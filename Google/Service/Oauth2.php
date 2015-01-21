@@ -15,10 +15,10 @@
  * the License.
  */
 
-require_once WP_PLUGIN_DIR . '/postman/Google/Model.php';
-require_once WP_PLUGIN_DIR . '/postman/Google/Service.php';
-require_once WP_PLUGIN_DIR . '/postman/Google/Service/Resource.php';
-require_once WP_PLUGIN_DIR . '/postman/Google/Config.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Model.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Service.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Service/Resource.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Config.php';
 
 /**
  * Service definition for Oauth2 (v2).

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-require_once WP_PLUGIN_DIR . '/postman/Google/Logger/Abstract.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Logger/Abstract.php';
 
 /**
  * Null logger based on the PSR-3 standard.

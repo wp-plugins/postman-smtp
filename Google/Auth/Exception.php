@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-require_once WP_PLUGIN_DIR . '/postman/Google/Exception.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Exception.php';
 
 class Google_Auth_Exception extends Google_Exception
 {

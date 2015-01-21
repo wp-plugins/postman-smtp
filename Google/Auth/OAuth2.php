@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-require_once WP_PLUGIN_DIR . '/postman/Google/Auth/Abstract.php';
-require_once WP_PLUGIN_DIR . '/postman/Google/Http/Request.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Auth/Abstract.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Http/Request.php';
 
 /**
  * Authentication class that deals with the OAuth 2 web-server authentication flow

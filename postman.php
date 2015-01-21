@@ -27,9 +27,9 @@ namespace Postman {
 	define ( 'OAUTH_REDIRECT_URL', admin_url ( 'options-general.php' ) );
 	define ( 'HOME_PAGE_URL', OAUTH_REDIRECT_URL . '?page=postman' );
 	
-	require_once WP_PLUGIN_DIR . '/postman/Postman/WordpressMailEngine.php';
-	require_once WP_PLUGIN_DIR . '/postman/Postman/SmtpOAuthMailerAdmin.php';
-	require_once WP_PLUGIN_DIR . '/postman/Postman/GmailAuthenticationManager.php';
+	require_once WP_PLUGIN_DIR . '/postman-smtp/Postman/WordpressMailEngine.php';
+	require_once WP_PLUGIN_DIR . '/postman-smtp/Postman/SmtpOAuthMailerAdmin.php';
+	require_once WP_PLUGIN_DIR . '/postman-smtp/Postman/GmailAuthenticationManager.php';
 	
 	$fromName;
 	$fromEmail;

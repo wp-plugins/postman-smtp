@@ -19,7 +19,7 @@
  * Abstract IO base class
  */
 
-require_once WP_PLUGIN_DIR . '/postman/Google/Http/CacheParser.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Http/CacheParser.php';
 
 abstract class Google_IO_Abstract
 {

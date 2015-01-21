@@ -22,7 +22,7 @@
 /**
  * @see Zend_Validate_Abstract
  */
-require_once WP_PLUGIN_DIR . '/postman/Zend/Validate/Abstract.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Validate/Abstract.php';
 
 /**
  * @category   Zend

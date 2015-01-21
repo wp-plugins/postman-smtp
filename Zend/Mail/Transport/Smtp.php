@@ -24,17 +24,17 @@
 /**
  * @see Zend_Mime
  */
-require_once WP_PLUGIN_DIR . '/postman/Zend/Mime.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Mime.php';
 
 /**
  * @see Zend_Mail_Protocol_Smtp
  */
-require_once WP_PLUGIN_DIR . '/postman/Zend/Mail/Protocol/Smtp.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Mail/Protocol/Smtp.php';
 
 /**
  * @see Zend_Mail_Transport_Abstract
  */
-require_once WP_PLUGIN_DIR . '/postman/Zend/Mail/Transport/Abstract.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Mail/Transport/Abstract.php';
 
 
 /**
@@ -192,7 +192,7 @@ class Zend_Mail_Transport_Smtp extends Zend_Mail_Transport_Abstract
                 $connectionClass .= '_Auth_' . ucwords($this->_auth);
             }
             if (!class_exists($connectionClass)) {
-                require_once WP_PLUGIN_DIR . '/postman/Zend/Loader.php';
+                require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Loader.php';
                 Zend_Loader::loadClass($connectionClass);
             }
             $this->setConnection(new $connectionClass($this->_host, $this->_port, $this->_config));

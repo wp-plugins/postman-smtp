@@ -23,7 +23,7 @@
 /**
  * @see Zend_Exception
  */
-require_once WP_PLUGIN_DIR . '/postman/Zend/Exception.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Exception.php';
 
 
 /**

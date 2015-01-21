@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-require_once WP_PLUGIN_DIR . '/postman/Google/Utils.php';
+require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Utils.php';
 
 /**
  * HTTP Request to be executed by IO classes. Upon execution, the
