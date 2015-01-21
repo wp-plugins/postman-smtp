@@ -157,7 +157,7 @@ namespace Postman {
 		 * (string or array)
 		 * For the string version, each header line (beginning with From:, Cc:, etc.) is delimited with a newline ("\r\n")
 		 *
-		 * @todo
+		 * @todo http://framework.zend.com/manual/1.12/en/zend.mail.additional-headers.html
 		 *
 		 */
 		function setHeaders($header) {
