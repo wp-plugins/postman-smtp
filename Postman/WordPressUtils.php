@@ -40,7 +40,7 @@ namespace Postman {
 	 * from http://codex.wordpress.org/Function_Reference/wp_mail
 	 */
 	function test1() {
-		wp_mail ( 'jason@hendriks.ca', 'a subject', 'a message' );
+		wp_mail ( 'wordpress@wordpress.org', 'a subject', 'a message' );
 	}
 	
 	/**
