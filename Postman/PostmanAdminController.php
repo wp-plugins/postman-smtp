@@ -98,10 +98,10 @@ namespace Postman {
 			echo '</p></div>';
 		}
 		public function displayTestEmailFailedMessage() {
-			unset ( $_SESSION [PostmanAdminController::TEST_EMAIL_FAILURE] );
 			?><div class="error">
-	<p>Oh, bother! Your test message failed to send :( [<?php echo $_GET['testEmailError'] ?>]</p>
+	<p>Oh, bother! Your test message failed to send :( ... <?php echo $_SESSION[PostmanAdminController::TEST_EMAIL_FAILURE] ?></p>
 </div><?php
+			unset ( $_SESSION [PostmanAdminController::TEST_EMAIL_FAILURE] );
 		}
 		
 		//
@@ -171,10 +171,9 @@ namespace Postman {
 				unset ( $_SESSION [PostmanAdminController::TEST_EMAIL_SUCCESS] );
 				print "<h3>Failed |(</h3>";
 				if ($engine->getException ()->getCode () == 334) {
-					$_SESSION [PostmanAdminController::TEST_EMAIL_FAILURE] = 'code 334';
-					$url = $url . '&testEmailError=code 334';
+					$_SESSION [PostmanAdminController::TEST_EMAIL_FAILURE] = 'Communication Error [334].';
 				} else {
-					$_SESSION [PostmanAdminController::TEST_EMAIL_FAILURE] = '&testEmailError=' . $engine->getException ()->getMessage () . ' (code ' . $engine->getException ()->getCode () . ')';
+					$_SESSION [PostmanAdminController::TEST_EMAIL_FAILURE] = $engine->getException ()->getMessage () . ' [' . $engine->getException ()->getCode () . '].';
 				}
 			}
 			
@@ -213,7 +212,7 @@ namespace Postman {
 	<form method="POST" action="<?php get_admin_url()?>admin-post.php">
 		<input type='hidden' name='action' value='gmail_auth' />
             <?php
-			if (! $this->isRequestOAuthPermissiongAllowed()) {
+			if (! $this->isRequestOAuthPermissiongAllowed ()) {
 				$disabled = "disabled='disabled'";
 			}
 			submit_button ( 'Request Permission from Google', 'primary', 'submit', true, $disabled );
@@ -223,7 +222,7 @@ namespace Postman {
 		<input type='hidden' name='action' value='test_mail' />
             <?php
 			do_settings_sections ( POSTMAN_TEST_SLUG );
-			if (! $this->isSendingEmailAllowed()) {
+			if (! $this->isSendingEmailAllowed ()) {
 				$disabled = "disabled='disabled'";
 			}
 			submit_button ( 'Send Test Email', 'primary', 'submit', true, $disabled );
