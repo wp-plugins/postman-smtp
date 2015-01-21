@@ -12,7 +12,7 @@
  */
 namespace Postman {
 
-	define ( 'WP_PLUGIN_DIR', '/Users/jasonhendriks/Sites/amsoil/wp-content/plugins/' );
+	define ( 'WP_PLUGIN_DIR', plugin_dir_path ( __FILE__ ) );
 	
 	define ( 'POSTMAN_NAME', 'Postman SMTP' );
 	define ( 'POSTMAN_SLUG', 'postman' );
@@ -27,76 +27,67 @@ namespace Postman {
 	define ( 'OAUTH_REDIRECT_URL', admin_url ( 'options-general.php' ) );
 	define ( 'HOME_PAGE_URL', OAUTH_REDIRECT_URL . '?page=postman' );
 	
-	require_once WP_PLUGIN_DIR . '/postman-smtp/Postman/WordpressMailEngine.php';
-	require_once WP_PLUGIN_DIR . '/postman-smtp/Postman/SmtpOAuthMailerAdmin.php';
-	require_once WP_PLUGIN_DIR . '/postman-smtp/Postman/GmailAuthenticationManager.php';
+	define ( 'Postman\DEBUG', false );
 	
-	$fromName;
-	$fromEmail;
+	require_once 'Postman/PostmanOAuthSmtpEngine.php';
+	require_once 'Postman/PostmanAdminController.php';
+	require_once 'Postman/GmailAuthenticationManager.php';
+	require_once 'Postman/AuthenticationToken.php';
+	require_once 'Postman/Options.php';
+	require_once 'Postman/WordPressUtils.php';
+	
+	require_once 'Zend/Mail/Transport/Smtp.php';
+	require_once 'Zend/Mail.php';
+	
+	session_start ();
+	
+	if (isset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
+		$authenticationToken = new AuthenticationToken ( get_option ( POSTMAN_OPTIONS ) );
+		$gmailAuthenticationManager = new GmailAuthenticationManager ( $authenticationToken );
+		$gmailAuthenticationManager->tradeCodeForToken ( '\Postman\saveOptions' );
+		die ();
+	} else {
+		$smtpOAuthMailerAdmin = new PostmanAdminController ();
+	}
+	function saveOptions(AuthenticationToken $authenticationToken) {
+		$options = get_option ( POSTMAN_OPTIONS );
+		$options [Options::ACCESS_TOKEN] = $authenticationToken->getAccessToken ();
+		$options [Options::REFRESH_TOKEN] = $authenticationToken->getRefreshToken ();
+		$options [Options::TOKEN_EXPIRES] = $authenticationToken->getExpiryTime ();
+		update_option ( POSTMAN_OPTIONS, $options );
+	}
 	
 	/**
 	 *
-	 * @param unknown $to        	
-	 * @param unknown $subject        	
-	 * @param unknown $message        	
-	 * @param unknown $headers        	
-	 * @param unknown $attachments        	
+	 * @param unknown $to
+	 *        	(string or array) (required) The intended recipient(s). Multiple recipients may be specified using an array or a comma-separated
+	 * @param unknown $subject
+	 *        	(string) (required) The subject of the message.
+	 * @param unknown $message
+	 *        	(string) (required) Message content.
+	 * @param unknown $headers
+	 *        	(string or array) (optional) Mail headers to send with the message. For the string version, each header line (beginning with From:, Cc:, etc.) is delimited with a newline ("\r\n") (advanced) Default: Empty
+	 * @param unknown $attachments
+	 *        	(string or array) (optional) Files to attach: a single filename, an array of filenames, or a newline-delimited string list of multiple filenames. (advanced) Default: Empty
 	 */
 	function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
-		$engine = new WordpressMailEngine ();
-		$options = get_option ( POSTMAN_OPTIONS );
-		$engine->setAuthEmail ( $options ['oauth_email'] );
-		$engine->setAuthToken ( $options ['access_token'] );
-		$engine->setServer ( $options ['hostname'] );
+		$engine = new PostmanOAuthSmtpEngine ();
 		$engine->setBodyText ( $message );
 		$engine->setSubject ( $subject );
-		if (empty ( $fromEmail ) && empty ( $fromName )) {
-			$engine->setFrom ( $options ['oauth_email'] );
-		} elseif (empty ( $fromName )) {
-			$engine->setFrom ( $this->fromName );
-		} else {
-			$engine->setFrom ( $this->fromEmail, $this->fromName );
-		}
 		$engine->addTo ( $to );
 		return $engine->send ();
-	}
-	function wp_mail_smtp_mail_from($email) {
-		$this->fromEmail = $email;
-	}
-	function wp_mail_smtp_mail_from_name($name) {
-		$this->fromName = $name;
 	}
 }
 
 namespace {
 
-	require_once 'Zend/Mail/Transport/Smtp.php';
-	require_once 'Zend/Mail.php';
-	
-	/**
-	 *
-	 * @return mixed
-	 */
 	$options = get_option ( POSTMAN_OPTIONS );
-	if (! empty ( $options ['access_token'] )) {
+	if ($smtpOAuthMailerAdmin->isRequestOAuthPermissiongAllowed() && $smtpOAuthMailerAdmin->isSendingEmailAllowed()) {
 		if (! function_exists ( 'wp_mail' )) {
 			function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
 				return call_user_func_array ( '\Postman\wp_mail', func_get_args () );
 			}
 		}
-		if (! function_exists ( 'wp_mail_smtp_mail_from' )) {
-			function wp_mail_smtp_mail_from($email) {
-				return call_user_func_array ( '\Postman\wp_mail_smtp_mail_from', func_get_args () );
-			}
-		}
-		if (! function_exists ( 'wp_mail_smtp_mail_from_name' )) {
-			function wp_mail_smtp_mail_from_name($name) {
-				return call_user_func_array ( '\Postman\wp_mail_smtp_mail_from_name', func_get_args () );
-			}
-		}
-		// Add filters to replace the mail from name and emailaddress
-		add_filter ( 'wp_mail_from', '\Postman\wp_mail_smtp_mail_from' );
-		add_filter ( 'wp_mail_from_name', '\Postman\wp_mail_smtp_mail_from_name' );
 	}
 	
 	// Adds "Settings" link to the plugin action page
@@ -109,19 +100,7 @@ namespace {
 		);
 		return array_merge ( $links, $mylinks );
 	}
-	// print "<br/>GET: ";
-	// print_r ( $_GET );
-	// print "<br/>POST: ";
-	// print_r ( $_POST );
-	// print "<br/>HEADERS: ";
-	// print_r ( getallheaders () );
 	
-	// wp_mail ( 'jason@hendriks.ca', 'a subject', 'a message' );
-	
-	session_start ();
-	if (isset ( $_SESSION ['SMTP_OAUTH_GMAIL_AUTH_IN_PROGRESS'] )) {
-		$gmailAuthenticationManager = new \Postman\GmailAuthenticationManager ();
-		$gmailAuthenticationManager->tradeCodeForToken ();
-	}
+	// \Postman\test1();
 }
 ?>
