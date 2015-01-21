@@ -1,6 +1,6 @@
 === Postman SMTP ===
 Contributors: jasonhendriks
-Tags: mail, email, smtp, smtps, gmail, oauth, oauth2, mailer, phpmailer, wp_mail, google apps
+Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, phpmailer, wp_mail, gmail, google apps
 Requires at least: 3.0
 Tested up to: 4.1
 Stable tag: 0.1
@@ -15,7 +15,7 @@ Having [trouble getting Gmail to send your email](https://wordpress.org/support/
 
 As Google tightens their security, the proper solution is to send your mail with "the most up to date security measures", i.e. SMTPS with OAuth 2.0 authentication. As of July 2014, this is [recommended](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and in some cases, [required](https://support.google.com/accounts/answer/6010255) for sending mail via Gmail.
 
-Postman is a next-generation SMTP plugin that seemlessly overrides the default WordPress wp_mail() call and provides the OAuth authentication. This means that any other plugins using the default WordPress mailer, such as [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) or the WordPress Lost Password feature, will automatically use this mechanism to send mail.
+Postman is a next-generation SMTP plugin that seemlessly overrides the default WordPress wp_mail() call (which itself uses phpmailer) and provides the OAuth authentication. This means that any other plugins using the default WordPress mailer, such as [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) or the WordPress Lost Password feature, will automatically use this mechanism to send mail.
 
 Tested on Safari 8 with OS X 10.10 on a RedHat OpenShift installation. Requires a Gmail or Google Apps account, and corresponding OAuth Credentials from Google Developer.
 
@@ -55,6 +55,9 @@ This one's a no-brainer. Because OAuth doesn't require your password to send ema
 1. If you use [Google Apps](http://admin.google.com) to manage your domain, you HAVE to use OAuth
 
 == Changelog ==
+
+= 0.2 =
+2015-01-21 - refactoring and clean-up.
 
 = 0.1 =
 2015-01-19 - First release. Happy Fig Newton Day! It was a gruelling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
