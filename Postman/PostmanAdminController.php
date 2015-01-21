@@ -80,11 +80,22 @@ namespace Postman {
 				// }
 			}
 		}
+		public function addWarningUnableToImplementWpMail() {
+			add_action ( 'admin_notices', array (
+					$this,
+					'displayUnableToImplementWpMailWarning' 
+			) );
+		}
 		public function isRequestOAuthPermissiongAllowed() {
 			return ! empty ( $this->options [Options::CLIENT_ID] ) && ! empty ( $this->options [Options::CLIENT_SECRET] );
 		}
 		public function isSendingEmailAllowed() {
 			return ! empty ( $this->options [Options::ACCESS_TOKEN] ) && ! empty ( $this->options [Options::REFRESH_TOKEN] ) && ! empty ( $this->options [Options::SENDER_EMAIL] );
+		}
+		public function displayUnableToImplementWpMailWarning() {
+			echo '<div class="error"><p>';
+			echo sprintf ( __ ( POSTMAN_NAME . ' is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.', POSTMAN_PLUGIN_DIRECTORY ), esc_url ( HOME_PAGE_URL ) );
+			echo '</p></div>';
 		}
 		public function displayConfigurationRequiredWarning() {
 			echo '<div class="update-nag"><p>';
@@ -142,7 +153,7 @@ namespace Postman {
 			$port = $this->options [Options::PORT];
 			$from = $this->options [Options::SENDER_EMAIL];
 			$subject = 'WordPress SMTP OAuth Mailer Test';
-			$body = "Hello, World!";
+			$message = "Hello, World!";
 			
 			if (\Postman\DEBUG) {
 				print "<h2>Sending Test email</h2><br/>";
@@ -155,13 +166,18 @@ namespace Postman {
 				print $body . "<br/>";
 			}
 			
+			// send through wp_mail
+			// $result = wp_mail ( $recipient, $subject, $message . ' - sent by Postman through wp_mail()' );
+			
+			// send through our own engine
 			$engine = new PostmanOAuthSmtpEngine ();
-			$engine->setBodyText ( $body );
+			$engine->setBodyText ( $message );
+			// $engine->setBodyText ( $message . ' - sent by Postman through PostmanOAuthSmtpEngine()' );
 			$engine->setSubject ( $subject );
 			$engine->addTo ( $recipient );
 			$result = $engine->send ();
-			// $result = true;
-			
+
+			//
 			$url = HOME_PAGE_URL;
 			if ($result) {
 				$_SESSION [PostmanAdminController::TEST_EMAIL_SUCCESS] = 'true';
@@ -384,6 +400,7 @@ namespace Postman {
 		 */
 		public function printTestEmailSectionInfo() {
 			print 'Test your setup here. ';
+			// print 'This will send TWO e-mails; one through Postman\'s own engine, and another through the WordPress wp_mail() call.';
 		}
 		
 		/**

@@ -87,6 +87,8 @@ namespace {
 			function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
 				return call_user_func_array ( '\Postman\wp_mail', func_get_args () );
 			}
+		} else {
+			$smtpOAuthMailerAdmin->addWarningUnableToImplementWpMail ();
 		}
 	}
 	
