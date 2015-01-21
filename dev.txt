@@ -1,0 +1,43 @@
+Tutorials
+---------
+
+"SMTP with oauth for gmail." - Aug 2012
+https://skroesbergen.wordpress.com/2012/08/22/smtp-with-oauth-for-gmail/
+
+"GOOGLE, SMTP, AND OAUTH2 AUTHENTICATION" - Feb 2013
+http://www.chargenevier.com/2013/02/google-smtp-and-oauth2-authentication/
+
+PHP, SMTP, XOAUTH2 and Gmail - Feb 2014
+http://www.boxuk.com/blog/php-smtp-xoauth2-gmail/
+
+
+Creating a Gmail Token
+----------------------
+
+Google Developer OAuth 2.0 Playgrounf
+https://developers.google.com/oauthplayground/
+
+Google Developers Console
+https://console.developers.google.com/
+
+Google Apps Security Settings
+https://admin.google.com/AdminHome?chromeless=1&fral=1#SecuritySettings:
+
+Account Permissions
+https://security.google.com/settings/security/permissions?pli=1
+
+Rereshing a Token
+-----------------
+How do I refresh my google_oauth2 access token using my refresh token?
+http://stackoverflow.com/questions/12792326/how-do-i-refresh-my-google-oauth2-access-token-using-my-refresh-token
+
+
+
+References
+----------
+
+Using OAuth 2.0 to Access Google APIs
+https://developers.google.com/accounts/docs/OAuth2
+
+Gmail Platform - OAuth 2.0
+https://developers.google.com/gmail/oauth_protocol?hl=nl
