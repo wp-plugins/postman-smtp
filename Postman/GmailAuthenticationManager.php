@@ -2,6 +2,8 @@
 
 namespace Postman {
 
+	require_once WP_PLUGIN_DIR . '/postman-smtp/Postman/AuthenticationManager.php';
+	
 	require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Client.php';
 	require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Service/Oauth2.php';
 	require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Model.php';
@@ -14,14 +16,26 @@ namespace Postman {
 	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api
 	 * http://pastebin.com/jA9sBNTk
 	 */
-	class GmailAuthenticationManager {
-		private $options;
+	class GmailAuthenticationManager implements AuthenticationManager {
+		
+		// constants
+		const FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE = 60;
+		const AUTHORIZATION_IN_PROGRESS = 'AUTHORIZATION_IN_PROGRESS';
+		const SCOPE = 'https://mail.google.com/';
+		const APPROVAL_PROMPT = 'force';
+		const ACCESS_TOKEN = 'access_token';
+		const REFRESH_TOKEN = 'refresh_token';
+		const EXPIRES = 'expires_in';
+		
+		// the oauth authorization options
+		private $authenticationToken;
 		
 		/**
-		 * Start up
+		 * Constructor
 		 */
-		public function __construct() {
-			$this->options = get_option ( POSTMAN_OPTIONS );
+		public function __construct(AuthenticationToken $authenticationToken) {
+			$this->authenticationToken = $authenticationToken;
+			// needs predictable access to the session
 			session_start ();
 		}
 		
@@ -35,13 +49,13 @@ namespace Postman {
 			// Create the Client
 			$client = new \Google_Client ();
 			// Set Basic Client info as established at the beginning of the file
-			$client->setClientId ( $this->options ['oauth_client_id'] );
-			$client->setClientSecret ( $this->options ['oauth_client_secret'] );
+			$client->setClientId ( $this->authenticationToken->getClientId () );
+			$client->setClientSecret ( $this->authenticationToken->getClientSecret () );
 			$client->setRedirectUri ( OAUTH_REDIRECT_URL );
-			$client->setScopes ( 'https://mail.google.com/' );
+			$client->setScopes ( SCOPE );
 			// Set this to 'force' in order to get a new refresh_token.
 			// Useful if you had already granted access to this application.
-			$client->setApprovalPrompt ( 'force' );
+			$client->setApprovalPrompt ( GmailAuthenticationManager::APPROVAL_PROMPT );
 			// Critical in order to get a refresh_token, otherwise it's not provided in the response.
 			$client->setAccessType ( 'offline' );
 			
@@ -51,12 +65,17 @@ namespace Postman {
 		
 		/**
 		 */
-		function refreshTokenIfRequired() {
-			if (time () > ($this->options ['auth_token_expires'] - 60)) {
-				$client = $this->createGoogleClient ();
-				$client->refreshToken ( $this->options ['refresh_token'] );
-				$this->saveTokens ( $client );
-			}
+		function isTokenExpired() {
+			$expireTime = ($this->authenticationToken->getExpiryTime () - FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
+			return time () > $expireTime;
+		}
+		
+		/**
+		 */
+		function refreshToken() {
+			$client = $this->createGoogleClient ();
+			$client->refreshToken ( $this->authenticationToken->getRefreshToken () );
+			$this->decodeReceivedAuthorizationToken ( $client );
 		}
 		
 		/**
@@ -70,7 +89,7 @@ namespace Postman {
 		 */
 		function authenticate() {
 			$client = $this->createGoogleClient ();
-			$_SESSION ['SMTP_OAUTH_GMAIL_AUTH_IN_PROGRESS'] = 'true';
+			$_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] = 'true';
 			$authUrl = $client->createAuthUrl ();
 			header ( 'Location: ' . filter_var ( $authUrl, FILTER_SANITIZE_URL ) );
 			die ();
@@ -85,12 +104,13 @@ namespace Postman {
 		 * bundle in the session, and redirect to ourself.
 		 * **********************************************
 		 */
-		function tradeCodeForToken() {
+		function tradeCodeForToken(callable $saveOptions) {
 			$client = $this->createGoogleClient ();
-			unset ( $_SESSION ['SMTP_OAUTH_GMAIL_AUTH_IN_PROGRESS'] );
+			unset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
 			if (isset ( $_GET ['code'] )) {
 				$client->authenticate ( $_GET ['code'] );
-				$this->saveTokens ( $client );
+				$this->decodeReceivedAuthorizationToken ( $client );
+				$saveOptions ( $this->authenticationToken );
 				header ( 'Location: ' . filter_var ( HOME_PAGE_URL, FILTER_SANITIZE_URL ) );
 				die ();
 			} else {
@@ -101,19 +121,28 @@ namespace Postman {
 		}
 		
 		/**
-		 *
+		 * Parses the authorization token and extracts the expiry time, accessToken, and if this is a first-time authorization, a refresh token.
+		 * 
 		 * @param unknown $client        	
 		 */
-		private function saveTokens($client) {
-			$tokens = json_decode ( $client->getAccessToken () );
-			$this->options ['auth_token_expires'] = (time () + $tokens->{'expires_in'});
-			print "expires: ".$this->options['auth_token_expires'];
-			$this->options ['access_token'] = $tokens->{'access_token'};
-			$refreshToken = $tokens->{'refresh_token'};
-			if (! empty ( $refreshToken )) {
-				$this->options ['refresh_token'] = $refreshToken;
+		private function decodeReceivedAuthorizationToken(\Google_Client $client) {
+			$newtoken = json_decode ( $client->getAccessToken () );
+			$this->authenticationToken->setExpiryTime ( (time () + $newtoken->{GmailAuthenticationManager::EXPIRES}) );
+			$this->authenticationToken->setAccessToken ( $newtoken->{GmailAuthenticationManager::ACCESS_TOKEN} );
+			$refreshToken = $newtoken->{GmailAuthenticationManager::REFRESH_TOKEN};
+			if (isset ( $refreshToken )) {
+				$this->authenticationToken->setRefreshToken ( $refreshToken );
 			}
-			update_option ( POSTMAN_OPTIONS, $this->options );
+		}
+		
+		/*
+		 * Accessors
+		 */
+		public function setAuthenticationToken(AuthenticationToken $authenticationToken) {
+			$this->authenticationToken = $authenticationToken;
+		}
+		public function getAuthenticationToken() {
+			return $this->authenticationToken;
 		}
 	}
 }
