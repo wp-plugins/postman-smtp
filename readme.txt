@@ -65,6 +65,7 @@ This one's a no-brainer. Because OAuth doesn't require your password to send ema
 * paired down the external libraries to only what was required - from 3,700 files to just 75
 * default Gmail port changed from 587 (won't work) to 465
 * Added 'Delete All Data' button to erase the stored tokens
+* OpenShift production problem: This environment didn't like the callback and there were possibly invalid characters in the source script
 
 = 0.1 =
 2015-01-19 - First release. Happy Fig Newton Day! It was a gruelling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
