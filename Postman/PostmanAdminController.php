@@ -40,6 +40,10 @@ namespace Postman {
 					$this,
 					'handleGoogleAuthenticationAction' 
 			) );
+			add_action ( 'admin_post_purge_data', array (
+					$this,
+					'handlePurgeDataAction' 
+			) );
 			
 			if (! $this->isRequestOAuthPermissiongAllowed () || ! $this->isSendingEmailAllowed ()) {
 				add_action ( 'admin_notices', Array (
@@ -79,6 +83,12 @@ namespace Postman {
 				// ) );
 				// }
 			}
+		}
+		public function handlePurgeDataAction() {
+			$emptyOptions = array ();
+			update_option ( POSTMAN_OPTIONS, $emptyOptions );
+			wp_redirect ( HOME_PAGE_URL );
+			exit ();
 		}
 		public function addWarningUnableToImplementWpMail() {
 			add_action ( 'admin_notices', array (
@@ -176,7 +186,7 @@ namespace Postman {
 			$engine->setSubject ( $subject );
 			$engine->addTo ( $recipient );
 			$result = $engine->send ();
-
+			
 			//
 			$url = HOME_PAGE_URL;
 			if ($result) {
@@ -242,6 +252,12 @@ namespace Postman {
 				$disabled = "disabled='disabled'";
 			}
 			submit_button ( 'Send Test Email', 'primary', 'submit', true, $disabled );
+			?>
+	</form>
+	<form method="POST" action="<?php get_admin_url()?>admin-post.php">
+		<input type='hidden' name='action' value='purge_data' />
+            <?php
+			submit_button ( 'Delete All Data', 'delete', 'submit', true, 'style="background-color:red;color:white"' );
 			?>
 	</form>
 
@@ -414,14 +430,14 @@ namespace Postman {
 		 * Get the settings option array and print one of its values
 		 */
 		public function hostname_callback() {
-			printf ( '<input readonly="true" type="text" id="hostname" name="postman_options[hostname]" value="%s" />', isset ( $this->options [Options::HOSTNAME] ) ? esc_attr ( $this->options [Options::HOSTNAME] ) : '' );
+			printf ( '<input type="text" id="hostname" name="postman_options[hostname]" value="%s" />', isset ( $this->options [Options::HOSTNAME] ) ? esc_attr ( $this->options [Options::HOSTNAME] ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function port_callback() {
-			printf ( '<input readonly="true" type="text" id="port" name="postman_options[port]" value="%s" />', isset ( $this->options [Options::PORT] ) ? esc_attr ( $this->options [Options::PORT] ) : '' );
+			printf ( '<input type="text" id="port" name="postman_options[port]" value="%s" />', isset ( $this->options [Options::PORT] ) ? esc_attr ( $this->options [Options::PORT] ) : '' );
 		}
 		
 		/**
