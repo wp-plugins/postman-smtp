@@ -23,6 +23,7 @@ namespace Postman {
 		const AUTHORIZATION_IN_PROGRESS = 'AUTHORIZATION_IN_PROGRESS';
 		const SCOPE = 'https://mail.google.com/';
 		const APPROVAL_PROMPT = 'force';
+		const ACCESS_TYPE = 'offline';
 		const ACCESS_TOKEN = 'access_token';
 		const REFRESH_TOKEN = 'refresh_token';
 		const EXPIRES = 'expires_in';
@@ -52,12 +53,12 @@ namespace Postman {
 			$client->setClientId ( $this->authenticationToken->getClientId () );
 			$client->setClientSecret ( $this->authenticationToken->getClientSecret () );
 			$client->setRedirectUri ( OAUTH_REDIRECT_URL );
-			$client->setScopes ( SCOPE );
+			$client->setScopes ( GmailAuthenticationManager::SCOPE );
 			// Set this to 'force' in order to get a new refresh_token.
 			// Useful if you had already granted access to this application.
 			$client->setApprovalPrompt ( GmailAuthenticationManager::APPROVAL_PROMPT );
 			// Critical in order to get a refresh_token, otherwise it's not provided in the response.
-			$client->setAccessType ( 'offline' );
+			$client->setAccessType ( GmailAuthenticationManager::ACCESS_TYPE);
 			
 			$google_oauthV2 = new \Google_Service_Oauth2 ( $client );
 			return $client;
