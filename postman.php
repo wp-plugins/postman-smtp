@@ -82,7 +82,7 @@ namespace Postman {
 namespace {
 
 	$options = get_option ( POSTMAN_OPTIONS );
-	if ($smtpOAuthMailerAdmin->isRequestOAuthPermissiongAllowed() && $smtpOAuthMailerAdmin->isSendingEmailAllowed()) {
+	if ($smtpOAuthMailerAdmin->isRequestOAuthPermissiongAllowed () && $smtpOAuthMailerAdmin->isSendingEmailAllowed ()) {
 		if (! function_exists ( 'wp_mail' )) {
 			function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
 				return call_user_func_array ( '\Postman\wp_mail', func_get_args () );
@@ -100,7 +100,5 @@ namespace {
 		);
 		return array_merge ( $links, $mylinks );
 	}
-	
-	// \Postman\test1();
 }
 ?>
