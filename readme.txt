@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, phpmailer, wp_mail, gmail, google apps
 Requires at least: 3.0
 Tested up to: 4.1
-Stable tag: 0.1
+Stable tag: 0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,9 +60,11 @@ This one's a no-brainer. Because OAuth doesn't require your password to send ema
 = 0.3 =
 
 = 0.2 =
-2015-01-21 - wp_mail accepts multiple recipients (array and string) including: 'a@a.com, "b" <b@b.com>, "C, c" <c@c.com>'
-2015-01-21 - display a warning to the user if another plugin is preventing Postman from overriding wp_mail
-2015-01-21 - paired down the external libraries to only what was required - from 3,700 files to just 75
+* wp_mail accepts multiple recipients (array and string) including: 'a@a.com, "b" <b@b.com>, "C, c" <c@c.com>'
+* display a warning to the user if another plugin is preventing Postman from overriding wp_mail
+* paired down the external libraries to only what was required - from 3,700 files to just 75
+* default Gmail port changed from 587 (won't work) to 465
+* Added 'Delete All Data' button to erase the stored tokens
 
 = 0.1 =
 2015-01-19 - First release. Happy Fig Newton Day! It was a gruelling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
