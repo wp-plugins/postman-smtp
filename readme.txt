@@ -57,6 +57,8 @@ This one's a no-brainer. Because OAuth doesn't require your password to send ema
 
 == Changelog ==
 
+= 0.3 =
+
 = 0.2 =
 2015-01-21 - wp_mail accepts multiple recipients (array and string) including: 'a@a.com, "b" <b@b.com>, "C, c" <c@c.com>'
 2015-01-21 - display a warning to the user if another plugin is preventing Postman from overriding wp_mail
