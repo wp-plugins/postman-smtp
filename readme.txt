@@ -21,6 +21,7 @@ Tested on Safari 8 with OS X 10.10 on a RedHat OpenShift installation. Requires 
 
 What's planned for the future:
 
+* Attachments and Custom Headers
 * Wizard interface
 * Ability to revoke the refresh token at Google
 * Ability to remove the stored token from WordPress
@@ -57,7 +58,8 @@ This one's a no-brainer. Because OAuth doesn't require your password to send ema
 == Changelog ==
 
 = 0.2 =
-2015-01-21 - refactoring and clean-up.
+2015-01-21 - wp_mail accepts multiple recipients (array and string) including: 'a@a.com, "b" <b@b.com>, "C, c" <c@c.com>'
+2015-01-21 - display a warning to the user if another plugin is preventing Postman from overriding wp_mail
 
 = 0.1 =
 2015-01-19 - First release. Happy Fig Newton Day! It was a gruelling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
