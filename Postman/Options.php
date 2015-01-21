@@ -16,8 +16,8 @@ namespace Postman {
 		
 		const SMTP_TYPE = 'smtp_type';
 		const SENDER_EMAIL = 'sender_email';
-		const PORT = "port";
-		const HOSTNAME = "hostname";
+		const PORT = 'port';
+		const HOSTNAME = 'hostname';
 		const TEST_EMAIL = 'test_email';
 						
 		private $hostname;

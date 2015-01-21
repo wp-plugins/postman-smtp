@@ -117,6 +117,13 @@ namespace Postman {
 		
 		//
 		private function setDefaults() {
+
+			// fix a 0.1 to 0.2 upgrade bug
+			if ($this->options [Options::PORT] != PostmanAdminController::DEFAULT_GMAIL_OAUTH_PORT) {
+				$this->options [Options::PORT] = PostmanAdminController::DEFAULT_GMAIL_OAUTH_PORT;
+				update_option ( POSTMAN_OPTIONS, $options );
+			}
+				
 			if ($this->options [Options::HOSTNAME] == '') {
 				$this->options [Options::HOSTNAME] = PostmanAdminController::DEFAULT_GMAIL_OAUTH_HOSTNAME;
 			}
@@ -176,7 +183,7 @@ namespace Postman {
 			$engine->setSubject ( $subject );
 			$engine->addTo ( $recipient );
 			$result = $engine->send ();
-
+			
 			//
 			$url = HOME_PAGE_URL;
 			if ($result) {

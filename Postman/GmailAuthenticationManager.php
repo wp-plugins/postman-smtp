@@ -107,7 +107,6 @@ namespace Postman {
 		 */
 		function tradeCodeForToken(callable $saveOptions) {
 			$client = $this->createGoogleClient ();
-			unset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
 			if (isset ( $_GET ['code'] )) {
 				$client->authenticate ( $_GET ['code'] );
 				$this->decodeReceivedAuthorizationToken ( $client );
