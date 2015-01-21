@@ -41,7 +41,7 @@ namespace Postman {
 					'handleGoogleAuthenticationAction' 
 			) );
 			
-			if (! $this->isConfigured () || ! $this->isAuthorized ()) {
+			if (! $this->isRequestOAuthPermissiongAllowed () || ! $this->isSendingEmailAllowed ()) {
 				add_action ( 'admin_notices', Array (
 						$this,
 						'displayConfigurationRequiredWarning' 
@@ -80,11 +80,11 @@ namespace Postman {
 				// }
 			}
 		}
-		public function isConfigured() {
-			return isset ( $this->options [Options::CLIENT_ID] ) && isset ( $this->options [Options::CLIENT_SECRET] );
+		public function isRequestOAuthPermissiongAllowed() {
+			return ! empty ( $this->options [Options::CLIENT_ID] ) && ! empty ( $this->options [Options::CLIENT_SECRET] );
 		}
-		public function isAuthorized() {
-			return isset ( $this->options [Options::ACCESS_TOKEN] ) && isset ( $this->options [Options::REFRESH_TOKEN] );
+		public function isSendingEmailAllowed() {
+			return ! empty ( $this->options [Options::ACCESS_TOKEN] ) && ! empty ( $this->options [Options::REFRESH_TOKEN] ) && ! empty ( $this->options [Options::SENDER_EMAIL] );
 		}
 		public function displayConfigurationRequiredWarning() {
 			echo '<div class="update-nag"><p>';
@@ -213,7 +213,7 @@ namespace Postman {
 	<form method="POST" action="<?php get_admin_url()?>admin-post.php">
 		<input type='hidden' name='action' value='gmail_auth' />
             <?php
-			if (! $this->isConfigured ()) {
+			if (! $this->isRequestOAuthPermissiongAllowed()) {
 				$disabled = "disabled='disabled'";
 			}
 			submit_button ( 'Request Permission from Google', 'primary', 'submit', true, $disabled );
@@ -223,7 +223,7 @@ namespace Postman {
 		<input type='hidden' name='action' value='test_mail' />
             <?php
 			do_settings_sections ( POSTMAN_TEST_SLUG );
-			if (! $this->isAuthorized()) {
+			if (! $this->isSendingEmailAllowed()) {
 				$disabled = "disabled='disabled'";
 			}
 			submit_button ( 'Send Test Email', 'primary', 'submit', true, $disabled );
