@@ -421,14 +421,14 @@ namespace Postman {
 		 * Get the settings option array and print one of its values
 		 */
 		public function hostname_callback() {
-			printf ( '<input readonly="true" type="text" id="hostname" name="postman_options[hostname]" value="%s" />', isset ( $this->options [Options::HOSTNAME] ) ? esc_attr ( $this->options [Options::HOSTNAME] ) : '' );
+			printf ( '<input type="text" id="hostname" name="postman_options[hostname]" value="%s" />', isset ( $this->options [Options::HOSTNAME] ) ? esc_attr ( $this->options [Options::HOSTNAME] ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function port_callback() {
-			printf ( '<input readonly="true" type="text" id="port" name="postman_options[port]" value="%s" />', isset ( $this->options [Options::PORT] ) ? esc_attr ( $this->options [Options::PORT] ) : '' );
+			printf ( '<input type="text" id="port" name="postman_options[port]" value="%s" />', isset ( $this->options [Options::PORT] ) ? esc_attr ( $this->options [Options::PORT] ) : '' );
 		}
 		
 		/**
