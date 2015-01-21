@@ -97,7 +97,6 @@ namespace Postman {
 					var_dump ( $this->mail );
 					echo "<br/>";
 				}
-				
 				$this->mail->send ( $transport );
 			} catch ( \Zend_Mail_Protocol_Exception $e ) {
 				$this->exception = $e;
@@ -126,19 +125,43 @@ namespace Postman {
 		}
 		
 		/**
-		 * Accessors
+		 * Adds recipients to the message.
+		 *
+		 * @param unknown $email|Array
+		 *        	or comma-separated list of email addresses to send message.
+		 * @param
+		 *        	string
 		 */
-		public function setFrom($email, $name = null) {
-			$this->mail->setFrom ( $email, $name );
-		}
 		public function addTo($email, $name = '') {
-			$this->mail->addTo ( $email, $name );
+			if (! is_array ( $email )) {
+				// http://tiku.io/questions/955963/splitting-comma-separated-email-addresses-in-a-string-with-commas-in-quotes-in-p
+				$t = str_getcsv ( $email );
+				foreach ( $t as $k => $v ) {
+					if (strpos ( $v, ',' ) !== false) {
+						$t [$k] = '"' . str_replace ( ' <', '" <', $v );
+					}
+					$this->mail->addTo ( trim ( $t [$k] ) );
+				}
+			} else {
+				$this->mail->addTo ( $email, $name );
+			}
 		}
 		function setBodyText($bodyText) {
 			$this->mail->setBodyText ( $bodyText );
 		}
 		function setSubject($subject) {
 			$this->mail->setSubject ( $subject );
+		}
+		/**
+		 * unknown $header| Mail headers to send with the message.
+		 * (string or array)
+		 * For the string version, each header line (beginning with From:, Cc:, etc.) is delimited with a newline ("\r\n")
+		 *
+		 * @todo
+		 *
+		 */
+		function setHeaders($header) {
+			// $this->mail->addHeader ( $header );
 		}
 		public function getException() {
 			return $this->exception;
