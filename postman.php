@@ -45,17 +45,19 @@ namespace Postman {
 		unset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
 		$authenticationToken = new AuthenticationToken ( get_option ( POSTMAN_OPTIONS ) );
 		$gmailAuthenticationManager = new GmailAuthenticationManager ( $authenticationToken );
-		$gmailAuthenticationManager->tradeCodeForToken ( '\Postman\saveOptions' );
+		if ($gmailAuthenticationManager->tradeCodeForToken ()) {
+			$options = get_option ( POSTMAN_OPTIONS );
+			$options [Options::ACCESS_TOKEN] = $authenticationToken->getAccessToken ();
+			$options [Options::REFRESH_TOKEN] = $authenticationToken->getRefreshToken ();
+			$options [Options::TOKEN_EXPIRES] = $authenticationToken->getExpiryTime ();
+			update_option ( POSTMAN_OPTIONS, $options );
+		}
+		header ( 'Location: ' . filter_var ( HOME_PAGE_URL, FILTER_SANITIZE_URL ) );
 		die ();
 	} else {
 		$smtpOAuthMailerAdmin = new PostmanAdminController ();
 	}
 	function saveOptions(AuthenticationToken $authenticationToken) {
-		$options = get_option ( POSTMAN_OPTIONS );
-		$options [Options::ACCESS_TOKEN] = $authenticationToken->getAccessToken ();
-		$options [Options::REFRESH_TOKEN] = $authenticationToken->getRefreshToken ();
-		$options [Options::TOKEN_EXPIRES] = $authenticationToken->getExpiryTime ();
-		update_option ( POSTMAN_OPTIONS, $options );
 	}
 	
 	/**

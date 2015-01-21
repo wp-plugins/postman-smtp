@@ -58,7 +58,7 @@ namespace Postman {
 			// Useful if you had already granted access to this application.
 			$client->setApprovalPrompt ( GmailAuthenticationManager::APPROVAL_PROMPT );
 			// Critical in order to get a refresh_token, otherwise it's not provided in the response.
-			$client->setAccessType ( GmailAuthenticationManager::ACCESS_TYPE);
+			$client->setAccessType ( GmailAuthenticationManager::ACCESS_TYPE );
 			
 			$google_oauthV2 = new \Google_Service_Oauth2 ( $client );
 			return $client;
@@ -105,24 +105,18 @@ namespace Postman {
 		 * bundle in the session, and redirect to ourself.
 		 * **********************************************
 		 */
-		function tradeCodeForToken(callable $saveOptions) {
-			$client = $this->createGoogleClient ();
+		function tradeCodeForToken() {
 			if (isset ( $_GET ['code'] )) {
+				$client = $this->createGoogleClient ();
 				$client->authenticate ( $_GET ['code'] );
 				$this->decodeReceivedAuthorizationToken ( $client );
-				$saveOptions ( $this->authenticationToken );
-				header ( 'Location: ' . filter_var ( HOME_PAGE_URL, FILTER_SANITIZE_URL ) );
-				die ();
-			} else {
-				// failure - the user probably clicked cancel
-				header ( 'Location: ' . filter_var ( HOME_PAGE_URL, FILTER_SANITIZE_URL ) );
-				die ();
+				return true;
 			}
 		}
 		
 		/**
 		 * Parses the authorization token and extracts the expiry time, accessToken, and if this is a first-time authorization, a refresh token.
-		 * 
+		 *
 		 * @param unknown $client        	
 		 */
 		private function decodeReceivedAuthorizationToken(\Google_Client $client) {
