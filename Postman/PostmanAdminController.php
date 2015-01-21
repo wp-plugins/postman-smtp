@@ -40,6 +40,10 @@ namespace Postman {
 					$this,
 					'handleGoogleAuthenticationAction' 
 			) );
+			add_action ( 'admin_post_purge_data', array (
+					$this,
+					'handlePurgeDataAction' 
+			) );
 			
 			if (! $this->isRequestOAuthPermissiongAllowed () || ! $this->isSendingEmailAllowed ()) {
 				add_action ( 'admin_notices', Array (
@@ -80,6 +84,12 @@ namespace Postman {
 				// }
 			}
 		}
+		public function handlePurgeDataAction() {
+			$emptyOptions = array ();
+			update_option ( POSTMAN_OPTIONS, $emptyOptions );
+			wp_redirect ( HOME_PAGE_URL );
+			exit ();
+		}
 		public function addWarningUnableToImplementWpMail() {
 			add_action ( 'admin_notices', array (
 					$this,
@@ -117,7 +127,6 @@ namespace Postman {
 		
 		//
 		private function setDefaults() {
-
 			if ($this->options [Options::HOSTNAME] == '') {
 				$this->options [Options::HOSTNAME] = PostmanAdminController::DEFAULT_GMAIL_OAUTH_HOSTNAME;
 			}
@@ -243,6 +252,12 @@ namespace Postman {
 				$disabled = "disabled='disabled'";
 			}
 			submit_button ( 'Send Test Email', 'primary', 'submit', true, $disabled );
+			?>
+	</form>
+	<form method="POST" action="<?php get_admin_url()?>admin-post.php">
+		<input type='hidden' name='action' value='purge_data' />
+            <?php
+			submit_button ( 'Delete All Data', 'delete', 'submit', true, 'style="background-color:red;color:white"' );
 			?>
 	</form>
 
