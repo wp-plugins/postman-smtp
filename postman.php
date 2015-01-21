@@ -42,6 +42,7 @@ namespace Postman {
 	session_start ();
 	
 	if (isset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
+		unset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
 		$authenticationToken = new AuthenticationToken ( get_option ( POSTMAN_OPTIONS ) );
 		$gmailAuthenticationManager = new GmailAuthenticationManager ( $authenticationToken );
 		$gmailAuthenticationManager->tradeCodeForToken ( '\Postman\saveOptions' );
