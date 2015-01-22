@@ -17,7 +17,7 @@ As Google tightens their security, the proper solution is to send your mail with
 
 Postman is a next-generation SMTP plugin which seemlessly overrides the default WordPress wp_mail() call and provides the OAuth authentication. Any other plugins that send mail, such as [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) or the WordPress Lost Password feature, will automatically use this mechanism to send mail.
 
-Tested on Safari 8 with OS X 10.10 on a RedHat OpenShift installation. Requires a Gmail or Google Apps account, and corresponding OAuth Credentials from Google Developer.
+Tested on a RedHat OpenShift installation. Requires a Gmail or Google Apps account, and corresponding OAuth Credentials from Google Developer.
 
 What's planned for the future:
 
