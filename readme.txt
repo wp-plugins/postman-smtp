@@ -37,6 +37,10 @@ Your feedback is appreciated!! Please send feature requests and/or bug reports.
 
 This one's a no-brainer. Because OAuth doesn't require your password to send email, only an *authentication token*. Other plugins need your gmail password to send mail securely via SSL/TLS. **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
+= How do I get a Client ID? =
+
+
+
 == Installation ==
 
 1. Activate the plugin through the 'Plugins' menu in WordPress.
