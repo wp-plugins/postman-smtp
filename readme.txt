@@ -15,7 +15,7 @@ Having [trouble getting Gmail to send your email](https://wordpress.org/support/
 
 As Google tightens their security, the proper solution is to send your mail with "the most up to date security measures", i.e. SMTPS with OAuth 2.0 authentication. As of July 2014, this is [recommended](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and in some cases, [required](https://support.google.com/accounts/answer/6010255) for sending mail via Gmail.
 
-Postman is a next-generation SMTP plugin that seemlessly overrides the default WordPress wp_mail() call (which itself uses phpmailer) and provides the OAuth authentication. This means that any other plugins using the default WordPress mailer, such as [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) or the WordPress Lost Password feature, will automatically use this mechanism to send mail.
+Postman is a next-generation SMTP plugin which seemlessly overrides the default WordPress wp_mail() call and provides the OAuth authentication. Any other plugins that send mail, such as [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) or the WordPress Lost Password feature, will automatically use this mechanism to send mail.
 
 Tested on Safari 8 with OS X 10.10 on a RedHat OpenShift installation. Requires a Gmail or Google Apps account, and corresponding OAuth Credentials from Google Developer.
 
@@ -35,12 +35,12 @@ Your feedback is appreciated!! Please send feature requests and/or bug reports.
 
 = Why should I use Postman to deliver my mail? =
 
-This one's a no-brainer. Because OAuth doesn't require your password to send email, only an *authentication token*. Other plugins need your gmail password to send mail securely via SSL/TLS. **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
+This one's a no-brainer. Because OAuth doesn't require your password to send email, only an *authentication token*. Other plugins need your Gmail password to send mail securely via SSL/TLS. **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = How do I get a Google Client ID? =
 1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose Create Project, or use an existing project if you have one.
 1. If you have previously created a project, select it from the Projects page and you will arrive at the Project Dashboard. If you have just created a project, you are brought to the Project Dashboard automatically.
-1. If you have not filled out the consent screen for this project, do it now. In the left-hand hanvigation menu, select *Consent Screen* from under *APIs & auth*. Into *email address* put your Gmail address and in *product name* put the name of your WordPress site. Choose *Save*.
+1. If you have not filled out the consent screen for this project, do it now. In the left-hand hand navigation menu, select *Consent Screen* from under *APIs & auth*. Into *email address* put your Gmail address and in *product name* put the name of your WordPress site. Choose *Save*.
 1. Select *Credentials* from under *APIs & auth*. Choose *Create a new Client ID*.
 1. For the *Application Type* use "Web application". The first URL (*Authorized Javascript origins) will be the root address of your WordPress site. The second URL (*Authorized Redirect URIs) will be the the redirect URI shown on *Postman's Settings page*.
 1. Choose *Create Client ID*.
@@ -65,10 +65,8 @@ This one's a no-brainer. Because OAuth doesn't require your password to send ema
 
 == Changelog ==
 
-= 0.3 =
-
 = 0.2 =
-* wp_mail accepts multiple recipients (array and string) including: 'a@a.com, "b" <b@b.com>, "C, c" <c@c.com>'
+* wp_mail accepts multiple recipients (array and string)
 * display a warning to the user if another plugin is preventing Postman from overriding wp_mail
 * paired down the external libraries to only what was required - from 3,700 files to just 75
 * default Gmail port changed from 587 (won't work) to 465
@@ -76,5 +74,5 @@ This one's a no-brainer. Because OAuth doesn't require your password to send ema
 * OpenShift production problem: This environment didn't like the callback and there were possibly invalid characters in the source script
 
 = 0.1 =
-2015-01-19 - First release. Happy Fig Newton Day! It was a gruelling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
+2015-01-19 - First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
