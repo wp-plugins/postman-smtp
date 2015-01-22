@@ -37,20 +37,24 @@ Your feedback is appreciated!! Please send feature requests and/or bug reports.
 
 This one's a no-brainer. Because OAuth doesn't require your password to send email, only an *authentication token*. Other plugins need your gmail password to send mail securely via SSL/TLS. **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
-= How do I get a Client ID? =
-
-
+= How do I get a Google Client ID? =
+1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose Create Project, or use an existing project if you have one.
+1. If you have previously created a project, select it from the Projects page and you will arrive at the Project Dashboard. If you have just created a project, you are brought to the Project Dashboard automatically.
+1. If you have not filled out the consent screen for this project, do it now. In the left-hand hanvigation menu, select *Consent Screen* from under *APIs & auth*. Into *email address* put your Gmail address and in *product name* put the name of your WordPress site. Choose *Save*.
+1. Select *Credentials* from under *APIs & auth*. Choose *Create a new Client ID*.
+1. For the *Application Type* use "Web application". The first URL (*Authorized Javascript origins) will be the root address of your WordPress site. The second URL (*Authorized Redirect URIs) will be the the redirect URI shown on *Postman's Settings page*.
+1. Choose *Create Client ID*.
+1. Now you can enter the Client ID and Client Secret shown into Postman's settings page.
 
 == Installation ==
 
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 1. In the WordPress 'Settings' menu find 'Postman SMTP'.
-1. Enter your Gmail e-mail address (all sent e-mail will come from this account). This should be the same address you login to Google with.
-1. Go to [Google Developer's Console](https://console.developers.google.com/) and create a new project.
-1. Create a "Client ID for Web Application" for that project. When asked, supply the redirect URI shown on the plugin's Settings page.
-1. Copy your Client ID and Client Secret into the plugin's Settings page.
-1. Select the Save Changes button.
-1. Select the Authenticate with Google button and follow the instructions.
+1. In *Sender Email Address* enter your account's email address. This should be the same address you login to Google with.
+1. Go to [Google Developer's Console](https://console.developers.google.com/) and create a Client ID for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
+1. Copy your *Client ID* and *Client Secret* into the plugin's Settings page.
+1. Choose the Save Changes button.
+1. Choose the *Request Permission from Google* button and follow the instructions.
 1. Send yourself a test e-mail. 
 
 == Screenshots ==
