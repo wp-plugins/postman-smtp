@@ -1,7 +1,7 @@
 === Postman SMTP ===
 Contributors: jasonhendriks
 Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, phpmailer, wp_mail, gmail, google apps
-Requires at least: 3.0
+Requires at least: 3.8
 Tested up to: 4.1
 Stable tag: 0.2
 License: GPLv2 or later
@@ -19,6 +19,12 @@ Postman is a next-generation SMTP plugin which seemlessly overrides the default 
 
 Tested on a RedHat OpenShift installation. Requires a Gmail or Google Apps account, and corresponding OAuth Credentials from Google Developer.
 
+Requirements:
+
+* A Gmail or Google Apps account
+* A Client ID from Google Developer
+* Port 465 (TCP, outbound) must be open
+
 What's planned for the future:
 
 * Attachments and Custom Headers
@@ -35,14 +41,17 @@ Your feedback is appreciated!! Please send feature requests and/or bug reports.
 
 = Why should I use Postman to deliver my mail? =
 
-This one's a no-brainer. Because OAuth doesn't require your password to send email, only an *authentication token*. Other plugins need your Gmail password to send mail securely via SSL/TLS. **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
+*Postman* doesn't require your password to send email, only an *authentication token*. Other plugins need your Gmail password to send mail securely via SSL/TLS. **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
+
+= What is a Client ID? =
+Every website and/or application has their own Client ID. It's used to control authentication and authorization and is tied to the specific URL of your website. Google has [instructions for creating a Client ID](https://developers.google.com/console/help/new/#generatingoauth2), which I've expanded upon below.
 
 = How do I get a Google Client ID? =
 1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose Create Project, or use an existing project if you have one.
 1. If you have previously created a project, select it from the Projects page and you will arrive at the Project Dashboard. If you have just created a project, you are brought to the Project Dashboard automatically.
 1. If you have not filled out the consent screen for this project, do it now. In the left-hand hand navigation menu, select *Consent Screen* from under *APIs & auth*. Into *email address* put your Gmail address and in *product name* put the name of your WordPress site. Choose *Save*.
 1. Select *Credentials* from under *APIs & auth*. Choose *Create a new Client ID*.
-1. For the *Application Type* use "Web application". The first URL (*Authorized Javascript origins) will be the root address of your WordPress site. The second URL (*Authorized Redirect URIs) will be the the redirect URI shown on *Postman's Settings page*.
+1. For the *Application Type* use "Web application". The first URL (*Authorized Javascript origins*) will be the root address of your WordPress site. The second URL (*Authorized Redirect URIs*) will be the the redirect URI shown on *Postman's Settings page*.
 1. Choose *Create Client ID*.
 1. Now you can enter the Client ID and Client Secret shown into Postman's settings page.
 
@@ -63,16 +72,20 @@ This one's a no-brainer. Because OAuth doesn't require your password to send ema
 1. The required Client ID and Client Secret
 1. If you use [Google Apps](http://admin.google.com) to manage your domain, you HAVE to use OAuth
 
+== Upgrade Notice ==
+
+Now accepts multiple recipients when sending email. 
+
 == Changelog ==
 
 = 0.2 =
 * wp_mail accepts multiple recipients (array and string)
 * display a warning to the user if another plugin is preventing Postman from overriding wp_mail
 * paired down the external libraries to only what was required - from 3,700 files to just 75
-* default Gmail port changed from 587 (won't work) to 465
+* default Gmail port corrected to 465 - previously 465 was hardcoded but 587 was saved to the database
 * Added 'Delete All Data' button to erase the stored tokens
 * OpenShift production problem: This environment didn't like the callback and there were possibly invalid characters in the source script
 
 = 0.1 =
-2015-01-19 - First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
+* 2015-01-19 - First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
