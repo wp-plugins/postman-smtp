@@ -11,6 +11,8 @@ Kiss your Gmail problems good-bye with Postman, the first and only OAuth-enabled
 
 == Description ==
 
+** Please Note: Testing FAILED in a GoDaddy environment with error "Warning: Cannot modify header information - headers already sent." I'm working on a fix **
+
 Having [trouble getting Gmail to send your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? You could ask Gmail to [allow less secure apps](https://support.google.com/accounts/answer/6010255), but only if you don't use Google Apps to manage your domain.
 
 As Google tightens their security, the proper solution is to send your mail with "the most up to date security measures", i.e. SMTPS with OAuth 2.0 authentication. As of July 2014, this is [recommended](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and in some cases, [required](https://support.google.com/accounts/answer/6010255) for sending mail via Gmail.
