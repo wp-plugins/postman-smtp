@@ -14,7 +14,7 @@ http://www.boxuk.com/blog/php-smtp-xoauth2-gmail/
 Creating a Gmail Token
 ----------------------
 
-Google Developer OAuth 2.0 Playgrounf
+Google Developer OAuth 2.0 Playground
 https://developers.google.com/oauthplayground/
 
 Google Developers Console
