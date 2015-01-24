@@ -192,10 +192,10 @@ namespace Postman {
 			if ($result) {
 				$_SESSION [PostmanAdminController::TEST_EMAIL_SUCCESS] = 'true';
 				unset ( $_SESSION [PostmanAdminController::TEST_EMAIL_FAILURE] );
-				print "<h3>No Errors :)</h3>";
+// 				print "<h3>No Errors :)</h3>";
 			} else {
 				unset ( $_SESSION [PostmanAdminController::TEST_EMAIL_SUCCESS] );
-				print "<h3>Failed |(</h3>";
+// 				print "<h3>Failed |(</h3>";
 				if ($engine->getException ()->getCode () == 334) {
 					$_SESSION [PostmanAdminController::TEST_EMAIL_FAILURE] = 'Communication Error [334].';
 				} else {
