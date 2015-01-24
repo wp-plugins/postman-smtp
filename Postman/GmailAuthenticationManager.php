@@ -34,7 +34,7 @@ namespace Postman {
 		/**
 		 * Constructor
 		 */
-		public function __construct(AuthenticationToken $authenticationToken) {
+		public function __construct(AuthenticationToken $authenticationToken, $gmailAddress) {
 			$this->authenticationToken = $authenticationToken;
 			// needs predictable access to the session
 			session_start ();
@@ -53,6 +53,7 @@ namespace Postman {
 			$client->setClientId ( $this->authenticationToken->getClientId () );
 			$client->setClientSecret ( $this->authenticationToken->getClientSecret () );
 			$client->setRedirectUri ( OAUTH_REDIRECT_URL );
+			$client->setLoginHint($gmailAddress);
 			$client->setScopes ( GmailAuthenticationManager::SCOPE );
 			// Set this to 'force' in order to get a new refresh_token.
 			// Useful if you had already granted access to this application.
@@ -93,7 +94,7 @@ namespace Postman {
 			$_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] = 'true';
 			$authUrl = $client->createAuthUrl ();
 			header ( 'Location: ' . filter_var ( $authUrl, FILTER_SANITIZE_URL ) );
-			die ();
+			exit ();
 		}
 		
 		/**

@@ -53,7 +53,7 @@ namespace Postman {
 			update_option ( POSTMAN_OPTIONS, $options );
 		}
 		header ( 'Location: ' . filter_var ( HOME_PAGE_URL, FILTER_SANITIZE_URL ) );
-		die ();
+		exit ();
 	} else {
 		$smtpOAuthMailerAdmin = new PostmanAdminController ();
 	}

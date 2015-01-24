@@ -211,8 +211,10 @@ namespace Postman {
 			}
 		}
 		public function handleGoogleAuthenticationAction() {
-			$authenticationToken = new AuthenticationToken ( get_option ( POSTMAN_OPTIONS ) );
-			$authenticationManager = new GmailAuthenticationManager ( $authenticationToken );
+			$userData = get_option ( POSTMAN_OPTIONS );
+			$options = new Options( $userData );
+			$authenticationToken = new AuthenticationToken ( $userData );
+			$authenticationManager = new GmailAuthenticationManager ( $authenticationToken, $options->getSenderEmail() );
 			$authenticationManager->authenticate ();
 		}
 		

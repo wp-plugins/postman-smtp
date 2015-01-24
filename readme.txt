@@ -21,10 +21,7 @@ Postman is intended for users who want to use Gmail's SMTP servers. Please be aw
 
 Tested on a RedHat OpenShift installation.
 
-Requirements:
-* A Gmail or Google Apps account
-* A Client ID from Google Developer
-* Port 465 (TCP, outbound) must be open
+Requirements: A Gmail or Google Apps account, a Client ID from Google Developer, Port 465 (TCP, outbound) must be open
 
 Your feedback is appreciated!! Please send feature requests and/or bug reports.
 
@@ -32,7 +29,7 @@ Your feedback is appreciated!! Please send feature requests and/or bug reports.
 
 = Why should I use Postman to deliver my mail? =
 
-*Postman* doesn't require your password to send email, only an *authentication token*. Other plugins need your Gmail password to send mail securely via SSL/TLS. **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
+Postman doesn't require your password to send email, only an *authentication token*. Other plugins need your Gmail password to send mail securely via SSL/TLS. **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = What is a Client ID? =
 To use Postman, every website needs their own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one. Google has [instructions for creating a Client ID](https://developers.google.com/console/help/new/#generatingoauth2), which I've expanded upon below.
@@ -70,7 +67,7 @@ Now accepts multiple recipients when sending email.
 == Changelog ==
 
 = 0.2.1 =
-* 2015-01-23 - Fixed an error that prevented Postman reloading the setting screen after sending a test e-mail
+* 2015-01-23 - Fixed an environment-specific error that prevented Postman reloading the setting screen after sending a test e-mail
 
 = 0.2 =
 * wp_mail accepts multiple recipients (array and string)
