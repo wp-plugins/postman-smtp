@@ -11,7 +11,7 @@ Kiss your Gmail problems good-bye with Postman, the first and only OAuth-enabled
 
 == Description ==
 
-Have you been having [trouble getting Gmail to send your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0 and [blocking traditional SMTP SSL/TLS](https://support.google.com/accounts/answer/6010255) mechanisms with Gmail.
+Have you been having [trouble getting Gmail to send your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking traditional SMTP SSL/TLS](https://support.google.com/accounts/answer/6010255) mechanisms with Gmail.
 
 You could ask Gmail to [allow less secure apps](https://support.google.com/accounts/answer/6010255), but that is not ideal and is unavailable to those who use Google Apps to manage a domain.
 
@@ -22,20 +22,9 @@ Postman is intended for users who want to use Gmail's SMTP servers. Please be aw
 Tested on a RedHat OpenShift installation.
 
 Requirements:
-
 * A Gmail or Google Apps account
 * A Client ID from Google Developer
 * Port 465 (TCP, outbound) must be open
-
-What's planned for the future:
-
-* Attachments and Custom Headers
-* Wizard interface
-* Ability to revoke the refresh token at Google
-* Ability to remove the stored token from WordPress
-* Namespacing of the external API's for compatibility with other plugins
-* WordPress MultiSite compatibility
-* Compatibility with other mail providers (e.g. Hotmail)
 
 Your feedback is appreciated!! Please send feature requests and/or bug reports.
 
@@ -81,7 +70,7 @@ Now accepts multiple recipients when sending email.
 == Changelog ==
 
 = 0.2.1 =
-* Fixed an error that prevented Postman reloading the setting screen after sending a test e-mail
+* 2015-01-23 - Fixed an error that prevented Postman reloading the setting screen after sending a test e-mail
 
 = 0.2 =
 * wp_mail accepts multiple recipients (array and string)
