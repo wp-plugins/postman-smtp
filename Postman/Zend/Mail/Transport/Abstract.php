@@ -24,7 +24,6 @@
 /**
  * @see Zend_Mime
  */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Mime.php';
 
 
 /**

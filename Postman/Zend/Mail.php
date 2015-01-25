@@ -23,22 +23,22 @@
 /**
  * @see Zend_Mail_Transport_Abstract
  */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Mail/Transport/Abstract.php';
+require_once 'Mail/Transport/Abstract.php';
 
 /**
  * @see Zend_Mime
  */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Mime.php';
+require_once 'Mime.php';
 
 /**
  * @see Zend_Mime_Message
  */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Mime/Message.php';
+require_once 'Mime/Message.php';
 
 /**
  * @see Zend_Mime_Part
  */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Mime/Part.php';
+require_once 'Mime/Part.php';
 
 
 /**

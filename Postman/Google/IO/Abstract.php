@@ -19,8 +19,6 @@
  * Abstract IO base class
  */
 
-require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Http/CacheParser.php';
-
 abstract class Google_IO_Abstract
 {
   const UNKNOWN_CODE = 0;

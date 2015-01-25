@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Logger/Null.php';
-require_once WP_PLUGIN_DIR . '/postman-smtp/Google/IO/Curl.php';
+require_once 'Logger/Null.php';
+require_once 'IO/Curl.php';
 
 /**
  * The Google API Client

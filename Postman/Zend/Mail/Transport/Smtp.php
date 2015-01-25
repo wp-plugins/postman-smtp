@@ -24,17 +24,15 @@
 /**
  * @see Zend_Mime
  */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Mime.php';
 
 /**
  * @see Zend_Mail_Protocol_Smtp
  */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Mail/Protocol/Smtp.php';
 
 /**
  * @see Zend_Mail_Transport_Abstract
  */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Mail/Transport/Abstract.php';
+require_once 'Abstract.php';
 
 
 /**

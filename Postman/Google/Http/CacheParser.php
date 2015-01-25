@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Auth/Exception.php';
-
 /**
  * Implement the caching directives specified in rfc2616. This
  * implementation is guided by the guidance offered in rfc2616-sec13.

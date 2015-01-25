@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,27 @@
  * limitations under the License.
  */
 
-require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Exception.php';
+require_once 'Abstract.php';
 
-class Google_Auth_Exception extends Google_Exception
+/**
+ * Null logger based on the PSR-3 standard.
+ *
+ * This logger simply discards all messages.
+ */
+class Google_Logger_Null extends Google_Logger_Abstract
 {
+  /**
+   * {@inheritdoc}
+   */
+  public function shouldHandle($level)
+  {
+    return false;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function write($message, array $context = array())
+  {
+  }
 }

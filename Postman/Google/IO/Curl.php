@@ -21,8 +21,8 @@
  * @author Stuart Langley <slangley@google.com>
  */
 
-require_once WP_PLUGIN_DIR . '/postman-smtp/Google/IO/Abstract.php';
-require_once WP_PLUGIN_DIR . '/postman-smtp/Google/IO/Exception.php';
+require_once 'Abstract.php';
+require_once 'Exception.php';
 
 class Google_IO_Curl extends Google_IO_Abstract
 {

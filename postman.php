@@ -12,8 +12,6 @@
  */
 namespace Postman {
 
-	define ( 'WP_PLUGIN_DIR', plugin_dir_path ( __FILE__ ) );
-	
 	define ( 'POSTMAN_NAME', 'Postman SMTP' );
 	define ( 'POSTMAN_SLUG', 'postman' );
 	define ( 'POSTMAN_TEST_SLUG', 'postman-test' );
@@ -27,8 +25,6 @@ namespace Postman {
 	define ( 'OAUTH_REDIRECT_URL', admin_url ( 'options-general.php' ) );
 	define ( 'HOME_PAGE_URL', OAUTH_REDIRECT_URL . '?page=postman' );
 	
-	define ( 'Postman\DEBUG', false );
-	
 	require_once 'Postman/PostmanOAuthSmtpEngine.php';
 	require_once 'Postman/PostmanAdminController.php';
 	require_once 'Postman/GmailAuthenticationManager.php';
@@ -36,10 +32,12 @@ namespace Postman {
 	require_once 'Postman/Options.php';
 	require_once 'Postman/WordPressUtils.php';
 	
-	require_once 'Zend/Mail/Transport/Smtp.php';
-	require_once 'Zend/Mail.php';
+	require_once 'Postman/Zend/Mail/Transport/Smtp.php';
+	require_once 'Postman/Zend/Mail.php';
 	
-	session_start ();
+	if (! isset ( $_SESSION )) {
+		session_start ();
+	}
 	
 	if (isset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
 		unset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );

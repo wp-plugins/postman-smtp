@@ -2,15 +2,18 @@
 
 namespace Postman {
 
-	require_once WP_PLUGIN_DIR . '/postman-smtp/Postman/AuthenticationManager.php';
+	require_once 'AuthenticationManager.php';
 	
-	require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Client.php';
-	require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Service/Oauth2.php';
-	require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Model.php';
-	require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Service.php';
-	require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Service/Resource.php';
-	require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Config.php';
-	require_once WP_PLUGIN_DIR . '/postman-smtp/Google/Auth/OAuth2.php';
+	require_once 'Google/Auth/OAuth2.php';
+	require_once 'Google/Exception.php';
+	require_once 'Google/Auth/Exception.php';
+	require_once 'Google/Client.php';
+	require_once 'Google/Config.php';
+	require_once 'Google/Http/CacheParser.php';
+	require_once 'Google/Model.php';
+	require_once 'Google/Service.php';
+	require_once 'Google/Service/Oauth2.php';
+	require_once 'Google/Service/Resource.php';
 	
 	/**
 	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api

@@ -19,7 +19,6 @@ namespace Postman {
 		 * Start up
 		 */
 		public function __construct() {
-			session_start ();
 			$this->options = get_option ( POSTMAN_OPTIONS );
 			
 			add_action ( 'admin_menu', array (
