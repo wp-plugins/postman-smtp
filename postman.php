@@ -25,38 +25,20 @@ namespace Postman {
 	define ( 'OAUTH_REDIRECT_URL', admin_url ( 'options-general.php' ) );
 	define ( 'HOME_PAGE_URL', OAUTH_REDIRECT_URL . '?page=postman' );
 	
-	require_once 'Postman/PostmanOAuthSmtpEngine.php';
-	require_once 'Postman/PostmanAdminController.php';
+	require_once 'Postman/OAuthSmtpEngine.php';
+	require_once 'Postman/AdminController.php';
 	require_once 'Postman/GmailAuthenticationManager.php';
-	require_once 'Postman/AuthenticationToken.php';
-	require_once 'Postman/Options.php';
+	require_once 'Postman/OptionsUtil.php';
 	require_once 'Postman/WordPressUtils.php';
 	
-	require_once 'Postman/Zend/Mail/Transport/Smtp.php';
-	require_once 'Postman/Zend/Mail.php';
+	assert_options ( ASSERT_BAIL, true );
 	
 	if (! isset ( $_SESSION )) {
+		// needs predictable access to the session
 		session_start ();
 	}
 	
-	if (isset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
-		unset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
-		$authenticationToken = new AuthenticationToken ( get_option ( POSTMAN_OPTIONS ) );
-		$gmailAuthenticationManager = new GmailAuthenticationManager ( $authenticationToken );
-		if ($gmailAuthenticationManager->tradeCodeForToken ()) {
-			$options = get_option ( POSTMAN_OPTIONS );
-			$options [Options::ACCESS_TOKEN] = $authenticationToken->getAccessToken ();
-			$options [Options::REFRESH_TOKEN] = $authenticationToken->getRefreshToken ();
-			$options [Options::TOKEN_EXPIRES] = $authenticationToken->getExpiryTime ();
-			update_option ( POSTMAN_OPTIONS, $options );
-		}
-		header ( 'Location: ' . filter_var ( HOME_PAGE_URL, FILTER_SANITIZE_URL ) );
-		exit ();
-	} else {
-		$smtpOAuthMailerAdmin = new PostmanAdminController ();
-	}
-	function saveOptions(AuthenticationToken $authenticationToken) {
-	}
+	$kevinCostener = new AdminController ( plugin_basename ( __FILE__ ) );
 	
 	/**
 	 *
@@ -72,36 +54,37 @@ namespace Postman {
 	 *        	(string or array) (optional) Files to attach: a single filename, an array of filenames, or a newline-delimited string list of multiple filenames. (advanced) Default: Empty
 	 */
 	function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
-		$engine = new PostmanOAuthSmtpEngine ();
+		$engine = new OAuthSmtpEngine ();
 		$engine->setBodyText ( $message );
 		$engine->setSubject ( $subject );
 		$engine->addTo ( $to );
 		return $engine->send ();
 	}
+	function debug($text) {
+		error_log ( "PostmanSmtp: " . $text );
+	}
+	function addError($message) {
+		$_SESSION [AdminController::ERROR_MESSAGE] = $message;
+	}
+	function addWarning($message) {
+		$_SESSION [AdminController::WARNING_MESSAGE] = $message;
+	}
+	function addMessage($message) {
+		$_SESSION [AdminController::SUCCESS_MESSAGE] = $message;
+	}
 }
 
 namespace {
 
-	$options = get_option ( POSTMAN_OPTIONS );
-	if ($smtpOAuthMailerAdmin->isRequestOAuthPermissiongAllowed () && $smtpOAuthMailerAdmin->isSendingEmailAllowed ()) {
+	if ($kevinCostener->isRequestOAuthPermissiongAllowed () && $kevinCostener->isSendingEmailAllowed ()) {
 		if (! function_exists ( 'wp_mail' )) {
 			function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
 				return call_user_func_array ( '\Postman\wp_mail', func_get_args () );
 			}
 		} else {
-			$smtpOAuthMailerAdmin->addWarningUnableToImplementWpMail ();
+			$kevinCostener->addWarningUnableToImplementWpMail ();
 		}
-	}
-	
-	// Adds "Settings" link to the plugin action page
-	add_filter ( 'plugin_action_links_' . plugin_basename ( __FILE__ ), 'add_action_links' );
-	
-	//
-	function add_action_links($links) {
-		$mylinks = array (
-				'<a href="' . HOME_PAGE_URL . '">Settings</a>' 
-		);
-		return array_merge ( $links, $mylinks );
+	} else {
 	}
 }
 ?>

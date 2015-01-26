@@ -2,7 +2,20 @@
 
 namespace Postman {
 
-	require_once 'PostmanSmtpEngine.php';
+	require_once 'SmtpEngine.php';
+	
+	require_once 'Zend/Registry.php';
+	require_once 'Zend/Mime.php';
+	require_once 'Zend/Validate.php';
+	require_once 'Zend/Validate/Hostname.php';
+	require_once 'Zend/Mail.php';
+	require_once 'Zend/Loader.php';
+	require_once 'Zend/Loader/Autoloader.php';
+	require_once 'Zend/Mail/Transport/Smtp.php';
+	require_once 'Zend/Exception.php';
+	require_once 'Zend/Mail/Exception.php';
+	require_once 'Zend/Mail/Protocol/Smtp.php';
+	require_once 'Zend/Mail/Protocol/Smtp/Auth/Oauth2.php';
 	
 	/**
 	 * This class knows how to interface with Wordpress
@@ -11,7 +24,7 @@ namespace Postman {
 	 * @author jasonhendriks
 	 *        
 	 */
-	class PostmanOAuthSmtpEngine implements PostmanSmtpEngine {
+	class OAuthSmtpEngine implements SmtpEngine {
 		
 		// define some constants
 		const ZEND_TRANSPORT_CONFIG_SSL = 'ssl';
@@ -21,18 +34,17 @@ namespace Postman {
 		const AUTH_VALUE = 'oauth2';
 		const SSL_VALUE = 'ssl';
 		
+		//
+		private $options;
+		
 		// this class wraps Zend_Mail
 		private $mail;
-		private $postmanOptions;
-		private $authenticationToken;
 		private $exception;
 		
 		// constructor
-		function __construct() {
+		function __construct(&$options) {
+			$this->options = &$options;
 			$this->mail = new \Zend_Mail ();
-			$options = get_option ( POSTMAN_OPTIONS );
-			$this->postmanOptions = new Options ( $options );
-			$this->authenticationToken = new AuthenticationToken ( $options );
 		}
 		
 		/**
@@ -43,10 +55,12 @@ namespace Postman {
 		public function send() {
 			
 			// refresh the authentication token, if necessary
-			$this->verifyAndRefreshAuthToken ();
-			
-			// send mail
-			return $this->sendMail ();
+			if ($this->verifyAndRefreshAuthToken ()) {
+				// send mail
+				return $this->sendMail ();
+			} else {
+				return false;
+			}
 		}
 		
 		/**
@@ -54,18 +68,25 @@ namespace Postman {
 		 */
 		private function verifyAndRefreshAuthToken() {
 			// create an auth manager
-			$authenticationManager = new GmailAuthenticationManager ( $this->authenticationToken );
+			$authenticationManager = new GmailAuthenticationManager ( $this->options );
 			
 			// ensure the token is up-to-date
-			if ($authenticationManager->isTokenExpired ()) {
-				$authenticationManager->refreshToken ();
-				$options = get_option ( POSTMAN_OPTIONS );
-				$options [Options::ACCESS_TOKEN] = $this->authenticationToken->getAccessToken ();
-				$options [Options::TOKEN_EXPIRES] = $this->authenticationToken->getExpiryTime ();
-				update_option ( POSTMAN_OPTIONS, $options );
+			try {
+				if ($authenticationManager->isTokenExpired ()) {
+					debug ( 'Access Token has expired, attempting refresh' );
+					$authenticationManager->refreshToken ();
+				}
+				return true;
+			} catch ( \Exception $e ) {
+				$this->exception = $e;
+				debug ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
+				return false;
 			}
 		}
-		
+		public function validateEmail($email) {
+			$exp = "/^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$/i";
+			return preg_match ( $exp, $email );
+		}
 		/**
 		 * Uses ZendMail to send the message
 		 *
@@ -73,54 +94,36 @@ namespace Postman {
 		 */
 		private function sendMail() {
 			// create the options for authentication
-			$initClientRequestEncoded = base64_encode ( "user={$this->postmanOptions->getSenderEmail()}\1auth=Bearer {$this->authenticationToken->getAccessToken()}\1\1" );
+			$senderEmail = OptionsUtil::getSenderEmail ( $this->options );
+			assert ( ! empty ( $senderEmail ) );
+			assert ( $this->validateEmail ( $senderEmail ) );
+			$accessToken = OptionsUtil::getAccessToken ( $this->options );
+			assert ( ! empty ( $accessToken ) );
+			$port = OptionsUtil::getPort ( $this->options );
+			assert ( ! empty ( $port ) );
+			$hostname = OptionsUtil::getHostname ( $this->options );
+			assert ( ! empty ( $hostname ) );
+			$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$accessToken}\1\1" );
+			debug ( 'initClientRequest=' . base64_decode ( $initClientRequestEncoded ) );
+			assert ( ! empty ( $initClientRequestEncoded ) );
 			$config = array (
-					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => PostmanOAuthSmtpEngine::SSL_VALUE,
-					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_PORT => $this->postmanOptions->getPort (),
-					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_AUTH => PostmanOAuthSmtpEngine::AUTH_VALUE,
-					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_XOAUTH2_REQUEST => $initClientRequestEncoded 
+					OAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => OAuthSmtpEngine::SSL_VALUE,
+					OAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_PORT => $port,
+					OAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_AUTH => OAuthSmtpEngine::AUTH_VALUE,
+					OAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_XOAUTH2_REQUEST => $initClientRequestEncoded 
 			);
 			
 			// create the SMTP transport
-			$transport = new \Zend_Mail_Transport_Smtp ( $this->postmanOptions->getHostname (), $config );
+			$transport = new \Zend_Mail_Transport_Smtp ( $hostname, $config );
 			try {
-				$this->mail->setFrom ( $this->postmanOptions->getSenderEmail () );
-				
-				if (\Postman\DEBUG) {
-					echo "<h3>clientRequest</h3>";
-					var_dump ( $initClientRequestEncoded );
-					echo "<h3>config</h3>";
-					var_dump ( $config );
-					echo "<h3>transport</h3>";
-					var_dump ( $transport );
-					echo "<h3>mail</h3>";
-					var_dump ( $this->mail );
-					echo "<br/>";
-				}
+				$this->mail->setFrom ( $senderEmail );
+				assert ( ! empty ( $transport ) );
 				$this->mail->send ( $transport );
+				return true;
 			} catch ( \Zend_Mail_Protocol_Exception $e ) {
 				$this->exception = $e;
-				if (\Postman\DEBUG) {
-					echo "Caught exception: " . get_class ( $e ) . "\n";
-					echo "Message: " . $e->getMessage () . "\n";
-					echo "Code: " . $e->getCode () . "\n";
-				}
+				debug ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
 				return false;
-			}
-			return true;
-		}
-		
-		/**
-		 * Print the internal state
-		 */
-		public function toString() {
-			if (\Postman\DEBUG) {
-				print "authEmail=" . $this->postmanOptions->email . "\n";
-				print "authToken=" . $this->authenticationToken->accessToken . "\n";
-				print "server=" . $this->postmanOptions->hostname . "\n";
-				print "from=" . $this->mail->getFrom () . "\n";
-				print "to=" . implode ( "|", $this->mail->getRecipients () ) . "\n";
-				print "subject=" . $this->mail->getSubject () . "\n";
 			}
 		}
 		
@@ -158,7 +161,7 @@ namespace Postman {
 		 * For the string version, each header line (beginning with From:, Cc:, etc.) is delimited with a newline ("\r\n")
 		 *
 		 * @todo http://framework.zend.com/manual/1.12/en/zend.mail.additional-headers.html
-		 *
+		 *      
 		 */
 		function setHeaders($header) {
 			// $this->mail->addHeader ( $header );
