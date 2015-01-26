@@ -22,7 +22,7 @@
 /**
  * @see Zend_Validate_Interface
  */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Validate/Interface.php';
+require_once 'Validate/Interface.php';
 
 /**
  * @category   Zend

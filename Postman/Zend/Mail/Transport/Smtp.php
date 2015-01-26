@@ -190,7 +190,7 @@ class Zend_Mail_Transport_Smtp extends Zend_Mail_Transport_Abstract
                 $connectionClass .= '_Auth_' . ucwords($this->_auth);
             }
             if (!class_exists($connectionClass)) {
-                require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Loader.php';
+                // require_once 'Zend/Loader.php';
                 Zend_Loader::loadClass($connectionClass);
             }
             $this->setConnection(new $connectionClass($this->_host, $this->_port, $this->_config));

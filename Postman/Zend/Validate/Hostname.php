@@ -22,12 +22,12 @@
 /**
  * @see Zend_Validate_Abstract
  */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Validate/Abstract.php';
+require_once 'Abstract.php';
 
 /**
  * @see Zend_Validate_Ip
  */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Validate/Ip.php';
+require_once 'Ip.php';
 
 /**
  * Please note there are two standalone test scripts for testing IDN characters due to problems

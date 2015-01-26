@@ -21,7 +21,6 @@
  */
 
 /** Zend_Loader */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Loader.php';
 
 /**
  * Autoloader stack and namespace autoloader

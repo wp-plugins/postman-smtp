@@ -23,7 +23,6 @@
 /**
  * @see Zend_Mail_Protocol_Smtp
  */
-require_once WP_PLUGIN_DIR . '/postman-smtp/Zend/Mail/Protocol/Smtp.php';
  
 /**
  * Performs Oauth2 authentication
