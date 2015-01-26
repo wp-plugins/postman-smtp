@@ -16,7 +16,7 @@ namespace Postman {
 			
 			// send through wp_mail
 			$result = wp_mail ( $recipient, $subject, $message . ' - sent by Postman via wp_mail()' );
-			$result = false;
+			
 			if (! $result) {
 				debug ( 'wp_mail failed :( re-trying through the internal engine' );
 				// send through our own engine
