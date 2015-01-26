@@ -21,7 +21,7 @@ Postman is intended for users who want to use Gmail's SMTP servers. Please be aw
 
 Tested on a RedHat OpenShift installation.
 
-Requirements: A Gmail or Google Apps account, a Client ID from Google Developer, Port 465 (TCP, outbound) must be open
+Requirements: PHP 5.3, a Gmail or Google Apps account, a Client ID from Google Developer, Port 465 (TCP, outbound) must be open
 
 Your feedback is appreciated!! Please send feature requests and/or bug reports.
 
