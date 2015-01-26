@@ -82,7 +82,6 @@ namespace {
 		} else {
 			$kevinCostener->addWarningUnableToImplementWpMail ();
 		}
-	} else {
 	}
 }
 ?>
