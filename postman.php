@@ -4,7 +4,7 @@
  * Plugin Name: Postman OAuth SMTP
  * Plugin URI: https://wordpress.org/plugins/postman/
  * Description: Send your mail with your Gmail account by adding what Google calls "the latest security measures" (i.e. SMTPS with OAuth 2.0 authentication). As of July 2014, this is <a href="http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html">recommended</a> and in some cases, <a href="https://support.google.com/accounts/answer/6010255">required</a> for sending mail via Gmail. Hotmail support will be added in a future release.
- * Version: 0.2.2
+ * Version: 0.2.3
  * Author: Jason Hendriks
  * Author URI: https://profiles.wordpress.org/jasonhendriks/
  * License: GPLv2 or later
@@ -52,7 +52,8 @@ namespace Postman {
 	 *        	(string or array) (optional) Files to attach: a single filename, an array of filenames, or a newline-delimited string list of multiple filenames. (advanced) Default: Empty
 	 */
 	function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
-		$engine = new OAuthSmtpEngine ();
+		$options = get_option ( POSTMAN_OPTIONS );
+		$engine = new OAuthSmtpEngine ( $options );
 		$engine->setBodyText ( $message );
 		$engine->setSubject ( $subject );
 		$engine->addTo ( $to );

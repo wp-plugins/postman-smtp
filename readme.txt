@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, phpmailer, wp_mail, gmail, google apps
 Requires at least: 3.8
 Tested up to: 4.1
-Stable tag: 0.2.1
+Stable tag: 0.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,7 +66,7 @@ Now accepts multiple recipients when sending email.
 
 == Changelog ==
 
-= 0.2.2 - 2015-01-25 =
+= 0.2.3 - 2015-01-25 =
 * Fixed problems on servers with the plugin installed as a symbolic link.
 * Better error handling and reporting. Supports php logging and assertions.
 
@@ -86,7 +86,7 @@ Now accepts multiple recipients when sending email.
 
 == Upgrade Notice ==
 
-= 0.2.2 =
+= 0.2.3 =
 Fixed problem installing on servers where the plugin directory is a symbolic link.
 
 = 0.2.1 =
