@@ -15,29 +15,29 @@ namespace Postman {
 	define ( 'POSTMAN_NAME', 'Postman SMTP' );
 	define ( 'POSTMAN_SLUG', 'postman' );
 	define ( 'POSTMAN_TEST_SLUG', 'postman-test' );
-
+	
 	define ( 'POSTMAN_OPTIONS', 'postman_options' );
 	define ( 'POSTMAN_TEST_OPTIONS', 'postman_test_options' );
 	define ( 'POSTMAN_PAGE_TITLE', POSTMAN_NAME . ' Settings' );
 	define ( 'POSTMAN_MENU_TITLE', POSTMAN_NAME );
 	define ( 'POSTMAN_PLUGIN_DIRECTORY', POSTMAN_SLUG );
-
+	
 	define ( 'OAUTH_REDIRECT_URL', admin_url ( 'options-general.php' ) );
 	define ( 'HOME_PAGE_URL', OAUTH_REDIRECT_URL . '?page=postman' );
-
+	
 	require_once 'Postman/OAuthSmtpEngine.php';
 	require_once 'Postman/AdminController.php';
 	require_once 'Postman/GmailAuthenticationManager.php';
 	require_once 'Postman/OptionsUtil.php';
 	require_once 'Postman/WordPressUtils.php';
-
+	
 	if (! isset ( $_SESSION )) {
 		// needs predictable access to the session
 		session_start ();
 	}
-
+	
 	$kevinCostener = new AdminController ( plugin_basename ( __FILE__ ) );
-
+	
 	/**
 	 *
 	 * @param unknown $to
