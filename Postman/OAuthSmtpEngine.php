@@ -43,6 +43,7 @@ namespace Postman {
 		
 		// constructor
 		function __construct(&$options) {
+			assert ( ! empty ( $options ) );
 			$this->options = &$options;
 			$this->mail = new \Zend_Mail ();
 		}

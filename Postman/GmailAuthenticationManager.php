@@ -27,6 +27,7 @@ namespace Postman {
 		 * Constructor
 		 */
 		public function __construct(&$options) {
+			assert ( ! empty ( $options ) );
 			$this->options = &$options;
 			require_once 'google-api-php-client-1.1.2/autoload.php';
 		}
