@@ -18,12 +18,15 @@ namespace Postman {
 		const HOSTNAME = 'hostname';
 		const TEST_EMAIL = 'test_email';
 		public static function getHostname($options) {
+			if(isset($options [OptionsUtil::HOSTNAME]))
 			return $options [OptionsUtil::HOSTNAME];
 		}
 		public static function getPort($options) {
+			if(isset($options [OptionsUtil::PORT]))
 			return $options [OptionsUtil::PORT];
 		}
 		public static function getSenderEmail($options) {
+			if(isset($options [OptionsUtil::SENDER_EMAIL]))
 			return $options [OptionsUtil::SENDER_EMAIL];
 		}
 		public static function getClientId($options) {
@@ -31,12 +34,15 @@ namespace Postman {
 				return $options [OptionsUtil::CLIENT_ID];
 		}
 		public static function getClientSecret($options) {
-			return $options [OptionsUtil::CLIENT_SECRET];
+			if (isset ( $options [OptionsUtil::CLIENT_SECRET] ))
+				return $options [OptionsUtil::CLIENT_SECRET];
 		}
 		public static function getTestEmail($options) {
+			if(isset($options [OptionsUtil::TEST_EMAIL]))
 			return $options [OptionsUtil::TEST_EMAIL];
 		}
 		public static function getSmtpType($options) {
+			if(isset($options [OptionsUtil::SMTP_TYPE]))
 			return $options [OptionsUtil::SMTP_TYPE];
 		}
 		public static function getTokenExpiryTime($options) {
@@ -44,10 +50,12 @@ namespace Postman {
 				return $options [OptionsUtil::TOKEN_EXPIRES];
 		}
 		public static function getAccessToken($options) {
-			return $options [OptionsUtil::ACCESS_TOKEN];
+			if (isset ( $options [OptionsUtil::ACCESS_TOKEN] ))
+				return $options [OptionsUtil::ACCESS_TOKEN];
 		}
 		public static function getRefreshToken($options) {
-			return $options [OptionsUtil::REFRESH_TOKEN];
+			if (isset ( $options [OptionsUtil::REFRESH_TOKEN] ))
+				return $options [OptionsUtil::REFRESH_TOKEN];
 		}
 		public static function updateAccessToken($authenticationToken, array &$options) {
 			$options [OptionsUtil::ACCESS_TOKEN] = $authenticationToken;
