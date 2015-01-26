@@ -31,8 +31,6 @@ namespace Postman {
 	require_once 'Postman/OptionsUtil.php';
 	require_once 'Postman/WordPressUtils.php';
 	
-	assert_options ( ASSERT_BAIL, true );
-	
 	if (! isset ( $_SESSION )) {
 		// needs predictable access to the session
 		session_start ();
