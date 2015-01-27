@@ -66,6 +66,9 @@ Now accepts multiple recipients when sending email.
 
 == Changelog ==
 
+= 0.2.5 - 2015-01-27 =
+* Removed the namespace for users with older version of PHP
+
 = 0.2.4 - 2015-01-25 =
 * Fixed problems on servers with the plugin installed as a symbolic link.
 * Better error handling and reporting. Supports php logging and assertions.
@@ -85,6 +88,9 @@ Now accepts multiple recipients when sending email.
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 0.2.5 =
+Can now install on PHP versions less than 5.3
 
 = 0.2.4 =
 Fixed problem installing on servers where the plugin directory is a symbolic link.
