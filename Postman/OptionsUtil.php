@@ -1,70 +1,63 @@
 <?php
-
-namespace Postman {
-
+if (! class_exists ( "PostmanOptionUtil" )) {
+	
 	/**
 	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api
 	 * http://pastebin.com/jA9sBNTk
 	 */
-	class OptionsUtil {
+	class PostmanOptionUtil {
 		const CLIENT_ID = 'oauth_client_id';
 		const CLIENT_SECRET = 'oauth_client_secret';
-		const REFRESH_TOKEN = 'refresh_token';
-		const TOKEN_EXPIRES = 'auth_token_expires';
-		const ACCESS_TOKEN = 'access_token';
 		const SMTP_TYPE = 'smtp_type';
 		const SENDER_EMAIL = 'sender_email';
 		const PORT = 'port';
 		const HOSTNAME = 'hostname';
 		const TEST_EMAIL = 'test_email';
+		
+		//
 		public static function getHostname($options) {
-			if(isset($options [OptionsUtil::HOSTNAME]))
-			return $options [OptionsUtil::HOSTNAME];
+			if (isset ( $options [PostmanOptionUtil::HOSTNAME] ))
+				return $options [PostmanOptionUtil::HOSTNAME];
 		}
 		public static function getPort($options) {
-			if(isset($options [OptionsUtil::PORT]))
-			return $options [OptionsUtil::PORT];
+			if (isset ( $options [PostmanOptionUtil::PORT] ))
+				return $options [PostmanOptionUtil::PORT];
 		}
 		public static function getSenderEmail($options) {
-			if(isset($options [OptionsUtil::SENDER_EMAIL]))
-			return $options [OptionsUtil::SENDER_EMAIL];
+			if (isset ( $options [PostmanOptionUtil::SENDER_EMAIL] ))
+				return $options [PostmanOptionUtil::SENDER_EMAIL];
 		}
 		public static function getClientId($options) {
-			if (isset ( $options [OptionsUtil::CLIENT_ID] ))
-				return $options [OptionsUtil::CLIENT_ID];
+			if (isset ( $options [PostmanOptionUtil::CLIENT_ID] ))
+				return $options [PostmanOptionUtil::CLIENT_ID];
 		}
 		public static function getClientSecret($options) {
-			if (isset ( $options [OptionsUtil::CLIENT_SECRET] ))
-				return $options [OptionsUtil::CLIENT_SECRET];
+			if (isset ( $options [PostmanOptionUtil::CLIENT_SECRET] ))
+				return $options [PostmanOptionUtil::CLIENT_SECRET];
 		}
 		public static function getTestEmail($options) {
-			if(isset($options [OptionsUtil::TEST_EMAIL]))
-			return $options [OptionsUtil::TEST_EMAIL];
+			if (isset ( $options [PostmanOptionUtil::TEST_EMAIL] ))
+				return $options [PostmanOptionUtil::TEST_EMAIL];
 		}
 		public static function getSmtpType($options) {
-			if(isset($options [OptionsUtil::SMTP_TYPE]))
-			return $options [OptionsUtil::SMTP_TYPE];
-		}
-		public static function getTokenExpiryTime($options) {
-			if (isset ( $options [OptionsUtil::TOKEN_EXPIRES] ))
-				return $options [OptionsUtil::TOKEN_EXPIRES];
-		}
-		public static function getAccessToken($options) {
-			if (isset ( $options [OptionsUtil::ACCESS_TOKEN] ))
-				return $options [OptionsUtil::ACCESS_TOKEN];
-		}
-		public static function getRefreshToken($options) {
-			if (isset ( $options [OptionsUtil::REFRESH_TOKEN] ))
-				return $options [OptionsUtil::REFRESH_TOKEN];
+			if (isset ( $options [PostmanOptionUtil::SMTP_TYPE] ))
+				return $options [PostmanOptionUtil::SMTP_TYPE];
 		}
 		public static function updateAccessToken($authenticationToken, array &$options) {
-			$options [OptionsUtil::ACCESS_TOKEN] = $authenticationToken;
+			$options [PostmanOptionUtil::ACCESS_TOKEN] = $authenticationToken;
 		}
 		public static function updateRefreshToken($refreshToken, array &$options) {
-			$options [OptionsUtil::REFRESH_TOKEN] = $refreshToken;
+			$options [PostmanOptionUtil::REFRESH_TOKEN] = $refreshToken;
 		}
 		public static function updateTokenExpiryTime($time, array &$options) {
-			$options [OptionsUtil::TOKEN_EXPIRES] = $time;
+			$options [PostmanOptionUtil::TOKEN_EXPIRES] = $time;
+		}
+		public static function debug(PostmanLogger $logger, array $options) {
+			$logger->debug ( 'Sender Email=' . PostmanOptionUtil::getSenderEmail ( $options ) );
+			$logger->debug ( 'Host=' . PostmanOptionUtil::getHostname ( $options ) );
+			$logger->debug ( 'Port=' . PostmanOptionUtil::getPort ( $options ) );
+			$logger->debug ( 'Client Id=' . PostmanOptionUtil::getClientId ( $options ) );
+			$logger->debug ( 'Client Secret=' . PostmanOptionUtil::getClientSecret ( $options ) );
 		}
 	}
 }

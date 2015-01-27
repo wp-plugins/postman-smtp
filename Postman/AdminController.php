@@ -1,16 +1,40 @@
 <?php
-
-namespace Postman {
-
+if (! class_exists ( "PostmanAdminController" )) {
+	
 	require_once "SendTestEmailController.php";
 	
 	//
-	class AdminController {
+	class PostmanAdminController {
+		// UI defaults
 		const DEFAULT_GMAIL_OAUTH_HOSTNAME = 'smtp.gmail.com';
 		const DEFAULT_GMAIL_OAUTH_PORT = 465;
+		
+		// The Postman Group is used for saving data, make sure it is globally unique
+		const SETTINGS_GROUP_NAME = 'postman_group';
+		
+		// The Session variables that carry messages
 		const ERROR_MESSAGE = 'POSTMAN_ERROR_MESSAGE';
 		const WARNING_MESSAGE = 'POSTMAN_WARNING_MESSAGE';
 		const SUCCESS_MESSAGE = 'POSTMAN_SUCCESS_MESSAGE';
+		
+		// a database entry specifically for the form that sends test e-mail
+		const TEST_OPTIONS = 'postman_test_options';
+		
+		// page titles
+		const NAME = 'Postman SMTP';
+		const PAGE_TITLE = 'Postman SMTP Settings';
+		const MENU_TITLE = 'Postman SMTP';
+		
+		// slugs
+		const POSTMAN_SLUG = 'postman';
+		const POSTMAN_TEST_SLUG = 'postman-test';
+		
+		//
+		private $logger;
+		private $util;
+		
+		// the Authorization Token
+		private $authorizationToken;
 		
 		/**
 		 * Holds the values to be used in the fields callbacks
@@ -22,7 +46,11 @@ namespace Postman {
 		 * Start up
 		 */
 		public function __construct($basename) {
-			$this->options = get_option ( POSTMAN_OPTIONS );
+			$this->logger = new PostmanLogger ();
+			$this->util = new PostmanWordpressUtil ();
+			$this->options = get_option ( PostmanWordpressUtil::POSTMAN_OPTIONS );
+			$this->authorizationToken = new PostmanAuthorizationToken ();
+			$this->authorizationToken->load ();
 			
 			// Adds "Settings" link to the plugin action page
 			add_filter ( 'plugin_action_links_' . $basename, array (
@@ -66,7 +94,7 @@ namespace Postman {
 				// }
 			}
 			
-			if (isset ( $_SESSION [AdminController::ERROR_MESSAGE] )) {
+			if (isset ( $_SESSION [PostmanAdminController::ERROR_MESSAGE] )) {
 				add_action ( 'admin_notices', Array (
 						$this,
 						'displayErrorMessage' 
@@ -79,7 +107,7 @@ namespace Postman {
 				// }
 			}
 			
-			if (isset ( $_SESSION [AdminController::WARNING_MESSAGE] )) {
+			if (isset ( $_SESSION [PostmanAdminController::WARNING_MESSAGE] )) {
 				add_action ( 'admin_notices', Array (
 						$this,
 						'displayWarningMessage' 
@@ -92,7 +120,7 @@ namespace Postman {
 				// }
 			}
 			
-			if (isset ( $_SESSION [AdminController::SUCCESS_MESSAGE] )) {
+			if (isset ( $_SESSION [PostmanAdminController::SUCCESS_MESSAGE] )) {
 				add_action ( 'admin_notices', Array (
 						$this,
 						'displaySuccessMessage' 
@@ -106,62 +134,61 @@ namespace Postman {
 			}
 			
 			if (isset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
-				debug ( 'Authorization in progress' );
-				unset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
-				$gmailAuthenticationManager = new GmailAuthenticationManager ( $this->options );
-				try {
-					if ($gmailAuthenticationManager->tradeCodeForToken ()) {
-						debug ( 'Authorization successful' );
-					} else {
-						addWarning ( 'Google did not grant Postman permission.' );
+				if (isset ( $_GET ['code'] )) {
+					$this->logger->debug ( 'Authorization in progress' );
+					unset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
+					
+					$authenticationManager = PostmanAuthenticationManagerFactory::createAuthenticationManager ( $this->options, $this->authorizationToken );
+					try {
+						if ($authenticationManager->tradeCodeForToken ()) {
+							$this->logger->debug ( 'Authorization successful' );
+							// save to database
+							$this->authorizationToken->save ();
+						} else {
+							$this->util->addError ( 'Your email provider did not grant Postman permission. Try again.' );
+						}
+					} catch ( Google_Auth_Exception $e ) {
+						$this->logger->debug ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
+						$this->util->addError ( 'Error authenticating with this Client ID - please create a new one. [<em>' . $e->getMessage () . ' code=' . $e->getCode () . '</em>]' );
 					}
-				} catch ( \Google_Auth_Exception $e ) {
-					debug ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
-					addError ( 'Error authenticating with Google - please create a new <b>Client Id</b> and <b>Client Secret</b>. [<em>' . $e->getMessage () . ' code=' . $e->getCode () . '</em>]' );
+					header ( 'Location: ' . esc_url ( POSTMAN_HOME_PAGE_URL ) );
+					exit ();
+				} else {
+					// recover from an aborted Authorization (back button or cancel triggers this)
+					unset ( $_SESSION [PostmanAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
+					// continue on with the current request.... do not die()
 				}
-				header ( 'Location: ' . filter_var ( HOME_PAGE_URL, FILTER_SANITIZE_URL ) );
-				exit ();
 			}
 		}
 		//
 		public function add_action_links($links) {
 			$mylinks = array (
-					'<a href="' . HOME_PAGE_URL . '">Settings</a>' 
+					'<a href="' . esc_url ( POSTMAN_HOME_PAGE_URL ) . '">Settings</a>' 
 			);
 			return array_merge ( $links, $mylinks );
 		}
 		public function handlePurgeDataAction() {
-			$emptyOptions = array ();
-			update_option ( POSTMAN_OPTIONS, $emptyOptions );
-			wp_redirect ( HOME_PAGE_URL );
+			delete_option ( PostmanWordpressUtil::POSTMAN_OPTIONS );
+			delete_option ( PostmanAuthorizationToken::OPTIONS_NAME );
+			update_option ( PostmanAdminController::TEST_OPTIONS );
+			wp_redirect ( esc_url ( POSTMAN_HOME_PAGE_URL ) );
 			exit ();
 		}
-		public function addWarningUnableToImplementWpMail() {
-			add_action ( 'admin_notices', array (
-					$this,
-					'displayUnableToImplementWpMailWarning' 
-			) );
-		}
 		public function isRequestOAuthPermissiongAllowed() {
-			$clientId = OptionsUtil::getClientId ( $this->options );
-			$clientSecret = OptionsUtil::getClientSecret ( $this->options );
+			$clientId = PostmanOptionUtil::getClientId ( $this->options );
+			$clientSecret = PostmanOptionUtil::getClientSecret ( $this->options );
 			return (! empty ( $clientId ) && ! empty ( $clientSecret ));
 		}
 		public function isSendingEmailAllowed() {
-			$accessToken = OptionsUtil::getAccessToken ( $this->options );
-			$refreshToken = OptionsUtil::getRefreshToken ( $this->options );
-			$senderEmail = OptionsUtil::getSenderEmail ( $this->options );
+			$accessToken = $this->authorizationToken->getAccessToken ();
+			$refreshToken = $this->authorizationToken->getRefreshToken ();
+			$senderEmail = PostmanOptionUtil::getSenderEmail ( $this->options );
 			
 			return ! empty ( $accessToken ) && ! empty ( $refreshToken ) && ! empty ( $senderEmail );
 		}
-		public function displayUnableToImplementWpMailWarning() {
-			echo '<div class="error"><p>';
-			echo sprintf ( __ ( POSTMAN_NAME . ' is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.', POSTMAN_PLUGIN_DIRECTORY ), esc_url ( HOME_PAGE_URL ) );
-			echo '</p></div>';
-		}
 		public function displayConfigurationRequiredWarning() {
 			echo '<div class="update-nag"><p>';
-			echo sprintf ( __ ( POSTMAN_NAME . ' is activated, but <em>not</em> intercepting mail requests. <a href="%s">Configure and Authorize</a> the plugin.', POSTMAN_PLUGIN_DIRECTORY ), esc_url ( HOME_PAGE_URL ) );
+			echo PostmanAdminController::NAME . ' is activated, but <em>not</em> intercepting mail requests. <a href="%s">Configure and Authorize</a> the plugin.';
 			echo '</p></div>';
 		}
 		public function displayMessage($sessionVar, $class) {
@@ -170,34 +197,34 @@ namespace Postman {
 			echo '<div class="' . $class . '"><p>' . $message . '</p></div>';
 		}
 		public function displaySuccessMessage() {
-			$this->displayMessage ( AdminController::SUCCESS_MESSAGE, 'updated' );
+			$this->displayMessage ( PostmanAdminController::SUCCESS_MESSAGE, 'updated' );
 		}
 		public function displayErrorMessage() {
-			$this->displayMessage ( AdminController::ERROR_MESSAGE, 'error' );
+			$this->displayMessage ( PostmanAdminController::ERROR_MESSAGE, 'error' );
 		}
 		public function displayWarningMessage() {
-			$this->displayMessage ( AdminController::WARNING_MESSAGE, 'update-nag' );
+			$this->displayMessage ( PostmanAdminController::WARNING_MESSAGE, 'update-nag' );
 		}
 		
 		//
 		private function setDefaults() {
-			if (! isset ( $this->options [OptionsUtil::HOSTNAME] )) {
-				$this->options [OptionsUtil::HOSTNAME] = AdminController::DEFAULT_GMAIL_OAUTH_HOSTNAME;
+			if (! isset ( $this->options [PostmanOptionUtil::HOSTNAME] )) {
+				$this->options [PostmanOptionUtil::HOSTNAME] = PostmanAdminController::DEFAULT_GMAIL_OAUTH_HOSTNAME;
 			}
-			if (! isset ( $this->options [OptionsUtil::PORT] )) {
-				$this->options [OptionsUtil::PORT] = AdminController::DEFAULT_GMAIL_OAUTH_PORT;
+			if (! isset ( $this->options [PostmanOptionUtil::PORT] )) {
+				$this->options [PostmanOptionUtil::PORT] = PostmanAdminController::DEFAULT_GMAIL_OAUTH_PORT;
 			}
 			if (! isset ( $this->options ['smtp_type'] )) {
 				$this->options ['smtp_type'] = 'gmail';
 			}
 			$defaultFrom = wp_get_current_user ()->user_email;
 			// $defaultFrom = createLegacySenderEmail ();
-			if (! isset ( $this->options [OptionsUtil::SENDER_EMAIL] )) {
-				$this->options [OptionsUtil::SENDER_EMAIL] = $defaultFrom;
+			if (! isset ( $this->options [PostmanOptionUtil::SENDER_EMAIL] )) {
+				$this->options [PostmanOptionUtil::SENDER_EMAIL] = $defaultFrom;
 			}
-			if (! isset ( $this->options [OptionsUtil::TEST_EMAIL] )) {
+			if (! isset ( $this->options [PostmanOptionUtil::TEST_EMAIL] )) {
 				$current_user = wp_get_current_user ();
-				$this->testOptions [OptionsUtil::TEST_EMAIL] = $current_user->user_email;
+				$this->testOptions [PostmanOptionUtil::TEST_EMAIL] = $current_user->user_email;
 			}
 		}
 		
@@ -206,19 +233,19 @@ namespace Postman {
 		 */
 		public function add_plugin_page() {
 			// This page will be under "Settings"
-			add_options_page ( POSTMAN_PAGE_TITLE, POSTMAN_MENU_TITLE, 'manage_options', POSTMAN_SLUG, array (
+			add_options_page ( PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', PostmanAdminController::POSTMAN_SLUG, array (
 					$this,
 					'create_admin_page' 
 			) );
 		}
 		public function handleTestEmailAction() {
-			$recipient = $_POST ['postman_test_options'] ['test_email'];
-			$testEmailController = new SendTestEmailController ();
+			$recipient = $_POST [PostmanAdminController::TEST_OPTIONS] ['test_email'];
+			$testEmailController = new PostmanSendTestEmailController ();
 			$testEmailController->send ( $this->options, $recipient );
 		}
 		public function handleGoogleAuthenticationAction() {
-			$authenticationManager = new GmailAuthenticationManager ( $this->options );
-			$authenticationManager->authenticate ( OptionsUtil::getSenderEmail ( $this->options ) );
+			$authenticationManager = PostmanAuthenticationManagerFactory::createAuthenticationManager ( $this->options, $this->authorizationToken );
+			$authenticationManager->authenticate ( PostmanOptionUtil::getSenderEmail ( $this->options ) );
 		}
 		
 		/**
@@ -231,12 +258,12 @@ namespace Postman {
 			?>
 <div class="wrap">
             <?php screen_icon(); ?>
-            <h2><?php echo POSTMAN_PAGE_TITLE ?></h2>
+            <h2><?php echo PostmanAdminController::PAGE_TITLE ?></h2>
 	<form method="post" action="options.php">
 	<?php
 			// This prints out all hidden setting fields
-			settings_fields ( 'my_option_group' );
-			do_settings_sections ( POSTMAN_SLUG );
+			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
+			do_settings_sections ( PostmanAdminController::POSTMAN_SLUG );
 			submit_button ();
 			?>
 			</form>
@@ -253,7 +280,7 @@ namespace Postman {
 	<form method="POST" action="<?php get_admin_url()?>admin-post.php">
 		<input type='hidden' name='action' value='test_mail' />
             <?php
-			do_settings_sections ( POSTMAN_TEST_SLUG );
+			do_settings_sections ( PostmanAdminController::POSTMAN_TEST_SLUG );
 			if (! $this->isSendingEmailAllowed ()) {
 				$disabled = "disabled='disabled'";
 			}
@@ -274,7 +301,7 @@ namespace Postman {
 		 * Register and add settings
 		 */
 		public function page_init() {
-			register_setting ( 'my_option_group', POSTMAN_OPTIONS, array (
+			register_setting ( PostmanAdminController::SETTINGS_GROUP_NAME, PostmanWordpressUtil::POSTMAN_OPTIONS, array (
 					$this,
 					'sanitize' 
 			) );
@@ -283,54 +310,59 @@ namespace Postman {
 			add_settings_section ( 'SMTP_SETTINGS', 'SMTP Settings', array (
 					$this,
 					'printSmtpSectionInfo' 
-			), POSTMAN_SLUG );
+			), PostmanAdminController::POSTMAN_SLUG );
 			
 			add_settings_field ( 'smtp_type', 'Type', array (
 					$this,
 					'smtp_type_callback' 
-			), POSTMAN_SLUG, 'SMTP_SETTINGS' );
+			), PostmanAdminController::POSTMAN_SLUG, 'SMTP_SETTINGS' );
 			
-			add_settings_field ( OptionsUtil::SENDER_EMAIL, 'Sender Email Address', array (
+			add_settings_field ( PostmanOptionUtil::SENDER_EMAIL, 'Sender Email Address', array (
 					$this,
 					'sender_email_callback' 
-			), POSTMAN_SLUG, 'SMTP_SETTINGS' );
+			), PostmanAdminController::POSTMAN_SLUG, 'SMTP_SETTINGS' );
 			
-			add_settings_field ( OptionsUtil::HOSTNAME, 'Outgoing Mail Server (SMTP)', array (
+			add_settings_field ( PostmanOptionUtil::HOSTNAME, 'Outgoing Mail Server (SMTP)', array (
 					$this,
 					'hostname_callback' 
-			), POSTMAN_SLUG, 'SMTP_SETTINGS' );
+			), PostmanAdminController::POSTMAN_SLUG, 'SMTP_SETTINGS' );
 			
-			add_settings_field ( OptionsUtil::PORT, 'SSL Port', array (
+			add_settings_field ( PostmanOptionUtil::PORT, 'SSL Port', array (
 					$this,
 					'port_callback' 
-			), POSTMAN_SLUG, 'SMTP_SETTINGS' );
+			), PostmanAdminController::POSTMAN_SLUG, 'SMTP_SETTINGS' );
 			
 			add_settings_section ( 'OAUTH_SETTINGS', 'OAuth Settings', array (
 					$this,
 					'printOAuthSectionInfo' 
-			), POSTMAN_SLUG );
+			), PostmanAdminController::POSTMAN_SLUG );
 			
-			add_settings_field ( OptionsUtil::CLIENT_ID, 'Client ID', array (
+			add_settings_field ( PostmanOptionUtil::CLIENT_ID, 'Client ID', array (
 					$this,
 					'oauth_client_id_callback' 
-			), POSTMAN_SLUG, 'OAUTH_SETTINGS' );
+			), PostmanAdminController::POSTMAN_SLUG, 'OAUTH_SETTINGS' );
 			
-			add_settings_field ( OptionsUtil::CLIENT_SECRET, 'Client Secret', array (
+			add_settings_field ( PostmanOptionUtil::CLIENT_SECRET, 'Client Secret', array (
 					$this,
 					'oauth_client_secret_callback' 
-			), POSTMAN_SLUG, 'OAUTH_SETTINGS' );
+			), PostmanAdminController::POSTMAN_SLUG, 'OAUTH_SETTINGS' );
 			
-			add_settings_field ( OptionsUtil::ACCESS_TOKEN, 'Access Token', array (
-					$this,
-					'access_token_callback' 
-			), POSTMAN_SLUG, 'OAUTH_SETTINGS' );
+			// add_settings_field ( PostmanOptionUtil::ACCESS_TOKEN, 'Access Token', array (
+			// $this,
+			// 'access_token_callback'
+			// ), PostmanAdminController::POSTMAN_SLUG, 'OAUTH_SETTINGS' );
 			
-			add_settings_field ( 'refresh_token', 'Refresh Token', array (
-					$this,
-					'refresh_token_callback' 
-			), POSTMAN_SLUG, 'OAUTH_SETTINGS' );
+			// add_settings_field ( PostmanOptionUtil::REFRESH_TOKEN, 'Refresh Token', array (
+			// $this,
+			// 'refresh_token_callback'
+			// ), PostmanAdminController::POSTMAN_SLUG, 'OAUTH_SETTINGS' );
 			
-			register_setting ( 'email_group', POSTMAN_TEST_OPTIONS, array (
+			// add_settings_field ( PostmanOptionUtil::TOKEN_EXPIRES, 'Token Expiry Times', array (
+			// $this,
+			// 'token_expiry_callback'
+			// ), PostmanAdminController::POSTMAN_SLUG, 'OAUTH_SETTINGS' );
+			
+			register_setting ( 'email_group', PostmanAdminController::TEST_OPTIONS, array (
 					$this,
 					'testSanitize' 
 			) );
@@ -338,12 +370,12 @@ namespace Postman {
 			add_settings_section ( 'TEST_EMAIL', 'Test Your Setup', array (
 					$this,
 					'printTestEmailSectionInfo' 
-			), POSTMAN_TEST_SLUG );
+			), PostmanAdminController::POSTMAN_TEST_SLUG );
 			
 			add_settings_field ( 'test_email', 'Recipient Email Address', array (
 					$this,
 					'test_email_callback' 
-			), POSTMAN_TEST_SLUG, 'TEST_EMAIL' );
+			), PostmanAdminController::POSTMAN_TEST_SLUG, 'TEST_EMAIL' );
 		}
 		
 		/**
@@ -353,31 +385,27 @@ namespace Postman {
 		 *        	Contains all settings fields as array keys
 		 */
 		public function sanitize($input) {
+			$this->logger->debug ( "Sanitizing data before storage" );
+			
 			$new_input = array ();
 			
 			if (isset ( $input ['smtp_type'] ))
 				$new_input ['smtp_type'] = sanitize_text_field ( $input ['smtp_type'] );
 			
-			if (isset ( $input [OptionsUtil::HOSTNAME] ))
-				$new_input [OptionsUtil::HOSTNAME] = sanitize_text_field ( $input [OptionsUtil::HOSTNAME] );
+			if (isset ( $input [PostmanOptionUtil::HOSTNAME] ))
+				$new_input [PostmanOptionUtil::HOSTNAME] = sanitize_text_field ( $input [PostmanOptionUtil::HOSTNAME] );
 			
-			if (isset ( $input [OptionsUtil::PORT] ))
-				$new_input [OptionsUtil::PORT] = absint ( $input [OptionsUtil::PORT] );
+			if (isset ( $input [PostmanOptionUtil::PORT] ))
+				$new_input [PostmanOptionUtil::PORT] = absint ( $input [PostmanOptionUtil::PORT] );
 			
-			if (isset ( $input [OptionsUtil::SENDER_EMAIL] ))
-				$new_input [OptionsUtil::SENDER_EMAIL] = sanitize_text_field ( $input [OptionsUtil::SENDER_EMAIL] );
+			if (isset ( $input [PostmanOptionUtil::SENDER_EMAIL] ))
+				$new_input [PostmanOptionUtil::SENDER_EMAIL] = sanitize_text_field ( $input [PostmanOptionUtil::SENDER_EMAIL] );
 			
-			if (isset ( $input [OptionsUtil::CLIENT_ID] ))
-				$new_input [OptionsUtil::CLIENT_ID] = sanitize_text_field ( $input [OptionsUtil::CLIENT_ID] );
+			if (isset ( $input [PostmanOptionUtil::CLIENT_ID] ))
+				$new_input [PostmanOptionUtil::CLIENT_ID] = sanitize_text_field ( $input [PostmanOptionUtil::CLIENT_ID] );
 			
-			if (isset ( $input [OptionsUtil::CLIENT_SECRET] ))
-				$new_input [OptionsUtil::CLIENT_SECRET] = sanitize_text_field ( $input [OptionsUtil::CLIENT_SECRET] );
-			
-			if (isset ( $input ['refresh_token'] ))
-				$new_input ['refresh_token'] = sanitize_text_field ( $input ['refresh_token'] );
-			
-			if (isset ( $input [OptionsUtil::ACCESS_TOKEN] ))
-				$new_input [OptionsUtil::ACCESS_TOKEN] = sanitize_text_field ( $input [OptionsUtil::ACCESS_TOKEN] );
+			if (isset ( $input [PostmanOptionUtil::CLIENT_SECRET] ))
+				$new_input [PostmanOptionUtil::CLIENT_SECRET] = sanitize_text_field ( $input [PostmanOptionUtil::CLIENT_SECRET] );
 			
 			return $new_input;
 		}
@@ -414,7 +442,7 @@ namespace Postman {
 		 * Print the Section text
 		 */
 		public function printOAuthSectionInfo() {
-			print 'You can create a Client ID for your Gmail account at the <a href="https://console.developers.google.com/">Google Developers Console</a> (look under APIs -> Credentials). The Redirect URI to use is <b>' . admin_url ( 'options-general.php' ) . '</b> - detailed instructions will be added soon.';
+			print 'You can create a Client ID for your Gmail account at the <a href="https://console.developers.google.com/">Google Developers Console</a> (look under APIs -> Credentials). The Redirect URI to use is <b>' . POSTMAN_HOME_PAGE_URL . '</b>. There are <a href="https://wordpress.org/plugins/postman-smtp/installation/">additional instructions</a> on the Postman homepage.';
 		}
 		
 		/**
@@ -422,49 +450,48 @@ namespace Postman {
 		 */
 		public function printTestEmailSectionInfo() {
 			print 'Test your setup here. ';
-			// print 'This will send TWO e-mails; one through Postman\'s own engine, and another through the WordPress wp_mail() call.';
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function smtp_type_callback() {
-			printf ( '<select disabled="true" id="smtp_type" name="postman_options[smtp_type]" /><option name="gmail">%s</option></select>', isset ( $this->options [OptionsUtil::SMTP_TYPE] ) ? esc_attr ( $this->options [OptionsUtil::SMTP_TYPE] ) : '' );
+			printf ( '<select disabled="true" id="smtp_type" name="postman_options[smtp_type]" /><option name="gmail">%s</option></select>', isset ( $this->options [PostmanOptionUtil::SMTP_TYPE] ) ? esc_attr ( $this->options [PostmanOptionUtil::SMTP_TYPE] ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function hostname_callback() {
-			printf ( '<input type="text" id="hostname" name="postman_options[hostname]" value="%s" />', isset ( $this->options [OptionsUtil::HOSTNAME] ) ? esc_attr ( $this->options [OptionsUtil::HOSTNAME] ) : '' );
+			printf ( '<input readonly="readonly" type="text" id="hostname" name="postman_options[hostname]" value="%s" />', isset ( $this->options [PostmanOptionUtil::HOSTNAME] ) ? esc_attr ( $this->options [PostmanOptionUtil::HOSTNAME] ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function port_callback() {
-			printf ( '<input type="text" id="port" name="postman_options[port]" value="%s" />', isset ( $this->options [OptionsUtil::PORT] ) ? esc_attr ( $this->options [OptionsUtil::PORT] ) : '' );
+			printf ( '<input readonly="readonly" type="text" id="port" name="postman_options[port]" value="%s" />', isset ( $this->options [PostmanOptionUtil::PORT] ) ? esc_attr ( $this->options [PostmanOptionUtil::PORT] ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function sender_email_callback() {
-			printf ( '<input type="text" id="sender_email" name="postman_options[sender_email]" value="%s" />', isset ( $this->options [OptionsUtil::SENDER_EMAIL] ) ? esc_attr ( $this->options [OptionsUtil::SENDER_EMAIL] ) : '' );
+			printf ( '<input type="text" id="sender_email" name="postman_options[sender_email]" value="%s" />', isset ( $this->options [PostmanOptionUtil::SENDER_EMAIL] ) ? esc_attr ( $this->options [PostmanOptionUtil::SENDER_EMAIL] ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function oauth_client_id_callback() {
-			printf ( '<input type="text" id="oauth_client_id" name="postman_options[oauth_client_id]" value="%s" size="71" />', isset ( $this->options [OptionsUtil::CLIENT_ID] ) ? esc_attr ( $this->options [OptionsUtil::CLIENT_ID] ) : '' );
+			printf ( '<input type="text" id="oauth_client_id" name="postman_options[oauth_client_id]" value="%s" size="71" />', isset ( $this->options [PostmanOptionUtil::CLIENT_ID] ) ? esc_attr ( $this->options [PostmanOptionUtil::CLIENT_ID] ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function oauth_client_secret_callback() {
-			printf ( '<input type="text" autocomplete="off" id="oauth_client_secret" name="postman_options[oauth_client_secret]" value="%s" size="24"/>', isset ( $this->options [OptionsUtil::CLIENT_SECRET] ) ? esc_attr ( $this->options [OptionsUtil::CLIENT_SECRET] ) : '' );
+			printf ( '<input type="text" autocomplete="off" id="oauth_client_secret" name="postman_options[oauth_client_secret]" value="%s" size="24"/>', isset ( $this->options [PostmanOptionUtil::CLIENT_SECRET] ) ? esc_attr ( $this->options [PostmanOptionUtil::CLIENT_SECRET] ) : '' );
 		}
 		
 		/**
@@ -477,8 +504,15 @@ namespace Postman {
 		/**
 		 * Get the settings option array and print one of its values
 		 */
+		public function token_expiry_callback() {
+			printf ( '<input readonly="true" type="text" id="auth_token_expires" name="postman_options[auth_token_expires]" value="%s" size="45" />', isset ( $this->options ['auth_token_expires'] ) ? esc_attr ( $this->options ['auth_token_expires'] ) : '' );
+		}
+		
+		/**
+		 * Get the settings option array and print one of its values
+		 */
 		public function access_token_callback() {
-			printf ( '<input readonly="true" type="text" id="access_token" name="postman_options[access_token]" value="%s" size="83" />', isset ( $this->options [OptionsUtil::ACCESS_TOKEN] ) ? esc_attr ( $this->options [OptionsUtil::ACCESS_TOKEN] ) : '' );
+			printf ( '<input readonly="true" type="text" id="access_token" name="postman_options[access_token]" value="%s" size="83" />', isset ( $this->options [PostmanOptionUtil::ACCESS_TOKEN] ) ? esc_attr ( $this->options [PostmanOptionUtil::ACCESS_TOKEN] ) : '' );
 		}
 		
 		/**
