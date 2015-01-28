@@ -46,7 +46,7 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 				if ($postmanWpMail->getException ()->getCode () == 334) {
 					$this->util->addError ( 'Oh, bother! ... Communication Error [334].' );
 				} else {
-					$this->util->addError ( 'Oh, bother! ... ' . $postmanWpMail->getException ()->getMessage () . ' [' . $postmanWpMail->getException ()->getCode () . '].' );
+					$this->util->addError ( 'Oh, bother! ... ' . $postmanWpMail->getException ()->getMessage () );
 				}
 			}
 			
