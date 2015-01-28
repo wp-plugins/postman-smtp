@@ -68,6 +68,7 @@ Now accepts multiple recipients when sending email.
 
 = 0.2.5 - 2015-01-27 =
 * Removed the namespace for users with older version of PHP
+* Changed the Postman Redirect URI (now includes a trailing ?page=postman) - this means Client ID's from 0.2.4 or earlier must be UPDATED with the new Redirect URI or re-created from scratch.
 
 = 0.2.4 - 2015-01-25 =
 * Fixed problems on servers with the plugin installed as a symbolic link.
@@ -90,7 +91,7 @@ Now accepts multiple recipients when sending email.
 == Upgrade Notice ==
 
 = 0.2.5 =
-Can now install on PHP versions less than 5.3
+Please note that the Postman Redirect URI has changed. If you are upgrading, you MUST update the Client ID Redirect URI in the Google Developer Console, or create a new CLient ID altogether. Attempting to re-authorize a Client ID created for an earlier version of Postman WILL FAIL.
 
 = 0.2.4 =
 Fixed problem installing on servers where the plugin directory is a symbolic link.
