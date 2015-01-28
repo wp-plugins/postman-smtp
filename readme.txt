@@ -91,7 +91,7 @@ Now accepts multiple recipients when sending email.
 == Upgrade Notice ==
 
 = 0.2.5 =
-Please note that the Postman Redirect URI has changed. If you are upgrading, you MUST update the Client ID Redirect URI in the Google Developer Console, or create a new CLient ID altogether. Attempting to re-authorize a Client ID created for an earlier version of Postman WILL FAIL.
+Please note that the Postman Redirect URI has changed. If you are upgrading, you MUST update the Client ID Redirect URI in the Google Developer Console, or create a new CLient ID altogether. Attempting to re-authorize a Client ID created for an earlier version of Postman WILL FAIL with "Error: redirect_uri_mismatch".
 
 = 0.2.4 =
 Fixed problem installing on servers where the plugin directory is a symbolic link.
