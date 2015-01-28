@@ -65,8 +65,9 @@ if (! class_exists ( "GmailAuthenticationManager" )) {
 		 */
 		public function isTokenExpired() {
 			$expireTime = ($this->authorizationToken->getExpiryTime () - GmailAuthenticationManager::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
-			$this->logger->debug ( "Expiry time is " . $expireTime );
-			return time () > $expireTime;
+			$tokenHasExpired = time () > $expireTime;
+			$this->logger->debug ( 'Access Token Expiry Time is ' . $expireTime . ', expired?=' . ($tokenHasExpired ? 'yes' : 'no') );
+			return $tokenHasExpired;
 		}
 		
 		/**
