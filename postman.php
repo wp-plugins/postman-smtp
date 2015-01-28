@@ -35,7 +35,9 @@ if ($kevinCostener->isRequestOAuthPermissiongAllowed () && $kevinCostener->isSen
 		function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
 			// load settings from database
 			$options = get_option ( PostmanWordpressUtil::POSTMAN_OPTIONS );
-			$postmanWpMail = new PostmanWpMail ( $options );
+			$authorizationToken = new PostmanAuthorizationToken ();
+			$authorizationToken->load ();
+			$postmanWpMail = new PostmanWpMail ( $options, $authorizationToken );
 			return $postmanWpMail->send ( $to, $subject, $message, $headers, $attachments );
 		}
 	} else {
@@ -60,7 +62,7 @@ if (! function_exists ( 'activatePostman' )) {
 			$authToken->setAccessToken ( $options [PostmanAuthorizationToken::ACCESS_TOKEN] );
 			$authToken->setRefreshToken ( $options [PostmanAuthorizationToken::REFRESH_TOKEN] );
 			$authToken->setExpiryTime ( $options [PostmanAuthorizationToken::EXPIRY_TIME] );
- 			$authToken->save ();
+			$authToken->save ();
 		}
 	}
 }

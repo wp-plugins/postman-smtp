@@ -19,7 +19,7 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 		 * @param unknown $options        	
 		 * @param unknown $recipient        	
 		 */
-		public function send(&$options, $recipient) {
+		public function send($options, &$authorizationToken, $recipient) {
 			$hostname = PostmanOptionUtil::getHostname ( $options );
 			$port = PostmanOptionUtil::getPort ( $options );
 			$from = PostmanOptionUtil::getSenderEmail ( $options );
@@ -33,7 +33,7 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			
 			if (! $result) {
 				$this->logger->debug ( 'wp_mail failed :( re-trying through the internal engine' );
-				$postmanWpMail = new PostmanWpMail ( $options );
+				$postmanWpMail = new PostmanWpMail ( $options, $authorizationToken );
 				$result = $postmanWpMail->send ( $recipient, $subject, $message . ' - sent by Postman via internal engine' );
 			}
 			
