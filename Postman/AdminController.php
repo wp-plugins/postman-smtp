@@ -86,51 +86,27 @@ if (! class_exists ( "PostmanAdminController" )) {
 						$this,
 						'displayConfigurationRequiredWarning' 
 				) );
-				// if (is_multisite ()) {
-				// add_action ( 'network_admin_notices', Array (
-				// $this,
-				// 'displayConfigurationRequiredWarning'
-				// ) );
-				// }
 			}
 			
 			if (isset ( $_SESSION [PostmanAdminController::ERROR_MESSAGE] )) {
 				add_action ( 'admin_notices', Array (
 						$this,
-						'displayErrorMessage' 
+						'displayErrorSessionMessage' 
 				) );
-				// if (is_multisite ()) {
-				// add_action ( 'network_admin_notices', Array (
-				// $this,
-				// 'displayTestEmailSentMessage'
-				// ) );
-				// }
 			}
 			
 			if (isset ( $_SESSION [PostmanAdminController::WARNING_MESSAGE] )) {
 				add_action ( 'admin_notices', Array (
 						$this,
-						'displayWarningMessage' 
+						'displayWarningSessionMessage' 
 				) );
-				// if (is_multisite ()) {
-				// add_action ( 'network_admin_notices', Array (
-				// $this,
-				// 'displayTestEmailFailedMessage'
-				// ) );
-				// }
 			}
 			
 			if (isset ( $_SESSION [PostmanAdminController::SUCCESS_MESSAGE] )) {
 				add_action ( 'admin_notices', Array (
 						$this,
-						'displaySuccessMessage' 
+						'displaySuccessSessionMessage' 
 				) );
-				// if (is_multisite ()) {
-				// add_action ( 'network_admin_notices', Array (
-				// $this,
-				// 'displayTestEmailFailedMessage'
-				// ) );
-				// }
 			}
 			
 			if (isset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
@@ -170,8 +146,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function handlePurgeDataAction() {
 			delete_option ( PostmanWordpressUtil::POSTMAN_OPTIONS );
 			delete_option ( PostmanAuthorizationToken::OPTIONS_NAME );
-			update_option ( PostmanAdminController::TEST_OPTIONS );
-			wp_redirect ( esc_url ( POSTMAN_HOME_PAGE_URL ) );
+			delete_option ( PostmanAdminController::TEST_OPTIONS );
+			header ( 'Location: ' . esc_url ( POSTMAN_HOME_PAGE_URL ) );
 			exit ();
 		}
 		public function isRequestOAuthPermissiongAllowed() {
@@ -186,24 +162,41 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			return ! empty ( $accessToken ) && ! empty ( $refreshToken ) && ! empty ( $senderEmail );
 		}
+		
+		/**
+		 * Handle admin messages
+		 */
 		public function displayConfigurationRequiredWarning() {
-			echo '<div class="update-nag"><p>';
-			echo PostmanAdminController::NAME . ' is activated, but <em>not</em> intercepting mail requests. <a href="%s">Configure and Authorize</a> the plugin.';
-			echo '</p></div>';
+			$message = PostmanAdminController::NAME . ' is activated, but <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_URL . '">Configure and Authorize</a> the plugin.';
+			$this->displayWarningMessage ( $message );
 		}
-		public function displayMessage($sessionVar, $class) {
+		//
+		public function displaySuccessSessionMessage() {
+			$this->displaySuccessMessage ( $this->retrieveSessionMessage ( PostmanAdminController::SUCCESS_MESSAGE ), 'updated' );
+		}
+		public function displayErrorSessionMessage() {
+			$this->displayErrorMessage ( $this->retrieveSessionMessage ( PostmanAdminController::ERROR_MESSAGE ), 'error' );
+		}
+		public function displayWarningSessionMessage() {
+			$this->displayWarningMessage ( $this->retrieveSessionMessage ( PostmanAdminController::WARNING_MESSAGE ), 'update-nag' );
+		}
+		private function retrieveSessionMessage($sessionVar) {
 			$message = $_SESSION [$sessionVar];
 			unset ( $_SESSION [$sessionVar] );
-			echo '<div class="' . $class . '"><p>' . $message . '</p></div>';
+			return $message;
 		}
-		public function displaySuccessMessage() {
-			$this->displayMessage ( PostmanAdminController::SUCCESS_MESSAGE, 'updated' );
+		//
+		public function displaySuccessMessage($message) {
+			$this->displayMessage ( $message, 'updated' );
 		}
-		public function displayErrorMessage() {
-			$this->displayMessage ( PostmanAdminController::ERROR_MESSAGE, 'error' );
+		public function displayErrorMessage($message) {
+			$this->displayMessage ( $message, 'error' );
 		}
-		public function displayWarningMessage() {
-			$this->displayMessage ( PostmanAdminController::WARNING_MESSAGE, 'update-nag' );
+		public function displayWarningMessage($message) {
+			$this->displayMessage ( $message, 'update-nag' );
+		}
+		private function displayMessage($message, $className) {
+			echo '<div class="' . $className . '"><p>' . $message . '</p></div>';
 		}
 		
 		//
@@ -241,7 +234,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function handleTestEmailAction() {
 			$recipient = $_POST [PostmanAdminController::TEST_OPTIONS] ['test_email'];
 			$testEmailController = new PostmanSendTestEmailController ();
-			$testEmailController->send ( $this->options, $recipient );
+			$testEmailController->send ( $this->options, $this->authorizationToken, $recipient );
 		}
 		public function handleGoogleAuthenticationAction() {
 			$authenticationManager = PostmanAuthenticationManagerFactory::createAuthenticationManager ( $this->options, $this->authorizationToken );
