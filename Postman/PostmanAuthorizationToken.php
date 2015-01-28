@@ -19,9 +19,9 @@ if (! class_exists ( "PostmanAuthorizationToken" )) {
 			$this->setRefreshToken ( $a [PostmanAuthorizationToken::REFRESH_TOKEN] );
 			$this->setExpiryTime ( $a [PostmanAuthorizationToken::EXPIRY_TIME] );
 			$logger = new PostmanLogger ();
-			$logger->debug ( 'Loaded Access Token: ' . $this->getAccessToken () );
-			$logger->debug ( 'Loaded Refresh Token: ' . $this->getRefreshToken () );
-			$logger->debug ( 'Loaded Expiry Time: ' . $this->getExpiryTime () );
+// 			$logger->debug ( 'Loaded Access Token: ' . $this->getAccessToken () );
+// 			$logger->debug ( 'Loaded Refresh Token: ' . $this->getRefreshToken () );
+// 			$logger->debug ( 'Loaded Expiry Time: ' . $this->getExpiryTime () );
 		}
 		
 		/**
@@ -30,7 +30,7 @@ if (! class_exists ( "PostmanAuthorizationToken" )) {
 			$a = array ();
 			$a [PostmanAuthorizationToken::ACCESS_TOKEN] = $this->getAccessToken ();
 			$a [PostmanAuthorizationToken::REFRESH_TOKEN] = $this->getRefreshToken ();
-			$a [PostmanAuthorizationToken::EXPIRY_TIME] = $this->getRefreshToken ();
+			$a [PostmanAuthorizationToken::EXPIRY_TIME] = $this->getExpiryTime ();
 			
 			update_option ( PostmanAuthorizationToken::OPTIONS_NAME, $a );
 		}
