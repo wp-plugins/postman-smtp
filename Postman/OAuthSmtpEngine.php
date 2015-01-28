@@ -38,7 +38,6 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		
 		// this class wraps Zend_Mail
 		private $mail;
-		private $exception;
 		
 		//
 		private $senderEmail;
@@ -48,7 +47,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		function __construct($senderEmail, $accessToken) {
 			$this->logger = new PostmanLogger ();
 			$this->mail = new Zend_Mail ();
-			$this->senderEmail= $senderEmail;
+			$this->senderEmail = $senderEmail;
 			$this->accessToken = $accessToken;
 		}
 		
@@ -58,7 +57,6 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		 * @return boolean
 		 */
 		public function send($hostname, $port) {
-			
 			$senderEmail = $this->senderEmail;
 			$accessToken = $this->accessToken;
 			// create the options for authentication
@@ -67,8 +65,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			assert ( ! empty ( $port ) );
 			assert ( ! empty ( $hostname ) );
 			if (! $this->validateEmail ( $senderEmail )) {
-				$this->logger->debug ( 'Error: \'' . $senderEmail .'\' is not a valid email address' );
-				return false;
+				throw new Exception ( 'Sender e-mail "' . $senderEmail . '" is invalid.' );
 			}
 			$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$accessToken}\1\1" );
 			$this->logger->debug ( 'initClientRequest=' . base64_decode ( $initClientRequestEncoded ) );
@@ -82,16 +79,9 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			
 			// create the SMTP transport
 			$transport = new Zend_Mail_Transport_Smtp ( $hostname, $config );
-			try {
-				$this->mail->setFrom ( $senderEmail );
-				assert ( ! empty ( $transport ) );
-				$this->mail->send ( $transport );
-				return true;
-			} catch ( \Zend_Mail_Protocol_Exception $e ) {
-				$this->exception = $e;
-				$this->logger->debug ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
-				return false;
-			}
+			$this->mail->setFrom ( $senderEmail );
+			assert ( ! empty ( $transport ) );
+			$this->mail->send ( $transport );
 		}
 		public function validateEmail($email) {
 			$exp = "/^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$/i";
@@ -108,16 +98,40 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		public function addTo($email, $name = '') {
 			if (! is_array ( $email )) {
 				// http://tiku.io/questions/955963/splitting-comma-separated-email-addresses-in-a-string-with-commas-in-quotes-in-p
-				$t = str_getcsv ( $email );
+				$t = $this->stringGetCsvAlternate ( $email );
 				foreach ( $t as $k => $v ) {
 					if (strpos ( $v, ',' ) !== false) {
 						$t [$k] = '"' . str_replace ( ' <', '" <', $v );
 					}
-					$this->mail->addTo ( trim ( $t [$k] ) );
+					$tokenizedEmail = trim ( $t [$k] );
+					if (! $this->validateEmail ( $tokenizedEmail )) {
+						throw new Exception ( 'Recipient e-mail "' . $tokenizedEmail . '" is invalid.' );
+					}
+					$this->mail->addTo ( $tokenizedEmail );
 				}
 			} else {
+				if (! $this->validateEmail ( $email )) {
+					throw new Exception ( 'Recipient e-mail "' . $email . '" is invalid.' );
+				}
 				$this->mail->addTo ( $email, $name );
 			}
+		}
+		/**
+		 * Using fgetscv (PHP 4) as a work-around for str_getcsv (PHP 5.3)
+		 * From http://stackoverflow.com/questions/13430120/str-getcsv-alternative-for-older-php-version-gives-me-an-empty-array-at-the-e
+		 *
+		 * @param unknown $string        	
+		 * @return multitype:
+		 */
+		private function stringGetCsvAlternate($string) {
+			$fh = fopen ( 'php://temp', 'r+' );
+			fwrite ( $fh, $string );
+			rewind ( $fh );
+			
+			$row = fgetcsv ( $fh );
+			
+			fclose ( $fh );
+			return $row;
 		}
 		function setBodyText($bodyText) {
 			$this->mail->setBodyText ( $bodyText );
@@ -135,9 +149,6 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		 */
 		function setHeaders($header) {
 			// $this->mail->addHeader ( $header );
-		}
-		public function getException() {
-			return $this->exception;
 		}
 	}
 }
