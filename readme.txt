@@ -19,11 +19,7 @@ Postman is a next-generation SMTP plugin which provides WordPress with a more se
 
 Postman is intended for users who want to use Gmail's SMTP servers. Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to Gmail's SMTP server and Postman will not function.
 
-Tested on a RedHat OpenShift installation.
-
-Requirements: PHP 5.3, a Gmail or Google Apps account, a Client ID from Google Developer, Port 465 (TCP, outbound) must be open
-
-Your feedback is appreciated!! Please send feature requests and/or bug reports.
+Requirements: PHP 5.2, a Gmail or Google Apps account, a Client ID from Google Developer, Port 465 (TCP, outbound) must be open
 
 == Frequently Asked Questions == 
 
@@ -65,20 +61,24 @@ To use Postman, every website needs their own Client ID. The Client ID is used t
 Now accepts multiple recipients when sending email. 
 
 == Changelog ==
+= 0.2.6 - 2015-01-28
+* Fixed Configure and Authorize the plugin" have no link address - broke this when I removed sprintf()
+* Fixed Fatal error: Call to undefined function str_getcsv() - this function is available in PHP 5.3+
+* Fixed Warning: Missing argument 2 for update_option() - should be calling delete_option instead
 
 = 0.2.5 - 2015-01-27 =
 * Removed the namespace for users with older version of PHP
-* Changed the Postman Redirect URI (now includes a trailing ?page=postman) - this means Client ID's from 0.2.4 or earlier must be UPDATED with the new Redirect URI or re-created from scratch.
+* Changed the Postman Redirect URI (now includes a trailing ?page=postman) - this means Client ID's from 0.2.4 or earlier MUST be updated with the new Redirect URI or re-created from scratch.
 
 = 0.2.4 - 2015-01-25 =
-* Fixed problems on servers with the plugin installed as a symbolic link.
-* Better error handling and reporting. Supports php logging and assertions.
+* Fixed issues on servers where the plugin is installed as a symbolic link.
+* Better error handling/debugging with php logging and assertions.
 
 = 0.2.1 - 2015-01-23 =
 * Fixed an environment-specific error that prevented Postman reloading the setting screen after sending a test e-mail
 
 = 0.2 - 2015-01-20 =
-* wp_mail accepts multiple recipients (array and string)
+* wp_mail() accepts multiple recipients (array and string)
 * display a warning to the user if another plugin is preventing Postman from overriding wp_mail
 * paired down the external libraries to only what was required - from 3,700 files to just 75
 * default Gmail port corrected to 465 - previously 465 was hardcoded but 587 was saved to the database
@@ -89,6 +89,9 @@ Now accepts multiple recipients when sending email.
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 0.2.6 =
+Fixed various errors when running in a PHP 5.2 environment.
 
 = 0.2.5 =
 Please note that the Postman Redirect URI has changed. If you are upgrading, you MUST update the Client ID Redirect URI in the Google Developer Console, or create a new CLient ID altogether. Attempting to re-authorize a Client ID created for an earlier version of Postman WILL FAIL with "Error: redirect_uri_mismatch".
