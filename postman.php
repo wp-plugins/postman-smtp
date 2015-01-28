@@ -47,7 +47,11 @@ if ($kevinCostener->isRequestOAuthPermissiongAllowed () && $kevinCostener->isSen
 
 if (! function_exists ( 'activatePostman' )) {
 	register_activation_hook ( __FILE__, 'activatePostman' );
+	/**
+	 * Handle activation of plugin
+	 */
 	function activatePostman() {
+		// prior to version 0.2.5, $authOptions did not exist
 		$authOptions = get_option ( PostmanAuthorizationToken::OPTIONS_NAME );
 		$options = get_option ( PostmanWordpressUtil::POSTMAN_OPTIONS );
 		if (empty ( $authOptions ) && ! (empty ( $options ))) {
