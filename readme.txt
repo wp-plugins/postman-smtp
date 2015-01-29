@@ -69,6 +69,7 @@ Now accepts multiple recipients when sending email.
 * Fixed error: "Undefined variable: authorizationToken" was preventing mail delivery outside of the admin screen.
 * Fixed warning message that Postman couldnt bind to wp_mail immediately after Activation
 * Added prerequisite checks to make sure the PHP environment can handle Postman
+* Moved the screenshots and icons out of /trunk and into /assets
 
 = 0.2.6 - 2015-01-28 =
 * Fixed Configure and Authorize the plugin" have no link address - broke this when I removed sprintf()
