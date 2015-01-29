@@ -13,7 +13,7 @@ Kiss your Gmail problems good-bye with Postman, the first and only OAuth-enabled
 
 Have you been having [trouble getting Gmail to send your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking traditional SMTP SSL/TLS](https://support.google.com/accounts/answer/6010255) mechanisms with Gmail.
 
-You could ask Gmail to [allow less secure apps](https://support.google.com/accounts/answer/6010255), but this a less than ideal solution and not even an option for those who use Google Apps to manage a domain.
+If you don't care about security, you could ask Gmail to [allow less secure apps](https://support.google.com/accounts/answer/6010255) - but this workaround isn't available if you're using Google Apps to manage a domain.
 
 Postman is a next-generation SMTP plugin which provides WordPress with a more secure mechanism for sending email. When your site generates an e-mail, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
 
