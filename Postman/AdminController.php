@@ -42,10 +42,15 @@ if (! class_exists ( "PostmanAdminController" )) {
 		private $options;
 		private $testOptions;
 		
+		//
+		private $basename;
+		private $couldNotReplaceWpMail;
+		
 		/**
 		 * Start up
 		 */
 		public function __construct($basename) {
+			$this->basename = $basename;
 			$this->logger = new PostmanLogger ();
 			$this->util = new PostmanWordpressUtil ();
 			$this->options = get_option ( PostmanWordpressUtil::POSTMAN_OPTIONS );
@@ -61,6 +66,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 			add_action ( 'admin_menu', array (
 					$this,
 					'add_plugin_page' 
+			) );
+			add_action ( 'admin_init', array (
+					$this,
+					'warnIfCanNotBindToWpMail' 
 			) );
 			add_action ( 'admin_init', array (
 					$this,
@@ -135,6 +144,26 @@ if (! class_exists ( "PostmanAdminController" )) {
 					// continue on with the current request.... do not die()
 				}
 			}
+		}
+		function warnIfCanNotBindToWpMail() {
+			if (is_plugin_active ( $this->basename )) {
+				$this->logger->debug ( 'plugin is active' );
+				$this->logger->debug ( 'wp_mail(): ' . $this->couldNotReplaceWpMail );
+				if ($this->couldNotReplaceWpMail) {
+					$this->logger->debug ( 'creating warning' );
+					add_action ( 'admin_notices', Array (
+							$this,
+							'displayCouldNotReplaceWpMail' 
+					) );
+					// $this->util->addWarning ( );
+				}
+			}
+		}
+		public function couldNotReplaceWpMail() {
+			$this->couldNotReplaceWpMail = true;
+		}
+		public function displayCouldNotReplaceWpMail() {
+			$this->displayWarningMessage ( PostmanAdminController::NAME . ' is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.' );
 		}
 		//
 		public function add_action_links($links) {
@@ -269,47 +298,46 @@ if (! class_exists ( "PostmanAdminController" )) {
 				print '<li>SSL Extension: ' . ($sslRequirement ? 'Yes' : 'No') . '</li>';
 				print '<li>spl_autoload_register: ' . ($splAutoloadRegisterRequirement ? 'Yes' : 'No') . '</li>';
 				print '<li>ArrayObject: ' . ($arrayObjectRequirement ? 'Yes' : 'No') . '</li>';
+				print '</div>';
 			}
 			?>
 	
-	</div>
-			
             <form method="post" action="options.php">
 	<?php
-				// This prints out all hidden setting fields
-				settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
-				do_settings_sections ( PostmanAdminController::POSTMAN_SLUG );
-				submit_button ();
-				?>
+			// This prints out all hidden setting fields
+			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
+			do_settings_sections ( PostmanAdminController::POSTMAN_SLUG );
+			submit_button ();
+			?>
 			</form>
-	<form method="POST" action="<?php get_admin_url()?>admin-post.php">
-		<input type='hidden' name='action' value='gmail_auth' />
+			<form method="POST" action="<?php get_admin_url()?>admin-post.php">
+				<input type='hidden' name='action' value='gmail_auth' />
             <?php
-				$disabled = '';
-				if (! $this->isRequestOAuthPermissiongAllowed ()) {
-					$disabled = "disabled='disabled'";
-				}
-				submit_button ( 'Request Permission from Google', 'primary', 'submit', true, $disabled );
-				?>
+			$disabled = '';
+			if (! $this->isRequestOAuthPermissiongAllowed ()) {
+				$disabled = "disabled='disabled'";
+			}
+			submit_button ( 'Request Permission from Google', 'primary', 'submit', true, $disabled );
+			?>
 	</form>
-	<form method="POST" action="<?php get_admin_url()?>admin-post.php">
-		<input type='hidden' name='action' value='test_mail' />
+			<form method="POST" action="<?php get_admin_url()?>admin-post.php">
+				<input type='hidden' name='action' value='test_mail' />
             <?php
-				do_settings_sections ( PostmanAdminController::POSTMAN_TEST_SLUG );
-				if (! $this->isSendingEmailAllowed ()) {
-					$disabled = "disabled='disabled'";
-				}
-				submit_button ( 'Send Test Email', 'primary', 'submit', true, $disabled );
-				?>
+			do_settings_sections ( PostmanAdminController::POSTMAN_TEST_SLUG );
+			if (! $this->isSendingEmailAllowed ()) {
+				$disabled = "disabled='disabled'";
+			}
+			submit_button ( 'Send Test Email', 'primary', 'submit', true, $disabled );
+			?>
 	</form>
-	<form method="POST" action="<?php get_admin_url()?>admin-post.php">
-		<input type='hidden' name='action' value='purge_data' />
+			<form method="POST" action="<?php get_admin_url()?>admin-post.php">
+				<input type='hidden' name='action' value='purge_data' />
             <?php
-				submit_button ( 'Delete All Data', 'delete', 'submit', true, 'style="background-color:red;color:white"' );
-				?>
+			submit_button ( 'Delete All Data', 'delete', 'submit', true, 'style="background-color:red;color:white"' );
+			?>
 	</form>
-
-</div>
+	
+	</div>
 <?php
 		}
 		/**
