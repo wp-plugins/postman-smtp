@@ -26,11 +26,11 @@ if (! isset ( $_SESSION )) {
 }
 
 // start the Postman Admin page
-$kevinCostener = new PostmanAdminController ( plugin_basename ( __FILE__ ) );
+$kevinCostner = new PostmanAdminController ( plugin_basename ( __FILE__ ) );
 $logger = new PostmanLogger ();
 
 // replace the wp_mail function with Postman's
-if ($kevinCostener->isRequestOAuthPermissiongAllowed () && $kevinCostener->isSendingEmailAllowed ()) {
+if ($kevinCostner->isRequestOAuthPermissiongAllowed () && $kevinCostner->isSendingEmailAllowed ()) {
 	if (! function_exists ( 'wp_mail' )) {
 		function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
 			// load settings from database
