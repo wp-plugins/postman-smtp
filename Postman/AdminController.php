@@ -246,45 +246,67 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function create_admin_page() {
 			
+			// test features
+			$sslRequirement = extension_loaded ( 'openssl' );
+			$splAutoloadRegisterRequirement = function_exists ( 'spl_autoload_register' );
+			$phpVersionRequirement = PHP_VERSION_ID >= 50300;
+			$arrayObjectRequirement = class_exists ( 'ArrayObject' );
+			
 			// Set class property
 			$this->setDefaults ();
 			?>
 <div class="wrap">
             <?php screen_icon(); ?>
             <h2><?php echo PostmanAdminController::PAGE_TITLE ?></h2>
-	<form method="post" action="options.php">
-	<?php
-			// This prints out all hidden setting fields
-			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
-			do_settings_sections ( PostmanAdminController::POSTMAN_SLUG );
-			submit_button ();
+
+            <?php
+			if (! $sslRequirement || ! $splAutoloadRegisterRequirement || ! $arrayObjectRequirement) {
+				?><div style="background-color: white; padding: 10px;">
+		<b style='color: red'>Warning, your system does not meet the
+			pre-requisites - something may fail:</b>
+		<ul><?php
+				print '<li>PHP v5.3: ' . ($phpVersionRequirement ? 'Yes' : 'No (' . PHP_VERSION . ')') . '</li>';
+				print '<li>SSL Extension: ' . ($sslRequirement ? 'Yes' : 'No') . '</li>';
+				print '<li>spl_autoload_register: ' . ($splAutoloadRegisterRequirement ? 'Yes' : 'No') . '</li>';
+				print '<li>ArrayObject: ' . ($arrayObjectRequirement ? 'Yes' : 'No') . '</li>';
+			}
 			?>
+	
+	</div>
+			
+            <form method="post" action="options.php">
+	<?php
+				// This prints out all hidden setting fields
+				settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
+				do_settings_sections ( PostmanAdminController::POSTMAN_SLUG );
+				submit_button ();
+				?>
 			</form>
 	<form method="POST" action="<?php get_admin_url()?>admin-post.php">
 		<input type='hidden' name='action' value='gmail_auth' />
             <?php
-			$disabled = '';
-			if (! $this->isRequestOAuthPermissiongAllowed ()) {
-				$disabled = "disabled='disabled'";
-			}
-			submit_button ( 'Request Permission from Google', 'primary', 'submit', true, $disabled );
-			?>
+				$disabled = '';
+				if (! $this->isRequestOAuthPermissiongAllowed ()) {
+					$disabled = "disabled='disabled'";
+				}
+				submit_button ( 'Request Permission from Google', 'primary', 'submit', true, $disabled );
+				?>
 	</form>
 	<form method="POST" action="<?php get_admin_url()?>admin-post.php">
 		<input type='hidden' name='action' value='test_mail' />
             <?php
-			do_settings_sections ( PostmanAdminController::POSTMAN_TEST_SLUG );
-			if (! $this->isSendingEmailAllowed ()) {
-				$disabled = "disabled='disabled'";
-			}
-			submit_button ( 'Send Test Email', 'primary', 'submit', true, $disabled );
-			?>
+				do_settings_sections ( PostmanAdminController::POSTMAN_TEST_SLUG );
+				if (! $this->isSendingEmailAllowed ()) {
+					$disabled = "disabled='disabled'";
+				}
+				submit_button ( 'Send Test Email', 'primary', 'submit', true, $disabled );
+				?>
 	</form>
 	<form method="POST" action="<?php get_admin_url()?>admin-post.php">
 		<input type='hidden' name='action' value='purge_data' />
             <?php
-			submit_button ( 'Delete All Data', 'delete', 'submit', true, 'style="background-color:red;color:white"' );
-			?>
+				submit_button ( 'Delete All Data', 'delete', 'submit', true, 'style="background-color:red;color:white"' );
+				?>
 	</form>
 
 </div>
