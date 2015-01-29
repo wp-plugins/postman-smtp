@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, phpmailer, wp_mail, gmail, google apps
 Requires at least: 3.8
 Tested up to: 4.1
-Stable tag: 0.2.5
+Stable tag: 0.2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +17,7 @@ If you don't care about security, you could ask Gmail to [allow less secure apps
 
 Postman is a next-generation SMTP plugin which provides WordPress with a more secure mechanism for sending email. When your site generates an e-mail, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
 
-Requirements: PHP 5.2, a Gmail or Google Apps account, a Client ID from Google Developer, Port 465 (TCP, outbound) must be open
+Requirements: PHP 5.3.23, a Gmail or Google Apps account, a Client ID from Google Developer, Port 465 (TCP, outbound) must be open
 
 == Frequently Asked Questions == 
 
@@ -94,7 +94,7 @@ Now accepts multiple recipients when sending email.
 == Upgrade Notice ==
 
 = 0.2.6 =
-Fixed various errors when running in a PHP 5.2 environment.
+Fixed the hyperlink in the message that displays when the plugin is not configured (just installed).
 
 = 0.2.5 =
 Please note that the Postman Redirect URI has changed. If you are upgrading, you MUST update the Client ID Redirect URI in the Google Developer Console, or create a new CLient ID altogether. Attempting to re-authorize a Client ID created for an earlier version of Postman WILL FAIL with "Error: redirect_uri_mismatch".
