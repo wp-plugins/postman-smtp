@@ -50,8 +50,7 @@ Please note: Postman is intended for users who want to use Gmail's SMTP servers.
 1. Choose the *Request Permission from Google* button and follow the instructions.
 1. Send yourself a test e-mail. 
 
-postman is developed on OS X Macports PHP 5.2.17 and Apache 2.2.29
-Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment.
+Postman is developed on OS X Macports PHP 5.2.17 and Apache 2.2.29. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment.
 
 == Screenshots ==
 
