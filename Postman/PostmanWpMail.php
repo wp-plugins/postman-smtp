@@ -24,7 +24,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 				if ($authenticationManager->isTokenExpired ()) {
 					$this->logger->debug ( 'Access Token has expired, attempting refresh' );
 					$authenticationManager->refreshToken ();
-					$authorizationToken->save ();
+					$this->authorizationToken->save ();
 				}
 				// send the message
 				$this->engine = new PostmanOAuthSmtpEngine ( PostmanOptionUtil::getSenderEmail ( $this->options ), $this->authorizationToken->getAccessToken () );
