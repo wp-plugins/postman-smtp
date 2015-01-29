@@ -1,7 +1,7 @@
 <?php
 if (! class_exists ( "PostmanSendTestEmailController" )) {
 	class PostmanSendTestEmailController {
-		const SUBJECT = 'WordPress SMTP OAuth Mailer Test';
+		const SUBJECT = 'WordPress Postman SMTP Test';
 		const MESSAGE = 'Hello, World!';
 		
 		//
