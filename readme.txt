@@ -17,8 +17,6 @@ If you don't care about security, you could ask Gmail to [allow less secure apps
 
 Postman is a next-generation SMTP plugin which provides WordPress with a more secure mechanism for sending email. When your site generates an e-mail, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
 
-Postman is intended for users who want to use Gmail's SMTP servers. Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to Gmail's SMTP server and Postman will not function.
-
 Requirements: PHP 5.2, a Gmail or Google Apps account, a Client ID from Google Developer, Port 465 (TCP, outbound) must be open
 
 == Frequently Asked Questions == 
@@ -41,6 +39,8 @@ To use Postman, every website needs their own Client ID. The Client ID is used t
 
 == Installation ==
 
+Please note: Postman is intended for users who want to use Gmail's SMTP servers. Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to Gmail's SMTP servers and Postman will not work for you.
+
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 1. In the WordPress 'Settings' menu find 'Postman SMTP'.
 1. In *Sender Email Address* enter your account's email address. This should be the same address you login to Google with.
@@ -49,6 +49,9 @@ To use Postman, every website needs their own Client ID. The Client ID is used t
 1. Choose the Save Changes button.
 1. Choose the *Request Permission from Google* button and follow the instructions.
 1. Send yourself a test e-mail. 
+
+postman is developed on OS X Macports PHP 5.2.17 and Apache 2.2.29
+Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment.
 
 == Screenshots ==
 
@@ -61,7 +64,7 @@ To use Postman, every website needs their own Client ID. The Client ID is used t
 Now accepts multiple recipients when sending email. 
 
 == Changelog ==
-= 0.2.6 - 2015-01-28
+= 0.2.6 - 2015-01-28 =
 * Fixed Configure and Authorize the plugin" have no link address - broke this when I removed sprintf()
 * Fixed Fatal error: Call to undefined function str_getcsv() - this function is available in PHP 5.3+
 * Fixed Warning: Missing argument 2 for update_option() - should be calling delete_option instead
