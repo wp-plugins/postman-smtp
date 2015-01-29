@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, phpmailer, wp_mail, gmail, google apps
 Requires at least: 3.8
 Tested up to: 4.1
-Stable tag: 0.2.6
+Stable tag: 0.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,12 @@ Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environmen
 Now accepts multiple recipients when sending email. 
 
 == Changelog ==
+
+= 0.2.7 - 2015-01-29 =
+* Fixed error: "Undefined variable: authorizationToken" was preventing mail delivery outside of the admin screen.
+* Fixed warning message that Postman couldnt bind to wp_mail immediately after Activation
+* Added prerequisite checks to make sure the PHP environment can handle Postman
+
 = 0.2.6 - 2015-01-28 =
 * Fixed Configure and Authorize the plugin" have no link address - broke this when I removed sprintf()
 * Fixed Fatal error: Call to undefined function str_getcsv() - this function is available in PHP 5.3+
@@ -92,6 +98,9 @@ Now accepts multiple recipients when sending email.
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 0.2.7 =
+A bug in PostmanWpMail prevents all mail from going out. PLEASE UPGRADE!
 
 = 0.2.6 =
 Fixed the hyperlink in the message that displays when the plugin is not configured (just installed).
