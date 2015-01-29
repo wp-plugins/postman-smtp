@@ -3,18 +3,22 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 	
 	require_once 'SmtpEngine.php';
 	
-	require_once 'Zend/Registry.php';
-	require_once 'Zend/Mime.php';
-	require_once 'Zend/Validate.php';
-	require_once 'Zend/Validate/Hostname.php';
-	require_once 'Zend/Mail.php';
-	require_once 'Zend/Loader.php';
-	require_once 'Zend/Loader/Autoloader.php';
-	require_once 'Zend/Mail/Transport/Smtp.php';
-	require_once 'Zend/Exception.php';
-	require_once 'Zend/Mail/Exception.php';
-	require_once 'Zend/Mail/Protocol/Smtp.php';
-	require_once 'Zend/Mail/Protocol/Smtp/Auth/Oauth2.php';
+	require_once 'Zend-1.12.10/Registry.php';
+	require_once 'Zend-1.12.10/Mail/Transport/Abstract.php';
+	require_once 'Zend-1.12.10/Mail/Transport/Smtp.php';
+	require_once 'Zend-1.12.10/Mime/Message.php';
+	require_once 'Zend-1.12.10/Mime/Part.php';
+	require_once 'Zend-1.12.10/Mail/Transport/Abstract.php';
+	require_once 'Zend-1.12.10/Mail.php';
+	require_once 'Zend-1.12.10/Validate/Interface.php';
+	require_once 'Zend-1.12.10/Validate/Abstract.php';
+	require_once 'Zend-1.12.10/Validate/Ip.php';
+	require_once 'Zend-1.12.10/Validate/Hostname.php';
+	require_once 'Zend-1.12.10/Validate.php';
+	require_once 'Zend-1.12.10/Mime.php';
+	require_once 'Zend-1.12.10/Mail/Protocol/Abstract.php';
+	require_once 'Zend-1.12.10/Mail/Protocol/Smtp.php';
+	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Oauth2.php';
 	
 	/**
 	 * This class knows how to interface with Wordpress

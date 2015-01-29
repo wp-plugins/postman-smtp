@@ -2,6 +2,24 @@
 if (! class_exists ( "GmailAuthenticationManager" )) {
 	
 	require_once 'AuthenticationManager.php';
+
+	require_once 'google-api-php-client-1.1.2/src/Google/Exception.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/IO/Exception.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Logger/Abstract.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Logger/Null.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Http/CacheParser.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/IO/Abstract.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/IO/Stream.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Utils.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Http/Request.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Client.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Config.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Service.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Model.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Service/Resource.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Service/Oauth2.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Auth/Abstract.php';
+	require_once 'google-api-php-client-1.1.2/src/Google/Auth/Oauth2.php';
 	
 	/**
 	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api
@@ -35,7 +53,7 @@ if (! class_exists ( "GmailAuthenticationManager" )) {
 			$this->clientId = $clientId;
 			$this->clientSecret = $clientSecret;
 			$this->authorizationToken = &$authorizationToken;
-			require_once 'google-api-php-client-1.1.2/autoload.php';
+// 			require_once 'google-api-php-client-1.1.2/autoload.php';
 		}
 		
 		/**
