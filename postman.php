@@ -4,7 +4,7 @@
  * Plugin Name: Postman OAuth SMTP
  * Plugin URI: https://wordpress.org/plugins/postman/
  * Description: Send your mail with your Gmail account by adding what Google calls "the latest security measures" (i.e. SMTPS with OAuth 2.0 authentication). As of July 2014, this is <a href="http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html">recommended</a> and in some cases, <a href="https://support.google.com/accounts/answer/6010255">required</a> for sending mail via Gmail. Hotmail support will be added in a future release.
- * Version: 0.2.6
+ * Version: 0.2.7
  * Author: Jason Hendriks
  * Author URI: https://profiles.wordpress.org/jasonhendriks/
  * License: GPLv2 or later
@@ -31,7 +31,7 @@ $logger = new PostmanLogger ();
 
 // replace the wp_mail function with Postman's
 if ($kevinCostner->isRequestOAuthPermissiongAllowed () && $kevinCostner->isSendingEmailAllowed ()) {
-	if (! function_exists ( 'wp_mail' )) {
+	if (! function_exists ( 'wp_mail' ) ) {
 		function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
 			// load settings from database
 			$options = get_option ( PostmanWordpressUtil::POSTMAN_OPTIONS );
@@ -43,7 +43,7 @@ if ($kevinCostner->isRequestOAuthPermissiongAllowed () && $kevinCostner->isSendi
 	} else {
 		$logger->debug ( 'cant replace wp_mail' );
 		$util = new PostmanWordpressUtil ();
-		$util->addWarning ( PostmanAdminController::NAME . ' is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.' );
+		$kevinCostner->couldNotReplaceWpMail();
 	}
 }
 
