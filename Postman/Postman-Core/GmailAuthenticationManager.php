@@ -135,18 +135,18 @@ if (! class_exists ( "GmailAuthenticationManager" )) {
 			// update expiry time
 			$newExpiryTime = time () + $newtoken->{GmailAuthenticationManager::EXPIRES};
 			$this->authorizationToken->setExpiryTime ( $newExpiryTime );
-			$this->logger->debug ( 'Updating Access Token Expiry Time=' . $newExpiryTime );
+			$this->logger->debug ( 'Updating Access Token Expiry Time' );
 			
 			// update acccess token
 			$newAccessToken = $newtoken->{GmailAuthenticationManager::ACCESS_TOKEN};
 			$this->authorizationToken->setAccessToken ( $newAccessToken );
-			$this->logger->debug ( 'Updating Access Token=' . $newAccessToken );
+			$this->logger->debug ( 'Updating Access Token' );
 			
 			// update refresh token, if there is one
 			if (isset ( $newtoken->{GmailAuthenticationManager::REFRESH_TOKEN} )) {
 				$newRefreshToken = $newtoken->{GmailAuthenticationManager::REFRESH_TOKEN};
 				$this->authorizationToken->setRefreshToken ( $newRefreshToken );
-				$this->logger->debug ( 'Updating Refresh Token=' . $newRefreshToken );
+				$this->logger->debug ( 'Updating Refresh Token' );
 			}
 		}
 	}

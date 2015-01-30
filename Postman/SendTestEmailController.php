@@ -25,13 +25,13 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			$subject = PostmanSendTestEmailController::SUBJECT;
 			$message = PostmanSendTestEmailController::MESSAGE;
 			
-			$this->logger->debug ( 'Sending Test email: server=' . $options->getHostname () . ':' . $options->getPort () . ' from=' . $options->getSenderEmail () . ' to=' . $recipient . ' subject=' . $subject );
+			$this->logger->debug ( 'Sending Test email' );
 			
 			// send through wp_mail
 			$wp_mail_result = wp_mail ( $recipient, $subject, $message . ' - sent by Postman via wp_mail()' );
 			
 			if (! $wp_mail_result) {
-				$this->logger->debug ( 'wp_mail failed :( re-trying through the internal engine' );
+				$this->logger->error ( 'wp_mail failed :( re-trying through the internal engine' );
 				$postmanWpMail = new PostmanWpMail ();
 				$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message . ' - sent by Postman via internal engine' );
 			}
@@ -41,14 +41,16 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 				$this->logger->debug ( 'Test Email delivered to SMTP server' );
 				$postmanMessageHandler->addMessage ( 'Your message was delivered to the SMTP server! Congratulations :)' );
 			} else if (! $postmanWpMailResult) {
-				$this->logger->debug ( 'Test Email NOT delivered to SMTP server - ' . $postmanWpMail->getException ()->getCode () );
+				$this->logger->error ( 'Test Email NOT delivered to SMTP server - ' . $postmanWpMail->getException ()->getCode () );
 				if ($postmanWpMail->getException ()->getCode () == 334) {
 					$postmanMessageHandler->addError ( 'Oh, bother! ... Communication Error [334].' );
 				} else {
 					$postmanMessageHandler->addError ( 'Oh, bother! ... ' . $postmanWpMail->getException ()->getMessage () );
 				}
 			} else {
-				$postmanMessageHandler->addError ( 'Something is wrong, sending throgh wp_mail() failed, but sending through internal engine succeeded. Time to debug!' );
+				$message = 'Something is wrong, sending throgh wp_mail() failed, but sending through internal engine succeeded. Time to debug!';
+				$this->logger->error ( $message );
+				$postmanMessageHandler->addError ( $message );
 			}
 			
 			$this->logger->debug ( 'Redirecting to home page' );

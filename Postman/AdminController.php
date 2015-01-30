@@ -49,7 +49,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			assert ( ! empty ( $options ) );
 			assert ( ! empty ( $authorizationToken ) );
 			assert ( ! empty ( $postmanMessageHandler ) );
-			$this->logger = new PostmanLogger ( get_class( $this ));
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->postmanMessageHandler = $postmanMessageHandler;
@@ -125,7 +125,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$testEmailController->send ( $this->options, $this->authorizationToken, $recipient, $this->postmanMessageHandler );
 		}
 		public function handleGoogleAuthenticationAction() {
-			$authenticationManager = PostmanAuthenticationManagerFactory::createAuthenticationManager ( $this->options->getClientId (), $this->options->getClientSecret (), $this->authorizationToken );
+			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $this->options->getClientId (), $this->options->getClientSecret (), $this->authorizationToken );
 			$authenticationManager->authenticate ( $this->options->getSenderEmail () );
 		}
 		

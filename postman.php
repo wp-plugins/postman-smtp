@@ -47,7 +47,7 @@ function postmanSmtpMain() {
 	if (isset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
 		unset ( $_SESSION [PostmanAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
 		if (isset ( $_GET ['code'] )) {
-			postmanHandleAuthorizationGrant ( $options->getClientId (), $options->getClientSecret (), $authToken );
+			postmanHandleAuthorizationGrant ( $logger, $options->getClientId (), $options->getClientSecret (), $authToken );
 			// redirect to plugin setting page and exit()
 			header ( 'Location: ' . esc_url ( POSTMAN_HOME_PAGE_URL ) );
 			exit ();
@@ -67,11 +67,11 @@ function postmanSmtpMain() {
 /**
  * Handles the authorization grant
  */
-function postmanHandleAuthorizationGrant($clientId, $clientSecret, $authorizationToken) {
+function postmanHandleAuthorizationGrant(PostmanLogger $logger, $clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken) {
 	$logger->debug ( 'Authorization in progress' );
 	unset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
 	
-	$authenticationManager = PostmanAuthenticationManagerFactory::createAuthenticationManager ( $clientId, $clientSecret, $authorizationToken );
+	$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $clientId, $clientSecret, $authorizationToken );
 	try {
 		if ($authenticationManager->tradeCodeForToken ()) {
 			$logger->debug ( 'Authorization successful' );
@@ -81,7 +81,7 @@ function postmanHandleAuthorizationGrant($clientId, $clientSecret, $authorizatio
 			PostmanMessageHandler::addError ( 'Your email provider did not grant Postman permission. Try again.' );
 		}
 	} catch ( Google_Auth_Exception $e ) {
-		$logger->debug ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
+		$logger->error ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
 		PostmanMessageHandler::addError ( 'Error authenticating with this Client ID - please create a new one. [<em>' . $e->getMessage () . ' code=' . $e->getCode () . '</em>]' );
 	}
 }
@@ -93,6 +93,8 @@ if (! function_exists ( 'activatePostman' )) {
 	 * Handle activation of plugin
 	 */
 	function activatePostman() {
+		$logger = new PostmanLogger ( 'postman.php' );
+		$logger->debug("Activating plugin");
 		// prior to version 0.2.5, $authOptions did not exist
 		$authOptions = get_option ( PostmanAuthorizationToken::OPTIONS_NAME );
 		$options = get_option ( PostmanOptions::POSTMAN_OPTIONS );

@@ -1,5 +1,8 @@
 <?php
 if (! class_exists ( "PostmanWpMail" )) {
+	
+	require_once 'Postman-Core/PostmanSmtpEngineFactory.php';
+	
 	/**
 	 * Moved this code into a class so it could be used by both wp_mail() and PostmanSendTestEmailController
 	 *
@@ -12,18 +15,24 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$logger = new PostmanLogger ( get_class ( $this ) );
 			try {
 				// ensure the token is up-to-date
-				$wpMailAuthManager = PostmanAuthenticationManagerFactory::createAuthenticationManager ( $wpMailOptions->getClientId (), $wpMailOptions->getClientSecret (), $wpMailAuthorizationToken );
+				$logger->debug ( 'Ensuring Access Token is up-to-date' );
+				
+				// interact with the Authentication Manager
+				$wpMailAuthManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $wpMailOptions->getClientId (), $wpMailOptions->getClientSecret (), $wpMailAuthorizationToken );
 				if ($wpMailAuthManager->isTokenExpired ()) {
 					$logger->debug ( 'Access Token has expired, attempting refresh' );
 					$wpMailAuthManager->refreshToken ();
 					$wpMailAuthorizationToken->save ();
 				}
 				// send the message
-				$this->engine = new PostmanOAuthSmtpEngine ( $wpMailOptions->getSenderEmail (), $wpMailAuthorizationToken->getAccessToken () );
-				$this->engine->setBodyText ( $message );
-				$this->engine->setSubject ( $subject );
-				$this->engine->addTo ( $to );
-				$this->engine->send ( $wpMailOptions->getHostname (), $wpMailOptions->getPort () );
+				$logger->debug ( 'Sending mail' );
+				
+				// interact with the SMTP Engine
+				$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken );
+				$engine->setBodyText ( $message );
+				$engine->setSubject ( $subject );
+				$engine->addTo ( $to );
+				$engine->send ( $wpMailOptions->getHostname (), $wpMailOptions->getPort () );
 				return true;
 			} catch ( Exception $e ) {
 				$this->exception = $e;

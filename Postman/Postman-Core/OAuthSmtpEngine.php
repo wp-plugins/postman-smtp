@@ -68,10 +68,11 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			assert ( ! empty ( $port ) );
 			assert ( ! empty ( $hostname ) );
 			if (! $this->validateEmail ( $senderEmail )) {
-				throw new Exception ( 'Sender e-mail "' . $senderEmail . '" is invalid.' );
+				$message = 'Sender e-mail "' . $senderEmail . '" is invalid.';
+				$this->logger->error ( $message );
+				throw new Exception ( $message );
 			}
 			$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$accessToken}\1\1" );
-			$this->logger->debug ( 'initClientRequest=' . base64_decode ( $initClientRequestEncoded ) );
 			assert ( ! empty ( $initClientRequestEncoded ) );
 			$config = array (
 					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => PostmanOAuthSmtpEngine::SSL_VALUE,
@@ -84,6 +85,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			$transport = new Zend_Mail_Transport_Smtp ( $hostname, $config );
 			$this->mail->setFrom ( $senderEmail );
 			assert ( ! empty ( $transport ) );
+			$this->logger->debug ( "Sending mail" );
 			$this->mail->send ( $transport );
 		}
 		public function validateEmail($email) {
@@ -108,14 +110,20 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 					}
 					$tokenizedEmail = trim ( $t [$k] );
 					if (! $this->validateEmail ( $tokenizedEmail )) {
-						throw new Exception ( 'Recipient e-mail "' . $tokenizedEmail . '" is invalid.' );
+						$message = 'Recipient e-mail "' . $tokenizedEmail . '" is invalid.';
+						$this->logger->error ( $message );
+						throw new Exception ( $message );
 					}
+					$this->logger->debug ( "To: " . $tokenizedEmail );
 					$this->mail->addTo ( $tokenizedEmail );
 				}
 			} else {
 				if (! $this->validateEmail ( $email )) {
-					throw new Exception ( 'Recipient e-mail "' . $email . '" is invalid.' );
+					$message = 'Recipient e-mail "' . $email . '" is invalid.';
+					$this->logger->error ( $message );
+					throw new Exception ( $message );
 				}
+				$this->logger->debug ( "To: " . $email . '(' . $name . ')' );
 				$this->mail->addTo ( $email, $name );
 			}
 		}

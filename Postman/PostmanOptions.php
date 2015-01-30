@@ -29,6 +29,10 @@ if (! class_exists ( "PostmanOptions" )) {
 			}
 			return $inst;
 		}
+		
+		/**
+		 * private constructor
+		 */
 		private function __construct() {
 			$this->options = get_option ( PostmanOptions::POSTMAN_OPTIONS );
 		}
@@ -36,7 +40,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		public function isRequestOAuthPermissiongAllowed() {
 			$clientId = $this->getClientId ();
 			$clientSecret = $this->getClientSecret ();
-			return ! empty ( $clientId ) && ! empty ( $haveClientSecret );
+			return ! empty ( $clientId ) && ! empty ( $clientSecret );
 		}
 		public function isSendingEmailAllowed(PostmanAuthorizationToken $token) {
 			$accessToken = $token->getAccessToken ();
