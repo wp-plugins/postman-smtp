@@ -12,16 +12,23 @@ if (! class_exists ( "PostmanAuthorizationToken" )) {
 		private $accessToken;
 		private $refreshToken;
 		private $expiryTime;
-		public function load() {
+
+		// singleton instance
+		public static function getInstance() {
+			static $inst = null;
+			if ($inst === null) {
+				$inst = new PostmanAuthorizationToken ();
+			}
+			return $inst;
+		}
+		
+		// private constructor
+		private function __construct() {
 			// load settings from database
 			$a = get_option ( PostmanAuthorizationToken::OPTIONS_NAME );
 			$this->setAccessToken ( $a [PostmanAuthorizationToken::ACCESS_TOKEN] );
 			$this->setRefreshToken ( $a [PostmanAuthorizationToken::REFRESH_TOKEN] );
 			$this->setExpiryTime ( $a [PostmanAuthorizationToken::EXPIRY_TIME] );
-			$logger = new PostmanLogger ();
-// 			$logger->debug ( 'Loaded Access Token: ' . $this->getAccessToken () );
-// 			$logger->debug ( 'Loaded Refresh Token: ' . $this->getRefreshToken () );
-// 			$logger->debug ( 'Loaded Expiry Time: ' . $this->getExpiryTime () );
 		}
 		
 		/**

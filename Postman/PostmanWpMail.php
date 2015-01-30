@@ -1,41 +1,33 @@
 <?php
 if (! class_exists ( "PostmanWpMail" )) {
+	/**
+	 * Moved this code into a class so it could be used by both wp_mail() and PostmanSendTestEmailController
+	 *
+	 * @author jasonhendriks
+	 *        
+	 */
 	class PostmanWpMail {
-		private $logger;
-		private $options;
-		private $authorizationToken;
 		private $exception;
-		/**
-		 * 
-		 * @param unknown $options
-		 * @param unknown $authorizationToken - passed by reference as it is potentially altered by the AuthenticationManager
-		 */
-		function __construct($options, &$authorizationToken) {
-			assert ( ! empty ( $options ) );
-			assert ( ! empty ( $authorizationToken ) );
-			$this->options = $options;
-			$this->authorizationToken = &$authorizationToken;
-			$this->logger = new PostmanLogger ();
-		}
-		public function send($to, $subject, $message, $headers = '', $attachments = array()) {
+		public function send(PostmanOptions $wpMailOptions, PostmanAuthorizationToken $wpMailAuthorizationToken, $to, $subject, $message, $headers = '', $attachments = array()) {
+			$logger = new PostmanLogger ( get_class ( $this ) );
 			try {
 				// ensure the token is up-to-date
-				$authenticationManager = PostmanAuthenticationManagerFactory::createAuthenticationManager($this->options, $this->authorizationToken );
-				if ($authenticationManager->isTokenExpired ()) {
-					$this->logger->debug ( 'Access Token has expired, attempting refresh' );
-					$authenticationManager->refreshToken ();
-					$this->authorizationToken->save ();
+				$wpMailAuthManager = PostmanAuthenticationManagerFactory::createAuthenticationManager ( $wpMailOptions->getClientId (), $wpMailOptions->getClientSecret (), $wpMailAuthorizationToken );
+				if ($wpMailAuthManager->isTokenExpired ()) {
+					$logger->debug ( 'Access Token has expired, attempting refresh' );
+					$wpMailAuthManager->refreshToken ();
+					$wpMailAuthorizationToken->save ();
 				}
 				// send the message
-				$this->engine = new PostmanOAuthSmtpEngine ( PostmanOptionUtil::getSenderEmail ( $this->options ), $this->authorizationToken->getAccessToken () );
+				$this->engine = new PostmanOAuthSmtpEngine ( $wpMailOptions->getSenderEmail (), $wpMailAuthorizationToken->getAccessToken () );
 				$this->engine->setBodyText ( $message );
 				$this->engine->setSubject ( $subject );
 				$this->engine->addTo ( $to );
-				$this->engine->send ( PostmanOptionUtil::getHostname ( $this->options ), PostmanOptionUtil::getPort ( $this->options ) );
+				$this->engine->send ( $wpMailOptions->getHostname (), $wpMailOptions->getPort () );
 				return true;
 			} catch ( Exception $e ) {
 				$this->exception = $e;
-				$this->logger->debug ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
+				$logger->debug ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
 				return false;
 			}
 		}

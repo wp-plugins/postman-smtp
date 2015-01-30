@@ -304,7 +304,7 @@ class Zend_Mail_Protocol_Smtp extends Zend_Mail_Protocol_Abstract
             /**
              * @see Zend_Mail_Protocol_Exception
              */
-            require_once 'Zend/Mail/Protocol/Exception.php';
+//             require_once 'Zend/Mail/Protocol/Exception.php';
             throw new Zend_Mail_Protocol_Exception('No recipient forward path has been supplied');
         }
 

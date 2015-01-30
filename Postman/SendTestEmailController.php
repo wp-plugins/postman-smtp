@@ -6,12 +6,10 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 		
 		//
 		private $logger;
-		private $util;
 		
 		//
 		function __construct() {
-			$this->logger = new PostmanLogger ();
-			$this->util = new PostmanWordpressUtil ();
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
 		
 		/**
@@ -19,35 +17,38 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 		 * @param unknown $options        	
 		 * @param unknown $recipient        	
 		 */
-		public function send($options, &$authorizationToken, $recipient) {
-			$hostname = PostmanOptionUtil::getHostname ( $options );
-			$port = PostmanOptionUtil::getPort ( $options );
-			$from = PostmanOptionUtil::getSenderEmail ( $options );
+		public function send(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, $recipient, PostmanMessageHandler $postmanMessageHandler) {
+			assert ( ! empty ( $options ) );
+			assert ( ! empty ( $authorizationToken ) );
+			assert ( ! empty ( $recipient ) );
+			assert ( ! empty ( $postmanMessageHandler ) );
 			$subject = PostmanSendTestEmailController::SUBJECT;
 			$message = PostmanSendTestEmailController::MESSAGE;
 			
-			$this->logger->debug ( 'Sending Test email: server=' . $hostname . ':' . $port . ' from=' . $from . ' to=' . $recipient . ' subject=' . $subject );
+			$this->logger->debug ( 'Sending Test email: server=' . $options->getHostname () . ':' . $options->getPort () . ' from=' . $options->getSenderEmail () . ' to=' . $recipient . ' subject=' . $subject );
 			
 			// send through wp_mail
-			$result = wp_mail ( $recipient, $subject, $message . ' - sent by Postman via wp_mail()' );
+			$wp_mail_result = wp_mail ( $recipient, $subject, $message . ' - sent by Postman via wp_mail()' );
 			
-			if (! $result) {
+			if (! $wp_mail_result) {
 				$this->logger->debug ( 'wp_mail failed :( re-trying through the internal engine' );
-				$postmanWpMail = new PostmanWpMail ( $options, $authorizationToken );
-				$result = $postmanWpMail->send ( $recipient, $subject, $message . ' - sent by Postman via internal engine' );
+				$postmanWpMail = new PostmanWpMail ();
+				$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message . ' - sent by Postman via internal engine' );
 			}
 			
 			//
-			if ($result) {
+			if ($wp_mail_result) {
 				$this->logger->debug ( 'Test Email delivered to SMTP server' );
-				$this->util->addMessage ( 'Your message was delivered to the SMTP server! Congratulations :)' );
-			} else {
+				$postmanMessageHandler->addMessage ( 'Your message was delivered to the SMTP server! Congratulations :)' );
+			} else if (! $postmanWpMailResult) {
 				$this->logger->debug ( 'Test Email NOT delivered to SMTP server - ' . $postmanWpMail->getException ()->getCode () );
 				if ($postmanWpMail->getException ()->getCode () == 334) {
-					$this->util->addError ( 'Oh, bother! ... Communication Error [334].' );
+					$postmanMessageHandler->addError ( 'Oh, bother! ... Communication Error [334].' );
 				} else {
-					$this->util->addError ( 'Oh, bother! ... ' . $postmanWpMail->getException ()->getMessage () );
+					$postmanMessageHandler->addError ( 'Oh, bother! ... ' . $postmanWpMail->getException ()->getMessage () );
 				}
+			} else {
+				$postmanMessageHandler->addError ( 'Something is wrong, sending throgh wp_mail() failed, but sending through internal engine succeeded. Time to debug!' );
 			}
 			
 			$this->logger->debug ( 'Redirecting to home page' );

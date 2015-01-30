@@ -3,42 +3,6 @@ if (! class_exists ( "PostmanWordpressUtil" )) {
 	// global function specific to the WordPress implementation of Postman
 	class PostmanWordpressUtil {
 
-		const POSTMAN_OPTIONS = 'postman_options';
-		
-		/*
-		 * THIS FUNCTION IS TAKEN FORM wp_main IN pluggable.php.
-		 * TO BE A 100% DROP-IN REPLACEMENT, THE DEFAULT SENDER E-MAIL WILL
-		 * REMAIN AS wordpress@sitename.
-		 */
-		function addError($message) {
-			$_SESSION [PostmanAdminController::ERROR_MESSAGE] = $message;
-		}
-		function addWarning($message) {
-			$_SESSION [PostmanAdminController::WARNING_MESSAGE] = $message;
-		}
-		function addMessage($message) {
-			$_SESSION [PostmanAdminController::SUCCESS_MESSAGE] = $message;
-		}
-		/**
-		 * If we don't have an email from the input headers default to wordpress@$sitename
-		 * Some hosts will block outgoing mail from this address if it doesn't exist but
-		 * there's no easy alternative.
-		 * Defaulting to admin_email might appear to be another
-		 * option but some hosts may refuse to relay mail from an unknown domain. See
-		 * https://core.trac.wordpress.org/ticket/5007.
-		 */
-		function createLegacySenderEmail() {
-			$from_name = 'WordPress';
-			
-			// Get the site domain and get rid of www.
-			$sitename = strtolower ( $_SERVER ['SERVER_NAME'] );
-			if (substr ( $sitename, 0, 4 ) == 'www.') {
-				$sitename = substr ( $sitename, 4 );
-			}
-			
-			$from_email = 'wordpress@' . $sitename;
-			return $from_email;
-		}
 		function runTest() {
 			test1 ();
 			test2 ();

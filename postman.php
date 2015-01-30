@@ -14,39 +14,79 @@
 // these constants are used for OAuth HTTP requests
 define ( 'POSTMAN_HOME_PAGE_URL', admin_url ( 'options-general.php' ) . '?page=postman' );
 
-// load the guts of Postman
-require_once 'Postman/core.php';
-require_once 'Postman/PostmanWpMail.php';
-require_once 'Postman/AdminController.php';
-require_once 'Postman/WordPressUtils.php';
+// load the core of Postman
+require_once 'Postman/Postman-Core/core.php';
 
-if (! isset ( $_SESSION )) {
-	// needs predictable access to the session
-	session_start ();
+// bind Postman to wp_mail()
+require_once 'Postman/PostmanWpMailBinder.php';
+
+// display messages to the user
+require_once 'Postman/PostmanMessageHandler.php';
+
+// the options screen
+require_once 'Postman/AdminController.php';
+
+// start all the fuss
+postmanSmtpMain ();
+
+// all the fuss
+function postmanSmtpMain() {
+	if (! isset ( $_SESSION )) {
+		// needs predictable access to the session
+		session_start ();
+	}
+	
+	// create a Logger
+	$logger = new PostmanLogger ( 'postman.php' );
+	
+	// load the options and the auth token
+	$options = PostmanOptions::getInstance ();
+	$authToken = PostmanAuthorizationToken::getInstance ();
+	
+	// check if there is an auth token waiting for granting and possibly exit
+	if (isset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
+		unset ( $_SESSION [PostmanAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
+		if (isset ( $_GET ['code'] )) {
+			postmanHandleAuthorizationGrant ( $options->getClientId (), $options->getClientSecret (), $authToken );
+			// redirect to plugin setting page and exit()
+			header ( 'Location: ' . esc_url ( POSTMAN_HOME_PAGE_URL ) );
+			exit ();
+		}
+	}
+	
+	// create a message handler
+	$messageHandler = new PostmanMessageHandler ( $options );
+	
+	// start the Postman Admin page
+	$kevinCostner = new PostmanAdminController ( plugin_basename ( __FILE__ ), $options, $authToken, $messageHandler );
+	
+	// bind to wp_mail()
+	new PostmanWpMailBinder ( plugin_basename ( __FILE__ ), $options, $authToken, $messageHandler );
 }
 
-// start the Postman Admin page
-$kevinCostner = new PostmanAdminController ( plugin_basename ( __FILE__ ) );
-$logger = new PostmanLogger ();
-
-// replace the wp_mail function with Postman's
-if ($kevinCostner->isRequestOAuthPermissiongAllowed () && $kevinCostner->isSendingEmailAllowed ()) {
-	if (! function_exists ( 'wp_mail' ) ) {
-		function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
-			// load settings from database
-			$options = get_option ( PostmanWordpressUtil::POSTMAN_OPTIONS );
-			$authorizationToken = new PostmanAuthorizationToken ();
-			$authorizationToken->load ();
-			$postmanWpMail = new PostmanWpMail ( $options, $authorizationToken );
-			return $postmanWpMail->send ( $to, $subject, $message, $headers, $attachments );
+/**
+ * Handles the authorization grant
+ */
+function postmanHandleAuthorizationGrant($clientId, $clientSecret, $authorizationToken) {
+	$logger->debug ( 'Authorization in progress' );
+	unset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
+	
+	$authenticationManager = PostmanAuthenticationManagerFactory::createAuthenticationManager ( $clientId, $clientSecret, $authorizationToken );
+	try {
+		if ($authenticationManager->tradeCodeForToken ()) {
+			$logger->debug ( 'Authorization successful' );
+			// save to database
+			$authorizationToken->save ();
+		} else {
+			PostmanMessageHandler::addError ( 'Your email provider did not grant Postman permission. Try again.' );
 		}
-	} else {
-		$logger->debug ( 'cant replace wp_mail' );
-		$util = new PostmanWordpressUtil ();
-		$kevinCostner->couldNotReplaceWpMail();
+	} catch ( Google_Auth_Exception $e ) {
+		$logger->debug ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
+		PostmanMessageHandler::addError ( 'Error authenticating with this Client ID - please create a new one. [<em>' . $e->getMessage () . ' code=' . $e->getCode () . '</em>]' );
 	}
 }
 
+// handle plugin activation
 if (! function_exists ( 'activatePostman' )) {
 	register_activation_hook ( __FILE__, 'activatePostman' );
 	/**
@@ -55,7 +95,7 @@ if (! function_exists ( 'activatePostman' )) {
 	function activatePostman() {
 		// prior to version 0.2.5, $authOptions did not exist
 		$authOptions = get_option ( PostmanAuthorizationToken::OPTIONS_NAME );
-		$options = get_option ( PostmanWordpressUtil::POSTMAN_OPTIONS );
+		$options = get_option ( PostmanOptions::POSTMAN_OPTIONS );
 		if (empty ( $authOptions ) && ! (empty ( $options ))) {
 			// copy the variables from $options to $authToken
 			$authToken = new PostmanAuthorizationToken ();

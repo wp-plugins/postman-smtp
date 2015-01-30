@@ -1,16 +1,18 @@
 <?php
 require_once 'OAuthSmtpEngine.php';
 require_once 'GmailAuthenticationManager.php';
-require_once 'OptionsUtil.php';
-require_once 'PostmanAuthorizationToken.php';
 require_once 'PostmanAuthenticationManagerFactory.php';
 
 if (! class_exists ( "PostmanLogger" )) {
 	
 	//
 	class PostmanLogger {
+		private $name;
+		function __construct($name) {
+			$this->name = $name;
+		}
 		function debug($text) {
-			error_log ( "PostmanSmtp: " . $text );
+			error_log ( $this->name . ' ' . $text );
 		}
 	}
 }

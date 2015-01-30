@@ -27,14 +27,14 @@ if (! class_exists ( "GmailAuthenticationManager" )) {
 		/**
 		 * Constructor
 		 */
-		public function __construct($clientId, $clientSecret, PostmanAuthorizationToken &$authorizationToken) {
+		public function __construct($clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken) {
 			assert ( ! empty ( $clientId ) );
 			assert ( ! empty ( $clientSecret ) );
 			assert ( ! empty ( $authorizationToken ) );
-			$this->logger = new PostmanLogger ();
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->clientId = $clientId;
 			$this->clientSecret = $clientSecret;
-			$this->authorizationToken = &$authorizationToken;
+			$this->authorizationToken = $authorizationToken;
 			require_once 'google-api-php-client-1.1.2/autoload.php';
 		}
 		
@@ -91,6 +91,7 @@ if (! class_exists ( "GmailAuthenticationManager" )) {
 		 * **********************************************
 		 */
 		public function authenticate($gmailAddress) {
+			assert ( ! empty ( $gmailAddress ) );
 			$client = $this->createGoogleClient ();
 			$client->setLoginHint ( $gmailAddress );
 			$this->logger->debug ( "authenticating with google: loginHint=" . $gmailAddress );

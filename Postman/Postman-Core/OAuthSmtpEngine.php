@@ -13,6 +13,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 	require_once 'Zend/Mail/Transport/Smtp.php';
 	require_once 'Zend/Exception.php';
 	require_once 'Zend/Mail/Exception.php';
+	require_once 'Zend/Mail/Protocol/Exception.php';
 	require_once 'Zend/Mail/Protocol/Smtp.php';
 	require_once 'Zend/Mail/Protocol/Smtp/Auth/Oauth2.php';
 	
@@ -45,7 +46,9 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		
 		// constructor
 		function __construct($senderEmail, $accessToken) {
-			$this->logger = new PostmanLogger ();
+			assert ( ! empty ( $senderEmail ) );
+			assert ( ! empty ( $accessToken ) );
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->mail = new Zend_Mail ();
 			$this->senderEmail = $senderEmail;
 			$this->accessToken = $accessToken;
