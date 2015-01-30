@@ -37,36 +37,62 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		//
 		private $logger;
 		
-		// this class wraps Zend_Mail
-		private $mail;
+		// are we in text/html mode?
+		private $textHtml;
 		
-		//
+		// set in the constructor
 		private $senderEmail;
 		private $accessToken;
+		
+		// set by the caller
+		private $recipients;
+		private $subject;
+		private $body;
+		private $headers;
 		
 		// constructor
 		function __construct($senderEmail, $accessToken) {
 			assert ( ! empty ( $senderEmail ) );
 			assert ( ! empty ( $accessToken ) );
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			$this->mail = new Zend_Mail ();
 			$this->senderEmail = $senderEmail;
 			$this->accessToken = $accessToken;
 		}
-		
+		public function setHeaders($headers) {
+			$this->headers = $headers;
+		}
+		function setBody($body) {
+			$this->body = $body;
+		}
+		function setSubject($subject) {
+			$this->subject = $subject;
+		}
+		function setReceipients($recipients) {
+			$this->recipients = $recipients;
+		}
 		/**
 		 * Verifies the Authentication Token and sends an email
 		 *
 		 * @return boolean
 		 */
 		public function send($hostname, $port) {
-			$senderEmail = $this->senderEmail;
-			$accessToken = $this->accessToken;
-			// create the options for authentication
-			assert ( ! empty ( $senderEmail ) );
-			assert ( ! empty ( $accessToken ) );
 			assert ( ! empty ( $port ) );
 			assert ( ! empty ( $hostname ) );
+			
+			// create the Message
+			$mail = new Zend_Mail ();
+			// headers must be set before body
+			$this->processHeaders ( $mail );
+			$this->processBody ( $mail );
+			$this->processRecipiens ( $mail );
+			$mail->setSubject ( $this->subject );
+			$this->addHeader ( 'X-Mailer', 'Postman SMTP for WordPress', $mail );
+			
+			// prepare authentication
+			$senderEmail = $this->senderEmail;
+			$accessToken = $this->accessToken;
+			assert ( ! empty ( $senderEmail ) );
+			assert ( ! empty ( $accessToken ) );
 			if (! $this->validateEmail ( $senderEmail )) {
 				$message = 'Sender e-mail "' . $senderEmail . '" is invalid.';
 				$this->logger->error ( $message );
@@ -83,10 +109,10 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			
 			// create the SMTP transport
 			$transport = new Zend_Mail_Transport_Smtp ( $hostname, $config );
-			$this->mail->setFrom ( $senderEmail );
+			$mail->setFrom ( $senderEmail );
 			assert ( ! empty ( $transport ) );
 			$this->logger->debug ( "Sending mail" );
-			$this->mail->send ( $transport );
+			$mail->send ( $transport );
 		}
 		public function validateEmail($email) {
 			$exp = "/^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$/i";
@@ -100,7 +126,8 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		 * @param
 		 *        	string
 		 */
-		public function addTo($email, $name = '') {
+		private function processRecipiens(Zend_Mail $mail) {
+			$email = $this->recipients;
 			if (! is_array ( $email )) {
 				// http://tiku.io/questions/955963/splitting-comma-separated-email-addresses-in-a-string-with-commas-in-quotes-in-p
 				$t = $this->stringGetCsvAlternate ( $email );
@@ -115,7 +142,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 						throw new Exception ( $message );
 					}
 					$this->logger->debug ( "To: " . $tokenizedEmail );
-					$this->mail->addTo ( $tokenizedEmail );
+					$mail->addTo ( $tokenizedEmail );
 				}
 			} else {
 				if (! $this->validateEmail ( $email )) {
@@ -124,7 +151,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 					throw new Exception ( $message );
 				}
 				$this->logger->debug ( "To: " . $email . '(' . $name . ')' );
-				$this->mail->addTo ( $email, $name );
+				$mail->addTo ( $email, $name );
 			}
 		}
 		/**
@@ -144,11 +171,14 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			fclose ( $fh );
 			return $row;
 		}
-		function setBodyText($bodyText) {
-			$this->mail->setBodyText ( $bodyText );
-		}
-		function setSubject($subject) {
-			$this->mail->setSubject ( $subject );
+		private function processBody(Zend_Mail $mail) {
+			if ($this->textHtml) {
+				$this->logger->debug ( 'Adding body as html' );
+				$mail->setBodyHtml ( $this->body );
+			} else {
+				$this->logger->debug ( 'Adding body as text' );
+				$mail->setBodyText ( $this->body );
+			}
 		}
 		/**
 		 * unknown $header| Mail headers to send with the message.
@@ -158,8 +188,62 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		 * @todo http://framework.zend.com/manual/1.12/en/zend.mail.additional-headers.html
 		 *      
 		 */
-		function setHeaders($header) {
-			// $this->mail->addHeader ( $header );
+		private function processHeaders(Zend_Mail $mail) {
+			if (! is_array ( $this->headers )) {
+				// WordPress may send a string where "each header line (beginning with From:, Cc:, etc.) is delimited with a newline ("\r\n") (advanced)"
+				$headerArray = explode ( PHP_EOL, $this->headers );
+			} else {
+				$headerArray = $this->headers;
+			}
+			// otherwise WordPress sends an array
+			foreach ( $headerArray as $header ) {
+				if (! empty ( $header )) {
+					$explodedHeader = explode ( ':', $header, 2 );
+					$name = $explodedHeader [0];
+					$value = trim ( $explodedHeader [1] );
+					$this->addHeader ( $name, $value, $mail );
+				}
+			}
+		}
+		private function addHeader($name, $value, Zend_Mail $mail) {
+			if (strtolower ( $name ) == "to") {
+				$this->logger->debug ( "to Header: " . $value );
+				$mail->addTo ( $value );
+			} else if (strtolower ( $name ) == "cc") {
+				$this->logger->debug ( "cc Header: " . $value );
+				$mail->addCc ( $value );
+			} else if (strtolower ( $name ) == "bcc") {
+				$this->logger->debug ( "bcc Header: " . $value );
+				$mail->addBcc ( $value );
+			} else if (strtolower ( $name ) == "from") {
+				$this->logger->debug ( "from Header ignored" );
+				// not allowed in OAuth
+			} else if (strtolower ( $name ) == "subject") {
+				$this->logger->debug ( "subject Header: " . $value );
+				$mail->setSubject ( $value );
+			} else if (strtolower ( $name ) == "reply-to") {
+				$this->logger->debug ( "reply-to Header: " . $value );
+				$mail->setReplyTo ( $value );
+			} else if (strtolower ( $name ) == "return-path") {
+				$this->logger->debug ( "return-path Header: " . $value );
+				$mail->setReturnPath ( $value );
+			} else if (strtolower ( $name ) == "date") {
+				$this->logger->debug ( "date Header: " . $value );
+				$mail->setDate ( $value );
+			} else if (strtolower ( $name ) == "message-id") {
+				$this->logger->debug ( "message-id Header: " . $value );
+				$mail->setMessageId ( $value );
+			} else if (strtolower ( $name ) == "message-id") {
+				$this->logger->debug ( "message-id Header: " . $value );
+				$mail->setMessageId ( $value );
+			} else if (strtolower ( $name ) == 'content-type' && strtolower ( $value ) == 'text/html') {
+				$this->textHtml = true;
+				$this->logger->debug ( "content-type Header: " . $value );
+				$mail->addHeader ( $name, $value, false );
+			} else {
+				$this->logger->debug ( "Allowed Header: " . $name . ': ' . $value );
+				$mail->addHeader ( $name, $value, false );
+			}
 		}
 	}
 }

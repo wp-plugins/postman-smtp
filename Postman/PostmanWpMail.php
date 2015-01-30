@@ -29,9 +29,10 @@ if (! class_exists ( "PostmanWpMail" )) {
 				
 				// interact with the SMTP Engine
 				$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken );
-				$engine->setBodyText ( $message );
+				$engine->setBody ( $message );
 				$engine->setSubject ( $subject );
-				$engine->addTo ( $to );
+				$engine->setReceipients ( $to );
+				$engine->setHeaders ( $headers );
 				$engine->send ( $wpMailOptions->getHostname (), $wpMailOptions->getPort () );
 				return true;
 			} catch ( Exception $e ) {

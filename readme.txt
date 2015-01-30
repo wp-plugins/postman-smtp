@@ -58,11 +58,9 @@ Postman is developed on OS X Macports PHP 5.2.17 and Apache 2.2.29. Postman is t
 1. The required Client ID and Client Secret
 1. If you use [Google Apps](http://admin.google.com) to manage your domain, you HAVE to use OAuth
 
-== Upgrade Notice ==
-
-Now accepts multiple recipients when sending email. 
-
 == Changelog ==
+
+= 0.3 =
 
 = 0.2.7 - 2015-01-29 =
 * Fixed error: "Undefined variable: authorizationToken" was preventing mail delivery outside of the admin screen.
@@ -71,9 +69,9 @@ Now accepts multiple recipients when sending email.
 * Moved the screenshots and icons out of /trunk and into /assets
 
 = 0.2.6 - 2015-01-28 =
-* Fixed Configure and Authorize the plugin" have no link address - broke this when I removed sprintf()
-* Fixed Fatal error: Call to undefined function str_getcsv() - this function is available in PHP 5.3+
-* Fixed Warning: Missing argument 2 for update_option() - should be calling delete_option instead
+* Fixed "Configure and Authorize the plugin" missing the link address - broke this when I removed sprintf()
+* Fixed "Fatal error: Call to undefined function str_getcsv()" - this function is not available before PHP 5.3. Replaced with fgetcsv()
+* Fixed "Warning: Missing argument 2 for update_option()" - should be calling delete_option instead
 
 = 0.2.5 - 2015-01-27 =
 * Removed the namespace for users with older version of PHP
