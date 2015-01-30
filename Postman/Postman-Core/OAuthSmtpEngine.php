@@ -49,6 +49,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		private $subject;
 		private $body;
 		private $headers;
+		private $attachments;
 		
 		// constructor
 		function __construct($senderEmail, $accessToken) {
@@ -70,6 +71,9 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		function setReceipients($recipients) {
 			$this->recipients = $recipients;
 		}
+		function setAttachments($attachments) {
+			$this->attachments = $attachments;
+		}
 		/**
 		 * Verifies the Authentication Token and sends an email
 		 *
@@ -87,6 +91,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			$this->processRecipiens ( $mail );
 			$mail->setSubject ( $this->subject );
 			$this->addHeader ( 'X-Mailer', 'Postman SMTP for WordPress', $mail );
+			$this->processAttachments ( $mail );
 			
 			// prepare authentication
 			$senderEmail = $this->senderEmail;
@@ -189,14 +194,13 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		 *      
 		 */
 		private function processHeaders(Zend_Mail $mail) {
-			if (! is_array ( $this->headers )) {
+			$headers = $this->headers;
+			if (! is_array ( $headers )) {
 				// WordPress may send a string where "each header line (beginning with From:, Cc:, etc.) is delimited with a newline ("\r\n") (advanced)"
-				$headerArray = explode ( PHP_EOL, $this->headers );
-			} else {
-				$headerArray = $this->headers;
+				$headers = explode ( PHP_EOL, $headers );
 			}
 			// otherwise WordPress sends an array
-			foreach ( $headerArray as $header ) {
+			foreach ( $headers as $header ) {
 				if (! empty ( $header )) {
 					$explodedHeader = explode ( ':', $header, 2 );
 					$name = $explodedHeader [0];
@@ -243,6 +247,27 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			} else {
 				$this->logger->debug ( "Allowed Header: " . $name . ': ' . $value );
 				$mail->addHeader ( $name, $value, false );
+			}
+		}
+		private function processAttachments(Zend_Mail $mail) {
+			$attachments = $this->attachments;
+			if (! is_array ( $attachments )) {
+				// WordPress may a single filename or a newline-delimited string list of multiple filenames
+				$attArray = explode ( PHP_EOL, $attachments );
+			} else {
+				$attArray = $attachments;
+			}
+			// otherwise WordPress sends an array
+			foreach ( $attArray as $file ) {
+				if (! empty ( $file )) {
+					$this->logger->debug ( "Adding attachment: " . $file );
+					$at = new Zend_Mime_Part ( $file );
+					// $at->type = 'image/gif';
+					// $at->disposition = Zend_Mime::DISPOSITION_INLINE;
+					// $at->encoding = Zend_Mime::ENCODING_BASE64;
+					$at->filename = basename ( $file );
+					$mail->addAttachment ( $at );
+				}
 			}
 		}
 	}

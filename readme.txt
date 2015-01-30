@@ -61,6 +61,8 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 == Changelog ==
 
 = 0.3 =
+* Now supports email headers, such as a text/html content-type
+* Now supports email attachments
 
 = 0.2.7 - 2015-01-29 =
 * Fixed error: "Undefined variable: authorizationToken" was preventing mail delivery outside of the admin screen.

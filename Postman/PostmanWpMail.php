@@ -33,6 +33,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 				$engine->setSubject ( $subject );
 				$engine->setReceipients ( $to );
 				$engine->setHeaders ( $headers );
+				$engine->setAttachments ( $attachments );
 				$engine->send ( $wpMailOptions->getHostname (), $wpMailOptions->getPort () );
 				return true;
 			} catch ( Exception $e ) {
