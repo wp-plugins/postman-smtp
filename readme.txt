@@ -17,7 +17,7 @@ If you don't care about security, you could ask Gmail to [allow less secure apps
 
 Postman is a next-generation SMTP plugin which provides WordPress with a more secure mechanism for sending email. When your site generates an e-mail, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
 
-Requirements: PHP 5.3.23, a Gmail or Google Apps account, a Client ID from Google Developer, Port 465 (TCP, outbound) must be open
+Requirements: PHP 5.3.23 with OpenSSL, a Gmail or Google Apps account, a Client ID from Google Developer, Port 465 (TCP, outbound) must be open
 
 == Frequently Asked Questions == 
 
@@ -50,7 +50,7 @@ Please note: Postman is intended for users who want to use Gmail's SMTP servers.
 1. Choose the *Request Permission from Google* button and follow the instructions.
 1. Send yourself a test e-mail. 
 
-Postman is developed on OS X Macports PHP 5.2.17 and Apache 2.2.29. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment.
+Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment.
 
 == Screenshots ==
 
