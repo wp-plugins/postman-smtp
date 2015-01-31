@@ -261,10 +261,10 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			foreach ( $attArray as $file ) {
 				if (! empty ( $file )) {
 					$this->logger->debug ( "Adding attachment: " . $file );
-					$at = new Zend_Mime_Part ( $file );
+					$at = new Zend_Mime_Part ( file_get_contents ( $file ) );
 					// $at->type = 'image/gif';
-					// $at->disposition = Zend_Mime::DISPOSITION_INLINE;
-					// $at->encoding = Zend_Mime::ENCODING_BASE64;
+					$at->disposition = Zend_Mime::DISPOSITION_INLINE;
+					$at->encoding = Zend_Mime::ENCODING_BASE64;
 					$at->filename = basename ( $file );
 					$mail->addAttachment ( $at );
 				}
