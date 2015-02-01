@@ -14,19 +14,8 @@ if (! class_exists ( "PostmanWpMail" )) {
 		public function send(PostmanOptions $wpMailOptions, PostmanAuthorizationToken $wpMailAuthorizationToken, $to, $subject, $message, $headers = '', $attachments = array()) {
 			$logger = new PostmanLogger ( get_class ( $this ) );
 			try {
-				// ensure the token is up-to-date
-				$logger->debug ( 'Ensuring Access Token is up-to-date' );
-				
-				// interact with the Authentication Manager
-				$wpMailAuthManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $wpMailOptions->getClientId (), $wpMailOptions->getClientSecret (), $wpMailAuthorizationToken );
-				if ($wpMailAuthManager->isTokenExpired ()) {
-					$logger->debug ( 'Access Token has expired, attempting refresh' );
-					$wpMailAuthManager->refreshToken ();
-					$wpMailAuthorizationToken->save ();
-				}
 				// send the message
 				$logger->debug ( 'Sending mail' );
-				
 				// interact with the SMTP Engine
 				$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken );
 				$engine->setBody ( $message );
@@ -34,7 +23,10 @@ if (! class_exists ( "PostmanWpMail" )) {
 				$engine->setReceipients ( $to );
 				$engine->setHeaders ( $headers );
 				$engine->setAttachments ( $attachments );
-				$engine->send ( $wpMailOptions->getHostname (), $wpMailOptions->getPort () );
+				$engine->setSender ( $wpMailOptions->getSenderEmail () );
+				$engine->setHostname ( $wpMailOptions->getHostname () );
+				$engine->setPort ( $wpMailOptions->getPort () );
+				$engine->send ();
 				return true;
 			} catch ( Exception $e ) {
 				$this->exception = $e;

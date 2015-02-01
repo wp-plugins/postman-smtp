@@ -41,3 +41,15 @@ https://developers.google.com/accounts/docs/OAuth2
 
 Gmail Platform - OAuth 2.0
 https://developers.google.com/gmail/oauth_protocol?hl=nl
+
+
+OAuth Overview
+--------------
+
+Request Permission ->
+<- Authorization Grant
+
+Grant Code ->
+<- Authorization Token
+
+(Access Token and Refresh Token)

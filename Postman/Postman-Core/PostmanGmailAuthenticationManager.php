@@ -1,13 +1,13 @@
 <?php
-if (! class_exists ( "GmailAuthenticationManager" )) {
+if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 	
-	require_once 'AuthenticationManager.php';
+	require_once 'PostmanAuthenticationManager.php';
 	
 	/**
 	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api
 	 * http://pastebin.com/jA9sBNTk
 	 */
-	class GmailAuthenticationManager implements PostmanAuthenticationManager {
+	class PostmanGmailAuthenticationManager implements PostmanAuthenticationManager {
 		
 		// constants
 		const FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE = 60;
@@ -50,12 +50,12 @@ if (! class_exists ( "GmailAuthenticationManager" )) {
 			$client->setClientId ( $this->clientId );
 			$client->setClientSecret ( $this->clientSecret );
 			$client->setRedirectUri ( POSTMAN_HOME_PAGE_URL );
-			$client->setScopes ( GmailAuthenticationManager::SCOPE );
+			$client->setScopes ( PostmanGmailAuthenticationManager::SCOPE );
 			// Set this to 'force' in order to get a new refresh_token.
 			// Useful if you had already granted access to this application.
-			$client->setApprovalPrompt ( GmailAuthenticationManager::APPROVAL_PROMPT );
+			$client->setApprovalPrompt ( PostmanGmailAuthenticationManager::APPROVAL_PROMPT );
 			// Critical in order to get a refresh_token, otherwise it's not provided in the response.
-			$client->setAccessType ( GmailAuthenticationManager::ACCESS_TYPE );
+			$client->setAccessType ( PostmanGmailAuthenticationManager::ACCESS_TYPE );
 			
 			$google_oauthV2 = new Google_Service_Oauth2 ( $client );
 			return $client;
@@ -64,7 +64,7 @@ if (! class_exists ( "GmailAuthenticationManager" )) {
 		/**
 		 */
 		public function isTokenExpired() {
-			$expireTime = ($this->authorizationToken->getExpiryTime () - GmailAuthenticationManager::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
+			$expireTime = ($this->authorizationToken->getExpiryTime () - PostmanGmailAuthenticationManager::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
 			$tokenHasExpired = time () > $expireTime;
 			$this->logger->debug ( 'Access Token Expiry Time is ' . $expireTime . ', expired?=' . ($tokenHasExpired ? 'yes' : 'no') );
 			return $tokenHasExpired;
@@ -95,7 +95,7 @@ if (! class_exists ( "GmailAuthenticationManager" )) {
 			$client = $this->createGoogleClient ();
 			$client->setLoginHint ( $gmailAddress );
 			$this->logger->debug ( "authenticating with google: loginHint=" . $gmailAddress );
-			$_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] = 'true';
+			$_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] = 'true';
 			$authUrl = $client->createAuthUrl ();
 			header ( 'Location: ' . filter_var ( $authUrl, FILTER_SANITIZE_URL ) );
 			exit ();
@@ -133,21 +133,25 @@ if (! class_exists ( "GmailAuthenticationManager" )) {
 			$newtoken = json_decode ( $client->getAccessToken () );
 			
 			// update expiry time
-			$newExpiryTime = time () + $newtoken->{GmailAuthenticationManager::EXPIRES};
+			$newExpiryTime = time () + $newtoken->{PostmanGmailAuthenticationManager::EXPIRES};
 			$this->authorizationToken->setExpiryTime ( $newExpiryTime );
 			$this->logger->debug ( 'Updating Access Token Expiry Time' );
 			
 			// update acccess token
-			$newAccessToken = $newtoken->{GmailAuthenticationManager::ACCESS_TOKEN};
+			$newAccessToken = $newtoken->{PostmanGmailAuthenticationManager::ACCESS_TOKEN};
 			$this->authorizationToken->setAccessToken ( $newAccessToken );
 			$this->logger->debug ( 'Updating Access Token' );
 			
 			// update refresh token, if there is one
-			if (isset ( $newtoken->{GmailAuthenticationManager::REFRESH_TOKEN} )) {
-				$newRefreshToken = $newtoken->{GmailAuthenticationManager::REFRESH_TOKEN};
+			if (isset ( $newtoken->{PostmanGmailAuthenticationManager::REFRESH_TOKEN} )) {
+				$newRefreshToken = $newtoken->{PostmanGmailAuthenticationManager::REFRESH_TOKEN};
 				$this->authorizationToken->setRefreshToken ( $newRefreshToken );
 				$this->logger->debug ( 'Updating Refresh Token' );
 			}
+		}
+		
+		public function getAuthorizationToken() {
+			return $this->authorizationToken;
 		}
 	}
 }

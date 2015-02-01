@@ -63,6 +63,7 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 = 0.3 =
 * Now supports email headers, such as a text/html content-type
 * Now supports email attachments
+* Postman now supports insecure and Basic authentication like the other 172 WordPress SMTP plugins active in the plugin repo... <yawn>
 
 = 0.2.7 - 2015-01-29 =
 * Fixed error: "Undefined variable: authorizationToken" was preventing mail delivery outside of the admin screen.

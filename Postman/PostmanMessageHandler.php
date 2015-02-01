@@ -13,7 +13,7 @@ class PostmanMessageHandler {
 	 * @param unknown $options        	
 	 */
 	function __construct(PostmanOptions $options) {
-		if (! $options->isRequestOAuthPermissiongAllowed () || ! $options->isSendingEmailAllowed ( PostmanAuthorizationToken::getInstance () )) {
+		if (! $options->isSendingEmailAllowed ( PostmanAuthorizationToken::getInstance () )) {
 			add_action ( 'admin_notices', Array (
 					$this,
 					'displayConfigurationRequiredWarning' 
@@ -51,11 +51,8 @@ class PostmanMessageHandler {
 		$_SESSION [PostmanMessageHandler::SUCCESS_MESSAGE] = $message;
 	}
 	
-	/**
-	 * Handle admin messages
-	 */
 	public function displayConfigurationRequiredWarning() {
-		$message = PostmanAdminController::NAME . ' is activated, but <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_URL . '">Configure and Authorize</a> the plugin.';
+		$message = PostmanAdminController::NAME . ' is <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_URL . '">Configure</a> the plugin.';
 		$this->displayWarningMessage ( $message );
 	}
 	//

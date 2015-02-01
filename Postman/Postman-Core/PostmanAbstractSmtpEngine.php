@@ -1,128 +1,113 @@
 <?php
 if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 	
-	require_once 'SmtpEngine.php';
+	require_once 'PostmanSmtpEngine.php';
 	
-	require_once 'Zend/Registry.php';
-	require_once 'Zend/Mime.php';
-	require_once 'Zend/Validate.php';
-	require_once 'Zend/Validate/Hostname.php';
-	require_once 'Zend/Mail.php';
-	require_once 'Zend/Loader.php';
-	require_once 'Zend/Loader/Autoloader.php';
-	require_once 'Zend/Mail/Transport/Smtp.php';
-	require_once 'Zend/Exception.php';
-	require_once 'Zend/Mail/Exception.php';
-	require_once 'Zend/Mail/Protocol/Exception.php';
-	require_once 'Zend/Mail/Protocol/Smtp.php';
-	require_once 'Zend/Mail/Protocol/Smtp/Auth/Oauth2.php';
+	require_once 'Zend-1.12.10/Loader.php';
+	require_once 'Zend-1.12.10/Registry.php';
+	require_once 'Zend-1.12.10/Mime/Message.php';
+	require_once 'Zend-1.12.10/Mime/Part.php';
+	require_once 'Zend-1.12.10/Mime.php';
+	require_once 'Zend-1.12.10/Validate/Interface.php';
+	require_once 'Zend-1.12.10/Validate/Abstract.php';
+	require_once 'Zend-1.12.10/Validate.php';
+	require_once 'Zend-1.12.10/Validate/Ip.php';
+	require_once 'Zend-1.12.10/Validate/Hostname.php';
+	require_once 'Zend-1.12.10/Mail.php';
+	require_once 'Zend-1.12.10/Exception.php';
+	require_once 'Zend-1.12.10/Mail/Exception.php';
+	require_once 'Zend-1.12.10/Mail/Transport/Exception.php';
+	require_once 'Zend-1.12.10/Mail/Transport/Abstract.php';
+	require_once 'Zend-1.12.10/Mail/Transport/Smtp.php';
+	require_once 'Zend-1.12.10/Mail/Protocol/Abstract.php';
+	require_once 'Zend-1.12.10/Mail/Protocol/Exception.php';
+	require_once 'Zend-1.12.10/Mail/Protocol/Smtp.php';
+	// require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Login.php';
+	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Oauth2.php';
+	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Login.php';
 	
 	/**
 	 * This class knows how to interface with Wordpress
 	 * including loading/saving to the database.
 	 *
+	 * The various Transports available:
+	 * http://framework.zend.com/manual/current/en/modules/zend.mail.smtp.options.html
+	 *
 	 * @author jasonhendriks
 	 *        
 	 */
-	class PostmanOAuthSmtpEngine implements PostmanSmtpEngine {
+	abstract class PostmanAbstractSmtpEngine implements PostmanSmtpEngine {
 		
 		// define some constants
-		const ZEND_TRANSPORT_CONFIG_SSL = 'ssl';
-		const ZEND_TRANSPORT_CONFIG_PORT = 'port';
-		const ZEND_TRANSPORT_CONFIG_AUTH = 'auth';
-		const ZEND_TRANSPORT_CONFIG_XOAUTH2_REQUEST = 'xoauth2_request';
 		const AUTH_VALUE = 'oauth2';
 		const SSL_VALUE = 'ssl';
 		
-		//
+		// logger for all concrete classes - populate with setLogger($logger)
 		private $logger;
 		
 		// are we in text/html mode?
-		private $textHtml;
-		
-		// set in the constructor
-		private $senderEmail;
-		private $accessToken;
+		private $isTextHtml;
 		
 		// set by the caller
+		private $senderEmail;
 		private $recipients;
 		private $subject;
 		private $body;
 		private $headers;
 		private $attachments;
 		
-		// constructor
-		function __construct($senderEmail, $accessToken) {
-			assert ( ! empty ( $senderEmail ) );
-			assert ( ! empty ( $accessToken ) );
-			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			$this->senderEmail = $senderEmail;
-			$this->accessToken = $accessToken;
-		}
-		public function setHeaders($headers) {
-			$this->headers = $headers;
-		}
-		function setBody($body) {
-			$this->body = $body;
-		}
-		function setSubject($subject) {
-			$this->subject = $subject;
-		}
-		function setReceipients($recipients) {
-			$this->recipients = $recipients;
-		}
-		function setAttachments($attachments) {
-			$this->attachments = $attachments;
-		}
 		/**
-		 * Verifies the Authentication Token and sends an email
+		 * (non-PHPdoc)
 		 *
-		 * @return boolean
+		 * @see PostmanSmtpEngine::send()
 		 */
-		public function send($hostname, $port) {
-			assert ( ! empty ( $port ) );
-			assert ( ! empty ( $hostname ) );
+		public function send() {
+			assert ( ! empty ( $this->senderEmail ) );
+			assert ( ! empty ( $this->port ) );
+			assert ( ! empty ( $this->hostname ) );
 			
 			// create the Message
 			$mail = new Zend_Mail ();
 			// headers must be set before body
 			$this->processHeaders ( $mail );
 			$this->processBody ( $mail );
-			$this->processRecipiens ( $mail );
+			$this->processRecipients ( $mail );
 			$mail->setSubject ( $this->subject );
 			$this->addHeader ( 'X-Mailer', 'Postman SMTP for WordPress', $mail );
 			$this->processAttachments ( $mail );
 			
-			// prepare authentication
-			$senderEmail = $this->senderEmail;
-			$accessToken = $this->accessToken;
-			assert ( ! empty ( $senderEmail ) );
-			assert ( ! empty ( $accessToken ) );
-			if (! $this->validateEmail ( $senderEmail )) {
-				$message = 'Sender e-mail "' . $senderEmail . '" is invalid.';
-				$this->logger->error ( $message );
-				throw new Exception ( $message );
-			}
-			$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$accessToken}\1\1" );
-			assert ( ! empty ( $initClientRequestEncoded ) );
-			$config = array (
-					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => PostmanOAuthSmtpEngine::SSL_VALUE,
-					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_PORT => $port,
-					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_AUTH => PostmanOAuthSmtpEngine::AUTH_VALUE,
-					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_XOAUTH2_REQUEST => $initClientRequestEncoded 
-			);
+			// get the transport configuration
+			$config = $this->createConfig ( $this->hostname, $this->port );
+			assert ( ! empty ( $config ) );
 			
 			// create the SMTP transport
-			$transport = new Zend_Mail_Transport_Smtp ( $hostname, $config );
-			$mail->setFrom ( $senderEmail );
+			$transport = new Zend_Mail_Transport_Smtp ( $this->hostname, $config );
+			$mail->setFrom ( $this->senderEmail );
 			assert ( ! empty ( $transport ) );
 			$this->logger->debug ( "Sending mail" );
 			$mail->send ( $transport );
 		}
+		
+		/**
+		 * Let the subclass define the transport configuration
+		 *
+		 * @param unknown $senderEmail        	
+		 * @param unknown $hostname        	
+		 * @param unknown $port        	
+		 */
+		abstract protected function createConfig($hostname, $port);
+		
+		/**
+		 * Validate an email address
+		 *
+		 * @param unknown $email        	
+		 * @return number
+		 */
 		public function validateEmail($email) {
 			$exp = "/^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$/i";
 			return preg_match ( $exp, $email );
 		}
+		
 		/**
 		 * Adds recipients to the message.
 		 *
@@ -131,7 +116,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		 * @param
 		 *        	string
 		 */
-		private function processRecipiens(Zend_Mail $mail) {
+		private function processRecipients(Zend_Mail $mail) {
 			$email = $this->recipients;
 			if (! is_array ( $email )) {
 				// http://tiku.io/questions/955963/splitting-comma-separated-email-addresses-in-a-string-with-commas-in-quotes-in-p
@@ -176,8 +161,14 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			fclose ( $fh );
 			return $row;
 		}
+		
+		/**
+		 * Add the message body, HTML or Text depending on the headers that were sent.
+		 *
+		 * @param Zend_Mail $mail        	
+		 */
 		private function processBody(Zend_Mail $mail) {
-			if ($this->textHtml) {
+			if ($this->isTextHtml) {
 				$this->logger->debug ( 'Adding body as html' );
 				$mail->setBodyHtml ( $this->body );
 			} else {
@@ -209,6 +200,15 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 				}
 			}
 		}
+		
+		/**
+		 * Add the headers that were processed in processHeaders()
+		 * Zend requires that several headers are specially handled.
+		 *
+		 * @param unknown $name        	
+		 * @param unknown $value        	
+		 * @param Zend_Mail $mail        	
+		 */
 		private function addHeader($name, $value, Zend_Mail $mail) {
 			if (strtolower ( $name ) == "to") {
 				$this->logger->debug ( "to Header: " . $value );
@@ -220,8 +220,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 				$this->logger->debug ( "bcc Header: " . $value );
 				$mail->addBcc ( $value );
 			} else if (strtolower ( $name ) == "from") {
-				$this->logger->debug ( "from Header ignored" );
-				// not allowed in OAuth
+				$this->overrideSender ( $value );
 			} else if (strtolower ( $name ) == "subject") {
 				$this->logger->debug ( "subject Header: " . $value );
 				$mail->setSubject ( $value );
@@ -241,7 +240,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 				$this->logger->debug ( "message-id Header: " . $value );
 				$mail->setMessageId ( $value );
 			} else if (strtolower ( $name ) == 'content-type' && strtolower ( $value ) == 'text/html') {
-				$this->textHtml = true;
+				$this->isTextHtml = true;
 				$this->logger->debug ( "content-type Header: " . $value );
 				$mail->addHeader ( $name, $value, false );
 			} else {
@@ -249,6 +248,12 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 				$mail->addHeader ( $name, $value, false );
 			}
 		}
+		
+		/**
+		 * Add attachments to the message
+		 *
+		 * @param Zend_Mail $mail        	
+		 */
 		private function processAttachments(Zend_Mail $mail) {
 			$attachments = $this->attachments;
 			if (! is_array ( $attachments )) {
@@ -269,6 +274,40 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 					$mail->addAttachment ( $at );
 				}
 			}
+		}
+		
+		// public accessors
+		public function setHeaders($headers) {
+			$this->headers = $headers;
+		}
+		function setBody($body) {
+			$this->body = $body;
+		}
+		function setSubject($subject) {
+			$this->subject = $subject;
+		}
+		protected function overrideSender($sender) {
+			$this->setSender ( $sender );
+		}
+		function setReceipients($recipients) {
+			$this->recipients = $recipients;
+		}
+		function setAttachments($attachments) {
+			$this->attachments = $attachments;
+		}
+		function setSender($sender) {
+			$this->senderEmail = $sender;
+		}
+		function setHostname($hostname) {
+			$this->hostname = $hostname;
+		}
+		function setPort($port) {
+			$this->port = $port;
+		}
+		
+		// set the internal logger (defined in the abstract class)
+		protected function setLogger($logger) {
+			$this->logger = $logger;
 		}
 	}
 }

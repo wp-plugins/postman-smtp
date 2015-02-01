@@ -20,9 +20,10 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 					$this,
 					'warnIfCanNotBindToWpMail' 
 			) );
-			if ($binderOptions->isRequestOAuthPermissiongAllowed () && $binderOptions->isSendingEmailAllowed ( $binderAuthorizationToken )) {
+			if ($binderOptions->isSendingEmailAllowed ( $binderAuthorizationToken )) {
 				
 				if (! function_exists ( 'wp_mail' )) {
+					$this->logger->debug ( 'Binding to wp_mail()' );
 					/**
 					 * Define our own wp_mail
 					 *
@@ -46,6 +47,8 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 					$this->logger->debug ( 'cant replace wp_mail' );
 					$this->couldNotReplaceWpMail = true;
 				}
+			} else {
+				$this->logger->debug ( 'Not attemping to bind, plugin is not configured.' );
 			}
 		}
 		function warnIfCanNotBindToWpMail() {

@@ -17,11 +17,11 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 		 * @param unknown $options        	
 		 * @param unknown $recipient        	
 		 */
-		public function send(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, $recipient, PostmanMessageHandler $postmanMessageHandler) {
+		public function send(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, $recipient, PostmanMessageHandler $messageHandler) {
 			assert ( ! empty ( $options ) );
 			assert ( ! empty ( $authorizationToken ) );
 			assert ( ! empty ( $recipient ) );
-			assert ( ! empty ( $postmanMessageHandler ) );
+			assert ( ! empty ( $messageHandler ) );
 			$subject = PostmanSendTestEmailController::SUBJECT;
 			$message = PostmanSendTestEmailController::MESSAGE;
 			
@@ -39,18 +39,18 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			//
 			if ($wp_mail_result) {
 				$this->logger->debug ( 'Test Email delivered to SMTP server' );
-				$postmanMessageHandler->addMessage ( 'Your message was delivered to the SMTP server! Congratulations :)' );
+				$messageHandler->addMessage ( 'Your message was delivered to the SMTP server! Congratulations :)' );
 			} else if (! $postmanWpMailResult) {
 				$this->logger->error ( 'Test Email NOT delivered to SMTP server - ' . $postmanWpMail->getException ()->getCode () );
 				if ($postmanWpMail->getException ()->getCode () == 334) {
-					$postmanMessageHandler->addError ( 'Oh, bother! ... Communication Error [334].' );
+					$messageHandler->addError ( 'Oh, bother! ... Communication Error [334].' );
 				} else {
-					$postmanMessageHandler->addError ( 'Oh, bother! ... ' . $postmanWpMail->getException ()->getMessage () );
+					$messageHandler->addError ( 'Oh, bother! ... ' . $postmanWpMail->getException ()->getMessage () );
 				}
 			} else {
 				$message = 'Something is wrong, sending throgh wp_mail() failed, but sending through internal engine succeeded. Time to debug!';
 				$this->logger->error ( $message );
-				$postmanMessageHandler->addError ( $message );
+				$messageHandler->addError ( $message );
 			}
 			
 			$this->logger->debug ( 'Redirecting to home page' );

@@ -1,6 +1,6 @@
 <?php
-require_once 'OAuthSmtpEngine.php';
-require_once 'GmailAuthenticationManager.php';
+require_once 'PostmanOAuthSmtpEngine.php';
+require_once 'PostmanGmailAuthenticationManager.php';
 require_once 'PostmanAuthenticationManagerFactory.php';
 
 if (! class_exists ( "PostmanLogger" )) {

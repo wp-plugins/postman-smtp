@@ -13,6 +13,7 @@
 
 // these constants are used for OAuth HTTP requests
 define ( 'POSTMAN_HOME_PAGE_URL', admin_url ( 'options-general.php' ) . '?page=postman' );
+define ( 'POSTMAN_PLUGIN_VERSION', '1.2.7' );
 
 // load the core of Postman
 require_once 'Postman/Postman-Core/core.php';
@@ -44,10 +45,10 @@ function postmanSmtpMain() {
 	$authToken = PostmanAuthorizationToken::getInstance ();
 	
 	// check if there is an auth token waiting for granting and possibly exit
-	if (isset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
+	if (isset ( $_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
 		unset ( $_SESSION [PostmanAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
 		if (isset ( $_GET ['code'] )) {
-			postmanHandleAuthorizationGrant ( $logger, $options->getClientId (), $options->getClientSecret (), $authToken );
+			postmanHandleAuthorizationGrant ( $logger, $options, $authToken );
 			// redirect to plugin setting page and exit()
 			header ( 'Location: ' . esc_url ( POSTMAN_HOME_PAGE_URL ) );
 			exit ();
@@ -67,11 +68,14 @@ function postmanSmtpMain() {
 /**
  * Handles the authorization grant
  */
-function postmanHandleAuthorizationGrant(PostmanLogger $logger, $clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken) {
+function postmanHandleAuthorizationGrant(PostmanLogger $logger, PostmanOptions $options, PostmanAuthorizationToken $authorizationToken) {
+	$authType = $options->getAuthorizationType ();
+	$clientId = $options->getClientId ();
+	$clientSecret = $options->getClientSecret ();
 	$logger->debug ( 'Authorization in progress' );
-	unset ( $_SESSION [GmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
+	unset ( $_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
 	
-	$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $clientId, $clientSecret, $authorizationToken );
+	$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $authType, $clientId, $clientSecret, $authorizationToken );
 	try {
 		if ($authenticationManager->tradeCodeForToken ()) {
 			$logger->debug ( 'Authorization successful' );
@@ -94,7 +98,7 @@ if (! function_exists ( 'activatePostman' )) {
 	 */
 	function activatePostman() {
 		$logger = new PostmanLogger ( 'postman.php' );
-		$logger->debug("Activating plugin");
+		$logger->debug ( "Activating plugin" );
 		// prior to version 0.2.5, $authOptions did not exist
 		$authOptions = get_option ( PostmanAuthorizationToken::OPTIONS_NAME );
 		$options = get_option ( PostmanOptions::POSTMAN_OPTIONS );
@@ -105,6 +109,10 @@ if (! function_exists ( 'activatePostman' )) {
 			$authToken->setRefreshToken ( $options [PostmanAuthorizationToken::REFRESH_TOKEN] );
 			$authToken->setExpiryTime ( $options [PostmanAuthorizationToken::EXPIRY_TIME] );
 			$authToken->save ();
+		}
+		if (empty ( $options [PostmanOptions::AUTHORIZATION_TYPE] )) {
+			$options [PostmanOptions::AUTHORIZATION_TYPE] = PostmanOptions::AUTHORIZATION_TYPE_OAUTH2;
+			update_option ( PostmanOptions::POSTMAN_OPTIONS, $options );
 		}
 	}
 }

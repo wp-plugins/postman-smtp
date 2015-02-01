@@ -1,6 +1,9 @@
 <?php
 if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 	
+	require_once 'PostmanGmailAuthenticationManager.php';
+	require_once 'PostmanNonOAuthAuthenticationManager.php';
+	
 	//
 	class PostmanAuthenticationManagerFactory {
 		private $logger;
@@ -16,8 +19,12 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 		private function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
-		public function createAuthenticationManager($clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken) {
-			$authenticationManager = new GmailAuthenticationManager ( $clientId, $clientSecret, $authorizationToken );
+		public function createAuthenticationManager($authenticationType, $clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken) {
+			if ($authenticationType == PostmanOptions::AUTHORIZATION_TYPE_OAUTH2) {
+				$authenticationManager = new PostmanGmailAuthenticationManager ( $clientId, $clientSecret, $authorizationToken );
+			} else {
+				$authenticationManager = new PostmanNonOAuthAuthenticationManager ();
+			}
 			$this->logger->debug ( 'Created ' . get_class ( $authenticationManager ) );
 			return $authenticationManager;
 		}
