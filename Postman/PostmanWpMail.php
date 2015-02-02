@@ -2,6 +2,7 @@
 if (! class_exists ( "PostmanWpMail" )) {
 	
 	require_once 'Postman-Core/PostmanSmtpEngineFactory.php';
+	require_once 'PostmanStats.php';
 	
 	/**
 	 * Moved this code into a class so it could be used by both wp_mail() and PostmanSendTestEmailController
@@ -27,10 +28,12 @@ if (! class_exists ( "PostmanWpMail" )) {
 				$engine->setHostname ( $wpMailOptions->getHostname () );
 				$engine->setPort ( $wpMailOptions->getPort () );
 				$engine->send ();
+				PostmanStats::getInstance()->incrementSuccessfulDelivery();
 				return true;
 			} catch ( Exception $e ) {
 				$this->exception = $e;
 				$logger->debug ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
+				PostmanStats::getInstance()->incrementFailedDelivery();
 				return false;
 			}
 		}
