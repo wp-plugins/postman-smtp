@@ -18,7 +18,7 @@ If you don't care about security, you could ask Gmail to [allow less secure apps
 Postman is a next-generation SMTP plugin which provides WordPress with a more secure mechanism for sending email. When your site generates an email, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
 
 ###Features:
-* Send mail to any host with SMTP/SMTPS(SSL/TLS/STARTTLS) like the other 171 WordPress SMTP plugins
+* Send mail to any host with SMTP/SMTPS(SSL/TLS/STARTTLS) like the other 172 WordPress SMTP plugins
 * Send mail to Gmail with SMTPS using OAuth 2.0 - even if your Google password changes, your messages will still be sent!
 * Easy to use Setup Wizard takes the guesswork out of configuring email
 * Built-in TCP Port Tester for troubleshooting connectivity issues due to firewalls
@@ -89,7 +89,7 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 
 = 1.0 - 2015-02-02 =
 * Overhaul of the UI - A navigation pane is shown at the top of each page and each major function has been separated into its own screen
-* Postman now supports sending with basic auth and no auth just like the other 171 WordPress SMTP plugins active in the plugin repo... yawn
+* Postman now supports sending with basic auth and no auth just like the other 172 WordPress SMTP plugins active in the plugin repo... yawn
 * Added a Port Test function so users can have peace of mind whether the plugin is failing (never!) or whether the host has firewalled them 
 * Now supports email headers, such as a text/html content-type
 * Now supports email attachments
