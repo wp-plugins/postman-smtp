@@ -3,6 +3,7 @@ if (! class_exists ( 'SmtpDiscovery' )) {
 	
 	require_once "SmtpMappings.php";
 	class SmtpDiscovery {
+		private $primaryMx;
 		public function getPrimaryMxHost($hostname) {
 			$b_mx_avail = getmxrr ( $hostname, $mx_records, $mx_weight );
 			if ($b_mx_avail && sizeof ( $mx_records ) > 0) {
@@ -34,24 +35,24 @@ if (! class_exists ( 'SmtpDiscovery' )) {
 				return false;
 			}
 			if ($smtp) {
-				// print $email . ' smtp=' . $smtp . "\n";
 				return $smtp;
 			} else {
 				$host = $this->getPrimaryMxHost ( $hostname );
+				$this->primaryMx = $host;
 				if ($host) {
 					$smtp = $mapping->getSmtpFromMx ( $host );
 					if ($smtp) {
-						// print $email . " mx=" . $host . ' smtp=' . $smtp . "\n";
 						return $smtp;
 					} else {
-						// print $email . ' :( ask user for SMTP - I have no idea' . "\n";
 						return false;
 					}
 				} else {
-					// print $email . ' :( ask user for SMTP - I have no idea' . "\n";
 					return false;
 				}
 			}
+		}
+		public function getPrimaryMx() {
+			return $this->primaryMx;
 		}
 	}
 }
@@ -81,35 +82,5 @@ if (! function_exists ( 'getmxrr' )) {
 		return false;
 	}
 }
-function check($email) {
-	$d = new SmtpDiscovery ();
-	$smtp = $d->getSmtpServer ( $email );
-	if ($smtp) {
-		print $email . '=' . $smtp . "\n";
-	} else {
-		print $email . ' ASK USER' . "\n";
-	}
-}
-function test() {
-	check ( 'jason@jason@hendriks.ca' );
-	check ( 'test@hotmail.com' );
-	check ( 'test@office365.com' );
-	check ( 'test@gmail.com' );
-	check ( 'test@hendriks.ca' );
-	check ( 'test@yahoo.com.co' );
-	check ( 'test@yahoo.com' );
-	check ( 'test@hendriksandcregg.com' );
-	check ( 'test@yahoo.co.uk' );
-	check ( 'test@yahoo.com.au' );
-	check ( 'test@ibm.com' );
-	check ( 'test@sdlkfjsdl.co.uk' );
-	check ( 'test@sdlkfjsdl.org' );
-	check ( 'test@sdlkfjsdl.gov' );
-	check ( 'test@sdlkfjsdl.com' );
-	check ( 'test@apple.com' );
-	check ( 'test@icloud.com' );
-	check ( 'test@me.com' );
-	check ( 'test@mobileme.com' );
-}
-//test ();
+
 ?>

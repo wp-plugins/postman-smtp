@@ -1,6 +1,7 @@
 <?php
 if (! class_exists ( 'SmtpMapping' )) {
 	class SmtpMapping {
+		// if an email is in this domain array, it is a known smtp server (easy lookup)
 		private $emailDomain = array (
 				'gmail.com' => 'smtp.gmail.com',
 				'hotmail.com' => 'smtp.live.com',
@@ -11,10 +12,13 @@ if (! class_exists ( 'SmtpMapping' )) {
 				'icloud.com' => 'imap.mail.me.com',
 				'mail.com' => 'smtp.mail.com'
 		);
+		// if an email's mx is in this domain array, it is a known smtp server (dns lookup)
+		// useful for custom domains that map to a mail service
 		private $mx = array (
 				'google.com' => 'smtp.gmail.com',
 				'icloud.com' => 'imap.mail.me.com', 
-				'hotmail.com' => 'smtp.live.com' 
+				'hotmail.com' => 'smtp.live.com',
+				'hushmail.com' => 'smtp.hushmail.com'
 		);
 		public function getSmtpFromEmail($email) {
 			$hostname = substr ( strrchr ( $email, "@" ), 1 );
@@ -23,7 +27,7 @@ if (! class_exists ( 'SmtpMapping' )) {
 					return $smtp;
 				}
 			}
-			return false;
+			return null;
 		}
 		public function getSmtpFromMx($mx) {
 			while ( list ( $domain, $smtp ) = each ( $this->mx ) ) {

@@ -53,7 +53,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		public function isRequestOAuthPermissionAllowed() {
 			$clientId = $this->getClientId ();
 			$clientSecret = $this->getClientSecret ();
-			return ! empty ( $clientId ) && ! empty ( $clientSecret );
+			$authType = $this->getAuthorizationType();
+			return $authType == PostmanOptions::AUTHORIZATION_TYPE_OAUTH2 && ! empty ( $clientId ) && ! empty ( $clientSecret );
 		}
 		public function isSendingEmailAllowed(PostmanAuthorizationToken $token) {
 			$authType = $this->getAuthorizationType ();

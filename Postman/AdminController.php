@@ -176,8 +176,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function handleTestEmailAction() {
 			$this->logger->debug ( 'in handleTestEmailAction()' );
 			$recipient = $_POST [PostmanAdminController::TEST_OPTIONS] ['test_email'];
-			$testEmailController = new PostmanSendTestEmailController ();
-			$testEmailController->send ( $this->options, $this->authorizationToken, $recipient, $this->messageHandler );
+			if (! empty ( $recipient )) {
+				$testEmailController = new PostmanSendTestEmailController ();
+				$testEmailController->send ( $this->options, $this->authorizationToken, $recipient, $this->messageHandler );
+			}
+			$this->logger->debug ( 'Redirecting to home page' );
+			wp_redirect ( POSTMAN_HOME_PAGE_URL );
+			exit ();
 		}
 		public function handleGoogleAuthenticationAction() {
 			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $this->options->getAuthorizationType (), $this->options->getClientId (), $this->options->getClientSecret (), $this->authorizationToken );
@@ -381,6 +386,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			return $new_input;
 		}
 		
+		//
+		private function setDefaults() {
+			$defaultFrom = wp_get_current_user ()->user_email;
+			$senderEmail = $this->options->setSenderEmailIfEmpty ( $defaultFrom );
+			$testEmail = $this->testOptions [PostmanOptions::TEST_EMAIL];
+			if (! isset ( $testEmail )) {
+				$this->testOptions [PostmanOptions::TEST_EMAIL] = $defaultFrom;
+			}
+		}
+		
 		/**
 		 * Options page callback
 		 */
@@ -392,6 +407,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$phpVersionRequirement = PHP_VERSION_ID >= 50300;
 			$arrayObjectRequirement = class_exists ( 'ArrayObject' );
 			$getmxrrRequirement = function_exists ( 'getmxrr' );
+			
+			// Set class property
+			$this->setDefaults ();
 			
 			// Set class property
 			print '<div class="wrap">';
@@ -477,9 +495,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 	<h1>SMTP Server Port</h1>
 	<fieldset>
 		<legend>Choose an SMTP port</legend>
-		<p>Your email provider will dictate which port to use. Port 25 (SMTP)
-			is plaintext, Port 465 (SMTPS-SSL) is encrypted and Port 587
-			(SMTPS-TLS/STARTTLS) offers both.</p>
+		<p>Your email provider will dictate which port to use. Normally, Port
+			25 (SMTP) is plaintext, Port 465 (SMTPS-SSL) is encrypted and Port
+			587 (SMTPS-TLS/STARTTLS) offers both.</p>
 
 		<label for="hostname">SMTP Server Port</label>
 		<?php echo $this->port_callback('style="display:none"'); ?>
@@ -528,7 +546,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 				</section>
 
 		<section class="wizard-auth-basic">
-			<p id="port-explanation"></p>
+			<p class="port-explanation-ssl">Enter your credentials to login to
+				the SMTP server when sending mail. Your username is most likely your
+				email address.</p>
+			<p class="port-explanation-tls">Choose Basic (TLS) authentication to
+				login to the SMTP server when sending mail. Your username is most
+				likely your email address.</p>
+			<p class="port-explanation-tls">Choose None for no authentication at
+				all (not recommended).</p>
 			<label class="input_authorization_type" for="redirect_uri">Authentication
 				Type</label>
 			<?php echo $this->authorization_type_callback(); ?>
@@ -567,15 +592,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$d = new SmtpDiscovery ();
 			$smtp = $d->getSmtpServer ( $email );
 			$this->logger->debug ( 'given email ' . $email . ', smtp server is ' . $smtp );
-			if ($smtp) {
-				$response = array (
-						'hostname' => $smtp 
-				);
-			} else {
-				$response = array (
-						'hostname' => '' 
-				);
-			}
+			$response = array (
+					'hostname' => ! empty ( $smtp ) ? $smtp : '' 
+			);
 			wp_send_json ( $response );
 		}
 		/**

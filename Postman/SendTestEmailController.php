@@ -53,9 +53,6 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 				$messageHandler->addError ( $message );
 			}
 			
-			$this->logger->debug ( 'Redirecting to home page' );
-			wp_redirect ( POSTMAN_HOME_PAGE_URL );
-			exit ();
 		}
 	}
 }

@@ -46,7 +46,7 @@ function portTest(tdValue, port) {
 	testEl.html('Testing');
 	var data = {
 		'action' : 'test_port',
-		'hostname' : jQuery('input#hostname').val(),
+		'hostname' : jQuery(postman_hostname_element_name).val(),
 		'port' : port
 	// We pass php values differently!
 	};
@@ -56,7 +56,8 @@ function portTest(tdValue, port) {
 		if (response.success) {
 			testEl.html('<span style="color:green">Open</span>');
 		} else {
-			testEl.html('<span style="color:red">Failed - ' + response.message + "</span>");
+			testEl.html('<span style="color:red">Failed - ' + response.message
+					+ "</span>");
 		}
 	});
 }

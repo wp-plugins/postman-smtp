@@ -67,11 +67,17 @@ jQuery(document)
 											} else if (currentIndex === 1) {
 												portsChecked = 0;
 												portsToCheck = 0;
-												// allow the user to choose any port
-												jQuery('#input_auth_type_oauth2').removeAttr('disabled');
-												jQuery('#input_auth_type_ssl').removeAttr('disabled');
-												jQuery('#input_auth_type_tls').removeAttr('disabled');
-												jQuery('#input_auth_type_none').removeAttr('disabled');
+												// allow the user to choose any
+												// port
+												jQuery(
+														'#input_auth_type_oauth2')
+														.removeAttr('disabled');
+												jQuery('#input_auth_type_ssl')
+														.removeAttr('disabled');
+												jQuery('#input_auth_type_tls')
+														.removeAttr('disabled');
+												jQuery('#input_auth_type_none')
+														.removeAttr('disabled');
 												wizardPortTest(
 														jQuery('#wizard_port_465'),
 														jQuery('#wizard_port_465_status'));
@@ -86,43 +92,116 @@ jQuery(document)
 													alert('Please wait for the check to finish');
 													return false;
 												}
-												var chosenPort = jQuery('#input_port').val();
-												var hostname = jQuery(postman_hostname_element_name).val();
-												jQuery('#input_authorization_type').click(function(){
-													var $val = jQuery('#input_authorization_type').val();
-													if($val == 'none') {
-														jQuery('#input_basic_auth_username').attr('disabled','disabled');
-														jQuery('#input_basic_auth_password').attr('disabled','disabled');
-													} else {
-														jQuery('#input_basic_auth_username').removeAttr('disabled');
-														jQuery('#input_basic_auth_password').removeAttr('disabled');
-													}
-												});
-												jQuery('.wizard-auth-oauth2').hide();
-												jQuery('.wizard-auth-basic').show();
-												jQuery('#input_basic_auth_username').removeAttr('disabled');
-												jQuery('#input_basic_auth_password').removeAttr('disabled');
-												jQuery('#input_auth_type_oauth2').attr('disabled', 'disabled');
-												if (hostname == 'smtp.gmail.com' && chosenPort == 465) {
-													jQuery('.wizard-auth-oauth2').show();
-													jQuery('.wizard-auth-basic').hide();
-													jQuery(input_authorization_type).val('oauth2');
-													jQuery('.input_authorization_type').hide();
-													jQuery('#input_auth_type_oauth2').removeAttr('disabled');
-												} else if(chosenPort == 465) {
-													jQuery(input_authorization_type).val('basic-ssl');
-													jQuery('.input_authorization_type').hide();
-													jQuery('#port-explanation').html("Enter your credentials to login to the SMTP server. Your username is most likely your email address.");
-												} else if(chosenPort == 587) {
-													jQuery(input_authorization_type).val('basic-tls');
-													jQuery('#input_auth_type_ssl').attr('disabled', 'disabled');
-													jQuery('.input_authorization_type').show();
-													jQuery('#port-explanation').html("Choose Basic (TLS) authentication to login to the SMTP server and enter your credentials. Your username is most likely your email address. Or choose None for no authentication at all.");
+												var chosenPort = jQuery(
+														'#input_port').val();
+												var hostname = jQuery(
+														postman_hostname_element_name)
+														.val();
+												jQuery(
+														'#input_authorization_type')
+														.click(
+																function() {
+																	var $val = jQuery(
+																			'#input_authorization_type')
+																			.val();
+																	if ($val == 'none') {
+																		jQuery(
+																				'#input_basic_auth_username')
+																				.attr(
+																						'disabled',
+																						'disabled');
+																		jQuery(
+																				'#input_basic_auth_password')
+																				.attr(
+																						'disabled',
+																						'disabled');
+																	} else {
+																		jQuery(
+																				'#input_basic_auth_username')
+																				.removeAttr(
+																						'disabled');
+																		jQuery(
+																				'#input_basic_auth_password')
+																				.removeAttr(
+																						'disabled');
+																	}
+																});
+												jQuery('.wizard-auth-oauth2')
+														.hide();
+												jQuery('.wizard-auth-basic')
+														.show();
+												jQuery(
+														'#input_basic_auth_username')
+														.removeAttr('disabled');
+												jQuery(
+														'#input_basic_auth_password')
+														.removeAttr('disabled');
+												jQuery(
+														'#input_auth_type_oauth2')
+														.attr('disabled',
+																'disabled');
+												if (hostname == 'smtp.gmail.com'
+														&& chosenPort == 465) {
+													jQuery(
+															'.wizard-auth-oauth2')
+															.show();
+													jQuery('.wizard-auth-basic')
+															.hide();
+													jQuery(
+															input_authorization_type)
+															.val('oauth2');
+													jQuery(
+															'.input_authorization_type')
+															.hide();
+													jQuery(
+															'#input_auth_type_oauth2')
+															.removeAttr(
+																	'disabled');
+												} else if (chosenPort == 465) {
+													jQuery(
+															input_authorization_type)
+															.val('basic-ssl');
+													jQuery(
+															'.input_authorization_type')
+															.hide();
+													jQuery(
+															'.port-explanation-ssl')
+															.show();
+													jQuery(
+															'.port-explanation-tls')
+															.hide();
+												} else if (chosenPort == 587) {
+													jQuery(
+															input_authorization_type)
+															.val('basic-tls');
+													jQuery(
+															'#input_auth_type_ssl')
+															.attr('disabled',
+																	'disabled');
+													jQuery(
+															'.input_authorization_type')
+															.show();
+													jQuery(
+															'.port-explanation-ssl')
+															.hide();
+													jQuery(
+															'.port-explanation-tls')
+															.show();
 												} else {
-													jQuery(input_authorization_type).val('none');
-													jQuery('.input_authorization_type').hide();
-													jQuery('#input_basic_auth_username').attr('disabled','disabled');
-													jQuery('#input_basic_auth_password').attr('disabled','disabled');
+													jQuery(
+															input_authorization_type)
+															.val('none');
+													jQuery(
+															'.input_authorization_type')
+															.hide();
+													jQuery(
+															'#input_basic_auth_username')
+															.attr('disabled',
+																	'disabled');
+													jQuery(
+															'#input_basic_auth_password')
+															.attr('disabled',
+																	'disabled');
 												}
 											}
 
@@ -131,14 +210,19 @@ jQuery(document)
 										},
 										onStepChanged : function(event,
 												currentIndex, priorIndex) {
-											var chosenPort = jQuery('#input_port').val();
-									        // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
-									        if (currentIndex === 3 && priorIndex === 4 && chosenPort == 25)
-									        {
-									            jQuery(this).steps("previous");
-									            return;
-									        }
-									        if(currentIndex === 3 && chosenPort == 25) {
+											var chosenPort = jQuery(
+													'#input_port').val();
+											// Suppress (skip) "Warning" step if
+											// the user is old enough and wants
+											// to the previous step.
+											if (currentIndex === 3
+													&& priorIndex === 4
+													&& chosenPort == 25) {
+												jQuery(this).steps("previous");
+												return;
+											}
+											if (currentIndex === 3
+													&& chosenPort == 25) {
 												jQuery(this).steps("next");
 											}
 										},
@@ -146,16 +230,19 @@ jQuery(document)
 												currentIndex) {
 											var form = jQuery(this);
 
-											jQuery('.wizard-auth-oauth2').show();
+											jQuery('.wizard-auth-oauth2')
+													.show();
 											jQuery('.wizard-auth-basic').show();
-											jQuery('.input_authorization_type').show();
+											jQuery('.input_authorization_type')
+													.show();
 											// Disable validation on fields that
 											// are disabled.
 											// At this point it's recommended to
 											// do an overall check (mean
 											// ignoring
 											// only disabled fields)
-//											form.validate().settings.ignore = ":disabled";
+											// form.validate().settings.ignore =
+											// ":disabled";
 
 											// Start validation; Prevent form
 											// submission if false
@@ -199,7 +286,7 @@ function wizardPortTest(input, state) {
 	elState.html('Checking..');
 	el.attr('disabled', 'disabled');
 	el.prop('checked', false);
-	el.click(function(){
+	el.click(function() {
 		jQuery(postman_port_element_name).val(el.val());
 	});
 	portsToCheck++;
@@ -212,52 +299,57 @@ function wizardPortTest(input, state) {
 	};
 	// We can also pass the url value separately from ajaxurl for front end AJAX
 	// implementations
-	jQuery.post(ajaxurl, data, function(response) {
-		portsChecked++;
-		if (response.success) {
-			elState.html('Ok');
-			el.removeAttr('disabled');
-		} else {
-			elState.html('Closed');
-		}
-		if (portsChecked >= portsToCheck) {
-			var el25 = jQuery('#wizard_port_25');
-			var el465 = jQuery('#wizard_port_465');
-			var el587 = jQuery('#wizard_port_587');
-			var el25_avail = el25.attr('disabled') != 'disabled';
-			var el465_avail = el465.attr('disabled') != 'disabled';
-			var el587_avail = el587.attr('disabled') != 'disabled';
-			var totalAvail = 0;
-			if (el25_avail)
-				totalAvail++;
-			if (el465_avail)
-				totalAvail++;
-			if (el587_avail)
-				totalAvail++;
-			if (hostname == 'smtp.gmail.com' && el465_avail) {
-				// select OAuth2 if the user can use it
-				el25.attr('disabled', 'disabled');
-				el465.prop("checked", true);
-				el587.attr('disabled', 'disabled');
-				portInput.val(465);
-			} else if (totalAvail == 1) {
-				if (el25_avail) {
-					el25.prop('checked', true);
-					portInput.val(25);
-				}
-				if (el465_avail) {
-					el465.prop('checked', true);
-					portInput.val(465);
-				}
-				if (el587_avail) {
-					el587.prop('checked', true);
-					portInput.val(587);
-				}
-			} else {
-				if(totalAvail == 0) {
-					alert("No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.")
-				}
-			}
-		}
-	});
+	jQuery
+			.post(
+					ajaxurl,
+					data,
+					function(response) {
+						portsChecked++;
+						if (response.success) {
+							elState.html('Ok');
+							el.removeAttr('disabled');
+						} else {
+							elState.html('Closed');
+						}
+						if (portsChecked >= portsToCheck) {
+							var el25 = jQuery('#wizard_port_25');
+							var el465 = jQuery('#wizard_port_465');
+							var el587 = jQuery('#wizard_port_587');
+							var el25_avail = el25.attr('disabled') != 'disabled';
+							var el465_avail = el465.attr('disabled') != 'disabled';
+							var el587_avail = el587.attr('disabled') != 'disabled';
+							var totalAvail = 0;
+							if (el25_avail)
+								totalAvail++;
+							if (el465_avail)
+								totalAvail++;
+							if (el587_avail)
+								totalAvail++;
+							if (hostname == 'smtp.gmail.com' && el465_avail) {
+								// select OAuth2 if the user can use it
+								el25.attr('disabled', 'disabled');
+								el465.prop("checked", true);
+								el587.attr('disabled', 'disabled');
+								portInput.val(465);
+							} else if (totalAvail == 1) {
+								var enable = true;
+								if (el25_avail) {
+									el25.prop('checked', enable);
+									portInput.val(25);
+								}
+								if (el465_avail) {
+									el465.prop('checked', enable);
+									portInput.val(465);
+								}
+								if (el587_avail) {
+									el587.prop('checked', enable);
+									portInput.val(587);
+								}
+							} else {
+								if (totalAvail == 0) {
+									alert("No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.")
+								}
+							}
+						}
+					});
 }
