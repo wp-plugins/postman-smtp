@@ -110,7 +110,8 @@ if (! function_exists ( 'activatePostman' )) {
 			$authToken->setExpiryTime ( $options [PostmanAuthorizationToken::EXPIRY_TIME] );
 			$authToken->save ();
 		}
-		if (empty ( $options [PostmanOptions::AUTHORIZATION_TYPE] )) {
+		// prior to 1.0.0, the auth type was set to 'gmail' instead of oauth2
+		if ($options [PostmanOptions::AUTHORIZATION_TYPE] == 'gmail') {
 			$options [PostmanOptions::AUTHORIZATION_TYPE] = PostmanOptions::AUTHORIZATION_TYPE_OAUTH2;
 			update_option ( PostmanOptions::POSTMAN_OPTIONS, $options );
 		}
