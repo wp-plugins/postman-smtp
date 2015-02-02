@@ -3,3 +3,7 @@
 .welcome-panel {
 	padding: 0px 10px 0;
 }
+
+form#postman_wizard legend {
+	font-weight: bold;
+}

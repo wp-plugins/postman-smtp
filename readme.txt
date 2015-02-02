@@ -60,10 +60,14 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 
 == Changelog ==
 
-= 0.3 =
+= 1.0 = 2015-02-01 =
+* Overhaul of the UI - A navigation pane is shown at the top of each page and each major function has been separated into its own screen
+* Postman now supports sending with basic auth and no auth just like the other 172 WordPress SMTP plugins active in the plugin repo... <yawn>
+* Added a Port Test function so users can have peace of mind whether the plugin is failing (never!) or whether the host has firewalled them 
 * Now supports email headers, such as a text/html content-type
 * Now supports email attachments
-* Postman now supports insecure and Basic authentication like the other 172 WordPress SMTP plugins active in the plugin repo... <yawn>
+* Added a warning if the user has configured OAuth but not requested permission from Google
+* Added a warning if the user is using Google with Basic auth (or worse) and a suggestion to enable OAuth 2.0
 
 = 0.2.7 - 2015-01-29 =
 * Fixed error: "Undefined variable: authorizationToken" was preventing mail delivery outside of the admin screen.
@@ -99,6 +103,9 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 1.0 =
+Major overhaul of the UI including a Setup Wizard and a TCP Port Tester!
 
 = 0.2.7 =
 A bug in PostmanWpMail prevents all mail from going out. PLEASE UPGRADE!

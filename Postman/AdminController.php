@@ -5,12 +5,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 	require_once 'PostmanOptions.php';
 	require_once 'PostmanAuthorizationToken.php';
 	require_once 'Wizard/PortTest.php';
+	require_once 'Wizard/SmtpDiscovery.php';
 	
 	//
 	class PostmanAdminController {
-		// UI defaults
-		const DEFAULT_GMAIL_OAUTH_HOSTNAME = 'smtp.gmail.com';
-		const DEFAULT_GMAIL_OAUTH_PORT = 465;
 		
 		// this is the slug used in the URL
 		const POSTMAN_MENU_SLUG = 'postman';
@@ -57,6 +55,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		private $displayPurgeData;
 		private $displayTest;
 		private $displayPortTest;
+		private $displayWizard;
 		
 		/**
 		 * Start up
@@ -77,6 +76,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 				add_action ( 'wp_ajax_test_port', array (
 						$this,
 						'testPort' 
+				) );
+				add_action ( 'wp_ajax_check_email', array (
+						$this,
+						'checkEmail' 
 				) );
 			}
 			// Adds "Settings" link to the plugin action page
@@ -128,6 +131,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this->displayPurgeData = true;
 				} else if ($action == 'run_port_test') {
 					$this->displayPortTest = true;
+				} else if ($action == 'start_wizard') {
+					$this->displayWizard = true;
 				}
 			}
 		}
@@ -143,15 +148,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			delete_option ( PostmanAdminController::TEST_OPTIONS );
 			header ( 'Location: ' . esc_url ( POSTMAN_HOME_PAGE_URL ) );
 			exit ();
-		}
-		
-		//
-		private function setDefaults() {
-			// $this->options->setAuthorizationTypeIfEmpty ( 'OAuth2' );
-			$this->options->setSenderEmailIfEmpty ( wp_get_current_user ()->user_email );
-			if (! isset ( $this->testOptions [PostmanOptions::TEST_EMAIL] )) {
-				$this->testOptions [PostmanOptions::TEST_EMAIL] = wp_get_current_user ()->user_email;
-			}
 		}
 		
 		/**
@@ -174,6 +170,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		function enqueueStylesheet() {
 			wp_enqueue_style ( 'postman_style' );
+			wp_enqueue_style ( 'jquery_steps_style' );
 			wp_enqueue_script ( 'postman_script' );
 		}
 		public function handleTestEmailAction() {
@@ -197,14 +194,31 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function initializeAdminPage() {
 			// register the stylesheet and javascript external resources
 			wp_register_style ( 'postman_style', plugins_url ( 'style/postman.css', __FILE__ ), null, POSTMAN_PLUGIN_VERSION );
+			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery.steps.css', __FILE__ ), null, POSTMAN_PLUGIN_VERSION );
+			
 			wp_register_script ( 'postman_script', plugins_url ( 'script/postman.js', __FILE__ ), array (
+					'postman_wizard_script',
+					'jquery',
+					'jquery_steps_script',
+					'jquery_validation' 
+			), POSTMAN_PLUGIN_VERSION );
+			wp_register_script ( 'jquery_steps_script', plugins_url ( 'script/jquery.steps.min.js', __FILE__ ), array (
 					'jquery' 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_localize_script ( 'postman_script', 'postman_auth_element_name', 'select#authorization_type' );
+			wp_register_script ( 'jquery_validation', plugins_url ( 'script/jquery.validate.min.js', __FILE__ ), array (
+					'jquery' 
+			), POSTMAN_PLUGIN_VERSION );
+			wp_register_script ( 'postman_wizard_script', plugins_url ( 'script/postman_wizard.js', __FILE__ ), array (
+					'jquery' 
+			), POSTMAN_PLUGIN_VERSION );
 			wp_localize_script ( 'postman_script', 'postman_smtp_section_element_name', 'div#smtp_section' );
 			wp_localize_script ( 'postman_script', 'postman_oauth_section_element_name', 'div#oauth_section' );
-			wp_localize_script ( 'postman_script', 'postman_port_element_name', 'input#port' );
-			wp_localize_script ( 'postman_script', 'postman_hostname_element_name', 'input#hostname' );
+			
+			// user input
+			wp_localize_script ( 'postman_script', 'postman_input_auth_type', '#input_authorization_type' );
+			wp_localize_script ( 'postman_script', 'postman_input_sender_email', '#input_sender_email' );
+			wp_localize_script ( 'postman_script', 'postman_port_element_name', '#input_port' );
+			wp_localize_script ( 'postman_script', 'postman_hostname_element_name', '#input_hostname' );
 			wp_localize_script ( 'postman_script', 'postman_auth_none', PostmanOptions::AUTHORIZATION_TYPE_NONE );
 			wp_localize_script ( 'postman_script', 'postman_auth_basic_ssl', PostmanOptions::AUTHORIZATION_TYPE_BASIC_SSL );
 			wp_localize_script ( 'postman_script', 'postman_auth_basic_tls', PostmanOptions::AUTHORIZATION_TYPE_BASIC_TLS );
@@ -325,16 +339,20 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$success = true;
 			
 			if (isset ( $input [PostmanOptions::AUTHORIZATION_TYPE] )) {
+				$this->logger->debug ( 'Authorization Type ' . $input [PostmanOptions::AUTHORIZATION_TYPE] );
 				$new_input [PostmanOptions::AUTHORIZATION_TYPE] = sanitize_text_field ( $input [PostmanOptions::AUTHORIZATION_TYPE] );
 			}
 			
 			if (isset ( $input [PostmanOptions::HOSTNAME] ))
 				$new_input [PostmanOptions::HOSTNAME] = sanitize_text_field ( $input [PostmanOptions::HOSTNAME] );
 			
-			if (isset ( $input [PostmanOptions::PORT] ))
+			if (isset ( $input [PostmanOptions::PORT] )) {
+				$this->logger->debug ( 'Sanitize Port ' . $input [PostmanOptions::PORT] );
 				$new_input [PostmanOptions::PORT] = absint ( $input [PostmanOptions::PORT] );
+			}
 			
 			if (isset ( $input [PostmanOptions::SENDER_EMAIL] )) {
+				$this->logger->debug ( 'Sanitize Sender Email' . $input [PostmanOptions::SENDER_EMAIL] );
 				$newEmail = $input [PostmanOptions::SENDER_EMAIL];
 				if ($this->validateEmail ( $newEmail )) {
 					$new_input [PostmanOptions::SENDER_EMAIL] = sanitize_text_field ( $newEmail );
@@ -373,9 +391,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$splAutoloadRegisterRequirement = function_exists ( 'spl_autoload_register' );
 			$phpVersionRequirement = PHP_VERSION_ID >= 50300;
 			$arrayObjectRequirement = class_exists ( 'ArrayObject' );
+			$getmxrrRequirement = function_exists ( 'getmxrr' );
 			
 			// Set class property
-			$this->setDefaults ();
 			print '<div class="wrap">';
 			screen_icon ();
 			print '<h2>' . PostmanAdminController::PAGE_TITLE . '</h2>';
@@ -396,6 +414,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->displayPurgeData ();
 			} else if ($this->displayPortTest) {
 				$this->generatePortTestHtml ();
+			} else if ($this->displayWizard) {
+				$this->generateWizardHtml ();
 			} else {
 				$this->generateStatusHtml ();
 			}
@@ -426,7 +446,138 @@ if (! class_exists ( "PostmanAdminController" )) {
 				print '<p><span style="color:red; padding:2px 5px; font-size:1.1em">Status: Postman is not properly configured.</span></p>';
 			}
 		}
-		
+		/**
+		 */
+		public function generateWizardHtml() {
+			?>
+<h3>Postman Setup Wizard</h3>
+
+<form id="postman_wizard" method="post" action="options.php">
+	<?php settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME ); ?>
+	<h1>Email Address</h1>
+	<fieldset>
+		<legend>Enter your Email Address </legend>
+		<p>Let's begin! Please enter the email address you'd like to send mail
+			from. Plugins may override this address when composing messages.</p>
+
+		<label for="postman_options[sender_email]">Sender Email Address</label>
+		<?php echo $this->sender_email_callback(); ?>
+	</fieldset>
+
+	<h1>SMTP Server Hostname</h1>
+	<fieldset>
+		<legend>Enter your SMTP hostname. </legend>
+		<p>This is the server that Postman will use to deliver your mail.</p>
+		<label for="hostname">SMTP Server Hostname</label>
+		<?php echo $this->hostname_callback(); ?>
+	
+	
+	</fieldset>
+
+	<h1>SMTP Server Port</h1>
+	<fieldset>
+		<legend>Choose an SMTP port</legend>
+		<p>Your email provider will dictate which port to use. Port 25 (SMTP)
+			is plaintext, Port 465 (SMTPS-SSL) is encrypted and Port 587
+			(SMTPS-TLS/STARTTLS) offers both.</p>
+
+		<label for="hostname">SMTP Server Port</label>
+		<?php echo $this->port_callback('style="display:none"'); ?>
+		<table>
+			<tr>
+				<td><span>Port 25 </span></td>
+				<td><input type="radio" id="wizard_port_25" name="wizard-port"
+					value="25" class="required" style="margin-top: 0px" /></td>
+				<td id="wizard_port_25_status">Unknown</td>
+			</tr>
+			<tr>
+				<td><span>Port 465</span></td>
+				<td><input type="radio" id="wizard_port_465" name="wizard-port"
+					value="465" class="required" style="margin-top: 0px" /></td>
+				<td id="wizard_port_465_status">Unknown</td>
+			</tr>
+			<tr>
+				<td><span>Port 587</span></td>
+				<td><input type="radio" id="wizard_port_587" name="wizard-port"
+					value="587" class="required" style="margin-top: 0px" /></td>
+				<td id="wizard_port_587_status">Unknown</td>
+			</tr>
+		</table>
+	</fieldset>
+
+	<h1>Authentication</h1>
+	<fieldset>
+		<legend> Setup Authentication </legend>
+		<section class="wizard-auth-oauth2">
+			<p>
+				Open the <a href="https://console.developers.google.com/"
+					target="_new">Google Developer Console</a>, create a Client ID
+				using the Redirect URI below, and enter the Client ID and Client
+				Secret. See the <a
+					href="https://wordpress.org/plugins/postman-smtp/installation/"
+					target="_new">homepage</a> for help.
+			</p>
+			<label for="redirect_uri">Redirect URI</label>
+			<?php echo $this->redirect_url_callback(); ?>
+
+			<label for="client_id">Client ID</label>
+			<?php echo $this->oauth_client_id_callback(); ?>
+
+			<label for="client_id">Client Secret</label> 
+			<?php echo $this->oauth_client_secret_callback(); ?>
+				</section>
+
+		<section class="wizard-auth-basic">
+			<p id="port-explanation"></p>
+			<label class="input_authorization_type" for="redirect_uri">Authentication
+				Type</label>
+			<?php echo $this->authorization_type_callback(); ?>
+			<br /> <label for="username">Username</label>
+			<?php echo $this->basic_auth_username_callback();?>
+			<label for="password">Password</label>
+			<?php echo $this->basic_auth_password_callback();?>
+			</section>
+	</fieldset>
+
+	<h1>Finish</h1>
+	<fieldset>
+		<legend>All done!</legend>
+		<section class="wizard-auth-oauth2">
+			<p>Once you click Finish below, these settings will be saved. Then at
+				the main Postman Settings screen, be sure to:</p>
+			<ul style='margin-left: 20px'>
+				<li>Request Permission from Google to allow Postman to send email
+					and</li>
+				<li>Send yourself a Test Email to make sure everything is working!</li>
+			</ul>
+		</section>
+		<section class="wizard-auth-basic">
+			<p>Once you click Finish below, these settings will be saved. Then at
+				the main Postman Settings screen, be sure to send yourself a Test
+				Email to make sure everything is working!</p>
+		</section>
+	</fieldset>
+
+</form>
+
+<?php
+		}
+		function checkEmail() {
+			$email = $_POST ['email'];
+			$d = new SmtpDiscovery ();
+			$smtp = $d->getSmtpServer ( $email );
+			$this->logger->debug ( 'given email ' . $email . ', smtp server is ' . $smtp );
+			if ($smtp) {
+				$response = array (
+						'hostname' => $smtp 
+				);
+			} else {
+				$response = array (
+						'hostname' => '' 
+				);
+			}
+			wp_send_json ( $response );
+		}
 		/**
 		 */
 		public function generateManuallyConfigureHtml() {
@@ -457,7 +608,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 */
 		public function generatePortTestHtml() {
-			if(WP_DEBUG_DISPLAY) {
+			if (WP_DEBUG_DISPLAY) {
 				print '<p><span style="color:red">You must disable WP_DEBUG_DISPLAY mode or the port test will not work.';
 			}
 			print '<form method="post">';
@@ -491,9 +642,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		function testPort() {
 			$hostname = $_POST ['hostname'];
 			$port = intval ( $_POST ['port'] );
+			if (isset ( $_POST ['timeout'] )) {
+				$timeout = intval ( $_POST ['timeout'] );
+			} else {
+				$timeout = 20;
+			}
 			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ();
-			$success = $portTest->testSmtpPorts ( $hostname, $port );
+			$success = $portTest->testSmtpPorts ( $hostname, $port, $timeout );
 			$this->logger->debug ( 'testing port success=' . $success );
 			$response = array (
 					'message' => $portTest->getErrorMessage (),
@@ -581,17 +737,17 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function authorization_type_callback() {
 			$authType = $this->options->getAuthorizationType ();
-			print '<select id="authorization_type" name="postman_options[authorization_type]">';
-			print '<option value="' . PostmanOptions::AUTHORIZATION_TYPE_NONE . '"';
+			print '<select id="input_authorization_type" class="input_authorization_type" name="postman_options[authorization_type]">';
+			print '<option id="input_auth_type_none" value="' . PostmanOptions::AUTHORIZATION_TYPE_NONE . '"';
 			printf ( '%s', $authType == PostmanOptions::AUTHORIZATION_TYPE_NONE ? 'selected="selected"' : '' );
 			print '>None</option>';
-			print '<option value="' . PostmanOptions::AUTHORIZATION_TYPE_BASIC_SSL . '"';
+			print '<option id="input_auth_type_ssl" value="' . PostmanOptions::AUTHORIZATION_TYPE_BASIC_SSL . '"';
 			printf ( '%s', $authType == PostmanOptions::AUTHORIZATION_TYPE_BASIC_SSL ? 'selected="selected"' : '' );
 			print '>Basic (SSL)</option>';
-			print '<option value="' . PostmanOptions::AUTHORIZATION_TYPE_BASIC_TLS . '"';
+			print '<option id="input_auth_type_tls" value="' . PostmanOptions::AUTHORIZATION_TYPE_BASIC_TLS . '"';
 			printf ( '%s', $authType == PostmanOptions::AUTHORIZATION_TYPE_BASIC_TLS ? 'selected="selected"' : '' );
 			print '>Basic (TLS)</option>';
-			print '<option value="' . PostmanOptions::AUTHORIZATION_TYPE_OAUTH2 . '"';
+			print '<option id="input_auth_type_oauth2" value="' . PostmanOptions::AUTHORIZATION_TYPE_OAUTH2 . '"';
 			printf ( '%s', (empty ( $authType ) || $authType == PostmanOptions::AUTHORIZATION_TYPE_OAUTH2) ? 'selected="selected"' : '' );
 			print '>OAuth2 (Gmail)</option></select>';
 		}
@@ -600,21 +756,21 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function hostname_callback() {
-			printf ( '<input type="text" id="hostname" name="postman_options[hostname]" value="%s" />', null !== $this->options->getHostname () ? esc_attr ( $this->options->getHostname () ) : '' );
+			printf ( '<input type="text" id="input_hostname" name="postman_options[hostname]" value="%s" class="required"/>', null !== $this->options->getHostname () ? esc_attr ( $this->options->getHostname () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
-		public function port_callback() {
-			printf ( '<input type="text" id="port" name="postman_options[port]" value="%s" />', null !== $this->options->getPort () ? esc_attr ( $this->options->getPort () ) : '' );
+		public function port_callback($args) {
+			printf ( '<input type="text" id="input_port" name="postman_options[port]" value="%s" class="required" %s/>', null !== $this->options->getPort () ? esc_attr ( $this->options->getPort () ) : '', $args );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function sender_email_callback() {
-			printf ( '<input type="text" id="sender_email" name="postman_options[sender_email]" value="%s" />', null !== $this->options->getSenderEmail () ? esc_attr ( $this->options->getSenderEmail () ) : '' );
+			printf ( '<input type="text" id="input_sender_email" name="postman_options[sender_email]" value="%s" class="required email"/>', null !== $this->options->getSenderEmail () ? esc_attr ( $this->options->getSenderEmail () ) : '' );
 		}
 		
 		/**
@@ -628,28 +784,28 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function basic_auth_username_callback() {
-			printf ( '<input type="text" id="basic_auth_username" name="postman_options[basic_auth_username]" value="%s"/>', null !== $this->options->getUsername () ? esc_attr ( $this->options->getUsername () ) : '' );
+			printf ( '<input type="text" id="input_basic_auth_username" name="postman_options[basic_auth_username]" value="%s" class="required"/>', null !== $this->options->getUsername () ? esc_attr ( $this->options->getUsername () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function basic_auth_password_callback() {
-			printf ( '<input type="password" autocomplete="off" id="basic_auth_password" name="postman_options[basic_auth_password]" value="%s"/>', null !== $this->options->getPassword () ? esc_attr ( $this->options->getPassword () ) : '' );
+			printf ( '<input type="password" autocomplete="off" id="input_basic_auth_password" name="postman_options[basic_auth_password]" value="%s" class="required"/>', null !== $this->options->getPassword () ? esc_attr ( $this->options->getPassword () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function oauth_client_id_callback() {
-			printf ( '<textarea type="text" id="oauth_client_id" name="postman_options[oauth_client_id]" cols="60">%s</textarea>', null !== $this->options->getClientId () ? esc_attr ( $this->options->getClientId () ) : '' );
+			printf ( '<textarea type="text" onClick="this.setSelectionRange(0, this.value.length)" id="oauth_client_id" name="postman_options[oauth_client_id]" cols="60" class="required">%s</textarea>', null !== $this->options->getClientId () ? esc_attr ( $this->options->getClientId () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function oauth_client_secret_callback() {
-			printf ( '<input type="text" autocomplete="off" id="oauth_client_secret" name="postman_options[oauth_client_secret]" value="%s" size="24"/>', null !== $this->options->getClientSecret () ? esc_attr ( $this->options->getClientSecret () ) : '' );
+			printf ( '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" autocomplete="off" id="oauth_client_secret" name="postman_options[oauth_client_secret]" value="%s" size="60" class="required"/>', null !== $this->options->getClientSecret () ? esc_attr ( $this->options->getClientSecret () ) : '' );
 		}
 		
 		/**
@@ -669,7 +825,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				<h4>Get Started</h4>
 				<a
 					class="button button-primary button-hero load-customize hide-if-no-customize"
-					href="http://localhost/~jasonhendriks/wordpress/wp-admin/customize.php">Start
+					href="<?php echo POSTMAN_HOME_PAGE_URL ?>&postman_action=start_wizard">Start
 					the Wizard</a>
 				<p class="hide-if-no-customize">
 					or, <a
@@ -708,7 +864,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
 				printf ( '<a
 							href="%s&postman_action=send_test_email"
-							class="welcome-icon send-test-email">Send a Test Email</a>', POSTMAN_HOME_PAGE_URL );
+							class="welcome-icon send-test-email">Send an Email</a>', POSTMAN_HOME_PAGE_URL );
 			} else {
 				print 'Send a Test Email';
 			}

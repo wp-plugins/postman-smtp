@@ -1,7 +1,6 @@
 <?php
-
-namespace Postman {
-
+if (! class_exists ( 'SmtpDiscovery' )) {
+	
 	require_once "SmtpMappings.php";
 	class SmtpDiscovery {
 		public function getPrimaryMxHost($hostname) {
@@ -17,7 +16,8 @@ namespace Postman {
 				// sort array mxs to get servers with highest prio
 				ksort ( $mxs, SORT_NUMERIC );
 				reset ( $mxs );
-				return array_shift ( array_values ( $mxs ) );
+				$mxs_vals = array_values ( $mxs );
+				return array_shift ( $mxs_vals );
 			} else {
 				return false;
 			}
@@ -54,7 +54,43 @@ namespace Postman {
 			}
 		}
 	}
-	
+}
+
+// support windows platforms
+if (! function_exists ( 'getmxrr' )) {
+	function getmxrr($hostname, &$mxhosts, &$mxweight) {
+		if (! is_array ( $mxhosts )) {
+			$mxhosts = array ();
+		}
+		$hostname = escapeshellarg ( $hostname );
+		if (! empty ( $hostname )) {
+			$output = "";
+			@exec ( "nslookup.exe -type=MX $hostname.", $output );
+			$imx = - 1;
+			
+			foreach ( $output as $line ) {
+				$imx ++;
+				$parts = "";
+				if (preg_match ( "/^$hostname\tMX preference = ([0-9]+), mail exchanger = (.*)$/", $line, $parts )) {
+					$mxweight [$imx] = $parts [1];
+					$mxhosts [$imx] = $parts [2];
+				}
+			}
+			return ($imx != - 1);
+		}
+		return false;
+	}
+}
+function check($email) {
+	$d = new SmtpDiscovery ();
+	$smtp = $d->getSmtpServer ( $email );
+	if ($smtp) {
+		print $email . '=' . $smtp . "\n";
+	} else {
+		print $email . ' ASK USER' . "\n";
+	}
+}
+function test() {
 	check ( 'jason@jason@hendriks.ca' );
 	check ( 'test@hotmail.com' );
 	check ( 'test@office365.com' );
@@ -70,44 +106,10 @@ namespace Postman {
 	check ( 'test@sdlkfjsdl.org' );
 	check ( 'test@sdlkfjsdl.gov' );
 	check ( 'test@sdlkfjsdl.com' );
-	function check($email) {
-		$d = new SmtpDiscovery ();
-		$smtp = $d->getSmtpServer ( $email );
-		if ($smtp) {
-			print $email . '=' . $smtp . "\n";
-		} else {
-			print $email . ' ASK USER' . "\n";
-		}
-	}
+	check ( 'test@apple.com' );
+	check ( 'test@icloud.com' );
+	check ( 'test@me.com' );
+	check ( 'test@mobileme.com' );
 }
-
-namespace {
-	
-	// support windows platforms
-	if (! function_exists ( 'getmxrr' )) {
-		function getmxrr($hostname, &$mxhosts, &$mxweight) {
-			if (! is_array ( $mxhosts )) {
-				$mxhosts = array ();
-			}
-			$hostname = escapeshellarg($hostname);
-			if (! empty ( $hostname )) {
-				$output = "";
-				@exec ( "nslookup.exe -type=MX $hostname.", $output );
-				$imx = - 1;
-				
-				foreach ( $output as $line ) {
-					$imx ++;
-					$parts = "";
-					if (preg_match ( "/^$hostname\tMX preference = ([0-9]+), mail exchanger = (.*)$/", $line, $parts )) {
-						$mxweight [$imx] = $parts [1];
-						$mxhosts [$imx] = $parts [2];
-					}
-				}
-				return ($imx != - 1);
-			}
-			return false;
-		}
-	}
-}
-
+//test ();
 ?>

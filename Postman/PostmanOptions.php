@@ -26,6 +26,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		
 		// options data
 		private $options;
+		private $logger;
 		
 		// singleton instance
 		public static function getInstance() {
@@ -41,6 +42,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		 */
 		private function __construct() {
 			$this->options = get_option ( PostmanOptions::POSTMAN_OPTIONS );
+			$this->logger = new PostmanLogger ( 'PostmanOptions' );
 		}
 		//
 		public function save() {
@@ -72,7 +74,7 @@ if (! class_exists ( "PostmanOptions" )) {
 				$senderEmail = $this->getSenderEmail ();
 				return ! empty ( $accessToken ) && ! empty ( $refreshToken ) && ! empty ( $senderEmail );
 			} else {
-				throw new Exception ( "oops", 0 );
+				$authType = null;
 			}
 		}
 		public function isPermissionNeeded(PostmanAuthorizationToken $token) {
@@ -83,6 +85,8 @@ if (! class_exists ( "PostmanOptions" )) {
 			$clientId = $this->getClientId ();
 			$clientSecret = $this->getClientSecret ();
 			if ($authType != PostmanOptions::AUTHORIZATION_TYPE_OAUTH2 || empty ( $hostname ) || empty ( $port ) || empty ( $senderEmail ) || empty ( $clientId ) || empty ( $clientSecret )) {
+				$this->logger->debug ( 'authtype: ' . $authType );
+				$this->logger->debug ( 'doesnt look like this is oatuh2' );
 				return false;
 			} else {
 				$accessToken = $token->getAccessToken ();

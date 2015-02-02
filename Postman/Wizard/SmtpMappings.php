@@ -1,7 +1,5 @@
 <?php
-
-namespace Postman {
-
+if (! class_exists ( 'SmtpMapping' )) {
 	class SmtpMapping {
 		private $emailDomain = array (
 				'gmail.com' => 'smtp.gmail.com',
@@ -9,11 +7,14 @@ namespace Postman {
 				'outlook.com' => 'smtp.live.com',
 				'yahoo.co.uk' => 'smtp.mail.yahoo.co.uk',
 				'yahoo.com.au' => 'smtp.mail.yahoo.com.au',
-				'yahoo.com' => 'smtp.mail.yahoo.com' 
+				'yahoo.com' => 'smtp.mail.yahoo.com',
+				'icloud.com' => 'imap.mail.me.com',
+				'mail.com' => 'smtp.mail.com'
 		);
 		private $mx = array (
 				'google.com' => 'smtp.gmail.com',
-				'hotmail.com' => 'smtp.live.com'
+				'icloud.com' => 'imap.mail.me.com', 
+				'hotmail.com' => 'smtp.live.com' 
 		);
 		public function getSmtpFromEmail($email) {
 			$hostname = substr ( strrchr ( $email, "@" ), 1 );

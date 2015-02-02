@@ -1,32 +1,27 @@
 jQuery(document).ready(function() {
 	showHide();
-	var $el = jQuery(postman_auth_element_name);
+	var $el = jQuery(postman_input_auth_type);
 	$el.change(function() {
 		showHide();
 	});
 });
 function showHide() {
-	var $el = jQuery(postman_auth_element_name);
+	var $el = jQuery(postman_input_auth_type);
 	$choice = $el.val();
 	var $div1 = jQuery(postman_smtp_section_element_name);
 	var $div2 = jQuery(postman_oauth_section_element_name);
 	var $divEl = jQuery(postman_port_element_name);
 	var $hostnameEl = jQuery(postman_hostname_element_name);
 	if ($choice == postman_auth_none) {
-		$divEl.val(25);
 		$div1.hide();
 		$div2.hide();
 	} else if ($choice == postman_auth_basic_ssl) {
-		$divEl.val(465);
 		$div1.show();
 		$div2.hide();
 	} else if ($choice == postman_auth_basic_tls) {
-		$divEl.val(587);
 		$div1.show();
 		$div2.hide();
 	} else {
-		$hostnameEl.val('smtp.gmail.com');
-		$divEl.val(465);
 		$div1.hide();
 		$div2.show();
 	}
