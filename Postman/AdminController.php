@@ -500,7 +500,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			587 (SMTPS-TLS/STARTTLS) offers both.</p>
 
 		<label for="hostname">SMTP Server Port</label>
-		<?php echo $this->port_callback('style="display:none"'); ?>
+		<?php echo $this->port_callback(array('style'=>'style="display:none"')); ?>
 		<table>
 			<tr>
 				<td><span>Port 25 </span></td>
@@ -782,7 +782,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function port_callback($args) {
-			printf ( '<input type="text" id="input_port" name="postman_options[port]" value="%s" class="required" %s/>', null !== $this->options->getPort () ? esc_attr ( $this->options->getPort () ) : '', $args );
+			printf ( '<input type="text" id="input_port" name="postman_options[port]" value="%s" class="required" %s/>', null !== $this->options->getPort () ? esc_attr ( $this->options->getPort () ) : '', isset ( $args ['style'] ) ? $args ['style'] : '' );
 		}
 		
 		/**
