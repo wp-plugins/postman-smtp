@@ -3,11 +3,11 @@ Contributors: jasonhendriks
 Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, phpmailer, wp_mail, gmail, google apps
 Requires at least: 3.8
 Tested up to: 4.1
-Stable tag: 0.2.7
+Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Kiss your Email problems good-bye with Postman, the first and only OAuth-enabled SMTP Plugin for WordPress. Never give out your password again!
+Kiss your Gmail problems good-bye with Postman, the first and only OAuth-enabled SMTP Plugin for WordPress. Never give out your password again!
 
 == Description ==
 
@@ -77,6 +77,7 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 * Now supports email attachments
 * Added a warning if the user has configured OAuth but not requested permission from Google
 * Added a warning if the user is using Google with Basic auth (or worse) and a suggestion to enable OAuth 2.0
+* Recording of successful/failure tally
 
 = 0.2.7 - 2015-01-29 =
 * Fixed error: "Undefined variable: authorizationToken" was preventing mail delivery outside of the admin screen.
