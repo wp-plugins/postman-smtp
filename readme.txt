@@ -7,7 +7,7 @@ Stable tag: 0.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Kiss your Gmail problems good-bye with Postman, the first and only OAuth-enabled SMTP Plugin for WordPress. Never give out your password again!
+Kiss your Email problems good-bye with Postman, the first and only OAuth-enabled SMTP Plugin for WordPress. Never give out your password again!
 
 == Description ==
 
@@ -17,13 +17,22 @@ If you don't care about security, you could ask Gmail to [allow less secure apps
 
 Postman is a next-generation SMTP plugin which provides WordPress with a more secure mechanism for sending email. When your site generates an e-mail, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
 
-Requirements: PHP 5.3.23 with OpenSSL, a Gmail or Google Apps account, a Client ID from Google Developer, Port 465 (TCP, outbound) must be open
+###Features:
+* Send mail to any host with SMTP/SMTPS(SSL/TLS/STARTTLS) like the other 171 WordPress SMTP plugins
+* Send mail to Gmail with SMTPS using OAuth 2.0 - *and the plugin will never ask for your Google password*
+* Easy to use Setup Wizard takes the guesswork out of configuring e-mail
+* Built-in port probe for troubleshooting connectivity issues due to firewalls
+
+### Requirements:
+* PHP 5.3.23 (with OpenSSL for SMTPS)
+* an email account with any 3rd-party provider, and connectivity to their SMTP server
+* a Gmail/Google Apps account, a Client ID from Google Developer and connectivity to the Gmail server (for SMTP with OAuth 2.0)
 
 == Frequently Asked Questions == 
 
 = Why should I use Postman to deliver my mail? =
 
-Postman doesn't require your password to send email, only an *authentication token*. Other plugins need your Gmail password to send mail securely via SSL/TLS. **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
+If you're using Gmail, then Postman doesn't require your password to send email, only an *authentication token*. Other plugins ask for your Google password to send mail. **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = What is a Client ID? =
 To use Postman, every website needs their own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one. Google has [instructions for creating a Client ID](https://developers.google.com/console/help/new/#generatingoauth2), which I've expanded upon below.
@@ -39,7 +48,7 @@ To use Postman, every website needs their own Client ID. The Client ID is used t
 
 == Installation ==
 
-Please note: Postman is intended for users who want to use Gmail's SMTP servers. Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to Gmail's SMTP servers and Postman will not work for you.
+Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to Gmail's SMTP servers and Postman will not work for you.
 
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 1. In the WordPress 'Settings' menu find 'Postman SMTP'.
@@ -60,9 +69,9 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 
 == Changelog ==
 
-= 1.0 = 2015-02-01 =
+= 1.0 - 2015-02-02 =
 * Overhaul of the UI - A navigation pane is shown at the top of each page and each major function has been separated into its own screen
-* Postman now supports sending with basic auth and no auth just like the other 172 WordPress SMTP plugins active in the plugin repo... <yawn>
+* Postman now supports sending with basic auth and no auth just like the other 171 WordPress SMTP plugins active in the plugin repo... yawn
 * Added a Port Test function so users can have peace of mind whether the plugin is failing (never!) or whether the host has firewalled them 
 * Now supports email headers, such as a text/html content-type
 * Now supports email attachments
