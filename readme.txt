@@ -48,7 +48,7 @@ To use Postman, every website needs their own Client ID. The Client ID is used t
 
 == Installation ==
 
-Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to Gmail's SMTP servers and Postman will not work for you.
+Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to external SMTP servers and Postman will not work for you.
 
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 1. In the WordPress 'Settings' menu find 'Postman SMTP'.
