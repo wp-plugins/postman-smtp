@@ -63,6 +63,7 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 
 == Screenshots ==
 
+1. Postman's Setup Wizard checking server connectivity
 1. Creating a new Client ID with Google
 1. The required Client ID and Client Secret
 1. If you use [Google Apps](http://admin.google.com) to manage your domain, you HAVE to use OAuth
