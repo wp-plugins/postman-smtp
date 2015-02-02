@@ -19,9 +19,9 @@ Postman is a next-generation SMTP plugin which provides WordPress with a more se
 
 ###Features:
 * Send mail to any host with SMTP/SMTPS(SSL/TLS/STARTTLS) like the other 171 WordPress SMTP plugins
-* Send mail to Gmail with SMTPS using OAuth 2.0 - *and the plugin will never ask for your Google password*
+* Send mail to Gmail with SMTPS using OAuth 2.0 - even if your Google password changes, your messages will still be sent!
 * Easy to use Setup Wizard takes the guesswork out of configuring e-mail
-* Built-in port probe for troubleshooting connectivity issues due to firewalls
+* Built-in TCP Port Tester for troubleshooting connectivity issues due to firewalls
 
 ### Requirements:
 * PHP 5.3.23 (with OpenSSL for SMTPS)
@@ -63,6 +63,7 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 
 == Screenshots ==
 
+1. Postman's Setup Wizard checking server connectivity
 1. Creating a new Client ID with Google
 1. The required Client ID and Client Secret
 1. If you use [Google Apps](http://admin.google.com) to manage your domain, you HAVE to use OAuth
