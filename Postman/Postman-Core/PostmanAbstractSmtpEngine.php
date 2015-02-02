@@ -43,7 +43,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		const SSL_VALUE = 'ssl';
 		
 		// logger for all concrete classes - populate with setLogger($logger)
-		private $logger;
+		protected $logger;
 		
 		// are we in text/html mode?
 		private $isTextHtml;
