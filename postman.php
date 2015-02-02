@@ -1,10 +1,10 @@
 <?php
 
 /*
- * Plugin Name: Postman OAuth SMTP
+ * Plugin Name: Postman SMTP
  * Plugin URI: https://wordpress.org/plugins/postman/
- * Description: Send your mail with your Gmail account by adding what Google calls "the latest security measures" (i.e. SMTPS with OAuth 2.0 authentication). As of July 2014, this is <a href="http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html">recommended</a> and in some cases, <a href="https://support.google.com/accounts/answer/6010255">required</a> for sending mail via Gmail. Hotmail support will be added in a future release.
- * Version: 0.2.7
+ * Description: Gmail not working?  Never lose another email again! Postman is the first and only WordPress plugin to implement Google's OAuth 2.0 authentication. Setup is a breeze with the Configuration Wizard and built-in TCP Port Tester. Enjoy worry-free, guaranteed delivery even if your password changes!
+ * Version: 1.0
  * Author: Jason Hendriks
  * Author URI: https://profiles.wordpress.org/jasonhendriks/
  * License: GPLv2 or later
@@ -13,7 +13,7 @@
 
 // these constants are used for OAuth HTTP requests
 define ( 'POSTMAN_HOME_PAGE_URL', admin_url ( 'options-general.php' ) . '?page=postman' );
-define ( 'POSTMAN_PLUGIN_VERSION', '1.2.7' );
+define ( 'POSTMAN_PLUGIN_VERSION', '1.0' );
 
 // load the core of Postman
 require_once 'Postman/Postman-Core/core.php';
@@ -110,10 +110,13 @@ if (! function_exists ( 'activatePostman' )) {
 			$authToken->setExpiryTime ( $options [PostmanAuthorizationToken::EXPIRY_TIME] );
 			$authToken->save ();
 		}
-		// prior to 1.0.0, the auth type was set to 'gmail' instead of oauth2
-		if ($options [PostmanOptions::AUTHORIZATION_TYPE] == 'gmail') {
-			$options [PostmanOptions::AUTHORIZATION_TYPE] = PostmanOptions::AUTHORIZATION_TYPE_OAUTH2;
-			update_option ( PostmanOptions::POSTMAN_OPTIONS, $options );
+		if (! isset ( $options [PostmanOptions::AUTHORIZATION_TYPE] )) {
+			// prior to 1.0.0, access tokens were saved in authOptions without an auth type
+			// prior to 0.2.5, access tokens were save in options without an auth type
+			if (isset ( $authOptions [PostmanAuthorizationToken::ACCESS_TOKEN] ) || isset ( $options [PostmanAuthorizationToken::ACCESS_TOKEN] )) {
+				$options [PostmanOptions::AUTHORIZATION_TYPE] = PostmanOptions::AUTHORIZATION_TYPE_OAUTH2;
+				update_option ( PostmanOptions::POSTMAN_OPTIONS, $options );
+			}
 		}
 	}
 }
