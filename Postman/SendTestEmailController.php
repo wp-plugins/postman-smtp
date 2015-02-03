@@ -31,16 +31,16 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			$message = 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - السلام عليكم - Olá - Привет! - নমস্কার - 今日は - ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ।';
 			$message .= PostmanSendTestEmailController::EOL . PostmanSendTestEmailController::EOL . 'Sent by Postman v' . POSTMAN_PLUGIN_VERSION . ' - https://wordpress.org/plugins/postman-smtp/';
 			// $headers = array ( 'Content-Type: text/html;' );
+			$headers = array();
 			
 			// send through wp_mail
 			$this->logger->debug ( 'Sending Test email' );
 			$wp_mail_result = wp_mail ( $recipient, $subject, $message, $headers );
 			
 			if (! $wp_mail_result) {
-				$this->logger->error ( 'wp_mail 
-			failed :( re-trying through the internal engine' );
+				$this->logger->error ( 'wp_mail failed :( re-trying through the internal engine' );
 				$postmanWpMail = new PostmanWpMail ();
-				$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message );
+				$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message, $headers );
 			}
 			
 			//

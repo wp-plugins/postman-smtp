@@ -26,7 +26,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @param unknown $attachments        	
 		 * @return boolean
 		 */
-		public function send(PostmanOptions $wpMailOptions, PostmanAuthorizationToken $wpMailAuthorizationToken, $to, $subject, $message, $headers, $attachments) {
+		public function send(PostmanOptions $wpMailOptions, PostmanAuthorizationToken $wpMailAuthorizationToken, $to, $subject, $message, $headers = '', $attachments = array()) {
 			$logger = new PostmanLogger ( get_class ( $this ) );
 			try {
 				// send the message

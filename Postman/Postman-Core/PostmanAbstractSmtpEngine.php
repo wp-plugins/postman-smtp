@@ -275,42 +275,6 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		}
 		
 		/**
-		 * Adds recipients to the message.
-		 *
-		 * @param unknown $email|Array
-		 *        	or comma-separated list of email addresses to send message.
-		 * @param
-		 *        	string
-		 */
-		private function addRecipientsToMail(Zend_Mail $mail) {
-			$email = $this->recipients;
-			if (! is_array ( $email )) {
-				// http://tiku.io/questions/955963/splitting-comma-separated-email-addresses-in-a-string-with-commas-in-quotes-in-p
-				$t = $this->stringGetCsvAlternate ( $email );
-				foreach ( $t as $k => $v ) {
-					if (strpos ( $v, ',' ) !== false) {
-						$t [$k] = '"' . str_replace ( ' <', '" <', $v );
-					}
-					$tokenizedEmail = trim ( $t [$k] );
-					if (! $this->validateEmail ( $tokenizedEmail )) {
-						$message = 'Recipient e-mail "' . $tokenizedEmail . '" is invalid.';
-						$this->logger->error ( $message );
-						throw new Exception ( $message );
-					}
-					$this->logger->debug ( "To: " . $tokenizedEmail );
-					$mail->addTo ( $tokenizedEmail );
-				}
-			} else {
-				if (! $this->validateEmail ( $email )) {
-					$message = 'Recipient e-mail "' . $email . '" is invalid.';
-					$this->logger->error ( $message );
-					throw new Exception ( $message );
-				}
-				$this->logger->debug ( "To: " . $email . '(' . $name . ')' );
-				$mail->addTo ( $email, $name );
-			}
-		}
-		/**
 		 * Using fgetscv (PHP 4) as a work-around for str_getcsv (PHP 5.3)
 		 * From http://stackoverflow.com/questions/13430120/str-getcsv-alternative-for-older-php-version-gives-me-an-empty-array-at-the-e
 		 *
