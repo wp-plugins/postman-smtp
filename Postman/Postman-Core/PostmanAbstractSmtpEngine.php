@@ -374,9 +374,9 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 					$this->logProcessHeader ( 'Bcc', $name, $content );
 					$this->addBcc ( $content );
 					break;
-				// case 'from' :
-				// $this->overrideSender ( $content );
-				// break;
+				case 'from' :
+					$this->overrideSender ( $content );
+					break;
 				case 'subject' :
 					$this->logProcessHeader ( 'Subject', $name, $content );
 					$this->setSubject ( $content );
