@@ -31,9 +31,11 @@ Postman is a next-generation SMTP plugin which provides WordPress with a more se
 
 == Frequently Asked Questions == 
 
-= Why should I use Postman to deliver my mail? =
+= Why should I use Postman over the hundreds of other SMTP plugins? =
 
-If you're using Gmail, then Postman doesn't require your password to send email, only an *authentication token*. Other plugins ask for your Google password to send mail. **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
+If you have Gmail, Postman doesn't require your password to send email, only an *authentication token*. Other plugins need your Google password and will break if you change it, but Postman will continue to send email without interruption.
+
+> **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = What is a Client ID? =
 To use Postman, every website needs their own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one. Google has [instructions for creating a Client ID](https://developers.google.com/console/help/new/#generatingoauth2), which I've expanded upon below.
