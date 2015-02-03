@@ -18,6 +18,14 @@ if (! class_exists ( "PostmanNoAuthSmtpEngine" )) {
 			$this->setLogger ( new PostmanLogger ( get_class ( $this ) ) );
 		}
 		
+			/**
+		 * (non-PHPdoc)
+		 * @see PostmanAbstractSmtpEngine::overrideSender()
+		 */
+		function overrideSender(PostmanEmailAddress $sender) {
+			return $sender;
+		}
+
 		/**
 		 * (non-PHPdoc)
 		 *

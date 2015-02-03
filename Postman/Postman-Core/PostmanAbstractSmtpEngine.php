@@ -62,6 +62,15 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		private $isTextHtml;
 		private $contentType;
 		private $charset;
+		private $overrideSender;
+		
+		// hooks for the subclasses to use
+		protected function getSender() {
+			return $this->sender;
+		}
+		
+		// what should happen when WordPress asks to override the sender
+		protected abstract function overrideSender(PostmanEmailAddress $sender);
 		
 		/**
 		 * (non-PHPdoc)
@@ -94,18 +103,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			$this->logger->debug ( 'Adding content-type ' . $contentType );
 			
 			// add the sender
-			assert ( isset ( $this->sender ) );
-			if (isset ( $this->sender )) {
-				$senderEmail = $this->sender->getEmail ();
-				$senderName = $this->sender->getName ();
-				assert ( ! empty ( $senderEmail ) );
-				$this->logger->debug ( 'Adding from ' . $senderEmail );
-				if (! empty ( $senderName )) {
-					$mail->setFrom ( $senderEmail, $senderName );
-				} else {
-					$mail->setFrom ( $senderEmail );
-				}
-			}
+			$this->addFrom ( $mail );
 			
 			// add the headers
 			foreach ( ( array ) $this->headers as $name => $content ) {
@@ -115,19 +113,19 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			
 			// add the to recipients
 			foreach ( ( array ) $this->toRecipients as $recipient ) {
-				$this->logger->debug ( 'Adding to ' . $recipient->getEmail () );
+				$recipient->log ( $this->logger, 'To' );
 				$mail->addTo ( $recipient->getEmail (), $recipient->getName () );
 			}
 			
 			// add the cc recipients
 			foreach ( ( array ) $this->ccRecipients as $recipient ) {
-				$this->logger->debug ( 'Adding cc ' . $recipient->getEmail () );
+				$recipient->log ( $this->logger, 'Cc' );
 				$mail->addCc ( $recipient->getEmail (), $recipient->getName () );
 			}
 			
 			// add the to recipients
 			foreach ( ( array ) $this->bccRecipients as $recipient ) {
-				$this->logger->debug ( 'Adding bcc ' . $recipient->getEmail () );
+				$recipient->log ( $this->logger, 'Bcc' );
 				$mail->addBcc ( $recipient->getEmail (), $recipient->getName () );
 			}
 			
@@ -185,7 +183,51 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			
 			// send the message
 			$this->logger->debug ( "Sending mail" );
-			// $mail->send ( $transport );
+			$mail->send ( $transport );
+		}
+		
+		/**
+		 *
+		 * @param Zend_Mail $mail        	
+		 */
+		private function addFrom(Zend_Mail $mail) {
+			$sender = $this->sender;
+			if ($this->overrideSenderAllowed) {
+				if (! empty ( $this->overrideSender )) {
+					$sender = $this->overrideSender ( new PostmanEmailAddress ( $this->overrideSender ) );
+				}
+				/**
+				 * Filter the email address to send from.
+				 *
+				 * @since 2.2.0
+				 *       
+				 * @param string $from_email
+				 *        	Email address to send from.
+				 */
+				$sender->setEmail ( apply_filters ( 'wp_mail_from', $sender->getEmail () ) );
+				
+				/**
+				 * Filter the name to associate with the "from" email address.
+				 *
+				 * @since 2.3.0
+				 *       
+				 * @param string $from_name
+				 *        	Name associated with the "from" email address.
+				 */
+				$sender->setName ( apply_filters ( 'wp_mail_from_name', $sender->getName () ) );
+			}
+			assert ( isset ( $sender ) );
+			if (isset ( $sender )) {
+				$senderEmail = $sender->getEmail ();
+				$senderName = $sender->getName ();
+				assert ( ! empty ( $senderEmail ) );
+				$sender->log ( $this->logger, 'From' );
+				if (! empty ( $senderName )) {
+					$mail->setFrom ( $senderEmail, $senderName );
+				} else {
+					$mail->setFrom ( $senderEmail );
+				}
+			}
 		}
 		
 		/**
@@ -347,12 +389,8 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 					$this->addBcc ( $content );
 					break;
 				case 'from' :
-					if ($this->overrideSenderAllowed) {
-						$this->logProcessHeader ( 'From', $name, $content );
-						$this->overrideSender ( $content );
-					} else {
-						$this->logProcessHeader ( 'From (IGNORED)', $name, $content );
-					}
+					$this->logProcessHeader ( 'From', $name, $content );
+					$this->overrideSender = $content;
 					break;
 				case 'subject' :
 					$this->logProcessHeader ( 'Subject', $name, $content );
@@ -436,9 +474,6 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		function setSubject($subject) {
 			$this->subject = $subject;
 		}
-		protected function overrideSender($sender) {
-			$this->setSender ( $sender );
-		}
 		function setAttachments($attachments) {
 			$this->attachments = $attachments;
 		}
@@ -467,6 +502,10 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		// set the internal logger (defined in the abstract class)
 		protected function setLogger($logger) {
 			$this->logger = $logger;
+		}
+		// set the internal logger (defined in the abstract class)
+		protected function getLogger() {
+			return $this->logger;
 		}
 	}
 }

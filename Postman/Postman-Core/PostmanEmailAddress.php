@@ -11,8 +11,8 @@ if (! class_exists ( 'PostmanEmailAddress' )) {
 					$email = $matches [2];
 				}
 			}
-			$this->setEmail ( $email );
-			$this->setName ( $name );
+			$this->setEmail ( trim ( $email ) );
+			$this->setName ( trim ( $name ) );
 		}
 		public function getName() {
 			return $this->name;
@@ -60,6 +60,13 @@ if (! class_exists ( 'PostmanEmailAddress' )) {
 				}
 			}
 			return $emails;
+		}
+		public function log(PostmanLogger $log, $desc) {
+			$message = $desc . ' email=' . $this->getEmail ();
+			if (! empty ( $this->name )) {
+				$message .= ' name=' . $this->getName ();
+			}
+			$log->debug ( $message );
 		}
 	}
 }

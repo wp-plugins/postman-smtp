@@ -38,8 +38,9 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		 *
 		 * @see PostmanAbstractSmtpEngine::overrideSender()
 		 */
-		function overrideSender($sender) {
-			$this->logger->debug ( "from Header ignored" );
+		function overrideSender(PostmanEmailAddress $sender) {
+			$sender->setEmail ( $this->getSender ()->getEmail () );
+			return $sender;
 		}
 		
 		/**

@@ -32,7 +32,7 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			$message .= PostmanSendTestEmailController::EOL . PostmanSendTestEmailController::EOL . 'Sent by Postman v' . POSTMAN_PLUGIN_VERSION . ' - https://wordpress.org/plugins/postman-smtp/';
 			$headers = array (
 					'Content-Type: text/html;',
-					'From: brian@postman.com' 
+					'From: Brian <brian@postman.com>' 
 			);
 			
 			// send through wp_mail

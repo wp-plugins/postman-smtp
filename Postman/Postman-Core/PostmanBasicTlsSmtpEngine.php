@@ -25,6 +25,15 @@ if (! class_exists ( "PostmanBasicTlsSmtpEngine" )) {
 		/**
 		 * (non-PHPdoc)
 		 *
+		 * @see PostmanAbstractSmtpEngine::overrideSender()
+		 */
+		function overrideSender(PostmanEmailAddress $sender) {
+			return $sender->setEmail ( $this - getSender ()->getEmail () );
+		}
+		
+		/**
+		 * (non-PHPdoc)
+		 *
 		 * @see PostmanAbstractSmtpEngine::createConfig()
 		 */
 		public function createConfig(PostmanEmailAddress $sender, $hostname, $port) {
