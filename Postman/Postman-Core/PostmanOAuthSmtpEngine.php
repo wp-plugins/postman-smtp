@@ -20,19 +20,16 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		
 		// set in the constructor
 		private $accessToken;
-		private $senderEmail;
 		
 		/**
 		 *
 		 * @param unknown $senderEmail        	
 		 * @param unknown $accessToken        	
 		 */
-		function __construct($senderEmail, $accessToken) {
-			assert ( ! empty ( $senderEmail ) );
+		function __construct($accessToken) {
 			assert ( ! empty ( $accessToken ) );
 			$this->setLogger ( new PostmanLogger ( get_class ( $this ) ) );
 			$this->accessToken = $accessToken;
-			$this->senderEmail = new PostmanEmailAddress ( $senderEmail );
 		}
 		
 		/**
@@ -50,11 +47,17 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		 *
 		 * @see PostmanAbstractSmtpEngine::createConfig()
 		 */
-		public function createConfig($hostname, $port) {
+		public function createConfig(PostmanEmailAddress $sender, $hostname, $port) {
 			assert ( ! empty ( $port ) );
 			assert ( ! empty ( $hostname ) );
+			assert ( isset ( $sender ) );
 			
-			$initClientRequestEncoded = base64_encode ( "user={$this->senderEmail->getEmail()}\1auth=Bearer {$this->accessToken}\1\1" );
+			if (isset ( $sender )) {
+				$senderEmail = $sender->getEmail ();
+			}
+			assert ( ! empty ( $senderEmail ) );
+			
+			$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$this->accessToken}\1\1" );
 			assert ( ! empty ( $initClientRequestEncoded ) );
 			$config = array (
 					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => PostmanOAuthSmtpEngine::SSL_VALUE,

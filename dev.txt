@@ -78,6 +78,9 @@ https://litmus.com/blog/reach-more-people-and-improve-your-spam-score-why-multi-
 HTTP Message Headers
 http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
 
+Sending a multipart E-Mail using PHP Mailer/wp_mail - not all clients display E-Mail
+http://stackoverflow.com/questions/22614615/sending-a-multipart-e-mail-using-php-mailer-wp-mail-not-all-clients-display-e
+
 
 PHP Resources
 -------------

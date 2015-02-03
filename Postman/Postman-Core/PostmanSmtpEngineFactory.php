@@ -34,7 +34,7 @@ class PostmanSmtpEngineFactory {
 				$wpMailAuthManager->refreshToken ();
 				$authorizationToken->save ();
 			}
-			$engine = new PostmanOAuthSmtpEngine ( $options->getSenderEmail(), $authorizationToken->getAccessToken () );
+			$engine = new PostmanOAuthSmtpEngine ( $authorizationToken->getAccessToken () );
 		} else if ($options->getAuthorizationType () == PostmanOptions::AUTHORIZATION_TYPE_BASIC_SSL) {
 			$engine = new PostmanBasicSslSmtpEngine ( $options->getUsername (), $options->getPassword () );
 		} else if ($options->getAuthorizationType () == PostmanOptions::AUTHORIZATION_TYPE_BASIC_TLS) {

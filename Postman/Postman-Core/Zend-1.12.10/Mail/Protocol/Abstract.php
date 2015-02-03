@@ -401,7 +401,7 @@ abstract class Zend_Mail_Protocol_Abstract
      */
     protected function _expect($code, $timeout = null)
     {
-    	$timeout = 10; // I know, I'm violating RFC 2821 4.5.2.3 but five minutes is TOO LONG
+    	$timeout = POSTMAN_TCP_TIMEOUT; // I know, I'm violating RFC 2821 4.5.2.3 but five minutes is TOO LONG
         $this->_response = array();
         $cmd  = '';
         $more = '';

@@ -16,6 +16,7 @@ if (! class_exists ( "PostmanStats" )) {
 		// options data
 		private $options;
 		private $logger;
+		private $enable;
 		
 		// singleton instance
 		public static function getInstance() {
@@ -32,6 +33,16 @@ if (! class_exists ( "PostmanStats" )) {
 		private function __construct() {
 			$this->options = get_option ( PostmanStats::POSTMAN_STATS_DATA );
 			$this->logger = new PostmanLogger ( 'PostmanStats' );
+			$this->enable ();
+		}
+		public function enable() {
+			$this->enable = true;
+		}
+		public function disable() {
+			$this->enable = false;
+		}
+		public function isEnabled() {
+			return $this->enable;
 		}
 		//
 		public function save() {
@@ -47,8 +58,11 @@ if (! class_exists ( "PostmanStats" )) {
 			$this->options [PostmanStats::DELIVERY_SUCCESS_TOTAL] = $total;
 		}
 		function incrementSuccessfulDelivery() {
-			$this->setSuccessfulDelivery ( $this->getSuccessfulDeliveries () + 1 );
-			$this->save ();
+			if ($this->isEnabled ()) {
+				$this->setSuccessfulDelivery ( $this->getSuccessfulDeliveries () + 1 );
+				$this->logger->debug ( 'incrementing success count: ' . $this->getSuccessfulDeliveries () );
+				$this->save ();
+			}
 		}
 		function getFailedDeliveries() {
 			if (isset ( $this->options [PostmanStats::DELIVERY_FAILURE_TOTAL] ))
@@ -60,8 +74,11 @@ if (! class_exists ( "PostmanStats" )) {
 			$this->options [PostmanStats::DELIVERY_FAILURE_TOTAL] = $total;
 		}
 		function incrementFailedDelivery() {
-			$this->setFailedDelivery ( $this->getFailedDeliveries () + 1 );
-			$this->save ();
+			if ($this->isEnabled ()) {
+				$this->setFailedDelivery ( $this->getFailedDeliveries () + 1 );
+				$this->logger->debug ( 'incrementing success count: ' . $this->getFailedDeliveries () );
+				$this->save ();
+			}
 		}
 	}
 }

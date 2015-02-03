@@ -14,8 +14,11 @@ if (! class_exists ( "PostmanOptions" )) {
 		const CLIENT_SECRET = 'oauth_client_secret';
 		const AUTHORIZATION_TYPE = 'authorization_type';
 		const SENDER_EMAIL = 'sender_email';
+		const SENDER_NAME = 'sender_name';
 		const PORT = 'port';
 		const HOSTNAME = 'hostname';
+		const REPLY_TO = 'reply_to';
+		const RETURN_PATH = 'return_path';
 		const TEST_EMAIL = 'test_email';
 		const BASIC_AUTH_USERNAME = 'basic_auth_username';
 		const BASIC_AUTH_PASSWORD = 'basic_auth_password';
@@ -23,6 +26,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		const AUTHORIZATION_TYPE_BASIC_SSL = 'basic-ssl';
 		const AUTHORIZATION_TYPE_BASIC_TLS = 'basic-tls';
 		const AUTHORIZATION_TYPE_OAUTH2 = 'oauth2';
+		const ALLOW_SENDER_NAME_OVERRIDE = 'allow_sender_name_override';
 		
 		// options data
 		private $options;
@@ -53,7 +57,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		public function isRequestOAuthPermissionAllowed() {
 			$clientId = $this->getClientId ();
 			$clientSecret = $this->getClientSecret ();
-			$authType = $this->getAuthorizationType();
+			$authType = $this->getAuthorizationType ();
 			return $authType == PostmanOptions::AUTHORIZATION_TYPE_OAUTH2 && ! empty ( $clientId ) && ! empty ( $clientSecret );
 		}
 		public function isSendingEmailAllowed(PostmanAuthorizationToken $token) {
@@ -101,125 +105,116 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		
 		//
-		public 
-
-		function getHostname() {
+		public function getHostname() {
 			if (isset ( $this->options [PostmanOptions::HOSTNAME] ))
 				return $this->options [PostmanOptions::HOSTNAME];
 		}
-		public 
-
-		function getPort() {
+		public function getPort() {
 			if (isset ( $this->options [PostmanOptions::PORT] ))
 				return $this->options [PostmanOptions::PORT];
 		}
-		public 
-
-		function getSenderEmail() {
+		public function getSenderEmail() {
 			if (isset ( $this->options [PostmanOptions::SENDER_EMAIL] ))
 				return $this->options [PostmanOptions::SENDER_EMAIL];
 		}
-		public 
-
-		function getClientId() {
+		public function getSenderName() {
+			if (isset ( $this->options [PostmanOptions::SENDER_NAME] ))
+				return $this->options [PostmanOptions::SENDER_NAME];
+		}
+		public function getClientId() {
 			if (isset ( $this->options [PostmanOptions::CLIENT_ID] ))
 				return $this->options [PostmanOptions::CLIENT_ID];
 		}
-		public 
-
-		function getClientSecret() {
+		public function getClientSecret() {
 			if (isset ( $this->options [PostmanOptions::CLIENT_SECRET] ))
 				return $this->options [PostmanOptions::CLIENT_SECRET];
 		}
-		public 
-
-		function getAuthorizationType() {
+		public function getAuthorizationType() {
 			if (isset ( $this->options [PostmanOptions::AUTHORIZATION_TYPE] ))
 				return $this->options [PostmanOptions::AUTHORIZATION_TYPE];
 		}
-		public 
-
-		function getUsername() {
+		public function getUsername() {
 			if (isset ( $this->options [PostmanOptions::BASIC_AUTH_USERNAME] ))
 				return $this->options [PostmanOptions::BASIC_AUTH_USERNAME];
 		}
-		public 
-
-		function getPassword() {
+		public function getPassword() {
 			if (isset ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] ))
 				return $this->options [PostmanOptions::BASIC_AUTH_PASSWORD];
 		}
-		public 
-
-		function setHostname($hostname) {
+		public function getReplyTo() {
+			if (isset ( $this->options [PostmanOptions::REPLY_TO] ))
+				return $this->options [PostmanOptions::REPLY_TO];
+		}
+		public function getReturnPath() {
+			if (isset ( $this->options [PostmanOptions::RETURN_PATH] ))
+				return $this->options [PostmanOptions::RETURN_PATH];
+		}
+		public function isSenderNameOverrideAllowed() {
+			if (isset ( $this->options [PostmanOptions::ALLOW_SENDER_NAME_OVERRIDE] ))
+				return $this->options [PostmanOptions::ALLOW_SENDER_NAME_OVERRIDE];
+		}
+		public function setSenderNameOverrideAllowed($allow) {
+			$this->options [PostmanOptions::ALLOW_SENDER_NAME_OVERRIDE] = $allow;
+		}
+		public function setHostname($hostname) {
 			$this->options [PostmanOptions::HOSTNAME] = $hostname;
 		}
-		public 
-
-		function setHostnameIfEmpty($hostname) {
+		public function setHostnameIfEmpty($hostname) {
 			if (! isset ( $this->options [PostmanOptions::HOSTNAME] )) {
 				$this->setHostname ( $hostname );
 			}
 		}
-		public 
-
-		function setPort($port) {
+		public function setPort($port) {
 			$this->options [PostmanOptions::PORT] = $port;
 		}
-		public 
-
-		function setPortIfEmpty($port) {
+		public function setPortIfEmpty($port) {
 			if (! isset ( $this->options [PostmanOptions::PORT] )) {
 				$this->setPort ( $port );
 			}
 		}
-		public 
-
-		function setSenderEmail($senderEmail) {
+		public function setSenderEmail($senderEmail) {
 			$this->options [PostmanOptions::SENDER_EMAIL] = $senderEmail;
 		}
-		public 
-
-		function setSenderEmailIfEmpty($senderEmail) {
+		public function setSenderEmailIfEmpty($senderEmail) {
 			if (! isset ( $this->options [PostmanOptions::SENDER_EMAIL] )) {
 				$this->setSenderEmail ( $senderEmail );
 			}
 		}
-		public 
-
-		function setClientId($clientId) {
+		public function setSenderName($senderName) {
+			$this->options [PostmanOptions::SENDER_NAME] = $senderName;
+		}
+		public function setSenderNameIfEmpty($senderName) {
+			if (! isset ( $this->options [PostmanOptions::SENDER_NAME] )) {
+				$this->setSenderName ( $senderName );
+			}
+		}
+		public function setClientId($clientId) {
 			$this->options [PostmanOptions::CLIENT_ID] = $clientId;
 		}
-		public 
-
-		function setClientSecret($clientSecret) {
+		public function setClientSecret($clientSecret) {
 			$this->options [PostmanOptions::CLIENT_SECRET] = $clientSecret;
 		}
-		public 
-
-		function setAuthorizationType($authType) {
+		public function setAuthorizationType($authType) {
 			$this->options [PostmanOptions::AUTHORIZATION_TYPE] = $authType;
 		}
-		public 
-
-		function setAuthorizationTypeIfEmpty($authType) {
+		public function setAuthorizationTypeIfEmpty($authType) {
 			if (! isset ( $this->options [PostmanOptions::AUTHORIZATION_TYPE] )) {
 				$this->setAuthorizationType ( $authType );
 			}
 		}
-		public 
-
-		function setUsername($username) {
+		public function setUsername($username) {
 			$this->options [PostmanOptions::BASIC_AUTH_USERNAME];
 		}
-		public 
-
-		function setPassword($password) {
+		public function setPassword($password) {
 			$this->options [PostmanOptions::BASIC_AUTH_PASSWORD];
 		}
-		public 
-
-		function debug(PostmanLogger $logger) {
+		public function setReplyTo($replyTo) {
+			$this->options [PostmanOptions::REPLY_TO];
+		}
+		public function setReturnPath($returnPath) {
+			$this->options [PostmanOptions::RETURN_PATH];
+		}
+		public function debug(PostmanLogger $logger) {
 			$logger->debug ( 'Sender Email=' . $this->getSenderEmail () );
 			$logger->debug ( 'Host=' . $this->getHostname () );
 			$logger->debug ( 'Port=' . $this->getPort () );

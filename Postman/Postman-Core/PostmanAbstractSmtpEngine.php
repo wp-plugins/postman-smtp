@@ -44,7 +44,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		// set by the caller
 		private $hostname;
 		private $port;
-		private $senderEmail;
+		private $sender;
 		private $replyTo;
 		private $toRecipients;
 		private $ccRecipients;
@@ -56,6 +56,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		private $returnPath;
 		private $date;
 		private $messageId;
+		private $overrideSenderAllowed;
 		
 		// determined by the send() method
 		private $isTextHtml;
@@ -68,7 +69,6 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		 * @see PostmanSmtpEngine::send()
 		 */
 		public function send() {
-			assert ( ! empty ( $this->senderEmail ) );
 			assert ( ! empty ( $this->port ) );
 			assert ( ! empty ( $this->hostname ) );
 			
@@ -92,6 +92,20 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 				$mail->addHeader ( 'Content-Type', $contentType );
 			}
 			$this->logger->debug ( 'Adding content-type ' . $contentType );
+			
+			// add the sender
+			assert ( isset ( $this->sender ) );
+			if (isset ( $this->sender )) {
+				$senderEmail = $this->sender->getEmail ();
+				$senderName = $this->sender->getName ();
+				assert ( ! empty ( $senderEmail ) );
+				$this->logger->debug ( 'Adding from ' . $senderEmail );
+				if (! empty ( $senderName )) {
+					$mail->setFrom ( $senderEmail, $senderName );
+				} else {
+					$mail->setFrom ( $senderEmail );
+				}
+			}
 			
 			// add the headers
 			foreach ( ( array ) $this->headers as $name => $content ) {
@@ -132,7 +146,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 				$mail->setDate ( $this->date );
 			}
 			
-			// add the date
+			// add the messageId
 			if (isset ( $this->messageId )) {
 				$mail->setMessageId ( $this->messageId );
 			}
@@ -162,12 +176,11 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			$this->addAttachmentsToMail ( $mail );
 			
 			// get the transport configuration
-			$config = $this->createConfig ( $this->hostname, $this->port );
+			$config = $this->createConfig ( $this->sender, $this->hostname, $this->port );
 			assert ( ! empty ( $config ) );
 			
 			// create the SMTP transport
 			$transport = new Zend_Mail_Transport_Smtp ( $this->hostname, $config );
-			$mail->setFrom ( $this->senderEmail );
 			assert ( ! empty ( $transport ) );
 			
 			// send the message
@@ -374,9 +387,11 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 					$this->logProcessHeader ( 'Bcc', $name, $content );
 					$this->addBcc ( $content );
 					break;
-				// case 'from' :
-				// $this->overrideSender ( $content );
-				// break;
+				case 'from' :
+					if ($this->overrideSenderAllowed) {
+						$this->overrideSender ( $content );
+					}
+					break;
 				case 'subject' :
 					$this->logProcessHeader ( 'Subject', $name, $content );
 					$this->setSubject ( $content );
@@ -458,8 +473,8 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		function setAttachments($attachments) {
 			$this->attachments = $attachments;
 		}
-		function setSender($sender) {
-			$this->senderEmail = $sender;
+		function setSender($sender, $name = null) {
+			$this->sender = new PostmanEmailAddress ( $sender, $name );
 		}
 		function setReplyTo($replyTo) {
 			$this->replyTo = $replyTo;

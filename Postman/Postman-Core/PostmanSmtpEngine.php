@@ -10,10 +10,10 @@ if (! interface_exists ( "PostmanSmtpEngine" )) {
 		/**
 		 * Create the Zend transport configuration
 		 *
+		 * @param PostmanEmailAddress $sender        	
 		 * @param unknown $hostname        	
 		 * @param unknown $port        	
-		 * @return array
 		 */
-		public function createConfig($hostname, $port);
+		public function createConfig(PostmanEmailAddress $sender, $hostname, $port);
 	}
 }
