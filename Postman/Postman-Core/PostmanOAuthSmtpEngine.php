@@ -32,7 +32,7 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 			assert ( ! empty ( $accessToken ) );
 			$this->setLogger ( new PostmanLogger ( get_class ( $this ) ) );
 			$this->accessToken = $accessToken;
-			$this->senderEmail = $senderEmail;
+			$this->senderEmail = new PostmanEmailAddress ( $senderEmail );
 		}
 		
 		/**
@@ -50,17 +50,11 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		 *
 		 * @see PostmanAbstractSmtpEngine::createConfig()
 		 */
-		protected function createConfig($hostname, $port) {
+		public function createConfig($hostname, $port) {
 			assert ( ! empty ( $port ) );
 			assert ( ! empty ( $hostname ) );
 			
-			// prepare authentication
-			if (! $this->validateEmail ( $this->senderEmail )) {
-				$message = 'Sender e-mail "' . $this->senderEmail . '" is invalid.';
-				$this->logger->error ( $message );
-				throw new Exception ( $message );
-			}
-			$initClientRequestEncoded = base64_encode ( "user={$this->senderEmail}\1auth=Bearer {$this->accessToken}\1\1" );
+			$initClientRequestEncoded = base64_encode ( "user={$this->senderEmail->getEmail()}\1auth=Bearer {$this->accessToken}\1\1" );
 			assert ( ! empty ( $initClientRequestEncoded ) );
 			$config = array (
 					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => PostmanOAuthSmtpEngine::SSL_VALUE,

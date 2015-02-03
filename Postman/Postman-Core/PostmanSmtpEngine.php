@@ -8,8 +8,12 @@ if (! interface_exists ( "PostmanSmtpEngine" )) {
 		const ZEND_TRANSPORT_CONFIG_PORT = 'port';
 		
 		/**
-		 * Send a message.
+		 * Create the Zend transport configuration
+		 *
+		 * @param unknown $hostname        	
+		 * @param unknown $port        	
+		 * @return array
 		 */
-		public function send();
+		public function createConfig($hostname, $port);
 	}
 }

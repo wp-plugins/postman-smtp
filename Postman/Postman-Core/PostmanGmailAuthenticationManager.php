@@ -66,7 +66,7 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 		public function isTokenExpired() {
 			$expireTime = ($this->authorizationToken->getExpiryTime () - PostmanGmailAuthenticationManager::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
 			$tokenHasExpired = time () > $expireTime;
-			$this->logger->debug ( 'Access Token Expiry Time is ' . $expireTime . ', expired?=' . ($tokenHasExpired ? 'yes' : 'no') );
+			$this->logger->debug ( 'Access Token Expiry Time is ' . $expireTime . ', expired=' . ($tokenHasExpired ? 'yes' : 'no') );
 			return $tokenHasExpired;
 		}
 		

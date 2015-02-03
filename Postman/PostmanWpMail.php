@@ -12,7 +12,21 @@ if (! class_exists ( "PostmanWpMail" )) {
 	 */
 	class PostmanWpMail {
 		private $exception;
-		public function send(PostmanOptions $wpMailOptions, PostmanAuthorizationToken $wpMailAuthorizationToken, $to, $subject, $message, $headers = '', $attachments = array()) {
+		
+		/**
+		 * This methods creates an instance of PostmanSmtpEngine and sends an email.
+		 * Exceptions are held for later inspection. An instance of PostmanStats updates the success/fail tally.
+		 *
+		 * @param PostmanOptions $wpMailOptions        	
+		 * @param PostmanAuthorizationToken $wpMailAuthorizationToken        	
+		 * @param unknown $to        	
+		 * @param unknown $subject        	
+		 * @param unknown $message        	
+		 * @param unknown $headers        	
+		 * @param unknown $attachments        	
+		 * @return boolean
+		 */
+		public function send(PostmanOptions $wpMailOptions, PostmanAuthorizationToken $wpMailAuthorizationToken, $to, $subject, $message, $headers, $attachments) {
 			$logger = new PostmanLogger ( get_class ( $this ) );
 			try {
 				// send the message
@@ -21,19 +35,19 @@ if (! class_exists ( "PostmanWpMail" )) {
 				$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken );
 				$engine->setBody ( $message );
 				$engine->setSubject ( $subject );
-				$engine->setReceipients ( $to );
+				$engine->addTo ( $to );
 				$engine->setHeaders ( $headers );
 				$engine->setAttachments ( $attachments );
 				$engine->setSender ( $wpMailOptions->getSenderEmail () );
 				$engine->setHostname ( $wpMailOptions->getHostname () );
 				$engine->setPort ( $wpMailOptions->getPort () );
 				$engine->send ();
-				PostmanStats::getInstance()->incrementSuccessfulDelivery();
+				PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
 				return true;
 			} catch ( Exception $e ) {
 				$this->exception = $e;
 				$logger->debug ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
-				PostmanStats::getInstance()->incrementFailedDelivery();
+				PostmanStats::getInstance ()->incrementFailedDelivery ();
 				return false;
 			}
 		}

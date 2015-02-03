@@ -25,23 +25,28 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 				if (! function_exists ( 'wp_mail' )) {
 					$this->logger->debug ( 'Binding to wp_mail()' );
 					/**
-					 * Define our own wp_mail
+					 * The Postman drop-in replacement for the WordPress wp_mail() function
 					 *
-					 * @param unknown $to        	
-					 * @param unknown $subject        	
-					 * @param unknown $message        	
-					 * @param string $headers        	
-					 * @param unknown $attachments        	
-					 * @return boolean
+					 * @param string|array $to
+					 *        	Array or comma-separated list of email addresses to send message.
+					 * @param string $subject
+					 *        	Email subject
+					 * @param string $message
+					 *        	Message contents
+					 * @param string|array $headers
+					 *        	Optional. Additional headers.
+					 * @param string|array $attachments
+					 *        	Optional. Files to attach.
+					 * @return bool Whether the email contents were sent successfully.
 					 */
-					function wp_mail($wp_mail_to, $wp_mail_subject, $wp_mail_message, $wp_mail_headers = '', $wp_mail_attachments = array()) {
+					function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
 						// get the Options and AuthToken
 						$wp_mail_options = PostmanOptions::getInstance ();
 						$wp_mail_authToken = PostmanAuthorizationToken::getInstance ();
 						// create an instance of PostmanWpMail to send the message
 						$wp_mail_postmanWpMail = new PostmanWpMail ();
 						// send the message
-						return $wp_mail_postmanWpMail->send ( $wp_mail_options, $wp_mail_authToken, $wp_mail_to, $wp_mail_subject, $wp_mail_message, $wp_mail_headers, $wp_mail_attachments );
+						return $wp_mail_postmanWpMail->send ( $wp_mail_options, $wp_mail_authToken, $to, $subject, $message, $headers, $attachments );
 					}
 				} else {
 					$this->logger->debug ( 'cant replace wp_mail' );

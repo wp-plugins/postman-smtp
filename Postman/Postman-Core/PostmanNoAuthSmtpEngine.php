@@ -23,7 +23,7 @@ if (! class_exists ( "PostmanNoAuthSmtpEngine" )) {
 		 *
 		 * @see PostmanAbstractSmtpEngine::createConfig()
 		 */
-		protected function createConfig($hostname, $port) {
+		public function createConfig($hostname, $port) {
 			assert ( ! empty ( $port ) );
 			assert ( ! empty ( $hostname ) );
 			$config = array (

@@ -53,3 +53,34 @@ Grant Code ->
 <- Authorization Token
 
 (Access Token and Refresh Token)
+
+
+wp_mail() and Email in General
+-----------------------------
+Hacking WordPress Emails
+http://glennmessersmith.com/pages/wpemail.html
+
+The Importance of Content-Type Character Encoding in HTML Emails
+http://www.emailonacid.com/blog/details/C13/the_importance_of_content-type_character_encoding_in_html_emails
+
+The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)
+http://www.joelonsoftware.com/articles/Unicode.html
+
+How to Tell Who Supports SMTP TLS for Email Transmission
+https://luxsci.com/blog/how-to-tell-who-supports-tls-for-email-transmission.html
+
+JavaMail: Keeping IMAPFolder.idle() alive
+http://stackoverflow.com/questions/4155412/javamail-keeping-imapfolder-idle-alive
+
+Reach More People and Improve Your Spam Score: Why Multi-Part Email is Important
+https://litmus.com/blog/reach-more-people-and-improve-your-spam-score-why-multi-part-email-is-important
+
+HTTP Message Headers
+http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+
+
+PHP Resources
+-------------
+Why your PHP App NEEDS a Circuit Breaker
+http://devzone.zend.com/1424/why-your-php-app-needs-a-circuit-breaker/
+

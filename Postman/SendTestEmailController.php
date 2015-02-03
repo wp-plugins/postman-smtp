@@ -3,6 +3,7 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 	class PostmanSendTestEmailController {
 		const SUBJECT = 'WordPress Postman SMTP Test';
 		const MESSAGE = 'Hello, World!';
+		const EOL = "\r\n";
 		
 		//
 		private $logger;
@@ -22,18 +23,24 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			assert ( ! empty ( $authorizationToken ) );
 			assert ( ! empty ( $recipient ) );
 			assert ( ! empty ( $messageHandler ) );
-			$subject = PostmanSendTestEmailController::SUBJECT;
-			$message = PostmanSendTestEmailController::MESSAGE;
 			
-			$this->logger->debug ( 'Sending Test email' );
+			// $recipient = 'Kevin.Brine@pppg.com, Robert.Thomas@pppg.com, "Guice, Doug" <Doug.Guice@pppg.com>';
+			$subject = PostmanSendTestEmailController::SUBJECT;
+			// Lines in email are terminated by CRLF ("\r\n") according to RFC2821
+			// Englsih - Mandarin - French - Hindi - Spanish - Arabic - Portuguese - Russian - Bengali - Japanese - Punjabi
+			$message = 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - السلام عليكم - Olá - Привет! - নমস্কার - 今日は - ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ।';
+			$message .= PostmanSendTestEmailController::EOL . PostmanSendTestEmailController::EOL . 'Sent by Postman v' . POSTMAN_PLUGIN_VERSION . ' - https://wordpress.org/plugins/postman-smtp/';
+			// $headers = array ( 'Content-Type: text/html;' );
 			
 			// send through wp_mail
-			$wp_mail_result = wp_mail ( $recipient, $subject, $message . ' - sent by Postman via wp_mail()' );
+			$this->logger->debug ( 'Sending Test email' );
+			$wp_mail_result = wp_mail ( $recipient, $subject, $message, $headers );
 			
 			if (! $wp_mail_result) {
-				$this->logger->error ( 'wp_mail failed :( re-trying through the internal engine' );
+				$this->logger->error ( 'wp_mail 
+			failed :( re-trying through the internal engine' );
 				$postmanWpMail = new PostmanWpMail ();
-				$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message . ' - sent by Postman via internal engine' );
+				$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message );
 			}
 			
 			//
@@ -52,7 +59,6 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 				$this->logger->error ( $message );
 				$messageHandler->addError ( $message );
 			}
-			
 		}
 	}
 }

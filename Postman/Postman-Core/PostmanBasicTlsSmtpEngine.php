@@ -27,7 +27,7 @@ if (! class_exists ( "PostmanBasicTlsSmtpEngine" )) {
 		 *
 		 * @see PostmanAbstractSmtpEngine::createConfig()
 		 */
-		protected function createConfig($hostname, $port) {
+		public function createConfig($hostname, $port) {
 			assert ( ! empty ( $port ) );
 			assert ( ! empty ( $hostname ) );
 			// $config = array('ssl' => 'tls', 'port' => 587, 'auth' => 'login', 'username' => 'webmaster@mydomain.com', 'password' => 'password');

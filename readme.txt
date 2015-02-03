@@ -15,13 +15,14 @@ Have you been having [trouble getting Gmail to send your email](https://wordpres
 
 If you don't care about security, you could ask Gmail to [allow less secure apps](https://support.google.com/accounts/answer/6010255) - but this workaround isn't available if you're using Google Apps to manage a domain.
 
-Postman is a next-generation SMTP plugin which provides WordPress with a more secure mechanism for sending email. When your site generates an e-mail, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
+Postman is a next-generation SMTP plugin which provides WordPress with a more secure mechanism for sending email. When your site generates an email, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
 
 ###Features:
-* Send mail to any host with SMTP/SMTPS(SSL/TLS/STARTTLS) like the other 171 WordPress SMTP plugins
+* Send mail to any host with SMTP/SMTPS(SSL/TLS/STARTTLS) like the other 172 WordPress SMTP plugins
 * Send mail to Gmail with SMTPS using OAuth 2.0 - even if your Google password changes, your messages will still be sent!
-* Easy to use Setup Wizard takes the guesswork out of configuring e-mail
+* Easy to use Setup Wizard takes the guesswork out of configuring email
 * Built-in TCP Port Tester for troubleshooting connectivity issues due to firewalls
+* Supports international characters, HTML mail and MultiPart/MIME
 
 ### Requirements:
 * PHP 5.3.23 (with OpenSSL for SMTPS)
@@ -48,16 +49,33 @@ To use Postman, every website needs their own Client ID. The Client ID is used t
 
 == Installation ==
 
-Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to Gmail's SMTP servers and Postman will not work for you.
+Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to external SMTP servers and Postman will not work for you. Use the "Run a Port Test" feature to determine if your host has blocked access to the SMTP server you wish to use.
 
-1. Activate the plugin through the 'Plugins' menu in WordPress.
+### To configure OAuth 2.0 Authentication
+
+1. Install and activate the plugin through the 'Plugins' menu in WordPress.
 1. In the WordPress 'Settings' menu find 'Postman SMTP'.
+1. Choose configure manually
+1. In *Authentication* choose OAuth2 (Gmail)
 1. In *Sender Email Address* enter your account's email address. This should be the same address you login to Google with.
+1. In *Outgoing Mail Server (SMTP)* enter smtp.gmail.com. In *Port* enter 465.
 1. Go to [Google Developer's Console](https://console.developers.google.com/) and create a Client ID for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
 1. Copy your *Client ID* and *Client Secret* into the plugin's Settings page.
 1. Choose the Save Changes button.
-1. Choose the *Request Permission from Google* button and follow the instructions.
-1. Send yourself a test e-mail. 
+1. Choose the *Request Permission from Google* link and follow the instructions.
+1. Send yourself a test email. 
+
+### To configure Basic Authentication
+
+1. Install and activate the plugin through the 'Plugins' menu in WordPress.
+1. In the WordPress 'Settings' menu find 'Postman SMTP'.
+1. Choose configure manually
+1. In *Authentication* choose Basic (SSL) or Basic (TLS), depending on your provider's instruction.
+1. In *Sender Email Address* enter your account's email address. Some plugins may override this, however it is up to your email provider if this is permitted.
+1. Enter the SMTP Server's hostname and port.
+1. Enter your username (probably your email address) and password in the Basic Auth Settings section.
+1. Choose the Save Changes button.
+1. Send yourself a test email. 
 
 Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment.
 
@@ -70,9 +88,13 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 
 == Changelog ==
 
+= 1.1 - 2015-02-03 =
+* Added support for international characters (the WordPress default is UTF-8) which can be specified with headers or the [wp_mail_charset](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail_charset) filter
+* Added support for multi-part content type which can be specified with headers or the [wp_mail_content_type](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail_content_type) filter
+
 = 1.0 - 2015-02-02 =
 * Overhaul of the UI - A navigation pane is shown at the top of each page and each major function has been separated into its own screen
-* Postman now supports sending with basic auth and no auth just like the other 171 WordPress SMTP plugins active in the plugin repo... yawn
+* Postman now supports sending with basic auth and no auth just like the other 172 WordPress SMTP plugins active in the plugin repo... yawn
 * Added a Port Test function so users can have peace of mind whether the plugin is failing (never!) or whether the host has firewalled them 
 * Now supports email headers, such as a text/html content-type
 * Now supports email attachments
@@ -100,7 +122,7 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 * Better error handling/debugging with php logging and assertions.
 
 = 0.2.1 - 2015-01-23 =
-* Fixed an environment-specific error that prevented Postman reloading the setting screen after sending a test e-mail
+* Fixed an environment-specific error that prevented Postman reloading the setting screen after sending a test email
 
 = 0.2 - 2015-01-20 =
 * wp_mail() accepts multiple recipients (array and string)
@@ -114,6 +136,9 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 1.1 =
+Support for international characters and multipart/mime mail
 
 = 1.0 =
 Major overhaul of the UI including a Setup Wizard and a TCP Port Tester!
