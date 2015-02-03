@@ -329,7 +329,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'reply_to_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( 'allow_sender_name_override', 'Allow other Plugins to Override Sender Name', array (
+			add_settings_field ( 'allow_sender_name_override', 'Allow other Plugins to Override the Sender', array (
 					$this,
 					'allow_sender_name_override_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );

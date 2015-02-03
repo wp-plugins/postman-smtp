@@ -185,7 +185,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			
 			// send the message
 			$this->logger->debug ( "Sending mail" );
-			$mail->send ( $transport );
+			// $mail->send ( $transport );
 		}
 		
 		/**
@@ -257,52 +257,11 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		 * @throws Exception
 		 */
 		private function addRecipients(&$recipientList, $recipients) {
-			if (! is_array ( $recipients )) {
-				// http://tiku.io/questions/955963/splitting-comma-separated-email-addresses-in-a-string-with-commas-in-quotes-in-p
-				$t = $this->stringGetCsvAlternate ( $recipients );
-				foreach ( $t as $k => $v ) {
-					if (strpos ( $v, ',' ) !== false) {
-						$t [$k] = '"' . str_replace ( ' <', '" <', $v );
-					}
-					$tokenizedEmail = trim ( $t [$k] );
-					$this->logger->debug ( 'User Added recipient: ' . $tokenizedEmail );
-					array_push ( $recipientList, $this->createPostmanEmailAddress ( $tokenizedEmail ) );
-				}
-			} else {
-				foreach ( $recipients as $recipient ) {
-					$this->logger->debug ( 'User Added recipient: ' . $recipient );
-					array_push ( $recipientList, $this->createPostmanEmailAddress ( $recipient ) );
-				}
+			$recipients = PostmanEmailAddress::convertToArray ( $recipients );
+			foreach ( $recipients as $recipient ) {
+				$this->logger->debug ( 'User Added recipient: ' . $recipient );
+				array_push ( $recipientList, new PostmanEmailAddress ( $recipient ) );
 			}
-		}
-		private function createPostmanEmailAddress($recipient) {
-			// Break $recipient into name and address parts if in the format "Foo <bar@baz.com>"
-			$recipient_name = '';
-			if (preg_match ( '/(.*)<(.+)>/', $recipient, $matches )) {
-				if (count ( $matches ) == 3) {
-					$recipient_name = $matches [1];
-					$recipient = $matches [2];
-				}
-			}
-			return new PostmanEmailAddress ( $recipient, $recipient_name );
-		}
-		
-		/**
-		 * Using fgetscv (PHP 4) as a work-around for str_getcsv (PHP 5.3)
-		 * From http://stackoverflow.com/questions/13430120/str-getcsv-alternative-for-older-php-version-gives-me-an-empty-array-at-the-e
-		 *
-		 * @param unknown $string        	
-		 * @return multitype:
-		 */
-		private function stringGetCsvAlternate($string) {
-			$fh = fopen ( 'php://temp', 'r+' );
-			fwrite ( $fh, $string );
-			rewind ( $fh );
-			
-			$row = fgetcsv ( $fh );
-			
-			fclose ( $fh );
-			return $row;
 		}
 		
 		/**
@@ -389,7 +348,10 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 					break;
 				case 'from' :
 					if ($this->overrideSenderAllowed) {
+						$this->logProcessHeader ( 'From', $name, $content );
 						$this->overrideSender ( $content );
+					} else {
+						$this->logProcessHeader ( 'From (IGNORED)', $name, $content );
 					}
 					break;
 				case 'subject' :
@@ -427,7 +389,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		 * @param unknown $content        	
 		 */
 		private function logProcessHeader($desc, $name, $content) {
-			$this->logger->debug ( 'Processing ' . $desc . ' Header ' . $name . ': ' . $content );
+			$this->logger->debug ( 'Processing ' . $desc . ' Header - ' . $name . ': ' . $content );
 		}
 		
 		/**
@@ -455,6 +417,13 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 					$mail->addAttachment ( $at );
 				}
 			}
+		}
+		
+		/**
+		 * If this is not set, the FROM header and WordPress FROM hooks are ignored
+		 */
+		public function allowSenderOverride($allow) {
+			$this->overrideSenderAllowed = $allow;
 		}
 		
 		// public accessors

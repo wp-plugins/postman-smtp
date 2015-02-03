@@ -30,8 +30,10 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			// Englsih - Mandarin - French - Hindi - Spanish - Arabic - Portuguese - Russian - Bengali - Japanese - Punjabi
 			$message = 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - السلام عليكم - Olá - Привет! - নমস্কার - 今日は - ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ।';
 			$message .= PostmanSendTestEmailController::EOL . PostmanSendTestEmailController::EOL . 'Sent by Postman v' . POSTMAN_PLUGIN_VERSION . ' - https://wordpress.org/plugins/postman-smtp/';
-			// $headers = array ( 'Content-Type: text/html;' );
-			$headers = array ();
+			$headers = array (
+					'Content-Type: text/html;',
+					'From: brian@postman.com' 
+			);
 			
 			// send through wp_mail
 			$this->logger->debug ( 'Sending Test email' );
@@ -43,8 +45,8 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 				$postmanWpMail = new PostmanWpMail ();
 				$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message, $headers );
 			}
-			PostmanStats::getInstance ()->enable();
-						
+			PostmanStats::getInstance ()->enable ();
+			
 			//
 			if ($wp_mail_result) {
 				$this->logger->debug ( 'Test Email delivered to SMTP server' );

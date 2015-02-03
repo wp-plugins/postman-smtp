@@ -3,8 +3,8 @@
 /*
  * Plugin Name: Postman SMTP
  * Plugin URI: https://wordpress.org/plugins/postman/
- * Description: Gmail not working?  Never lose another email again! Postman is the first and only WordPress plugin to implement Google's OAuth 2.0 authentication. Setup is a breeze with the Configuration Wizard and built-in TCP Port Tester. Enjoy worry-free, guaranteed delivery even if your password changes!
- * Version: 1.1
+ * Description: Gmail not working? Never lose another email again! Postman is the first and only WordPress plugin to implement Google's OAuth 2.0 authentication. Setup is a breeze with the Configuration Wizard and built-in TCP Port Tester. Enjoy worry-free, guaranteed delivery even if your password changes!
+ * Version: 1.2
  * Author: Jason Hendriks
  * Author URI: https://profiles.wordpress.org/jasonhendriks/
  * License: GPLv2 or later
@@ -13,7 +13,8 @@
 
 // these constants are used for OAuth HTTP requests
 define ( 'POSTMAN_HOME_PAGE_URL', admin_url ( 'options-general.php' ) . '?page=postman' );
-define ( 'POSTMAN_PLUGIN_VERSION', '1.1' );
+define ( 'POSTMAN_PLUGIN_VERSION', '1.2' );
+define ( 'POSTMAN_TCP_TIMEOUT', 30 );
 
 // load the core of Postman
 require_once 'Postman/Postman-Core/core.php';
@@ -121,4 +122,23 @@ if (! function_exists ( 'activatePostman' )) {
 	}
 }
 
+if (! function_exists ( 'str_getcsv' )) {
+	/**
+	 * Using fgetscv (PHP 4) as a work-around for str_getcsv (PHP 5.3)
+	 * From http://stackoverflow.com/questions/13430120/str-getcsv-alternative-for-older-php-version-gives-me-an-empty-array-at-the-e
+	 *
+	 * @param unknown $string        	
+	 * @return multitype:
+	 */
+	function str_getcsv($string) {
+		$fh = fopen ( 'php://temp', 'r+' );
+		fwrite ( $fh, $string );
+		rewind ( $fh );
+		
+		$row = fgetcsv ( $fh );
+		
+		fclose ( $fh );
+		return $row;
+	}
+}
 ?>

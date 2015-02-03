@@ -49,14 +49,14 @@ if (! class_exists ( 'PostmanEmailAddress' )) {
 		public static function convertToArray($emails) {
 			if (! is_array ( $emails )) {
 				// http://tiku.io/questions/955963/splitting-comma-separated-email-addresses-in-a-string-with-commas-in-quotes-in-p
-				$t = $this->stringGetCsvAlternate ( $emails );
+				$t = str_getcsv ( $emails );
+				$emails = array ();
 				foreach ( $t as $k => $v ) {
 					if (strpos ( $v, ',' ) !== false) {
 						$t [$k] = '"' . str_replace ( ' <', '" <', $v );
 					}
 					$tokenizedEmail = trim ( $t [$k] );
-					$this->logger->debug ( 'User Added recipient: ' . $tokenizedEmail );
-					array_push ( $recipientList, $this->createPostmanEmailAddress ( $tokenizedEmail ) );
+					array_push ( $emails, $tokenizedEmail );
 				}
 			}
 			return $emails;
