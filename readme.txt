@@ -90,8 +90,12 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 
 == Changelog ==
 
-= 1.1.1 =
+= 1.2 =
 * Disabled record-keeping for test e-mails
+* Support for Reply-To, Return-Path and Sender Name
+
+= 1.1.1 - 2015-02-03 =
+* Fixed a bug I introduced in 1.1. Thanks to user derrey for catching this one. Zend_Mail crashes when attempting to throw an exception when the 'from' standard header was added as a header : "Zend_Mail_Exception code=0 message=Cannot set standard header from addHeader()"
 
 = 1.1 - 2015-02-03 =
 * Added support for international characters (the WordPress default is UTF-8) which can be specified with headers or the [wp_mail_charset](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail_charset) filter
@@ -114,9 +118,9 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 * Moved the screenshots and icons out of /trunk and into /assets
 
 = 0.2.6 - 2015-01-28 =
-* Fixed "Configure and Authorize the plugin" missing the link address - broke this when I removed sprintf()
-* Fixed "Fatal error: Call to undefined function str_getcsv()" - this function is not available before PHP 5.3. Replaced with fgetcsv()
-* Fixed "Warning: Missing argument 2 for update_option()" - should be calling delete_option instead
+* Fixed "Configure and Authorize the plugin" missing the link address. Thanks to user kaorw for catching ths one.
+* Fixed "Fatal error: Call to undefined function str_getcsv()". Thanks to user kaorw for catching ths one. This function is not available before PHP 5.3. Fixed by replacing str_getdsv() with custom implementation.
+* Fixed "Warning: Missing argument 2 for update_option()". Thanks to user kaorw for catching ths one. Fixed by calling delete_option instead of update_option().
 
 = 0.2.5 - 2015-01-27 =
 * Removed the namespace for users with older version of PHP
@@ -141,6 +145,12 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 1.2 =
+Support for Sender Name, Reply-To, and Return-Path
+
+= 1.1.1 =
+Fixed bug that prevents Contact Form 7 from sending mail
 
 = 1.1 =
 Support for international characters and multipart/mime mail
