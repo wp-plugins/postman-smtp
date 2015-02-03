@@ -3,11 +3,11 @@ Contributors: jasonhendriks
 Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, phpmailer, wp_mail, gmail, google apps
 Requires at least: 3.8
 Tested up to: 4.1
-Stable tag: 1.1
+Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Kiss your Gmail problems good-bye with Postman, the first and only OAuth-enabled SMTP Plugin for WordPress. Never give out your password again!
+Kiss your email problems good-bye with Postman, the first and only OAuth-enabled SMTP Plugin for WordPress. Never give out your password again!
 
 == Description ==
 
@@ -31,9 +31,11 @@ Postman is a next-generation SMTP plugin which provides WordPress with a more se
 
 == Frequently Asked Questions == 
 
-= Why should I use Postman to deliver my mail? =
+= Why should I use Postman over the hundreds of other SMTP plugins? =
 
-If you're using Gmail, then Postman doesn't require your password to send email, only an *authentication token*. Other plugins ask for your Google password to send mail. **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
+If you have Gmail, Postman doesn't require your password to send email, only an *authentication token*. Other plugins need your Google password and will break if you change it, but Postman will continue to send email without interruption.
+
+> **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = What is a Client ID? =
 To use Postman, every website needs their own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one. Google has [instructions for creating a Client ID](https://developers.google.com/console/help/new/#generatingoauth2), which I've expanded upon below.
@@ -87,6 +89,9 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 1. If you use [Google Apps](http://admin.google.com) to manage your domain, you HAVE to use OAuth
 
 == Changelog ==
+
+= 1.1.1 =
+* Disabled record-keeping for test e-mails
 
 = 1.1 - 2015-02-03 =
 * Added support for international characters (the WordPress default is UTF-8) which can be specified with headers or the [wp_mail_charset](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail_charset) filter
