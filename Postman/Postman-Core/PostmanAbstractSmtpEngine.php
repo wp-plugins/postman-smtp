@@ -130,22 +130,24 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			}
 			
 			// add the reply-to
-			if (isset ( $this->replyTo )) {
-				$mail->setReplyTo ( $this->replyTo );
+			if (! empty ( $this->replyTo )) {
+				$replyTo = new PostmanEmailAddress ( $this->replyTo );
+				$mail->setReplyTo ( $replyTo->getEmail (), $replyTo->getName () );
 			}
 			
 			// add the return-path
-			if (isset ( $this->returnPath )) {
-				$mail->setReturnPath ( $this->returnPath );
+			if (! empty ( $this->returnPath )) {
+				$returnPath = new PostmanEmailAddress ( $this->returnPath );
+				$mail->setReturnPath ( $returnPath->getEmail () );
 			}
 			
 			// add the date
-			if (isset ( $this->date )) {
+			if (! empty ( $this->date )) {
 				$mail->setDate ( $this->date );
 			}
 			
 			// add the messageId
-			if (isset ( $this->messageId )) {
+			if (! empty ( $this->messageId )) {
 				$mail->setMessageId ( $this->messageId );
 			}
 			
