@@ -18,7 +18,6 @@ if (! class_exists ( "PostmanOptions" )) {
 		const PORT = 'port';
 		const HOSTNAME = 'hostname';
 		const REPLY_TO = 'reply_to';
-		const RETURN_PATH = 'return_path';
 		const TEST_EMAIL = 'test_email';
 		const BASIC_AUTH_USERNAME = 'basic_auth_username';
 		const BASIC_AUTH_PASSWORD = 'basic_auth_password';
@@ -145,10 +144,6 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::REPLY_TO] ))
 				return $this->options [PostmanOptions::REPLY_TO];
 		}
-		public function getReturnPath() {
-			if (isset ( $this->options [PostmanOptions::RETURN_PATH] ))
-				return $this->options [PostmanOptions::RETURN_PATH];
-		}
 		public function isSenderNameOverrideAllowed() {
 			if (isset ( $this->options [PostmanOptions::ALLOW_SENDER_NAME_OVERRIDE] ))
 				return $this->options [PostmanOptions::ALLOW_SENDER_NAME_OVERRIDE];
@@ -210,9 +205,6 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function setReplyTo($replyTo) {
 			$this->options [PostmanOptions::REPLY_TO];
-		}
-		public function setReturnPath($returnPath) {
-			$this->options [PostmanOptions::RETURN_PATH];
 		}
 		public function debug(PostmanLogger $logger) {
 			$logger->debug ( 'Sender Email=' . $this->getSenderEmail () );
