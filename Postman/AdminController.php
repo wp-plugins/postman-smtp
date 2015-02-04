@@ -288,7 +288,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printOAuthSectionInfo' 
 			), PostmanAdminController::OAUTH_OPTIONS );
 			
-			add_settings_field ( 'redirect_url', 'Redirect URL', array (
+			add_settings_field ( 'redirect_url', 'Redirect URI', array (
 					$this,
 					'redirect_url_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
@@ -925,14 +925,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 					target="_new">How do I get a Google Client ID?</a> in the F.A.Q.
 				for help.
 			</p>
-			<label for="redirect_uri">Redirect URI</label>
-			<?php echo $this->redirect_url_callback(); ?>
+			<label for="redirect_uri">Redirect URI</label><br/>
+			<?php echo $this->redirect_url_callback(); ?><br/>
 
-			<label for="client_id">Client ID</label>
-			<?php echo $this->oauth_client_id_callback(); ?>
+			<label for="client_id">Client ID</label><br/>
+			<?php echo $this->oauth_client_id_callback(); ?><br/>
 
-			<label for="client_id">Client Secret</label> 
-			<?php echo $this->oauth_client_secret_callback(); ?>
+			<label for="client_id">Client Secret</label> <br/>
+			<?php echo $this->oauth_client_secret_callback(); ?><br/>
 				</section>
 
 		<section class="wizard-auth-basic">
