@@ -25,10 +25,10 @@ Postman is a next-generation SMTP plugin which provides WordPress with a more se
 * Supports international characters, HTML mail and MultiPart/MIME
 
 ### Requirements:
-* PHP 5.3.23 (with OpenSSL for SMTPS)
-* WordPress 3.9 or later
-* an email account with any 3rd-party provider, and connectivity to their SMTP server
-* a Gmail/Google Apps account, a Client ID from Google Developer and connectivity to the Gmail server (for SMTP with OAuth 2.0)
+* PHP 5.3 (or later) with OpenSSL; or PHP 5.2 with SPL and OpenSSL 
+* WordPress 3.9 (or later)
+* For SMTP: an email account with any 3rd-party provider, and connectivity to their SMTP server
+* For SMTP with OAuth2: a Gmail/Google Apps account, a Client ID from Google Developer and connectivity to the Gmail server
 
 == Frequently Asked Questions == 
 
@@ -150,7 +150,7 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 == Upgrade Notice ==
 
 = 1.2 =
-Support for Sender Name, Reply-To, and Return-Path
+Support for Sender Name and the Reply-To header.
 
 = 1.1.1 =
 Fixed bug that prevents Contact Form 7 from sending mail
