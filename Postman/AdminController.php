@@ -319,12 +319,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'read_timeout_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( PostmanOptions::RETURN_PATH, 'Return Path', array (
-					$this,
-					'return_path_callback' 
-			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
-			
-			add_settings_field ( PostmanOptions::REPLY_TO, 'Reply-To', array (
+			add_settings_field ( PostmanOptions::REPLY_TO, 'Reply-To Email Address', array (
 					$this,
 					'reply_to_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
@@ -389,7 +384,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->sanitizeString ( 'Username', PostmanOptions::BASIC_AUTH_USERNAME, $input, $new_input );
 			$this->sanitizeString ( 'Password', PostmanOptions::BASIC_AUTH_PASSWORD, $input, $new_input );
 			$this->sanitizeString ( 'Reply-To', PostmanOptions::REPLY_TO, $input, $new_input );
-			$this->sanitizeString ( 'Return-Path', PostmanOptions::RETURN_PATH, $input, $new_input );
 			$this->sanitizeString ( 'Sender Name Override', PostmanOptions::ALLOW_SENDER_NAME_OVERRIDE, $input, $new_input );
 			
 			if (isset ( $input [PostmanOptions::SENDER_EMAIL] )) {
@@ -753,13 +747,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function oauth_client_secret_callback() {
 			printf ( '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" autocomplete="off" id="oauth_client_secret" name="postman_options[oauth_client_secret]" value="%s" size="60" class="required"/>', null !== $this->options->getClientSecret () ? esc_attr ( $this->options->getClientSecret () ) : '' );
-		}
-		
-		/**
-		 * Get the settings option array and print one of its values
-		 */
-		public function return_path_callback() {
-			printf ( '<input type="text" id="input_return_path" name="postman_options[return_path]" value="%s" />', null !== $this->options->getReturnPath () ? esc_attr ( $this->options->getReturnPath () ) : '' );
 		}
 		
 		/**
