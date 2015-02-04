@@ -91,8 +91,8 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 == Changelog ==
 
 = 1.2 =
+* Support for Sender Name and Reply-To. Turns out Google no longer honours the MUA Return-Path header due to spam. Makes sense, so I've decided not to add a Return-Path field to Postman's configuration.
 * Disabled record-keeping for test e-mails
-* Support for Reply-To, Return-Path and Sender Name
 
 = 1.1.1 - 2015-02-03 =
 * Fixed a bug I introduced in 1.1. Thanks to user derrey for catching this one. Zend_Mail crashes when attempting to throw an exception when the 'from' standard header was added as a header : "Zend_Mail_Exception code=0 message=Cannot set standard header from addHeader()"
