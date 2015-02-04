@@ -33,7 +33,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 				$logger->debug ( 'Sending mail' );
 				// interact with the SMTP Engine
 				$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken );
-				$engine->allowSenderOverride($wpMailOptions->isSenderNameOverrideAllowed());
+				$engine->allowSenderOverride ( $wpMailOptions->isSenderNameOverrideAllowed () );
 				$engine->setBody ( $message );
 				$engine->setSubject ( $subject );
 				$engine->addTo ( $to );
@@ -42,6 +42,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 				$engine->setSender ( $wpMailOptions->getSenderEmail (), $wpMailOptions->getSenderName () );
 				$engine->setHostname ( $wpMailOptions->getHostname () );
 				$engine->setPort ( $wpMailOptions->getPort () );
+				$engine->setReplyTo ( $wpMailOptions->getReplyTo () );
 				$engine->send ();
 				PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
 				return true;
