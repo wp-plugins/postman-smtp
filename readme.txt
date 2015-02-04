@@ -1,7 +1,7 @@
 === Postman SMTP ===
 Contributors: jasonhendriks
 Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, phpmailer, wp_mail, gmail, google apps
-Requires at least: 3.8
+Requires at least: 3.9
 Tested up to: 4.1
 Stable tag: 1.1.1
 License: GPLv2 or later
@@ -26,6 +26,7 @@ Postman is a next-generation SMTP plugin which provides WordPress with a more se
 
 ### Requirements:
 * PHP 5.3.23 (with OpenSSL for SMTPS)
+* WordPress 3.9 or later
 * an email account with any 3rd-party provider, and connectivity to their SMTP server
 * a Gmail/Google Apps account, a Client ID from Google Developer and connectivity to the Gmail server (for SMTP with OAuth 2.0)
 
@@ -90,9 +91,11 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 
 == Changelog ==
 
-= 1.2 =
+= 1.2 - 2015-02-04 =
 * Support for Sender Name and Reply-To. Turns out Google no longer honours the MUA Return-Path header due to spam. Makes sense, so I've decided not to add a Return-Path field to Postman's configuration.
-* Disabled record-keeping for test e-mails
+* Support for WordPress filters [wp_mail_from](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail_from) and [wp_mail_from_name](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail_from_name)
+* Disable stats-keeping for email sent by the test function
+* Minor tweaks to the Wizard to support WordPress v3.9
 
 = 1.1.1 - 2015-02-03 =
 * Fixed a bug I introduced in 1.1. Thanks to user derrey for catching this one. Zend_Mail crashes when attempting to throw an exception when the 'from' standard header was added as a header : "Zend_Mail_Exception code=0 message=Cannot set standard header from addHeader()"
