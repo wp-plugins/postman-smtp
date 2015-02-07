@@ -24,20 +24,20 @@ class PostmanSmtpEngineFactory {
 		$this->logger = new PostmanLogger ( get_class ( $this ) );
 	}
 	public function createSmtpEngine(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken) {
-		if ($options->getAuthorizationType () == PostmanOptions::AUTHORIZATION_TYPE_OAUTH2) {
+		if ($options->getAuthorizationType () == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
 			// ensure the token is up-to-date
 			$this->logger->debug ( 'Ensuring Access Token is up-to-date' );
 			// interact with the Authentication Manager
-			$wpMailAuthManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $options->getAuthorizationType (), $options->getClientId (), $options->getClientSecret (), $authorizationToken );
+			$wpMailAuthManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $options, $authorizationToken );
 			if ($wpMailAuthManager->isTokenExpired ()) {
 				$this->logger->debug ( 'Access Token has expired, attempting refresh' );
 				$wpMailAuthManager->refreshToken ();
 				$authorizationToken->save ();
 			}
 			$engine = new PostmanOAuthSmtpEngine ( $authorizationToken->getAccessToken () );
-		} else if ($options->getAuthorizationType () == PostmanOptions::AUTHORIZATION_TYPE_BASIC_SSL) {
+		} else if ($options->getAuthorizationType () == PostmanOptions::AUTHENTICATION_TYPE_BASIC_SSL) {
 			$engine = new PostmanBasicSslSmtpEngine ( $options->getUsername (), $options->getPassword () );
-		} else if ($options->getAuthorizationType () == PostmanOptions::AUTHORIZATION_TYPE_BASIC_TLS) {
+		} else if ($options->getAuthorizationType () == PostmanOptions::AUTHENTICATION_TYPE_BASIC_TLS) {
 			$engine = new PostmanBasicTlsSmtpEngine ( $options->getUsername (), $options->getPassword () );
 		} else {
 			$engine = new PostmanNoAuthSmtpEngine ();

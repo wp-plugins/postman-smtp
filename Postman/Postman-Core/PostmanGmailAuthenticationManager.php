@@ -1,41 +1,27 @@
 <?php
 if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 	
-	require_once 'PostmanAuthenticationManager.php';
+	require_once 'PostmanAbstractAuthenticationManager.php';
 	
 	/**
 	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api
 	 * http://pastebin.com/jA9sBNTk
 	 */
-	class PostmanGmailAuthenticationManager implements PostmanAuthenticationManager {
+	class PostmanGmailAuthenticationManager extends PostmanAbstractAuthenticationManager implements PostmanAuthenticationManager {
 		
 		// constants
-		const FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE = 60;
 		const SCOPE = 'https://mail.google.com/';
-		const APPROVAL_PROMPT = 'force';
-		const ACCESS_TYPE = 'offline';
-		const ACCESS_TOKEN = 'access_token';
-		const REFRESH_TOKEN = 'refresh_token';
-		const EXPIRES = 'expires_in';
-		
-		// the oauth authorization options
-		private $clientId;
-		private $clientSecret;
-		private $authorizationToken;
-		private $logger;
+		const SMTP_HOSTNAME = 'smtp.gmail.com';
+		private $gmailAddress;
 		
 		/**
 		 * Constructor
 		 */
-		public function __construct($clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken) {
-			assert ( ! empty ( $clientId ) );
-			assert ( ! empty ( $clientSecret ) );
-			assert ( ! empty ( $authorizationToken ) );
+		public function __construct($clientId, $clientSecret, $gmailAddress, PostmanAuthorizationToken $authorizationToken, $senderEmail) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			$this->clientId = $clientId;
-			$this->clientSecret = $clientSecret;
-			$this->authorizationToken = $authorizationToken;
+			parent::__construct ( $clientId, $clientSecret, $authorizationToken, $logger );
 			require_once 'google-api-php-client-1.1.2/autoload.php';
+			$this->gmailAddress = $senderEmail;
 		}
 		
 		/**
@@ -63,15 +49,6 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 		
 		/**
 		 */
-		public function isTokenExpired() {
-			$expireTime = ($this->authorizationToken->getExpiryTime () - PostmanGmailAuthenticationManager::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
-			$tokenHasExpired = time () > $expireTime;
-			$this->logger->debug ( 'Access Token Expiry Time is ' . $expireTime . ', expired=' . ($tokenHasExpired ? 'yes' : 'no') );
-			return $tokenHasExpired;
-		}
-		
-		/**
-		 */
 		public function refreshToken() {
 			$this->logger->debug ( 'Refreshing Token' );
 			$client = $this->createGoogleClient ();
@@ -90,7 +67,8 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 		 * information from our API console project.
 		 * **********************************************
 		 */
-		public function authenticate($gmailAddress) {
+		public function requestVerificationCode() {
+			$gmailAddress = $this->gmailAddress;
 			assert ( ! empty ( $gmailAddress ) );
 			$client = $this->createGoogleClient ();
 			$client->setLoginHint ( $gmailAddress );
@@ -148,10 +126,6 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 				$this->authorizationToken->setRefreshToken ( $newRefreshToken );
 				$this->logger->debug ( 'Updating Refresh Token' );
 			}
-		}
-		
-		public function getAuthorizationToken() {
-			return $this->authorizationToken;
 		}
 	}
 }

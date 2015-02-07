@@ -187,8 +187,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 			exit ();
 		}
 		public function handleGoogleAuthenticationAction() {
-			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $this->options->getAuthorizationType (), $this->options->getClientId (), $this->options->getClientSecret (), $this->authorizationToken );
-			$authenticationManager->authenticate ( $this->options->getSenderEmail () );
+			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $this->options, $this->authorizationToken );
+			$authenticationManager->requestVerificationCode ();
 		}
 		public function handleConfigureAction() {
 			$this->logger->debug ( 'handle configure action' );
@@ -226,10 +226,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( 'postman_script', 'postman_input_sender_email', '#input_sender_email' );
 			wp_localize_script ( 'postman_script', 'postman_port_element_name', '#input_port' );
 			wp_localize_script ( 'postman_script', 'postman_hostname_element_name', '#input_hostname' );
-			wp_localize_script ( 'postman_script', 'postman_auth_none', PostmanOptions::AUTHORIZATION_TYPE_NONE );
-			wp_localize_script ( 'postman_script', 'postman_auth_basic_ssl', PostmanOptions::AUTHORIZATION_TYPE_BASIC_SSL );
-			wp_localize_script ( 'postman_script', 'postman_auth_basic_tls', PostmanOptions::AUTHORIZATION_TYPE_BASIC_TLS );
-			wp_localize_script ( 'postman_script', 'postman_auth_oauth2', PostmanOptions::AUTHORIZATION_TYPE_OAUTH2 );
+			wp_localize_script ( 'postman_script', 'postman_auth_none', PostmanOptions::AUTHENTICATION_TYPE_NONE );
+			wp_localize_script ( 'postman_script', 'postman_auth_basic_ssl', PostmanOptions::AUTHENTICATION_TYPE_BASIC_SSL );
+			wp_localize_script ( 'postman_script', 'postman_auth_basic_tls', PostmanOptions::AUTHENTICATION_TYPE_BASIC_TLS );
+			wp_localize_script ( 'postman_script', 'postman_auth_oauth2', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
 			
 			//
 			register_setting ( PostmanAdminController::SETTINGS_GROUP_NAME, PostmanOptions::POSTMAN_OPTIONS, array (
@@ -324,9 +324,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'reply_to_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( 'allow_sender_name_override', 'Allow other Plugins to Override the Sender', array (
+			add_settings_field ( 'prevent_sender_name_override', 'Prevent other Plugins from Overriding the Sender', array (
 					$this,
-					'allow_sender_name_override_callback' 
+					'prevent_sender_name_override_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
 			// the Port Test section
@@ -375,7 +375,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$new_input = array ();
 			$success = true;
 			
-			$this->sanitizeString ( 'Authorization Type', PostmanOptions::AUTHORIZATION_TYPE, $input, $new_input );
+			$this->sanitizeString ( 'Authorization Type', PostmanOptions::AUTHENTICATION_TYPE, $input, $new_input );
 			$this->sanitizeString ( 'Hostname', PostmanOptions::HOSTNAME, $input, $new_input );
 			$this->sanitizeInt ( 'Port', PostmanOptions::PORT, $input, $new_input );
 			$this->sanitizeString ( 'Sender Name', PostmanOptions::SENDER_NAME, $input, $new_input );
@@ -384,7 +384,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->sanitizeString ( 'Username', PostmanOptions::BASIC_AUTH_USERNAME, $input, $new_input );
 			$this->sanitizeString ( 'Password', PostmanOptions::BASIC_AUTH_PASSWORD, $input, $new_input );
 			$this->sanitizeString ( 'Reply-To', PostmanOptions::REPLY_TO, $input, $new_input );
-			$this->sanitizeString ( 'Sender Name Override', PostmanOptions::ALLOW_SENDER_NAME_OVERRIDE, $input, $new_input );
+			$this->sanitizeString ( 'Sender Name Override', PostmanOptions::prevent_sender_name_override, $input, $new_input );
 			
 			if (isset ( $input [PostmanOptions::SENDER_EMAIL] )) {
 				$this->logger->debug ( 'Sanitize Sender Email ' . $input [PostmanOptions::SENDER_EMAIL] );
@@ -469,17 +469,17 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function generateStatusHtml() {
 			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
 				print '<p><span style="color:green;padding:2px 5px; font-size:1.2em">Postman is configured.</span><p style="margin:0 10px">Sending mail from <b>' . $this->options->getSenderEmail () . '</b> via <b>' . $this->options->getHostname () . '</b>';
-				if ($this->options->getAuthorizationType () == PostmanOptions::AUTHORIZATION_TYPE_OAUTH2) {
+				if ($this->options->getAuthorizationType () == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
 					print ' using OAuth 2.0 authentication.</span></p>';
 					print '<p style="margin:10px 10px"><span>Please note: <em>Plugins are forbidden from overriding the sender email address in OAuth 2.0 mode</em>.</span></p>';
-				} else if ($this->options->getAuthorizationType () == PostmanOptions::AUTHORIZATION_TYPE_BASIC_SSL) {
+				} else if ($this->options->getAuthorizationType () == PostmanOptions::AUTHENTICATION_TYPE_BASIC_SSL) {
 					print ' using Basic authentication.</span></p>';
-				} else if ($this->options->getAuthorizationType () == PostmanOptions::AUTHORIZATION_TYPE_BASIC_TLS) {
+				} else if ($this->options->getAuthorizationType () == PostmanOptions::AUTHENTICATION_TYPE_BASIC_TLS) {
 					print ' using Basic authentication.</span></p>';
 				} else {
 					print ' using no authentication.</span></p>';
 				}
-				if ($this->options->getAuthorizationType () != PostmanOptions::AUTHORIZATION_TYPE_OAUTH2 && $this->options->getHostname () == 'smtp.gmail.com') {
+				if ($this->options->getAuthorizationType () != PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $this->options->getHostname () == PostmanGmailAuthenticationManager::SMTP_HOSTNAME) {
 					print '<p><span style="color:yellow; background-color:#AAA; padding:2px 5px; font-size:1.2em">Warning</span><p><span style="margin:0 10px">Google may silently discard messages sent with basic authentication. Change your authentication type to OAuth 2.0.</span></p>';
 				}
 			} else if ($this->options->isPermissionNeeded ( $this->authorizationToken )) {
@@ -672,17 +672,17 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function authorization_type_callback() {
 			$authType = $this->options->getAuthorizationType ();
 			print '<select id="input_authorization_type" class="input_authorization_type" name="postman_options[authorization_type]">';
-			print '<option id="input_auth_type_none" value="' . PostmanOptions::AUTHORIZATION_TYPE_NONE . '"';
-			printf ( '%s', $authType == PostmanOptions::AUTHORIZATION_TYPE_NONE ? 'selected="selected"' : '' );
+			print '<option id="input_auth_type_none" value="' . PostmanOptions::AUTHENTICATION_TYPE_NONE . '"';
+			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_NONE ? 'selected="selected"' : '' );
 			print '>None</option>';
-			print '<option id="input_auth_type_ssl" value="' . PostmanOptions::AUTHORIZATION_TYPE_BASIC_SSL . '"';
-			printf ( '%s', $authType == PostmanOptions::AUTHORIZATION_TYPE_BASIC_SSL ? 'selected="selected"' : '' );
+			print '<option id="input_auth_type_ssl" value="' . PostmanOptions::AUTHENTICATION_TYPE_BASIC_SSL . '"';
+			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_BASIC_SSL ? 'selected="selected"' : '' );
 			print '>Basic (SSL)</option>';
-			print '<option id="input_auth_type_tls" value="' . PostmanOptions::AUTHORIZATION_TYPE_BASIC_TLS . '"';
-			printf ( '%s', $authType == PostmanOptions::AUTHORIZATION_TYPE_BASIC_TLS ? 'selected="selected"' : '' );
+			print '<option id="input_auth_type_tls" value="' . PostmanOptions::AUTHENTICATION_TYPE_BASIC_TLS . '"';
+			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_BASIC_TLS ? 'selected="selected"' : '' );
 			print '>Basic (TLS)</option>';
-			print '<option id="input_auth_type_oauth2" value="' . PostmanOptions::AUTHORIZATION_TYPE_OAUTH2 . '"';
-			printf ( '%s', (empty ( $authType ) || $authType == PostmanOptions::AUTHORIZATION_TYPE_OAUTH2) ? 'selected="selected"' : '' );
+			print '<option id="input_auth_type_oauth2" value="' . PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 . '"';
+			printf ( '%s', (empty ( $authType ) || $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) ? 'selected="selected"' : '' );
 			print '>OAuth2 (Gmail)</option></select>';
 		}
 		
@@ -772,8 +772,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 		
 		/**
 		 */
-		public function allow_sender_name_override_callback() {
-			printf ( '<input type="checkbox" id="input_allow_sender_name_override" name="postman_options[allow_sender_name_override]" %s />', null !== $this->options->isSenderNameOverrideAllowed () ? 'checked="checked"' : '' );
+		public function prevent_sender_name_override_callback() {
+			printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s />', null !== $this->options->isSenderNameOverridePrevented () ? 'checked="checked"' : '' );
 		}
 		
 		/**
@@ -808,14 +808,20 @@ if (! class_exists ( "PostmanAdminController" )) {
 						href="<?php echo POSTMAN_HOME_PAGE_URL ?>&postman_action=delete_data"
 						class="welcome-icon oauth-authorize">Delete plugin data</a></li>
 					<li><?php
+			$emailCompany = 'Request OAuth Permission';
+			if ($this->options->getHostname () == PostmanGmailAuthenticationManager::SMTP_HOSTNAME) {
+				$emailCompany = 'Request Permission from
+								Google';
+			} else if ($this->options->getHostname () == PostmanHotmailAuthenticationManager::SMTP_HOSTNAME) {
+				$emailCompany = 'Request Permission from
+								Microsoft';
+			}
 			if ($this->options->isRequestOAuthPermissionAllowed ()) {
 				printf ( '<a
 							href="%s&postman_action=oauth_request_permission"
-							class="welcome-icon send-test-email">Request Permission from
-								Google</a>', POSTMAN_HOME_PAGE_URL );
+							class="welcome-icon send-test-email">' . $emailCompany . '</a>', POSTMAN_HOME_PAGE_URL );
 			} else {
-				print 'Request Permission from
-								Google';
+				print $emailCompany;
 			}
 			?></li>
 
@@ -925,15 +931,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 					target="_new">How do I get a Google Client ID?</a> in the F.A.Q.
 				for help.
 			</p>
-			<label for="redirect_uri">Redirect URI</label><br/>
-			<?php echo $this->redirect_url_callback(); ?><br/>
-
-			<label for="client_id">Client ID</label><br/>
-			<?php echo $this->oauth_client_id_callback(); ?><br/>
-
-			<label for="client_id">Client Secret</label> <br/>
-			<?php echo $this->oauth_client_secret_callback(); ?><br/>
-				</section>
+			<label for="redirect_uri">Redirect URI</label><br />
+			<?php echo $this->redirect_url_callback(); ?><br /> <label
+				for="client_id">Client ID</label><br />
+			<?php echo $this->oauth_client_id_callback(); ?><br /> <label
+				for="client_id">Client Secret</label> <br />
+			<?php echo $this->oauth_client_secret_callback(); ?><br />
+		</section>
 
 		<section class="wizard-auth-basic">
 			<p class="port-explanation-ssl">Enter your credentials to login to

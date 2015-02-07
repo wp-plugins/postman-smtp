@@ -26,9 +26,20 @@ if (! class_exists ( "PostmanNonOAuthAuthenticationManager" )) {
 		public function refreshToken() {
 			// no-op
 		}
-		public function authenticate($gmailAddress) {
+		
+		/**
+		 * (non-PHPdoc)
+		 *
+		 * @see PostmanAuthenticationManager::requestVerificationCode()
+		 */
+		public function requestVerificationCode() {
 			header ( 'Location: ' . filter_var ( $authUrl, FILTER_SANITIZE_URL ) );
 			exit ();
+		}
+		
+		/**
+		 */
+		public function tradeCodeForToken() {
 		}
 	}
 }

@@ -2,6 +2,7 @@
 if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 	
 	require_once 'PostmanGmailAuthenticationManager.php';
+	require_once 'PostmanHotmailAuthenticationManager.php';
 	require_once 'PostmanNonOAuthAuthenticationManager.php';
 	
 	//
@@ -19,9 +20,16 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 		private function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
-		public function createAuthenticationManager($authenticationType, $clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken) {
-			if ($authenticationType == PostmanOptions::AUTHORIZATION_TYPE_OAUTH2) {
-				$authenticationManager = new PostmanGmailAuthenticationManager ( $clientId, $clientSecret, $authorizationToken );
+		public function createAuthenticationManager(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken) {
+			$authenticationType = $options->getAuthorizationType ();
+			$hostname = $options->getHostname ();
+			$clientId = $options->getClientId ();
+			$clientSecret = $options->getClientSecret ();
+			$senderEmail = $options->getSenderEmail();
+			if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $hostname == PostmanGmailAuthenticationManager::SMTP_HOSTNAME) {
+				$authenticationManager = new PostmanGmailAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $senderEmail );
+			} else if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $hostname == PostmanHotmailAuthenticationManager::SMTP_HOSTNAME) {
+				$authenticationManager = new PostmanHotmailAuthenticationManager ( $clientId, $clientSecret, $authorizationToken );
 			} else {
 				$authenticationManager = new PostmanNonOAuthAuthenticationManager ();
 			}

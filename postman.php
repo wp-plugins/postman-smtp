@@ -70,13 +70,10 @@ function postmanSmtpMain() {
  * Handles the authorization grant
  */
 function postmanHandleAuthorizationGrant(PostmanLogger $logger, PostmanOptions $options, PostmanAuthorizationToken $authorizationToken) {
-	$authType = $options->getAuthorizationType ();
-	$clientId = $options->getClientId ();
-	$clientSecret = $options->getClientSecret ();
 	$logger->debug ( 'Authorization in progress' );
 	unset ( $_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
 	
-	$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $authType, $clientId, $clientSecret, $authorizationToken );
+	$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $options, $authorizationToken );
 	try {
 		if ($authenticationManager->tradeCodeForToken ()) {
 			$logger->debug ( 'Authorization successful' );
@@ -111,11 +108,11 @@ if (! function_exists ( 'activatePostman' )) {
 			$authToken->setExpiryTime ( $options [PostmanAuthorizationToken::EXPIRY_TIME] );
 			$authToken->save ();
 		}
-		if (! isset ( $options [PostmanOptions::AUTHORIZATION_TYPE] )) {
+		if (! isset ( $options [PostmanOptions::AUTHENTICATION_TYPE] )) {
 			// prior to 1.0.0, access tokens were saved in authOptions without an auth type
 			// prior to 0.2.5, access tokens were save in options without an auth type
 			if (isset ( $authOptions [PostmanAuthorizationToken::ACCESS_TOKEN] ) || isset ( $options [PostmanAuthorizationToken::ACCESS_TOKEN] )) {
-				$options [PostmanOptions::AUTHORIZATION_TYPE] = PostmanOptions::AUTHORIZATION_TYPE_OAUTH2;
+				$options [PostmanOptions::AUTHENTICATION_TYPE] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 				update_option ( PostmanOptions::POSTMAN_OPTIONS, $options );
 			}
 		}
