@@ -84,11 +84,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'checkEmail' 
 				) );
 			}
-			// Adds "Settings" link to the plugin action page
-			add_filter ( 'plugin_action_links_' . $basename, array (
-					$this,
-					'modifyLinksOnPluginsListPage' 
-			) );
 			
 			add_action ( 'admin_menu', array (
 					$this,
@@ -137,12 +132,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this->displayWizard = true;
 				}
 			}
-		}
-		public function modifyLinksOnPluginsListPage($links) {
-			$mylinks = array (
-					'<a href="' . esc_url ( POSTMAN_HOME_PAGE_URL ) . '">Settings</a>' 
-			);
-			return array_merge ( $links, $mylinks );
 		}
 		public function handlePurgeDataAction() {
 			delete_option ( PostmanOptions::POSTMAN_OPTIONS );
@@ -222,13 +211,22 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( 'postman_script', 'postman_oauth_section_element_name', 'div#oauth_section' );
 			
 			// user input
-			wp_localize_script ( 'postman_script', 'postman_input_auth_type', '#input_authorization_type' );
-			wp_localize_script ( 'postman_script', 'postman_input_sender_email', '#input_sender_email' );
-			wp_localize_script ( 'postman_script', 'postman_port_element_name', '#input_port' );
-			wp_localize_script ( 'postman_script', 'postman_hostname_element_name', '#input_hostname' );
+			wp_localize_script ( 'postman_script', 'postman_input_sender_email', '#input_' . PostmanOptions::SENDER_EMAIL );
+			wp_localize_script ( 'postman_script', 'postman_port_element_name', '#input_' . PostmanOptions::PORT );
+			wp_localize_script ( 'postman_script', 'postman_hostname_element_name', '#input_' . PostmanOptions::HOSTNAME );
+			wp_localize_script ( 'postman_script', 'postman_enc_for_password_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_PASSWORD );
+			wp_localize_script ( 'postman_script', 'postman_enc_for_oauth2_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
+			
+			// the password inputs
+			wp_localize_script ( 'postman_script', 'postman_input_basic_username', '#input_basic_auth_' . PostmanOptions::BASIC_AUTH_USERNAME );
+			wp_localize_script ( 'postman_script', 'postman_input_basic_password', '#input_basic_auth_' . PostmanOptions::BASIC_AUTH_PASSWORD );
+			
+			// the auth input
+			wp_localize_script ( 'postman_script', 'postman_input_auth_type', '#input_' . PostmanOptions::AUTHENTICATION_TYPE );
 			wp_localize_script ( 'postman_script', 'postman_auth_none', PostmanOptions::AUTHENTICATION_TYPE_NONE );
-			wp_localize_script ( 'postman_script', 'postman_auth_basic_ssl', PostmanOptions::AUTHENTICATION_TYPE_BASIC_SSL );
-			wp_localize_script ( 'postman_script', 'postman_auth_basic_tls', PostmanOptions::AUTHENTICATION_TYPE_BASIC_TLS );
+			wp_localize_script ( 'postman_script', 'postman_auth_login', PostmanOptions::AUTHENTICATION_TYPE_LOGIN );
+			wp_localize_script ( 'postman_script', 'postman_auth_plain', PostmanOptions::AUTHENTICATION_TYPE_PLAIN );
+			wp_localize_script ( 'postman_script', 'postman_auth_crammd5', PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 );
 			wp_localize_script ( 'postman_script', 'postman_auth_oauth2', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
 			
 			//
@@ -238,14 +236,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 			
 			// Sanitize
-			add_settings_section ( PostmanAdminController::SMTP_SECTION, 'SMTP Settings', array (
+			add_settings_section ( PostmanAdminController::SMTP_SECTION, __ ( 'SMTP Settings', 'postman' ), array (
 					$this,
 					'printSmtpSectionInfo' 
 			), PostmanAdminController::SMTP_OPTIONS );
 			
-			add_settings_field ( 'authorization_type', 'Authentication', array (
+			add_settings_field ( PostmanOptions::AUTHENTICATION_TYPE, 'Authentication', array (
 					$this,
-					'authorization_type_callback' 
+					'authentication_type_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
 			add_settings_field ( PostmanOptions::SENDER_NAME, 'Sender Name', array (
@@ -272,6 +270,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printBasicAuthSectionInfo' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS );
 			
+			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, 'Encryption', array (
+					$this,
+					'encryption_type_for_password_section_callback' 
+			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
+			
 			add_settings_field ( PostmanOptions::BASIC_AUTH_USERNAME, 'Username', array (
 					$this,
 					'basic_auth_username_callback' 
@@ -287,6 +290,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this,
 					'printOAuthSectionInfo' 
 			), PostmanAdminController::OAUTH_OPTIONS );
+			
+			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, 'Encryption', array (
+					$this,
+					'encryption_type_for_oauth2_section_callback' 
+			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
 			add_settings_field ( 'redirect_url', 'Redirect URI', array (
 					$this,
@@ -324,10 +332,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'reply_to_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( 'prevent_sender_name_override', 'Prevent other Plugins from Overriding the Sender', array (
-					$this,
-					'prevent_sender_name_override_callback' 
-			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			// add_settings_field ( 'prevent_sender_name_override', 'Prevent other Plugins from Overriding the Sender', array (
+			// $this,
+			// 'prevent_sender_name_override_callback'
+			// ), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
 			// the Port Test section
 			add_settings_section ( PostmanAdminController::PORT_TEST_SECTION, 'TCP Port Test', array (
@@ -375,46 +383,77 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$new_input = array ();
 			$success = true;
 			
-			$this->sanitizeString ( 'Authorization Type', PostmanOptions::AUTHENTICATION_TYPE, $input, $new_input );
+			$this->sanitizeString ( 'Encryption Type', PostmanOptions::ENCRYPTION_TYPE, $input, $new_input );
 			$this->sanitizeString ( 'Hostname', PostmanOptions::HOSTNAME, $input, $new_input );
-			$this->sanitizeInt ( 'Port', PostmanOptions::PORT, $input, $new_input );
+			if (isset ( $input [PostmanOptions::PORT] )) {
+				$port = absint ( $input [PostmanOptions::PORT] );
+				if ($port > 0) {
+					$this->sanitizeInt ( 'Port', PostmanOptions::PORT, $input, $new_input );
+				} else {
+					$new_input [PostmanOptions::PORT] = $this->options->getPort ();
+					add_settings_error ( PostmanOptions::PORT, PostmanOptions::PORT, 'Invalid TCP Port', 'error' );
+					$success = false;
+				}
+			}
+			// check the auth type AFTER the hostname because we reset the hostname if auth is bad
+			if (isset ( $input [PostmanOptions::AUTHENTICATION_TYPE] )) {
+				$newAuthType = $input [PostmanOptions::AUTHENTICATION_TYPE];
+				$this->logger->debug ( 'Sanitize Authorization Type ' . $newAuthType );
+				if ($newAuthType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
+					if (isset ( $input [PostmanOptions::HOSTNAME] ) && PostmanSmtpHostProperties::isOauthHost ( $input [PostmanOptions::HOSTNAME] )) {
+						$this->sanitizeString ( 'Authorization Type', PostmanOptions::AUTHENTICATION_TYPE, $input, $new_input );
+					} else {
+						$new_input [PostmanOptions::AUTHENTICATION_TYPE] = $this->options->getAuthorizationType ();
+						$new_input [PostmanOptions::HOSTNAME] = $this->options->getHostname ();
+						add_settings_error ( PostmanOptions::AUTHENTICATION_TYPE, PostmanOptions::AUTHENTICATION_TYPE, 'Your host must either be Gmail or Windows Live to enable OAuth2', 'error' );
+						$success = false;
+					}
+				}
+			}
 			$this->sanitizeString ( 'Sender Name', PostmanOptions::SENDER_NAME, $input, $new_input );
 			$this->sanitizeString ( 'Client ID', PostmanOptions::CLIENT_ID, $input, $new_input );
 			$this->sanitizeString ( 'Client Secret', PostmanOptions::CLIENT_SECRET, $input, $new_input );
 			$this->sanitizeString ( 'Username', PostmanOptions::BASIC_AUTH_USERNAME, $input, $new_input );
 			$this->sanitizeString ( 'Password', PostmanOptions::BASIC_AUTH_PASSWORD, $input, $new_input );
 			$this->sanitizeString ( 'Reply-To', PostmanOptions::REPLY_TO, $input, $new_input );
-			$this->sanitizeString ( 'Sender Name Override', PostmanOptions::prevent_sender_name_override, $input, $new_input );
+			$this->sanitizeString ( 'Sender Name Override', PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, $input, $new_input );
 			
 			if (isset ( $input [PostmanOptions::SENDER_EMAIL] )) {
-				$this->logger->debug ( 'Sanitize Sender Email ' . $input [PostmanOptions::SENDER_EMAIL] );
 				$newEmail = $input [PostmanOptions::SENDER_EMAIL];
+				$this->logger->debug ( 'Sanitize Sender Email ' . $newEmail );
 				if ($this->validateEmail ( $newEmail )) {
 					$new_input [PostmanOptions::SENDER_EMAIL] = sanitize_text_field ( $newEmail );
 				} else {
 					$new_input [PostmanOptions::SENDER_EMAIL] = $this->options->getSenderEmail ();
-					$this->messageHandler->addError ( 'You have entered an invalid e-mail address' );
+					add_settings_error ( PostmanOptions::SENDER_EMAIL, PostmanOptions::SENDER_EMAIL, 'You have entered an invalid e-mail address', 'error' );
 					$success = false;
 				}
 			}
 			
 			// set a request parameter
 			if ($success) {
+				$this->logger->debug ( 'Validation Success' );
 				$_SESSION ['postman_action'] = 'save_success';
+			} else {
+				$this->logger->debug ( 'Validation Failure' );
+				$_SESSION ['postman_action'] = 'save_failure';
 			}
 			return $new_input;
 		}
 		private function sanitizeString($desc, $key, $input, &$new_input) {
 			if (isset ( $input [$key] )) {
-				$this->logger->debug ( 'Sanitize ' . $desc . ' ' . $input [$key] );
+				$this->logSanitize ( $desc, $input [$key] );
 				$new_input [$key] = sanitize_text_field ( $input [$key] );
 			}
 		}
 		private function sanitizeInt($desc, $key, $input, &$new_input) {
 			if (isset ( $input [$key] )) {
-				$this->logger->debug ( $desc . ' ' . $input [$key] );
+				$this->logSanitize ( $desc, $input [$key] );
 				$new_input [$key] = absint ( $input [$key] );
 			}
+		}
+		private function logSanitize($desc, $value) {
+			$this->logger->debug ( 'Sanitize ' . $desc . ' ' . $value );
 		}
 		
 		//
@@ -472,9 +511,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 				if ($this->options->getAuthorizationType () == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
 					print ' using OAuth 2.0 authentication.</span></p>';
 					print '<p style="margin:10px 10px"><span>Please note: <em>Plugins are forbidden from overriding the sender email address in OAuth 2.0 mode</em>.</span></p>';
-				} else if ($this->options->getAuthorizationType () == PostmanOptions::AUTHENTICATION_TYPE_BASIC_SSL) {
+				} else if ($this->options->getAuthorizationType () == PostmanOptions::ENCRYPTION_TYPE_SSL) {
 					print ' using Basic authentication.</span></p>';
-				} else if ($this->options->getAuthorizationType () == PostmanOptions::AUTHENTICATION_TYPE_BASIC_TLS) {
+				} else if ($this->options->getAuthorizationType () == PostmanOptions::ENCRYPTION_TYPE_TLS) {
 					print ' using Basic authentication.</span></p>';
 				} else {
 					print ' using no authentication.</span></p>';
@@ -505,13 +544,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// This prints out all hidden setting fields
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
 			do_settings_sections ( PostmanAdminController::SMTP_OPTIONS );
-			print '<div id="smtp_section">';
-			do_settings_sections ( PostmanAdminController::BASIC_AUTH_OPTIONS );
-			print ('</div>') ;
-			print '<div id="oauth_section">';
-			do_settings_sections ( PostmanAdminController::OAUTH_OPTIONS );
-			print ('</div>') ;
-			do_settings_sections ( PostmanAdminController::ADVANCED_OPTIONS );
+			$authType = $this->options->getAuthorizationType ();
+			if (isset ( $authType ) && $authType != PostmanOptions::AUTHENTICATION_TYPE_NONE) {
+				print '<div id="smtp_section">';
+				do_settings_sections ( PostmanAdminController::BASIC_AUTH_OPTIONS );
+				print ('</div>') ;
+				print '<div id="oauth_section">';
+				do_settings_sections ( PostmanAdminController::OAUTH_OPTIONS );
+				print ('</div>') ;
+				do_settings_sections ( PostmanAdminController::ADVANCED_OPTIONS );
+			}
 			submit_button ();
 			print '</form>';
 		}
@@ -530,7 +572,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function generatePortTestHtml() {
 			if (WP_DEBUG_DISPLAY) {
-				print '<p><span style="color:red">You must disable WP_DEBUG_DISPLAY mode or the port test will not work.';
+				print '<p><span style="color:red">You should disable WP_DEBUG_DISPLAY mode or the port test may not work.';
 			}
 			print '<form method="post">';
 			do_settings_sections ( PostmanAdminController::PORT_TEST_OPTIONS );
@@ -641,8 +683,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printOAuthSectionInfo() {
-			print 'You can create a Client ID for your Gmail account at the <a href="https://console.developers.google.com/">Google Developers Console</a> (look under APIs -> Credentials). The Redirect URI to use is show below. There are <a href="https://wordpress.org/plugins/postman-smtp/installation/">additional instructions</a> on the Postman homepage.';
-			print ' Note: Gmail will NOT let you send from any email address <b>other than your own</b>.';
+			if ($this->options->getHostname () == PostmanGmailAuthenticationManager::SMTP_HOSTNAME) {
+				print 'You can create a Client ID for your Gmail account at the <a href="https://console.developers.google.com/">Google Developers Console</a> (Use ). The Redirect URI to use is show below. There are <a href="https://wordpress.org/plugins/postman-smtp/installation/">additional instructions</a> on the Postman homepage.';
+				print ' Note: Gmail will NOT let you send from any email address <b>other than your own</b>.';
+			} else {
+				print 'You can create a Client ID for your Hotmail account at the <a href="https://account.live.com/developers/applications/create">Microsoft account Developer Center</a>. In API Settings, use the Redirect URL shown below. Then copy the Client ID and Client Secret from App Settings to here. There are <a href="https://wordpress.org/plugins/postman-smtp/installation/">additional instructions</a> on the Postman homepage.';
+				print ' Note: Hotmail will NOT let you send from any email address <b>other than your own</b>.';
+			}
 		}
 		
 		/**
@@ -669,21 +716,48 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 * Get the settings option array and print one of its values
 		 */
-		public function authorization_type_callback() {
+		public function authentication_type_callback() {
 			$authType = $this->options->getAuthorizationType ();
-			print '<select id="input_authorization_type" class="input_authorization_type" name="postman_options[authorization_type]">';
+			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::AUTHENTICATION_TYPE );
 			print '<option id="input_auth_type_none" value="' . PostmanOptions::AUTHENTICATION_TYPE_NONE . '"';
 			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_NONE ? 'selected="selected"' : '' );
 			print '>None</option>';
-			print '<option id="input_auth_type_ssl" value="' . PostmanOptions::AUTHENTICATION_TYPE_BASIC_SSL . '"';
-			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_BASIC_SSL ? 'selected="selected"' : '' );
-			print '>Basic (SSL)</option>';
-			print '<option id="input_auth_type_tls" value="' . PostmanOptions::AUTHENTICATION_TYPE_BASIC_TLS . '"';
-			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_BASIC_TLS ? 'selected="selected"' : '' );
-			print '>Basic (TLS)</option>';
+			print '<option id="input_auth_type_plain" value="' . PostmanOptions::AUTHENTICATION_TYPE_PLAIN . '"';
+			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_PLAIN ? 'selected="selected"' : '' );
+			print '>Plain</option>';
+			print '<option id="input_auth_type_login" value="' . PostmanOptions::AUTHENTICATION_TYPE_LOGIN . '"';
+			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_LOGIN ? 'selected="selected"' : '' );
+			print '>Login</option>';
+			print '<option id="input_auth_type_crammd5" value="' . PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 . '"';
+			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 ? 'selected="selected"' : '' );
+			print '>CRAM-MD5</option>';
 			print '<option id="input_auth_type_oauth2" value="' . PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 . '"';
-			printf ( '%s', (empty ( $authType ) || $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) ? 'selected="selected"' : '' );
-			print '>OAuth2 (Gmail)</option></select>';
+			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 ? 'selected="selected"' : '' );
+			print '>OAuth 2.0</option>';
+			print '</select>';
+		}
+		/**
+		 * Get the settings option array and print one of its values
+		 */
+		public function encryption_type_for_password_section_callback() {
+			$this->encryption_type_callback ( PostmanOptions::AUTHENTICATION_TYPE_PASSWORD );
+		}
+		public function encryption_type_for_oauth2_section_callback() {
+			$this->encryption_type_callback ( PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
+		}
+		public function encryption_type_callback($section) {
+			$authType = $this->options->getEncryptionType ();
+			print '<select id="input_enc_type_' . $section . '" class="input_authorization_type" name="postman_options[enc_type]">';
+			print '<option id="input_enc_type_none" value="' . PostmanOptions::ENCRYPTION_TYPE_NONE . '"';
+			printf ( '%s', $authType == PostmanOptions::ENCRYPTION_TYPE ? 'selected="selected"' : '' );
+			print '>None</option>';
+			print '<option id="input_enc_type_ssl" value="' . PostmanOptions::ENCRYPTION_TYPE_SSL . '"';
+			printf ( '%s', $authType == PostmanOptions::ENCRYPTION_TYPE_SSL ? 'selected="selected"' : '' );
+			print '>SSL</option>';
+			print '<option id="input_enc_type_tls" value="' . PostmanOptions::ENCRYPTION_TYPE_TLS . '"';
+			printf ( '%s', $authType == PostmanOptions::ENCRYPTION_TYPE_TLS ? 'selected="selected"' : '' );
+			print '>TLS</option>';
+			print '</select>';
 		}
 		
 		/**
@@ -718,7 +792,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function redirect_url_callback() {
-			printf ( '<textarea onClick="this.setSelectionRange(0, this.value.length)" readonly="readonly" type="text" id="oauth_redirect_url" cols="60" >%s</textarea>', POSTMAN_HOME_PAGE_URL );
+			printf ( '<textarea onClick="this.setSelectionRange(0, this.value.length)" readonly="readonly" type="text" id="oauth_redirect_url" cols="60" >%s</textarea>', PostmanSmtpHostProperties::getRedirectUrl ( $this->options->getHostname () ) );
 		}
 		
 		/**
@@ -782,6 +856,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function test_email_callback() {
 			printf ( '<input type="text" id="test_email" name="postman_test_options[test_email]" value="%s" />', isset ( $this->testOptions ['test_email'] ) ? esc_attr ( $this->testOptions ['test_email'] ) : '' );
 		}
+		
 		/**
 		 */
 		public function displayTopNavigation() {
@@ -923,6 +998,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		<legend> Setup Authentication </legend>
 		<section class="wizard-auth-oauth2">
 			<p>
+			<?php if($this->options->getHostname() == 'smtp.gmail.com') {?>
 				Open the <a href="https://console.developers.google.com/"
 					target="_new">Google Developer Console</a>, create a Client ID
 				using the Redirect URI below, and enter the Client ID and Client
@@ -930,6 +1006,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 					href="https://wordpress.org/plugins/postman-smtp/faq/"
 					target="_new">How do I get a Google Client ID?</a> in the F.A.Q.
 				for help.
+			<?php } else { ?>
+				Open the <a
+					href="https://account.live.com/developers/applications/create"
+					target="_new">Microsoft Developer Center</a>, create an Application
+				using the Redirect URI below, and enter the Client ID and Client
+				Secret. See <a
+					href="https://wordpress.org/plugins/postman-smtp/faq/"
+					target="_new">How do I get a Windows Live Client ID?</a> in the F.A.Q.
+				for help.
+			<?php } ?>
 			</p>
 			<label for="redirect_uri">Redirect URI</label><br />
 			<?php echo $this->redirect_url_callback(); ?><br /> <label
@@ -948,9 +1034,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 				likely your email address.</p>
 			<p class="port-explanation-tls">Choose None for no authentication at
 				all (not recommended).</p>
-			<label class="input_authorization_type" for="redirect_uri">Authentication
+			<label class="input_authorization_type" for="auth_type">Authentication
 				Type</label>
-			<?php echo $this->authorization_type_callback(); ?>
+			<?php echo $this->authentication_type_callback(); ?>
+			<label class="input_encryption_type" for="enc_type">Encryption Type</label>
+			<?php echo $this->encryption_type_for_password_section_callback(); ?>
 			<br /> <label for="username">Username</label>
 			<?php echo $this->basic_auth_username_callback();?>
 			<label for="password">Password</label>

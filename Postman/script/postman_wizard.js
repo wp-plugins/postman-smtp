@@ -1,5 +1,11 @@
 portsChecked = 0;
 portsToCheck = 0;
+function hide($el) {
+	$el.hide();
+}
+function show($el) {
+	$el.show();
+}
 jQuery(document)
 		.ready(
 				function() {
@@ -58,26 +64,22 @@ jQuery(document)
 												return false;
 											}
 
-											// look-up the email address for the
-											// smtp server
 											if (currentIndex === 0) {
+												// page 1 : look-up the email
+												// address for the smtp server
 												checkEmail(jQuery(
 														postman_input_sender_email)
 														.val());
 											} else if (currentIndex === 1) {
+												// page 2 : check the port
 												portsChecked = 0;
 												portsToCheck = 0;
 												// allow the user to choose any
 												// port
-												jQuery(
-														'#input_auth_type_oauth2')
-														.removeAttr('disabled');
-												jQuery('#input_auth_type_ssl')
-														.removeAttr('disabled');
-												jQuery('#input_auth_type_tls')
-														.removeAttr('disabled');
-												jQuery('#input_auth_type_none')
-														.removeAttr('disabled');
+												enable(jQuery('#input_auth_type_oauth2'));
+												enable(jQuery('#input_auth_type_ssl'));
+												enable(jQuery('#input_auth_type_tls'));
+												enable(jQuery('#input_auth_type_none'));
 												wizardPortTest(
 														jQuery('#wizard_port_465'),
 														jQuery('#wizard_port_465_status'));
@@ -97,69 +99,44 @@ jQuery(document)
 												var hostname = jQuery(
 														postman_hostname_element_name)
 														.val();
-												jQuery(
-														'#input_authorization_type')
+												// on the Auth type drop-down,
+												// add events to enable/disable
+												// user/pass
+												jQuery(postman_input_auth_type)
 														.click(
 																function() {
 																	var $val = jQuery(
-																			'#input_authorization_type')
+																			postman_input_auth_type)
 																			.val();
+																	var $userEl = jQuery(postman_input_basic_username);
+																	var $pwEl = jQuery(postman_input_basic_password);
 																	if ($val == 'none') {
-																		jQuery(
-																				'#input_basic_auth_username')
-																				.attr(
-																						'disabled',
-																						'disabled');
-																		jQuery(
-																				'#input_basic_auth_password')
-																				.attr(
-																						'disabled',
-																						'disabled');
+																		disable($userEl);
+																		disable($pwEl);
 																	} else {
-																		jQuery(
-																				'#input_basic_auth_username')
-																				.removeAttr(
-																						'disabled');
-																		jQuery(
-																				'#input_basic_auth_password')
-																				.removeAttr(
-																						'disabled');
+																		enable($userEl);
+																		enable($pwEl);
 																	}
 																});
-												jQuery('.wizard-auth-oauth2')
-														.hide();
-												jQuery('.wizard-auth-basic')
-														.show();
-												jQuery(
-														'#input_basic_auth_username')
-														.removeAttr('disabled');
-												jQuery(
-														'#input_basic_auth_password')
-														.removeAttr('disabled');
-												jQuery(
-														'#input_auth_type_oauth2')
-														.attr('disabled',
-																'disabled');
+												hide(jQuery('.wizard-auth-oauth2'));
+												hide(jQuery('.wizard-auth-basic'));
+												enable(jQuery(postman_input_basic_username));
+												enable(jQuery(postman_input_basic_password));
+												disable(jQuery('#input_auth_type_oauth2'));
 												if (hostname == 'smtp.gmail.com'
-														&& chosenPort == 465) {
+														&& chosenPort == 465
+														|| hostname == 'smtp.live.com'
+														&& chosenPort == 587) {
+													show(jQuery('.wizard-auth-oauth2'));
 													jQuery(
-															'.wizard-auth-oauth2')
-															.show();
-													jQuery('.wizard-auth-basic')
-															.hide();
-													jQuery(
-															input_authorization_type)
+															postman_input_auth_type)
 															.val('oauth2');
-													jQuery(
-															'.input_authorization_type')
-															.hide();
-													jQuery(
-															'#input_auth_type_oauth2')
-															.removeAttr(
-																	'disabled');
+													hide(jQuery('.input_authorization_type'));
+													enable(jQuery('#input_auth_type_oauth2'));
 												} else if (chosenPort == 465) {
+													show(jQuery('.wizard-auth-basic'));
 													jQuery(
-															input_authorization_type)
+															postman_input_auth_type)
 															.val('basic-ssl');
 													jQuery(
 															'.input_authorization_type')
@@ -171,8 +148,9 @@ jQuery(document)
 															'.port-explanation-tls')
 															.hide();
 												} else if (chosenPort == 587) {
+													show(jQuery('.wizard-auth-basic'));
 													jQuery(
-															input_authorization_type)
+															postman_input_auth_type)
 															.val('basic-tls');
 													jQuery(
 															'#input_auth_type_ssl')
@@ -188,18 +166,19 @@ jQuery(document)
 															'.port-explanation-tls')
 															.show();
 												} else {
+													show(jQuery('.wizard-auth-basic'));
 													jQuery(
-															input_authorization_type)
+															postman_input_auth_type)
 															.val('none');
 													jQuery(
 															'.input_authorization_type')
 															.hide();
 													jQuery(
-															'#input_basic_auth_username')
+															postman_input_basic_username)
 															.attr('disabled',
 																	'disabled');
 													jQuery(
-															'#input_basic_auth_password')
+															postman_input_basic_password)
 															.attr('disabled',
 																	'disabled');
 												}
@@ -331,20 +310,22 @@ function wizardPortTest(input, state) {
 								el465.prop("checked", true);
 								el587.attr('disabled', 'disabled');
 								portInput.val(465);
-							} else if (totalAvail == 1) {
-								var enable = true;
-								if (el25_avail) {
-									el25.prop('checked', enable);
-									portInput.val(25);
-								}
-								if (el465_avail) {
-									el465.prop('checked', enable);
-									portInput.val(465);
-								}
-								if (el587_avail) {
-									el587.prop('checked', enable);
-									portInput.val(587);
-								}
+							} else if (hostname == 'smtp.live.com'
+									&& el587_avail) {
+								// select OAuth2 if the user can use it
+								el25.attr('disabled', 'disabled');
+								el465.attr('disabled', 'disabled');
+								el587.attr("checked", true);
+								portInput.val(587);
+							} else if (el465_avail) {
+								el465.prop("checked", true);
+								portInput.val(465);
+							} else if (el587_avail) {
+								el587.attr("checked", true);
+								portInput.val(587);
+							} else if (el25_avail) {
+								el25.attr("checked", true);
+								portInput.val(25);
 							} else {
 								if (totalAvail == 0) {
 									alert("No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.")

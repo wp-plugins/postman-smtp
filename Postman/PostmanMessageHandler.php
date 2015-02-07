@@ -7,12 +7,17 @@ class PostmanMessageHandler {
 	const ERROR_MESSAGE = 'POSTMAN_ERROR_MESSAGE';
 	const WARNING_MESSAGE = 'POSTMAN_WARNING_MESSAGE';
 	const SUCCESS_MESSAGE = 'POSTMAN_SUCCESS_MESSAGE';
+	private $logger;
 	
 	/**
 	 *
 	 * @param unknown $options        	
 	 */
 	function __construct(PostmanOptions $options) {
+		$this->logger = new PostmanLogger ( get_class ( $this ) );
+		
+		$this->logger->debug ( 'Starting' );
+		
 		if (! $options->isSendingEmailAllowed ( PostmanAuthorizationToken::getInstance () )) {
 			add_action ( 'admin_notices', Array (
 					$this,
@@ -50,10 +55,11 @@ class PostmanMessageHandler {
 	function addMessage($message) {
 		$_SESSION [PostmanMessageHandler::SUCCESS_MESSAGE] = $message;
 	}
-	
 	public function displayConfigurationRequiredWarning() {
-		$message = PostmanAdminController::NAME . ' is <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_URL . '">Configure</a> the plugin.';
-		$this->displayWarningMessage ( $message );
+		if (! (isset ( $_GET ['page'] ) && $_GET ['page'] == 'postman')) {
+			$message = PostmanAdminController::NAME . ' is <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_URL . '">Configure</a> the plugin.';
+			$this->displayWarningMessage ( $message );
+		}
 	}
 	//
 	public function displaySuccessSessionMessage() {

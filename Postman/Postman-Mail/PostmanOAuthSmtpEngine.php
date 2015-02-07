@@ -60,8 +60,10 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 			
 			$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$this->accessToken}\1\1" );
 			assert ( ! empty ( $initClientRequestEncoded ) );
+			$encryption = ($port == 465 ? 'ssl' : 'tls');
+			$this->getLogger ()->debug ( 'Sending mail to ' . $hostname . ':' . $port . ' as ' . $senderEmail . ' using ' . $encryption );
 			$config = array (
-					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => PostmanOAuthSmtpEngine::SSL_VALUE,
+					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => $encryption,
 					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_PORT => $port,
 					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_AUTH => PostmanOAuthSmtpEngine::AUTH_VALUE,
 					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_XOAUTH2_REQUEST => $initClientRequestEncoded 

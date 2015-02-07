@@ -11,35 +11,40 @@ Kiss your email problems good-bye with Postman, the first and only OAuth-enabled
 
 == Description ==
 
-Have you been having [trouble getting Gmail to send your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking traditional SMTP SSL/TLS](https://support.google.com/accounts/answer/6010255) mechanisms with Gmail.
-
-If you don't care about security, you could ask Gmail to [allow less secure apps](https://support.google.com/accounts/answer/6010255) - but this workaround isn't available if you're using Google Apps to manage a domain.
+Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking traditional SMTP SSL/TLS](https://support.google.com/accounts/answer/6010255) mechanisms with Gmail.
 
 Postman is a next-generation SMTP plugin which provides WordPress with a more secure mechanism for sending email. When your site generates an email, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
 
 ###Features:
-* Send mail to any host with SMTP/SMTPS(SSL/TLS/STARTTLS) like the other 172 WordPress SMTP plugins
-* Send mail to Gmail with SMTPS using OAuth 2.0 - even if your Google password changes, your messages will still be sent!
+* Send mail to any host with SMTP/SMTPS like the other 172 WordPress SMTP plugins
+* Send mail to Gmail or Hotmail using OAuth 2.0. Your mail will be delivered even if your password changes.
+* Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Easy to use Setup Wizard takes the guesswork out of configuring email
-* Built-in TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Supports international characters, HTML mail and MultiPart/MIME
+* Supports No/Plain/Login/CRAM-MD5/OAuth2 authentication
+* Supports SSL/TLS encryption
 
 ### Requirements:
-* PHP 5.3 (or later) with OpenSSL; or PHP 5.2 with SPL and OpenSSL 
 * WordPress 3.9 (or later)
-* For SMTP: an email account with any 3rd-party provider, and connectivity to their SMTP server
-* For SMTP with OAuth2: a Gmail/Google Apps account, a Client ID from Google Developer and connectivity to the Gmail server
+* PHP 5.3 (or later) with OpenSSL; or PHP 5.2 with SPL and OpenSSL 
+* For generic SMTP: connectivity to an SMTP server that you have an account on
+* For Gmail: a Gmail/Google Apps account, a Client ID from Google Developer and connectivity to the Gmail server
+* For Hotmail/Windows Live/Outlook: an Outlook.com account, a Client ID from Microsoft Developer Center and connectivity to the Windows Live server
 
 == Frequently Asked Questions == 
 
 = Why should I use Postman over the hundreds of other SMTP plugins? =
 
-If you have Gmail, Postman doesn't require your password to send email, only an *authentication token*. Other plugins need your Google password and will break if you change it, but Postman will continue to send email without interruption.
+If you use other plugins to send Gmail or Hotmail, they're going to ask you for your Google or Outlook.com password. And if you change your password, those same plugins will break. But Postman will continue to deliver your email without interruption.
 
-> **NEVER give out your Google password** to a 3rd-party or 3rd-party program that you don't fully trust.
+> **NEVER give out your Google or Outlook.com password** to a 3rd-party or 3rd-party program that you don't fully trust.
+
+= Why do I need OAuth? Can't I just tell Google to allow less secure apps? =
+
+Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. And this option is not available if you're using Google Apps to manage a domain.
 
 = What is a Client ID? =
-To use Postman, every website needs their own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one. Google has [instructions for creating a Client ID](https://developers.google.com/console/help/new/#generatingoauth2), which I've expanded upon below.
+To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one.
 
 = How do I get a Google Client ID? =
 1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose Create Project, or use an existing project if you have one.
@@ -49,6 +54,9 @@ To use Postman, every website needs their own Client ID. The Client ID is used t
 1. For the *Application Type* use "Web application". The first URL (*Authorized Javascript origins*) will be the root address of your WordPress site. The second URL (*Authorized Redirect URIs*) will be the the redirect URI shown on *Postman's Settings page*.
 1. Choose *Create Client ID*.
 1. Now you can enter the Client ID and Client Secret shown into Postman's settings page.
+
+= How can I tell my email provider to revoke OAuth access to my outbox? =
+If you have a Google Account, from the [Google Developer's Console](https://console.developers.google.com/) use the Delete button under the Client ID. If you have a Microsoft Live account, from the [Microsoft account Developer Center](https://account.live.com/developers/applications/index), select the Application and choose Delete Application.
 
 == Installation ==
 
@@ -90,6 +98,10 @@ Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested
 1. If you use [Google Apps](http://admin.google.com) to manage your domain, you HAVE to use OAuth
 
 == Changelog ==
+
+= 1.3 - 2015-02-06 =
+* Sending Hotmail/Outlook.com email now supported with OAuth 2.0 authentication!
+* 
 
 = 1.2 - 2015-02-04 =
 * Support for Sender Name and Reply-To. Turns out Google no longer honours the MUA Return-Path header due to spam. Makes sense, so I've decided not to add a Return-Path field to Postman's configuration.

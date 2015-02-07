@@ -1,7 +1,7 @@
 <?php
 if (! class_exists ( "PostmanWpMail" )) {
 	
-	require_once 'Postman-Core/PostmanSmtpEngineFactory.php';
+	require_once 'Postman-Mail/PostmanSmtpEngineFactory.php';
 	require_once 'PostmanStats.php';
 	
 	/**

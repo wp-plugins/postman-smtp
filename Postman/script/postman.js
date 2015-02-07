@@ -1,29 +1,55 @@
+if (!console)
+	console = {
+		log : function() {
+		}
+	}
+debug = false;
+function disable($el) {
+	$el.attr('disabled', 'disabled');
+}
+function enable($el) {
+	$el.removeAttr('disabled');
+}
 jQuery(document).ready(function() {
-	showHide();
+	$passwordSection = jQuery(postman_smtp_section_element_name);
+	$oauthSection = jQuery(postman_oauth_section_element_name);
+	$passwordEncryptionInput = jQuery(postman_enc_for_password_el);
+	$oauthEncryptionInput = jQuery(postman_enc_for_oauth2_el);
+	console.debug('el:passwordSection=' + $passwordSection);
+	console.debug('el:oauthSection=' + $oauthSection);
+	console.debug('el:passwordEncryption=' + $passwordEncryptionInput.val());
+	console.debug('el:oauthEncryption=' + $oauthEncryptionInput.val());
+	switchBetweenPasswordAndOAuth();
 	var $el = jQuery(postman_input_auth_type);
 	$el.change(function() {
-		showHide();
+		switchBetweenPasswordAndOAuth();
 	});
 });
-function showHide() {
-	var $el = jQuery(postman_input_auth_type);
-	$choice = $el.val();
-	var $div1 = jQuery(postman_smtp_section_element_name);
-	var $div2 = jQuery(postman_oauth_section_element_name);
-	var $divEl = jQuery(postman_port_element_name);
-	var $hostnameEl = jQuery(postman_hostname_element_name);
+function switchBetweenPasswordAndOAuth() {
+	var $choice = jQuery(postman_input_auth_type).val();
+	console.debug('showHide:authenticationType=' + $choice);
 	if ($choice == postman_auth_none) {
-		$div1.hide();
-		$div2.hide();
-	} else if ($choice == postman_auth_basic_ssl) {
-		$div1.show();
-		$div2.hide();
-	} else if ($choice == postman_auth_basic_tls) {
-		$div1.show();
-		$div2.hide();
+		if (!debug) {
+			$passwordSection.hide();
+			$oauthSection.hide();
+		}
+		disable($passwordEncryptionInput);
+		disable($oauthEncryptionInput);
+	} else if ($choice == postman_auth_plain || $choice == postman_auth_login
+			|| $choice == postman_auth_crammd5) {
+		if (!debug) {
+			$passwordSection.show();
+			$oauthSection.hide();
+		}
+		enable($passwordEncryptionInput);
+		disable($oauthEncryptionInput);
 	} else {
-		$div1.hide();
-		$div2.show();
+		if (!debug) {
+			$passwordSection.hide();
+			$oauthSection.show();
+		}
+		disable($passwordEncryptionInput);
+		enable($oauthEncryptionInput);
 	}
 }
 jQuery(document).ready(function() {

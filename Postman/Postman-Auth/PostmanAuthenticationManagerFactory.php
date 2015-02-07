@@ -25,7 +25,7 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 			$hostname = $options->getHostname ();
 			$clientId = $options->getClientId ();
 			$clientSecret = $options->getClientSecret ();
-			$senderEmail = $options->getSenderEmail();
+			$senderEmail = $options->getSenderEmail ();
 			if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $hostname == PostmanGmailAuthenticationManager::SMTP_HOSTNAME) {
 				$authenticationManager = new PostmanGmailAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $senderEmail );
 			} else if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $hostname == PostmanHotmailAuthenticationManager::SMTP_HOSTNAME) {

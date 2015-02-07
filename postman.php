@@ -6,6 +6,7 @@
  * Description: Gmail not working? Never lose another email again! Postman is the first and only WordPress plugin to implement Google's OAuth 2.0 authentication. Setup is a breeze with the Configuration Wizard and built-in TCP Port Tester. Enjoy worry-free, guaranteed delivery even if your password changes!
  * Version: 1.2
  * Author: Jason Hendriks
+ * Text Domain: postman
  * Author URI: https://profiles.wordpress.org/jasonhendriks/
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -16,56 +17,67 @@ define ( 'POSTMAN_HOME_PAGE_URL', admin_url ( 'options-general.php' ) . '?page=p
 define ( 'POSTMAN_PLUGIN_VERSION', '1.2' );
 define ( 'POSTMAN_TCP_TIMEOUT', 30 );
 
-// load the core of Postman
-require_once 'Postman/Postman-Core/core.php';
-
-// bind Postman to wp_mail()
-require_once 'Postman/PostmanWpMailBinder.php';
-
-// display messages to the user
-require_once 'Postman/PostmanMessageHandler.php';
-
-// the options screen
-require_once 'Postman/AdminController.php';
-
 // start all the fuss
-postmanSmtpMain ();
+postmanMain ();
 
 // all the fuss
-function postmanSmtpMain() {
-	if (! isset ( $_SESSION )) {
-		// needs predictable access to the session
-		session_start ();
-	}
+function postmanMain() {
 	
 	// create a Logger
+	require_once 'Postman/Postman-Common/postman-common.php';
 	$logger = new PostmanLogger ( 'postman.php' );
 	
 	// load the options and the auth token
+	require_once 'Postman/PostmanOptions.php';
 	$options = PostmanOptions::getInstance ();
+	require_once 'Postman/PostmanAuthorizationToken.php';
 	$authToken = PostmanAuthorizationToken::getInstance ();
 	
-	// check if there is an auth token waiting for granting and possibly exit
-	if (isset ( $_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
-		unset ( $_SESSION [PostmanAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
-		if (isset ( $_GET ['code'] )) {
-			postmanHandleAuthorizationGrant ( $logger, $options, $authToken );
-			// redirect to plugin setting page and exit()
-			header ( 'Location: ' . esc_url ( POSTMAN_HOME_PAGE_URL ) );
-			exit ();
-		}
-	}
+	$basename = plugin_basename ( __FILE__ );
 	
 	// create a message handler
+	require_once 'Postman/PostmanMessageHandler.php';
 	$messageHandler = new PostmanMessageHandler ( $options );
 	
-	// start the Postman Admin page
-	$kevinCostner = new PostmanAdminController ( plugin_basename ( __FILE__ ), $options, $authToken, $messageHandler );
-	
 	// bind to wp_mail()
+	require_once 'Postman/PostmanWpMailBinder.php';
 	new PostmanWpMailBinder ( plugin_basename ( __FILE__ ), $options, $authToken, $messageHandler );
+	
+	if (is_admin ()) {
+		// load the core of Postman
+		require_once 'Postman/Postman-Mail/core.php';
+		require_once 'Postman/Postman-Auth/core.php';
+		
+		// check if there is an auth token waiting for granting and possibly exit
+		if (isset ( $_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
+			unset ( $_SESSION [PostmanAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
+			if (isset ( $_GET ['code'] )) {
+				postmanHandleAuthorizationGrant ( $logger, $options, $authToken );
+				// redirect to plugin setting page and exit()
+				header ( 'Location: ' . esc_url ( POSTMAN_HOME_PAGE_URL ) );
+				exit ();
+			}
+		}
+		
+		// Adds "Settings" link to the plugin action page
+		add_filter ( 'plugin_action_links_' . $basename, 'modifyLinksOnPluginsListPage' );
+		
+		if (true || isset ( $_GET ['page'] ) && $_GET ['page'] == 'postman') {
+			
+			// the options screen
+			require_once 'Postman/AdminController.php';
+			
+			// start the Postman Admin page
+			$kevinCostner = new PostmanAdminController ( $basename, $options, $authToken, $messageHandler );
+		}
+	}
 }
-
+function modifyLinksOnPluginsListPage($links) {
+	$mylinks = array (
+			'<a href="' . esc_url ( POSTMAN_HOME_PAGE_URL ) . '">Settings</a>' 
+	);
+	return array_merge ( $links, $mylinks );
+}
 /**
  * Handles the authorization grant
  */

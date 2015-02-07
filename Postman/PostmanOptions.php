@@ -10,22 +10,28 @@ if (! class_exists ( "PostmanOptions" )) {
 		const POSTMAN_OPTIONS = 'postman_options';
 		
 		// the options fields
-		const CLIENT_ID = 'oauth_client_id';
-		const CLIENT_SECRET = 'oauth_client_secret';
-		const AUTHENTICATION_TYPE = 'authorization_type';
 		const SENDER_EMAIL = 'sender_email';
 		const SENDER_NAME = 'sender_name';
-		const PORT = 'port';
-		const HOSTNAME = 'hostname';
 		const REPLY_TO = 'reply_to';
 		const TEST_EMAIL = 'test_email';
+		const HOSTNAME = 'hostname';
+		const PORT = 'port';
+		const AUTHENTICATION_TYPE = 'auth_type';
+		const AUTHENTICATION_TYPE_NONE = 'none';
+		const AUTHENTICATION_TYPE_PASSWORD = 'password';
+		const AUTHENTICATION_TYPE_PLAIN = 'plain';
+		const AUTHENTICATION_TYPE_LOGIN = 'login';
+		const AUTHENTICATION_TYPE_CRAMMD5 = 'crammd5';
+		const AUTHENTICATION_TYPE_OAUTH2 = 'oauth2';
+		const ENCRYPTION_TYPE = 'enc_type';
+		const ENCRYPTION_TYPE_NONE = 'none';
+		const ENCRYPTION_TYPE_SSL = 'ssl';
+		const ENCRYPTION_TYPE_TLS = 'tls';
+		const CLIENT_ID = 'oauth_client_id';
+		const CLIENT_SECRET = 'oauth_client_secret';
 		const BASIC_AUTH_USERNAME = 'basic_auth_username';
 		const BASIC_AUTH_PASSWORD = 'basic_auth_password';
-		const AUTHENTICATION_TYPE_NONE = 'none';
-		const AUTHENTICATION_TYPE_BASIC_SSL = 'basic-ssl';
-		const AUTHENTICATION_TYPE_BASIC_TLS = 'basic-tls';
-		const AUTHENTICATION_TYPE_OAUTH2 = 'oauth2';
-		const ALLOW_SENDER_NAME_OVERRIDE = 'allow_sender_name_override';
+		const PREVENT_SENDER_NAME_OVERRIDE = 'prevent_sender_name_override';
 		
 		// options data
 		private $options;
@@ -70,7 +76,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			}
 			if ($authType == PostmanOptions::AUTHENTICATION_TYPE_NONE) {
 				return true;
-			} else if ($authType == PostmanOptions::AUTHENTICATION_TYPE_BASIC_SSL || $authType == PostmanOptions::AUTHENTICATION_TYPE_BASIC_TLS) {
+			} else if ($authType == PostmanOptions::AUTHENTICATION_TYPE_LOGIN || $authType == PostmanOptions::AUTHENTICATION_TYPE_PLAIN) {
 				return ! empty ( $username ) && ! empty ( $password );
 			} else if ($authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
 				$accessToken = $token->getAccessToken ();
@@ -132,6 +138,10 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::AUTHENTICATION_TYPE] ))
 				return $this->options [PostmanOptions::AUTHENTICATION_TYPE];
 		}
+		public function getEncryptionType() {
+			if (isset ( $this->options [PostmanOptions::ENCRYPTION_TYPE] ))
+				return $this->options [PostmanOptions::ENCRYPTION_TYPE];
+		}
 		public function getUsername() {
 			if (isset ( $this->options [PostmanOptions::BASIC_AUTH_USERNAME] ))
 				return $this->options [PostmanOptions::BASIC_AUTH_USERNAME];
@@ -145,11 +155,11 @@ if (! class_exists ( "PostmanOptions" )) {
 				return $this->options [PostmanOptions::REPLY_TO];
 		}
 		public function isSenderNameOverridePrevented() {
-			if (isset ( $this->options [PostmanOptions::ALLOW_SENDER_NAME_OVERRIDE] ))
-				return $this->options [PostmanOptions::ALLOW_SENDER_NAME_OVERRIDE];
+			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] ))
+				return $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE];
 		}
-		public function setSenderNameOverrideAllowed($allow) {
-			$this->options [PostmanOptions::ALLOW_SENDER_NAME_OVERRIDE] = $allow;
+		public function setSenderNameOverridePrevented($prevent) {
+			$this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] = $prevent;
 		}
 		public function setHostname($hostname) {
 			$this->options [PostmanOptions::HOSTNAME] = $hostname;
@@ -196,6 +206,9 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (! isset ( $this->options [PostmanOptions::AUTHENTICATION_TYPE] )) {
 				$this->setAuthorizationType ( $authType );
 			}
+		}
+		public function setEncryptionType($encType) {
+			$this->options [PostmanOptions::ENCRYPTION_TYPE] = $encType;
 		}
 		public function setUsername($username) {
 			$this->options [PostmanOptions::BASIC_AUTH_USERNAME];

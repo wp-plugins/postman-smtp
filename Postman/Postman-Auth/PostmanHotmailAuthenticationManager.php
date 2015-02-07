@@ -23,16 +23,13 @@ if (! class_exists ( "PostmanHotmailAuthenticationManager" )) {
 		 * Get a Client ID from https://account.live.com/developers/applications/index
 		 */
 		public function __construct($clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken) {
+			assert ( ! empty ( $clientId ) );
+			assert ( ! empty ( $clientSecret ) );
+			assert ( ! empty ( $authorizationToken ) );
 			$logger = new PostmanLogger ( get_class ( $this ) );
 			parent::__construct ( $clientId, $clientSecret, $authorizationToken, $logger );
 		}
 		
-		/**
-		 */
-		public function refreshToken() {
-			$this->logger->debug ( 'Refreshing Token' );
-		}
-
 		/**
 		 * **********************************************
 		 * Request Verification Code
@@ -48,13 +45,15 @@ if (! class_exists ( "PostmanHotmailAuthenticationManager" )) {
 		 * **********************************************
 		 */
 		public function requestVerificationCode() {
+			$_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] = 'hotmail';
 			
 			$endpoint = PostmanHotmailAuthenticationManager::WINDOWS_LIVE_ENDPOINT;
 			$scope = PostmanHotmailAuthenticationManager::SCOPE;
 			
-			$callbackUrl = admin_url ( POSTMAN_HOME_PAGE_URL );
-			$callbackUrl = 'http://computer.com/~jasonhendriks/wordpress/wp-admin/options-general.php';
-			$authUrl = $endpoint . "?client_id=" . $this->getClientId () . "&client_secret=" . $this->getClientSecret () . "&response_type=code&scope=" . $scope . "&redirect_uri=" . urlencode ( admin_url ( $callbackUrl ) );
+			$callbackUrl = PostmanSmtpHostProperties::getRedirectUrl ( PostmanSmtpHostProperties::WINDOWS_LIVE_HOSTNAME );
+			// $callbackUrl = 'http://computer.com/~jasonhendriks/wordpress/wp-admin/options-general.php';
+			
+			$authUrl = $endpoint . "?client_id=" . $this->getClientId () . "&client_secret=" . $this->getClientSecret () . "&response_type=code&scope=" . $scope . "&redirect_uri=" . urlencode ( $callbackUrl );
 			
 			$this->getLogger ()->debug ( "authenticating with windows live" );
 			header ( 'Location: ' . filter_var ( $authUrl, FILTER_SANITIZE_URL ) );
@@ -72,12 +71,32 @@ if (! class_exists ( "PostmanHotmailAuthenticationManager" )) {
 		public function tradeCodeForToken() {
 			if (isset ( $_GET ['code'] )) {
 				$code = $_GET ['code'];
-				$this->logger->debug ( 'Found authorization code in request header' );
+				$this->getLogger ()->debug ( 'Found authorization code in request header' );
+				$getAccessToken_value = $this->getAccessToken ( 'https://login.live.com/oauth20_token.srf', admin_url ( 'options-general.php' ), $code );
+				$getatoken = json_decode ( stripslashes ( $getAccessToken_value ) );
+				
+				if ($getatoken === NULL) {
+					$atoken = $getAccessToken_value;
+				} else {
+					$atoken = $this->decodeReceivedAuthorizationToken ( $getatoken );
+				}
+				$this->getLogger ()->debug ( "atoken " . $atoken );
+				
 				return true;
 			} else {
-				$this->logger->debug ( 'Expected code in the request header but found none - user probably denied request' );
+				$this->getLogger ()->debug ( 'Expected code in the request header but found none - user probably denied request' );
 				return false;
 			}
+		}
+		
+		/**
+		 * (non-PHPdoc)
+		 * https://msdn.microsoft.com/en-us/library/hh243649.aspx#refresh
+		 *
+		 * @see PostmanAuthenticationManager::refreshToken()
+		 */
+		public function refreshToken() {
+			$this->getLogger ()->debug ( 'Refreshing Token' );
 		}
 	}
 }
