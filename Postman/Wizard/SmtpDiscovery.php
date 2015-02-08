@@ -24,6 +24,7 @@ if (! class_exists ( 'SmtpDiscovery' )) {
 			}
 		}
 		public function validateEmail($email) {
+			return true; // TODO figure out a replacement for deprecated eregi
 			$exp = "^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$";
 			return eregi ( $exp, $email );
 		}

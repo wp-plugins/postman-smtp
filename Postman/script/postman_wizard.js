@@ -9,6 +9,7 @@ function show($el) {
 jQuery(document)
 		.ready(
 				function() {
+					jQuery(postman_input_sender_email).focus();
 					jQuery("#postman_wizard")
 							.steps(
 									{
@@ -90,6 +91,8 @@ jQuery(document)
 														jQuery('#wizard_port_587'),
 														jQuery('#wizard_port_587_status'));
 											} else if (currentIndex === 2) {
+												// user has clicked next from
+												// ports-check page
 												if (portsChecked < portsToCheck) {
 													alert('Please wait for the check to finish');
 													return false;
@@ -124,15 +127,37 @@ jQuery(document)
 												enable(jQuery(postman_input_basic_password));
 												disable(jQuery('#input_auth_type_oauth2'));
 												if (hostname == 'smtp.gmail.com'
-														&& chosenPort == 465
-														|| hostname == 'smtp.live.com'
-														&& chosenPort == 587) {
+														&& chosenPort == 465) {
+													getRedirectUrl(
+															hostname,
+															postman_redirect_url_el,
+															'#wizard_oauth2_help');
 													show(jQuery('.wizard-auth-oauth2'));
 													jQuery(
 															postman_input_auth_type)
 															.val('oauth2');
 													hide(jQuery('.input_authorization_type'));
 													enable(jQuery('#input_auth_type_oauth2'));
+													jQuery(
+															postman_enc_for_password_el)
+															.val(
+																	postman_enc_ssl);
+												} else if (hostname == 'smtp.live.com'
+														&& chosenPort == 587) {
+													getRedirectUrl(
+															hostname,
+															postman_redirect_url_el,
+															'#wizard_oauth2_help');
+													show(jQuery('.wizard-auth-oauth2'));
+													jQuery(
+															postman_input_auth_type)
+															.val('oauth2');
+													hide(jQuery('.input_authorization_type'));
+													enable(jQuery('#input_auth_type_oauth2'));
+													jQuery(
+															postman_enc_for_password_el)
+															.val(
+																	postman_enc_tls);
 												} else if (chosenPort == 465) {
 													show(jQuery('.wizard-auth-basic'));
 													jQuery(
@@ -257,6 +282,16 @@ function checkEmail(email) {
 		jQuery(postman_hostname_element_name).val(response.hostname);
 	});
 }
+function getRedirectUrl(hostname, el_redirect_url, el_help_text) {
+	var data = {
+		'action' : 'get_redirect_url',
+		'hostname' : hostname
+	};
+	jQuery.post(ajaxurl, data, function(response) {
+		jQuery(el_redirect_url).val(response.redirect_url);
+		jQuery(el_help_text).html(response.help_text);
+	});
+}
 function wizardPortTest(input, state) {
 	var hostname = jQuery(postman_hostname_element_name).val();
 	var el = jQuery(input);
@@ -284,7 +319,7 @@ function wizardPortTest(input, state) {
 					data,
 					function(response) {
 						portsChecked++;
-						if (response.success) {
+						if (true || response.success) {
 							elState.html('Ok');
 							el.removeAttr('disabled');
 						} else {

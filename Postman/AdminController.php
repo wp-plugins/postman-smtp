@@ -83,6 +83,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 						$this,
 						'checkEmail' 
 				) );
+				add_action ( 'wp_ajax_get_redirect_url', array (
+						$this,
+						'getRedirectUrl' 
+				) );
 			}
 			
 			add_action ( 'admin_menu', array (
@@ -214,14 +218,20 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( 'postman_script', 'postman_input_sender_email', '#input_' . PostmanOptions::SENDER_EMAIL );
 			wp_localize_script ( 'postman_script', 'postman_port_element_name', '#input_' . PostmanOptions::PORT );
 			wp_localize_script ( 'postman_script', 'postman_hostname_element_name', '#input_' . PostmanOptions::HOSTNAME );
+
+			// the enc input
 			wp_localize_script ( 'postman_script', 'postman_enc_for_password_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_PASSWORD );
 			wp_localize_script ( 'postman_script', 'postman_enc_for_oauth2_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
-			
+			wp_localize_script ( 'postman_script', 'postman_enc_none', PostmanOptions::ENCRYPTION_TYPE_NONE );
+			wp_localize_script ( 'postman_script', 'postman_enc_ssl', PostmanOptions::ENCRYPTION_TYPE_SSL );
+			wp_localize_script ( 'postman_script', 'postman_enc_tls', PostmanOptions::ENCRYPTION_TYPE_TLS );
+				
 			// the password inputs
 			wp_localize_script ( 'postman_script', 'postman_input_basic_username', '#input_basic_auth_' . PostmanOptions::BASIC_AUTH_USERNAME );
 			wp_localize_script ( 'postman_script', 'postman_input_basic_password', '#input_basic_auth_' . PostmanOptions::BASIC_AUTH_PASSWORD );
 			
 			// the auth input
+			wp_localize_script ( 'postman_script', 'postman_redirect_url_el', '#oauth_redirect_url' );
 			wp_localize_script ( 'postman_script', 'postman_input_auth_type', '#input_' . PostmanOptions::AUTHENTICATION_TYPE );
 			wp_localize_script ( 'postman_script', 'postman_auth_none', PostmanOptions::AUTHENTICATION_TYPE_NONE );
 			wp_localize_script ( 'postman_script', 'postman_auth_login', PostmanOptions::AUTHENTICATION_TYPE_LOGIN );
@@ -385,7 +395,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			$this->sanitizeString ( 'Encryption Type', PostmanOptions::ENCRYPTION_TYPE, $input, $new_input );
 			$this->sanitizeString ( 'Hostname', PostmanOptions::HOSTNAME, $input, $new_input );
-			if (isset ( $input [PostmanOptions::PORT] )) {
+			if (! empty ( $input [PostmanOptions::PORT] )) {
 				$port = absint ( $input [PostmanOptions::PORT] );
 				if ($port > 0) {
 					$this->sanitizeInt ( 'Port', PostmanOptions::PORT, $input, $new_input );
@@ -396,20 +406,21 @@ if (! class_exists ( "PostmanAdminController" )) {
 				}
 			}
 			// check the auth type AFTER the hostname because we reset the hostname if auth is bad
-			if (isset ( $input [PostmanOptions::AUTHENTICATION_TYPE] )) {
-				$newAuthType = $input [PostmanOptions::AUTHENTICATION_TYPE];
-				$this->logger->debug ( 'Sanitize Authorization Type ' . $newAuthType );
-				if ($newAuthType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
-					if (isset ( $input [PostmanOptions::HOSTNAME] ) && PostmanSmtpHostProperties::isOauthHost ( $input [PostmanOptions::HOSTNAME] )) {
-						$this->sanitizeString ( 'Authorization Type', PostmanOptions::AUTHENTICATION_TYPE, $input, $new_input );
-					} else {
-						$new_input [PostmanOptions::AUTHENTICATION_TYPE] = $this->options->getAuthorizationType ();
-						$new_input [PostmanOptions::HOSTNAME] = $this->options->getHostname ();
-						add_settings_error ( PostmanOptions::AUTHENTICATION_TYPE, PostmanOptions::AUTHENTICATION_TYPE, 'Your host must either be Gmail or Windows Live to enable OAuth2', 'error' );
-						$success = false;
-					}
-				}
-			}
+			$this->sanitizeString ( 'Authorization Type', PostmanOptions::AUTHENTICATION_TYPE, $input, $new_input );
+			
+			// if (isset ( $input [PostmanOptions::AUTHENTICATION_TYPE] )) {
+			// $newAuthType = $input [PostmanOptions::AUTHENTICATION_TYPE];
+			// $this->logger->debug ( 'Sanitize Authorization Type ' . $newAuthType );
+			// if ($newAuthType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
+			// if (isset ( $input [PostmanOptions::HOSTNAME] ) && PostmanSmtpHostProperties::isOauthHost ( $input [PostmanOptions::HOSTNAME] )) {
+			// } else {
+			// $new_input [PostmanOptions::AUTHENTICATION_TYPE] = $this->options->getAuthorizationType ();
+			// $new_input [PostmanOptions::HOSTNAME] = $this->options->getHostname ();
+			// add_settings_error ( PostmanOptions::AUTHENTICATION_TYPE, PostmanOptions::AUTHENTICATION_TYPE, 'Your host must either be Gmail or Windows Live to enable OAuth2', 'error' );
+			// $success = false;
+			// }
+			// }
+			// }
 			$this->sanitizeString ( 'Sender Name', PostmanOptions::SENDER_NAME, $input, $new_input );
 			$this->sanitizeString ( 'Client ID', PostmanOptions::CLIENT_ID, $input, $new_input );
 			$this->sanitizeString ( 'Client Secret', PostmanOptions::CLIENT_SECRET, $input, $new_input );
@@ -418,7 +429,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->sanitizeString ( 'Reply-To', PostmanOptions::REPLY_TO, $input, $new_input );
 			$this->sanitizeString ( 'Sender Name Override', PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, $input, $new_input );
 			
-			if (isset ( $input [PostmanOptions::SENDER_EMAIL] )) {
+			if (! empty ( $input [PostmanOptions::SENDER_EMAIL] )) {
 				$newEmail = $input [PostmanOptions::SENDER_EMAIL];
 				$this->logger->debug ( 'Sanitize Sender Email ' . $newEmail );
 				if ($this->validateEmail ( $newEmail )) {
@@ -432,8 +443,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			// set a request parameter
 			if ($success) {
-				$this->logger->debug ( 'Validation Success' );
-				$_SESSION ['postman_action'] = 'save_success';
+				if (! isset ( $_SESSION ['postman_action'] )) {
+					$this->logger->debug ( 'Validation Success' );
+					$_SESSION ['postman_action'] = 'save_success';
+				}
 			} else {
 				$this->logger->debug ( 'Validation Failure' );
 				$_SESSION ['postman_action'] = 'save_failure';
@@ -521,8 +534,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 				if ($this->options->getAuthorizationType () != PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $this->options->getHostname () == PostmanGmailAuthenticationManager::SMTP_HOSTNAME) {
 					print '<p><span style="color:yellow; background-color:#AAA; padding:2px 5px; font-size:1.2em">Warning</span><p><span style="margin:0 10px">Google may silently discard messages sent with basic authentication. Change your authentication type to OAuth 2.0.</span></p>';
 				}
-			} else if ($this->options->isPermissionNeeded ( $this->authorizationToken )) {
-				print '<p><span style="color:red; padding:2px 5px; font-size:1.1em">Status: You have entered a Client ID and Client Secret, but you have not received permission from Google.</span></p>';
 			} else {
 				print '<p><span style="color:red; padding:2px 5px; font-size:1.1em">Status: Postman is not properly configured.</span></p>';
 			}
@@ -537,6 +548,34 @@ if (! class_exists ( "PostmanAdminController" )) {
 			);
 			wp_send_json ( $response );
 		}
+		function getRedirectUrl() {
+			$hostname = $_POST ['hostname'];
+			assert ( ! empty ( $hostname ) );
+			$redirectUrl = PostmanSmtpHostProperties::getRedirectUrl ( $hostname );
+			if ($hostname == 'smtp.gmail.com') {
+				$help = 'Open the <a href="https://console.developers.google.com/" target="_new">Google Developer Console</a>, create a Client ID
+				using the Redirect URI below, and enter the Client ID and Client
+				Secret. See <a
+					href="https://wordpress.org/plugins/postman-smtp/faq/"
+					target="_new">How do I get a Google Client ID?</a> in the F.A.Q.
+				for help.';
+			} else {
+				$help = '				Open the <a
+					href="https://account.live.com/developers/applications/create"
+					target="_new">Microsoft Developer Center</a>, create an Application
+				using the Redirect URI below, and enter the Client ID and Client
+				Secret. See <a
+					href="https://wordpress.org/plugins/postman-smtp/faq/"
+					target="_new">How do I get a Windows Live Client ID?</a> in the F.A.Q.
+				for help.
+			';
+			}
+			$response = array (
+					'redirect_url' => (! empty ( $redirectUrl ) ? $redirectUrl : ''),
+					'help_text' => $help
+			);
+			wp_send_json ( $response );
+		}
 		/**
 		 */
 		public function generateManuallyConfigureHtml() {
@@ -545,15 +584,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
 			do_settings_sections ( PostmanAdminController::SMTP_OPTIONS );
 			$authType = $this->options->getAuthorizationType ();
-			if (isset ( $authType ) && $authType != PostmanOptions::AUTHENTICATION_TYPE_NONE) {
-				print '<div id="smtp_section">';
-				do_settings_sections ( PostmanAdminController::BASIC_AUTH_OPTIONS );
-				print ('</div>') ;
-				print '<div id="oauth_section">';
-				do_settings_sections ( PostmanAdminController::OAUTH_OPTIONS );
-				print ('</div>') ;
-				do_settings_sections ( PostmanAdminController::ADVANCED_OPTIONS );
-			}
+			print '<div id="smtp_section">';
+			do_settings_sections ( PostmanAdminController::BASIC_AUTH_OPTIONS );
+			print ('</div>') ;
+			print '<div id="oauth_section">';
+			do_settings_sections ( PostmanAdminController::OAUTH_OPTIONS );
+			print ('</div>') ;
+			do_settings_sections ( PostmanAdminController::ADVANCED_OPTIONS );
 			submit_button ();
 			print '</form>';
 		}
@@ -683,12 +720,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printOAuthSectionInfo() {
-			if ($this->options->getHostname () == PostmanGmailAuthenticationManager::SMTP_HOSTNAME) {
+			if (PostmanSmtpHostProperties::isGmail ( $this->options->getHostname () )) {
 				print 'You can create a Client ID for your Gmail account at the <a href="https://console.developers.google.com/">Google Developers Console</a> (Use ). The Redirect URI to use is show below. There are <a href="https://wordpress.org/plugins/postman-smtp/installation/">additional instructions</a> on the Postman homepage.';
 				print ' Note: Gmail will NOT let you send from any email address <b>other than your own</b>.';
-			} else {
+			} else if (PostmanSmtpHostProperties::isHotmail ( $this->options->getHostname () )) {
 				print 'You can create a Client ID for your Hotmail account at the <a href="https://account.live.com/developers/applications/create">Microsoft account Developer Center</a>. In API Settings, use the Redirect URL shown below. Then copy the Client ID and Client Secret from App Settings to here. There are <a href="https://wordpress.org/plugins/postman-smtp/installation/">additional instructions</a> on the Postman homepage.';
 				print ' Note: Hotmail will NOT let you send from any email address <b>other than your own</b>.';
+			} else {
+				print 'You must enter an OAuth-capable hostname.';
 			}
 		}
 		
@@ -778,14 +817,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function sender_name_callback() {
-			printf ( '<input type="text" id="input_sender_name" name="postman_options[sender_name]" value="%s"/>', null !== $this->options->getSenderName () ? esc_attr ( $this->options->getSenderName () ) : '' );
+			printf ( '<input type="text" id="input_sender_name" name="postman_options[sender_name]" value="%s" size="40" />', null !== $this->options->getSenderName () ? esc_attr ( $this->options->getSenderName () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function sender_email_callback() {
-			printf ( '<input type="text" id="input_sender_email" name="postman_options[sender_email]" value="%s" class="required email"/>', null !== $this->options->getSenderEmail () ? esc_attr ( $this->options->getSenderEmail () ) : '' );
+			printf ( '<input type="text" id="input_sender_email" name="postman_options[sender_email]" value="%s" size="40" class="required email"/>', null !== $this->options->getSenderEmail () ? esc_attr ( $this->options->getSenderEmail () ) : '' );
 		}
 		
 		/**
@@ -948,7 +987,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		<p>Let's begin! Please enter the email address and name you'd like to
 			send mail from.</p>
 		<p>
-			Please note that to reduce Spam, many email services will <em>not</em>
+			Please note that to combat Spam, many email services will <em>not</em>
 			let you send from an e-mail address that is not your own.
 		</p>
 
@@ -971,9 +1010,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	<h1>SMTP Server Port</h1>
 	<fieldset>
 		<legend>Choose an SMTP port</legend>
-		<p>Your email provider will dictate which port to use. Normally, Port
-			25 (SMTP) is plaintext, Port 465 (SMTPS-SSL) is encrypted and Port
-			587 (SMTPS-TLS/STARTTLS) offers both.</p>
+		<p>Your email provider will dictate which port to use.</p>
 
 		<label for="hostname">SMTP Server Port</label>
 		<?php echo $this->port_callback(array('style'=>'style="display:none"')); ?>
@@ -1003,26 +1040,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	<fieldset>
 		<legend> Setup Authentication </legend>
 		<section class="wizard-auth-oauth2">
-			<p>
-			<?php if($this->options->getHostname() == 'smtp.gmail.com') {?>
-				Open the <a href="https://console.developers.google.com/"
-					target="_new">Google Developer Console</a>, create a Client ID
-				using the Redirect URI below, and enter the Client ID and Client
-				Secret. See <a
-					href="https://wordpress.org/plugins/postman-smtp/faq/"
-					target="_new">How do I get a Google Client ID?</a> in the F.A.Q.
-				for help.
-			<?php } else { ?>
-				Open the <a
-					href="https://account.live.com/developers/applications/create"
-					target="_new">Microsoft Developer Center</a>, create an Application
-				using the Redirect URI below, and enter the Client ID and Client
-				Secret. See <a
-					href="https://wordpress.org/plugins/postman-smtp/faq/"
-					target="_new">How do I get a Windows Live Client ID?</a> in the F.A.Q.
-				for help.
-			<?php } ?>
-			</p>
+			<p id="wizard_oauth2_help">Help.</p>
 			<label for="redirect_uri">Redirect URI</label><br />
 			<?php echo $this->redirect_url_callback(); ?><br /> <label
 				for="client_id">Client ID</label><br />
@@ -1059,7 +1077,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			<p>Once you click Finish below, these settings will be saved. Then at
 				the main Postman Settings screen, be sure to:</p>
 			<ul style='margin-left: 20px'>
-				<li>Request Permission from Google to allow Postman to send email
+				<li>Request Permission from the Email Provider to allow Postman to send email
 					and</li>
 				<li>Send yourself a Test Email to make sure everything is working!</li>
 			</ul>

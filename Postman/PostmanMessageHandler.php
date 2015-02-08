@@ -8,6 +8,7 @@ class PostmanMessageHandler {
 	const WARNING_MESSAGE = 'POSTMAN_WARNING_MESSAGE';
 	const SUCCESS_MESSAGE = 'POSTMAN_SUCCESS_MESSAGE';
 	private $logger;
+	private $options;
 	
 	/**
 	 *
@@ -15,14 +16,25 @@ class PostmanMessageHandler {
 	 */
 	function __construct(PostmanOptions $options) {
 		$this->logger = new PostmanLogger ( get_class ( $this ) );
+		$this->options = $options;
 		
 		$this->logger->debug ( 'Starting' );
 		
-		if (! $options->isSendingEmailAllowed ( PostmanAuthorizationToken::getInstance () )) {
-			add_action ( 'admin_notices', Array (
-					$this,
-					'displayConfigurationRequiredWarning' 
-			) );
+		if (isset ( $_GET ['page'] ) && $_GET ['page'] == 'postman') {
+			
+			if ($this->options->isPermissionNeeded ( PostmanAuthorizationToken::getInstance () )) {
+				add_action ( 'admin_notices', Array (
+						$this,
+						'displayPermissionNeededWarning' 
+				) );
+			}
+		} else {
+			if (! $options->isSendingEmailAllowed ( PostmanAuthorizationToken::getInstance () )) {
+				add_action ( 'admin_notices', Array (
+						$this,
+						'displayConfigurationRequiredWarning' 
+				) );
+			}
 		}
 		
 		if (isset ( $_SESSION [PostmanMessageHandler::ERROR_MESSAGE] )) {
@@ -55,11 +67,13 @@ class PostmanMessageHandler {
 	function addMessage($message) {
 		$_SESSION [PostmanMessageHandler::SUCCESS_MESSAGE] = $message;
 	}
+	public function displayPermissionNeededWarning() {
+		$message = 'You have entered a Client ID and Client Secret, but you have not received permission from ' . PostmanSmtpHostProperties::getServiceName ( $this->options->getHostname () );
+		$this->displayWarningMessage ( $message );
+	}
 	public function displayConfigurationRequiredWarning() {
-		if (! (isset ( $_GET ['page'] ) && $_GET ['page'] == 'postman')) {
-			$message = PostmanAdminController::NAME . ' is <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_URL . '">Configure</a> the plugin.';
-			$this->displayWarningMessage ( $message );
-		}
+		$message = PostmanAdminController::NAME . ' is <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_URL . '">Configure</a> the plugin.';
+		$this->displayWarningMessage ( $message );
 	}
 	//
 	public function displaySuccessSessionMessage() {
