@@ -896,7 +896,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 							href="%s&postman_action=oauth_request_permission"
 							class="welcome-icon send-test-email">' . $emailCompany . '</a>', POSTMAN_HOME_PAGE_URL );
 			} else {
+				print '<div class="welcome-icon send_test_emaail">';
 				print $emailCompany;
+				print '</div>';
 			}
 			?></li>
 
@@ -905,6 +907,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 			<div class="welcome-panel-column welcome-panel-last">
 				<h4>Troubleshooting</h4>
 				<ul>
+					<li><a href="https://wordpress.org/support/plugin/postman-smtp"
+						class="welcome-icon postman_support">Postman Support Forum</a></li>
 					<li><a
 						href="<?php echo POSTMAN_HOME_PAGE_URL ?>&postman_action=run_port_test"
 						class="welcome-icon run-port-test">Run a Port Test</a></li>
@@ -913,9 +917,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
 				printf ( '<a
 							href="%s&postman_action=send_test_email"
-							class="welcome-icon send-test-email">Send an Email</a>', POSTMAN_HOME_PAGE_URL );
+							class="welcome-icon send_test_email">Send an Email</a>', POSTMAN_HOME_PAGE_URL );
 			} else {
+				print '<div class="welcome-icon send_test_emaail">';
 				print 'Send a Test Email';
+				print '</div>';
 			}
 			
 			?></li>
