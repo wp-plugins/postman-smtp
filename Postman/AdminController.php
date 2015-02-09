@@ -990,7 +990,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 						href="<?php echo POSTMAN_HOME_PAGE_URL ?>&postman_action=run_port_test"
 						class="welcome-icon run-port-test">Run a Port Test</a></li>
 					<li><a
-						href="https://wordpress.org/support/plugin/postman-smtp/other_notes/"
+						href="https://wordpress.org/plugins/postman-smtp/other_notes/"
 						class="welcome-icon postman_support">Online Support</a></li>
 				</ul>
 			</div>
