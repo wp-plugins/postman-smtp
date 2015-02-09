@@ -2,6 +2,8 @@
 if (! class_exists ( 'SmtpDiscovery' )) {
 	
 	require_once "SmtpMappings.php";
+	require_once "SmtpMappings.php";
+
 	class SmtpDiscovery {
 		private $primaryMx;
 		public function getPrimaryMxHost($hostname) {
@@ -24,9 +26,7 @@ if (! class_exists ( 'SmtpDiscovery' )) {
 			}
 		}
 		public function validateEmail($email) {
-			return true; // TODO figure out a replacement for deprecated eregi
-			$exp = "^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$";
-			return eregi ( $exp, $email );
+			return postmanValidateEmail($email);
 		}
 		public function getSmtpServer($email) {
 			$hostname = substr ( strrchr ( $email, "@" ), 1 );

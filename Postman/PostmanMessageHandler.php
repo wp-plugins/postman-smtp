@@ -18,14 +18,18 @@ class PostmanMessageHandler {
 		$this->logger = new PostmanLogger ( get_class ( $this ) );
 		$this->options = $options;
 		
-		$this->logger->debug ( 'Starting' );
-		
 		if (isset ( $_GET ['page'] ) && $_GET ['page'] == 'postman') {
 			
 			if ($this->options->isPermissionNeeded ( PostmanAuthorizationToken::getInstance () )) {
 				add_action ( 'admin_notices', Array (
 						$this,
 						'displayPermissionNeededWarning' 
+				) );
+			}
+			if (!$this->options->isAuthTypeOAuth2 () && ($this->options->isSmtpHostGmail () || $this->options->isSmtpHostHotmail ())) {
+				add_action ( 'admin_notices', Array (
+						$this,
+						'displaySwitchToOAuthWarning' 
 				) );
 			}
 		} else {
@@ -68,13 +72,19 @@ class PostmanMessageHandler {
 		$_SESSION [PostmanMessageHandler::SUCCESS_MESSAGE] = $message;
 	}
 	public function displayPermissionNeededWarning() {
-		$message = 'You have entered a Client ID and Client Secret, but you have not received permission from ' . PostmanSmtpHostProperties::getServiceName ( $this->options->getHostname () );
+		$url = sprintf ( __ ( '<a href="%1$s&postman_action=oauth_request_permission">%2$s</a>', 'postman' ), POSTMAN_HOME_PAGE_URL, 'Request Permission' );
+		$message = 'Warning: You entered a Client ID and Client Secret, but have not received permission to use it. ' . $url . ' from ' . PostmanSmtpHostProperties::getServiceName ( $this->options->getHostname () ) . '.';
 		$this->displayWarningMessage ( $message );
 	}
 	public function displayConfigurationRequiredWarning() {
-		$message = PostmanAdminController::NAME . ' is <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_URL . '">Configure</a> the plugin.';
+		$message = 'Warning: ' . PostmanAdminController::NAME . ' is <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_URL . '">Configure</a> the plugin.';
 		$this->displayWarningMessage ( $message );
 	}
+	public function displaySwitchToOAuthWarning() {
+		$message = sprintf ( 'Warning: %s may silently discard messages sent with password authentication. Change your authentication type to OAuth 2.0.</span></p>', PostmanSmtpHostProperties::getServiceName ( $this->options->getHostname () ) );
+		$this->displayWarningMessage ( $message );
+	}
+	
 	//
 	public function displaySuccessSessionMessage() {
 		$this->displaySuccessMessage ( $this->retrieveSessionMessage ( PostmanMessageHandler::SUCCESS_MESSAGE ), 'updated' );

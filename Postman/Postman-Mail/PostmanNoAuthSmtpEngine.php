@@ -18,14 +18,15 @@ if (! class_exists ( "PostmanNoAuthSmtpEngine" )) {
 			$this->setLogger ( new PostmanLogger ( get_class ( $this ) ) );
 		}
 		
-			/**
+		/**
 		 * (non-PHPdoc)
+		 * 
 		 * @see PostmanAbstractSmtpEngine::overrideSender()
 		 */
 		function overrideSender(PostmanEmailAddress $sender) {
 			return $sender;
 		}
-
+		
 		/**
 		 * (non-PHPdoc)
 		 *
@@ -37,6 +38,7 @@ if (! class_exists ( "PostmanNoAuthSmtpEngine" )) {
 			$config = array (
 					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_PORT => $port 
 			);
+			$this->getLogger ()->debug ( sprintf ( 'Routing mail via %1$s:%2$s using no auth', $hostname, $port ) );
 			return $config;
 		}
 	}

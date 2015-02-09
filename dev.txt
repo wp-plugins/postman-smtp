@@ -81,6 +81,15 @@ http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
 Sending a multipart E-Mail using PHP Mailer/wp_mail - not all clients display E-Mail
 http://stackoverflow.com/questions/22614615/sending-a-multipart-e-mail-using-php-mailer-wp-mail-not-all-clients-display-e
 
+The AUTH Command
+http://www.samlogic.net/articles/smtp-commands-reference-auth.htm
+
+SMTP Authentication with Zend
+http://framework.zend.com/manual/1.12/en/zend.mail.smtp-authentication.html
+
+SMTP Authentication [Tutorial]
+http://www.fehcom.de/qmail/smtpauth.html
+
 
 PHP Resources
 -------------

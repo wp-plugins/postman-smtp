@@ -3,7 +3,7 @@
 /*
  * Plugin Name: Postman SMTP
  * Plugin URI: https://wordpress.org/plugins/postman/
- * Description: Gmail not working? Never lose another email again! Postman is the first and only WordPress plugin to implement Google's OAuth 2.0 authentication. Setup is a breeze with the Configuration Wizard and built-in TCP Port Tester. Enjoy worry-free, guaranteed delivery even if your password changes!
+ * Description: Email not working? Never lose another message again! Postman is the first and only WordPress SMTP plugin to implement OAuth 2.0. Setup is a breeze with the Configuration Wizard and integrated Port Tester. Enjoy worry-free, guaranteed delivery even if your password changes!
  * Version: 1.2
  * Author: Jason Hendriks
  * Text Domain: postman
@@ -120,11 +120,37 @@ if (! function_exists ( 'activatePostman' )) {
 			$authToken->setExpiryTime ( $options [PostmanAuthorizationToken::EXPIRY_TIME] );
 			$authToken->save ();
 		}
-		if (! isset ( $options [PostmanOptions::AUTHENTICATION_TYPE] )) {
+		if (! isset ( $options ['authorization_type'] )) {
 			// prior to 1.0.0, access tokens were saved in authOptions without an auth type
 			// prior to 0.2.5, access tokens were save in options without an auth type
 			if (isset ( $authOptions [PostmanAuthorizationToken::ACCESS_TOKEN] ) || isset ( $options [PostmanAuthorizationToken::ACCESS_TOKEN] )) {
-				$options [PostmanOptions::AUTHENTICATION_TYPE] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+				$options ['authorization_type'] = 'oauth2';
+				update_option ( PostmanOptions::POSTMAN_OPTIONS, $options );
+			}
+		}
+		if (! isset ( $options [PostmanOptions::ENCRYPTION_TYPE] )) {
+			// prior to 1.3, encryption type was combined with authentication type
+			if (isset ( $options ['authorization_type'] )) {
+				$authType = $options ['authorization_type'];
+				switch ($authType) {
+					case 'none' :
+						$options [PostmanOptions::AUTHENTICATION_TYPE] = PostmanOptions::AUTHENTICATION_TYPE_NONE;
+						$options [PostmanOptions::ENCRYPTION_TYPE] = PostmanOptions::ENCRYPTION_TYPE_NONE;
+						break;
+					case 'basic-ssl' :
+						$options [PostmanOptions::AUTHENTICATION_TYPE] = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
+						$options [PostmanOptions::ENCRYPTION_TYPE] = PostmanOptions::ENCRYPTION_TYPE_SSL;
+						break;
+					case 'basic-tls' :
+						$options [PostmanOptions::AUTHENTICATION_TYPE] = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
+						$options [PostmanOptions::ENCRYPTION_TYPE] = PostmanOptions::ENCRYPTION_TYPE_TLS;
+						break;
+					case 'oauth2' :
+						$options [PostmanOptions::AUTHENTICATION_TYPE] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+						$options [PostmanOptions::ENCRYPTION_TYPE] = PostmanOptions::ENCRYPTION_TYPE_SSL;
+						break;
+					default :
+				}
 				update_option ( PostmanOptions::POSTMAN_OPTIONS, $options );
 			}
 		}
@@ -148,6 +174,19 @@ if (! function_exists ( 'str_getcsv' )) {
 		
 		fclose ( $fh );
 		return $row;
+	}
+}
+
+if (! function_exists ( 'postmanValidateEmail' )) {
+	/**
+	 * Validate an e-mail address
+	 *
+	 * @param unknown $email        	
+	 * @return number
+	 */
+	function postmanValidateEmail($email) {
+		$exp = "/^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$/i";
+		return preg_match ( $exp, $email );
 	}
 }
 ?>

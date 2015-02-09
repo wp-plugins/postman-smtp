@@ -37,7 +37,7 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 			// Set Basic Client info as established at the beginning of the file
 			$client->setClientId ( $this->getClientId () );
 			$client->setClientSecret ( $this->getClientSecret () );
-			$client->setRedirectUri ( PostmanSmtpHostProperties::getRedirectUrl(PostmanSmtpHostProperties::GMAIL_HOSTNAME) );
+			$client->setRedirectUri ( PostmanSmtpHostProperties::getRedirectUrl ( PostmanSmtpHostProperties::GMAIL_HOSTNAME ) );
 			$client->setScopes ( PostmanGmailAuthenticationManager::SCOPE );
 			// Set this to 'force' in order to get a new refresh_token.
 			// Useful if you had already granted access to this application.
@@ -57,7 +57,8 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 			$refreshToken = $this->getAuthorizationToken ()->getRefreshToken ();
 			assert ( ! empty ( $refreshToken ) );
 			$client->refreshToken ( $refreshToken );
-			$this->handleResponse ( $client );
+			$this->processRefreshTokenResponse ( $client->getAccessToken () );
+			// $this->handleResponse ( $client );
 		}
 		
 		/**
@@ -96,7 +97,8 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 				$this->getLogger ()->debug ( 'Found authorization code in request header' );
 				$client = $this->createGoogleClient ();
 				$client->authenticate ( $code );
-				$this->handleResponse ( $client );
+				// $this->handleResponse ( $client );
+				$this->processTradeCodeForTokenResponse ( $client->getAccessToken () );
 				return true;
 			} else {
 				$this->getLogger ()->debug ( 'Expected code in the request header but found none - user probably denied request' );
@@ -106,6 +108,9 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 		
 		/**
 		 * Parses the authorization token and extracts the expiry time, accessToken, and if this is a first-time authorization, a refresh token.
+		 *
+		 * Calling superclass processResponse instead .. but is that call to stripslashes ok??
+		 * @deprecated
 		 *
 		 * @param unknown $client        	
 		 */

@@ -12,7 +12,7 @@ if (! class_exists ( 'PostmanSmtpHostProperties' )) {
 				case PostmanSmtpHostProperties::WINDOWS_LIVE_HOSTNAME :
 					return admin_url ( 'options-general.php' );
 				default :
-					return 'NO REDIRECT URL';
+					return '';
 			}
 		}
 		static function isOauthHost($hostname) {

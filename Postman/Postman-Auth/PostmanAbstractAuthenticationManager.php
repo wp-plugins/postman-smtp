@@ -50,7 +50,7 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		public function isTokenExpired() {
 			$expireTime = ($this->authorizationToken->getExpiryTime () - PostmanGmailAuthenticationManager::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
 			$tokenHasExpired = time () > $expireTime;
-			$this->logger->debug ( 'Access Token Expiry Time is ' . $expireTime . ', expired=' . ($tokenHasExpired ? 'yes' : 'no') );
+			$this->logger->debug ( 'Access Token Expiry Time is ' . $expireTime . ', expires_in=' . ($expireTime - time ()) . ', expired=' . ($tokenHasExpired ? 'yes' : 'no') );
 			return $tokenHasExpired;
 		}
 		
@@ -89,12 +89,25 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		}
 		/**
 		 *
+		 * @return mixed
+		 */
+		protected function refreshAccessToken($accessTokenUrl, $redirectUri) {
+			// the format of the URL is
+			// client_id=CLIENT_ID&client_secret=CLIENT_SECRET&redirect_uri=REDIRECT_URI&grant_type=refresh_token&refresh_token=REFRESH_TOKEN
+			$postvals = "client_id=" . $this->getClientId () . "&client_secret=" . $this->getClientSecret () . "&redirect_uri=" . urlencode ( $redirectUri ) . "&grant_type=refresh_token&refresh_token=" . $this->getAuthorizationToken ()->getRefreshToken ();
+			// example request string
+			// client_id=0000000603DB0F&redirect_uri=http%3A%2F%2Fwww.contoso.com%2Fcallback.php&client_secret=LWILlT555GicSrIATma5qgyBXebRI&refresh_token=*LA9...//refresh token string shortened for example//...xRoX&grant_type=refresh_token
+			return $this->curl_request ( $accessTokenUrl, 'POST', $postvals );
+		}
+		/**
+		 *
 		 * @param unknown $url        	
 		 * @param unknown $method        	
 		 * @param unknown $postvals        	
 		 * @return mixed
 		 */
-		private function curl_request($url, $method, $postvals) {
+		protected function curl_request($url, $method, $postvals) {
+			$this->getLogger ()->debug ( 'Posting to url ' . $url . ' parameters: ' . $postvals );
 			$ch = curl_init ( $url );
 			if ($method == "POST") {
 				$options = array (
@@ -120,6 +133,29 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 			curl_close ( $ch );
 			// print_r($response);
 			return $response;
+		}
+		protected function processRefreshTokenResponse($response) {
+			$this->processResponse ( $response, 'Could not refresh token' );
+		}
+		protected function processTradeCodeForTokenResponse($response) {
+			$this->processResponse ( $response, 'Could not acquire authentication token' );
+		}
+		
+		/**
+		 * Decoded the received token
+		 *
+		 * @param unknown $response        	
+		 * @throws Exception
+		 */
+		private function processResponse($response, $errorMessage) {
+			$authToken = json_decode ( stripslashes ( $response ) );
+			if ($authToken === NULL) {
+				$message = $errorMessage . ': ' . $response;
+				$this->getLogger ()->error ( $message );
+				throw new Exception ( $message );
+			} else {
+				$this->decodeReceivedAuthorizationToken ( $authToken );
+			}
 		}
 	}
 }

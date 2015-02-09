@@ -1,6 +1,8 @@
 <?php
 if (! class_exists ( "PostmanOptions" )) {
 	
+	require_once 'Postman-Auth/PostmanSmtpHostProperties.php';
+	
 	/**
 	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api
 	 * http://pastebin.com/jA9sBNTk
@@ -94,9 +96,9 @@ if (! class_exists ( "PostmanOptions" )) {
 			$senderEmail = $this->getSenderEmail ();
 			$clientId = $this->getClientId ();
 			$clientSecret = $this->getClientSecret ();
-			if ($authType != PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 || empty ( $hostname ) || empty ( $port ) || empty ( $senderEmail ) || empty ( $clientId ) || empty ( $clientSecret )) {
+			if (! $this->isAuthTypeOAuth2 () || empty ( $hostname ) || empty ( $port ) || empty ( $senderEmail ) || empty ( $clientId ) || empty ( $clientSecret )) {
 				$this->logger->debug ( 'authtype: ' . $authType );
-				$this->logger->debug ( 'doesnt look like this is oatuh2' );
+				$this->logger->debug ( 'doesnt look like this is OAuth 2.0' );
 				return false;
 			} else {
 				$accessToken = $token->getAccessToken ();
@@ -165,7 +167,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			$this->options [PostmanOptions::HOSTNAME] = $hostname;
 		}
 		public function setHostnameIfEmpty($hostname) {
-			if (! isset ( $this->options [PostmanOptions::HOSTNAME] )) {
+			if (empty ( $this->options [PostmanOptions::HOSTNAME] )) {
 				$this->setHostname ( $hostname );
 			}
 		}
@@ -173,7 +175,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			$this->options [PostmanOptions::PORT] = $port;
 		}
 		public function setPortIfEmpty($port) {
-			if (! isset ( $this->options [PostmanOptions::PORT] )) {
+			if (empty ( $this->options [PostmanOptions::PORT] )) {
 				$this->setPort ( $port );
 			}
 		}
@@ -181,7 +183,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			$this->options [PostmanOptions::SENDER_EMAIL] = $senderEmail;
 		}
 		public function setSenderEmailIfEmpty($senderEmail) {
-			if (! isset ( $this->options [PostmanOptions::SENDER_EMAIL] )) {
+			if (empty ( $this->options [PostmanOptions::SENDER_EMAIL] )) {
 				$this->setSenderEmail ( $senderEmail );
 			}
 		}
@@ -189,7 +191,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			$this->options [PostmanOptions::SENDER_NAME] = $senderName;
 		}
 		public function setSenderNameIfEmpty($senderName) {
-			if (! isset ( $this->options [PostmanOptions::SENDER_NAME] )) {
+			if (empty ( $this->options [PostmanOptions::SENDER_NAME] )) {
 				$this->setSenderName ( $senderName );
 			}
 		}
@@ -225,6 +227,21 @@ if (! class_exists ( "PostmanOptions" )) {
 			$logger->debug ( 'Port=' . $this->getPort () );
 			$logger->debug ( 'Client Id=' . $this->getClientId () );
 			$logger->debug ( 'Client Secret=' . $this->getClientSecret () );
+		}
+		public function isAuthTypeOAuth2() {
+			return PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $this->getAuthorizationType ();
+		}
+		public function isAuthTypeLogin() {
+			return PostmanOptions::AUTHENTICATION_TYPE_LOGIN == $this->getAuthorizationType ();
+		}
+		public function isAuthTypeNone() {
+			return PostmanOptions::AUTHENTICATION_TYPE_NONE == $this->getAuthorizationType ();
+		}
+		public function isSmtpHostGmail() {
+			return PostmanSmtpHostProperties::isGmail ( $this->getHostname () );
+		}
+		public function isSmtpHostHotmail() {
+			return PostmanSmtpHostProperties::isHotmail ( $this->getHostname () );
 		}
 	}
 }

@@ -31,7 +31,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		
 		// page titles
 		const NAME = 'Postman SMTP';
-		const PAGE_TITLE = 'Postman SMTP Settings';
+		const PAGE_TITLE = 'Postman Settings';
 		const MENU_TITLE = 'Postman SMTP';
 		
 		// slugs
@@ -85,7 +85,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				) );
 				add_action ( 'wp_ajax_get_redirect_url', array (
 						$this,
-						'getRedirectUrl' 
+						'getAjaxRedirectUrl' 
 				) );
 			}
 			
@@ -111,6 +111,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this,
 					'handleConfigureAction' 
 			) );
+			if (isset ( $_POST ['purge_auth_token'] )) {
+				// this means the wizard completed successfully and we should destroy the stored auth token
+				$this->logger->debug ( 'Found purge auth token key' );
+				delete_option ( PostmanAuthorizationToken::OPTIONS_NAME );
+			}
 			if (isset ( $_SESSION ['postman_action'] )) {
 				$action = $_SESSION ['postman_action'];
 				unset ( $_SESSION ['postman_action'] );
@@ -167,6 +172,18 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_enqueue_style ( 'postman_style' );
 			wp_enqueue_style ( 'jquery_steps_style' );
 			wp_enqueue_script ( 'postman_script' );
+			if (isset ( $_GET ['postman_action'] )) {
+				$action = $_GET ['postman_action'];
+				if ($action == 'configure_manually') {
+					wp_enqueue_script ( 'postman_manual_config_script' );
+				} else if ($action == 'start_wizard') {
+					wp_enqueue_script ( 'postman_wizard_script' );
+					$this->displayWizard = true;
+				} else if ($action == 'run_port_test') {
+					wp_enqueue_script ( 'postman_port_test_script' );
+					$this->displayWizard = true;
+				}
+			}
 		}
 		public function handleTestEmailAction() {
 			$this->logger->debug ( 'in handleTestEmailAction()' );
@@ -197,19 +214,27 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery.steps.css', __FILE__ ), null, POSTMAN_PLUGIN_VERSION );
 			
 			wp_register_script ( 'postman_script', plugins_url ( 'script/postman.js', __FILE__ ), array (
-					'postman_wizard_script',
 					'jquery',
 					'jquery_steps_script',
 					'jquery_validation' 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_register_script ( 'jquery_steps_script', plugins_url ( 'script/jquery.steps.min.js', __FILE__ ), array (
+			wp_register_script ( 'jquery_steps_script', plugins_url ( 'script/jquery.steps.js', __FILE__ ), array (
 					'jquery' 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_register_script ( 'jquery_validation', plugins_url ( 'script/jquery.validate.min.js', __FILE__ ), array (
+			wp_register_script ( 'jquery_validation', plugins_url ( 'script/jquery.validate.js', __FILE__ ), array (
 					'jquery' 
 			), POSTMAN_PLUGIN_VERSION );
 			wp_register_script ( 'postman_wizard_script', plugins_url ( 'script/postman_wizard.js', __FILE__ ), array (
-					'jquery' 
+					'jquery',
+					'postman_script' 
+			), POSTMAN_PLUGIN_VERSION );
+			wp_register_script ( 'postman_manual_config_script', plugins_url ( 'script/postman_manual_config.js', __FILE__ ), array (
+					'jquery',
+					'postman_script' 
+			), POSTMAN_PLUGIN_VERSION );
+			wp_register_script ( 'postman_port_test_script', plugins_url ( 'script/postman_port_test.js', __FILE__ ), array (
+					'jquery',
+					'postman_script' 
 			), POSTMAN_PLUGIN_VERSION );
 			wp_localize_script ( 'postman_script', 'postman_smtp_section_element_name', 'div#smtp_section' );
 			wp_localize_script ( 'postman_script', 'postman_oauth_section_element_name', 'div#oauth_section' );
@@ -218,17 +243,23 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( 'postman_script', 'postman_input_sender_email', '#input_' . PostmanOptions::SENDER_EMAIL );
 			wp_localize_script ( 'postman_script', 'postman_port_element_name', '#input_' . PostmanOptions::PORT );
 			wp_localize_script ( 'postman_script', 'postman_hostname_element_name', '#input_' . PostmanOptions::HOSTNAME );
-
+			
 			// the enc input
 			wp_localize_script ( 'postman_script', 'postman_enc_for_password_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_PASSWORD );
 			wp_localize_script ( 'postman_script', 'postman_enc_for_oauth2_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
 			wp_localize_script ( 'postman_script', 'postman_enc_none', PostmanOptions::ENCRYPTION_TYPE_NONE );
 			wp_localize_script ( 'postman_script', 'postman_enc_ssl', PostmanOptions::ENCRYPTION_TYPE_SSL );
 			wp_localize_script ( 'postman_script', 'postman_enc_tls', PostmanOptions::ENCRYPTION_TYPE_TLS );
-				
+			// these are the ids for the <option>s in the encryption <select>
+			wp_localize_script ( 'postman_script', 'postman_enc_option_ssl_id', '.input_enc_type_ssl' );
+			wp_localize_script ( 'postman_script', 'postman_enc_option_tls_id', '.input_enc_type_tls' );
+			wp_localize_script ( 'postman_script', 'postman_enc_option_none_id', '.input_enc_type_none' );
+			// this is for both the label and input of encryption type
+			wp_localize_script ( 'postman_script', 'postman_encryption_group', '.input_encryption_type' );
+			
 			// the password inputs
-			wp_localize_script ( 'postman_script', 'postman_input_basic_username', '#input_basic_auth_' . PostmanOptions::BASIC_AUTH_USERNAME );
-			wp_localize_script ( 'postman_script', 'postman_input_basic_password', '#input_basic_auth_' . PostmanOptions::BASIC_AUTH_PASSWORD );
+			wp_localize_script ( 'postman_script', 'postman_input_basic_username', '#input_' . PostmanOptions::BASIC_AUTH_USERNAME );
+			wp_localize_script ( 'postman_script', 'postman_input_basic_password', '#input_' . PostmanOptions::BASIC_AUTH_PASSWORD );
 			
 			// the auth input
 			wp_localize_script ( 'postman_script', 'postman_redirect_url_el', '#oauth_redirect_url' );
@@ -238,6 +269,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( 'postman_script', 'postman_auth_plain', PostmanOptions::AUTHENTICATION_TYPE_PLAIN );
 			wp_localize_script ( 'postman_script', 'postman_auth_crammd5', PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 );
 			wp_localize_script ( 'postman_script', 'postman_auth_oauth2', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
+			// these are the ids for the <option>s in the auth <select>
+			wp_localize_script ( 'postman_script', 'postman_auth_option_oauth2_id', '#input_auth_type_oauth2' );
+			wp_localize_script ( 'postman_script', 'postman_auth_option_none_id', '#input_auth_type_none' );
 			
 			//
 			register_setting ( PostmanAdminController::SETTINGS_GROUP_NAME, PostmanOptions::POSTMAN_OPTIONS, array (
@@ -275,7 +309,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'port_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, 'Basic Auth Settings', array (
+			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, 'Authentication Settings', array (
 					$this,
 					'printBasicAuthSectionInfo' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS );
@@ -296,7 +330,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
 			
 			// the OAuth section
-			add_settings_section ( PostmanAdminController::OAUTH_SECTION, 'OAuth Settings', array (
+			add_settings_section ( PostmanAdminController::OAUTH_SECTION, 'Authentication Settings', array (
 					$this,
 					'printOAuthSectionInfo' 
 			), PostmanAdminController::OAUTH_OPTIONS );
@@ -520,22 +554,17 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function generateStatusHtml() {
 			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
-				print '<p><span style="color:green;padding:2px 5px; font-size:1.2em">Postman is configured.</span><p style="margin:0 10px">Sending mail from <b>' . $this->options->getSenderEmail () . '</b> via <b>' . $this->options->getHostname () . '</b>';
-				if ($this->options->getAuthorizationType () == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
+				print '<p><span style="color:green;padding:2px 5px; font-size:1.2em">Postman is configured.</span><p style="margin:0 10px">Sending mail from <b>' . $this->options->getSenderEmail () . '</b> via <b>' . $this->options->getHostname () . ':' . $this->options->getPort () . '</b>';
+				if ($this->options->isAuthTypeOAuth2 ()) {
 					print ' using OAuth 2.0 authentication.</span></p>';
 					print '<p style="margin:10px 10px"><span>Please note: <em>Plugins are forbidden from overriding the sender email address in OAuth 2.0 mode</em>.</span></p>';
-				} else if ($this->options->getAuthorizationType () == PostmanOptions::ENCRYPTION_TYPE_SSL) {
-					print ' using Basic authentication.</span></p>';
-				} else if ($this->options->getAuthorizationType () == PostmanOptions::ENCRYPTION_TYPE_TLS) {
-					print ' using Basic authentication.</span></p>';
-				} else {
+				} else if ($this->options->isAuthTypeNone ()) {
 					print ' using no authentication.</span></p>';
-				}
-				if ($this->options->getAuthorizationType () != PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $this->options->getHostname () == PostmanGmailAuthenticationManager::SMTP_HOSTNAME) {
-					print '<p><span style="color:yellow; background-color:#AAA; padding:2px 5px; font-size:1.2em">Warning</span><p><span style="margin:0 10px">Google may silently discard messages sent with basic authentication. Change your authentication type to OAuth 2.0.</span></p>';
+				} else {
+					print ' using Password (' . $this->options->getAuthorizationType () . ') authentication.</span></p>';
 				}
 			} else {
-				print '<p><span style="color:red; padding:2px 5px; font-size:1.1em">Status: Postman is not properly configured.</span></p>';
+				print '<p><span style="color:red; padding:2px 5px; font-size:1.1em">Status: Postman is not sending mail.</span></p>';
 			}
 		}
 		function checkEmail() {
@@ -548,9 +577,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 			);
 			wp_send_json ( $response );
 		}
-		function getRedirectUrl() {
+		function getAjaxRedirectUrl() {
 			$hostname = $_POST ['hostname'];
-			assert ( ! empty ( $hostname ) );
+			$response = $this->getRedirectUrl ($hostname);
+			wp_send_json ( $response );
+		}
+		function getRedirectUrl($hostname) {
 			$redirectUrl = PostmanSmtpHostProperties::getRedirectUrl ( $hostname );
 			if ($hostname == 'smtp.gmail.com') {
 				$help = 'Open the <a href="https://console.developers.google.com/" target="_new">Google Developer Console</a>, create a Client ID
@@ -559,9 +591,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 					href="https://wordpress.org/plugins/postman-smtp/faq/"
 					target="_new">How do I get a Google Client ID?</a> in the F.A.Q.
 				for help.';
-			} else {
+			} else if ($hostname == 'smtp.live.com') {
 				$help = '				Open the <a
-					href="https://account.live.com/developers/applications/create"
+					href="https://account.live.com/developers/applications/index"
 					target="_new">Microsoft Developer Center</a>, create an Application
 				using the Redirect URI below, and enter the Client ID and Client
 				Secret. See <a
@@ -569,12 +601,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 					target="_new">How do I get a Windows Live Client ID?</a> in the F.A.Q.
 				for help.
 			';
+			} else {
+				$help = '<p id="wizard_oauth2_help"><span style="color:red">You must enter an Outgoing Mail Server with OAuth 2.0 capabilities.</span></p>';
 			}
 			$response = array (
 					'redirect_url' => (! empty ( $redirectUrl ) ? $redirectUrl : ''),
-					'help_text' => $help
+					'help_text' => $help 
 			);
-			wp_send_json ( $response );
+			return $response;
 		}
 		/**
 		 */
@@ -611,7 +645,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if (WP_DEBUG_DISPLAY) {
 				print '<p><span style="color:red">You should disable WP_DEBUG_DISPLAY mode or the port test may not work.';
 			}
-			print '<form method="post">';
+			print '<form id="port_test_form_id" method="post">';
 			do_settings_sections ( PostmanAdminController::PORT_TEST_OPTIONS );
 			// This prints out all hidden setting fields
 			submit_button ( 'Begin Test', 'primary', 'begin-port-test', true );
@@ -706,7 +740,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Port Test text
 		 */
 		public function printPortTestSectionInfo() {
-			print '<p><span>This test determines which ports are open for Postman to use. A failed test indicates either that your host has placed a firewall between this site and the SMTP server, or that the SMTP server has no service running on that port.</span></p><p><span>Each test is given twenty seconds to complete and the entire test will take up to one minute to run. Javascript is required.</span></p>';
+			print '<p><span>This test determines which ports are open for Postman to use. A</span> <span style="color:red">Closed</span><span> port indicates either <ol><li>Your host has placed a firewall between this site and the SMTP server or</li><li>The SMTP server has no service running on that port</li></ol></span></p><p><span><b>If the port you are trying to use is </span> <span style="color:red"><b>Closed</b></span><span>, Postman can not deliver mail. Contact your host to get the port opened.</b></span></p><p><span style="font-size:0.9em">Each test is given twenty seconds to complete and the entire test will take up to one minute to run. Javascript is required.</span></p>';
 		}
 		
 		/**
@@ -720,15 +754,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printOAuthSectionInfo() {
-			if (PostmanSmtpHostProperties::isGmail ( $this->options->getHostname () )) {
-				print 'You can create a Client ID for your Gmail account at the <a href="https://console.developers.google.com/">Google Developers Console</a> (Use ). The Redirect URI to use is show below. There are <a href="https://wordpress.org/plugins/postman-smtp/installation/">additional instructions</a> on the Postman homepage.';
-				print ' Note: Gmail will NOT let you send from any email address <b>other than your own</b>.';
-			} else if (PostmanSmtpHostProperties::isHotmail ( $this->options->getHostname () )) {
-				print 'You can create a Client ID for your Hotmail account at the <a href="https://account.live.com/developers/applications/create">Microsoft account Developer Center</a>. In API Settings, use the Redirect URL shown below. Then copy the Client ID and Client Secret from App Settings to here. There are <a href="https://wordpress.org/plugins/postman-smtp/installation/">additional instructions</a> on the Postman homepage.';
-				print ' Note: Hotmail will NOT let you send from any email address <b>other than your own</b>.';
-			} else {
-				print 'You must enter an OAuth-capable hostname.';
-			}
+			$response = $this->getRedirectUrl($this->options->getHostname ());
+			print $response['help_text'];
 		}
 		
 		/**
@@ -786,14 +813,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		public function encryption_type_callback($section) {
 			$authType = $this->options->getEncryptionType ();
-			print '<select id="input_enc_type_' . $section . '" class="input_authorization_type" name="postman_options[enc_type]">';
-			print '<option id="input_enc_type_none" value="' . PostmanOptions::ENCRYPTION_TYPE_NONE . '"';
+			print '<select id="input_enc_type_' . $section . '" class="input_encryption_type" name="postman_options[enc_type]">';
+			print '<option class="input_enc_type_none" value="' . PostmanOptions::ENCRYPTION_TYPE_NONE . '"';
 			printf ( '%s', $authType == PostmanOptions::ENCRYPTION_TYPE ? 'selected="selected"' : '' );
 			print '>None</option>';
-			print '<option id="input_enc_type_ssl" value="' . PostmanOptions::ENCRYPTION_TYPE_SSL . '"';
+			print '<option class="input_enc_type_ssl" value="' . PostmanOptions::ENCRYPTION_TYPE_SSL . '"';
 			printf ( '%s', $authType == PostmanOptions::ENCRYPTION_TYPE_SSL ? 'selected="selected"' : '' );
 			print '>SSL</option>';
-			print '<option id="input_enc_type_tls" value="' . PostmanOptions::ENCRYPTION_TYPE_TLS . '"';
+			print '<option class="input_enc_type_tls" value="' . PostmanOptions::ENCRYPTION_TYPE_TLS . '"';
 			printf ( '%s', $authType == PostmanOptions::ENCRYPTION_TYPE_TLS ? 'selected="selected"' : '' );
 			print '>TLS</option>';
 			print '</select>';
@@ -918,9 +945,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			<div class="welcome-panel-column">
 				<h4>Actions</h4>
 				<ul>
-					<li><a
-						href="<?php echo POSTMAN_HOME_PAGE_URL ?>&postman_action=delete_data"
-						class="welcome-icon oauth-authorize">Delete plugin data</a></li>
 					<li><?php
 			$emailCompany = 'Request OAuth Permission';
 			if ($this->options->getHostname () == PostmanGmailAuthenticationManager::SMTP_HOSTNAME) {
@@ -940,17 +964,15 @@ if (! class_exists ( "PostmanAdminController" )) {
 				print '</div>';
 			}
 			?></li>
+					<li><a
+						href="<?php echo POSTMAN_HOME_PAGE_URL ?>&postman_action=delete_data"
+						class="welcome-icon oauth-authorize">Delete plugin data</a></li>
 
 				</ul>
 			</div>
 			<div class="welcome-panel-column welcome-panel-last">
 				<h4>Troubleshooting</h4>
 				<ul>
-					<li><a href="https://wordpress.org/support/plugin/postman-smtp"
-						class="welcome-icon postman_support">Postman Support Forum</a></li>
-					<li><a
-						href="<?php echo POSTMAN_HOME_PAGE_URL ?>&postman_action=run_port_test"
-						class="welcome-icon run-port-test">Run a Port Test</a></li>
 					<li><?php
 			
 			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
@@ -964,6 +986,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 			
 			?></li>
+					<li><a
+						href="<?php echo POSTMAN_HOME_PAGE_URL ?>&postman_action=run_port_test"
+						class="welcome-icon run-port-test">Run a Port Test</a></li>
+					<li><a
+						href="https://wordpress.org/support/plugin/postman-smtp/other_notes/"
+						class="welcome-icon postman_support">Online Support</a></li>
 				</ul>
 			</div>
 		</div>
@@ -980,6 +1008,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 <h3>Postman Setup Wizard</h3>
 
 <form id="postman_wizard" method="post" action="options.php">
+	<input type="hidden" name="purge_auth_token" value="purge_auth_token" />
 	<?php settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME ); ?>
 	<h1>Email Address</h1>
 	<fieldset>
@@ -1042,8 +1071,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		<section class="wizard-auth-oauth2">
 			<p id="wizard_oauth2_help">Help.</p>
 			<label for="redirect_uri">Redirect URI</label><br />
-			<?php echo $this->redirect_url_callback(); ?><br /> <label
-				for="client_id">Client ID</label><br />
+			<?php echo $this->redirect_url_callback(); ?><br /> 
+			<?php echo $this->encryption_type_for_oauth2_section_callback(); ?>
+			<label for="client_id">Client ID</label><br />
 			<?php echo $this->oauth_client_id_callback(); ?><br /> <label
 				for="client_id">Client Secret</label> <br />
 			<?php echo $this->oauth_client_secret_callback(); ?><br />
@@ -1077,8 +1107,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 			<p>Once you click Finish below, these settings will be saved. Then at
 				the main Postman Settings screen, be sure to:</p>
 			<ul style='margin-left: 20px'>
-				<li>Request Permission from the Email Provider to allow Postman to send email
-					and</li>
+				<li>Request Permission from the Email Provider to allow Postman to
+					send email and</li>
 				<li>Send yourself a Test Email to make sure everything is working!</li>
 			</ul>
 		</section>

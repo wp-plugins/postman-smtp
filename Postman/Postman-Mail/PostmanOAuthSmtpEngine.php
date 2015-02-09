@@ -20,16 +20,22 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		
 		// set in the constructor
 		private $accessToken;
+		private $authenticationType;
+		private $encryptionType;
 		
 		/**
 		 *
 		 * @param unknown $senderEmail        	
 		 * @param unknown $accessToken        	
 		 */
-		function __construct($accessToken) {
+		function __construct($accessToken, $authType, $encType) {
 			assert ( ! empty ( $accessToken ) );
+			assert ( ! empty ( $authType ) );
+			assert ( ! empty ( $encType ) );
 			$this->setLogger ( new PostmanLogger ( get_class ( $this ) ) );
 			$this->accessToken = $accessToken;
+			$this->authenticationType = $authType;
+			$this->encryptionType = $encType;
 		}
 		
 		/**
@@ -60,14 +66,13 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 			
 			$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$this->accessToken}\1\1" );
 			assert ( ! empty ( $initClientRequestEncoded ) );
-			$encryption = ($port == 465 ? 'ssl' : 'tls');
-			$this->getLogger ()->debug ( 'Sending mail to ' . $hostname . ':' . $port . ' as ' . $senderEmail . ' using ' . $encryption );
 			$config = array (
-					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => $encryption,
+					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => $this->encryptionType,
 					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_PORT => $port,
-					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_AUTH => PostmanOAuthSmtpEngine::AUTH_VALUE,
+					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_AUTH => $this->authenticationType,
 					PostmanOAuthSmtpEngine::ZEND_TRANSPORT_CONFIG_XOAUTH2_REQUEST => $initClientRequestEncoded 
 			);
+			$this->getLogger ()->debug ( sprintf ( 'Routing mail via %1$s:%2$s using auth:%3$s over ssl:%4$s for user %5$s', $hostname, $port, $this->authenticationType, $this->encryptionType, $senderEmail ) );
 			return $config;
 		}
 	}

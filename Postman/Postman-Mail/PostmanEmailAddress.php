@@ -36,8 +36,7 @@ if (! class_exists ( 'PostmanEmailAddress' )) {
 		 * @return number
 		 */
 		public function validateEmail($email) {
-			$exp = "/^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$/i";
-			return preg_match ( $exp, $email );
+			return postmanValidateEmail ( $email );
 		}
 		
 		/**

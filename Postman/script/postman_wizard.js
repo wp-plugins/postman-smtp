@@ -1,275 +1,234 @@
 portsChecked = 0;
 portsToCheck = 0;
-function hide($el) {
-	$el.hide();
-}
-function show($el) {
-	$el.show();
-}
-jQuery(document)
-		.ready(
-				function() {
-					jQuery(postman_input_sender_email).focus();
-					jQuery("#postman_wizard")
-							.steps(
-									{
-										bodyTag : "fieldset",
-										headerTag : "h1",
-										transitionEffect : "slideLeft",
-										stepsOrientation : "vertical",
-										autoFocus : true,
-										onStepChanging : function(event,
-												currentIndex, newIndex) {
-											// Always allow going backward even
-											// if the current step contains
-											// invalid
-											// fields!
-											if (currentIndex > newIndex) {
-												return true;
-											}
+jQuery(document).ready(
+		function() {
+			jQuery(postman_input_sender_email).focus();
+			jQuery("#postman_wizard")
+					.steps(
+							{
+								bodyTag : "fieldset",
+								headerTag : "h1",
+								transitionEffect : "slideLeft",
+								stepsOrientation : "vertical",
+								autoFocus : true,
+								onStepChanging : function(event, currentIndex,
+										newIndex) {
+									return handleStepChange(event,
+											currentIndex, newIndex,
+											jQuery(this));
 
-											// Forbid suppressing "Warning" step
-											// if the user is to young
-											if (newIndex === 3
-													&& Number(jQuery("#age")
-															.val()) < 18) {
-												return false;
-											}
-
-											var form = jQuery(this);
-
-											// Clean up if user went backward
-											// before
-											if (currentIndex < newIndex) {
-												// To remove error styles
-												jQuery(
-														".body:eq("
-																+ newIndex
-																+ ") label.error",
-														form).remove();
-												jQuery(
-														".body:eq(" + newIndex
-																+ ") .error",
-														form).removeClass(
-														"error");
-											}
-
-											// Disable validation on fields that
-											// are disabled or hidden.
-											form.validate().settings.ignore = ":disabled,:hidden";
-
-											// Start validation; Prevent going
-											// forward if false
-											valid = form.valid();
-											if (!valid) {
-												return false;
-											}
-
-											if (currentIndex === 0) {
-												// page 1 : look-up the email
-												// address for the smtp server
-												checkEmail(jQuery(
-														postman_input_sender_email)
-														.val());
-											} else if (currentIndex === 1) {
-												// page 2 : check the port
-												portsChecked = 0;
-												portsToCheck = 0;
-												// allow the user to choose any
-												// port
-												enable(jQuery('#input_auth_type_oauth2'));
-												enable(jQuery('#input_auth_type_ssl'));
-												enable(jQuery('#input_auth_type_tls'));
-												enable(jQuery('#input_auth_type_none'));
-												wizardPortTest(
-														jQuery('#wizard_port_465'),
-														jQuery('#wizard_port_465_status'));
-												wizardPortTest(
-														jQuery('#wizard_port_25'),
-														jQuery('#wizard_port_25_status'));
-												wizardPortTest(
-														jQuery('#wizard_port_587'),
-														jQuery('#wizard_port_587_status'));
-											} else if (currentIndex === 2) {
-												// user has clicked next from
-												// ports-check page
-												if (portsChecked < portsToCheck) {
-													alert('Please wait for the check to finish');
-													return false;
-												}
-												var chosenPort = jQuery(
-														'#input_port').val();
-												var hostname = jQuery(
-														postman_hostname_element_name)
-														.val();
-												// on the Auth type drop-down,
-												// add events to enable/disable
-												// user/pass
-												jQuery(postman_input_auth_type)
-														.click(
-																function() {
-																	var $val = jQuery(
-																			postman_input_auth_type)
-																			.val();
-																	var $userEl = jQuery(postman_input_basic_username);
-																	var $pwEl = jQuery(postman_input_basic_password);
-																	if ($val == 'none') {
-																		disable($userEl);
-																		disable($pwEl);
-																	} else {
-																		enable($userEl);
-																		enable($pwEl);
-																	}
-																});
-												hide(jQuery('.wizard-auth-oauth2'));
-												hide(jQuery('.wizard-auth-basic'));
-												enable(jQuery(postman_input_basic_username));
-												enable(jQuery(postman_input_basic_password));
-												disable(jQuery('#input_auth_type_oauth2'));
-												if (hostname == 'smtp.gmail.com'
-														&& chosenPort == 465) {
-													getRedirectUrl(
-															hostname,
-															postman_redirect_url_el,
-															'#wizard_oauth2_help');
-													show(jQuery('.wizard-auth-oauth2'));
-													jQuery(
-															postman_input_auth_type)
-															.val('oauth2');
-													hide(jQuery('.input_authorization_type'));
-													enable(jQuery('#input_auth_type_oauth2'));
-													jQuery(
-															postman_enc_for_password_el)
-															.val(
-																	postman_enc_ssl);
-												} else if (hostname == 'smtp.live.com'
-														&& chosenPort == 587) {
-													getRedirectUrl(
-															hostname,
-															postman_redirect_url_el,
-															'#wizard_oauth2_help');
-													show(jQuery('.wizard-auth-oauth2'));
-													jQuery(
-															postman_input_auth_type)
-															.val('oauth2');
-													hide(jQuery('.input_authorization_type'));
-													enable(jQuery('#input_auth_type_oauth2'));
-													jQuery(
-															postman_enc_for_password_el)
-															.val(
-																	postman_enc_tls);
-												} else if (chosenPort == 465) {
-													show(jQuery('.wizard-auth-basic'));
-													jQuery(
-															postman_input_auth_type)
-															.val('basic-ssl');
-													jQuery(
-															'.input_authorization_type')
-															.hide();
-													jQuery(
-															'.port-explanation-ssl')
-															.show();
-													jQuery(
-															'.port-explanation-tls')
-															.hide();
-												} else if (chosenPort == 587) {
-													show(jQuery('.wizard-auth-basic'));
-													jQuery(
-															postman_input_auth_type)
-															.val('basic-tls');
-													jQuery(
-															'#input_auth_type_ssl')
-															.attr('disabled',
-																	'disabled');
-													jQuery(
-															'.input_authorization_type')
-															.show();
-													jQuery(
-															'.port-explanation-ssl')
-															.hide();
-													jQuery(
-															'.port-explanation-tls')
-															.show();
-												} else {
-													show(jQuery('.wizard-auth-basic'));
-													jQuery(
-															postman_input_auth_type)
-															.val('none');
-													jQuery(
-															'.input_authorization_type')
-															.hide();
-													jQuery(
-															postman_input_basic_username)
-															.attr('disabled',
-																	'disabled');
-													jQuery(
-															postman_input_basic_password)
-															.attr('disabled',
-																	'disabled');
-												}
-											}
-
-											return true;
-
-										},
-										onStepChanged : function(event,
-												currentIndex, priorIndex) {
-											var chosenPort = jQuery(
-													'#input_port').val();
-											// Suppress (skip) "Warning" step if
-											// the user is old enough and wants
-											// to the previous step.
-											if (currentIndex === 3
-													&& priorIndex === 4
-													&& chosenPort == 25) {
-												jQuery(this).steps("previous");
-												return;
-											}
-											if (currentIndex === 3
-													&& chosenPort == 25) {
-												jQuery(this).steps("next");
-											}
-										},
-										onFinishing : function(event,
-												currentIndex) {
-											var form = jQuery(this);
-
-											jQuery('.wizard-auth-oauth2')
-													.show();
-											jQuery('.wizard-auth-basic').show();
-											jQuery('.input_authorization_type')
-													.show();
-											// Disable validation on fields that
-											// are disabled.
-											// At this point it's recommended to
-											// do an overall check (mean
-											// ignoring
-											// only disabled fields)
-											// form.validate().settings.ignore =
-											// ":disabled";
-
-											// Start validation; Prevent form
-											// submission if false
-											return form.valid();
-										},
-										onFinished : function(event,
-												currentIndex) {
-											var form = jQuery(this);
-
-											// Submit form input
-											form.submit();
-										}
-									}).validate({
-								errorPlacement : function(error, element) {
-									element.before(error);
 								},
-								rules : {
-									confirm : {
-										equalTo : "#password"
-									}
+								onStepChanged : function(event, currentIndex,
+										priorIndex) {
+									return postHandleStepChange(event,
+											currentIndex, priorIndex,
+											jQuery(this));
+								},
+								onFinishing : function(event, currentIndex) {
+									var form = jQuery(this);
+
+									jQuery('.wizard-auth-oauth2').show();
+									jQuery('.wizard-auth-basic').show();
+									jQuery(postman_encryption_group).show();
+									// Disable validation on fields that
+									// are disabled.
+									// At this point it's recommended to
+									// do an overall check (mean
+									// ignoring
+									// only disabled fields)
+									// form.validate().settings.ignore =
+									// ":disabled";
+
+									// Start validation; Prevent form
+									// submission if false
+									return form.valid();
+								},
+								onFinished : function(event, currentIndex) {
+									var form = jQuery(this);
+
+									// Submit form input
+									form.submit();
 								}
-							});
-				});
+							}).validate({
+						errorPlacement : function(error, element) {
+							element.before(error);
+						},
+						rules : {
+							confirm : {
+								equalTo : "#password"
+							}
+						}
+					});
+		});
+function handleStepChange(event, currentIndex, newIndex, form) {
+	// Always allow going backward even if
+	// the current step contains invalid fields!
+	if (currentIndex > newIndex) {
+		return true;
+	}
+
+	// Clean up if user went backward
+	// before
+	if (currentIndex < newIndex) {
+		// To remove error styles
+		jQuery(".body:eq(" + newIndex + ") label.error", form).remove();
+		jQuery(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+	}
+
+	// Disable validation on fields that
+	// are disabled or hidden.
+	form.validate().settings.ignore = ":disabled,:hidden";
+
+	// Start validation; Prevent going
+	// forward if false
+	valid = form.valid();
+	if (!valid) {
+		return false;
+	}
+
+	if (currentIndex === 0) {
+		// page 1 : look-up the email
+		// address for the smtp server
+		checkEmail(jQuery(postman_input_sender_email).val());
+	} else if (currentIndex === 1) {
+		// page 2 : check the port
+		portsChecked = 0;
+		portsToCheck = 0;
+		// allow the user to choose any
+		// port
+		wizardPortTest(jQuery('#wizard_port_465'),
+				jQuery('#wizard_port_465_status'));
+		wizardPortTest(jQuery('#wizard_port_25'),
+				jQuery('#wizard_port_25_status'));
+		wizardPortTest(jQuery('#wizard_port_587'),
+				jQuery('#wizard_port_587_status'));
+	} else if (currentIndex === 2) {
+
+		// user has clicked next from ports-check page
+		if (portsChecked < portsToCheck) {
+			alert('Please wait for the check to finish');
+			return false;
+		}
+		var chosenPort = jQuery(postman_port_element_name).val();
+		var hostname = jQuery(postman_hostname_element_name).val();
+
+		// on the Auth type drop-down, add events to enable/disable user/pass
+		jQuery(postman_input_auth_type).click(function() {
+			var $val = jQuery(postman_input_auth_type).val();
+			if ($val == 'none') {
+				disable(postman_input_basic_username);
+				disable(postman_input_basic_password);
+				disable(postman_enc_for_password_el);
+				setEncryptionType(postman_enc_none);
+			} else {
+				enable(postman_input_basic_username);
+				enable(postman_input_basic_password);
+				// for the next two lines, i assume this is port 587 because that's
+				// currently the only time the user can change the auth type
+				enable(postman_enc_for_password_el);
+				setEncryptionType(postman_enc_tls);
+			}
+		});
+
+		// hide both the oauth section and the password section
+		hide('.wizard-auth-oauth2');
+		hide('.wizard-auth-basic');
+		disable(postman_auth_option_oauth2_id);
+		disable(postman_auth_option_none_id);
+		if (hostname == 'smtp.gmail.com' && chosenPort == 465) {
+			// setup Gmail with OAuth2
+			populateRedirectUrl(hostname);
+			setAuthType(postman_auth_oauth2);
+			setEncryptionType(postman_enc_ssl);
+			// hide the auth type field for OAuth screen
+			show('.wizard-auth-oauth2');
+			hide(postman_enc_for_oauth2_el);
+			// allow oauth2 as an authentication choice
+			enable(postman_auth_option_oauth2_id);
+		} else if (hostname == 'smtp.live.com' && chosenPort == 587) {
+			// setup Hotmail with OAuth2
+			populateRedirectUrl(hostname);
+			setAuthType(postman_auth_oauth2);
+			setEncryptionType(postman_enc_tls);
+			// hide the auth type field for OAuth screen
+			show('.wizard-auth-oauth2');
+			hide(postman_enc_for_oauth2_el);
+			enable(postman_auth_option_oauth2_id);
+		} else if (chosenPort == 465) {
+
+			// set authentication and encryption types
+			setAuthType(postman_auth_login);
+			setEncryptionType(postman_enc_ssl);
+
+			// eanble user/pass fields
+			enablePasswordFields();
+
+			show('.wizard-auth-basic');
+			enable(postman_enc_option_ssl_id);
+			hide(postman_encryption_group);
+			jQuery('.port-explanation-ssl').show();
+			hide('.port-explanation-tls');
+		} else if (chosenPort == 587) {
+			// allow none as an authentication choice
+			enable(postman_auth_option_none_id);
+
+			// set authentication and encryption types
+			setAuthType(postman_auth_login);
+			setEncryptionType(postman_enc_tls);
+
+			// eanble user/pass fields
+			enablePasswordFields();
+
+			disable(postman_enc_option_ssl_id);
+			show('.wizard-auth-basic');
+			jQuery(postman_encryption_group).show();
+			hide('.port-explanation-ssl');
+			jQuery('.port-explanation-tls').show();
+		} else {
+			// allow none as an authentication choice
+			enable(postman_auth_option_none_id);
+
+			// set authentication and encryption types
+			setAuthType(postman_auth_none);
+			setEncryptionType(postman_enc_none);
+
+			show('.wizard-auth-basic');
+			hide(postman_encryption_group);
+			disable(postman_input_basic_username);
+			disable(postman_input_basic_password);
+		}
+	}
+
+	return true;
+}
+function populateRedirectUrl(hostname) {
+	getRedirectUrl(hostname, postman_redirect_url_el, '#wizard_oauth2_help');
+}
+function setAuthType($authType) {
+	jQuery(postman_input_auth_type).val($authType);
+}
+function setEncryptionType($encType) {
+	jQuery(postman_enc_for_password_el).val($encType);
+	jQuery(postman_enc_for_oauth2_el).val($encType);
+}
+function enablePasswordFields() {
+	enable(postman_input_basic_username);
+	enable(postman_input_basic_password);
+}
+function postHandleStepChange(event, currentIndex, priorIndex, myself) {
+	var chosenPort = jQuery('#input_port').val();
+	// Suppress (skip) "Warning" step if
+	// the user is old enough and wants
+	// to the previous step.
+	if (currentIndex === 3 && priorIndex === 4 && chosenPort == 25) {
+		myself.steps("previous");
+		return;
+	}
+	if (currentIndex === 3 && chosenPort == 25) {
+		myself.steps("next");
+	}
+
+}
 function checkEmail(email) {
 	var data = {
 		'action' : 'check_email',
@@ -280,16 +239,6 @@ function checkEmail(email) {
 	// implementations
 	jQuery.post(ajaxurl, data, function(response) {
 		jQuery(postman_hostname_element_name).val(response.hostname);
-	});
-}
-function getRedirectUrl(hostname, el_redirect_url, el_help_text) {
-	var data = {
-		'action' : 'get_redirect_url',
-		'hostname' : hostname
-	};
-	jQuery.post(ajaxurl, data, function(response) {
-		jQuery(el_redirect_url).val(response.redirect_url);
-		jQuery(el_help_text).html(response.help_text);
 	});
 }
 function wizardPortTest(input, state) {
@@ -319,7 +268,7 @@ function wizardPortTest(input, state) {
 					data,
 					function(response) {
 						portsChecked++;
-						if (true || response.success) {
+						if (response.success) {
 							elState.html('Ok');
 							el.removeAttr('disabled');
 						} else {

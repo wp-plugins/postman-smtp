@@ -196,7 +196,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			$sender = $this->sender;
 			if ($this->overrideSenderAllowed) {
 				if (! empty ( $this->overrideSender )) {
-					$sender = $this->overrideSender ( new PostmanEmailAddress ( $this->overrideSender ) );
+					$sender = new PostmanEmailAddress ( $this->overrideSender );
 				}
 				/**
 				 * Filter the email address to send from.

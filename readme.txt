@@ -11,11 +11,14 @@ Kiss your email problems good-bye with Postman, the first and only OAuth-enabled
 
 == Description ==
 
-Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking traditional SMTP SSL/TLS](https://support.google.com/accounts/answer/6010255) mechanisms with Gmail.
+Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking](https://support.google.com/accounts/answer/6010255) [traditional](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) SMTP SSL/TLS mechanisms with Gmail.
 
 Postman is a next-generation SMTP plugin which provides WordPress with a more secure mechanism for sending email. When your site generates an email, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
 
-###Features:
+###* What's New for v1.3 *
+*Now supprting OAuth 2.0 auth with Hotmail/Windows Live/Outlook.com! What?! :D*
+
+= Features =
 * Send mail to any host with SMTP/SMTPS like the other 172 WordPress SMTP plugins
 * Send mail to Gmail or Hotmail using OAuth 2.0. Your mail will be delivered even if your password changes.
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
@@ -24,12 +27,58 @@ Postman is a next-generation SMTP plugin which provides WordPress with a more se
 * Supports No/Plain/Login/CRAM-MD5/OAuth2 authentication
 * Supports SSL/TLS encryption
 
-### Requirements:
+= Requirements =
 * WordPress 3.9 (or later)
 * PHP 5.3 (or later) with OpenSSL; or PHP 5.2 with SPL and OpenSSL 
 * For generic SMTP: connectivity to an SMTP server that you have an account on
 * For Gmail: a Gmail/Google Apps account, a Client ID from Google Developer and connectivity to the Gmail server
 * For Hotmail/Windows Live/Outlook: an Outlook.com account, a Client ID from Microsoft Developer Center and connectivity to the Windows Live server
+
+== Installation ==
+
+> Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to external SMTP servers and Postman will not work for you. Use the "Run a Port Test" feature to determine if your host has blocked access to the SMTP server you wish to use.
+
+= Easy install and setup! (Recommended for all users) =
+1. Install and activate the plugin through the 'Plugins' menu in WordPress.
+1. In the WordPress 'Settings' menu select 'Postman SMTP'.
+1. Choose 'Start the Wizard' and follow the instructions.
+
+= To manually configure OAuth 2.0 Authentication for Gmail =
+
+1. Choose configure manually
+1. In 'Authentication' choose 'OAuth2 2.0'
+1. In 'Sender Email Address' enter your Gmail email address. This MUST be the same address you login to Google with.
+1. In 'Outgoing Mail Server (SMTP)' enter 'smtp.gmail.com'. In 'Port' enter '465'. In 'Encryption' choose 'SSL'.
+1. Go to [Google Developer's Console](https://console.developers.google.com/) and create a Client ID for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
+1. Copy your generated 'Client ID' and 'Client Secret' into the plugin's Settings page.
+1. Choose the Save Changes button.
+1. Choose the 'Request Permission from Google' link and follow the instructions.
+1. Send yourself a test email. 
+
+= To manually configure OAuth 2.0 Authentication for Hotmail =
+
+1. Choose configure manually
+1. In 'Authentication' choose 'OAuth2 2.0'
+1. In 'Sender Email Address' enter your Hotmail email address. This MUST be the same address you login to Hotmail with.
+1. In 'Outgoing Mail Server (SMTP)' enter 'smtp.live.com'. In 'Port' enter '587'. In 'Encryption' choose 'TLS'.
+1. Go to [Microsoft Developer Center](https://account.live.com/developers/applications/create) and create an application for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
+1. Copy your generated *Client ID* and *Client Secret* into the plugin's Settings page.
+1. Choose the Save Changes button.
+1. Choose the *Request Permission from Microsoft* link and follow the instructions.
+1. Send yourself a test email. 
+
+= To manually configure Password Authentication for any SMTP provider =
+
+1. Choose configure manually
+1. In 'Authentication' choose Login, unless your provider has told you different.
+1. In 'Sender Email Address' enter your account's email address. Some plugins may override this, however it is up to your email provider if this is permitted.
+1. Enter the SMTP Server's hostname and port.
+1. If you chose Plain, Login or CRAM-MD5 as your authentication method then: Choose 'SSL' for encryption if your port is 465, or 'TLS' if your port is 587.
+1. Enter your username (probably your email address) and password in the Basic Auth Settings section.
+1. Choose the Save Changes button.
+1. Send yourself a test email. 
+
+> Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment with PHP 5.3.3 and Apache 2.2.15.
 
 == Frequently Asked Questions == 
 
@@ -47,48 +96,55 @@ Google does have a setting to [allow less secure apps](https://support.google.co
 To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one.
 
 = How do I get a Google Client ID? =
-1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose Create Project, or use an existing project if you have one.
+1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose 'Create Project', or use an existing project if you have one.
 1. If you have previously created a project, select it from the Projects page and you will arrive at the Project Dashboard. If you have just created a project, you are brought to the Project Dashboard automatically.
-1. If you have not filled out the consent screen for this project, do it now. In the left-hand hand navigation menu, select *Consent Screen* from under *APIs & auth*. Into *email address* put your Gmail address and in *product name* put the name of your WordPress site. Choose *Save*.
-1. Select *Credentials* from under *APIs & auth*. Choose *Create a new Client ID*.
-1. For the *Application Type* use "Web application". The first URL (*Authorized Javascript origins*) will be the root address of your WordPress site. The second URL (*Authorized Redirect URIs*) will be the the redirect URI shown on *Postman's Settings page*.
-1. Choose *Create Client ID*.
-1. Now you can enter the Client ID and Client Secret shown into Postman's settings page.
+1. If you have not filled out the consent screen for this project, do it now. In the left-hand hand navigation menu, select 'Consent Screen' from under 'APIs & auth'. Into 'email address' put your Gmail address and in 'product name' put the name of your WordPress site. Choose 'Save'.
+1. Select 'Credentials' from under 'APIs & auth'. Choose 'Create a new Client ID'.
+1. For the 'Application Type' use 'Web application'. The first URL ('Authorized Javascript origins') will be the root address of your WordPress site. The second URL, 'Authorized Redirect URIs', will be the the redirect URI shown on Postman's Settings page.
+1. Choose 'Create Client ID'.
+1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
-= How can I tell my email provider to revoke OAuth access to my outbox? =
+= How do I get a Hotmail/Windows Live/Outlook.com Client ID? =
+1. Go to [Microsoft account Developer Center](https://account.live.com/developers/applications/index) and select 'Create application'.
+1. In the 'Application name' field enter the name of your WordPress site. Select 'I accept.'
+1. Select 'API Settings' from under 'Settings'.
+1. In 'Redirect URL', enter the redirect URI shown on Postman's Settings page. Select Save.
+1. Select 'App Settings' from under 'Settings'.
+1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
+
+= How can I stop all this OAuth nonsense!? =
 If you have a Google Account, from the [Google Developer's Console](https://console.developers.google.com/) use the Delete button under the Client ID. If you have a Microsoft Live account, from the [Microsoft account Developer Center](https://account.live.com/developers/applications/index), select the Application and choose Delete Application.
 
-== Installation ==
+== Troubleshooting ==
 
-Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to external SMTP servers and Postman will not work for you. Use the "Run a Port Test" feature to determine if your host has blocked access to the SMTP server you wish to use.
+Here are some common error messages and what they mean. If you do not find your answer here, please [open a ticket](https://wordpress.org/support/plugin/postman-smtp).
 
-### To configure OAuth 2.0 Authentication
+= Communication Error [334] =
 
-1. Install and activate the plugin through the 'Plugins' menu in WordPress.
-1. In the WordPress 'Settings' menu find 'Postman SMTP'.
-1. Choose configure manually
-1. In *Authentication* choose OAuth2 (Gmail)
-1. In *Sender Email Address* enter your account's email address. This should be the same address you login to Google with.
-1. In *Outgoing Mail Server (SMTP)* enter smtp.gmail.com. In *Port* enter 465.
-1. Go to [Google Developer's Console](https://console.developers.google.com/) and create a Client ID for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
-1. Copy your *Client ID* and *Client Secret* into the plugin's Settings page.
-1. Choose the Save Changes button.
-1. Choose the *Request Permission from Google* link and follow the instructions.
-1. Send yourself a test email. 
+This is the only OAuth2-specific error you will see. It tells you nothing about what's wrong, by design. There are a number of things to check:
+* Make sure that your Sender Email Address is the same account that you use to create the Google Client ID or Microsoft Application.
+* Maybe you sent an e-mail with the wrong Sender Email Address one too many times. Delete the Google Client ID or Microsoft Application, and start over.
+* Maybe you sent an e-mail with a new user before logging in to the web. Login to the webmail, checks for errors, and try again.
+* Maybe you refreshed the Client Secret but Postman still has the old one. Make sure your Client ID and Client Secret are an exact match.
+* If all else fails, delete your Google Client ID or Microsoft Application and start over
 
-### To configure Basic Authentication
+= Could not open socket =
 
-1. Install and activate the plugin through the 'Plugins' menu in WordPress.
-1. In the WordPress 'Settings' menu find 'Postman SMTP'.
-1. Choose configure manually
-1. In *Authentication* choose Basic (SSL) or Basic (TLS), depending on your provider's instruction.
-1. In *Sender Email Address* enter your account's email address. Some plugins may override this, however it is up to your email provider if this is permitted.
-1. Enter the SMTP Server's hostname and port.
-1. Enter your username (probably your email address) and password in the Basic Auth Settings section.
-1. Choose the Save Changes button.
-1. Send yourself a test email. 
+* Your host may have installed a firewall between you and the server. Ask them to open the ports.
+* Your may have tried to (incorrectly) use SSL over port 587. Check your encryption and port settings.
 
-Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment.
+= Operation Timed out =
+
+* Your host may have installed a firewall (DROP packets) between you and the server. Ask them to open the ports.
+* Your may have tried to (incorrectly) use TLS over port 465. Check your encryption and port settings.
+
+= Connection refused =
+
+Your host has likely installed a firewall (REJECT packets) between you and the server. Ask them to open the ports.
+
+= XOAUTH2 authentication mechanism not supported =
+
+You may be on a Virtual Private Server that is [playing havoc with your communications](https://wordpress.org/support/topic/oh-bother-xoauth2-authentication-mechanism-not-supported?replies=9). Jump ship.
 
 == Screenshots ==
 

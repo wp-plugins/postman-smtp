@@ -4,14 +4,18 @@ if (! class_exists ( "PostmanHotmailAuthenticationManager" )) {
 	require_once 'PostmanAbstractAuthenticationManager.php';
 	
 	/**
+	 * https://msdn.microsoft.com/en-us/library/hh243647.aspx (Seems to be the most up-to-date doc on OAuth 2.0
+	 * https://msdn.microsoft.com/en-us/library/hh243649.aspx (Seems to be the most up-to-date examples on using the API)
 	 * https://msdn.microsoft.com/en-us/library/ff750690.aspx OAuth WRAP (Messenger Connect)
 	 * https://msdn.microsoft.com/en-us/library/ff749624.aspx Working with OAuth WRAP (Messenger Connect)
+	 * https://gist.github.com/kayalshri/5262641 Working example from Giriraj Namachivayam (kayalshri)
 	 */
 	class PostmanHotmailAuthenticationManager extends PostmanAbstractAuthenticationManager implements PostmanAuthenticationManager {
 		
 		// constants
 		const SMTP_HOSTNAME = 'smtp.live.com';
 		const WINDOWS_LIVE_ENDPOINT = 'https://login.live.com/oauth20_authorize.srf';
+		const WINDOWS_LIVE_REFRESH = 'https://login.live.com/oauth20_token.srf';
 		
 		// http://stackoverflow.com/questions/7163786/messenger-connect-oauth-wrap-api-to-get-user-emails
 		// http://quabr.com/26329398/outlook-oauth-send-emails-with-wl-imap-scope-in-php
@@ -55,7 +59,7 @@ if (! class_exists ( "PostmanHotmailAuthenticationManager" )) {
 			
 			$authUrl = $endpoint . "?client_id=" . $this->getClientId () . "&client_secret=" . $this->getClientSecret () . "&response_type=code&scope=" . $scope . "&redirect_uri=" . urlencode ( $callbackUrl );
 			
-			$this->getLogger ()->debug ( "authenticating with windows live" );
+			$this->getLogger ()->debug ( 'Requesting verification code from ' . $authUrl );
 			header ( 'Location: ' . filter_var ( $authUrl, FILTER_SANITIZE_URL ) );
 			exit ();
 		}
@@ -72,16 +76,8 @@ if (! class_exists ( "PostmanHotmailAuthenticationManager" )) {
 			if (isset ( $_GET ['code'] )) {
 				$code = $_GET ['code'];
 				$this->getLogger ()->debug ( 'Found authorization code in request header' );
-				$getAccessToken_value = $this->getAccessToken ( 'https://login.live.com/oauth20_token.srf', admin_url ( 'options-general.php' ), $code );
-				$getatoken = json_decode ( stripslashes ( $getAccessToken_value ) );
-				
-				if ($getatoken === NULL) {
-					$atoken = $getAccessToken_value;
-				} else {
-					$atoken = $this->decodeReceivedAuthorizationToken ( $getatoken );
-				}
-				$this->getLogger ()->debug ( "atoken " . $atoken );
-				
+				$response = $this->getAccessToken ( 'https://login.live.com/oauth20_token.srf', admin_url ( 'options-general.php' ), $code );
+				$this->processTradeCodeForTokenResponse ( $response );
 				return true;
 			} else {
 				$this->getLogger ()->debug ( 'Expected code in the request header but found none - user probably denied request' );
@@ -90,13 +86,37 @@ if (! class_exists ( "PostmanHotmailAuthenticationManager" )) {
 		}
 		
 		/**
+		 * The Content-Type header should have the value "application/x-www-form-urlencoded".
+		 *
+		 * Construct the request body using the following template and replace these elements:
+		 *
+		 * 1. Replace CLIENT_ID with your app's client ID.
+		 *
+		 * 2. Replace REDIRECT_URI with the URI to your callback webpage. This URI must be the
+		 * same as the URI that you specified when you requested an authorization code. The
+		 * URI must use URL escape codes, such as %20 for spaces, %3A for colons, and %2F
+		 * for forward slashes.
+		 *
+		 * 3. Replace CLIENT_SECRET with your app's client secret. The client secret must use
+		 * URL escape codes, such as %2B for the plus sign.
+		 *
+		 * 4. Replace REFRESH_TOKEN with the refresh token that you obtained earlier.
+		 *
 		 * (non-PHPdoc)
-		 * https://msdn.microsoft.com/en-us/library/hh243649.aspx#refresh
 		 *
 		 * @see PostmanAuthenticationManager::refreshToken()
 		 */
 		public function refreshToken() {
 			$this->getLogger ()->debug ( 'Refreshing Token' );
+			
+			$callbackUrl = PostmanSmtpHostProperties::getRedirectUrl ( PostmanSmtpHostProperties::WINDOWS_LIVE_HOSTNAME );
+			assert ( ! empty ( $callbackUrl ) );
+			
+			$windowsLiveUrl = PostmanHotmailAuthenticationManager::WINDOWS_LIVE_REFRESH;
+			assert ( ! empty ( $windowsLiveUrl ) );
+			
+			$response = $this->refreshAccessToken ( $windowsLiveUrl, $callbackUrl );
+			$this->processRefreshTokenResponse ( $response );
 		}
 	}
 }
