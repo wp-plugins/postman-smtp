@@ -1,9 +1,9 @@
 === Postman SMTP ===
 Contributors: jasonhendriks
-Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, phpmailer, wp_mail, gmail, google apps
+Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, gmail, google apps, hotmail, windows live, outlook.com
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.2
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Have you been having [trouble sending your email](https://wordpress.org/support/
 Postman is a next-generation SMTP plugin which provides WordPress with a more secure mechanism for sending email. When your site generates an email, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
 
 ###* What's New for v1.3 *
-*Now supprting OAuth 2.0 auth with Hotmail/Windows Live/Outlook.com! What?! :D*
+*Now supporting OAuth 2.0 auth with Hotmail/Windows Live/Outlook.com! What?! :D*
 
 = Features =
 * Send mail to any host with SMTP/SMTPS like the other 172 WordPress SMTP plugins
@@ -62,9 +62,9 @@ Postman is a next-generation SMTP plugin which provides WordPress with a more se
 1. In 'Sender Email Address' enter your Hotmail email address. This MUST be the same address you login to Hotmail with.
 1. In 'Outgoing Mail Server (SMTP)' enter 'smtp.live.com'. In 'Port' enter '587'. In 'Encryption' choose 'TLS'.
 1. Go to [Microsoft Developer Center](https://account.live.com/developers/applications/create) and create an application for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
-1. Copy your generated *Client ID* and *Client Secret* into the plugin's Settings page.
+1. Copy your generated 'Client ID' and 'Client Secret' into the plugin's Settings page.
 1. Choose the Save Changes button.
-1. Choose the *Request Permission from Microsoft* link and follow the instructions.
+1. Choose the 'Request Permission from Microsoft' link and follow the instructions.
 1. Send yourself a test email. 
 
 = To manually configure Password Authentication for any SMTP provider =
@@ -155,9 +155,14 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.3 - 2015-02-06 =
-* Sending Hotmail/Outlook.com email now supported with OAuth 2.0 authentication!
-* 
+= 1.3 - 2015-02-09 =
+* Sending Hotmail/Outlook.com email now supported with OAuth 2.0 authentication! If Wizard detects that a Hotmail server has been entered, it automatically configures OAuth 2.0. 
+* Separated Authentication input from Encryption input for finer configuration control
+* Added additional authentication types: plain and CRAM-MD5. 'basic' became 'login'
+* Added Ajax to manual config and wizard screens to allow dynamic OAuth2 redirect url + help text changes in response to hostname changes
+* Removed 'Allow Plugin to Override Sender' user input
+* Added Online Support link in menu
+* Clarified text in 'Run a Port Test' so people won't continue to ask me about connection problems (hopefully)
 
 = 1.2 - 2015-02-04 =
 * Support for Sender Name and Reply-To. Turns out Google no longer honours the MUA Return-Path header due to spam. Makes sense, so I've decided not to add a Return-Path field to Postman's configuration.
@@ -184,7 +189,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 0.2.7 - 2015-01-29 =
 * Fixed error: "Undefined variable: authorizationToken" was preventing mail delivery outside of the admin screen.
-* Fixed warning message that Postman couldnt bind to wp_mail immediately after Activation
+* Fixed warning message that Postman couldn't bind to wp_mail immediately after Activation
 * Added prerequisite checks to make sure the PHP environment can handle Postman
 * Moved the screenshots and icons out of /trunk and into /assets
 
@@ -236,7 +241,7 @@ A bug in PostmanWpMail prevents all mail from going out. PLEASE UPGRADE!
 Fixed the hyperlink in the message that displays when the plugin is not configured (just installed).
 
 = 0.2.5 =
-Please note that the Postman Redirect URI has changed. If you are upgrading, you MUST update the Client ID Redirect URI in the Google Developer Console, or create a new CLient ID altogether. Attempting to re-authorize a Client ID created for an earlier version of Postman WILL FAIL with "Error: redirect_uri_mismatch".
+Please note that the Postman Redirect URI has changed. If you are upgrading, you MUST update the Client ID Redirect URI in the Google Developer Console, or create a new Client ID altogether. Attempting to re-authorize a Client ID created for an earlier version of Postman WILL FAIL with "Error: redirect_uri_mismatch".
 
 = 0.2.4 =
 Fixed problem installing on servers where the plugin directory is a symbolic link.
