@@ -122,6 +122,7 @@ Here are some common error messages and what they mean. If you do not find your 
 = Communication Error [334] =
 
 This is the only OAuth2-specific error you will see. It tells you nothing about what's wrong, by design. There are a number of things to check:
+
 * Make sure that your Sender Email Address is the same account that you use to create the Google Client ID or Microsoft Application.
 * Maybe you sent an e-mail with the wrong Sender Email Address one too many times. Delete the Google Client ID or Microsoft Application, and start over.
 * Maybe you sent an e-mail with a new user before logging in to the web. Login to the webmail, checks for errors, and try again.
@@ -221,6 +222,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 1.3 =
+Now supporting Hotmail via OAuth 2.0!
 
 = 1.2 =
 Support for Sender Name and the Reply-To header.
