@@ -126,7 +126,7 @@ This is the only OAuth2-specific error you will see. It tells you nothing about 
 * Make sure that your Sender Email Address is the same account that you use to create the Google Client ID or Microsoft Application.
 * Maybe you sent an e-mail with the wrong Sender Email Address one too many times. Delete the Google Client ID or Microsoft Application, and start over.
 * Maybe you sent an e-mail with a new user before logging in to the web. Login to the webmail, checks for errors, and try again.
-* Maybe you refreshed the Client Secret but Postman still has the old one. Make sure your Client ID and Client Secret in Postman match whatever is shown in the Developer Console of your provider.
+* Maybe you refreshed the Client Secret but Postman still has the old one. Make sure your Client ID and Client Secret in Postman match the values shown in the Developer Console of your provider.
 * If all else fails, delete your Google Client ID or Microsoft Application and start over
 
 = Could not open socket =
