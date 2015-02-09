@@ -84,9 +84,9 @@ Postman is a next-generation SMTP plugin which provides WordPress with a more se
 
 = Why should I use Postman over the hundreds of other SMTP plugins? =
 
-If you use other plugins to send Gmail or Hotmail, they're going to ask you for your Google or Outlook.com password. And if you change your password, those same plugins will break. But Postman will continue to deliver your email without interruption.
+If you use other plugins to send Gmail or Hotmail, they're going to ask you for your Google or Hotmail password. And if you change your password, those same plugins will break. But Postman will continue to deliver your email without interruption.
 
-> **NEVER give out your Google or Outlook.com password** to a 3rd-party or 3rd-party program that you don't fully trust.
+> **NEVER give out your Google or Hotmail password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = Why do I need OAuth? Can't I just tell Google to allow less secure apps? =
 
@@ -157,7 +157,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.3 - 2015-02-09 =
-* Sending Hotmail/Outlook.com email now supported with OAuth 2.0 authentication! If Wizard detects that a Hotmail server has been entered, it automatically configures OAuth 2.0. 
+* Sending Hotmail/Windows Live/Outlook.com email now supported with OAuth 2.0 authentication! If Wizard detects that a Hotmail server has been entered, it automatically configures OAuth 2.0. 
 * Separated Authentication input from Encryption input for finer configuration control
 * Added additional authentication types: plain and CRAM-MD5. 'basic' became 'login'
 * Added Ajax to manual config and wizard screens to allow dynamic OAuth2 redirect url + help text changes in response to hostname changes
