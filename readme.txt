@@ -24,7 +24,7 @@ Postman is a next-generation SMTP plugin which provides WordPress with a more se
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Easy to use Setup Wizard takes the guesswork out of configuring email
 * Supports international characters, HTML mail and MultiPart/MIME
-* Supports No/Plain/Login/CRAM-MD5/OAuth2 authentication
+* Supports Plain/Login/CRAM-MD5/OAuth2 authentication
 * Supports SSL/TLS encryption
 
 = Requirements =
@@ -84,9 +84,9 @@ Postman is a next-generation SMTP plugin which provides WordPress with a more se
 
 = Why should I use Postman over the hundreds of other SMTP plugins? =
 
-If you use other plugins to send Gmail or Hotmail, they're going to ask you for your Google or Outlook.com password. And if you change your password, those same plugins will break. But Postman will continue to deliver your email without interruption.
+If you use other plugins to send Gmail or Hotmail, they're going to ask you for your Google or Hotmail password. And if you change your password, those same plugins will break. But Postman will continue to deliver your email without interruption.
 
-> **NEVER give out your Google or Outlook.com password** to a 3rd-party or 3rd-party program that you don't fully trust.
+> **NEVER give out your Google or Hotmail password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = Why do I need OAuth? Can't I just tell Google to allow less secure apps? =
 
@@ -122,10 +122,11 @@ Here are some common error messages and what they mean. If you do not find your 
 = Communication Error [334] =
 
 This is the only OAuth2-specific error you will see. It tells you nothing about what's wrong, by design. There are a number of things to check:
+
 * Make sure that your Sender Email Address is the same account that you use to create the Google Client ID or Microsoft Application.
 * Maybe you sent an e-mail with the wrong Sender Email Address one too many times. Delete the Google Client ID or Microsoft Application, and start over.
 * Maybe you sent an e-mail with a new user before logging in to the web. Login to the webmail, checks for errors, and try again.
-* Maybe you refreshed the Client Secret but Postman still has the old one. Make sure your Client ID and Client Secret are an exact match.
+* Maybe you refreshed the Client Secret but Postman still has the old one. Make sure your Client ID and Client Secret in Postman match the values shown in the Developer Console of your provider.
 * If all else fails, delete your Google Client ID or Microsoft Application and start over
 
 = Could not open socket =
@@ -156,7 +157,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.3 - 2015-02-09 =
-* Sending Hotmail/Outlook.com email now supported with OAuth 2.0 authentication! If Wizard detects that a Hotmail server has been entered, it automatically configures OAuth 2.0. 
+* Sending Hotmail/Windows Live/Outlook.com email now supported with OAuth 2.0 authentication! If Wizard detects that a Hotmail server has been entered, it automatically configures OAuth 2.0. 
 * Separated Authentication input from Encryption input for finer configuration control
 * Added additional authentication types: plain and CRAM-MD5. 'basic' became 'login'
 * Added Ajax to manual config and wizard screens to allow dynamic OAuth2 redirect url + help text changes in response to hostname changes
@@ -221,6 +222,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 1.3 =
+Now supporting Hotmail via OAuth 2.0!
 
 = 1.2 =
 Support for Sender Name and the Reply-To header.
