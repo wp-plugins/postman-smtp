@@ -24,7 +24,7 @@ Postman is a next-generation SMTP plugin which provides WordPress with a more se
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Easy to use Setup Wizard takes the guesswork out of configuring email
 * Supports international characters, HTML mail and MultiPart/MIME
-* Supports No/Plain/Login/CRAM-MD5/OAuth2 authentication
+* Supports Plain/Login/CRAM-MD5/OAuth2 authentication
 * Supports SSL/TLS encryption
 
 = Requirements =
