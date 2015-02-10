@@ -23,6 +23,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			$authOptions = get_option ( 'postman_auth_token' );
 			$options = get_option ( 'postman_options' );
 			if (empty ( $authOptions ) && ! (empty ( $options ))) {
+				$logger->debug ( "Upgrading database: copying Authorization token from postman_options to postman_auth_token" );
 				// copy the variables from $options to $authToken
 				$authOptions ['access_token'] = $options ['access_token'];
 				$authOptions ['refresh_token'] = $options ['refresh_token'];
@@ -33,6 +34,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 				// prior to 1.0.0, access tokens were saved in authOptions without an auth type
 				// prior to 0.2.5, access tokens were save in options without an auth type
 				if (isset ( $authOptions ['access_token'] ) || isset ( $options ['access_token'] )) {
+					$logger->debug ( "Upgrading database: setting Authorization type to OAuth2" );
 					$options ['authorization_type'] = 'oauth2';
 					update_option ( 'postman_options', $options );
 				}
@@ -40,6 +42,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			if (! isset ( $options ['enc_type'] )) {
 				// prior to 1.3, encryption type was combined with authentication type
 				if (isset ( $options ['authorization_type'] )) {
+					$logger->debug ( "Upgrading database: creating auth_type and enc_type from authorization_type" );
 					$authType = $options ['authorization_type'];
 					switch ($authType) {
 						case 'none' :
