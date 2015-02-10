@@ -229,11 +229,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Upgrade Notice ==
 
-= 1.3.2 =
-Fixed fatal error when upgrading from a pre v1.0 version of Postgres to v1.0+ during database upgrade
-
-= 1.3.1 =
-Fixed the error PHP Fatal error: Class 'Google_IO_Stream' not found
+= 1.3.3 =
+Fixed several bugs that affect Postman's operation.
 
 = 1.3 =
 Now supporting Hotmail via OAuth 2.0!

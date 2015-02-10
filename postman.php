@@ -17,7 +17,6 @@
 // -- add a wizard style to the tester - then if the test fails, we can display proper debug information
 // -- if a test message succeeds, capture the domain of the primary mx, smtp server hostname and port, auth type, encyrption type into a database (with the user's permission)
 // -- write a plugin to capture the above information
-// -- replace curl_init with WP_Http (higher priority)
 // -- replace Google library with something custom (higher priority)
 
 // define constants

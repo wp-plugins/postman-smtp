@@ -51,7 +51,7 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 			$expireTime = ($this->authorizationToken->getExpiryTime () - PostmanGmailAuthenticationManager::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
 			$tokenHasExpired = time () > $expireTime;
 			$this->logger->debug ( 'Access Token Expiry Time is ' . $expireTime . ', expires_in=' . ($expireTime - time ()) . ', expired=' . ($tokenHasExpired ? 'yes' : 'no') );
-			return $tokenHasExpired;
+			return true || $tokenHasExpired;
 		}
 		
 		/**
@@ -85,7 +85,8 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		 */
 		protected function getAccessToken($accessTokenUrl, $redirectUri, $code) {
 			$postvals = "client_id=" . $this->getClientId () . "&client_secret=" . $this->getClientSecret () . "&grant_type=authorization_code" . "&redirect_uri=" . urlencode ( $redirectUri ) . "&code=" . $code;
-			return $this->curl_request ( $accessTokenUrl, 'POST', $postvals );
+			$fullUrl = $accessTokenUrl . '?' . $postvals;
+			return postmanHttpTransport ( $fullUrl );
 		}
 		/**
 		 *
@@ -98,7 +99,7 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 			// example request string
 			// client_id=0000000603DB0F&redirect_uri=http%3A%2F%2Fwww.contoso.com%2Fcallback.php&client_secret=LWILlT555GicSrIATma5qgyBXebRI&refresh_token=*LA9...//refresh token string shortened for example//...xRoX&grant_type=refresh_token
 			$fullUrl = $accessTokenUrl . '?' . $postvals;
-			return postmanHttpTransport($fullUrl);
+			return postmanHttpTransport ( $fullUrl );
 		}
 		protected function processRefreshTokenResponse($response) {
 			$this->processResponse ( $response, 'Could not refresh token' );
@@ -114,7 +115,7 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		 * @throws Exception
 		 */
 		private function processResponse($response, $errorMessage) {
-			$this->getLogger ()->debug ( 'Processing response' );
+			$this->getLogger ()->debug ( 'Processing response ' . $response);
 			$authToken = json_decode ( stripslashes ( $response ) );
 			if ($authToken === NULL) {
 				$message = $errorMessage . ': ' . $response;
