@@ -11,6 +11,16 @@
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
+
+// ideas for future versions of the plugin
+// -- send mail in the background using ajax - the single mail thread can block the PHP server for quite some time
+// -- add a wizard style to the tester - then if the test fails, we can display proper debug information
+// -- if a test message succeeds, capture the domain of the primary mx, smtp server hostname and port, auth type, encyrption type into a database (with the user's permission)
+// -- write a plugin to capture the above information
+// -- replace curl_init with WP_Http (higher priority)
+// -- replace Google library with something custom (higher priority)
+
+// define constants
 define ( 'POSTMAN_HOME_PAGE_RELATIVE_URL', 'options-general.php?page=postman' );
 define ( 'POSTMAN_HOME_PAGE_ABSOLUTE_URL', admin_url ( POSTMAN_HOME_PAGE_RELATIVE_URL ) );
 define ( 'POSTMAN_PLUGIN_VERSION', '1.3.1' );
