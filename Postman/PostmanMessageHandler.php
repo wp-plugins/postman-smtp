@@ -72,12 +72,12 @@ class PostmanMessageHandler {
 		$_SESSION [PostmanMessageHandler::SUCCESS_MESSAGE] = $message;
 	}
 	public function displayPermissionNeededWarning() {
-		$url = sprintf ( __ ( '<a href="%1$s&postman_action=oauth_request_permission">%2$s</a>', 'postman' ), POSTMAN_HOME_PAGE_URL, 'Request Permission' );
+		$url = sprintf ( __ ( '<a href="%1$s&postman_action=oauth_request_permission">%2$s</a>', 'postman' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL, 'Request Permission' );
 		$message = 'Warning: You entered a Client ID and Client Secret, but have not received permission to use it. ' . $url . ' from ' . PostmanSmtpHostProperties::getServiceName ( $this->options->getHostname () ) . '.';
 		$this->displayWarningMessage ( $message );
 	}
 	public function displayConfigurationRequiredWarning() {
-		$message = 'Warning: ' . PostmanAdminController::NAME . ' is <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_URL . '">Configure</a> the plugin.';
+		$message = 'Warning: ' . PostmanAdminController::NAME . ' is <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_ABSOLUTE_URL . '">Configure</a> the plugin.';
 		$this->displayWarningMessage ( $message );
 	}
 	public function displaySwitchToOAuthWarning() {
