@@ -330,7 +330,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Google will redirect back to WordPress after the user responds.
 		 */
 		public function handleOAuthPermissionRequestAction() {
-			$this->getLogger ()->debug ( 'handling OAuth Permission request' );
+			$this->logger->debug ( 'handling OAuth Permission request' );
 			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $this->options, $this->authorizationToken );
 			$authenticationManager->requestVerificationCode ();
 		}
