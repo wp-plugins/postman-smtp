@@ -25,24 +25,23 @@ define ( 'POSTMAN_HOME_PAGE_RELATIVE_URL', 'options-general.php?page=postman' );
 define ( 'POSTMAN_HOME_PAGE_ABSOLUTE_URL', admin_url ( POSTMAN_HOME_PAGE_RELATIVE_URL ) );
 define ( 'POSTMAN_PLUGIN_VERSION', '1.3.1' );
 
-// start the session
-if (! isset ( $_SESSION )) {
-	session_start ();
-}
-
-register_shutdown_function ( 'handleErrors' );
-function handleErrors() {
-	// error_get_last is only in PHP 5.2 and newer
-	if (function_exists ( 'error_get_last' )) {
-		$last_error = error_get_last ();
-		$t = $last_error ['type'];
-		$logger = new PostmanLogger ( 'postman.php' );
-		if (! is_null ( $last_error ) && ($t & (E_ERROR | E_PARSE)) && preg_match ( "/postman/i", $last_error ['file'] )) {
-			// if there has been a fatal error
-			$message = sprintf ( '%s in %s on line %d', $last_error ['message'], $last_error ['file'], $last_error ['line'] );
-			printf ( '<h2>Bad, Postman!</h2> <p><b><tt>X-(</b></tt></p> <p>Look at this mess:</p><code>%s</code>', $message );
-		} else {
-			$logger->debug ( 'Normal exit' );
+if (! function_exists ( 'postmanHandleErrors' )) {
+	/**
+	 * Handles unexpected errors
+	 */
+	function postmanHandleErrors() {
+		// error_get_last is only in PHP 5.2 and newer
+		if (function_exists ( 'error_get_last' )) {
+			$last_error = error_get_last ();
+			$t = $last_error ['type'];
+			$logger = new PostmanLogger ( 'postman.php' );
+			if (! is_null ( $last_error ) && ($t & (E_ERROR | E_PARSE)) && preg_match ( "/postman/i", $last_error ['file'] )) {
+				// if there has been a fatal error
+				$message = sprintf ( '%s in %s on line %d', $last_error ['message'], $last_error ['file'], $last_error ['line'] );
+				printf ( '<h2>Bad, Postman!</h2> <p><b><tt>X-(</b></tt></p> <p>Look at this mess:</p><code>%s</code>', $message );
+			} else {
+				$logger->debug ( 'Normal exit' );
+			}
 		}
 	}
 }
@@ -50,7 +49,7 @@ function handleErrors() {
 if (! function_exists ( 'postmanRedirect' )) {
 	/**
 	 * A façade function that handles redirects.
-	 * Inside WordPress we can use wp_redirect(). Outside WordPress, not so much. Load it before postman-core.php
+	 * Inside WordPress we can use wp_redirect(). Outside WordPress, not so much. **Load it before postman-core.php**
 	 *
 	 * @param unknown $url        	
 	 */
@@ -62,51 +61,51 @@ if (! function_exists ( 'postmanRedirect' )) {
 	}
 }
 
-// load the core stuff
-require_once 'postman-core.php';
-
-// start all the fuss
-postmanMain ();
-
-// all the fuss
-function postmanMain() {
-	
-	// create a Logger
-	$logger = new PostmanLogger ( 'postman.php' );
-	
-	// load the options and the auth token
-	require_once 'Postman/PostmanOptions.php';
-	$options = PostmanOptions::getInstance ();
-	require_once 'Postman/PostmanAuthorizationToken.php';
-	$authToken = PostmanAuthorizationToken::getInstance ();
-	
-	$basename = plugin_basename ( __FILE__ );
-	
-	// create a message handler
-	require_once 'Postman/PostmanMessageHandler.php';
-	$messageHandler = new PostmanMessageHandler ( $options );
-	
-	// bind to wp_mail()
-	require_once 'Postman/PostmanWpMailBinder.php';
-	new PostmanWpMailBinder ( plugin_basename ( __FILE__ ), $options, $authToken, $messageHandler );
-	
-	if (is_admin ()) {
+if (! function_exists ( 'postmanMain' )) {
+	/**
+	 * The main entry point for Postman
+	 */
+	function postmanMain() {
 		
-		// Adds "Settings" link to the plugin action page
-		add_filter ( 'plugin_action_links_' . $basename, 'modifyLinksOnPluginsListPage' );
+		// create a Logger
+		$logger = new PostmanLogger ( 'postman.php' );
 		
-		// the options screen
-		require_once 'Postman/AdminController.php';
+		// load the options and the auth token
+		require_once 'Postman/PostmanOptions.php';
+		$options = PostmanOptions::getInstance ();
+		require_once 'Postman/PostmanAuthorizationToken.php';
+		$authToken = PostmanAuthorizationToken::getInstance ();
 		
-		// start the Postman Admin page
-		$kevinCostner = new PostmanAdminController ( $basename, $options, $authToken, $messageHandler );
+		$basename = plugin_basename ( __FILE__ );
+		
+		// create a message handler
+		require_once 'Postman/PostmanMessageHandler.php';
+		$messageHandler = new PostmanMessageHandler ( $options );
+		
+		// bind to wp_mail()
+		require_once 'Postman/PostmanWpMailBinder.php';
+		new PostmanWpMailBinder ( plugin_basename ( __FILE__ ), $options, $authToken, $messageHandler );
+		
+		if (is_admin ()) {
+			
+			// Adds "Settings" link to the plugin action page
+			add_filter ( 'plugin_action_links_' . $basename, 'postmanModifyLinksOnPluginsListPage' );
+			
+			// the options screen
+			require_once 'Postman/AdminController.php';
+			
+			// start the Postman Admin page
+			$kevinCostner = new PostmanAdminController ( $basename, $options, $authToken, $messageHandler );
+		}
 	}
 }
-function modifyLinksOnPluginsListPage($links) {
-	$mylinks = array (
-			'<a href="' . esc_url ( POSTMAN_HOME_PAGE_ABSOLUTE_URL ) . '">Settings</a>' 
-	);
-	return array_merge ( $links, $mylinks );
+if (! function_exists ( 'postmanModifyLinksOnPluginsListPage' )) {
+	function postmanModifyLinksOnPluginsListPage($links) {
+		$mylinks = array (
+				'<a href="' . esc_url ( POSTMAN_HOME_PAGE_ABSOLUTE_URL ) . '">Settings</a>' 
+		);
+		return array_merge ( $links, $mylinks );
+	}
 }
 // handle plugin activation
 if (! function_exists ( 'activatePostman' )) {
@@ -164,5 +163,19 @@ if (! function_exists ( 'activatePostman' )) {
 		}
 	}
 }
+
+// start the session
+if (! isset ( $_SESSION )) {
+	session_start ();
+}
+
+// load the core stuff
+require_once 'postman-core.php';
+
+// register error handler
+register_shutdown_function ( 'postmanHandleErrors' );
+
+// start all the fuss
+postmanMain ();
 
 ?>

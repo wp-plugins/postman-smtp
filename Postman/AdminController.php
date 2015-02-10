@@ -177,7 +177,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					// Ajax handlers
 					if (is_admin ()) {
 						// todo i think we need to add a lot more is_admin() around
-						$this->logger->debug ( 'Activating Ajax handlers' );
+						$this->logger->debug ( 'Registering Ajax handlers' );
 						add_action ( 'wp_ajax_test_port', array (
 								$this,
 								'getAjaxPortStatus' 
@@ -200,12 +200,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 					) );
 					
 					// intercepts calls to test_mail action
+					$this->logger->debug ( 'Registering Test Mail Action handler' );
 					add_action ( 'admin_post_test_mail', array (
 							$this,
 							'handleTestEmailAction' 
 					) );
 					
 					// intercepts calls to purge_data action
+					$this->logger->debug ( 'Registering Purge Data Action handler' );
 					add_action ( 'admin_post_purge_data', array (
 							$this,
 							'handlePurgeDataAction' 
@@ -960,8 +962,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		<div class="welcome-panel-column-container">
 			<div class="welcome-panel-column">
 				<h4>Get Started</h4>
-				<a
-					class="button button-primary button-hero"
+				<a class="button button-primary button-hero"
 					href="<?php echo POSTMAN_HOME_PAGE_ABSOLUTE_URL ?>&postman_action=start_wizard">Start
 					the Wizard</a>
 				<p class="">
