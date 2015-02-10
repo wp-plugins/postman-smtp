@@ -97,42 +97,8 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 			$postvals = "client_id=" . $this->getClientId () . "&client_secret=" . $this->getClientSecret () . "&redirect_uri=" . urlencode ( $redirectUri ) . "&grant_type=refresh_token&refresh_token=" . $this->getAuthorizationToken ()->getRefreshToken ();
 			// example request string
 			// client_id=0000000603DB0F&redirect_uri=http%3A%2F%2Fwww.contoso.com%2Fcallback.php&client_secret=LWILlT555GicSrIATma5qgyBXebRI&refresh_token=*LA9...//refresh token string shortened for example//...xRoX&grant_type=refresh_token
-			return $this->curl_request ( $accessTokenUrl, 'POST', $postvals );
-		}
-		/**
-		 *
-		 * @param unknown $url        	
-		 * @param unknown $method        	
-		 * @param unknown $postvals        	
-		 * @return mixed
-		 */
-		protected function curl_request($url, $method, $postvals) {
-			$this->getLogger ()->debug ( 'Posting to url ' . $url . ' parameters: ' . $postvals );
-			$ch = curl_init ( $url );
-			if ($method == "POST") {
-				$options = array (
-						CURLOPT_POST => 1,
-						CURLOPT_POSTFIELDS => $postvals,
-						CURLOPT_RETURNTRANSFER => 1 
-				);
-			} else {
-				
-				$options = array (
-						CURLOPT_RETURNTRANSFER => 1 
-				);
-			}
-			curl_setopt_array ( $ch, $options );
-			// if ($this->header) {
-			
-			// curl_setopt ( $ch, CURLOPT_HTTPHEADER, array (
-			// $this->header . $postvals
-			// ) );
-			// }
-			
-			$response = curl_exec ( $ch );
-			curl_close ( $ch );
-			// print_r($response);
-			return $response;
+			$fullUrl = $accessTokenUrl . '?' . $postvals;
+			return postmanHttpTransport($fullUrl);
 		}
 		protected function processRefreshTokenResponse($response) {
 			$this->processResponse ( $response, 'Could not refresh token' );

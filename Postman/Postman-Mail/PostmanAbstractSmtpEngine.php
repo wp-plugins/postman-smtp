@@ -20,11 +20,14 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 	require_once 'Zend-1.12.10/Mail/Transport/Exception.php';
 	require_once 'Zend-1.12.10/Mail/Transport/Abstract.php';
 	require_once 'Zend-1.12.10/Mail/Transport/Smtp.php';
+	require_once 'Zend-1.12.10/Mail/Transport/Sendmail.php';
 	require_once 'Zend-1.12.10/Mail/Protocol/Abstract.php';
 	require_once 'Zend-1.12.10/Mail/Protocol/Exception.php';
 	require_once 'Zend-1.12.10/Mail/Protocol/Smtp.php';
 	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Oauth2.php';
 	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Login.php';
+	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Crammd5.php';
+	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Plain.php';
 	
 	/**
 	 * This class knows how to interface with Wordpress

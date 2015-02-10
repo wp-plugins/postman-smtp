@@ -34,7 +34,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 				// prior to 1.0.0, access tokens were saved in authOptions without an auth type
 				// prior to 0.2.5, access tokens were save in options without an auth type
 				if (isset ( $authOptions ['access_token'] ) || isset ( $options ['access_token'] )) {
-					$logger->debug ( "Upgrading database: setting Authorization type to OAuth2" );
+					$logger->debug ( "Upgrading database: setting authorization_type to 'oauth2'" );
 					$options ['authorization_type'] = 'oauth2';
 					update_option ( 'postman_options', $options );
 				}

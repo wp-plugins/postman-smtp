@@ -4,7 +4,7 @@
  * Plugin Name: Postman SMTP
  * Plugin URI: https://wordpress.org/plugins/postman/
  * Description: Email not working? Never lose another message again! Postman is the first and only WordPress SMTP plugin to implement OAuth 2.0. Setup is a breeze with the Configuration Wizard and integrated Port Tester. Enjoy worry-free, guaranteed delivery even if your password changes!
- * Version: 1.3.2
+ * Version: 1.3.3
  * Author: Jason Hendriks
  * Text Domain: postman
  * Author URI: https://profiles.wordpress.org/jasonhendriks/
@@ -23,9 +23,9 @@
 // define constants
 define ( 'POSTMAN_HOME_PAGE_RELATIVE_URL', 'options-general.php?page=postman' );
 define ( 'POSTMAN_HOME_PAGE_ABSOLUTE_URL', admin_url ( POSTMAN_HOME_PAGE_RELATIVE_URL ) );
-define ( 'POSTMAN_PLUGIN_VERSION', '1.3.2' );
+define ( 'POSTMAN_PLUGIN_VERSION', '1.3.3' );
 
-// load the common functions, WordPress version
+// load the common functions
 require_once 'postman-common-wp-functions.php';
 
 // set-up the error handler
@@ -50,25 +50,36 @@ if (! function_exists ( 'postmanHandleErrors' )) {
 	}
 }
 
-// start the session
-if (! isset ( $_SESSION )) {
-	session_start ();
+if (! function_exists ( 'postmanMain' )) {
+	function postmanMain() {
+		// create a Logger
+		$logger = new PostmanLogger ( 'postman.php' );
+		$logger->debug ( 'Postman v' . POSTMAN_PLUGIN_VERSION . ' starting' );
+		
+		// start the session
+		if (! isset ( $_SESSION )) {
+			session_start ();
+		}
+		
+		// register error handler
+		register_shutdown_function ( 'postmanHandleErrors' );
+		
+		// handle plugin activation/deactivation
+		require_once 'Postman/PostmanActivationHandler.php';
+		$upgrader = new PostmanActivationHandler ();
+		register_activation_hook ( __FILE__, array (
+				$upgrader,
+				'activatePostman' 
+		) );
+		
+		// start Postman
+		require_once 'Postman/PostmanMain.php';
+		$kevinCostener = new PostmanMain ();
+		$kevinCostener->main ( plugin_basename ( __FILE__ ) );
+	}
 }
 
-// register error handler
-register_shutdown_function ( 'postmanHandleErrors' );
-
-// handle plugin activation/deactivation
-require_once 'Postman/PostmanActivationHandler.php';
-$upgrader = new PostmanActivationHandler ();
-register_activation_hook ( __FILE__, array (
-		$upgrader,
-		'activatePostman' 
-) );
-
-// start Postman
-require_once 'Postman/PostmanMain.php';
-$kevinCostener = new PostmanMain ();
-$kevinCostener->main ( plugin_basename ( __FILE__ ) );
+// start
+postmanMain ();
 
 ?>

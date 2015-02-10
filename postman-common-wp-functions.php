@@ -14,5 +14,20 @@ if (! function_exists ( 'postmanRedirect' )) {
 	}
 }
 
+if (! function_exists ( 'postmanHttpTransport' )) {
+	/**
+	 * Makes the outgoing HTTP requests
+	 *
+	 * @param unknown $url        	
+	 * @param unknown $args        	
+	 */
+	function postmanHttpTransport($url) {
+		$args = array (
+				'timeout' => POSTMAN_TCP_TIMEOUT 
+		);
+		$theBody = wp_remote_retrieve_body ( wp_remote_get ( $url, $args ) );
+	}
+}
+
 require_once 'postman-common-functions.php';
 ?>

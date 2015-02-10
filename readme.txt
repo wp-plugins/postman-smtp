@@ -156,10 +156,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.3.2 - 2015-02-10 =
-* Fixed the error: PHP Fatal error:  Call to private PostmanAuthorizationToken::__construct() This occurs when upgrading from a pre-v1.0 version of Postman (when PostmanAuthorizationToken had a public constructor) to 1.0 or higher.
-
-= 1.3.1 - 2015-02-10 =
+= 1.3.3 - 2015-02-10 =
+* Fixed the errpr: Class 'Zend_Mail_Protocol_Smtp_Auth_Plain' not found in /wordpress_jana/wp-content/plugins/postman-smtp/Postman/Postman-Mail/Zend-1.12.10/Mail/Transport/Smtp.php on line 198
+* Fixed the error: PHP Fatal error:  Call to private PostmanAuthorizationToken::__construct() This occurs when upgrading from a pre-v1.0 version of Postman (when PostmanAuthorizationToken had a public constructor) to v1.0 or higher.
 * Fixed the error PHP Fatal error: Class 'Google_IO_Stream' not found in /var/www/html/wp-content/plugins/postman-smtp/Postman/Postman-Auth/google-api-php-client-1.1.2/src/Google/Client.php on line 600 by including Google/IO/Stream.php
 * Postman now has a modest fatal error screen, rather than a dreaded white screen of death
 
@@ -231,7 +230,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Upgrade Notice ==
 
 = 1.3.2 =
-Fixed fatal error when upgrading from a pre-1.0 version of Postgres to 1.0+ during database upgrade
+Fixed fatal error when upgrading from a pre v1.0 version of Postgres to v1.0+ during database upgrade
 
 = 1.3.1 =
 Fixed the error PHP Fatal error: Class 'Google_IO_Stream' not found
