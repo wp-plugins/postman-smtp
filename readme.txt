@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, gmail, google apps, hotmail, windows live, outlook.com
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.3
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -156,6 +156,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.3.1 - 2015-02-10 =
+* Fixed the error PHP Fatal error: Class 'Google_IO_Stream' not found in /var/www/html/wp-content/plugins/postman-smtp/Postman/Postman-Auth/google-api-php-client-1.1.2/src/Google/Client.php on line 600 by including Google/IO/Stream.php
+* Postman now has a modest fatal error screen, rather than a dreaded white screen of death
+
 = 1.3 - 2015-02-09 =
 * Sending Hotmail/Windows Live/Outlook.com email now supported with OAuth 2.0 authentication! If Wizard detects that a Hotmail server has been entered, it automatically configures OAuth 2.0. 
 * Separated Authentication input from Encryption input for finer configuration control
@@ -222,6 +226,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+Fixed the error PHP Fatal error: Class 'Google_IO_Stream' not found
 
 = 1.3 =
 Now supporting Hotmail via OAuth 2.0!
