@@ -4,29 +4,45 @@
  * Plugin Name: Postman SMTP
  * Plugin URI: https://wordpress.org/plugins/postman/
  * Description: Email not working? Never lose another message again! Postman is the first and only WordPress SMTP plugin to implement OAuth 2.0. Setup is a breeze with the Configuration Wizard and integrated Port Tester. Enjoy worry-free, guaranteed delivery even if your password changes!
- * Version: 1.3
+ * Version: 1.3.1
  * Author: Jason Hendriks
  * Text Domain: postman
  * Author URI: https://profiles.wordpress.org/jasonhendriks/
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
-define ( 'POSTMAN_HOME_PAGE_URL', admin_url ( 'options-general.php' ) . '?page=postman' );
-define ( 'POSTMAN_PLUGIN_VERSION', '1.3' );
+define ( 'POSTMAN_HOME_PAGE_RELATIVE_URL', 'options-general.php?page=postman' );
+define ( 'POSTMAN_HOME_PAGE_ABSOLUTE_URL', admin_url ( POSTMAN_HOME_PAGE_RELATIVE_URL ) );
+define ( 'POSTMAN_PLUGIN_VERSION', '1.3.1' );
 
 // start the session
 if (! isset ( $_SESSION )) {
 	session_start ();
 }
 
+register_shutdown_function ( 'handleErrors' );
+function handleErrors() {
+	$last_error = error_get_last ();
+	$logger = new PostmanLogger ( 'postman.php' );
+	if (! is_null ( $last_error ) && preg_match ( "/postman/i", $last_error ['file'] )) {
+		// if there has been a fatal error
+		$message = sprintf ( '%s in %s on line %d', $last_error ['message'], $last_error ['file'], $last_error ['line'] );
+		printf ( '<h2>Bad, Postman!</h2> <p><b><tt>X-(</b></tt></p> <p>Look at this mess:</p><code>%s</code>', $message );
+	} else {
+		$logger->debug ( 'Normal exit' );
+	}
+}
+
 if (! function_exists ( 'postmanRedirect' )) {
 	/**
-	 * A function that handles redirects.
+	 * A façade function that handles redirects.
 	 * Inside WordPress we can use wp_redirect(). Outside WordPress, not so much. Load it before postman-core.php
 	 *
 	 * @param unknown $url        	
 	 */
 	function postmanRedirect($url) {
+		$logger = new PostmanLogger ( 'postman.php' );
+		$logger->debug ( sprintf ( "Redirecting to '%s'", $url ) );
 		wp_redirect ( $url );
 		exit ();
 	}
@@ -62,57 +78,22 @@ function postmanMain() {
 	
 	if (is_admin ()) {
 		
-		// check if there is an auth token waiting for granting and possibly exit
-		if (isset ( $_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
-			unset ( $_SESSION [PostmanAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
-			if (isset ( $_GET ['code'] )) {
-				postmanHandleAuthorizationGrant ( $logger, $options, $authToken );
-				// redirect to plugin setting page and exit()
-				postmanRedirect ( POSTMAN_HOME_PAGE_URL );
-			}
-		}
-		
 		// Adds "Settings" link to the plugin action page
 		add_filter ( 'plugin_action_links_' . $basename, 'modifyLinksOnPluginsListPage' );
 		
-		if (true || isset ( $_GET ['page'] ) && $_GET ['page'] == 'postman') {
-			
-			// the options screen
-			require_once 'Postman/AdminController.php';
-			
-			// start the Postman Admin page
-			$kevinCostner = new PostmanAdminController ( $basename, $options, $authToken, $messageHandler );
-		}
+		// the options screen
+		require_once 'Postman/AdminController.php';
+		
+		// start the Postman Admin page
+		$kevinCostner = new PostmanAdminController ( $basename, $options, $authToken, $messageHandler );
 	}
 }
 function modifyLinksOnPluginsListPage($links) {
 	$mylinks = array (
-			'<a href="' . esc_url ( POSTMAN_HOME_PAGE_URL ) . '">Settings</a>' 
+			'<a href="' . esc_url ( POSTMAN_HOME_PAGE_ABSOLUTE_URL ) . '">Settings</a>' 
 	);
 	return array_merge ( $links, $mylinks );
 }
-/**
- * Handles the authorization grant
- */
-function postmanHandleAuthorizationGrant(PostmanLogger $logger, PostmanOptions $options, PostmanAuthorizationToken $authorizationToken) {
-	$logger->debug ( 'Authorization in progress' );
-	unset ( $_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] );
-	
-	$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $options, $authorizationToken );
-	try {
-		if ($authenticationManager->tradeCodeForToken ()) {
-			$logger->debug ( 'Authorization successful' );
-			// save to database
-			$authorizationToken->save ();
-		} else {
-			PostmanMessageHandler::addError ( 'Your email provider did not grant Postman permission. Try again.' );
-		}
-	} catch ( Google_Auth_Exception $e ) {
-		$logger->error ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
-		PostmanMessageHandler::addError ( 'Error authenticating with this Client ID - please create a new one. [<em>' . $e->getMessage () . ' code=' . $e->getCode () . '</em>]' );
-	}
-}
-
 // handle plugin activation
 if (! function_exists ( 'activatePostman' )) {
 	register_activation_hook ( __FILE__, 'activatePostman' );
