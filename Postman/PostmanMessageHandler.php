@@ -14,26 +14,26 @@ class PostmanMessageHandler {
 	 *
 	 * @param unknown $options        	
 	 */
-	function __construct(PostmanOptions $options) {
+	function __construct(PostmanOptions $options, PostmanAuthorizationToken $authToken) {
 		$this->logger = new PostmanLogger ( get_class ( $this ) );
 		$this->options = $options;
 		
 		if (isset ( $_GET ['page'] ) && $_GET ['page'] == 'postman') {
 			
-			if ($this->options->isPermissionNeeded ( PostmanAuthorizationToken::getInstance () )) {
+			if ($this->options->isPermissionNeeded ( $authToken )) {
 				add_action ( 'admin_notices', Array (
 						$this,
 						'displayPermissionNeededWarning' 
 				) );
 			}
-			if (!$this->options->isAuthTypeOAuth2 () && ($this->options->isSmtpHostGmail () || $this->options->isSmtpHostHotmail ())) {
+			if (! $this->options->isAuthTypeOAuth2 () && ($this->options->isSmtpHostGmail () || $this->options->isSmtpHostHotmail ())) {
 				add_action ( 'admin_notices', Array (
 						$this,
 						'displaySwitchToOAuthWarning' 
 				) );
 			}
 		} else {
-			if (! $options->isSendingEmailAllowed ( PostmanAuthorizationToken::getInstance () )) {
+			if (! $options->isSendingEmailAllowed ( $authToken )) {
 				add_action ( 'admin_notices', Array (
 						$this,
 						'displayConfigurationRequiredWarning' 
@@ -72,7 +72,7 @@ class PostmanMessageHandler {
 		$_SESSION [PostmanMessageHandler::SUCCESS_MESSAGE] = $message;
 	}
 	public function displayPermissionNeededWarning() {
-		$url = sprintf ( __ ( '<a href="%1$s&postman_action=oauth_request_permission">%2$s</a>', 'postman' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL, 'Request Permission' );
+		$url = sprintf ( __ ( '<a href="%s&postman_action=%s">%s</a>', 'postman' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL, PostmanAdminController::POSTMAN_REQUEST_OAUTH_PERMISSION_ACTION, 'Request permission' );
 		$message = 'Warning: You entered a Client ID and Client Secret, but have not received permission to use it. ' . $url . ' from ' . PostmanSmtpHostProperties::getServiceName ( $this->options->getHostname () ) . '.';
 		$this->displayWarningMessage ( $message );
 	}
@@ -84,7 +84,6 @@ class PostmanMessageHandler {
 		$message = sprintf ( 'Warning: %s may silently discard messages sent with password authentication. Change your authentication type to OAuth 2.0.</span></p>', PostmanSmtpHostProperties::getServiceName ( $this->options->getHostname () ) );
 		$this->displayWarningMessage ( $message );
 	}
-	
 	//
 	public function displaySuccessSessionMessage() {
 		$this->displaySuccessMessage ( $this->retrieveSessionMessage ( PostmanMessageHandler::SUCCESS_MESSAGE ), 'updated' );

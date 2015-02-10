@@ -16,6 +16,9 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 			$this->basename = $basename;
 			$this->messageHandler = $messageHandler;
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			
+			// the bind should happen as soon as possible, but the error messages have to wait
+			// until the rest of WordPress has loaded
 			add_action ( 'admin_init', array (
 					$this,
 					'warnIfCanNotBindToWpMail' 
@@ -49,22 +52,20 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 					}
 					$this->logger->debug ( 'Bound to wp_mail()' );
 				} else {
-					$this->logger->error ( 'Cannot replace wp_mail' );
+					$this->logger->error ( 'Cannot bind to wp_mail' );
 					$this->couldNotReplaceWpMail = true;
 				}
 			} else {
-				$this->logger->debug ( 'Plugin is not configured.' );
+				$this->logger->debug ( 'Not binding, plugin is not configured.' );
 			}
 		}
 		function warnIfCanNotBindToWpMail() {
-			if (is_plugin_active ( $this->basename )) {
-				if ($this->couldNotReplaceWpMail) {
-					$this->logger->debug ( 'oops, can not bind to wp_mail()' );
-					add_action ( 'admin_notices', Array (
-							$this,
-							'displayCouldNotReplaceWpMail' 
-					) );
-				}
+			if ($this->couldNotReplaceWpMail) {
+				$this->logger->error ( 'Alerting administrator about bind problem' );
+				add_action ( 'admin_notices', Array (
+						$this,
+						'displayCouldNotReplaceWpMail' 
+				) );
 			}
 		}
 		public function displayCouldNotReplaceWpMail() {

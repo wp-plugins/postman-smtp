@@ -30,6 +30,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		const PORT_TEST_OPTIONS = 'postman_port_test_options';
 		const PORT_TEST_SECTION = 'postman_port_test_section';
 		
+		// action names
+		const POSTMAN_REQUEST_OAUTH_PERMISSION_ACTION = 'oauth_request_permission';
+		
 		// page titles
 		const NAME = 'Postman SMTP';
 		const PAGE_TITLE = 'Postman Settings';
@@ -100,6 +103,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 				}
 			}
 			
+			// Adds "Settings" link to the plugin action page
+			add_filter ( 'plugin_action_links_' . $basename, array (
+					$this,
+					'postmanModifyLinksOnPluginsListPage' 
+			) );
+			
 			// initialize the scripts, stylesheets and form fields
 			add_action ( 'admin_init', array (
 					$this,
@@ -109,110 +118,120 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// determine which actions to perform
 			switch ($action) {
 				case PostmanInputSanitizer::SAVE_SUCCESS :
-					$this->logger->debug ( 'Queued a call to handleSuccessfulSave()' );
-					add_action ( 'init', array (
-							$this,
-							'handleSuccessfulSave' 
-					) );
+					$this->registerInitFunction ( 'handleSuccessfulSave' );
 					break;
-				case 'oauth_request_permission' :
-					// prepare to go to Google/Hotmail to request OAuth permission
-					$this->logger->debug ( 'Queued a call to handleOAuthPermissionRequestAction()' );
-					add_action ( 'init', array (
-							$this,
-							'handleOAuthPermissionRequestAction' 
-					) );
+				
+				case PostmanAdminController::POSTMAN_REQUEST_OAUTH_PERMISSION_ACTION :
+					$this->registerInitFunction ( 'handleOAuthPermissionRequestAction' );
 					break;
+				
 				case PostmanAuthenticationManager::POSTMAN_AUTHORIZATION_IN_PROGRESS :
-					$this->logger->debug ( 'Queued a call to handleAuthorizationGrant()' );
-					add_action ( 'init', array (
-							$this,
-							'handleAuthorizationGrant' 
-					) );
+					$this->registerInitFunction ( 'handleAuthorizationGrant' );
 					break;
+				
 				case 'configure_manually' :
-					// this outputs the HTML content for the manual configuration function
-					$this->logger->debug ( 'Queued a call to outputManualConfigurationContent()' );
-					add_action ( 'admin_menu', array (
-							$this,
-							'generateManualConfigurationContent' 
-					) );
+					$this->registerAdminMenu ( 'generateManualConfigurationContent' );
 					break;
+				
 				case 'start_wizard' :
-					// this outputs the HTML content for the Wizard function
-					$this->logger->debug ( 'Queued a call to outputWizardContent()' );
-					add_action ( 'admin_menu', array (
-							$this,
-							'generateWizardContent' 
-					) );
+					$this->registerAdminMenu ( 'generateWizardContent' );
 					break;
+				
 				case 'send_test_email' :
-					// this outputs the HTML content for the send-test-email function
-					$this->logger->debug ( 'Queued a call to generateSendTestEmailContent()' );
-					add_action ( 'admin_menu', array (
-							$this,
-							'generateSendTestEmailContent' 
-					) );
-					
+					$this->registerAdminMenu ( 'generateSendTestEmailContent' );
 					break;
+				
 				case 'run_port_test' :
-					// this outputs the HTML content for the port test function
-					$this->logger->debug ( 'Queued a call to generatePortTestContent()' );
-					add_action ( 'admin_menu', array (
-							$this,
-							'generatePortTestContent' 
-					) );
-					
+					$this->registerAdminMenu ( 'generatePortTestContent' );
 					break;
+				
 				case 'delete_data' :
-					// this outputs the HTML content for the purge datafunction
-					$this->logger->debug ( 'Queued a call to generatePurgeDataContent()' );
-					add_action ( 'admin_menu', array (
-							$this,
-							'generatePurgeDataContent' 
-					) );
-					
+					$this->registerAdminMenu ( 'generatePurgeDataContent' );
 					break;
+				
 				default :
 					// Ajax handlers
 					if (is_admin ()) {
-						// todo i think we need to add a lot more is_admin() around
-						$this->logger->debug ( 'Registering Ajax handlers' );
-						add_action ( 'wp_ajax_test_port', array (
-								$this,
-								'getAjaxPortStatus' 
-						) );
-						add_action ( 'wp_ajax_check_email', array (
-								$this,
-								'getAjaxHostnameByEmail' 
-						) );
-						add_action ( 'wp_ajax_get_redirect_url', array (
-								$this,
-								'getAjaxRedirectUrl' 
-						) );
+						$this->registerAjaxHandler ( 'wp_ajax_test_port', 'getAjaxPortStatus' );
+						$this->registerAjaxHandler ( 'wp_ajax_check_email', 'getAjaxHostnameByEmail' );
+						$this->registerAjaxHandler ( 'wp_ajax_get_redirect_url', 'getAjaxRedirectUrl' );
 					}
 					
 					// this outputs the HTML content for the 'home' landing page
-					$this->logger->debug ( 'Queued a call to generateDefaultContent()' );
-					add_action ( 'admin_menu', array (
-							$this,
-							'generateDefaultContent' 
-					) );
+					$this->registerAdminMenu ( 'generateDefaultContent' );
 					
 					// intercepts calls to test_mail action
-					$this->logger->debug ( 'Registering Test Mail Action handler' );
-					add_action ( 'admin_post_test_mail', array (
-							$this,
-							'handleTestEmailAction' 
-					) );
+					$this->registerAdminPostAction ( 'test_mail', 'handleTestEmailAction' );
 					
 					// intercepts calls to purge_data action
-					$this->logger->debug ( 'Registering Purge Data Action handler' );
-					add_action ( 'admin_post_purge_data', array (
-							$this,
-							'handlePurgeDataAction' 
-					) );
+					$this->registerAdminPostAction ( 'purge_data', 'handlePurgeDataAction' );
 			}
+		}
+		
+		/**
+		 *
+		 * @param unknown $actionName        	
+		 * @param unknown $callbackName        	
+		 */
+		private function registerAjaxHandler($actionName, $callbackName) {
+			$this->logger->debug ( 'Registering ' . $actionName . ' Ajax handler' );
+			add_action ( $actionName, array (
+					$this,
+					$callbackName 
+			) );
+		}
+		
+		/**
+		 *
+		 * @param unknown $actionName        	
+		 * @param unknown $callbackName        	
+		 */
+		private function registerAdminMenu($callbackName) {
+			$this->logger->debug ( 'Registering admin menu ' . $callbackName );
+			add_action ( 'admin_menu', array (
+					$this,
+					$callbackName 
+			) );
+		}
+		
+		/**
+		 *
+		 * @param unknown $actionName        	
+		 * @param unknown $callbackName        	
+		 */
+		private function registerInitFunction($callbackName) {
+			$this->logger->debug ( 'Registering init function ' . $callbackName );
+			add_action ( 'init', array (
+					$this,
+					$callbackName 
+			) );
+		}
+		
+		/**
+		 * Registers actions posted by am HTML FORM with the WordPress 'action' parameter
+		 *
+		 * @param unknown $actionName        	
+		 * @param unknown $callbankName        	
+		 */
+		private function registerAdminPostAction($actionName, $callbankName) {
+			$this->logger->debug ( 'Registering ' . $actionName . ' Action Post handler' );
+			add_action ( 'admin_post_' . $actionName, array (
+					$this,
+					$callbankName 
+			) );
+		}
+		
+		/**
+		 * Add "Settings" link to the plugin action page
+		 *
+		 * @param unknown $links        	
+		 * @return multitype:
+		 */
+		private function postmanModifyLinksOnPluginsListPage($links) {
+			$mylinks = array (
+					'<a href="' . esc_url ( POSTMAN_HOME_PAGE_ABSOLUTE_URL ) . '">Settings</a>' 
+			);
+			return array_merge ( $links, $mylinks );
 		}
 		
 		/**
@@ -977,16 +996,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 					<li><?php
 			$emailCompany = 'Request OAuth Permission';
 			if ($this->options->getHostname () == PostmanGmailAuthenticationManager::SMTP_HOSTNAME) {
-				$emailCompany = 'Request Permission from
+				$emailCompany = 'Request permission from
 								Google';
 			} else if ($this->options->getHostname () == PostmanHotmailAuthenticationManager::SMTP_HOSTNAME) {
-				$emailCompany = 'Request Permission from
+				$emailCompany = 'Request permission from
 								Microsoft';
 			}
 			if ($this->options->isRequestOAuthPermissionAllowed ()) {
-				printf ( '<a
-							href="%s&postman_action=oauth_request_permission"
-							class="welcome-icon send-test-email">' . $emailCompany . '</a>', POSTMAN_HOME_PAGE_ABSOLUTE_URL );
+				printf ( '<a href="%s&postman_action=%s" class="welcome-icon send-test-email">%s</a>', POSTMAN_HOME_PAGE_ABSOLUTE_URL, PostmanAdminController::POSTMAN_REQUEST_OAUTH_PERMISSION_ACTION, $emailCompany );
 			} else {
 				print '<div class="welcome-icon send_test_emaail">';
 				print $emailCompany;
@@ -1141,7 +1158,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			<p>Once you click Finish below, these settings will be saved. Then at
 				the main Postman Settings screen, be sure to:</p>
 			<ul style='margin-left: 20px'>
-				<li>Request Permission from the Email Provider to allow Postman to
+				<li>Request permission from the Email Provider to allow Postman to
 					send email and</li>
 				<li>Send yourself a Test Email to make sure everything is working!</li>
 			</ul>
