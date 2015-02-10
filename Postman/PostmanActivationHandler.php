@@ -17,7 +17,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 		 * Handle activation of plugin
 		 */
 		public function activatePostman() {
-			$logger = new PostmanLogger ( 'postman.php' );
+			$logger = new PostmanLogger ( get_class ( $this ) );
 			$logger->debug ( "Activating plugin" );
 			// prior to version 0.2.5, $authOptions did not exist
 			$authOptions = get_option ( 'postman_auth_token' );
@@ -69,10 +69,5 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 		}
 	}
 }
-
-register_activation_hook ( __FILE__, array (
-		new PostmanActivationHandler (),
-		'activatePostman' 
-) );
 
 ?>

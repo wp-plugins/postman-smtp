@@ -227,7 +227,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * @param unknown $links        	
 		 * @return multitype:
 		 */
-		private function postmanModifyLinksOnPluginsListPage($links) {
+		public function postmanModifyLinksOnPluginsListPage($links) {
 			$mylinks = array (
 					'<a href="' . esc_url ( POSTMAN_HOME_PAGE_ABSOLUTE_URL ) . '">Settings</a>' 
 			);
