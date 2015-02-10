@@ -75,7 +75,7 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 			assert ( ! empty ( $gmailAddress ) );
 			$client = $this->createGoogleClient ();
 			$client->setLoginHint ( $gmailAddress );
-			$this->getLogger ()->debug ( "authenticating with google: loginHint=" . $gmailAddress );
+			$this->getLogger ()->debug ( "Requesting verification from Google - loginHint=" . $gmailAddress );
 			$_SESSION [PostmanAdminController::POSTMAN_ACTION] = PostmanAuthenticationManager::POSTMAN_AUTHORIZATION_IN_PROGRESS;
 			$authUrl = $client->createAuthUrl ();
 			postmanRedirect ( $authUrl );
