@@ -76,7 +76,7 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 			$client = $this->createGoogleClient ();
 			$client->setLoginHint ( $gmailAddress );
 			$this->getLogger ()->debug ( "authenticating with google: loginHint=" . $gmailAddress );
-			$_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] = 'gmail';
+			$_SESSION [PostmanAdminController::POSTMAN_ACTION] = PostmanAuthenticationManager::POSTMAN_AUTHORIZATION_IN_PROGRESS;
 			$authUrl = $client->createAuthUrl ();
 			postmanRedirect ( $authUrl );
 		}
@@ -95,8 +95,10 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 				$code = $_GET ['code'];
 				$this->getLogger ()->debug ( 'Found authorization code in request header' );
 				$client = $this->createGoogleClient ();
+				$this->getLogger ()->debug ( 'Authenticating with Google' );
 				$client->authenticate ( $code );
 				// $this->handleResponse ( $client );
+				$this->getLogger ()->debug ( 'Got a response' );
 				$this->processTradeCodeForTokenResponse ( $client->getAccessToken () );
 				return true;
 			} else {
@@ -109,7 +111,7 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 		 * Parses the authorization token and extracts the expiry time, accessToken, and if this is a first-time authorization, a refresh token.
 		 *
 		 * Calling superclass processResponse instead .. but is that call to stripslashes ok??
-		 * 
+		 *
 		 * @deprecated
 		 *
 		 * @param unknown $client        	

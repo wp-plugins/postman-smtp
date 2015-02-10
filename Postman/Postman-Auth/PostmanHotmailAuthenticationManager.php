@@ -49,8 +49,8 @@ if (! class_exists ( "PostmanHotmailAuthenticationManager" )) {
 		 * **********************************************
 		 */
 		public function requestVerificationCode() {
-			$_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] = 'hotmail';
-			
+			$_SESSION [PostmanAdminController::POSTMAN_ACTION] = PostmanAuthenticationManager::POSTMAN_AUTHORIZATION_IN_PROGRESS;
+						
 			$endpoint = PostmanHotmailAuthenticationManager::WINDOWS_LIVE_ENDPOINT;
 			$scope = PostmanHotmailAuthenticationManager::SCOPE;
 			
