@@ -32,7 +32,7 @@ if (! class_exists ( "PostmanStats" )) {
 		 */
 		private function __construct() {
 			$this->options = get_option ( PostmanStats::POSTMAN_STATS_DATA );
-			$this->logger = new PostmanLogger ( 'PostmanStats' );
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->enable ();
 		}
 		public function enable() {

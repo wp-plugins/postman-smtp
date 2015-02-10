@@ -53,7 +53,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		 */
 		private function __construct() {
 			$this->options = get_option ( PostmanOptions::POSTMAN_OPTIONS );
-			$this->logger = new PostmanLogger ( 'PostmanOptions' );
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
 		//
 		public function save() {

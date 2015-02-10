@@ -23,7 +23,6 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 			if ($binderOptions->isSendingEmailAllowed ( $binderAuthorizationToken )) {
 				
 				if (! function_exists ( 'wp_mail' )) {
-					$this->logger->debug ( 'Binding to wp_mail()' );
 					/**
 					 * The Postman drop-in replacement for the WordPress wp_mail() function
 					 *
@@ -48,12 +47,13 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 						// send the message
 						return $wp_mail_postmanWpMail->send ( $wp_mail_options, $wp_mail_authToken, $to, $subject, $message, $headers, $attachments );
 					}
+					$this->logger->debug ( 'Bound to wp_mail()' );
 				} else {
-					$this->logger->debug ( 'cant replace wp_mail' );
+					$this->logger->error ( 'Cannot replace wp_mail' );
 					$this->couldNotReplaceWpMail = true;
 				}
 			} else {
-				$this->logger->debug ( 'Not attemping to bind, plugin is not configured.' );
+				$this->logger->debug ( 'Plugin is not configured.' );
 			}
 		}
 		function warnIfCanNotBindToWpMail() {

@@ -148,6 +148,7 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		 * @throws Exception
 		 */
 		private function processResponse($response, $errorMessage) {
+			$this->getLogger ()->debug ( 'Processing response' );
 			$authToken = json_decode ( stripslashes ( $response ) );
 			if ($authToken === NULL) {
 				$message = $errorMessage . ': ' . $response;
