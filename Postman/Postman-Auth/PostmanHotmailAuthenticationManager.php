@@ -60,8 +60,7 @@ if (! class_exists ( "PostmanHotmailAuthenticationManager" )) {
 			$authUrl = $endpoint . "?client_id=" . $this->getClientId () . "&client_secret=" . $this->getClientSecret () . "&response_type=code&scope=" . $scope . "&redirect_uri=" . urlencode ( $callbackUrl );
 			
 			$this->getLogger ()->debug ( 'Requesting verification code from ' . $authUrl );
-			header ( 'Location: ' . filter_var ( $authUrl, FILTER_SANITIZE_URL ) );
-			exit ();
+			postmanRedirect ( $authUrl );
 		}
 		
 		/**

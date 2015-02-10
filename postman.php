@@ -11,11 +11,29 @@
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
-
-// these constants are used for OAuth HTTP requests
 define ( 'POSTMAN_HOME_PAGE_URL', admin_url ( 'options-general.php' ) . '?page=postman' );
 define ( 'POSTMAN_PLUGIN_VERSION', '1.3' );
-define ( 'POSTMAN_TCP_TIMEOUT', 30 );
+
+// start the session
+if (! isset ( $_SESSION )) {
+	session_start ();
+}
+
+if (! function_exists ( 'postmanRedirect' )) {
+	/**
+	 * A function that handles redirects.
+	 * Inside WordPress we can use wp_redirect(). Outside WordPress, not so much. Load it before postman-core.php
+	 *
+	 * @param unknown $url        	
+	 */
+	function postmanRedirect($url) {
+		wp_redirect ( $url );
+		exit ();
+	}
+}
+
+// load the core stuff
+require_once 'postman-core.php';
 
 // start all the fuss
 postmanMain ();
@@ -24,7 +42,6 @@ postmanMain ();
 function postmanMain() {
 	
 	// create a Logger
-	require_once 'Postman/Postman-Common/postman-common.php';
 	$logger = new PostmanLogger ( 'postman.php' );
 	
 	// load the options and the auth token
@@ -44,9 +61,6 @@ function postmanMain() {
 	new PostmanWpMailBinder ( plugin_basename ( __FILE__ ), $options, $authToken, $messageHandler );
 	
 	if (is_admin ()) {
-		// load the core of Postman
-		require_once 'Postman/Postman-Mail/core.php';
-		require_once 'Postman/Postman-Auth/core.php';
 		
 		// check if there is an auth token waiting for granting and possibly exit
 		if (isset ( $_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] )) {
@@ -54,8 +68,7 @@ function postmanMain() {
 			if (isset ( $_GET ['code'] )) {
 				postmanHandleAuthorizationGrant ( $logger, $options, $authToken );
 				// redirect to plugin setting page and exit()
-				header ( 'Location: ' . esc_url ( POSTMAN_HOME_PAGE_URL ) );
-				exit ();
+				postmanRedirect ( POSTMAN_HOME_PAGE_URL );
 			}
 		}
 		
@@ -157,36 +170,4 @@ if (! function_exists ( 'activatePostman' )) {
 	}
 }
 
-if (! function_exists ( 'str_getcsv' )) {
-	/**
-	 * Using fgetscv (PHP 4) as a work-around for str_getcsv (PHP 5.3)
-	 * From http://stackoverflow.com/questions/13430120/str-getcsv-alternative-for-older-php-version-gives-me-an-empty-array-at-the-e
-	 *
-	 * @param unknown $string        	
-	 * @return multitype:
-	 */
-	function str_getcsv($string) {
-		$fh = fopen ( 'php://temp', 'r+' );
-		fwrite ( $fh, $string );
-		rewind ( $fh );
-		
-		$row = fgetcsv ( $fh );
-		
-		fclose ( $fh );
-		return $row;
-	}
-}
-
-if (! function_exists ( 'postmanValidateEmail' )) {
-	/**
-	 * Validate an e-mail address
-	 *
-	 * @param unknown $email        	
-	 * @return number
-	 */
-	function postmanValidateEmail($email) {
-		$exp = "/^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$/i";
-		return preg_match ( $exp, $email );
-	}
-}
 ?>

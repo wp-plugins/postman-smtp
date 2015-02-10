@@ -146,8 +146,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			delete_option ( PostmanOptions::POSTMAN_OPTIONS );
 			delete_option ( PostmanAuthorizationToken::OPTIONS_NAME );
 			delete_option ( PostmanAdminController::TEST_OPTIONS );
-			header ( 'Location: ' . esc_url ( POSTMAN_HOME_PAGE_URL ) );
-			exit ();
+			postmanRedirect(POSTMAN_HOME_PAGE_URL );
 		}
 		
 		/**
@@ -193,8 +192,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$testEmailController->send ( $this->options, $this->authorizationToken, $recipient, $this->messageHandler );
 			}
 			$this->logger->debug ( 'Redirecting to home page' );
-			wp_redirect ( POSTMAN_HOME_PAGE_URL );
-			exit ();
+			postmanRedirect ( POSTMAN_HOME_PAGE_URL );
 		}
 		public function handleGoogleAuthenticationAction() {
 			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $this->options, $this->authorizationToken );

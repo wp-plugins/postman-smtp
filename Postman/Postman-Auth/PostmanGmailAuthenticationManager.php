@@ -78,8 +78,7 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 			$this->getLogger ()->debug ( "authenticating with google: loginHint=" . $gmailAddress );
 			$_SESSION [PostmanGmailAuthenticationManager::AUTHORIZATION_IN_PROGRESS] = 'gmail';
 			$authUrl = $client->createAuthUrl ();
-			header ( 'Location: ' . filter_var ( $authUrl, FILTER_SANITIZE_URL ) );
-			exit ();
+			postmanRedirect ( $authUrl );
 		}
 		
 		/**
@@ -110,6 +109,7 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 		 * Parses the authorization token and extracts the expiry time, accessToken, and if this is a first-time authorization, a refresh token.
 		 *
 		 * Calling superclass processResponse instead .. but is that call to stripslashes ok??
+		 * 
 		 * @deprecated
 		 *
 		 * @param unknown $client        	

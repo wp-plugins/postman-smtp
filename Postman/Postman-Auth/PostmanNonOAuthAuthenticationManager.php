@@ -33,8 +33,7 @@ if (! class_exists ( "PostmanNonOAuthAuthenticationManager" )) {
 		 * @see PostmanAuthenticationManager::requestVerificationCode()
 		 */
 		public function requestVerificationCode() {
-			header ( 'Location: ' . filter_var ( $authUrl, FILTER_SANITIZE_URL ) );
-			exit ();
+			postmanRedirect ( $authUrl );
 		}
 		
 		/**

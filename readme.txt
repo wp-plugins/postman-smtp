@@ -13,10 +13,10 @@ Kiss your email problems good-bye with Postman, the first and only OAuth-enabled
 
 Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking](https://support.google.com/accounts/answer/6010255) [traditional](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) SMTP SSL/TLS mechanisms with Gmail.
 
-Postman is a next-generation SMTP plugin which provides WordPress with a more secure mechanism for sending email. When your site generates an email, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
+Postman is a next-generation SMTP plugin which provides WordPress with the latest security mechanism for sending email. When your site generates an email, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
 
 ###* What's New for v1.3 *
-*Now supporting OAuth 2.0 auth with Hotmail/Windows Live/Outlook.com! What?! :D*
+*Now supporting OAuth 2.0 for Hotmail/Windows Live/Outlook.com!*
 
 = Features =
 * Send mail to any host with SMTP/SMTPS like the other 172 WordPress SMTP plugins
