@@ -7,6 +7,9 @@ http://codex.wordpress.org/I18n_for_WordPress_Developers
 Portable WordPress-only alternative to curl_init
 http://planetozh.com/blog/2009/08/how-to-make-http-requests-with-wordpress/
 
+"Once the action is complete. I want the page to redirect back to the form that called the script."
+http://stackoverflow.com/questions/21450966/wp-redirect-call-to-undefined-function-new-plugin
+
 
 Tutorials
 ---------
