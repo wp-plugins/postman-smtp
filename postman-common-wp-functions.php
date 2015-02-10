@@ -25,7 +25,16 @@ if (! function_exists ( 'postmanHttpTransport' )) {
 		$args = array (
 				'timeout' => POSTMAN_TCP_TIMEOUT 
 		);
-		$theBody = wp_remote_retrieve_body ( wp_remote_get ( $url, $args ) );
+		$logger = new PostmanLogger ( 'PostmanHttpTransport' );
+		$logger->debug ( sprintf ( 'Loading %s', $url ) );
+		$response = wp_remote_get ( $url, $args );
+		if (is_wp_error ( $response )) {
+			$logger->error ( $response->get_error_message () );
+			throw new Exception ( 'Error executing wp_remote_get: ' . $response->get_error_message () );
+		} else {
+			$theBody = wp_remote_retrieve_body ( $response );
+			return $theBody;
+		}
 	}
 }
 
