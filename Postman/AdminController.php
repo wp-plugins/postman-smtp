@@ -849,11 +849,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 				print '<p><span style="color:green;padding:2px 5px; font-size:1.2em">Postman is configured.</span><p style="margin:0 10px">Sending mail from <b>' . $this->options->getSenderEmail () . '</b> via <b>' . $this->options->getHostname () . ':' . $this->options->getPort () . '</b>';
 				if ($this->options->isAuthTypeOAuth2 ()) {
 					print ' using OAuth 2.0 authentication.</span></p>';
-					print '<p style="margin:10px 10px"><span>Please note: <em>Plugins are forbidden from overriding the sender email address in OAuth 2.0 mode</em>.</span></p>';
 				} else if ($this->options->isAuthTypeNone ()) {
 					print ' using no authentication.</span></p>';
 				} else {
 					print ' using Password (' . $this->options->getAuthorizationType () . ') authentication.</span></p>';
+				}
+				if (! $this->options->isAuthTypeNone ()) {
+					print '<p style="margin:10px 10px"><span>Please note: <em>Plugins may override the sender name only when authentication is used</em>.</span></p>';
 				}
 			} else {
 				print '<p><span style="color:red; padding:2px 5px; font-size:1.1em">Status: Postman is not sending mail.</span></p>';
@@ -959,10 +961,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 			<div class="welcome-panel-column">
 				<h4>Get Started</h4>
 				<a
-					class="button button-primary button-hero load-customize hide-if-no-customize"
+					class="button button-primary button-hero"
 					href="<?php echo POSTMAN_HOME_PAGE_ABSOLUTE_URL ?>&postman_action=start_wizard">Start
 					the Wizard</a>
-				<p class="hide-if-no-customize">
+				<p class="">
 					or, <a
 						href="<?php echo POSTMAN_HOME_PAGE_ABSOLUTE_URL ?>&postman_action=configure_manually">configure
 						manually</a>.
