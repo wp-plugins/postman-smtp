@@ -955,7 +955,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		
 		/**
 		 */
-		public function displayTopNavigation() {
+		private function displayTopNavigation() {
 			?>
 <div id="welcome-panel" class="welcome-panel">
 	<div class="welcome-panel-content">
