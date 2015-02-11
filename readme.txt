@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, gmail, google apps, hotmail, windows live, outlook.com
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.3.2
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -159,7 +159,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.3.3 - 2015-02-11 =
+= 1.3.4 - 2015-02-11 =
 * 500 downloads and six 5-star ratings in only three weeks! Cool! Postman is consistently in the 4th / 5th most popular SMTP plugin download spot. Thanks everyone! 8-)
 * Replaced the Google OAuth API with pure PHP code. No more unexpected Google API errors.
 * Enabled overriding of the timeouts in the configuration screen. If Postman is intermittently sending mail, doubling the TCP Read Timeout may help
@@ -242,7 +242,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Upgrade Notice ==
 
-= 1.3.3 =
+= 1.3.4 =
 This is a 'hardening' update which fixes several minor bugs and improves the stability of the UI and mail service.
 
 = 1.3 =

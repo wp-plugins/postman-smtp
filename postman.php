@@ -4,7 +4,7 @@
  * Plugin Name: Postman SMTP
  * Plugin URI: https://wordpress.org/plugins/postman/
  * Description: Email not working? Postman is the first and only WordPress SMTP plugin to implement OAuth 2.0 security for Gmail and Hotmail. Setup is a breeze with the Configuration Wizard and integrated Port Tester. Enjoy worry-free delivery even if your password changes!
- * Version: 1.3.3
+ * Version: 1.3.4
  * Author: Jason Hendriks
  * Text Domain: postman
  * Author URI: https://profiles.wordpress.org/jasonhendriks/
@@ -20,7 +20,7 @@
 // define constants
 define ( 'POSTMAN_HOME_PAGE_RELATIVE_URL', 'options-general.php?page=postman' );
 define ( 'POSTMAN_HOME_PAGE_ABSOLUTE_URL', admin_url ( POSTMAN_HOME_PAGE_RELATIVE_URL ) );
-define ( 'POSTMAN_PLUGIN_VERSION', '1.3.3' );
+define ( 'POSTMAN_PLUGIN_VERSION', '1.3.4' );
 
 // load the common functions
 require_once 'Postman/postman-common-wp-functions.php';
