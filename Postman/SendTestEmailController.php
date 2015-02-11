@@ -53,7 +53,7 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			} else if (! $postmanWpMailResult) {
 				$this->logger->error ( 'Test Email NOT delivered to SMTP server - ' . $postmanWpMail->getException ()->getCode () );
 				if ($postmanWpMail->getException ()->getCode () == 334) {
-					$messageHandler->addError ( 'Oh, bother! ... Communication Error [334] - check that your Sender Email is the same as your Gmail account.' );
+					$messageHandler->addError ( 'Oh, bother! ... Communication Error [334] - check that your Sender Email is the same as your Gmail account. You may need to re-create the Client ID.' );
 				} else {
 					$messageHandler->addError ( 'Oh, bother! ... ' . $postmanWpMail->getException ()->getMessage () );
 				}

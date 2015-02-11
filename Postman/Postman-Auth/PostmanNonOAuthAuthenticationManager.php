@@ -17,7 +17,7 @@ if (! class_exists ( "PostmanNonOAuthAuthenticationManager" )) {
 		
 		/**
 		 */
-		public function isTokenExpired() {
+		public function isAccessTokenExpired() {
 			return false;
 		}
 		
@@ -38,7 +38,7 @@ if (! class_exists ( "PostmanNonOAuthAuthenticationManager" )) {
 		
 		/**
 		 */
-		public function tradeCodeForToken() {
+		public function handleAuthorizatinGrantCode() {
 		}
 	}
 }

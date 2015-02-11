@@ -71,12 +71,11 @@ if (! class_exists ( "PostmanHotmailAuthenticationManager" )) {
 		 * bundle in the session, and redirect to ourself.
 		 * **********************************************
 		 */
-		public function tradeCodeForToken() {
+		public function handleAuthorizatinGrantCode() {
 			if (isset ( $_GET ['code'] )) {
 				$code = $_GET ['code'];
 				$this->getLogger ()->debug ( 'Found authorization code in request header' );
-				$response = $this->getAccessToken ( 'https://login.live.com/oauth20_token.srf', admin_url ( 'options-general.php' ), $code );
-				$this->processTradeCodeForTokenResponse ( $response );
+				$this->requestAuthorizationToken ( 'https://login.live.com/oauth20_token.srf', PostmanSmtpHostProperties::getRedirectUrl ( PostmanSmtpHostProperties::WINDOWS_LIVE_HOSTNAME ), $code );
 				return true;
 			} else {
 				$this->getLogger ()->debug ( 'Expected code in the request header but found none - user probably denied request' );
@@ -114,8 +113,7 @@ if (! class_exists ( "PostmanHotmailAuthenticationManager" )) {
 			$windowsLiveUrl = PostmanHotmailAuthenticationManager::WINDOWS_LIVE_REFRESH;
 			assert ( ! empty ( $windowsLiveUrl ) );
 			
-			$response = $this->refreshAccessToken ( $windowsLiveUrl, $callbackUrl );
-			$this->processRefreshTokenResponse ( $response );
+			$this->refreshAccessToken ( $windowsLiveUrl, $callbackUrl );
 		}
 	}
 }

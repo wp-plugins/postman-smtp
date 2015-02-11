@@ -28,7 +28,7 @@ class PostmanSmtpEngineFactory {
 			$this->logger->debug ( 'Ensuring Access Token is up-to-date' );
 			// interact with the Authentication Manager
 			$wpMailAuthManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $options, $authorizationToken );
-			if ($wpMailAuthManager->isTokenExpired ()) {
+			if ($wpMailAuthManager->isAccessTokenExpired ()) {
 				$this->logger->debug ( 'Access Token has expired, attempting refresh' );
 				$wpMailAuthManager->refreshToken ();
 				$authorizationToken->save ();

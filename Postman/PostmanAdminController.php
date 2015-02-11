@@ -262,16 +262,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $options, $authorizationToken );
 			try {
-				if ($authenticationManager->tradeCodeForToken ()) {
+				if ($authenticationManager->handleAuthorizatinGrantCode ()) {
 					$logger->debug ( 'Authorization successful' );
 					// save to database
 					$authorizationToken->save ();
 				} else {
 					$this->messageHandler->addError ( 'Your email provider did not grant Postman permission. Try again.' );
 				}
-			} catch ( Google_Auth_Exception $e ) {
+			} catch ( Exception $e ) {
 				$logger->error ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
-				PostmanMessageHandler::addError ( 'Error authenticating with this Client ID - please create a new one. [<em>' . $e->getMessage () . ' code=' . $e->getCode () . '</em>]' );
+				$this->messageHandler->addError ( 'Error authenticating with this Client ID - please create a new one. [<em>' . $e->getMessage () . '</em>]' );
 			}
 			// redirect home
 			postmanRedirect ( POSTMAN_HOME_PAGE_RELATIVE_URL );
@@ -876,7 +876,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					print ' using Password (' . $this->options->getAuthorizationType () . ') authentication.</span></p>';
 				}
 				if (! $this->options->isAuthTypeNone ()) {
-					print '<p style="margin:10px 10px"><span>Please note: <em>Plugins may override the sender name only when authentication is used</em>.</span></p>';
+					print '<p style="margin:10px 10px"><span>Please note: <em>When authentication is used, plugins may override the sender name only</em>.</span></p>';
 				}
 			} else {
 				print '<p><span style="color:red; padding:2px 5px; font-size:1.1em">Status: Postman is not sending mail.</span></p>';
@@ -995,10 +995,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 				<ul>
 					<li><?php
 			$emailCompany = 'Request OAuth Permission';
-			if ($this->options->getHostname () == PostmanGmailAuthenticationManager::SMTP_HOSTNAME) {
+			if ($this->options->isSmtpHostGmail ()) {
 				$emailCompany = 'Request permission from
 								Google';
-			} else if ($this->options->getHostname () == PostmanHotmailAuthenticationManager::SMTP_HOSTNAME) {
+			} else if ($this->options->isSmtpHostHotmail ()) {
 				$emailCompany = 'Request permission from
 								Microsoft';
 			}

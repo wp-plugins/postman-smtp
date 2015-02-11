@@ -21,16 +21,19 @@ if (! function_exists ( 'postmanHttpTransport' )) {
 	 * @param unknown $url        	
 	 * @param unknown $args        	
 	 */
-	function postmanHttpTransport($url) {
+	function postmanHttpTransport($url, $parameters) {
 		$args = array (
-				'timeout' => POSTMAN_TCP_TIMEOUT 
+				'timeout' => POSTMAN_TCP_TIMEOUT,
+				'body' => $parameters 
 		);
 		$logger = new PostmanLogger ( 'PostmanHttpTransport' );
-		$logger->debug ( sprintf ( 'Loading %s', $url ) );
-		$response = wp_remote_get ( $url, $args );
+		$logger->debug ( sprintf ( 'Posting to %s', $url) );
+		$response = wp_remote_post ( $url, $args );
+		
+		// pre-process the response
 		if (is_wp_error ( $response )) {
 			$logger->error ( $response->get_error_message () );
-			throw new Exception ( 'Error executing wp_remote_get: ' . $response->get_error_message () );
+			throw new Exception ( 'Error executing wp_remote_post: ' . $response->get_error_message () );
 		} else {
 			$theBody = wp_remote_retrieve_body ( $response );
 			return $theBody;

@@ -4,18 +4,35 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 	require_once 'PostmanAbstractAuthenticationManager.php';
 	
 	/**
-	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api
-	 * http://pastebin.com/jA9sBNTk
+	 * https://developers.google.com/accounts/docs/OAuth2WebServer
+	 * https://developers.google.com/gmail/xoauth2_protocol
+	 * https://developers.google.com/gmail/api/auth/scopes
 	 */
 	class PostmanGmailAuthenticationManager extends PostmanAbstractAuthenticationManager implements PostmanAuthenticationManager {
 		
-		// constants
-		const SCOPE = 'https://mail.google.com/';
-		const SMTP_HOSTNAME = 'smtp.gmail.com';
-		private $gmailAddress;
+		// This endpoint is the target of the initial request. It handles active session lookup, authenticating the user, and user consent.
+		const GOOGLE_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth';
+		const GOOGLE_REFRESH = 'https://www.googleapis.com/oauth2/v3/token';
+		
+		// this scope doesn't work
+		// Create, read, update, and delete drafts. Send messages and drafts.
+		const SCOPE_COMPOSE = 'https://www.googleapis.com/auth/gmail.compose';
+		
+		// this scope doesn't work
+		// All read/write operations except immediate, permanent deletion of threads and messages, bypassing Trash.
+		const SCOPE_MODIFY = 'https://www.googleapis.com/auth/gmail.modify';
+		
+		// Full access to the account, including permanent deletion of threads and messages. This scope should only be requested if your application needs to immediately and permanently delete threads and messages, bypassing Trash; all other actions can be performed with less permissive scopes.
+		const SCOPE_FULL_ACCESS = 'https://mail.google.com/';
+		const AUTH_TEMP_ID = 'GOOGLE_OAUTH_TEMP_ID';
+		
+		// the sender email address
+		private $senderEmail;
 		
 		/**
 		 * Constructor
+		 *
+		 * Get a Client ID from https://account.live.com/developers/applications/index
 		 */
 		public function __construct($clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken, $senderEmail) {
 			assert ( ! empty ( $clientId ) );
@@ -23,83 +40,68 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 			assert ( ! empty ( $authorizationToken ) );
 			assert ( ! empty ( $senderEmail ) );
 			$logger = new PostmanLogger ( get_class ( $this ) );
+			$this->senderEmail = $senderEmail;
 			parent::__construct ( $clientId, $clientSecret, $authorizationToken, $logger );
-			require_once 'google-api-php-client-1.1.2/autoload.php';
-			$this->gmailAddress = $senderEmail;
 		}
 		
 		/**
-		 */
-		private function createGoogleClient() {
-			
-			// Create the Client
-			$client = new Google_Client ();
-			// Set Basic Client info as established at the beginning of the file
-			$client->setClientId ( $this->getClientId () );
-			$client->setClientSecret ( $this->getClientSecret () );
-			$client->setRedirectUri ( PostmanSmtpHostProperties::getRedirectUrl ( PostmanSmtpHostProperties::GMAIL_HOSTNAME ) );
-			$client->setScopes ( PostmanGmailAuthenticationManager::SCOPE );
-			// Set this to 'force' in order to get a new refresh_token.
-			// Useful if you had already granted access to this application.
-			$client->setApprovalPrompt ( PostmanGmailAuthenticationManager::APPROVAL_PROMPT );
-			// Critical in order to get a refresh_token, otherwise it's not provided in the response.
-			$client->setAccessType ( PostmanGmailAuthenticationManager::ACCESS_TYPE );
-			
-			$google_oauthV2 = new Google_Service_Oauth2 ( $client );
-			return $client;
-		}
-		
-		/**
-		 */
-		public function refreshToken() {
-			$this->getLogger ()->debug ( 'Refreshing Token' );
-			$client = $this->createGoogleClient ();
-			$refreshToken = $this->getAuthorizationToken ()->getRefreshToken ();
-			assert ( ! empty ( $refreshToken ) );
-			$client->refreshToken ( $refreshToken );
-			$this->processRefreshTokenResponse ( $client->getAccessToken () );
-			// $this->handleResponse ( $client );
-		}
-		
-		/**
-		 * **********************************************
-		 * Make an API request on behalf of a user.
-		 * In this case we need to have a valid OAuth 2.0
-		 * token for the user, so we need to send them
-		 * through a login flow. To do this we need some
-		 * information from our API console project.
-		 * **********************************************
+		 * The authorization sequence begins when your application redirects a browser to a Google URL;
+		 * the URL includes query parameters that indicate the type of access being requested.
+		 *
+		 * As in other scenarios, Google handles user authentication, session selection, and user consent.
+		 * The result is an authorization code, which Google returns to your application in a query string.
+		 *
+		 * (non-PHPdoc)
+		 *
+		 * @see PostmanAuthenticationManager::requestVerificationCode()
 		 */
 		public function requestVerificationCode() {
-			$gmailAddress = $this->gmailAddress;
-			assert ( ! empty ( $gmailAddress ) );
-			$client = $this->createGoogleClient ();
-			$client->setLoginHint ( $gmailAddress );
-			$this->getLogger ()->debug ( "Requesting verification from Google - loginHint=" . $gmailAddress );
+			
+			// Create a state token to prevent request forgery.
+			// Store it in the session for later validation.
+			$state = md5 ( rand () );
+			$_SESSION [PostmanGmailAuthenticationManager::AUTH_TEMP_ID] = $state;
+			
+			$params = array (
+					'response_type' => 'code',
+					'redirect_uri' => urlencode ( PostmanSmtpHostProperties::getRedirectUrl ( PostmanSmtpHostProperties::GMAIL_HOSTNAME ) ),
+					'client_id' => $this->getClientId (),
+					'scope' => urlencode ( PostmanGmailAuthenticationManager::SCOPE_FULL_ACCESS ),
+					'access_type' => 'offline',
+					'approval_prompt' => 'force',
+					'state' => $state,
+					'login_hint' => $this->senderEmail 
+			);
+			
+			build_query ( $params );
+			$authUrl = PostmanGmailAuthenticationManager::GOOGLE_ENDPOINT . '?' . build_query ( $params );
+			
+			$this->getLogger ()->debug ( 'Requesting verification code from Google' );
 			$_SESSION [PostmanAdminController::POSTMAN_ACTION] = PostmanAuthenticationManager::POSTMAN_AUTHORIZATION_IN_PROGRESS;
-			$authUrl = $client->createAuthUrl ();
 			postmanRedirect ( $authUrl );
 		}
 		
 		/**
-		 * **********************************************
-		 * If we have a code back from the OAuth 2.0 flow,
-		 * we need to exchange that with the authenticate()
-		 * function.
-		 * We store the resultant access token
-		 * bundle in the session, and redirect to ourself.
-		 * **********************************************
+		 * After receiving the authorization code, your application can exchange the code
+		 * (along with a client ID and client secret) for an access token and, in some cases,
+		 * a refresh token.
+		 *
+		 * (non-PHPdoc)
+		 *
+		 * @see PostmanAuthenticationManager::handleAuthorizatinGrantCode()
 		 */
-		public function tradeCodeForToken() {
+		public function handleAuthorizatinGrantCode() {
 			if (isset ( $_GET ['code'] )) {
-				$code = $_GET ['code'];
 				$this->getLogger ()->debug ( 'Found authorization code in request header' );
-				$client = $this->createGoogleClient ();
-				$this->getLogger ()->debug ( 'Authenticating with Google' );
-				$client->authenticate ( $code );
-				// $this->handleResponse ( $client );
-				$this->getLogger ()->debug ( 'Got a response' );
-				$this->processTradeCodeForTokenResponse ( $client->getAccessToken () );
+				$code = $_GET ['code'];
+				if (isset ( $_GET ['state'] ) && $_GET ['state'] == $_SESSION [PostmanGmailAuthenticationManager::AUTH_TEMP_ID]) {
+					unset ( $_SESSION [PostmanGmailAuthenticationManager::AUTH_TEMP_ID] );
+					$this->getLogger ()->debug ( 'Found valid state in request header' );
+				} else {
+					$this->getLogger ()->error ( 'The grant code from Google had no state and may be a forgery' );
+					throw new Exception ( 'The grant code from Google had no state and may be a forgery' );
+				}
+				$this->requestAuthorizationToken ( PostmanGmailAuthenticationManager::GOOGLE_REFRESH, PostmanSmtpHostProperties::getRedirectUrl ( PostmanSmtpHostProperties::GMAIL_HOSTNAME ), $code );
 				return true;
 			} else {
 				$this->getLogger ()->debug ( 'Expected code in the request header but found none - user probably denied request' );
@@ -108,17 +110,25 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 		}
 		
 		/**
-		 * Parses the authorization token and extracts the expiry time, accessToken, and if this is a first-time authorization, a refresh token.
+		 * If a refresh token is present in the authorization code exchange,
+		 * then it can be used to obtain new access tokens at any time.
+		 * This is called offline access, because the user does not have to be present
+		 * at the browser when the application obtains a new access token.
 		 *
-		 * Calling superclass processResponse instead .. but is that call to stripslashes ok??
+		 * (non-PHPdoc)
 		 *
-		 * @deprecated
-		 *
-		 * @param unknown $client        	
+		 * @see PostmanAuthenticationManager::refreshToken()
 		 */
-		private function handleResponse(Google_Client $client) {
-			$newtoken = json_decode ( $client->getAccessToken () );
-			$this->decodeReceivedAuthorizationToken ( $newtoken );
+		public function refreshToken() {
+			$this->getLogger ()->debug ( 'Refreshing Token' );
+			
+			$callbackUrl = PostmanSmtpHostProperties::getRedirectUrl ( PostmanSmtpHostProperties::GMAIL_HOSTNAME );
+			assert ( ! empty ( $callbackUrl ) );
+			
+			$refreshUrl = PostmanGmailAuthenticationManager::GOOGLE_REFRESH;
+			assert ( ! empty ( $refreshUrl ) );
+			
+			$this->refreshAccessToken ( $refreshUrl, $callbackUrl );
 		}
 	}
 }

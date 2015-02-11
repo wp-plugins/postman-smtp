@@ -47,82 +47,116 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		
 		/**
 		 */
-		public function isTokenExpired() {
+		public function isAccessTokenExpired() {
 			$expireTime = ($this->authorizationToken->getExpiryTime () - PostmanGmailAuthenticationManager::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
 			$tokenHasExpired = time () > $expireTime;
 			$this->logger->debug ( 'Access Token Expiry Time is ' . $expireTime . ', expires_in=' . ($expireTime - time ()) . ', expired=' . ($tokenHasExpired ? 'yes' : 'no') );
-			return true || $tokenHasExpired;
+			return $tokenHasExpired;
 		}
 		
 		/**
-		 * Parses the authorization token and extracts the expiry time, accessToken, and if this is a first-time authorization, a refresh token.
+		 * Given an OAuth provider-specific URL, redirectUri and grant code,
+		 * issue an HttpRequest to get an authorization token
 		 *
-		 * @param unknown $client        	
+		 * This code is identical for Google and Hotmail
+		 *
+		 *
+		 * @param unknown $accessTokenUrl        	
+		 * @param unknown $redirectUri        	
+		 * @param unknown $code        	
 		 */
-		protected function decodeReceivedAuthorizationToken($newtoken) {
-			
-			// update expiry time
-			$newExpiryTime = time () + $newtoken->{PostmanGmailAuthenticationManager::EXPIRES};
-			$this->getAuthorizationToken ()->setExpiryTime ( $newExpiryTime );
-			$this->getLogger ()->debug ( 'Updating Access Token Expiry Time ' );
-			
-			// update acccess token
-			$newAccessToken = $newtoken->{PostmanGmailAuthenticationManager::ACCESS_TOKEN};
-			$this->getAuthorizationToken ()->setAccessToken ( $newAccessToken );
-			$this->getLogger ()->debug ( 'Updating Access Token' );
-			
-			// update refresh token, if there is one
-			if (isset ( $newtoken->{PostmanGmailAuthenticationManager::REFRESH_TOKEN} )) {
-				$newRefreshToken = $newtoken->{PostmanGmailAuthenticationManager::REFRESH_TOKEN};
-				$this->getAuthorizationToken ()->setRefreshToken ( $newRefreshToken );
-				$this->getLogger ()->debug ( 'Updating Refresh Token ' );
-			}
+		protected function requestAuthorizationToken($accessTokenUrl, $redirectUri, $code) {
+			$postvals = array (
+					'client_id' => $this->getClientId (),
+					'client_secret' => $this->getClientSecret (),
+					'grant_type' => 'authorization_code',
+					'redirect_uri' => $redirectUri,
+					'code' => $code 
+			);
+			$response = postmanHttpTransport ( $accessTokenUrl, $postvals );
+			$this->processResponse ( $response );
 		}
 		
 		/**
+		 * Given an OAuth provider-specific URL and redirectUri,
+		 * issue an HttpRequest to refresh the access token
 		 *
-		 * @return mixed
-		 */
-		protected function getAccessToken($accessTokenUrl, $redirectUri, $code) {
-			$postvals = "client_id=" . $this->getClientId () . "&client_secret=" . $this->getClientSecret () . "&grant_type=authorization_code" . "&redirect_uri=" . urlencode ( $redirectUri ) . "&code=" . $code;
-			$fullUrl = $accessTokenUrl . '?' . $postvals;
-			return postmanHttpTransport ( $fullUrl );
-		}
-		/**
+		 * This code is identical for Google and Hotmail
 		 *
-		 * @return mixed
+		 * @param unknown $accessTokenUrl        	
+		 * @param unknown $redirectUri        	
 		 */
 		protected function refreshAccessToken($accessTokenUrl, $redirectUri) {
 			// the format of the URL is
 			// client_id=CLIENT_ID&client_secret=CLIENT_SECRET&redirect_uri=REDIRECT_URI&grant_type=refresh_token&refresh_token=REFRESH_TOKEN
-			$postvals = "client_id=" . $this->getClientId () . "&client_secret=" . $this->getClientSecret () . "&redirect_uri=" . urlencode ( $redirectUri ) . "&grant_type=refresh_token&refresh_token=" . $this->getAuthorizationToken ()->getRefreshToken ();
+			$postvals = array (
+					'client_id' => $this->getClientId (),
+					'client_secret' => $this->getClientSecret (),
+					'redirect_uri' => $redirectUri,
+					'grant_type' => 'refresh_token',
+					'refresh_token' => $this->getAuthorizationToken ()->getRefreshToken () 
+			);
 			// example request string
 			// client_id=0000000603DB0F&redirect_uri=http%3A%2F%2Fwww.contoso.com%2Fcallback.php&client_secret=LWILlT555GicSrIATma5qgyBXebRI&refresh_token=*LA9...//refresh token string shortened for example//...xRoX&grant_type=refresh_token
-			$fullUrl = $accessTokenUrl . '?' . $postvals;
-			return postmanHttpTransport ( $fullUrl );
-		}
-		protected function processRefreshTokenResponse($response) {
-			$this->processResponse ( $response, 'Could not refresh token' );
-		}
-		protected function processTradeCodeForTokenResponse($response) {
-			$this->processResponse ( $response, 'Could not acquire authentication token' );
+			$response = postmanHttpTransport ( $accessTokenUrl, $postvals );
+			$this->processResponse ( $response );
 		}
 		
 		/**
 		 * Decoded the received token
+		 * This code is identical for Google and Hotmail
 		 *
 		 * @param unknown $response        	
 		 * @throws Exception
 		 */
-		private function processResponse($response, $errorMessage) {
-			$this->getLogger ()->debug ( 'Processing response ' . $response);
+		private function processResponse($response) {
 			$authToken = json_decode ( stripslashes ( $response ) );
 			if ($authToken === NULL) {
-				$message = $errorMessage . ': ' . $response;
-				$this->getLogger ()->error ( $message );
-				throw new Exception ( $message );
+				$this->getLogger ()->error ( $response );
+				throw new Exception ( $response );
+			} else if (isset ( $authToken->{'error'} )) {
+				$this->getLogger ()->error ( $authToken->{'error'} . ' processing response: ' . $authToken->{'error_description'} );
+				throw new Exception ( $authToken->{'error_description'} . '(' . $authToken->{'error'} . ')' );
 			} else {
+				$this->getLogger ()->debug ( 'Processing response ' . $response );
 				$this->decodeReceivedAuthorizationToken ( $authToken );
+			}
+		}
+		
+		/**
+		 * Parses the authorization token and extracts the expiry time, accessToken,
+		 * and if this is a first-time authorization, a refresh token.
+		 *
+		 * This code is identical for Google and Hotmail
+		 *
+		 * @param unknown $client        	
+		 */
+		protected function decodeReceivedAuthorizationToken($newtoken) {
+			assert ( ! empty ( $newtoken ) );
+			assert ( ! empty ( $newtoken->{PostmanAbstractAuthenticationManager::EXPIRES} ) );
+			assert ( ! empty ( $newtoken->{PostmanAbstractAuthenticationManager::ACCESS_TOKEN} ) );
+			
+			// update expiry time
+			if (empty ( $newtoken->{PostmanAbstractAuthenticationManager::EXPIRES} )) {
+				throw new Exception ( '[expires_in] value is missing from the authentication token' );
+			}
+			$newExpiryTime = time () + $newtoken->{PostmanAbstractAuthenticationManager::EXPIRES};
+			$this->getAuthorizationToken ()->setExpiryTime ( $newExpiryTime );
+			$this->getLogger ()->debug ( 'Updating Access Token Expiry Time ' );
+			
+			// update acccess token
+			if (empty ( $newtoken->{PostmanAbstractAuthenticationManager::ACCESS_TOKEN} )) {
+				throw new Exception ( '[access_token] value is missing from the authentication token' );
+			}
+			$newAccessToken = $newtoken->{PostmanAbstractAuthenticationManager::ACCESS_TOKEN};
+			$this->getAuthorizationToken ()->setAccessToken ( $newAccessToken );
+			$this->getLogger ()->debug ( 'Updating Access Token' );
+			
+			// update refresh token, if there is one
+			if (isset ( $newtoken->{PostmanAbstractAuthenticationManager::REFRESH_TOKEN} )) {
+				$newRefreshToken = $newtoken->{PostmanGmailAuthenticationManager::REFRESH_TOKEN};
+				$this->getAuthorizationToken ()->setRefreshToken ( $newRefreshToken );
+				$this->getLogger ()->debug ( 'Updating Refresh Token ' );
 			}
 		}
 	}
