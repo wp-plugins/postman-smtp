@@ -10,7 +10,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 	
 	//
 	class PostmanAdminController {
-		const POSTMAN_PORT_TEST_TIMEOUT = 30;
 		
 		// this is the slug used in the URL
 		const POSTMAN_MENU_SLUG = 'postman';
@@ -398,7 +397,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'jquery',
 					'postman_script' 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_localize_script ( 'postman_script', 'postman_port_check_timeout', PostmanAdminController::POSTMAN_PORT_TEST_TIMEOUT . '' );
+			wp_localize_script ( 'postman_script', 'postman_port_check_timeout', PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT . '' );
 			
 			wp_localize_script ( 'postman_script', 'postman_smtp_section_element_name', 'div#smtp_section' );
 			wp_localize_script ( 'postman_script', 'postman_oauth_section_element_name', 'div#oauth_section' );
@@ -584,7 +583,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if (isset ( $_POST ['timeout'] )) {
 				$timeout = intval ( $_POST ['timeout'] );
 			} else {
-				$timeout = PostmanAdminController::POSTMAN_PORT_TEST_TIMEOUT;
+				$timeout = PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT;
 			}
 			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ();
@@ -644,25 +643,24 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		private function getRedirectUrl($hostname) {
 			$redirectUrl = PostmanSmtpHostProperties::getRedirectUrl ( $hostname );
-			if ($hostname == 'smtp.gmail.com') {
-				$help = 'Open the <a href="https://console.developers.google.com/" target="_new">Google Developer Console</a>, create a Client ID
+			if (PostmanSmtpHostProperties::isGmail ( $hostname )) {
+				$help = '<p id="wizard_oauth2_help"><span class="normal">Open the <a href="https://console.developers.google.com/" target="_new">Google Developer Console</a>, create a Client ID
 				using the Redirect URI below, and enter the Client ID and Client
 				Secret. See <a
 					href="https://wordpress.org/plugins/postman-smtp/faq/"
 					target="_new">How do I get a Google Client ID?</a> in the F.A.Q.
-				for help.';
-			} else if ($hostname == 'smtp.live.com') {
-				$help = '				Open the <a
+				for help.</span></p>';
+			} else if (PostmanSmtpHostProperties::isHotmail ( $hostname )) {
+				$help = '<p id="wizard_oauth2_help"><span class="normal">Open the <a
 					href="https://account.live.com/developers/applications/index"
 					target="_new">Microsoft Developer Center</a>, create an Application
 				using the Redirect URI below, and enter the Client ID and Client
 				Secret. See <a
 					href="https://wordpress.org/plugins/postman-smtp/faq/"
 					target="_new">How do I get a Windows Live Client ID?</a> in the F.A.Q.
-				for help.
-			';
+				for help.</span></p>';
 			} else {
-				$help = '<p id="wizard_oauth2_help"><span style="color:red">You must enter an Outgoing Mail Server with OAuth 2.0 capabilities.</span></p>';
+				$help = '<p id="wizard_oauth2_help"><span class="error">You must enter an Outgoing Mail Server with OAuth 2.0 capabilities.</span></p>';
 			}
 			$response = array (
 					'redirect_url' => (! empty ( $redirectUrl ) ? $redirectUrl : ''),
@@ -688,7 +686,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Port Test text
 		 */
 		public function printPortTestSectionInfo() {
-			print '<p><span>This test determines which ports are open for Postman to use. A</span> <span style="color:red">Closed</span><span> port indicates either <ol><li>Your host has placed a firewall between this site and the SMTP server or</li><li>The SMTP server has no service running on that port</li></ol></span></p><p><span><b>If the port you are trying to use is </span> <span style="color:red"><b>Closed</b></span><span>, Postman can not deliver mail. Contact your host to get the port opened.</b></span></p><p><span style="font-size:0.9em">Each test is given ' . PostmanAdminController::POSTMAN_PORT_TEST_TIMEOUT . ' seconds to complete and the entire test will take up to ' . (PostmanAdminController::POSTMAN_PORT_TEST_TIMEOUT * 3) . ' seconds to run. Javascript is required.</span></p>';
+			print '<p><span>This test determines which ports are open for Postman to use. A</span> <span style="color:red">Closed</span><span> port indicates either <ol><li>Your host has placed a firewall between this site and the SMTP server or</li><li>The SMTP server has no service running on that port</li></ol></span></p><p><span><b>If the port you are trying to use is </span> <span style="color:red"><b>Closed</b></span><span>, Postman can not deliver mail. Contact your host to get the port opened.</b></span></p><p><span class="fine_print">Each test is given ' . PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT . ' seconds to complete and the entire test will take up to ' . (PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT * 3) . ' seconds to run. Javascript is required.</span></p>';
 		}
 		
 		/**
@@ -848,14 +846,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function connection_timeout_callback() {
-			printf ( '<input type="text" readonly="readonly" id="input_connection_timeout" name="postman_options[connection_timeout]" value="30" />' );
+			printf ( '<input type="text" readonly="readonly" id="input_connection_timeout" name="postman_options[connection_timeout]" value="%s" />', PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function read_timeout_callback() {
-			printf ( '<input type="text" readonly="readonly" id="input_read_timeout" name="postman_options[read_timeout]" value="30" />' );
+			printf ( '<input type="text" readonly="readonly" id="input_read_timeout" name="postman_options[read_timeout]" value="%s" />', PostmanMain::POSTMAN_TCP_READ_TIMEOUT );
 		}
 		
 		/**
@@ -896,13 +894,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 				print '<ul></div>';
 			}
 			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
-				print '<p><span style="color:green;padding:2px 5px; font-size:1.2em">Postman is configured.</span><p style="margin:0 10px">Sending mail from <b>' . $this->options->getSenderEmail () . '</b> via <b>' . $this->options->getHostname () . ':' . $this->options->getPort () . '</b>';
+				print '<p><span style="color:green;padding:2px 5px; font-size:1.2em">Postman is configured.</span><p style="margin:0 10px">Postman will send mail  via <b>' . $this->options->getHostname () . ':' . $this->options->getPort () . '</b>';
 				if ($this->options->isAuthTypeOAuth2 ()) {
-					print ' using OAuth 2.0 authentication.</span></p>';
+					print ' using <b>OAuth 2.0</b> authentication.</span></p>';
 				} else if ($this->options->isAuthTypeNone ()) {
 					print ' using no authentication.</span></p>';
 				} else {
-					print ' using Password (' . $this->options->getAuthorizationType () . ') authentication.</span></p>';
+					print ' using <b>Password</b> (' . $this->options->getAuthorizationType () . ') authentication.</span></p>';
 				}
 				if (! $this->options->isAuthTypeNone ()) {
 					print '<p style="margin:10px 10px"><span>Please note: <em>When authentication is enabled, WordPress may override the sender name only</em>.</span></p>';
@@ -966,11 +964,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// This prints out all hidden setting fields
 			submit_button ( 'Begin Test', 'primary', 'begin-port-test', true );
 			print '</form>';
-			print '<table id="testing_table" style="width:300px; font-size:1.2em; display:none">';
+			print '<table id="testing_table">';
 			// print '<tr><th>Port</th><th>State</th>';
-			print '<tr><td>Port 25</td><td id="port-test-port-25">Unknown</td>';
-			print '<tr><td>Port 465</td><td id="port-test-port-465">Unknown</td>';
-			print '<tr><td>Port 587</td><td id="port-test-port-587">Unknown</td>';
+			print '<tr><td class="port">Port 25</td><td id="port-test-port-25">Unknown</td>';
+			print '<tr><td class="port">Port 465</td><td id="port-test-port-465">Unknown</td>';
+			print '<tr><td class="port">Port 587</td><td id="port-test-port-587">Unknown</td>';
 			print '</table>';
 			print '</div>';
 		}
@@ -1224,9 +1222,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 	<h1>Input Email Address</h1>
 	<fieldset>
 		<legend>Enter your Email Address </legend>
-		<p>This utility allows you to send an email for testing. Please enter
-			a lovely email address to receive the test message.</p>
-
+		<p>This utility allows you to send an email for testing. It may take up to <?php echo PostmanMain::POSTMAN_TCP_READ_TIMEOUT * 2?> seconds to complete.</p>
+		
 		<label for="postman_test_options[test_email]">Recipient Email Address</label>
 		<?php echo $this->test_email_callback(); ?>
 	</fieldset>
@@ -1243,8 +1240,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 			<p>
 				<label>Message</label>
 			</p>
-			<textarea id="postman_test_message_error_message" type="text"
-				readonly="readonly" cols="70" rows="2"></textarea>
+			<textarea id="postman_test_message_error_message" readonly="readonly"
+				cols="70" rows="2"></textarea>
 			<p>
 				<label for="postman_test_message_transcript">Transcript</label>
 			</p>

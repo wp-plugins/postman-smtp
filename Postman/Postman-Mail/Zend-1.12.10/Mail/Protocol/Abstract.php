@@ -401,7 +401,9 @@ abstract class Zend_Mail_Protocol_Abstract
      */
     protected function _expect($code, $timeout = null)
     {
-    	$timeout = POSTMAN_TCP_TIMEOUT; // I know, I'm violating RFC 2821 4.5.2.3 but five minutes is TOO LONG
+    	if($timeout > PostmanMain::POSTMAN_TCP_READ_TIMEOUT) {
+    		$timeout = PostmanMain::POSTMAN_TCP_READ_TIMEOUT;
+    	}
         $this->_response = array();
         $cmd  = '';
         $more = '';
