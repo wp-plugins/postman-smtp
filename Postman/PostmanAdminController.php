@@ -138,7 +138,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 					break;
 				
 				case 'send_test_email' :
-					$this->registerAdminMenu ( 'generateSendTestEmailContent' );
+					// $this->registerAdminMenu ( 'generateSendTestEmailContent' );
+					$this->registerAdminMenu ( 'generateTestEmailWizardContent' );
 					break;
 				
 				case 'run_port_test' :
@@ -298,6 +299,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function generateDefaultContent() {
 			$this->addLinkToWordPressSettingsAdminMenu ( 'outputDefaultContent' );
 		}
+		public function generateTestEmailWizardContent() {
+			$this->addLinkToWordPressSettingsAdminMenu ( 'outputTestEmailWizardContent' );
+		}
 		public function addLinkToWordPressSettingsAdminMenu($pageContentCallback) {
 			// This page will be under "Settings"
 			$page = add_options_page ( PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', PostmanAdminController::POSTMAN_MENU_SLUG, array (
@@ -309,6 +313,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this,
 					'enqueueStylesheet' 
 			) );
+			return $page;
 		}
 		/**
 		 * Render the stylesheet
@@ -323,10 +328,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 					wp_enqueue_script ( 'postman_manual_config_script' );
 				} else if ($action == 'start_wizard') {
 					wp_enqueue_script ( 'postman_wizard_script' );
-					$this->displayWizard = true;
+				} else if ($action == 'send_test_email') {
+					wp_enqueue_script ( 'postman_test_email_wizard_script' );
 				} else if ($action == 'run_port_test') {
 					wp_enqueue_script ( 'postman_port_test_script' );
-					$this->displayWizard = true;
 				}
 			}
 		}
@@ -376,6 +381,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'jquery' 
 			), POSTMAN_PLUGIN_VERSION );
 			wp_register_script ( 'postman_wizard_script', plugins_url ( 'script/postman_wizard.js', __FILE__ ), array (
+					'jquery',
+					'postman_script' 
+			), POSTMAN_PLUGIN_VERSION );
+			wp_register_script ( 'postman_test_email_wizard_script', plugins_url ( 'script/postman_test_email_wizard.js', __FILE__ ), array (
 					'jquery',
 					'postman_script' 
 			), POSTMAN_PLUGIN_VERSION );
@@ -876,7 +885,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					print ' using Password (' . $this->options->getAuthorizationType () . ') authentication.</span></p>';
 				}
 				if (! $this->options->isAuthTypeNone ()) {
-					print '<p style="margin:10px 10px"><span>Please note: <em>When authentication is used, plugins may override the sender name only</em>.</span></p>';
+					print '<p style="margin:10px 10px"><span>Please note: <em>When authentication is enabled, WordPress may override the sender name only</em>.</span></p>';
 				}
 			} else {
 				print '<p><span style="color:red; padding:2px 5px; font-size:1.1em">Status: Postman is not sending mail.</span></p>';
@@ -1164,6 +1173,46 @@ if (! class_exists ( "PostmanAdminController" )) {
 			</ul>
 		</section>
 		<section class="wizard-auth-basic">
+			<p>Once you click Finish below, these settings will be saved. Then at
+				the main Postman Settings screen, be sure to send yourself a Test
+				Email to make sure everything is working!</p>
+		</section>
+	</fieldset>
+
+</form>
+
+<?php
+		}
+		/**
+		 */
+		public function outputTestEmailWizardContent() {
+			print '<div class="wrap">';
+			screen_icon ();
+			print '<h2>' . PostmanAdminController::PAGE_TITLE . '</h2>';
+			$this->displayTopNavigation ();
+			?>
+<h3>Send a Test Email</h3>
+
+<form id="postman_test_email_wizard" method="post" action="options.php">
+	<h1>Email Address</h1>
+	<fieldset>
+		<legend>Enter your Email Address </legend>
+		<p>Please enter a lovely email address to receive the test message.</p>
+
+		<label for="postman_test_options[test_email]">Recipient Email Address</label>
+		<?php echo $this->test_email_callback(); ?>
+	</fieldset>
+
+	<h1>Sending The Message</h1>
+	<fieldset>
+		<legend>Enter your SMTP hostname. </legend>
+		<p>This is the server that Postman will use to deliver your mail.</p>
+	</fieldset>
+
+	<h1>Finish</h1>
+	<fieldset>
+		<legend>All done!</legend>
+		<section>
 			<p>Once you click Finish below, these settings will be saved. Then at
 				the main Postman Settings screen, be sure to send yourself a Test
 				Email to make sure everything is working!</p>

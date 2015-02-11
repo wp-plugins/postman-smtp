@@ -13,11 +13,10 @@
  */
 
 // ideas for future versions of the plugin
-// -- send mail in the background using ajax - the single mail thread can block the PHP server for quite some time
 // -- add a wizard style to the tester - then if the test fails, we can display proper debug information
 // -- if a test message succeeds, capture the domain of the primary mx, smtp server hostname and port, auth type, encyrption type into a database (with the user's permission)
 // -- write a plugin to capture the above information
-// -- replace Google library with something custom (higher priority)
+// -- send mail in the background using ajax - the single mail thread can block the PHP server for quite some time
 
 // define constants
 define ( 'POSTMAN_HOME_PAGE_RELATIVE_URL', 'options-general.php?page=postman' );
