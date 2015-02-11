@@ -12,6 +12,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		const POSTMAN_OPTIONS = 'postman_options';
 		
 		// the options fields
+		const VERSION = 'version';
 		const SENDER_EMAIL = 'sender_email';
 		const SENDER_NAME = 'sender_name';
 		const REPLY_TO = 'reply_to';

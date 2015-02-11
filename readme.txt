@@ -164,6 +164,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Enabled editing of the timeouts in the configuration screen. If Postman is intermittently sending mail, try increasing the TCP Read Timeout
 * Added the SMTP session transcript output when a test message fails to send.
 * Fixed the error: Class 'Zend_Mail_Protocol_Smtp_Auth_Plain' not found in /wordpress_jana/wp-content/plugins/postman-smtp/Postman/Postman-Mail/Zend-1.12.10/Mail/Transport/Smtp.php on line 198
+* Passwords in the database are encoded
 
 = 1.3.2 - 2015-02-10 =
 * Fixed the error: PHP Fatal error:  Call to private PostmanAuthorizationToken::__construct() This occurs when upgrading from a pre-v1.0 version of Postman (when PostmanAuthorizationToken had a public constructor) to v1.0 or higher.
