@@ -164,7 +164,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Replaced the Google OAuth API with pure PHP code. No more unexpected Google API errors.
 * Enabled overriding of the timeouts in the configuration screen. If Postman is intermittently sending mail, doubling the TCP Read Timeout may help
 * Added the SMTP session transcript output when a test message fails to send.
-* Fixed the error: Class 'Zend_Mail_Protocol_Smtp_Auth_Plain' not found in /wordpress_jana/wp-content/plugins/postman-smtp/Postman/Postman-Mail/Zend-1.12.10/Mail/Transport/Smtp.php on line 198
+* Fixed the error: Class 'Zend_Mail_Protocol_Smtp_Auth_Plain' not found in /Postman/Postman-Mail/Zend-1.12.10/Mail/Transport/Smtp.php on line 198
 * Passwords in the database are now Base64-encoded so casual viewing of the database won't immediately reveal them
 * Fixed a couple minor database upgrade bugs: for new users who use Password Authentication, and for old users that don't have an expiry token stored
 * Added a version shortcode, mostly for promotion of Postman on my own websites
@@ -172,7 +172,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 1.3.2 - 2015-02-10 =
 * Fixed the error: PHP Fatal error:  Call to private PostmanAuthorizationToken::__construct() This occurs when upgrading from a pre-v1.0 version of Postman (when PostmanAuthorizationToken had a public constructor) to v1.0 or higher.
-* Fixed the error PHP Fatal error: Class 'Google_IO_Stream' not found in /var/www/html/wp-content/plugins/postman-smtp/Postman/Postman-Auth/google-api-php-client-1.1.2/src/Google/Client.php on line 600 by including Google/IO/Stream.php
+* Fixed the error PHP Fatal error: Class 'Google_IO_Stream' not found in /Postman/Postman-Auth/google-api-php-client-1.1.2/src/Google/Client.php on line 600 by including Google/IO/Stream.php
 * Postman now has a modest fatal error screen, rather than a dreaded white screen of death
 
 = 1.3 - 2015-02-09 =
