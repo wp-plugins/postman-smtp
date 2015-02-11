@@ -34,6 +34,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		const BASIC_AUTH_USERNAME = 'basic_auth_username';
 		const BASIC_AUTH_PASSWORD = 'basic_auth_password';
 		const PREVENT_SENDER_NAME_OVERRIDE = 'prevent_sender_name_override';
+		const CONNECTION_TIMEOUT = 'connection_timeout';
+		const READ_TIMEOUT = 'read_timeout';
 		
 		// options data
 		private $options;
@@ -156,6 +158,18 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::REPLY_TO] ))
 				return $this->options [PostmanOptions::REPLY_TO];
 		}
+		public function getConnectionTimeout() {
+			if (! empty ( $this->options [self::CONNECTION_TIMEOUT] ))
+				return $this->options [self::CONNECTION_TIMEOUT];
+			else
+				return PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT;
+		}
+		public function getReadTimeout() {
+			if (! empty ( $this->options [self::READ_TIMEOUT] ))
+				return $this->options [self::READ_TIMEOUT];
+			else
+				return PostmanMain::POSTMAN_TCP_READ_TIMEOUT;
+		}
 		public function isSenderNameOverridePrevented() {
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] ))
 				return $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE];
@@ -213,13 +227,29 @@ if (! class_exists ( "PostmanOptions" )) {
 			$this->options [PostmanOptions::ENCRYPTION_TYPE] = $encType;
 		}
 		public function setUsername($username) {
-			$this->options [PostmanOptions::BASIC_AUTH_USERNAME];
+			$this->options [PostmanOptions::BASIC_AUTH_USERNAME] = $username;
 		}
 		public function setPassword($password) {
-			$this->options [PostmanOptions::BASIC_AUTH_PASSWORD];
+			$this->options [PostmanOptions::BASIC_AUTH_PASSWORD] = $password;
 		}
 		public function setReplyTo($replyTo) {
-			$this->options [PostmanOptions::REPLY_TO];
+			$this->options [PostmanOptions::REPLY_TO] = $replyTo;
+		}
+		public function setConnectionTimeout($seconds) {
+			$this->options [self::CONNECTION_TIMEOUT] = $seconds;
+		}
+		public function setReadTimeout($seconds) {
+			$this->options [self::READ_TIMEOUT] = $seconds;
+		}
+		public function setConnectionTimeoutIfEmpty($seconds) {
+			if (! isset ( $this->options [self::CONNECTION_TIMEOUT] )) {
+				$this->setConnectionTimeout ( $seconds );
+			}
+		}
+		public function setReadTimeoutIfEmpty($seconds) {
+			if (! isset ( $this->options [self::READ_TIMEOUT] )) {
+				$this->setReadTimeout ( $seconds );
+			}
 		}
 		public function debug(PostmanLogger $logger) {
 			$logger->debug ( 'Sender Email=' . $this->getSenderEmail () );

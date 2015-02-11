@@ -722,7 +722,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printAdvancedSectionInfo() {
-			print 'Additional email properties';
+			print '<input type="checkbox" id="enable_advanced_settings" />Unlock advanced properties';
 		}
 		
 		/**
@@ -839,21 +839,21 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function reply_to_callback() {
-			printf ( '<input type="text" id="input_reply_to" name="postman_options[reply_to]" value="%s" />', null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
+			printf ( '<input readonly="readonly" type="text" id="input_reply_to" name="postman_options[reply_to]" value="%s" />', null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function connection_timeout_callback() {
-			printf ( '<input type="text" readonly="readonly" id="input_connection_timeout" name="postman_options[connection_timeout]" value="%s" />', PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT );
+			printf ( '<input type="text" readonly="readonly" id="input_connection_timeout" name="postman_options[connection_timeout]" value="%s" />', $this->options->getConnectionTimeout () );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function read_timeout_callback() {
-			printf ( '<input type="text" readonly="readonly" id="input_read_timeout" name="postman_options[read_timeout]" value="%s" />', PostmanMain::POSTMAN_TCP_READ_TIMEOUT );
+			printf ( '<input type="text" readonly="readonly" id="input_read_timeout" name="postman_options[read_timeout]" value="%s" />', $this->options->getReadTimeout () );
 		}
 		
 		/**
@@ -1222,8 +1222,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 	<h1>Input Email Address</h1>
 	<fieldset>
 		<legend>Enter your Email Address </legend>
-		<p>This utility allows you to send an email for testing. It may take up to <?php echo PostmanMain::POSTMAN_TCP_READ_TIMEOUT * 2?> seconds to complete.</p>
-		
+		<p>This utility allows you to send an email for testing. It may take up to <?php echo $this->options->getReadTimeout() * 2?> seconds to complete.</p>
+
 		<label for="postman_test_options[test_email]">Recipient Email Address</label>
 		<?php echo $this->test_email_callback(); ?>
 	</fieldset>

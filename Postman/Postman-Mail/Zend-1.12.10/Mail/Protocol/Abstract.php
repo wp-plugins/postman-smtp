@@ -401,8 +401,9 @@ abstract class Zend_Mail_Protocol_Abstract
      */
     protected function _expect($code, $timeout = null)
     {
-    	if($timeout > PostmanMain::POSTMAN_TCP_READ_TIMEOUT) {
-    		$timeout = PostmanMain::POSTMAN_TCP_READ_TIMEOUT;
+    	$userTimeout = PostmanOptions::getInstance()->getReadTimeout();
+    	if($timeout > $userTimeout) {
+    		$timeout = $userTimeout;
     	}
         $this->_response = array();
         $cmd  = '';

@@ -23,7 +23,7 @@ if (! function_exists ( 'postmanHttpTransport' )) {
 	 */
 	function postmanHttpTransport($url, $parameters) {
 		$args = array (
-				'timeout' => PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT,
+				'timeout' => PostmanOptions::getInstance()->getConnectionTimeout(),
 				'body' => $parameters 
 		);
 		$logger = new PostmanLogger ( 'PostmanHttpTransport' );

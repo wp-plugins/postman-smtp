@@ -23,6 +23,14 @@ function show(identifier) {
 	console.debug('showing ' + identifier);
 	el.show();
 }
+function writeable(identifier) {
+	var el = jQuery(identifier);
+	el.prop("readonly", false);
+}
+function readonly(identifier) {
+	var el = jQuery(identifier);
+	el.prop("readonly", true);
+}
 function getRedirectUrl(hostname, el_redirect_url, el_help_text) {
 	var data = {
 		'action' : 'get_redirect_url',

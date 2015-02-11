@@ -44,6 +44,8 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			$this->sanitizeString ( 'Password', PostmanOptions::BASIC_AUTH_PASSWORD, $input, $new_input );
 			$this->sanitizeString ( 'Reply-To', PostmanOptions::REPLY_TO, $input, $new_input );
 			$this->sanitizeString ( 'Sender Name Override', PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, $input, $new_input );
+			$this->sanitizeInt ( 'Read Timeout', PostmanOptions::READ_TIMEOUT, $input, $new_input );
+			$this->sanitizeInt ( 'Conenction Timeout', PostmanOptions::CONNECTION_TIMEOUT, $input, $new_input );
 			
 			if (! empty ( $input [PostmanOptions::SENDER_EMAIL] )) {
 				$newEmail = $input [PostmanOptions::SENDER_EMAIL];
