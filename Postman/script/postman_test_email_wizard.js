@@ -34,7 +34,6 @@ jQuery(document)
 										onFinished : function(event,
 												currentIndex) {
 											if (ready == 0) {
-												alert('Please wait for the message to finish sending');
 												return false;
 											} else {
 												var form = jQuery(this);
@@ -75,6 +74,8 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 
 	if (currentIndex === 0) {
 		ready = 0;
+		// this disables the finish button during the screen slide
+		jQuery('li + li').addClass('disabled');
 		jQuery('#postman_test_message_status').html('In Outbox');
 		jQuery('#postman_test_message_status').css('color', '');
 		jQuery('#postman_test_message_error_message').val('');
@@ -89,6 +90,8 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	if (currentIndex === 0) {
 	} else if (currentIndex === 1) {
+		// this is the second place i disable the finish button but Steps re-enables it after the screen slides
+		jQuery('li + li').addClass('disabled');
 		var data = {
 			'action' : 'send_test_email',
 			'email' : jQuery('#test_email').val(),
@@ -98,6 +101,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 		jQuery('#postman_test_message_status').css('color', 'blue');
 		jQuery.post(ajaxurl, data, function(response) {
 			ready = 1;
+			jQuery('li + li').removeClass('disabled');
 			if (response.success) {
 				jQuery('#postman_test_message_status').html('Success');
 				jQuery('#postman_test_message_status').css('color', 'green');

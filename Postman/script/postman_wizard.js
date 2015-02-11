@@ -95,6 +95,8 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		// allow the user to choose any
 		// port
 		portCheckBlocksUi = true;
+		// this should be the only place i disable the next button but Steps enables it after the screen slides
+		jQuery('li + li').addClass('disabled');
 		wizardPortTest(jQuery('#wizard_port_465'),
 				jQuery('#wizard_port_465_status'));
 		wizardPortTest(jQuery('#wizard_port_25'),
@@ -221,6 +223,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	// to the previous step.
 	if (currentIndex === 2) {
 		if (portCheckBlocksUi) {
+			// this is the second place i disable the next button but Steps re-enables it after the screen slides
 			jQuery('li + li').addClass('disabled');
 		}
 	}
