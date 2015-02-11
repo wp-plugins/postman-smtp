@@ -156,6 +156,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 						$this->registerAjaxHandler ( 'wp_ajax_test_port', 'getAjaxPortStatus' );
 						$this->registerAjaxHandler ( 'wp_ajax_check_email', 'getAjaxHostnameByEmail' );
 						$this->registerAjaxHandler ( 'wp_ajax_get_redirect_url', 'getAjaxRedirectUrl' );
+						$this->registerAjaxHandler ( 'wp_ajax_send_test_email', 'sendTestEmailViaAjax' );
 					}
 					
 					// this outputs the HTML content for the 'home' landing page
@@ -594,6 +595,22 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		
 		/**
+		 * This Ajax sends a test email
+		 */
+		function sendTestEmailViaAjax() {
+			$email = $_POST ['email'];
+			$method = $_POST ['method'];
+			$emailTester = new PostmanSendTestEmailController ();
+			$success = $emailTester->simeplSend ( $this->options, $this->authorizationToken, $email );
+			$response = array (
+					'message' => $emailTester->getMessage (),
+					'transcript' => $emailTester->getTranscript (),
+					'success' => $success 
+			);
+			wp_send_json ( $response );
+		}
+		
+		/**
 		 * This Ajax function retrieves the smtp hostname for a give e-mail address
 		 */
 		function getAjaxHostnameByEmail() {
@@ -848,7 +865,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function test_email_callback() {
-			printf ( '<input type="text" id="test_email" name="postman_test_options[test_email]" value="%s" />', isset ( $this->testOptions ['test_email'] ) ? esc_attr ( $this->testOptions ['test_email'] ) : '' );
+			printf ( '<input type="text" id="test_email" name="postman_test_options[test_email]" value="%s" class="required email" size="40"/>', isset ( $this->testOptions ['test_email'] ) ? esc_attr ( $this->testOptions ['test_email'] ) : '' );
 		}
 		
 		/**
@@ -1033,7 +1050,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
 				printf ( '<a
 							href="%s&postman_action=send_test_email"
-							class="welcome-icon send_test_email">Send an Email</a>', POSTMAN_HOME_PAGE_ABSOLUTE_URL );
+							class="welcome-icon send_test_email">Send a Test Email</a>', POSTMAN_HOME_PAGE_ABSOLUTE_URL );
 			} else {
 				print '<div class="welcome-icon send_test_emaail">';
 				print 'Send a Test Email';
@@ -1070,7 +1087,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 <form id="postman_wizard" method="post" action="options.php">
 	<input type="hidden" name="purge_auth_token" value="purge_auth_token" />
 	<?php settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME ); ?>
-	<h1>Email Address</h1>
+	<h1>Sender Address Details</h1>
 	<fieldset>
 		<legend>Enter your Email Address </legend>
 		<p>Let's begin! Please enter the email address and name you'd like to
@@ -1190,32 +1207,46 @@ if (! class_exists ( "PostmanAdminController" )) {
 			screen_icon ();
 			print '<h2>' . PostmanAdminController::PAGE_TITLE . '</h2>';
 			$this->displayTopNavigation ();
+			
+			// set default recipient for test emails
+			$testEmail = $this->testOptions [PostmanOptions::TEST_EMAIL];
+			if (! isset ( $testEmail )) {
+				$this->testOptions [PostmanOptions::TEST_EMAIL] = wp_get_current_user ()->user_email;
+			}
 			?>
 <h3>Send a Test Email</h3>
 
-<form id="postman_test_email_wizard" method="post" action="options.php">
-	<h1>Email Address</h1>
+<form id="postman_test_email_wizard" method="post"
+	action="<?php echo POSTMAN_HOME_PAGE_ABSOLUTE_URL ?>">
+	<h1>Input Email Address</h1>
 	<fieldset>
 		<legend>Enter your Email Address </legend>
-		<p>Please enter a lovely email address to receive the test message.</p>
+		<p>This utility allows you to send an email for testing. Please enter
+			a lovely email address to receive the test message.</p>
 
 		<label for="postman_test_options[test_email]">Recipient Email Address</label>
 		<?php echo $this->test_email_callback(); ?>
 	</fieldset>
 
-	<h1>Sending The Message</h1>
+	<h1>Deliver The Message</h1>
 	<fieldset>
-		<legend>Enter your SMTP hostname. </legend>
-		<p>This is the server that Postman will use to deliver your mail.</p>
-	</fieldset>
-
-	<h1>Finish</h1>
-	<fieldset>
-		<legend>All done!</legend>
-		<section>
-			<p>Once you click Finish below, these settings will be saved. Then at
-				the main Postman Settings screen, be sure to send yourself a Test
-				Email to make sure everything is working!</p>
+		<legend>
+			Sending the message: <span id="postman_test_message_status">In Outbox</span>
+		</legend>
+		<section id="test-success">
+			<p>Your message was delivered to the SMTP server! Congratulations :)</p>
+		</section>
+		<section id="test-fail">
+			<p>
+				<label>Message</label>
+			</p>
+			<textarea id="postman_test_message_error_message" type="text"
+				readonly="readonly" cols="70" rows="2"></textarea>
+			<p>
+				<label for="postman_test_message_transcript">Transcript</label>
+			</p>
+			<textarea readonly="readonly" id="postman_test_message_transcript"
+				cols="70" rows="6"></textarea>
 		</section>
 	</fieldset>
 

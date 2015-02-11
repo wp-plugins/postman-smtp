@@ -67,6 +67,9 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		private $charset;
 		private $overrideSender;
 		
+		// the result
+		private $transcript;
+		
 		// hooks for the subclasses to use
 		protected function getSender() {
 			return $this->sender;
@@ -188,7 +191,13 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			
 			// send the message
 			$this->logger->debug ( "Sending mail" );
-			$mail->send ( $transport );
+			try {
+				$mail->send ( $transport );
+				$this->transcript = $transport->getConnection ()->getLog ();
+			} catch ( Exception $e ) {
+				$this->transcript = $transport->getConnection ()->getLog ();
+				throw $e;
+			}
 		}
 		
 		/**
@@ -511,6 +520,10 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		// set the internal logger (defined in the abstract class)
 		protected function getLogger() {
 			return $this->logger;
+		}
+		// return the SMTP session transcript
+		public function getTranscript() {
+			return $this->transcript;
 		}
 	}
 }

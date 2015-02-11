@@ -7,6 +7,8 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 		
 		//
 		private $logger;
+		private $message;
+		private $transcript;
 		
 		//
 		function __construct() {
@@ -19,10 +21,18 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 		 * @param unknown $recipient        	
 		 */
 		public function send(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, $recipient, PostmanMessageHandler $messageHandler) {
+			assert ( ! empty ( $messageHandler ) );
+			$result = $this->simeplSend ( $options, $authorizationToken, $recipient );
+			if ($result) {
+				$messageHandler->addMessage ( $this->message );
+			} else {
+				$messageHandler->addError ( $this->message );
+			}
+		}
+		public function simeplSend(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, $recipient) {
 			assert ( ! empty ( $options ) );
 			assert ( ! empty ( $authorizationToken ) );
 			assert ( ! empty ( $recipient ) );
-			assert ( ! empty ( $messageHandler ) );
 			
 			$headers = array ();
 			$subject = PostmanSendTestEmailController::SUBJECT;
@@ -43,25 +53,36 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 				$this->logger->error ( 'wp_mail failed :( re-trying through the internal engine' );
 				$postmanWpMail = new PostmanWpMail ();
 				$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message, $headers );
+				$this->transcript = $postmanWpMail->getTranscript ();
 			}
 			PostmanStats::getInstance ()->enable ();
 			
 			//
 			if ($wp_mail_result) {
 				$this->logger->debug ( 'Test Email delivered to SMTP server' );
-				$messageHandler->addMessage ( 'Your message was delivered to the SMTP server! Congratulations :)' );
+				$this->message = 'Your message was delivered to the SMTP server! Congratulations :)';
+				return true;
 			} else if (! $postmanWpMailResult) {
 				$this->logger->error ( 'Test Email NOT delivered to SMTP server - ' . $postmanWpMail->getException ()->getCode () );
 				if ($postmanWpMail->getException ()->getCode () == 334) {
-					$messageHandler->addError ( 'Oh, bother! ... Communication Error [334] - check that your Sender Email is the same as your Gmail account. You may need to re-create the Client ID.' );
+					$serviceName = PostmanSmtpHostProperties::getServiceName ( $options->getHostname () );
+					$this->message = 'Communication Error [334] - check that your Sender Email is the same as your ' . $serviceName . ' account. You may need to re-create the Client ID.';
 				} else {
-					$messageHandler->addError ( 'Oh, bother! ... ' . $postmanWpMail->getException ()->getMessage () );
+					$this->message = $postmanWpMail->getException ()->getMessage ();
 				}
+				return false;
 			} else {
 				$message = 'Something is wrong, sending throgh wp_mail() failed, but sending through internal engine succeeded. Time to debug!';
 				$this->logger->error ( $message );
-				$messageHandler->addError ( $message );
+				$this->message = $message;
+				return false;
 			}
+		}
+		public function getMessage() {
+			return $this->message;
+		}
+		public function getTranscript() {
+			return $this->transcript;
 		}
 	}
 }

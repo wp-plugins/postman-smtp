@@ -16,7 +16,7 @@ Have you been having [trouble sending your email](https://wordpress.org/support/
 Postman is a next-generation SMTP plugin which provides WordPress with the latest security mechanism for sending email. When your site generates an email, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
 
 ###* What's New for v1.3 *
-*Now supporting OAuth 2.0 for Hotmail/Windows Live/Outlook.com!*
+*Now featuring OAuth 2.0 for **Hotmail/Windows Live/Outlook.com** users!*
 
 = Features =
 * Send mail to any host with SMTP/SMTPS like the other 172 WordPress SMTP plugins
@@ -158,6 +158,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 1.3.3 - 2015-02-11 =
 * Replaced the Google OAuth API with pure PHP code. No more unexpected Google API errors.
+* Added the SMTP session transcript output when a test message fails to send.
 * Fixed the error: Class 'Zend_Mail_Protocol_Smtp_Auth_Plain' not found in /wordpress_jana/wp-content/plugins/postman-smtp/Postman/Postman-Mail/Zend-1.12.10/Mail/Transport/Smtp.php on line 198
 
 = 1.3.2 - 2015-02-10 =

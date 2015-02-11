@@ -13,6 +13,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 	 */
 	class PostmanWpMail {
 		private $exception;
+		private $transcript;
 		
 		/**
 		 * This methods creates an instance of PostmanSmtpEngine and sends an email.
@@ -29,12 +30,12 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 */
 		public function send(PostmanOptions $wpMailOptions, PostmanAuthorizationToken $wpMailAuthorizationToken, $to, $subject, $message, $headers = '', $attachments = array()) {
 			$logger = new PostmanLogger ( get_class ( $this ) );
+			// send the message
+			$logger->debug ( 'Sending mail' );
+			// interact with the SMTP Engine
+			$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken );
 			try {
-				// send the message
-				$logger->debug ( 'Sending mail' );
-				// interact with the SMTP Engine
-				$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken );
-				$engine->allowSenderOverride ( !$wpMailOptions->isSenderNameOverridePrevented () );
+				$engine->allowSenderOverride ( ! $wpMailOptions->isSenderNameOverridePrevented () );
 				$engine->setBody ( $message );
 				$engine->setSubject ( $subject );
 				$engine->addTo ( $to );
@@ -46,16 +47,21 @@ if (! class_exists ( "PostmanWpMail" )) {
 				$engine->setReplyTo ( $wpMailOptions->getReplyTo () );
 				$engine->send ();
 				PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
+				$this->transcript = $engine->getTranscript ();
 				return true;
 			} catch ( Exception $e ) {
 				$this->exception = $e;
-				$logger->debug ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
+				$logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
 				PostmanStats::getInstance ()->incrementFailedDelivery ();
+				$this->transcript = $engine->getTranscript ();
 				return false;
 			}
 		}
 		public function getException() {
 			return $this->exception;
+		}
+		public function getTranscript() {
+			return $this->transcript;
 		}
 	}
 }
