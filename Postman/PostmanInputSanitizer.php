@@ -69,6 +69,12 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 				$this->logger->debug ( 'Validation Failure' );
 				$_SESSION [PostmanAdminController::POSTMAN_ACTION] = PostmanInputSanitizer::SAVE_FAILURE;
 			}
+			
+			// base-64 scramble password
+			if (! empty ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] )) {
+				$new_input [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] );
+			}
+			
 			return $new_input;
 		}
 		/**

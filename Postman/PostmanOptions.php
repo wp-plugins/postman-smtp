@@ -152,7 +152,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function getPassword() {
 			if (isset ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] ))
-				return $this->options [PostmanOptions::BASIC_AUTH_PASSWORD];
+				return base64_decode($this->options [PostmanOptions::BASIC_AUTH_PASSWORD]);
 		}
 		public function getReplyTo() {
 			if (isset ( $this->options [PostmanOptions::REPLY_TO] ))
@@ -230,7 +230,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			$this->options [PostmanOptions::BASIC_AUTH_USERNAME] = $username;
 		}
 		public function setPassword($password) {
-			$this->options [PostmanOptions::BASIC_AUTH_PASSWORD] = $password;
+			$this->options [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode($password);
 		}
 		public function setReplyTo($replyTo) {
 			$this->options [PostmanOptions::REPLY_TO] = $replyTo;
