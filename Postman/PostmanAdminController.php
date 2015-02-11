@@ -436,6 +436,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( 'postman_script', 'postman_auth_option_oauth2_id', '#input_auth_type_oauth2' );
 			wp_localize_script ( 'postman_script', 'postman_auth_option_none_id', '#input_auth_type_none' );
 			
+			// test email input
+			wp_localize_script ( 'postman_script', 'postman_input_test_email', '#input_' . PostmanOptions::TEST_EMAIL );
+							
 			//
 			$sanitizer = new PostmanInputSanitizer ( $this->options );
 			register_setting ( PostmanAdminController::SETTINGS_GROUP_NAME, PostmanOptions::POSTMAN_OPTIONS, array (
@@ -866,7 +869,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function test_email_callback() {
-			printf ( '<input type="text" id="test_email" name="postman_test_options[test_email]" value="%s" class="required email" size="40"/>', isset ( $this->testOptions ['test_email'] ) ? esc_attr ( $this->testOptions ['test_email'] ) : '' );
+			printf ( '<input type="text" id="input_test_email" name="postman_test_options[test_email]" value="%s" class="required email" size="40"/>', isset ( $this->testOptions ['test_email'] ) ? esc_attr ( $this->testOptions ['test_email'] ) : '' );
 		}
 		
 		/**

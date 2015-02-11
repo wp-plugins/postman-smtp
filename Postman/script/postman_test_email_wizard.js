@@ -21,6 +21,9 @@ jQuery(document)
 													jQuery(this));
 
 										},
+										onInit : function() {
+											jQuery(postman_input_test_email).focus();
+										},
 										onStepChanged : function(event,
 												currentIndex, priorIndex) {
 											return postHandleStepChange(event,
@@ -94,7 +97,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 		jQuery('li + li').addClass('disabled');
 		var data = {
 			'action' : 'send_test_email',
-			'email' : jQuery('#test_email').val(),
+			'email' : jQuery(postman_input_test_email).val(),
 			'method' : 'wp_mail'
 		};
 		jQuery('#postman_test_message_status').html('Sending...');
