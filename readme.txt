@@ -117,6 +117,8 @@ If you have a Google Account, from the [Google Developer's Console](https://cons
 
 == Troubleshooting ==
 
+* If sometimes Postman can send mail and sometimes it fails, with no configuration changes, your host may have poor connectivity to your mail server. Try doubling the Read Timeout.
+
 Here are some common error messages and what they mean. If you do not find your answer here, please [open a ticket](https://wordpress.org/support/plugin/postman-smtp).
 
 = Communication Error [334] =
@@ -136,6 +138,7 @@ This is the only OAuth2-specific error you will see. It tells you nothing about 
 
 = Operation Timed out =
 
+* Your host may have poor connectivity to the mail server. Try doubling the Read Timeout.
 * Your host may have installed a firewall (DROP packets) between you and the server. Ask them to open the ports.
 * Your may have tried to (incorrectly) use TLS over port 465. Check your encryption and port settings.
 
@@ -158,6 +161,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 1.3.3 - 2015-02-11 =
 * Replaced the Google OAuth API with pure PHP code. No more unexpected Google API errors.
+* Enabled editing of the timeouts in the configuration screen. If Postman is intermittently sending mail, try increasing the TCP Read Timeout
 * Added the SMTP session transcript output when a test message fails to send.
 * Fixed the error: Class 'Zend_Mail_Protocol_Smtp_Auth_Plain' not found in /wordpress_jana/wp-content/plugins/postman-smtp/Postman/Postman-Mail/Zend-1.12.10/Mail/Transport/Smtp.php on line 198
 

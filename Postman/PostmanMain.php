@@ -17,7 +17,7 @@ if (! class_exists ( 'PostmanMain' )) {
 	class PostmanMain {
 
 		const POSTMAN_TCP_READ_TIMEOUT = 60;
-		const POSTMAN_TCP_CONNECTION_TIMEOUT = 30;
+		const POSTMAN_TCP_CONNECTION_TIMEOUT = 15;
 		
 		/**
 		 * The main entry point for Postman
