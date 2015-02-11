@@ -10,6 +10,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	
 	//
 	class PostmanAdminController {
+		const POSTMAN_PORT_TEST_TIMEOUT = 30;
 		
 		// this is the slug used in the URL
 		const POSTMAN_MENU_SLUG = 'postman';
@@ -397,6 +398,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'jquery',
 					'postman_script' 
 			), POSTMAN_PLUGIN_VERSION );
+			wp_localize_script ( 'postman_script', 'postman_port_check_timeout', PostmanAdminController::POSTMAN_PORT_TEST_TIMEOUT . '' );
+			
 			wp_localize_script ( 'postman_script', 'postman_smtp_section_element_name', 'div#smtp_section' );
 			wp_localize_script ( 'postman_script', 'postman_oauth_section_element_name', 'div#oauth_section' );
 			
@@ -581,7 +584,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if (isset ( $_POST ['timeout'] )) {
 				$timeout = intval ( $_POST ['timeout'] );
 			} else {
-				$timeout = 20;
+				$timeout = PostmanAdminController::POSTMAN_PORT_TEST_TIMEOUT;
 			}
 			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ();
@@ -685,7 +688,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Port Test text
 		 */
 		public function printPortTestSectionInfo() {
-			print '<p><span>This test determines which ports are open for Postman to use. A</span> <span style="color:red">Closed</span><span> port indicates either <ol><li>Your host has placed a firewall between this site and the SMTP server or</li><li>The SMTP server has no service running on that port</li></ol></span></p><p><span><b>If the port you are trying to use is </span> <span style="color:red"><b>Closed</b></span><span>, Postman can not deliver mail. Contact your host to get the port opened.</b></span></p><p><span style="font-size:0.9em">Each test is given twenty seconds to complete and the entire test will take up to one minute to run. Javascript is required.</span></p>';
+			print '<p><span>This test determines which ports are open for Postman to use. A</span> <span style="color:red">Closed</span><span> port indicates either <ol><li>Your host has placed a firewall between this site and the SMTP server or</li><li>The SMTP server has no service running on that port</li></ol></span></p><p><span><b>If the port you are trying to use is </span> <span style="color:red"><b>Closed</b></span><span>, Postman can not deliver mail. Contact your host to get the port opened.</b></span></p><p><span style="font-size:0.9em">Each test is given ' . PostmanAdminController::POSTMAN_PORT_TEST_TIMEOUT . ' seconds to complete and the entire test will take up to ' . (PostmanAdminController::POSTMAN_PORT_TEST_TIMEOUT * 3) . ' seconds to run. Javascript is required.</span></p>';
 		}
 		
 		/**

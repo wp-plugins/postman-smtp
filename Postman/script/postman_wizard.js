@@ -255,7 +255,7 @@ function wizardPortTest(input, state) {
 	portsToCheck++;
 	var data = {
 		'action' : 'test_port',
-		'timeout' : '5',
+		'timeout' : postman_port_check_timeout,
 		'hostname' : hostname,
 		'port' : el.val()
 	// We pass php values differently!
