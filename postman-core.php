@@ -1,5 +1,5 @@
 <?php
-define ( 'POSTMAN_TCP_TIMEOUT', 30 );
+define ( 'POSTMAN_TCP_TIMEOUT', 60 );
 
 if (! class_exists ( "PostmanLogger" )) {
 	

@@ -76,7 +76,7 @@ if (! class_exists ( "PostmanStats" )) {
 		function incrementFailedDelivery() {
 			if ($this->isEnabled ()) {
 				$this->setFailedDelivery ( $this->getFailedDeliveries () + 1 );
-				$this->logger->debug ( 'incrementing success count: ' . $this->getFailedDeliveries () );
+				$this->logger->debug ( 'incrementing failure count: ' . $this->getFailedDeliveries () );
 				$this->save ();
 			}
 		}
