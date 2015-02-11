@@ -16,6 +16,9 @@ jQuery(document).ready(
 											jQuery(this));
 
 								},
+								onInit : function() {
+									jQuery(postman_input_sender_email).focus();
+								},
 								onStepChanged : function(event, currentIndex,
 										priorIndex) {
 									return postHandleStepChange(event,
@@ -221,6 +224,9 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	// Suppress (skip) "Warning" step if
 	// the user is old enough and wants
 	// to the previous step.
+	if(currentIndex === 1) {
+		jQuery(postman_hostname_element_name).focus();
+	}
 	if (currentIndex === 2) {
 		if (portCheckBlocksUi) {
 			// this is the second place i disable the next button but Steps re-enables it after the screen slides
