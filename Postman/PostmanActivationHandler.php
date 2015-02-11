@@ -22,17 +22,21 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			// prior to version 0.2.5, $authOptions did not exist
 			$authOptions = get_option ( 'postman_auth_token' );
 			$options = get_option ( 'postman_options' );
-			if (empty ( $authOptions ) && ! (empty ( $options ))) {
+			if (empty ( $authOptions ) && ! (empty ( $options )) && ! empty ( $options ['access_token'] )) {
 				$logger->debug ( "Upgrading database: copying Authorization token from postman_options to postman_auth_token" );
 				// copy the variables from $options to $authToken
 				$authOptions ['access_token'] = $options ['access_token'];
 				$authOptions ['refresh_token'] = $options ['refresh_token'];
-				$authOptions ['auth_token_expires'] = $options ['auth_token_expires'];
+				// there was a bug where we weren't setting the expiry time
+				if (! empty ( $options ['auth_token_expires'] )) {
+					$authOptions ['auth_token_expires'] = $options ['auth_token_expires'];
+				}
 				update_option ( 'postman_auth_token', $authOptions );
 			}
-			if (! isset ( $options ['authorization_type'] )) {
+			if (! isset ( $options ['authorization_type'] ) && ! isset ( $options ['auth_type'] )) {
 				// prior to 1.0.0, access tokens were saved in authOptions without an auth type
 				// prior to 0.2.5, access tokens were save in options without an auth type
+				// either way, only oauth2 was supported
 				if (isset ( $authOptions ['access_token'] ) || isset ( $options ['access_token'] )) {
 					$logger->debug ( "Upgrading database: setting authorization_type to 'oauth2'" );
 					$options ['authorization_type'] = 'oauth2';
@@ -65,6 +69,15 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 					}
 					update_option ( 'postman_options', $options );
 				}
+			}
+			// prior to 1.3.3, the version identifier was not stored and the passwords were plaintext
+			if (isset ( $options ['enc_type'] ) && ! isset ( $options ['version'] )) {
+				$logger->debug ( "Upgrading database: added plugin version and encoding password" );
+				$options ['version'] = '1.3.3';
+				if (isset ( $options ['basic_auth_password'] )) {
+					$options ['basic_auth_password'] = base64_encode ( $options ['basic_auth_password'] );
+				}
+				update_option ( 'postman_options', $options );
 			}
 		}
 	}
