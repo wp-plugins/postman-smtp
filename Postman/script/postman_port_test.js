@@ -9,15 +9,18 @@ jQuery(document).ready(function() {
 		var $elTestingTable = jQuery('#testing_table');
 		$elTestingTable.show();
 
-		portTest('#port-test-port-25', 25);
-		portTest('#port-test-port-587', 587);
-		portTest('#port-test-port-465', 465);
+		totalPortsTested = 0;
+		portsToBeTested = 0;
+		portTest('#port-test-port-25', 25, $el);
+		portTest('#port-test-port-587', 587, $el);
+		portTest('#port-test-port-465', 465, $el);
 
 		//
 		return false;
 	});
 });
-function portTest(tdValue, port) {
+function portTest(tdValue, port, button) {
+	portsToBeTested += 1;
 	var testEl = jQuery(tdValue);
 	testEl.html('Testing');
 	var data = {
@@ -29,11 +32,15 @@ function portTest(tdValue, port) {
 	// We can also pass the url value separately from ajaxurl for front end AJAX
 	// implementations
 	jQuery.post(ajaxurl, data, function(response) {
+		totalPortsTested += 1;
 		if (response.success) {
 			testEl.html('<span style="color:green">Open</span>');
 		} else {
 			testEl.html('<span style="color:red">Closed (' + response.message
 					+ ")</span>");
+		}
+		if (totalPortsTested >= portsToBeTested) {
+			enable(button);
 		}
 	});
 }
