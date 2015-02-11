@@ -160,11 +160,15 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.3.3 - 2015-02-11 =
+* 500 downloads and six 5-star ratings in only three weeks! Cool! Postman is consistently in the 4th / 5th most popular SMTP plugin download spot. Thanks everyone! 8-)
 * Replaced the Google OAuth API with pure PHP code. No more unexpected Google API errors.
-* Enabled editing of the timeouts in the configuration screen. If Postman is intermittently sending mail, try increasing the TCP Read Timeout
+* Enabled overriding of the timeouts in the configuration screen. If Postman is intermittently sending mail, doubling the TCP Read Timeout may help
 * Added the SMTP session transcript output when a test message fails to send.
 * Fixed the error: Class 'Zend_Mail_Protocol_Smtp_Auth_Plain' not found in /wordpress_jana/wp-content/plugins/postman-smtp/Postman/Postman-Mail/Zend-1.12.10/Mail/Transport/Smtp.php on line 198
-* Passwords in the database are encoded
+* Passwords in the database are now Base64-encoded so casual viewing of the database won't immediately reveal them
+* Fixed a couple minor database upgrade bugs: for new users who use Password Authentication, and for old users that don't have an expiry token stored
+* Added a version shortcode, mostly for promotion of Postman on my own websites
+* Serveal minor tweaks to the user interface, including focus, style, validation, and enabling/disabling inputs where applicable
 
 = 1.3.2 - 2015-02-10 =
 * Fixed the error: PHP Fatal error:  Call to private PostmanAuthorizationToken::__construct() This occurs when upgrading from a pre-v1.0 version of Postman (when PostmanAuthorizationToken had a public constructor) to v1.0 or higher.
@@ -239,7 +243,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Upgrade Notice ==
 
 = 1.3.3 =
-Fixed several bugs that affect Postman's operation.
+This is a 'hardening' update which fixes several minor bugs and improves the stability of the UI and mail service.
 
 = 1.3 =
 Now supporting Hotmail via OAuth 2.0!
