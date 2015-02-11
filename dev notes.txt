@@ -128,3 +128,5 @@ http://devzone.zend.com/1424/why-your-php-app-needs-a-circuit-breaker/
 Capturing and Handling PHP Errors Gracefully
 http://biostall.com/capturing-and-handling-php-errors-gracefully
 
+Gmail SMTP Settings and New Security Measures Demystified
+http://www.wpsitecare.com/gmail-smtp-settings/
