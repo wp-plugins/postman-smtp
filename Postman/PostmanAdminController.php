@@ -1241,12 +1241,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 		</section>
 		<section id="test-fail">
 			<p>
-				<label>Message</label>
+				<label>Error Message</label>
 			</p>
 			<textarea id="postman_test_message_error_message" readonly="readonly"
 				cols="70" rows="2"></textarea>
 			<p>
-				<label for="postman_test_message_transcript">Transcript</label>
+				<label for="postman_test_message_transcript">SMTP Session Transcript</label>
 			</p>
 			<textarea readonly="readonly" id="postman_test_message_transcript"
 				cols="70" rows="6"></textarea>
