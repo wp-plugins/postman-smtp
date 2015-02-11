@@ -7,6 +7,25 @@
 form#postman_wizard legend,form#postman_test_email_wizard legend {
 	font-weight: bold;
 }
+
 form#postman_wizard label,form#postman_test_email_wizard label {
 	font-weight: bold;
+}
+
+table#testing_table {
+	width: 600px;
+	font-size: 1.2em;
+	display: none"
+}
+
+table#testing_table td.port {
+	width: 100px;
+}
+
+p#wizard_oauth2_help span.error {
+	color: red;
+}
+
+fine_print {
+	font-size: 0.9em;
 }

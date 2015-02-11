@@ -8,6 +8,7 @@ jQuery(document)
 					jQuery("#postman_test_email_wizard")
 							.steps(
 									{
+										forceMoveForward : true,
 										bodyTag : "fieldset",
 										headerTag : "h1",
 										transitionEffect : "slideLeft",
@@ -50,7 +51,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 	// Always allow going backward even if
 	// the current step contains invalid fields!
 	if (currentIndex > newIndex) {
-		return true;
+		return false;
 	}
 
 	// Clean up if user went backward

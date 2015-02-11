@@ -1,5 +1,3 @@
-portsChecked = 0;
-portsToCheck = 0;
 jQuery(document).ready(
 		function() {
 			jQuery(postman_input_sender_email).focus();
@@ -96,6 +94,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		portsToCheck = 0;
 		// allow the user to choose any
 		// port
+		portCheckBlocksUi = true;
 		wizardPortTest(jQuery('#wizard_port_465'),
 				jQuery('#wizard_port_465_status'));
 		wizardPortTest(jQuery('#wizard_port_25'),
@@ -105,8 +104,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 	} else if (currentIndex === 2) {
 
 		// user has clicked next from ports-check page
-		if (portsChecked < portsToCheck) {
-			alert('Please wait for the check to finish');
+		if (portCheckBlocksUi) {
 			return false;
 		}
 		var chosenPort = jQuery(postman_port_element_name).val();
@@ -123,7 +121,8 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 			} else {
 				enable(postman_input_basic_username);
 				enable(postman_input_basic_password);
-				// for the next two lines, i assume this is port 587 because that's
+				// for the next two lines, i assume this is port 587 because
+				// that's
 				// currently the only time the user can change the auth type
 				enable(postman_enc_for_password_el);
 				setEncryptionType(postman_enc_tls);
@@ -220,6 +219,11 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	// Suppress (skip) "Warning" step if
 	// the user is old enough and wants
 	// to the previous step.
+	if (currentIndex === 2) {
+		if (portCheckBlocksUi) {
+			jQuery('li + li').addClass('disabled');
+		}
+	}
 	if (currentIndex === 3 && priorIndex === 4 && chosenPort == 25) {
 		myself.steps("previous");
 		return;
@@ -238,7 +242,9 @@ function checkEmail(email) {
 	// We can also pass the url value separately from ajaxurl for front end AJAX
 	// implementations
 	jQuery.post(ajaxurl, data, function(response) {
-		jQuery(postman_hostname_element_name).val(response.hostname);
+		if (response.hostname != '') {
+			jQuery(postman_hostname_element_name).val(response.hostname);
+		}
 	});
 }
 function wizardPortTest(input, state) {
@@ -310,11 +316,14 @@ function wizardPortTest(input, state) {
 							} else if (el25_avail) {
 								el25.attr("checked", true);
 								portInput.val(25);
-							} else {
-								if (totalAvail == 0) {
-									alert("No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.")
-								}
 							}
+							if (totalAvail == 0) {
+								alert("No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.")
+							} else {
+								jQuery('li + li').removeClass('disabled');
+								portCheckBlocksUi = false;
+							}
+
 						}
 					});
 }
