@@ -13,6 +13,7 @@
  */
 
 // ideas for future versions of the plugin
+// -- internationalization of text
 // -- if a test message succeeds, capture the domain of the primary mx, smtp server hostname and port, auth type, encryption type into a database (with the user's permission)
 // -- write a plugin to capture the above information
 // -- send mail in the background using ajax - the single mail thread can block the PHP server for quite some time

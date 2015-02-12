@@ -5,7 +5,7 @@ define ( 'POSTMAN_HOME_PAGE_ABSOLUTE_URL', admin_url ( POSTMAN_HOME_PAGE_RELATIV
 
 if (! function_exists ( 'postmanRedirect' )) {
 	/**
-	 * A fa�ade function that handles redirects.
+	 * A facade function that handles redirects.
 	 * Inside WordPress we can use wp_redirect(). Outside WordPress, not so much. **Load it before postman-core.php**
 	 *
 	 * @param unknown $url        	
@@ -21,6 +21,7 @@ if (! function_exists ( 'postmanRedirect' )) {
 if (! function_exists ( 'postmanHttpTransport' )) {
 	/**
 	 * Makes the outgoing HTTP requests
+	 * Inside WordPress we can use wp_remote_post(). Outside WordPress, not so much. **Load it before postman-core.php**
 	 *
 	 * @param unknown $url        	
 	 * @param unknown $args        	
