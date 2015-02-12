@@ -155,10 +155,13 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Screenshots ==
 
+1. Postman configured and ready for mail
 1. Postman's Setup Wizard checking server connectivity
+1. Postman's full configuration screen
+1. Postman's Test Email utility - Oops! Wrong password
+1. Postman's Port Test utility
 1. Creating a new Client ID with Google
 1. The required Client ID and Client Secret
-1. If you use [Google Apps](http://admin.google.com) to manage your domain, you HAVE to use OAuth
 
 == Changelog ==
 
