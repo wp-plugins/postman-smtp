@@ -162,6 +162,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 1. Postman's Port Test utility
 1. Creating a new Client ID with Google
 1. The required Client ID and Client Secret
+1. Creating a new Application with Microsoft
+1. The required Client ID and Client Secret
 
 == Changelog ==
 
