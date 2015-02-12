@@ -73,8 +73,8 @@ Never have an email authentication issue again!
 = To manually configure Password Authentication for any SMTP provider =
 
 1. Choose configure manually
-1. In 'Authentication' choose Login, unless your provider has told you different.
-1. In 'Sender Email Address' enter your account's email address. Some plugins may override this, however it is up to your email provider if this is permitted.
+1. In 'Authentication' choose 'Login', unless your provider has told you different.
+1. In 'Sender Email Address' enter your account's email address.
 1. Enter the SMTP Server's hostname and port.
 1. If you chose Plain, Login or CRAM-MD5 as your authentication method then: Choose 'SSL' for encryption if your port is 465, or 'TLS' if your port is 587.
 1. Enter your username (probably your email address) and password in the Basic Auth Settings section.
