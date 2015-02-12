@@ -13,7 +13,7 @@ Having Gmail problems? Lowering your security settings is stupid! Introducing Po
 
 Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking](https://support.google.com/accounts/answer/6010255) [traditional](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) SMTP SSL/TLS mechanisms with Gmail. Google may be quietly dumping your outbound mail and you wouldn't even know.
 
-Postman is the first and only next-generation SMTP plugin to provide WordPress with the latest security mechanism for sending email. Once configured, Google and Hotmail actively grant Postman permission to send messages on you behalf. When your site generates an email, from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth 2.0 authentication and SMTP delivery.
+Postman is the first and only next-generation SMTP plugin to provide WordPress with OAuth 2.0, the latest security mechanism for sending email. Once configured, Google and Hotmail actively grant Postman permission to send messages on your behalf. When your site generates an email, from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the authentication and delivery.
 
 Never have an email authentication issue again!
 
