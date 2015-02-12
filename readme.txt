@@ -11,11 +11,9 @@ Having Gmail problems? Lowering your security settings is not the answer! Introd
 
 == Description ==
 
-Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking](https://support.google.com/accounts/answer/6010255) [traditional](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) SMTP SSL/TLS mechanisms with Gmail. Google may be quietly dumping your outbound mail and you wouldn't even know.
+Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking](https://support.google.com/accounts/answer/6010255) [traditional](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) SMTP SSL/TLS mechanisms with Gmail. This has led to user frustration as they deal with authentication problems, lost outbound mail, or worse, mail that is delivered but somehow never reaches its destination.
 
-Postman is the first and only next-generation SMTP plugin to provide WordPress with OAuth 2.0, the latest security mechanism for sending email. Once configured, Google and Hotmail actively grant Postman permission to send messages on your behalf. When your site generates an email, from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the authentication and delivery.
-
-Never have an email authentication issue again!
+Postman is a next-generation SMTP plugin implementing OAuth 2.0, the latest security mechanism for sending email. During configuration, Google and Hotmail pre-approve Postman permission to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
 
 ###* What's New for v1.3 *
 *Now featuring OAuth 2.0 for **Hotmail/Windows Live/Outlook.com** users*
