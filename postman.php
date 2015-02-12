@@ -22,9 +22,6 @@ define ( 'POSTMAN_HOME_PAGE_RELATIVE_URL', 'options-general.php?page=postman' );
 define ( 'POSTMAN_HOME_PAGE_ABSOLUTE_URL', admin_url ( POSTMAN_HOME_PAGE_RELATIVE_URL ) );
 define ( 'POSTMAN_PLUGIN_VERSION', '1.3.4' );
 
-// load the common functions
-require_once 'Postman/postman-common-wp-functions.php';
-
 // set-up the error handler
 if (! function_exists ( 'postmanHandleErrors' )) {
 	/**
@@ -47,36 +44,32 @@ if (! function_exists ( 'postmanHandleErrors' )) {
 	}
 }
 
-if (! function_exists ( 'postmanMain' )) {
-	function postmanMain() {
-		// create a Logger
-		$logger = new PostmanLogger ( 'postman.php' );
-		$logger->debug ( 'Postman v' . POSTMAN_PLUGIN_VERSION . ' starting' );
-		
-		// start the session
-		if (! isset ( $_SESSION )) {
-			session_start ();
-		}
-		
-		// register error handler
-		register_shutdown_function ( 'postmanHandleErrors' );
-		
-		// handle plugin activation/deactivation
-		require_once 'Postman/PostmanActivationHandler.php';
-		$upgrader = new PostmanActivationHandler ();
-		register_activation_hook ( __FILE__, array (
-				$upgrader,
-				'activatePostman' 
-		) );
-		
-		// start Postman
-		require_once 'Postman/PostmanMain.php';
-		$kevinCostener = new PostmanMain ();
-		$kevinCostener->main ( plugin_basename ( __FILE__ ) );
-	}
+// load the common functions
+require_once 'Postman/postman-common-wp-functions.php';
+
+// create a Logger
+$logger = new PostmanLogger ( 'postman.php' );
+$logger->debug ( 'Postman v' . POSTMAN_PLUGIN_VERSION . ' starting' );
+
+// register error handler
+register_shutdown_function ( 'postmanHandleErrors' );
+
+// start the session
+if (! isset ( $_SESSION )) {
+	session_start ();
 }
 
-// start
-postmanMain ();
+// handle plugin activation/deactivation
+require_once 'Postman/PostmanActivationHandler.php';
+$upgrader = new PostmanActivationHandler ();
+register_activation_hook ( __FILE__, array (
+		$upgrader,
+		'activatePostman' 
+) );
+
+// start Postman
+require_once 'Postman/PostmanMain.php';
+$kevinCostener = new PostmanMain ();
+$kevinCostener->main ( plugin_basename ( __FILE__ ) );
 
 ?>
