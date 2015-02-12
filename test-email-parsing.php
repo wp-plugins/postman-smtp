@@ -1,5 +1,5 @@
 <?php
-require_once 'Postman-Mail/PostmanEmailAddress.php';
+require_once 'Postman/Postman-Mail/PostmanEmailAddress.php';
 
 // string test
 $recipients = 'Kevin.Brine@pppg.com, Robert <Robert.Thomas@pppg.com>, "Warbler" <Blaine.James@pppg.com>, "Guice, Doug" <Doug.Guice@pppg.com>';

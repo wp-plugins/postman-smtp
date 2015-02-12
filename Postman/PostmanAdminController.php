@@ -1,11 +1,11 @@
 <?php
 if (! class_exists ( "PostmanAdminController" )) {
 	
-	require_once "SendTestEmailController.php";
+	require_once "PostmanSendTestEmail.php";
 	require_once 'PostmanOptions.php';
 	require_once 'PostmanAuthorizationToken.php';
-	require_once 'Wizard/PortTest.php';
-	require_once 'Wizard/SmtpDiscovery.php';
+	require_once 'Postman-Wizard/PortTest.php';
+	require_once 'Postman-Wizard/SmtpDiscovery.php';
 	require_once 'PostmanInputSanitizer.php';
 	
 	//
@@ -447,7 +447,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 			
 			// Sanitize
-			add_settings_section ( PostmanAdminController::SMTP_SECTION, __ ( 'SMTP Settings', 'postman' ), array (
+			add_settings_section ( PostmanAdminController::SMTP_SECTION, __ ( 'SMTP Settings', 'postman' , 'postman-smtp'), array (
 					$this,
 					'printSmtpSectionInfo' 
 			), PostmanAdminController::SMTP_OPTIONS );

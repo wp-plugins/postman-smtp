@@ -1,5 +1,6 @@
 <?php
-require_once 'SmtpDiscovery.php';
+require_once 'Postman/postman-common-functions.php';
+require_once 'Postman/Postman-Wizard/SmtpDiscovery.php';
 function test() {
 	check ( 'test@hendriks.ca' );
 	check ( 'test@hotmail.com' );

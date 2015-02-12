@@ -1,5 +1,5 @@
 <?php
-$multipleEmails = 'jason@hendriks.ca, blake@tvwp.ca';
+$multipleEmails = 'test@hendriks.ca, test@tvwp.ca';
 display ( str_getcsv ( $multipleEmails ) );
 display ( stringGetCsvAlternate ( $multipleEmails ) );
 function display($t) {

@@ -4,6 +4,9 @@ Wordpress
 Internationalizing a Plugin
 http://codex.wordpress.org/I18n_for_WordPress_Developers
 
+Internationalization: You’re probably doing it wrong
+http://ottopress.com/2012/internationalization-youre-probably-doing-it-wrong/
+
 Portable WordPress-only alternative to curl_init
 http://planetozh.com/blog/2009/08/how-to-make-http-requests-with-wordpress/
 
