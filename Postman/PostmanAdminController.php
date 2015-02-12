@@ -438,7 +438,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			// test email input
 			wp_localize_script ( 'postman_script', 'postman_input_test_email', '#input_' . PostmanOptions::TEST_EMAIL );
-							
+			
 			//
 			$sanitizer = new PostmanInputSanitizer ( $this->options );
 			register_setting ( PostmanAdminController::SETTINGS_GROUP_NAME, PostmanOptions::POSTMAN_OPTIONS, array (
@@ -1184,19 +1184,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 	<h1>Finish</h1>
 	<fieldset>
 		<legend>All done!</legend>
-		<section class="wizard-auth-oauth2">
-			<p>Once you click Finish below, these settings will be saved. Then at
-				the main Postman Settings screen, be sure to:</p>
+		<section>
+			<p>Click Finish to save these settings. Then:</p>
 			<ul style='margin-left: 20px'>
-				<li>Request permission from the Email Provider to allow Postman to
-					send email and</li>
+				<li class="wizard-auth-oauth2">Request permission from the Email
+					Provider to allow Postman to send email and</li>
 				<li>Send yourself a Test Email to make sure everything is working!</li>
 			</ul>
-		</section>
-		<section class="wizard-auth-basic">
-			<p>Once you click Finish below, these settings will be saved. Then at
-				the main Postman Settings screen, be sure to send yourself a Test
-				Email to make sure everything is working!</p>
 		</section>
 	</fieldset>
 

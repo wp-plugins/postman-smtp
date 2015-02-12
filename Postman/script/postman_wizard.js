@@ -28,9 +28,6 @@ jQuery(document).ready(
 								onFinishing : function(event, currentIndex) {
 									var form = jQuery(this);
 
-									jQuery('.wizard-auth-oauth2').show();
-									jQuery('.wizard-auth-basic').show();
-									jQuery(postman_encryption_group).show();
 									// Disable validation on fields that
 									// are disabled.
 									// At this point it's recommended to
@@ -98,7 +95,8 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		// allow the user to choose any
 		// port
 		portCheckBlocksUi = true;
-		// this should be the only place i disable the next button but Steps enables it after the screen slides
+		// this should be the only place i disable the next button but Steps
+		// enables it after the screen slides
 		jQuery('li + li').addClass('disabled');
 		wizardPortTest(jQuery('#wizard_port_465'),
 				jQuery('#wizard_port_465_status'));
@@ -136,7 +134,6 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 
 		// hide both the oauth section and the password section
 		hide('.wizard-auth-oauth2');
-		hide('.wizard-auth-basic');
 		disable(postman_auth_option_oauth2_id);
 		disable(postman_auth_option_none_id);
 		if (hostname == 'smtp.gmail.com' && chosenPort == 465) {
@@ -167,7 +164,6 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 			// eanble user/pass fields
 			enablePasswordFields();
 
-			show('.wizard-auth-basic');
 			enable(postman_enc_option_ssl_id);
 			hide(postman_encryption_group);
 			jQuery('.port-explanation-ssl').show();
@@ -184,7 +180,6 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 			enablePasswordFields();
 
 			disable(postman_enc_option_ssl_id);
-			show('.wizard-auth-basic');
 			jQuery(postman_encryption_group).show();
 			hide('.port-explanation-ssl');
 			jQuery('.port-explanation-tls').show();
@@ -196,7 +191,6 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 			setAuthType(postman_auth_none);
 			setEncryptionType(postman_enc_none);
 
-			show('.wizard-auth-basic');
 			hide(postman_encryption_group);
 			disable(postman_input_basic_username);
 			disable(postman_input_basic_password);
@@ -224,12 +218,13 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	// Suppress (skip) "Warning" step if
 	// the user is old enough and wants
 	// to the previous step.
-	if(currentIndex === 1) {
+	if (currentIndex === 1) {
 		jQuery(postman_hostname_element_name).focus();
 	}
 	if (currentIndex === 2) {
 		if (portCheckBlocksUi) {
-			// this is the second place i disable the next button but Steps re-enables it after the screen slides
+			// this is the second place i disable the next button but Steps
+			// re-enables it after the screen slides
 			jQuery('li + li').addClass('disabled');
 		}
 	}
