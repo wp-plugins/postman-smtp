@@ -87,9 +87,9 @@ Postman is a next-generation SMTP plugin, the first and only to implement OAuth 
 
 If you use other plugins to send Gmail or Hotmail, they're going to ask you for your account password. And if you change your password, those same plugins will break. But Postman will continue to deliver your email without interruption.
 
-Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. This option is not available if you're using *Google Apps* to manage a domain.
+OAuth 2.0 provides focussed authorization. By giving other plugins your account password, they can do anything that you can do. Postman's OAuth 2.0 token permits access to your Gmail or Hotmail only, and not, for example, your Google Docs or Microsoft Office Online.
 
-Also, OAuth 2.0 provides focussed authorization. By giving other plugins your account password, they can do anything that you can do. Postman's OAuth 2.0 token allows access to Gmail or Hotmail only, and not, for example, your Google Docs or Microsoft Office Online.
+Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. This option is not available if you're using *Google Apps* to manage a domain.
 
 > **NEVER give out your Gmail or Microsoft password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
