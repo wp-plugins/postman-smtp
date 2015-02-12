@@ -1,29 +1,32 @@
 === Postman SMTP ===
 Contributors: jasonhendriks
-Tags: mail, email, mailer, smtp, smtps, oauth, oauth2, gmail, google apps, hotmail, windows live, outlook.com
+Tags: mail, email, mailer, smtp, oauth, oauth2, xoauth2, gmail, google apps, hotmail, wp smtp
 Requires at least: 3.9
 Tested up to: 4.1
 Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Kiss your email problems good-bye with Postman, the first and only OAuth-enabled SMTP Plugin for WordPress. Never give out your password again!
+Having Gmail problems? Lowering your security settings is stupid! Introducing Postman, the only OAuth 2.0-enabled SMTP Plugin for WordPress.
 
 == Description ==
 
-Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking](https://support.google.com/accounts/answer/6010255) [traditional](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) SMTP SSL/TLS mechanisms with Gmail.
+Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking](https://support.google.com/accounts/answer/6010255) [traditional](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) SMTP SSL/TLS mechanisms with Gmail. Google may be quietly dumping your outbound mail and you wouldn't even know.
 
-Postman is a next-generation SMTP plugin which provides WordPress with the latest security mechanism for sending email. When your site generates an email, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
+Postman is the first and only next-generation SMTP plugin to provide WordPress with OAuth 2.0, the latest security mechanism for sending email. Once configured, Google and Hotmail actively grant Postman permission to send messages on your behalf. When your site generates an email, from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the authentication and delivery.
+
+Never have an email authentication issue again!
 
 ###* What's New for v1.3 *
-*Now featuring OAuth 2.0 for **Hotmail/Windows Live/Outlook.com** users!*
+*Now featuring OAuth 2.0 for **Hotmail/Windows Live/Outlook.com** users*
 
 = Features =
 * Send mail to any host with SMTP/SMTPS like the other 172 WordPress SMTP plugins
-* Send mail to Gmail or Hotmail using OAuth 2.0. Your mail will be delivered even if your password changes.
+* Send mail to Gmail or Hotmail using OAuth 2.0
+* Fire-and-forget: OAuth 2.0 mail delivery continues even if your password changes
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Easy to use Setup Wizard takes the guesswork out of configuring email
-* Supports international characters, HTML mail and MultiPart/MIME
+* Supports International alphabets, HTML Mail and MultiPart/MIME
 * Supports Plain/Login/CRAM-MD5/OAuth2 authentication
 * Supports SSL/TLS encryption
 
@@ -36,7 +39,7 @@ Postman is a next-generation SMTP plugin which provides WordPress with the lates
 
 == Installation ==
 
-> Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to external SMTP servers and Postman will not work for you. Use the "Run a Port Test" feature to determine if your host has blocked access to the SMTP server you wish to use.
+> Please be aware that if your host provides an internal mail server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to external SMTP servers and Postman will not work for you. Use Postman's Port Test utility to determine if your host has a firewal in place.
 
 = Easy install and setup! (Recommended for all users) =
 1. Install and activate the plugin through the 'Plugins' menu in WordPress.
@@ -70,8 +73,8 @@ Postman is a next-generation SMTP plugin which provides WordPress with the lates
 = To manually configure Password Authentication for any SMTP provider =
 
 1. Choose configure manually
-1. In 'Authentication' choose Login, unless your provider has told you different.
-1. In 'Sender Email Address' enter your account's email address. Some plugins may override this, however it is up to your email provider if this is permitted.
+1. In 'Authentication' choose 'Login', unless your provider has told you different.
+1. In 'Sender Email Address' enter your account's email address.
 1. Enter the SMTP Server's hostname and port.
 1. If you chose Plain, Login or CRAM-MD5 as your authentication method then: Choose 'SSL' for encryption if your port is 465, or 'TLS' if your port is 587.
 1. Enter your username (probably your email address) and password in the Basic Auth Settings section.
@@ -152,10 +155,15 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Screenshots ==
 
+1. Postman configured and ready for mail
 1. Postman's Setup Wizard checking server connectivity
+1. Postman's full configuration screen
+1. Postman's Test Email utility - Oops! Wrong password
+1. Postman's Port Test utility
 1. Creating a new Client ID with Google
 1. The required Client ID and Client Secret
-1. If you use [Google Apps](http://admin.google.com) to manage your domain, you HAVE to use OAuth
+1. Creating a new Application with Microsoft
+1. The required Client ID and Client Secret
 
 == Changelog ==
 
@@ -165,7 +173,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Enabled overriding of the timeouts in the configuration screen. If Postman is intermittently sending mail, doubling the TCP Read Timeout may help
 * Added the SMTP session transcript output when a test message fails to send.
 * Fixed the error: Class 'Zend_Mail_Protocol_Smtp_Auth_Plain' not found in /Postman/Postman-Mail/Zend-1.12.10/Mail/Transport/Smtp.php on line 198
-* Passwords in the database are now Base64-encoded so casual viewing of the database won't immediately reveal them
+* Passwords in the database are now Base64-encoded so casual viewing of the database won't reveal them
 * Fixed a couple minor database upgrade bugs: for new users who use Password Authentication, and for old users that don't have an expiry token stored
 * Added a version shortcode, mostly for promotion of Postman on my own websites
 * Serveal minor tweaks to the user interface, including focus, style, validation, and enabling/disabling inputs where applicable
