@@ -11,7 +11,7 @@ Having Gmail problems? Lowering your security settings is not the answer! Introd
 
 == Description ==
 
-Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP SSL/TLS mechanisms. This has led to user frustration dealing with [outbound mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) when sending via SMTP, or worse, for those users who rely on the WordPress internal PHPMailer, mail that is 'successfully' delivered but is treated as SPAM or silently disappears like a mob witness the night before a trial.
+Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP SSL/TLS mechanisms. This has frustrated users with [outbound mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) when using basic SMTP plugins, or worse, for those users who rely on the WordPress internal PHPMailer, mail that is 'successfully' delivered but is treated as SPAM or silently disappears like a mob witness the night before a trial.
 
 Postman is a next-generation SMTP plugin, the first and only to implement OAuth 2.0, Gmail's preferred mechanism for authenticating to SMTP. During configuration, Google and Hotmail [pre-approve Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
 
@@ -20,12 +20,12 @@ Postman is a next-generation SMTP plugin, the first and only to implement OAuth 
 
 = Features =
 * Send mail to any host with SMTP/SMTPS, like the other 172 WordPress SMTP plugins
-* Send mail to Gmail or Hotmail using OAuth 2.0
+* Send mail to Gmail or Hotmail using OAuth 2.0 SMTPS
 * Fire-and-forget: OAuth 2.0 mail delivery continues even if your password changes
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Easy to use Setup Wizard takes the guesswork out of configuring email
 * Supports International alphabets, HTML Mail and MultiPart/MIME
-* Supports Plain/Login/CRAM-MD5/OAuth2 authentication
+* Supports Plain/Login/CRAM-MD5/XOAuth2 authentication
 * Supports SSL/TLS encryption
 
 = Requirements =
