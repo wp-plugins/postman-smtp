@@ -293,4 +293,3 @@ A variety of bug fixes and enhancements.
 
 = 0.1 =
 The first version. Yay!
-
