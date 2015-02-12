@@ -54,7 +54,7 @@ $logger->debug ( 'Postman v' . POSTMAN_PLUGIN_VERSION . ' starting' );
 // register error handler
 register_shutdown_function ( 'postmanHandleErrors' );
 
-// start the session
+// create a session
 if (! isset ( $_SESSION )) {
 	session_start ();
 }
