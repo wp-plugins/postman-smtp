@@ -69,7 +69,7 @@ register_activation_hook ( __FILE__, array (
 
 // start Postman
 require_once 'Postman/PostmanMain.php';
-$kevinCostener = new PostmanMain ();
-$kevinCostener->main ( plugin_basename ( __FILE__ ) );
+$kevinCostner = new PostmanMain ();
+$kevinCostner->main ( plugin_basename ( __FILE__ ) );
 
 ?>
