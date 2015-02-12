@@ -11,15 +11,15 @@ Having Gmail problems? Lowering your security settings is not the answer! Introd
 
 == Description ==
 
-Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking](https://support.google.com/accounts/answer/6010255) [traditional](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) SMTP SSL/TLS mechanisms with Gmail. This has led to user frustration as they deal with authentication problems and outbound mail failure, or worse, mail that is delivered but somehow never reaches its destination.
+Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), and [blocking traditional SMTP SSL/TLS mechanisms](https://support.google.com/accounts/answer/6010255) with Gmail in favour of OAuth 2.0. This has led to user frustration dealing with [authentication problems and outbound mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), or worse, mail that is delivered but somehow never reaches its destination.
 
-Postman is a next-generation SMTP plugin implementing OAuth 2.0, the latest security mechanism for sending email. During configuration, Google and Hotmail pre-approve Postman to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
+Postman is a next-generation SMTP plugin, the first and only to implement OAuth 2.0, the modern security mechanism for sending email. During configuration, [Google and Hotmail pre-approve Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
 
 ###* What's New for v1.3 *
 *Now featuring OAuth 2.0 for **Hotmail/Windows Live/Outlook.com** users*
 
 = Features =
-* Send mail to any host with SMTP/SMTPS like the other 172 WordPress SMTP plugins
+* Send mail to any host with SMTP/SMTPS, like the other 172 WordPress SMTP plugins
 * Send mail to Gmail or Hotmail using OAuth 2.0
 * Fire-and-forget: OAuth 2.0 mail delivery continues even if your password changes
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
@@ -83,20 +83,22 @@ Postman is a next-generation SMTP plugin implementing OAuth 2.0, the latest secu
 
 == Frequently Asked Questions == 
 
-= Why should I use Postman over the hundreds of other SMTP plugins? =
+= Why should I use Postman over any other plugins? Can't I just tell Google to allow less secure apps?  =
 
-If you use other plugins to send Gmail or Hotmail, they're going to ask you for your Google or Hotmail password. And if you change your password, those same plugins will break. But Postman will continue to deliver your email without interruption.
+If you use other plugins to send Gmail or Hotmail, they're going to ask you for your account password. And if you change your password, those same plugins will break. But Postman will continue to deliver your email without interruption.
 
-> **NEVER give out your Google or Hotmail password** to a 3rd-party or 3rd-party program that you don't fully trust.
+Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. This option is not available if you're using *Google Apps* to manage a domain.
 
-= Why do I need OAuth? Can't I just tell Google to allow less secure apps? =
+Also, OAuth 2.0 provides focussed authorization. By giving other plugins your account password, they can do anything that you can do. Postman's OAuth 2.0 token allows access to Gmail or Hotmail only, and not, for example, your Google Docs or Microsoft Office Online.
 
-Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. And this option is not available if you're using Google Apps to manage a domain.
+> **NEVER give out your Gmail or Microsoft password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = I want my email to come from a different email address. =
-This is a big Internet **no-no**. At best, your email provider will simply re-write your correct email address, or maybe give you an authentication error when you try to send your mail. At worst, your IP or entire domain will end up on a SPAM blacklist.
+This is a big **no-no** and in OAuth/Password authentication mode, Postman doesn't allow it. At best, your email provider will simply re-write the correct email address, or maybe give you an authentication error when you try to connect. At worst, your IP or entire domain will end up on a SPAM blacklist.
 
-Most like want you mean to do is set the **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
+Most likely want you mean to do is set the **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
+
+If you really, *really* want to send email from a different email address, connect anonymously by choosing "Authentication:none" in the configuration screen.
 
 = What is a Client ID? =
 To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one.
@@ -129,7 +131,7 @@ Here are some common error messages and what they mean. If you do not find your 
 
 = Communication Error [334] =
 
-This is the only OAuth2-specific error you will see. It tells you nothing about what's wrong, by design. There are a number of things to check:
+This is the only OAuth2-specific error you will see. By design it tells you *nothing* about what's wrong. There are a number of things to check:
 
 * Make sure that your Sender Email Address is the same account that you use to create the Google Client ID or Microsoft Application.
 * Maybe you sent an e-mail with the wrong Sender Email Address one too many times. Delete the Google Client ID or Microsoft Application, and start over.
