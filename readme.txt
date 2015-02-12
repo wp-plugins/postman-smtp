@@ -1,6 +1,6 @@
 === Postman SMTP ===
 Contributors: jasonhendriks
-Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, windows live, outlook.com, wp smtp
+Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, windows live, outlook.com, wp smtp, outgoing mail, sendmail, ssl, tls, wordpress smtp, wp_mail, wp mail
 Requires at least: 3.9
 Tested up to: 4.1
 Stable tag: 1.3.4
@@ -173,7 +173,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.3.4 - 2015-02-11 =
-* 500 downloads and six 5-star ratings in only three weeks! Cool! Postman is consistently in the 4th / 5th most popular SMTP plugin download spot. Thanks everyone! 8-)
+* 500 downloads and six 5-star ratings in only three weeks! Cool! 8-)
 * Replaced the Google OAuth API with pure PHP code. No more unexpected Google API errors.
 * Enabled overriding of the timeouts in the configuration screen. If Postman is intermittently sending mail, doubling the TCP Read Timeout may help
 * Added the SMTP session transcript output when a test message fails to send.
