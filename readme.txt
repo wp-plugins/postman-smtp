@@ -7,23 +7,26 @@ Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Kiss your email problems good-bye with Postman, the first and only OAuth-enabled SMTP Plugin for WordPress. Never give out your password again!
+Having Gmail problems? Lowering your security settings is stupid! Introducing Postman, the only OAuth 2.0-enabled SMTP Plugin for WordPress.
 
 == Description ==
 
-Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking](https://support.google.com/accounts/answer/6010255) [traditional](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) SMTP SSL/TLS mechanisms with Gmail.
+Have you been having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed) recently? In 2014, Google began [increasing their SMTP security checks](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) to include OAuth 2.0, and [blocking](https://support.google.com/accounts/answer/6010255) [traditional](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) SMTP SSL/TLS mechanisms with Gmail. Google may be quietly dumping your outbound mail and you wouldn't even know.
 
-Postman is a next-generation SMTP plugin which provides WordPress with the latest security mechanism for sending email. When your site generates an email, for example from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth authentication and SMTP delivery.
+Postman is the first and only next-generation SMTP plugin to provide WordPress with the latest security mechanism for sending email. Once configured, Google and Hotmail actively grant Postman permission to send messages on you behalf. When your site generates an email, from a Lost Password or a plugin like [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), Postman handles the OAuth 2.0 authentication and SMTP delivery.
+
+Never have an email authentication issue again!
 
 ###* What's New for v1.3 *
-*Now featuring OAuth 2.0 for **Hotmail/Windows Live/Outlook.com** users!*
+*Now featuring OAuth 2.0 for **Hotmail/Windows Live/Outlook.com** users*
 
 = Features =
 * Send mail to any host with SMTP/SMTPS like the other 172 WordPress SMTP plugins
-* Send mail to Gmail or Hotmail using OAuth 2.0. Your mail will be delivered even if your password changes.
+* Send mail to Gmail or Hotmail using OAuth 2.0
+* Fire-and-forget: OAuth 2.0 mail delivery continues even if your password changes
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Easy to use Setup Wizard takes the guesswork out of configuring email
-* Supports international characters, HTML mail and MultiPart/MIME
+* Supports International alphabets, HTML Mail and MultiPart/MIME
 * Supports Plain/Login/CRAM-MD5/OAuth2 authentication
 * Supports SSL/TLS encryption
 
@@ -36,7 +39,7 @@ Postman is a next-generation SMTP plugin which provides WordPress with the lates
 
 == Installation ==
 
-> Please be aware that if your host provides an internal SMTP server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to external SMTP servers and Postman will not work for you. Use the "Run a Port Test" feature to determine if your host has blocked access to the SMTP server you wish to use.
+> Please be aware that if your host provides an internal mail server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to external SMTP servers and Postman will not work for you. Use Postman's Port Test utility to determine if your host has a firewal in place.
 
 = Easy install and setup! (Recommended for all users) =
 1. Install and activate the plugin through the 'Plugins' menu in WordPress.
@@ -164,15 +167,15 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Replaced the Google OAuth API with pure PHP code. No more unexpected Google API errors.
 * Enabled overriding of the timeouts in the configuration screen. If Postman is intermittently sending mail, doubling the TCP Read Timeout may help
 * Added the SMTP session transcript output when a test message fails to send.
-* Fixed the error: Class 'Zend_Mail_Protocol_Smtp_Auth_Plain' not found in /wordpress_jana/wp-content/plugins/postman-smtp/Postman/Postman-Mail/Zend-1.12.10/Mail/Transport/Smtp.php on line 198
-* Passwords in the database are now Base64-encoded so casual viewing of the database won't immediately reveal them
+* Fixed the error: Class 'Zend_Mail_Protocol_Smtp_Auth_Plain' not found in /Postman/Postman-Mail/Zend-1.12.10/Mail/Transport/Smtp.php on line 198
+* Passwords in the database are now Base64-encoded so casual viewing of the database won't reveal them
 * Fixed a couple minor database upgrade bugs: for new users who use Password Authentication, and for old users that don't have an expiry token stored
 * Added a version shortcode, mostly for promotion of Postman on my own websites
 * Serveal minor tweaks to the user interface, including focus, style, validation, and enabling/disabling inputs where applicable
 
 = 1.3.2 - 2015-02-10 =
 * Fixed the error: PHP Fatal error:  Call to private PostmanAuthorizationToken::__construct() This occurs when upgrading from a pre-v1.0 version of Postman (when PostmanAuthorizationToken had a public constructor) to v1.0 or higher.
-* Fixed the error PHP Fatal error: Class 'Google_IO_Stream' not found in /var/www/html/wp-content/plugins/postman-smtp/Postman/Postman-Auth/google-api-php-client-1.1.2/src/Google/Client.php on line 600 by including Google/IO/Stream.php
+* Fixed the error PHP Fatal error: Class 'Google_IO_Stream' not found in /Postman/Postman-Auth/google-api-php-client-1.1.2/src/Google/Client.php on line 600 by including Google/IO/Stream.php
 * Postman now has a modest fatal error screen, rather than a dreaded white screen of death
 
 = 1.3 - 2015-02-09 =
