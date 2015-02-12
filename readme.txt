@@ -95,7 +95,7 @@ If you use other plugins to send Gmail or Hotmail, they're going to ask you for 
 
 Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. And this option is not available if you're using Google Apps to manage a domain.
 
-= I want to send email from an email address other than the one in the plugin =
+= I want my email to come from a different email address =
 This is a big Internet **no-no**. At best, your email provider will simply re-write your correct email address, or maybe give you an authentication error when you try to send your mail. At worst, your IP or entire domain will end up on a SPAM blacklist.
 
 The only way to send from an e-mail address other than your own is to send mail anonymously, i.e. with NO authentication enabled.
