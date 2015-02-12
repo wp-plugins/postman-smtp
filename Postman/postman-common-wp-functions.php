@@ -1,7 +1,11 @@
 <?php
+
+define ( 'POSTMAN_HOME_PAGE_RELATIVE_URL', 'options-general.php?page=postman' );
+define ( 'POSTMAN_HOME_PAGE_ABSOLUTE_URL', admin_url ( POSTMAN_HOME_PAGE_RELATIVE_URL ) );
+
 if (! function_exists ( 'postmanRedirect' )) {
 	/**
-	 * A faade function that handles redirects.
+	 * A faï¿½ade function that handles redirects.
 	 * Inside WordPress we can use wp_redirect(). Outside WordPress, not so much. **Load it before postman-core.php**
 	 *
 	 * @param unknown $url        	

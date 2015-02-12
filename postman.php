@@ -18,8 +18,6 @@
 // -- send mail in the background using ajax - the single mail thread can block the PHP server for quite some time
 
 // define constants
-define ( 'POSTMAN_HOME_PAGE_RELATIVE_URL', 'options-general.php?page=postman' );
-define ( 'POSTMAN_HOME_PAGE_ABSOLUTE_URL', admin_url ( POSTMAN_HOME_PAGE_RELATIVE_URL ) );
 define ( 'POSTMAN_PLUGIN_VERSION', '1.3.4' );
 
 // set-up the error handler
@@ -54,22 +52,8 @@ $logger->debug ( 'Postman v' . POSTMAN_PLUGIN_VERSION . ' starting' );
 // register error handler
 register_shutdown_function ( 'postmanHandleErrors' );
 
-// create a session
-if (! isset ( $_SESSION )) {
-	session_start ();
-}
-
-// handle plugin activation/deactivation
-require_once 'Postman/PostmanActivationHandler.php';
-$upgrader = new PostmanActivationHandler ();
-register_activation_hook ( __FILE__, array (
-		$upgrader,
-		'activatePostman' 
-) );
-
 // start Postman
 require_once 'Postman/PostmanMain.php';
-$kevinCostner = new PostmanMain ();
-$kevinCostner->main ( plugin_basename ( __FILE__ ) );
+$kevinCostner = new PostmanMain (__FILE__);
 
 ?>

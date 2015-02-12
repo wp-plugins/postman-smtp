@@ -15,14 +15,30 @@ if (! class_exists ( 'PostmanMain' )) {
 	 *        
 	 */
 	class PostmanMain {
-
 		const POSTMAN_TCP_READ_TIMEOUT = 60;
 		const POSTMAN_TCP_CONNECTION_TIMEOUT = 15;
 		
 		/**
-		 * The main entry point for Postman
+		 *
+		 * @param unknown $postmanPhpFile        	
 		 */
-		public function main($basename) {
+		public function __construct($postmanPhpFile) {
+
+			// calculate the basename
+			$basename = plugin_basename ( $postmanPhpFile );
+			
+			// create a session
+			if (! isset ( $_SESSION )) {
+				session_start ();
+			}
+			
+			// handle plugin activation/deactivation
+			require_once 'PostmanActivationHandler.php';
+			$upgrader = new PostmanActivationHandler ();
+			register_activation_hook ( $postmanPhpFile, array (
+					$upgrader,
+					'activatePostman' 
+			) );
 			
 			// load the options and the auth token
 			$options = PostmanOptions::getInstance ();
