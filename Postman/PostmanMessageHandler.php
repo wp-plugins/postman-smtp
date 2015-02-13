@@ -81,7 +81,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			$this->displayWarningMessage ( $message );
 		}
 		public function displaySwitchToOAuthWarning() {
-			$message = sprintf ( 'Warning: %s may silently discard messages sent with password authentication. Change your authentication type to OAuth 2.0.</span></p>', PostmanSmtpHostProperties::getServiceName ( $this->options->getHostname () ) );
+			$message = sprintf ( 'Warning: You may experience problems attempting to use password authentication with %s. Change your authentication type to OAuth 2.0.</span></p>', PostmanSmtpHostProperties::getServiceName ( $this->options->getHostname () ) );
 			$this->displayWarningMessage ( $message );
 		}
 		//

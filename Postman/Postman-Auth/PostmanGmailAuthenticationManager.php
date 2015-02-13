@@ -2,6 +2,7 @@
 if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 	
 	require_once 'PostmanAbstractAuthenticationManager.php';
+	require_once 'PostmanStateIdMissingException.php';
 	
 	/**
 	 * https://developers.google.com/accounts/docs/OAuth2WebServer
@@ -98,8 +99,8 @@ if (! class_exists ( "PostmanGmailAuthenticationManager" )) {
 					unset ( $_SESSION [PostmanGmailAuthenticationManager::AUTH_TEMP_ID] );
 					$this->getLogger ()->debug ( 'Found valid state in request header' );
 				} else {
-					$this->getLogger ()->error ( 'The grant code from Google had no state and may be a forgery' );
-					throw new Exception ( 'The grant code from Google had no state and may be a forgery' );
+					$this->getLogger()->error('The grant code from Google had no accompanying state and may be a forgery');
+					throw new PostmanStateIdMissingException();
 				}
 				$this->requestAuthorizationToken ( PostmanGmailAuthenticationManager::GOOGLE_REFRESH, PostmanSmtpHostProperties::getRedirectUrl ( PostmanSmtpHostProperties::GMAIL_HOSTNAME ), $code );
 				return true;

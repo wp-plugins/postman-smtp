@@ -63,6 +63,10 @@ if (! class_exists ( "PostmanOptions" )) {
 			update_option ( PostmanOptions::POSTMAN_OPTIONS, $this->options );
 		}
 		
+		public function isNew() {
+			return !isset($this->options[PostmanOptions::VERSION]);
+		}
+		
 		//
 		public function isRequestOAuthPermissionAllowed() {
 			$clientId = $this->getClientId ();

@@ -134,6 +134,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 
 		// hide both the oauth section and the password section
 		hide('.wizard-auth-oauth2');
+		hide('.wizard-auth-basic');
 		disable(postman_auth_option_oauth2_id);
 		disable(postman_auth_option_none_id);
 		if (hostname == 'smtp.gmail.com' && chosenPort == 465) {
@@ -156,33 +157,29 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 			hide(postman_enc_for_oauth2_el);
 			enable(postman_auth_option_oauth2_id);
 		} else if (chosenPort == 465) {
-
-			// set authentication and encryption types
-			setAuthType(postman_auth_login);
-			setEncryptionType(postman_enc_ssl);
-
 			// eanble user/pass fields
 			enablePasswordFields();
 
+			// allow ssl, set encryption to ssl
 			enable(postman_enc_option_ssl_id);
+			setEncryptionType(postman_enc_ssl);
+
+			// hide the encryption menu
 			hide(postman_encryption_group);
-			jQuery('.port-explanation-ssl').show();
-			hide('.port-explanation-tls');
 		} else if (chosenPort == 587) {
+			// eanble user/pass fields
+			enablePasswordFields();
+
+			// disallow ssl, set encryption to tls
+			setEncryptionType(postman_enc_tls);
+			disable(postman_enc_option_ssl_id);
+
+			// show the encryption menu
+			show(postman_encryption_group);
+
 			// allow none as an authentication choice
 			enable(postman_auth_option_none_id);
 
-			// set authentication and encryption types
-			setAuthType(postman_auth_login);
-			setEncryptionType(postman_enc_tls);
-
-			// eanble user/pass fields
-			enablePasswordFields();
-
-			disable(postman_enc_option_ssl_id);
-			jQuery(postman_encryption_group).show();
-			hide('.port-explanation-ssl');
-			jQuery('.port-explanation-tls').show();
 		} else {
 			// allow none as an authentication choice
 			enable(postman_auth_option_none_id);
@@ -210,8 +207,10 @@ function setEncryptionType($encType) {
 	jQuery(postman_enc_for_oauth2_el).val($encType);
 }
 function enablePasswordFields() {
+	setAuthType(postman_auth_login);
 	enable(postman_input_basic_username);
 	enable(postman_input_basic_password);
+	show('.wizard-auth-basic');
 }
 function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	var chosenPort = jQuery('#input_port').val();
