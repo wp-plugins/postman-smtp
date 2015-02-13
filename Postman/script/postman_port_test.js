@@ -1,5 +1,6 @@
 jQuery(document).ready(function() {
 	var $el = jQuery('input#begin-port-test');
+	jQuery(postman_hostname_element_name).focus();
 	$el.click(function() {
 		valid = jQuery('#port_test_form_id').valid();
 		if (!valid) {

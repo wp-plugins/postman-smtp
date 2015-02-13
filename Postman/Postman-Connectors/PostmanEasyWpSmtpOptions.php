@@ -15,13 +15,14 @@ if (! class_exists ( 'PostmanEasyWpSmtpOptions' )) {
 		}
 		public function isValid() {
 			$valid = true;
-// 			$valid &= ! empty ( $this->getHostname () );
-// 			$valid &= ! empty ( $this->getPort () );
-// 			$valid &= ! empty ( $this->getSenderEmail () );
-// 			$valid &= ! empty ( $this->getAuthenticationType () );
-// 			$valid &= ! empty ( $this->getEncryptionType () );
-// 			$valid &= ! empty ( $this->getUsername () );
-// 			$valid &= ! empty ( $this->getPassword () );
+			$valid &= ! empty ( $this->options ['smtp_settings'] ['host'] );
+			$valid &= ! empty ( $this->options ['smtp_settings'] ['port'] );
+			$valid &= ! empty ( $this->options ['from_email_field'] );
+			$valid &= ! empty ( $this->options ['from_name_field'] );
+			$valid &= ! empty ( $this->options ['smtp_settings'] ['autentication'] );
+			$valid &= ! empty ( $this->options ['smtp_settings'] ['type_encryption'] );
+			$valid &= ! empty ( $this->options ['smtp_settings'] ['username'] );
+			$valid &= ! empty ( $this->options ['smtp_settings'] ['password'] );
 			return $valid;
 		}
 		public function getHostname() {

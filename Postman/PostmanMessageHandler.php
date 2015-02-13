@@ -18,7 +18,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->options = $options;
 			
-			if (isset ( $_GET ['page'] ) && $_GET ['page'] == 'postman') {
+			if (isset ( $_GET ['page'] ) && substr ( $_GET ['page'], 0, 7 ) === 'postman') {
 				
 				if ($this->options->isPermissionNeeded ( $authToken )) {
 					add_action ( 'admin_notices', Array (

@@ -11,9 +11,21 @@ if (! class_exists ( "PostmanAdminController" )) {
 	
 	//
 	class PostmanAdminController {
+		public function getActionUrl($slug) {
+			return get_admin_url () . 'admin-post.php?action=' . $slug;
+		}
+		public function getPageUrl($slug) {
+			return get_admin_url () . 'options-general.php?page=' . $slug;
+		}
 		
 		// this is the slug used in the URL
 		const POSTMAN_MENU_SLUG = 'postman';
+		const REQUEST_OAUTH2_GRANT_SLUG = 'postman/requestOauthGrant';
+		const CONFIGURATION_SLUG = 'postman/configuration';
+		const CONFIGURATION_WIZARD_SLUG = 'postman/configuration_wizard';
+		const EMAIL_TEST_SLUG = 'postman/email_test';
+		const PORT_TEST_SLUG = 'postman/port_test';
+		const PURGE_DATA_SLUG = 'postman/purge_data';
 		
 		// The Postman Group is used for saving data, make sure it is globally unique
 		const SETTINGS_GROUP_NAME = 'postman_group';
@@ -133,10 +145,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 				default :
 					// Ajax handlers
 					if (is_admin ()) {
-						$this->registerAjaxHandler ( 'wp_ajax_test_port', 'getAjaxPortStatus' );
-						$this->registerAjaxHandler ( 'wp_ajax_check_email', 'getAjaxHostnameByEmail' );
-						$this->registerAjaxHandler ( 'wp_ajax_get_redirect_url', 'getAjaxRedirectUrl' );
-						$this->registerAjaxHandler ( 'wp_ajax_send_test_email', 'sendTestEmailViaAjax' );
+						$this->registerAjaxHandler ( 'test_port', 'getAjaxPortStatus' );
+						$this->registerAjaxHandler ( 'check_email', 'getAjaxHostnameByEmail' );
+						$this->registerAjaxHandler ( 'get_redirect_url', 'getAjaxRedirectUrl' );
+						$this->registerAjaxHandler ( 'send_test_email', 'sendTestEmailViaAjax' );
 					}
 					
 					$this->registerAdminMenu ( 'generateDefaultContent' );
@@ -147,8 +159,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this->registerAdminMenu ( 'addPurgeDataSubmenu' );
 					
 					// intercepts calls to purge_data action
-					$this->registerAdminPostAction ( 'purge_data', 'handlePurgeDataAction' );
-					$this->registerAdminPostAction ( 'requestOauthGrant', 'handleOAuthPermissionRequestAction' );
+					$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );
+					$this->registerAdminPostAction ( self::REQUEST_OAUTH2_GRANT_SLUG, 'handleOAuthPermissionRequestAction' );
 			}
 		}
 		
@@ -158,8 +170,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * @param unknown $callbackName        	
 		 */
 		private function registerAjaxHandler($actionName, $callbackName) {
-			$this->logger->debug ( 'Registering ' . $actionName . ' Ajax handler' );
-			add_action ( $actionName, array (
+			$fullname = 'wp_ajax_' . $actionName;
+			$this->logger->debug ( 'Registering ' . 'wp_ajax_' . $fullname . ' Ajax handler' );
+			add_action ( $fullname, array (
 					$this,
 					$callbackName 
 			) );
@@ -223,7 +236,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function generateDefaultContent() {
 			// This page will be under "Settings"
-			$page = add_options_page ( PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', PostmanAdminController::POSTMAN_MENU_SLUG, array (
+			$page = add_options_page ( PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', self::POSTMAN_MENU_SLUG, array (
 					$this,
 					'outputDefaultContent' 
 			) );
@@ -242,7 +255,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Configuration screen
 		 */
 		public function addConfigurationSubmenu() {
-			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', 'postman/configuration', array (
+			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', self::CONFIGURATION_SLUG, array (
 					$this,
 					'outputManualConfigurationContent' 
 			) );
@@ -261,7 +274,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Setup Wizard screen
 		 */
 		public function addSetupWizardSubmenu() {
-			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', 'postman/configuration_wizard', array (
+			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', self::CONFIGURATION_WIZARD_SLUG, array (
 					$this,
 					'outputWizardContent' 
 			) );
@@ -281,7 +294,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Email Test screen
 		 */
 		public function addEmailTestSubmenu() {
-			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', 'postman/email_test', array (
+			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', self::EMAIL_TEST_SLUG, array (
 					$this,
 					'outputTestEmailWizardContent' 
 			) );
@@ -301,7 +314,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Email Test screen
 		 */
 		public function addPortTestSubmenu() {
-			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', 'postman/port_test', array (
+			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', self::PORT_TEST_SLUG, array (
 					$this,
 					'outputPortTestContent' 
 			) );
@@ -320,7 +333,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Email Test screen
 		 */
 		public function addPurgeDataSubmenu() {
-			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', 'postman/purge_data', array (
+			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', self::PURGE_DATA_SLUG, array (
 					$this,
 					'outputPurgeDataContent' 
 			) );
@@ -945,7 +958,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$easyWp = new PostmanEasyWpSmtpOptions ();
 					$atLeastOneValid = $easyWp->isValid ();
 					if ($atLeastOneValid) {
-						print 'However, if you wish, Postman can <a href="'. POSTMAN_HOME_PAGE_ABSOLUTE_URL . '/configuration">import your SMTP configuration</a> from another plugin. You can run the Wizard later if the imported settings don\'t work.';
+						print 'However, if you wish, Postman can <a href="' . POSTMAN_HOME_PAGE_ABSOLUTE_URL . '/configuration">import your SMTP configuration</a> from another plugin. You can run the Wizard later if the imported settings don\'t work.';
 					}
 				}
 			}
@@ -983,7 +996,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<h2>' . PostmanAdminController::PAGE_TITLE . '</h2>';
 			$this->displayTopNavigation ();
 			print '<form method="POST" action="' . get_admin_url () . 'admin-post.php">';
-			print '<input type="hidden" name="action" value="purge_data" />';
+			printf ( '<input type="hidden" name="action" value="%s" />', self::PURGE_DATA_SLUG );
 			do_settings_sections ( 'PURGE_DATA' );
 			submit_button ( 'Delete All Data', 'delete', 'submit', true, 'style="background-color:red;color:white"' );
 			print '</form>';
@@ -1024,11 +1037,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 			<div class="welcome-panel-column">
 				<h4>Get Started</h4>
 				<a class="button button-primary button-hero"
-					href="<?php echo POSTMAN_HOME_PAGE_ABSOLUTE_URL ?>/configuration_wizard">Start
+					href="<?php echo $this->getPageUrl ( self::CONFIGURATION_WIZARD_SLUG ) ?>">Start
 					the Wizard</a>
 				<p class="">
 					or, <a
-						href="<?php echo POSTMAN_HOME_PAGE_ABSOLUTE_URL ?>/configuration">configure
+						href="<?php echo $this->getPageUrl(self::CONFIGURATION_SLUG) ?>">configure
 						manually</a>.
 				</p>
 			</div>
@@ -1036,16 +1049,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 				<h4>Actions</h4>
 				<ul>
 					<li><?php
-			$emailCompany = 'Request OAuth Permission';
+			$emailCompany = __ ( 'Request OAuth Permission' );
 			if ($this->options->isSmtpHostGmail ()) {
-				$emailCompany = 'Request permission from
-								Google';
+				$emailCompany = __ ( 'Request permission from Google' );
 			} else if ($this->options->isSmtpHostHotmail ()) {
-				$emailCompany = 'Request permission from
-								Microsoft';
+				$emailCompany = __ ( 'Request permission from Microsoft' );
 			}
 			if ($this->options->isRequestOAuthPermissionAllowed ()) {
-				printf ( '<a href="%s/requestOauthGrant" class="welcome-icon send-test-email">%s</a>', POSTMAN_HOME_PAGE_ABSOLUTE_URL, PostmanAdminController::POSTMAN_REQUEST_OAUTH_PERMISSION_ACTION, $emailCompany );
+				printf ( '<a href="%s" class="welcome-icon send-test-email">%s</a>', $this->getActionUrl ( self::REQUEST_OAUTH2_GRANT_SLUG ), $emailCompany );
 			} else {
 				print '<div class="welcome-icon send_test_emaail">';
 				print $emailCompany;
@@ -1053,7 +1064,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 			?></li>
 					<li><a
-						href="<?php echo POSTMAN_HOME_PAGE_ABSOLUTE_URL ?>/purge_data"
+						href="<?php echo $this->getPageUrl(self::PURGE_DATA_SLUG); ?>"
 						class="welcome-icon oauth-authorize">Delete plugin settings</a></li>
 
 				</ul>
@@ -1066,7 +1077,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
 				printf ( '<a
 							href="%s"
-							class="welcome-icon send_test_email">Send a Test Email</a>', POSTMAN_HOME_PAGE_ABSOLUTE_URL . '/email_test' );
+							class="welcome-icon send_test_email">Send a Test Email</a>', $this->getActionUrl ( self::EMAIL_TEST_SLUG ) );
 			} else {
 				print '<div class="welcome-icon send_test_emaail">';
 				print 'Send a Test Email';
@@ -1075,7 +1086,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			?></li>
 					<li><a
-						href="<?php echo POSTMAN_HOME_PAGE_ABSOLUTE_URL ?>/port_test"
+						href="<?php echo $this->getPageUrl ( self::PORT_TEST_SLUG ) ?>"
 						class="welcome-icon run-port-test">Run a Port Test</a></li>
 					<li><a
 						href="https://wordpress.org/plugins/postman-smtp/other_notes/"
