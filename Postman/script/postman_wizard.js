@@ -106,7 +106,12 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 				jQuery('#wizard_port_587_status'));
 	} else if (currentIndex === 2) {
 
-		// user has clicked next from ports-check page
+		// user has clicked next but we haen't finished the check
+		if (portsChecked < portsToCheck) {
+			alert('Please wait for the check to finish');
+			return false;
+		}
+		// or all ports are unavailable
 		if (portCheckBlocksUi) {
 			return false;
 		}

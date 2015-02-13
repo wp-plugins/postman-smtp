@@ -1,29 +1,17 @@
 <?php
 if (! class_exists ( 'PostmanEasyWpSmtpOptions' )) {
 	
-	require_once 'PostmanPluginOptions.php';
+	require_once 'PostmanAbstractPluginOptions.php';
 	
 	/**
 	 * Imports Easy WP SMTP options into Postman
 	 *
 	 * @author jasonhendriks
 	 */
-	class PostmanEasyWpSmtpOptions implements PostmanPluginOptions {
+	class PostmanEasyWpSmtpOptions extends PostmanAbstractPluginOptions implements PostmanPluginOptions {
 		private $options;
 		public function __construct() {
 			$this->options = get_option ( 'swpsmtp_options' );
-		}
-		public function isValid() {
-			$valid = true;
-			$valid &= ! empty ( $this->options ['smtp_settings'] ['host'] );
-			$valid &= ! empty ( $this->options ['smtp_settings'] ['port'] );
-			$valid &= ! empty ( $this->options ['from_email_field'] );
-			$valid &= ! empty ( $this->options ['from_name_field'] );
-			$valid &= ! empty ( $this->options ['smtp_settings'] ['autentication'] );
-			$valid &= ! empty ( $this->options ['smtp_settings'] ['type_encryption'] );
-			$valid &= ! empty ( $this->options ['smtp_settings'] ['username'] );
-			$valid &= ! empty ( $this->options ['smtp_settings'] ['password'] );
-			return $valid;
 		}
 		public function getHostname() {
 			if (isset ( $this->options ['smtp_settings'] ['host'] ))
