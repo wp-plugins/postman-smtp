@@ -275,7 +275,6 @@ function wizardPortTest(input, state) {
 							el.removeAttr('disabled');
 							totalAvail++;
 						} else {
-							el.removeAttr('disabled');
 							elState.html('Closed');
 						}
 						if (portsChecked >= portsToCheck) {
