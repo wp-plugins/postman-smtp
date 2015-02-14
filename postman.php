@@ -58,4 +58,3 @@ register_shutdown_function ( 'postmanHandleErrors' );
 require_once 'Postman/PostmanMain.php';
 $kevinCostner = new PostmanMain (__FILE__);
 
-?>

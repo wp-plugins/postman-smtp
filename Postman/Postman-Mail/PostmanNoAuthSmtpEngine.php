@@ -43,4 +43,3 @@ if (! class_exists ( "PostmanNoAuthSmtpEngine" )) {
 		}
 	}
 }
-?>

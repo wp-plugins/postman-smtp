@@ -6,6 +6,13 @@ if (! class_exists ( "PostmanOptions" )) {
 	/**
 	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api
 	 * http://pastebin.com/jA9sBNTk
+	 *
+	 * Make sure these emails are permitted (see http://en.wikipedia.org/wiki/E-mail_address#Internationalization):
+	 * Latin Alphabet (with diacritics): Pelé@example.com
+	 * Greek Alphabet: δοκιμή@παράδειγμα.δοκιμή
+	 * Traditional Chinese Characters: 我買@屋企.香港
+	 * Japanese Characters: 甲斐@黒川.日本
+	 * Cyrillic Characters: чебурашка@ящик-с-апельсинами.рф
 	 */
 	class PostmanOptions {
 		// the option database name

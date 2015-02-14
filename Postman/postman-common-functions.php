@@ -1,6 +1,9 @@
 <?php
 if (! class_exists ( "PostmanLogger" )) {
 	
+ini_set('display_errors', 'On');
+error_reporting(-1);
+ini_set('log_errors', 1);
 	//
 	class PostmanLogger {
 		private $name;
@@ -24,6 +27,7 @@ if (! function_exists ( 'postmanValidateEmail' )) {
 	 * @return number
 	 */
 	function postmanValidateEmail($email) {
+		return true;
 		$exp = "/^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$/i";
 		return preg_match ( $exp, $email );
 	}
@@ -58,4 +62,3 @@ if (! function_exists ( 'endsWith' )) {
 		return substr_compare ( $string, $test, $strlen - $testlen, $testlen ) === 0;
 	}
 }
-?>

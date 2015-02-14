@@ -61,4 +61,3 @@ if (! class_exists ( "PostmanPasswordAuthSmtpEngine" )) {
 		}
 	}
 }
-?>

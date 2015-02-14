@@ -83,5 +83,3 @@ if (! function_exists ( 'getmxrr' )) {
 		return false;
 	}
 }
-
-?>

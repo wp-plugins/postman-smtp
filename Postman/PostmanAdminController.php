@@ -892,7 +892,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function sender_email_callback() {
-			printf ( '<input type="text" id="input_sender_email" name="postman_options[sender_email]" value="%s" size="40" class="required email"/>', null !== $this->options->getSenderEmail () ? esc_attr ( $this->options->getSenderEmail () ) : '' );
+			printf ( '<input type="text" id="input_sender_email" name="postman_options[sender_email]" value="%s" size="40" class="required"/>', null !== $this->options->getSenderEmail () ? esc_attr ( $this->options->getSenderEmail () ) : '' );
 		}
 		
 		/**
@@ -1061,16 +1061,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 			screen_icon ();
 			print '<h2>' . PostmanAdminController::PAGE_TITLE . '</h2>';
 			$this->displayTopNavigation ();
-			if (WP_DEBUG_DISPLAY) {
-				print '<p><span style="color:red">You should disable WP_DEBUG_DISPLAY mode or the port test may not work.';
-			}
 			print '<form id="port_test_form_id" method="post">';
 			do_settings_sections ( PostmanAdminController::PORT_TEST_OPTIONS );
 			// This prints out all hidden setting fields
 			submit_button ( 'Begin Test', 'primary', 'begin-port-test', true );
 			print '</form>';
 			print '<table id="testing_table">';
-			// print '<tr><th>Port</th><th>State</th>';
 			print '<tr><td class="port">Port 25</td><td id="port-test-port-25">Unknown</td>';
 			print '<tr><td class="port">Port 465</td><td id="port-test-port-465">Unknown</td>';
 			print '<tr><td class="port">Port 587</td><td id="port-test-port-587">Unknown</td>';

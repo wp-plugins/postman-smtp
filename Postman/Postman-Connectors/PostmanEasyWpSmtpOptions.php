@@ -9,7 +9,6 @@ if (! class_exists ( 'PostmanEasyWpSmtpOptions' )) {
 	 * @author jasonhendriks
 	 */
 	class PostmanEasyWpSmtpOptions extends PostmanAbstractPluginOptions implements PostmanPluginOptions {
-		private $options;
 		const SLUG = 'easy_wp_smtp';
 		const PLUGIN_NAME = 'Easy WP SMTP';
 		const SMTP_SETTINGS = 'smtp_settings';

@@ -117,4 +117,3 @@ if (! class_exists ( "PostmanGoogleAuthenticationManager" )) {
 		}
 	}
 }
-?>

@@ -105,4 +105,3 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 		}
 	}
 }
-?>

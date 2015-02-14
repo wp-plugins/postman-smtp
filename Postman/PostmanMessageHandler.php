@@ -20,6 +20,12 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			
 			if (isset ( $_GET ['page'] ) && substr ( $_GET ['page'], 0, 7 ) === 'postman') {
 				
+				if (WP_DEBUG_LOG && WP_DEBUG_DISPLAY) {
+					add_action ( 'admin_notices', Array (
+							$this,
+							'displayDebugDisplayIsEnabled' 
+					) );
+				}
 				if ($this->options->isPermissionNeeded ( $authToken )) {
 					add_action ( 'admin_notices', Array (
 							$this,
@@ -77,11 +83,15 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			$this->displayWarningMessage ( $message );
 		}
 		public function displayConfigurationRequiredWarning() {
-			$message = 'Warning: ' . PostmanAdminController::NAME . ' is <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_ABSOLUTE_URL . '">Configure</a> the plugin.';
+			$message = 'Warning: Postman is <em>not</em> intercepting mail requests. <a href="' . POSTMAN_HOME_PAGE_ABSOLUTE_URL . '">Configure</a> the plugin.';
 			$this->displayWarningMessage ( $message );
 		}
 		public function displaySwitchToOAuthWarning() {
 			$message = sprintf ( 'Warning: You may experience problems attempting to use password authentication with %s. Change your authentication type to OAuth 2.0.</span></p>', PostmanSmtpHostProperties::getServiceName ( $this->options->getHostname () ) );
+			$this->displayWarningMessage ( $message );
+		}
+		public function displayDebugDisplayIsEnabled() {
+			$message = sprintf ( 'Warning: Debug messages are being piped into the HTML output. This is a <span style="color:red"><b>serious security risk</b></span> and may hang Postman\'s remote AJAX calls. Disable <a href="http://codex.wordpress.org/WP_DEBUG#WP_DEBUG_LOG_and_WP_DEBUG_DISPLAY">WP_DEBUG_DISPLAY</a>.</span></p>' );
 			$this->displayWarningMessage ( $message );
 		}
 		//
@@ -114,4 +124,3 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		}
 	}
 }
-?>

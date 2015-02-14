@@ -8,6 +8,7 @@ if (! class_exists ( 'PostmanAbstractPluginOptions' )) {
 	 * @author jasonhendriks
 	 */
 	abstract class PostmanAbstractPluginOptions implements PostmanPluginOptions {
+		protected $options;
 		public function isValid() {
 			$valid = true;
 			$host = $this->getHostname ();
@@ -19,13 +20,15 @@ if (! class_exists ( 'PostmanAbstractPluginOptions' )) {
 			$username = $this->getUsername ();
 			$password = $this->getPassword ();
 			$valid &= ! empty ( $host );
-			$valid &= ! empty ( $port );
+			$valid &= ! empty ( $port ) && absint ( $port ) > 0 && absint ( $port ) <= 65535;
 			$valid &= ! empty ( $senderEmail );
 			$valid &= ! empty ( $senderName );
 			$valid &= ! empty ( $auth );
 			$valid &= ! empty ( $enc );
-			$valid &= ! empty ( $username );
-			$valid &= ! empty ( $password );
+			if ($auth != PostmanOptions::AUTHENTICATION_TYPE_NONE) {
+				$valid &= ! empty ( $username );
+				$valid &= ! empty ( $password );
+			}
 			return $valid;
 		}
 		public function isImportable() {

@@ -87,4 +87,3 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 		}
 	}
 }
-?>

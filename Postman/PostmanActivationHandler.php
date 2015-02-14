@@ -82,5 +82,3 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 		}
 	}
 }
-
-?>

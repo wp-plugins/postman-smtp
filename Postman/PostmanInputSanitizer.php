@@ -111,4 +111,3 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 		}
 	}
 }
-?>

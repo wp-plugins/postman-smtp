@@ -6,7 +6,6 @@
 // a:9:{s:4:"from";s:19:"postman@hendriks.ca";s:8:"fromname";s:7:"WP SMTP";s:4:"host";s:14:"smtp.gmail.com";s:10:"smtpsecure";s:0:"";s:4:"port";s:3:"465";s:8:"smtpauth";s:2:"no";s:8:"username";s:19:"postman@hendriks.ca";s:8:"password";s:9:"cleartext";s:10:"deactivate";s:0:"";}
 if (! class_exists ( 'PostmanWpSmtpOptions' )) {
 	class PostmanWpSmtpOptions extends PostmanAbstractPluginOptions implements PostmanPluginOptions {
-		private $options;
 		const SLUG = 'wp_smtp'; // god these names are terrible
 		const PLUGIN_NAME = 'WP SMTP';
 		const SENDER_EMAIL = 'from';

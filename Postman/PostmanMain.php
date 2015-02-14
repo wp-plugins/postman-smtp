@@ -73,5 +73,3 @@ if (! class_exists ( 'PostmanMain' )) {
 		}
 	}
 }
-
-?>

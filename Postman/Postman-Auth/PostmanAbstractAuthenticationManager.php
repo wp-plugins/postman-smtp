@@ -174,4 +174,3 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		}
 	}
 }
-?>

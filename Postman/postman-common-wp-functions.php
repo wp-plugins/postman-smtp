@@ -47,4 +47,3 @@ if (! function_exists ( 'postmanHttpTransport' )) {
 }
 
 require_once 'postman-common-functions.php';
-?>
