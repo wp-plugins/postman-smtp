@@ -44,10 +44,10 @@ if (! class_exists ( "PostmanOptions" )) {
 		const PREVENT_SENDER_NAME_OVERRIDE = 'prevent_sender_name_override';
 		const CONNECTION_TIMEOUT = 'connection_timeout';
 		const READ_TIMEOUT = 'read_timeout';
+		const LOG_LEVEL = 'log_level';
 		
 		// options data
 		private $options;
-		private $logger;
 		
 		// singleton instance
 		public static function getInstance() {
@@ -63,7 +63,6 @@ if (! class_exists ( "PostmanOptions" )) {
 		 */
 		private function __construct() {
 			$this->options = get_option ( PostmanOptions::POSTMAN_OPTIONS );
-			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
 		//
 		public function save() {
@@ -123,7 +122,12 @@ if (! class_exists ( "PostmanOptions" )) {
 				}
 			}
 		}
-		
+		public function getLogLevel() {
+			if (isset ( $this->options [PostmanOptions::LOG_LEVEL] ))
+				return $this->options [PostmanOptions::LOG_LEVEL];
+			else
+				return PostmanLogger::OFF_INT;
+		}
 		//
 		public function getHostname() {
 			if (isset ( $this->options [PostmanOptions::HOSTNAME] ))
@@ -261,13 +265,6 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (! isset ( $this->options [self::READ_TIMEOUT] )) {
 				$this->setReadTimeout ( $seconds );
 			}
-		}
-		public function debug(PostmanLogger $logger) {
-			$logger->debug ( 'Sender Email=' . $this->getSenderEmail () );
-			$logger->debug ( 'Host=' . $this->getHostname () );
-			$logger->debug ( 'Port=' . $this->getPort () );
-			$logger->debug ( 'Client Id=' . $this->getClientId () );
-			$logger->debug ( 'Client Secret=' . $this->getClientSecret () );
 		}
 		public function isAuthTypeOAuth2() {
 			return PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $this->getAuthorizationType ();

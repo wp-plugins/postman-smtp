@@ -145,10 +145,6 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		});
 
 		// hide both the oauth section and the password section
-		hide('.wizard-auth-oauth2');
-		hide('.wizard-auth-basic');
-		disable(postman_auth_option_oauth2_id);
-		disable(postman_auth_option_none_id);
 		if (hostname == 'smtp.gmail.com' && chosenPort == 465) {
 			// setup Gmail with OAuth2
 		} else if (hostname == 'smtp.live.com' && chosenPort == 587) {
@@ -299,6 +295,10 @@ function wizardPortTest(input, state) {
 									'avail465' : el465_avail,
 									'avail587' : el587_avail
 								};
+								hide('.wizard-auth-oauth2');
+								hide('.wizard-auth-basic');
+								disable(postman_auth_option_oauth2_id);
+								disable(postman_auth_option_none_id);
 								populateRedirectUrl(data);
 								jQuery('li + li').removeClass('disabled');
 								portCheckBlocksUi = false;

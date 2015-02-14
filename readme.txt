@@ -1,6 +1,10 @@
 === Postman SMTP ===
 Contributors: jasonhendriks
+<<<<<<< .working
 Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, windows live, outlook.com, wp smtp, outgoing mail, sendmail, ssl, tls, wp smtp, wordpress smtp, wp_mail, wp mail, google apps for work, google apps for business
+=======
+Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, windows live, outlook.com, wp smtp, outgoing mail, sendmail, ssl, tls, wordpress smtp, wp_mail, wp mail, google apps for work, google apps for business
+>>>>>>> .merge-right.r1089893
 Requires at least: 3.9
 Tested up to: 4.1
 Stable tag: 1.3.4
@@ -11,22 +15,47 @@ Having Gmail problems? Lowering your security settings is not the answer! Introd
 
 == Description ==
 
+<<<<<<< .working
 Having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed)? In 2014, Google began [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms. Since then, users of basic SMTP plugins have been plagued by [outbound mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) and delays. Worse, when using the WordPress internal PHPMailer, mail that is 'successfully' delivered may be treated as SPAM or silently disappear like a mob witness the night before a trial.
+=======
+Having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed)? In 2014, Google began [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms. This has frustrated users of basic SMTP plugins with [outbound mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html). Worse, when using the WordPress internal PHPMailer, mail that is 'successfully' delivered may be treated as SPAM or silently disappear like a mob witness the night before a trial.
+>>>>>>> .merge-right.r1089893
 
+<<<<<<< .working
 Postman is a next-generation WordPress SMTP plugin, the first and only to implement OAuth 2.0, Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service provider [pre-approves Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
+=======
+Postman is a next-generation WordPress SMTP plugin, the first and only to implement OAuth 2.0, Gmail's preferred mechanism for authentication. During OAuth configuration, Google and Hotmail [pre-approve Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
+>>>>>>> .merge-right.r1089893
 
+<<<<<<< .working
 ###* What's New for v1.4 *
 *Featuring OAuth 2.0 for Gmail, Hotmail and now **Yahoo Mail** users!*
+=======
+###* What's New for v1.3 *
+*Now featuring OAuth 2.0 for **Hotmail/Windows Live/Outlook.com** users*
+>>>>>>> .merge-right.r1089893
 
 = Features =
+<<<<<<< .working
 * Send mail to any host with SMTP, just like the 'Big Five' WordPress SMTP plugins
 * Send mail to Gmail, Hotmail or Yahoo Mail using XOAUTH2 SMTPS
 * Fire-and-forget: OAuth 2.0 mail delivery continues even if your password changes
+=======
+* Send mail to any host with SMTP/SMTPS, like the 'Big Five' WordPress SMTP plugins
+* Send mail to Gmail or Hotmail using OAuth 2.0 SMTPS
+* Fire-and-forget: OAuth 2.0 mail delivery continues even if your password changes
+>>>>>>> .merge-right.r1089893
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Easy to use Setup Wizard takes the guesswork out of configuring email
+<<<<<<< .working
 * Supports International alphabets, HTML Mail and MultiPart/MIME
 * Supports Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Supports SMTPS SSL/TLS encryption
+=======
+* Supports International alphabets, HTML Mail and MultiPart/MIME
+* Supports Plain/Login/CRAM-MD5/XOAuth2 authentication
+* Supports SSL/TLS encryption
+>>>>>>> .merge-right.r1089893
 
 = Requirements =
 * WordPress 3.9 (or later)
@@ -82,16 +111,37 @@ Postman is a next-generation WordPress SMTP plugin, the first and only to implem
 
 == Frequently Asked Questions == 
 
+<<<<<<< .working
 = How does OAuth 2.0 help to send mail? =
-
-Postman specifically requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) on the user's behalf to perform a particular service (get Gmail working in the living room, stay out of Google Docs in the bedroom) without the user giving up their user and password credentials (master house key). If the user grants that access, Postman receives a unique token to do its work.
-
+=======
 = Why should I use Postman over any other plugins? Can't I just tell Google to allow less secure apps?  =
+>>>>>>> .merge-right.r1089893
 
+<<<<<<< .working
+Postman specifically requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) on the user's behalf to perform a particular service (get Gmail working in the living room, stay out of Google Docs in the bedroom) without the user giving up their user and password credentials (master house key). If the user grants that access, Postman receives a unique token to do its work.
+=======
+If you use other plugins to send Gmail or Hotmail, they're going to ask you for your account password. And if you change your password, those same plugins will break. But Postman will continue to deliver your email without interruption.
+>>>>>>> .merge-right.r1089893
+
+<<<<<<< .working
+= Why should I use Postman over any other plugins? Can't I just tell Google to allow less secure apps?  =
+=======
+OAuth 2.0 provides focussed authorization. By giving other plugins your account password, they can do anything that you can do. Postman's OAuth 2.0 token permits access to your Gmail or Hotmail only, and not, for example, your Google Docs or Microsoft Office Online.
+>>>>>>> .merge-right.r1089893
+
+<<<<<<< .working
 If you use other plugins to send Gmail, Hotmail or Yahoo Mail, they're going to ask you for your account password. Anything you can do on your account, they can do. And if you change your password, those same plugins will break until you update them with your new password.
+=======
+Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. This option is not available if you're using *Google Apps* to manage a domain.
+>>>>>>> .merge-right.r1089893
 
+<<<<<<< .working
 Postman only receives access to mail. It can never access your Google Docs, your YouTube, etc. Postman can continue to deliver your email even if your password changes.
+=======
+> **NEVER give out your Gmail or Microsoft password** to a 3rd-party or 3rd-party program that you don't fully trust.
+>>>>>>> .merge-right.r1089893
 
+<<<<<<< .working
 Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. This option is not available if you're using *Google Apps* to manage a domain.
 
 > **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
@@ -103,6 +153,15 @@ Most likely want you mean to do is set the **reply-to header** of the e-mail. Th
 
 If you really, *really* want to send email from a different email address, connect anonymously by choosing "Authentication:none" in the configuration screen.
 
+=======
+= I want my email to come from a different email address. =
+This is a big **no-no** and in OAuth/Password authentication mode, Postman doesn't allow it. At best, your email provider will simply re-write the correct email address, or maybe give you an authentication error when you try to connect. At worst, your IP or entire domain will end up on a SPAM blacklist.
+
+Most likely want you mean to do is set the **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
+
+If you really, *really* want to send email from a different email address, connect anonymously by choosing "Authentication:none" in the configuration screen.
+
+>>>>>>> .merge-right.r1089893
 = What is a Client ID? =
 To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one.
 
@@ -175,11 +234,18 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+<<<<<<< .working
 = 1.4 - in development =
 * Sending Yahoo email now supported with OAuth 2.0 authentication! If the Wizard detects that a Yahoo server has been entered, it automatically configures OAuth 2.0. 
 * First time users may now choose to import Password-authentication settings from Easy WP SMTP
 * Suppressed the fsock warnings so that the Ajax Port Test calls don't hang if PHP warning messages are bring printed to the Http Response
 
+=======
+= 1.3.5 - 2015-02-14 =
+* Happy Valentine's Day! error_log is disabled by default rather than enabled by default
+* Suppressed warning messages generated by call to fsockopen - they were causing the remote Ajax queries to hang
+
+>>>>>>> .merge-right.r1089977
 = 1.3.4 - 2015-02-11 =
 * 500 downloads and six 5-star ratings in only three weeks! Cool! 8-)
 * Replaced the Google OAuth API with pure PHP code. No more unexpected Google API errors.

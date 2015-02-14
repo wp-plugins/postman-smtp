@@ -46,7 +46,8 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			$this->sanitizeString ( 'Sender Name Override', PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, $input, $new_input );
 			$this->sanitizeInt ( 'Read Timeout', PostmanOptions::READ_TIMEOUT, $input, $new_input );
 			$this->sanitizeInt ( 'Conenction Timeout', PostmanOptions::CONNECTION_TIMEOUT, $input, $new_input );
-				
+			$this->sanitizeInt ( 'Log Level', PostmanOptions::LOG_LEVEL, $input, $new_input );
+			
 			if (! empty ( $input [PostmanOptions::SENDER_EMAIL] )) {
 				$newEmail = $input [PostmanOptions::SENDER_EMAIL];
 				$this->logger->debug ( 'Sanitize Sender Email ' . $newEmail );
@@ -74,9 +75,9 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			if (! empty ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] )) {
 				$new_input [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] );
 			}
-
+			
 			// add Postman plugin version number to database
-			$new_input[PostmanOptions::VERSION] = POSTMAN_PLUGIN_VERSION;
+			$new_input [PostmanOptions::VERSION] = POSTMAN_PLUGIN_VERSION;
 			
 			return $new_input;
 		}

@@ -600,6 +600,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'reply_to_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
+			add_settings_field ( PostmanOptions::LOG_LEVEL, _x ( 'Log Level', 'Configuration Input Field' ), array (
+					$this,
+					'log_level_callback' 
+			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			
 			// the Port Test section
 			add_settings_section ( PostmanAdminController::PORT_TEST_SECTION, _x ( 'TCP Port Test', 'Configuration Input Field' ), array (
 					$this,
@@ -964,6 +969,17 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function reply_to_callback() {
 			printf ( '<input type="text" id="input_reply_to" name="postman_options[reply_to]" value="%s" />', null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
+		}
+		
+		/**
+		 * Get the settings option array and print one of its values
+		 */
+		public function log_level_callback() {
+			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::LOG_LEVEL );
+			printf ( '<option value="%s" %s>Off</option>', PostmanLogger::OFF_INT, PostmanLogger::OFF_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
+			printf ( '<option value="%s" %s>Debug</option>', PostmanLogger::OFF_INT, PostmanLogger::DEBUG_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
+			printf ( '<option value="%s" %s>Errors</option>', PostmanLogger::OFF_INT, PostmanLogger::ERROR_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
+			printf ( '</select>' );
 		}
 		
 		/**
