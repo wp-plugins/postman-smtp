@@ -37,6 +37,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		const PREVENT_SENDER_NAME_OVERRIDE = 'prevent_sender_name_override';
 		const CONNECTION_TIMEOUT = 'connection_timeout';
 		const READ_TIMEOUT = 'read_timeout';
+		const LOG_LEVEL = 'log_level';
 		
 		// options data
 		private $options;
@@ -113,7 +114,12 @@ if (! class_exists ( "PostmanOptions" )) {
 				}
 			}
 		}
-		
+		public function getLogLevel() {
+			if (isset ( $this->options [PostmanOptions::LOG_LEVEL] ))
+				return $this->options [PostmanOptions::LOG_LEVEL];
+			else 
+				return 0;
+		}
 		//
 		public function getHostname() {
 			if (isset ( $this->options [PostmanOptions::HOSTNAME] ))
@@ -153,7 +159,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function getPassword() {
 			if (isset ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] ))
-				return base64_decode($this->options [PostmanOptions::BASIC_AUTH_PASSWORD]);
+				return base64_decode ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] );
 		}
 		public function getReplyTo() {
 			if (isset ( $this->options [PostmanOptions::REPLY_TO] ))
@@ -231,7 +237,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			$this->options [PostmanOptions::BASIC_AUTH_USERNAME] = $username;
 		}
 		public function setPassword($password) {
-			$this->options [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode($password);
+			$this->options [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode ( $password );
 		}
 		public function setReplyTo($replyTo) {
 			$this->options [PostmanOptions::REPLY_TO] = $replyTo;
