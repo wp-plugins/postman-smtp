@@ -7,7 +7,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	require_once 'Postman-Wizard/PortTest.php';
 	require_once 'Postman-Wizard/SmtpDiscovery.php';
 	require_once 'PostmanInputSanitizer.php';
-	require_once 'Postman-Connectors/PostmanEasyWpSmtpOptions.php';
+	require_once 'Postman-Connectors/PostmanImportableConfiguration.php';
 	
 	//
 	class PostmanAdminController {
@@ -69,6 +69,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		private $options;
 		private $testOptions;
+		private $importableConfiguration;
 		
 		/**
 		 * Start up
@@ -82,6 +83,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->messageHandler = $messageHandler;
+			
+			// import from other plugins
+			$this->importableConfiguration = new PostmanImportableConfiguration ();
 			
 			if (isset ( $_POST ['purge_auth_token'] )) {
 				// this means the wizard completed successfully and we should destroy the stored auth token
@@ -149,6 +153,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 						$this->registerAjaxHandler ( 'check_email', 'getAjaxHostnameByEmail' );
 						$this->registerAjaxHandler ( 'get_redirect_url', 'getAjaxRedirectUrl' );
 						$this->registerAjaxHandler ( 'send_test_email', 'sendTestEmailViaAjax' );
+						$this->registerAjaxHandler ( 'get_configuration', 'getConfigurationViaAjax' );
 					}
 					
 					$this->registerAdminMenu ( 'generateDefaultContent' );
@@ -368,11 +373,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$options = $this->options;
 			$authorizationToken = $this->authorizationToken;
 			$logger->debug ( 'Authorization in progress' );
-			unset ( $_SESSION [PostmanGmailAuthenticationManager::POSTMAN_AUTHORIZATION_IN_PROGRESS] );
+			unset ( $_SESSION [PostmanGoogleAuthenticationManager::POSTMAN_AUTHORIZATION_IN_PROGRESS] );
 			
 			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $options, $authorizationToken );
 			try {
-				if ($authenticationManager->handleAuthorizatinGrantCode ()) {
+				if ($authenticationManager->processAuthorizationGrantCode ()) {
 					$logger->debug ( 'Authorization successful' );
 					// save to database
 					$authorizationToken->save ();
@@ -446,6 +451,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			// user input
 			wp_localize_script ( 'postman_script', 'postman_input_sender_email', '#input_' . PostmanOptions::SENDER_EMAIL );
+			wp_localize_script ( 'postman_script', 'postman_input_sender_name', '#input_' . PostmanOptions::SENDER_NAME );
 			wp_localize_script ( 'postman_script', 'postman_port_element_name', '#input_' . PostmanOptions::PORT );
 			wp_localize_script ( 'postman_script', 'postman_hostname_element_name', '#input_' . PostmanOptions::HOSTNAME );
 			
@@ -456,6 +462,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( 'postman_script', 'postman_enc_ssl', PostmanOptions::ENCRYPTION_TYPE_SSL );
 			wp_localize_script ( 'postman_script', 'postman_enc_tls', PostmanOptions::ENCRYPTION_TYPE_TLS );
 			// these are the ids for the <option>s in the encryption <select>
+			
 			wp_localize_script ( 'postman_script', 'postman_enc_option_ssl_id', '.input_enc_type_ssl' );
 			wp_localize_script ( 'postman_script', 'postman_enc_option_tls_id', '.input_enc_type_tls' );
 			wp_localize_script ( 'postman_script', 'postman_enc_option_none_id', '.input_enc_type_none' );
@@ -494,6 +501,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printSmtpSectionInfo' 
 			), PostmanAdminController::SMTP_OPTIONS );
 			
+			if ($this->options->isNew () && $this->importableConfiguration->isImportAvailable ()) {
+				add_settings_field ( 'import_configuration', _x ( 'Import from Plugin', 'Configuration Input Field' ), array (
+						$this,
+						'import_configuration_callback' 
+				), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
+			}
+			
 			add_settings_field ( PostmanOptions::AUTHENTICATION_TYPE, _x ( 'Authentication', 'Configuration Input Field' ), array (
 					$this,
 					'authentication_type_callback' 
@@ -503,6 +517,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this,
 					'sender_name_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
+			
 			add_settings_field ( PostmanOptions::SENDER_EMAIL, _x ( 'Sender Email Address', 'Configuration Input Field' ), array (
 					$this,
 					'sender_email_callback' 
@@ -656,6 +671,30 @@ if (! class_exists ( "PostmanAdminController" )) {
 			);
 			wp_send_json ( $response );
 		}
+		function getConfigurationViaAjax() {
+			$plugin = $_POST ['plugin'];
+			$this->logger->debug ( 'Looking for config=' . $plugin );
+			$options = $this->importableConfiguration->getAvailableOptions()[$plugin];
+			if (isset ( $options )) {
+				$this->logger->debug ( 'Sending configuration response' );
+				$response = array (
+						PostmanOptions::SENDER_EMAIL => $options->getSenderEmail (),
+						PostmanOptions::SENDER_NAME => $options->getSenderName (),
+						PostmanOptions::HOSTNAME => $options->getHostname (),
+						PostmanOptions::PORT => $options->getPort (),
+						PostmanOptions::AUTHENTICATION_TYPE => $options->getAuthenticationType (),
+						PostmanOptions::ENCRYPTION_TYPE => $options->getEncryptionType (),
+						PostmanOptions::BASIC_AUTH_USERNAME => $options->getUsername (),
+						PostmanOptions::BASIC_AUTH_PASSWORD => $options->getPassword (),
+						'success' => true 
+				);
+			} else {
+				$response = array (
+						'success' => false 
+				);
+			}
+			wp_send_json ( $response );
+		}
 		
 		/**
 		 * This Ajax function retrieves the smtp hostname for a give e-mail address
@@ -688,14 +727,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		private function getRedirectUrl($hostname) {
 			$redirectUrl = PostmanSmtpHostProperties::getRedirectUrl ( $hostname );
-			if (PostmanSmtpHostProperties::isGmail ( $hostname )) {
+			if (PostmanSmtpHostProperties::isGoogle ( $hostname )) {
 				$help = '<p id="wizard_oauth2_help"><span class="normal">Open the <a href="https://console.developers.google.com/" target="_new">Google Developer Console</a>, create a Client ID
 				using the Redirect URI below, and enter the Client ID and Client
 				Secret. See <a
 					href="https://wordpress.org/plugins/postman-smtp/faq/"
 					target="_new">How do I get a Google Client ID?</a> in the F.A.Q.
 				for help.</span></p>';
-			} else if (PostmanSmtpHostProperties::isHotmail ( $hostname )) {
+			} else if (PostmanSmtpHostProperties::isMicrosoft ( $hostname )) {
 				$help = '<p id="wizard_oauth2_help"><span class="normal">Open the <a
 					href="https://account.live.com/developers/applications/index"
 					target="_new">Microsoft Developer Center</a>, create an Application
@@ -767,7 +806,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printAdvancedSectionInfo() {
-			print '<input type="checkbox" id="enable_advanced_settings" />Unlock advanced properties';
+			print 'Increase the read timeout if your host is intermittenly failing to send mail. Be careful, this also correlates to how long your user must wait if your mail server is unreachable.';
 		}
 		
 		/**
@@ -815,6 +854,17 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '%s', $authType == PostmanOptions::ENCRYPTION_TYPE_TLS ? 'selected="selected"' : '' );
 			print '>TLS</option>';
 			print '</select>';
+		}
+		
+		/**
+		 * Import configuration from another plugin
+		 */
+		public function import_configuration_callback() {
+			printf ( '<input type="radio" name="input_plugin" value="" checked="checked"/> No' );
+			$this->importableConfiguration->getAvailableOptions ();
+			foreach ( $this->importableConfiguration->getAvailableOptions () as $options ) {
+				printf ( '<input type="radio" name="input_plugin" class="input_plugin_radio" value="%s"/> <label> %s</label>', $options->getPluginSlug (), $options->getPluginName () );
+			}
 		}
 		
 		/**
@@ -884,21 +934,21 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function reply_to_callback() {
-			printf ( '<input readonly="readonly" type="text" id="input_reply_to" name="postman_options[reply_to]" value="%s" />', null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
+			printf ( '<input type="text" id="input_reply_to" name="postman_options[reply_to]" value="%s" />', null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function connection_timeout_callback() {
-			printf ( '<input type="text" readonly="readonly" id="input_connection_timeout" name="postman_options[connection_timeout]" value="%s" />', $this->options->getConnectionTimeout () );
+			printf ( '<input type="text" id="input_connection_timeout" name="postman_options[connection_timeout]" value="%s" />', $this->options->getConnectionTimeout () );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function read_timeout_callback() {
-			printf ( '<input type="text" readonly="readonly" id="input_read_timeout" name="postman_options[read_timeout]" value="%s" />', $this->options->getReadTimeout () );
+			printf ( '<input type="text" id="input_read_timeout" name="postman_options[read_timeout]" value="%s" />', $this->options->getReadTimeout () );
 		}
 		
 		/**
@@ -955,9 +1005,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				if ($this->options->isNew ()) {
 					print '<h3>Thank-you for choosing Postman!</h3>';
 					print '<p><span>Let\'s get started! All users are strongly encouraged to start by <a href="' . POSTMAN_HOME_PAGE_ABSOLUTE_URL . '/configuration_wizard">running the Setup Wizard</a>.</span></p>';
-					$easyWp = new PostmanEasyWpSmtpOptions ();
-					$atLeastOneValid = $easyWp->isValid ();
-					if ($atLeastOneValid) {
+					if ($this->importableConfiguration->isImportAvailable ()) {
 						print 'However, if you wish, Postman can <a href="' . POSTMAN_HOME_PAGE_ABSOLUTE_URL . '/configuration">import your SMTP configuration</a> from another plugin. You can run the Wizard later if the imported settings don\'t work.';
 					}
 				}
@@ -982,7 +1030,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<div id="oauth_section">';
 			do_settings_sections ( PostmanAdminController::OAUTH_OPTIONS );
 			print ('</div>') ;
+			print '<p id="advanced_options_configuration_display" class="fineprint"><span><a href="#">Show Advanced Settings</a></span></p>';
+			print '<div id="advanced_options_configuration_section">';
 			do_settings_sections ( PostmanAdminController::ADVANCED_OPTIONS );
+			print ('</div>') ;
 			submit_button ();
 			print '</form>';
 			print '</div>';

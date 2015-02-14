@@ -13,14 +13,14 @@ Having Gmail problems? Lowering your security settings is not the answer! Introd
 
 Having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed)? In 2014, Google began [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms. Since then, users of basic SMTP plugins have been plagued by [outbound mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html). Worse, when using the WordPress internal PHPMailer, mail that is 'successfully' delivered may be treated as SPAM or silently disappear like a mob witness the night before a trial.
 
-Postman is a next-generation WordPress SMTP plugin, the first and only to implement OAuth 2.0, Gmail's preferred mechanism for authentication. During OAuth configuration, Gmail and Hotmail [pre-approve Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
+Postman is a next-generation WordPress SMTP plugin, the first and only to implement OAuth 2.0, Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service provider [pre-approves Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
 
-###* What's New for v1.3 *
-*Now featuring OAuth 2.0 for **Hotmail/Windows Live/Outlook.com** users*
+###* What's New for v1.4 *
+*Featuring OAuth 2.0 for Gmail, Hotmail and now **Yahoo Mail** users!*
 
 = Features =
 * Send mail to any host with SMTP, just like the 'Big Five' WordPress SMTP plugins
-* Send mail to Gmail or Hotmail using OAuth 2.0 SMTP
+* Send mail to Gmail, Hotmail or Yahoo Mail using XOAUTH2 SMTPS
 * Fire-and-forget: OAuth 2.0 mail delivery continues even if your password changes
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Easy to use Setup Wizard takes the guesswork out of configuring email
@@ -31,9 +31,8 @@ Postman is a next-generation WordPress SMTP plugin, the first and only to implem
 = Requirements =
 * WordPress 3.9 (or later)
 * PHP 5.3 (or later) with OpenSSL; or PHP 5.2 with SPL and OpenSSL 
-* For generic SMTP: connectivity to an SMTP server that you have an account on
-* For Gmail: a Gmail/Google Apps account, a Client ID from Google Developer and connectivity to the Gmail server
-* For Hotmail/Windows Live/Outlook: an Outlook.com account, a Client ID from Microsoft Developer Center and connectivity to the Windows Live server
+* Connectivity to an SMTP server with authentication credentials
+* Optional: a Google, Microsoft or Yahoo OAuth 2.0 Client ID
 
 == Installation ==
 
@@ -83,15 +82,19 @@ Postman is a next-generation WordPress SMTP plugin, the first and only to implem
 
 == Frequently Asked Questions == 
 
+= How does OAuth 2.0 help to send mail? =
+
+Postman specifically requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) on the user's behalf to perform a particular service (get Gmail working in the living room, stay out of Google Docs in the bedroom) without the user giving up their user and password credentials (master house key). If the user grants that access, Postman receives a unique token to do its work.
+
 = Why should I use Postman over any other plugins? Can't I just tell Google to allow less secure apps?  =
 
-If you use other plugins to send Gmail or Hotmail, they're going to ask you for your account password. And if you change your password, those same plugins will break. But Postman will continue to deliver your email without interruption.
+If you use other plugins to send Gmail, Hotmail or Yahoo Mail, they're going to ask you for your account password. Anything you can do on your account, they can do. And if you change your password, those same plugins will break until you update them with your new password.
 
-OAuth 2.0 provides focussed authorization. By giving other plugins your account password, they can do anything that you can do. Postman's OAuth 2.0 token permits access to your Gmail or Hotmail only, and not, for example, your Google Docs or Microsoft Office Online.
+Postman only receives access to mail. It can never access your Google Docs, your YouTube, etc. Postman can continue to deliver your email even if your password changes.
 
 Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. This option is not available if you're using *Google Apps* to manage a domain.
 
-> **NEVER give out your Gmail or Microsoft password** to a 3rd-party or 3rd-party program that you don't fully trust.
+> **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = I want my email to come from a different email address. =
 This is a big **no-no** and in OAuth/Password authentication mode, Postman doesn't allow it. At best, your email provider will simply re-write the correct email address, or maybe give you an authentication error when you try to connect. At worst, your IP or entire domain will end up on a SPAM blacklist.
@@ -171,6 +174,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 1. The required Client ID and Client Secret
 
 == Changelog ==
+
+= 1.4 - in development =
+* Sending Yahoo email now supported with OAuth 2.0 authentication! If the Wizard detects that a Yahoo server has been entered, it automatically configures OAuth 2.0. 
+* First time users may now choose to import Password-authentication settings from Easy WP SMTP
 
 = 1.3.4 - 2015-02-11 =
 * 500 downloads and six 5-star ratings in only three weeks! Cool! 8-)

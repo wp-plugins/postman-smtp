@@ -29,3 +29,7 @@ p#wizard_oauth2_help span.error {
 fine_print {
 	font-size: 0.9em;
 }
+
+input.input_plugin_radio {
+	margin-left:20px;
+}

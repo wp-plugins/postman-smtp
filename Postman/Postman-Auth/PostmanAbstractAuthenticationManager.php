@@ -18,19 +18,22 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		private $clientId;
 		private $clientSecret;
 		private $authorizationToken;
+		private $callbackUri;
 		private $logger;
 		
 		/**
 		 * Constructor
 		 */
-		public function __construct($clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken, PostmanLogger $logger) {
+		public function __construct(PostmanLogger $logger, $clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken, $callbackUri) {
 			assert ( ! empty ( $clientId ) );
 			assert ( ! empty ( $clientSecret ) );
 			assert ( ! empty ( $authorizationToken ) );
+			assert ( ! empty ( $callbackUri ) );
 			$this->logger = $logger;
 			$this->clientId = $clientId;
 			$this->clientSecret = $clientSecret;
 			$this->authorizationToken = $authorizationToken;
+			$this->callbackUri = $callbackUri;
 		}
 		protected function getLogger() {
 			return $this->logger;
@@ -48,7 +51,7 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		/**
 		 */
 		public function isAccessTokenExpired() {
-			$expireTime = ($this->authorizationToken->getExpiryTime () - PostmanGmailAuthenticationManager::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
+			$expireTime = ($this->authorizationToken->getExpiryTime () - PostmanGoogleAuthenticationManager::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
 			$tokenHasExpired = time () > $expireTime;
 			$this->logger->debug ( 'Access Token Expiry Time is ' . $expireTime . ', expires_in=' . ($expireTime - time ()) . ', expired=' . ($tokenHasExpired ? 'yes' : 'no') );
 			return $tokenHasExpired;
@@ -73,31 +76,6 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 					'redirect_uri' => $redirectUri,
 					'code' => $code 
 			);
-			$response = postmanHttpTransport ( $accessTokenUrl, $postvals );
-			$this->processResponse ( $response );
-		}
-		
-		/**
-		 * Given an OAuth provider-specific URL and redirectUri,
-		 * issue an HttpRequest to refresh the access token
-		 *
-		 * This code is identical for Google and Hotmail
-		 *
-		 * @param unknown $accessTokenUrl        	
-		 * @param unknown $redirectUri        	
-		 */
-		protected function refreshAccessToken($accessTokenUrl, $redirectUri) {
-			// the format of the URL is
-			// client_id=CLIENT_ID&client_secret=CLIENT_SECRET&redirect_uri=REDIRECT_URI&grant_type=refresh_token&refresh_token=REFRESH_TOKEN
-			$postvals = array (
-					'client_id' => $this->getClientId (),
-					'client_secret' => $this->getClientSecret (),
-					'redirect_uri' => $redirectUri,
-					'grant_type' => 'refresh_token',
-					'refresh_token' => $this->getAuthorizationToken ()->getRefreshToken () 
-			);
-			// example request string
-			// client_id=0000000603DB0F&redirect_uri=http%3A%2F%2Fwww.contoso.com%2Fcallback.php&client_secret=LWILlT555GicSrIATma5qgyBXebRI&refresh_token=*LA9...//refresh token string shortened for example//...xRoX&grant_type=refresh_token
 			$response = postmanHttpTransport ( $accessTokenUrl, $postvals );
 			$this->processResponse ( $response );
 		}
@@ -154,10 +132,45 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 			
 			// update refresh token, if there is one
 			if (isset ( $newtoken->{PostmanAbstractAuthenticationManager::REFRESH_TOKEN} )) {
-				$newRefreshToken = $newtoken->{PostmanGmailAuthenticationManager::REFRESH_TOKEN};
+				$newRefreshToken = $newtoken->{PostmanGoogleAuthenticationManager::REFRESH_TOKEN};
 				$this->getAuthorizationToken ()->setRefreshToken ( $newRefreshToken );
 				$this->getLogger ()->debug ( 'Updating Refresh Token ' );
 			}
+		}
+		
+		/**
+		 * Given an OAuth provider-specific URL and redirectUri,
+		 * issue an HttpRequest to refresh the access token
+		 *
+		 * This code is identical for Google and Hotmail
+		 */
+		public function refreshToken() {
+			$this->getLogger ()->debug ( 'Refreshing Token' );
+			$refreshUrl = $this->getTokenUrl ();
+			$callbackUrl = $this->getCallbackUri ();
+			assert ( ! empty ( $refreshUrl ) );
+			assert ( ! empty ( $callbackUrl ) );
+			// the format of the URL is
+			// client_id=CLIENT_ID&client_secret=CLIENT_SECRET&redirect_uri=REDIRECT_URI&grant_type=refresh_token&refresh_token=REFRESH_TOKEN
+			$postvals = array (
+					'client_id' => $this->getClientId (),
+					'client_secret' => $this->getClientSecret (),
+					'redirect_uri' => $redirectUri,
+					'grant_type' => 'refresh_token',
+					'refresh_token' => $this->getAuthorizationToken ()->getRefreshToken () 
+			);
+			// example request string
+			// client_id=0000000603DB0F&redirect_uri=http%3A%2F%2Fwww.contoso.com%2Fcallback.php&client_secret=LWILlT555GicSrIATma5qgyBXebRI&refresh_token=*LA9...//refresh token string shortened for example//...xRoX&grant_type=refresh_token
+			$response = postmanHttpTransport ( $getTokenUrl, $postvals );
+			$this->processResponse ( $response );
+		}
+		/**
+		 * (non-PHPdoc)
+		 * 
+		 * @see PostmanAuthenticationManager::getCallbackUri()
+		 */
+		public function getCallbackUri() {
+			return $this->callbackUri;
 		}
 	}
 }

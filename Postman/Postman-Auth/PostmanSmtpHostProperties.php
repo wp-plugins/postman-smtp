@@ -3,39 +3,39 @@ if (! class_exists ( 'PostmanSmtpHostProperties' )) {
 	class PostmanSmtpHostProperties {
 		const GMAIL_HOSTNAME = 'smtp.gmail.com';
 		const WINDOWS_LIVE_HOSTNAME = 'smtp.live.com';
+		const YAHOO_HOSTNAME = 'smtp.mail.yahoo.com';
 		
 		// get the callback URL
 		static function getRedirectUrl($hostname) {
-			switch ($hostname) {
-				case PostmanSmtpHostProperties::GMAIL_HOSTNAME :
-					return admin_url ( 'options-general.php' ) . '?page=postman';
-				case PostmanSmtpHostProperties::WINDOWS_LIVE_HOSTNAME :
-					return admin_url ( 'options-general.php' );
-				default :
-					return '';
+			if (self::isGoogle ( $hostname ) || self::isYahoo ( $hostname )) {
+				return admin_url ( 'options-general.php' ) . '?page=postman';
+			} else if (self::isMicrosoft ( $hostname )) {
+				return admin_url ( 'options-general.php' );
+			} else {
+				return admin_url ( 'options-general.php' ) . '?page=postman';
 			}
 		}
 		static function isOauthHost($hostname) {
-			if ($hostname == PostmanSmtpHostProperties::GMAIL_HOSTNAME || $hostname == PostmanSmtpHostProperties::WINDOWS_LIVE_HOSTNAME) {
-				return true;
-			} else {
-				return false;
-			}
+			return self::isGoogle ( $hostname ) || self::isMicrosoft ( $hostname ) || self::isYahoo ( $hostname );
 		}
-		static function isGmail($hostname) {
-			return $hostname == PostmanSmtpHostProperties::GMAIL_HOSTNAME;
+		static function isGoogle($hostname) {
+			return endsWith ( $hostname, 'gmail.com' );
 		}
-		static function isHotmail($hostname) {
-			return $hostname == PostmanSmtpHostProperties::WINDOWS_LIVE_HOSTNAME;
+		static function isMicrosoft($hostname) {
+			return endsWith ( $hostname, 'live.com' );
+		}
+		static function isYahoo($hostname) {
+			return endsWith ( $hostname, 'yahoo.com' );
 		}
 		static function getServiceName($hostname) {
-			switch($hostname) {
-				case PostmanSmtpHostProperties::GMAIL_HOSTNAME :
-					return 'Google';
-				case PostmanSmtpHostProperties::WINDOWS_LIVE_HOSTNAME:
-					return 'Microsoft';
-				default:
-					return 'No-one';
+			if (self::isGoogle ( $hostname )) {
+				return 'Google';
+			} else if (self::isMicrosoft ( $hostname )) {
+				return 'Microsoft';
+			} else if (self::isYahoo ( $hostname )) {
+				return 'Yahoo';
+			} else {
+				return '';
 			}
 		}
 	}

@@ -1,5 +1,4 @@
 <?php
-
 if (! class_exists ( "PostmanLogger" )) {
 	
 	//
@@ -50,4 +49,13 @@ if (! function_exists ( 'str_getcsv' )) {
 	}
 }
 
+if (! function_exists ( 'endsWith' )) {
+	function endsWith($string, $test) {
+		$strlen = strlen ( $string );
+		$testlen = strlen ( $test );
+		if ($testlen > $strlen)
+			return false;
+		return substr_compare ( $string, $test, $strlen - $testlen, $testlen ) === 0;
+	}
+}
 ?>

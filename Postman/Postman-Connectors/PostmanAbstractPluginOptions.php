@@ -4,6 +4,7 @@ if (! class_exists ( 'PostmanAbstractPluginOptions' )) {
 	require_once 'PostmanPluginOptions.php';
 	
 	/**
+	 *
 	 * @author jasonhendriks
 	 */
 	abstract class PostmanAbstractPluginOptions implements PostmanPluginOptions {
@@ -26,6 +27,9 @@ if (! class_exists ( 'PostmanAbstractPluginOptions' )) {
 			$valid &= ! empty ( $username );
 			$valid &= ! empty ( $password );
 			return $valid;
+		}
+		public function isImportable() {
+			return ! PostmanSmtpHostProperties::isOauthHost ( $this->getHostname () ) && $this->isValid ();
 		}
 	}
 }

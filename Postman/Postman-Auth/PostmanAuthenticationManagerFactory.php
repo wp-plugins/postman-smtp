@@ -1,9 +1,10 @@
 <?php
 if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 	
-	require_once 'PostmanGmailAuthenticationManager.php';
-	require_once 'PostmanHotmailAuthenticationManager.php';
+	require_once 'PostmanGoogleAuthenticationManager.php';
+	require_once 'PostmanMicrosoftAuthenticationManager.php';
 	require_once 'PostmanNonOAuthAuthenticationManager.php';
+	require_once 'PostmanYahooAuthenticationManager.php';
 	
 	//
 	class PostmanAuthenticationManagerFactory {
@@ -26,10 +27,13 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 			$clientId = $options->getClientId ();
 			$clientSecret = $options->getClientSecret ();
 			$senderEmail = $options->getSenderEmail ();
+			$redirectUrl = PostmanSmtpHostProperties::getRedirectUrl ( $hostname );
 			if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $options->isSmtpHostGmail ()) {
-				$authenticationManager = new PostmanGmailAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $senderEmail );
+				$authenticationManager = new PostmanGoogleAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl, $senderEmail );
 			} else if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $options->isSmtpHostHotmail ()) {
-				$authenticationManager = new PostmanHotmailAuthenticationManager ( $clientId, $clientSecret, $authorizationToken );
+				$authenticationManager = new PostmanMicrosoftAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl );
+			} else if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $options->isSmtpHostYahoo ()) {
+				$authenticationManager = new PostmanYahooAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl );
 			} else {
 				$authenticationManager = new PostmanNonOAuthAuthenticationManager ();
 			}

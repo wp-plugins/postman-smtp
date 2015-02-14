@@ -1,5 +1,4 @@
 <?php
-
 define ( 'POSTMAN_HOME_PAGE_RELATIVE_URL', 'options-general.php?page=postman' );
 define ( 'POSTMAN_HOME_PAGE_ABSOLUTE_URL', admin_url ( POSTMAN_HOME_PAGE_RELATIVE_URL ) );
 
@@ -21,19 +20,20 @@ if (! function_exists ( 'postmanRedirect' )) {
 if (! function_exists ( 'postmanHttpTransport' )) {
 	/**
 	 * Makes the outgoing HTTP requests
-	 * Inside WordPress we can use wp_remote_post(). Outside WordPress, not so much. **Load it before postman-core.php**
+	 * Inside WordPress we can use wp_remote_post().
+	 * Outside WordPress, not so much. **Load it before postman-core.php**
 	 *
 	 * @param unknown $url        	
 	 * @param unknown $args        	
 	 */
 	function postmanHttpTransport($url, $parameters) {
 		$args = array (
-				'timeout' => PostmanOptions::getInstance()->getConnectionTimeout(),
+				'timeout' => PostmanOptions::getInstance ()->getConnectionTimeout (),
 				'body' => $parameters 
 		);
 		$logger = new PostmanLogger ( 'PostmanHttpTransport' );
-		$logger->debug ( sprintf ( 'Posting to %s', $url) );
-		$response = wp_remote_post ( $url, $args );
+		$logger->debug ( sprintf ( 'Posting to %s with args %s', $url, implode ( $parameters ) ) );
+		$response = wp_remote_post (  $url, $args );
 		
 		// pre-process the response
 		if (is_wp_error ( $response )) {

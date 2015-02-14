@@ -10,21 +10,9 @@ if (! class_exists ( "PostmanNonOAuthAuthenticationManager" )) {
 	class PostmanNonOAuthAuthenticationManager implements PostmanAuthenticationManager {
 		
 		/**
-		 * Constructor
-		 */
-		public function __construct() {
-		}
-		
-		/**
 		 */
 		public function isAccessTokenExpired() {
 			return false;
-		}
-		
-		/**
-		 */
-		public function refreshToken() {
-			// no-op
 		}
 		
 		/**
@@ -33,12 +21,22 @@ if (! class_exists ( "PostmanNonOAuthAuthenticationManager" )) {
 		 * @see PostmanAuthenticationManager::requestVerificationCode()
 		 */
 		public function requestVerificationCode() {
-			postmanRedirect ( $authUrl );
+			// no-op
 		}
-		
-		/**
-		 */
-		public function handleAuthorizatinGrantCode() {
+		public function processAuthorizationGrantCode() {
+			// no-op
+		}
+		public function refreshToken() {
+			// no-op
+		}
+		public function getAuthorizationUrl() {
+			return null;
+		}
+		public function getTokenUrl() {
+			return null;
+		}
+		public function getCallbackUri() {
+			return null;
 		}
 	}
 }

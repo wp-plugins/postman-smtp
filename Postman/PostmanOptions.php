@@ -62,9 +62,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		public function save() {
 			update_option ( PostmanOptions::POSTMAN_OPTIONS, $this->options );
 		}
-		
 		public function isNew() {
-			return !isset($this->options[PostmanOptions::VERSION]);
+			return ! isset ( $this->options [PostmanOptions::VERSION] );
 		}
 		
 		//
@@ -157,7 +156,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function getPassword() {
 			if (isset ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] ))
-				return base64_decode($this->options [PostmanOptions::BASIC_AUTH_PASSWORD]);
+				return base64_decode ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] );
 		}
 		public function getReplyTo() {
 			if (isset ( $this->options [PostmanOptions::REPLY_TO] ))
@@ -235,7 +234,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			$this->options [PostmanOptions::BASIC_AUTH_USERNAME] = $username;
 		}
 		public function setPassword($password) {
-			$this->options [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode($password);
+			$this->options [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode ( $password );
 		}
 		public function setReplyTo($replyTo) {
 			$this->options [PostmanOptions::REPLY_TO] = $replyTo;
@@ -273,10 +272,13 @@ if (! class_exists ( "PostmanOptions" )) {
 			return PostmanOptions::AUTHENTICATION_TYPE_NONE == $this->getAuthorizationType ();
 		}
 		public function isSmtpHostGmail() {
-			return PostmanSmtpHostProperties::isGmail ( $this->getHostname () );
+			return PostmanSmtpHostProperties::isGoogle ( $this->getHostname () );
 		}
 		public function isSmtpHostHotmail() {
-			return PostmanSmtpHostProperties::isHotmail ( $this->getHostname () );
+			return PostmanSmtpHostProperties::isMicrosoft ( $this->getHostname () );
+		}
+		public function isSmtpHostYahoo() {
+			return PostmanSmtpHostProperties::isYahoo ( $this->getHostname () );
 		}
 	}
 }
