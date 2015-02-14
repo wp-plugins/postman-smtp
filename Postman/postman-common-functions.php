@@ -1,18 +1,32 @@
 <?php
-
 if (! class_exists ( "PostmanLogger" )) {
+	
+	require_once 'PostmanOptions.php';
 	
 	//
 	class PostmanLogger {
+		const ALL_INT = - 2147483648;
+		const DEBUG_INT = 10000;
+		const ERROR_INT = 40000;
+		const FATAL_INT = 50000;
+		const INFO_INT = 20000;
+		const OFF_INT = 2147483647;
+		const WARN_INT = 30000;
 		private $name;
+		private $logLevel;
 		function __construct($name) {
 			$this->name = $name;
+			$this->logLevel = PostmanOptions::getInstance ()->getLogLevel ();
 		}
 		function debug($text) {
-			error_log ( 'DEBUG ' . $this->name . ': ' . $text );
+			if (self::DEBUG_INT >= $this->logLevel) {
+				error_log ( 'DEBUG ' . $this->name . ': ' . $text );
+			}
 		}
 		function error($text) {
-			error_log ( 'ERROR ' . $this->name . ': ' . $text );
+			if (self::ERROR_INT >= $this->logLevel) {
+				error_log ( 'ERROR ' . $this->name . ': ' . $text );
+			}
 		}
 	}
 }
