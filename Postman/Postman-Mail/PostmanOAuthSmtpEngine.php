@@ -64,7 +64,13 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 			}
 			assert ( ! empty ( $senderEmail ) );
 			
-			$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$this->accessToken}\1\1" );
+			$version = POSTMAN_PLUGIN_VERSION;
+			if (endsWith ( $hostname, 'yahoo.com' )) {
+				// Yahoo Mail requires a Vendor - see http://imapclient.freshfoo.com/changeset/535%3A80ae438f4e4a/
+				$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$this->accessToken}\1vendor=Postman SMTP {$version}\1\1" );
+			} else {
+				$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$this->accessToken}\1\1" );
+			}
 			assert ( ! empty ( $initClientRequestEncoded ) );
 			$config = array (
 					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => $this->encryptionType,
