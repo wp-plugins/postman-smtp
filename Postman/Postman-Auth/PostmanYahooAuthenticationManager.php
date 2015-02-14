@@ -90,7 +90,18 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 					$this->getLogger ()->error ( 'The grant code from Yahoo had no accompanying state and may be a forgery' );
 					throw new PostmanStateIdMissingException ();
 				}
-				$this->requestAuthorizationToken ( $this->getTokenUrl (), $this->getCallbackUri (), $code );
+				// Note: The Authorization: Basic authorization header is generated through a Base64 encoding of client_id:client_secret per RFC 2617.
+				// header("Authorization: Basic " . base64_encode($username . ":" . $password);
+				$headers = array (
+						'Authorization' => sprintf ( "Basic %s", base64_encode ( $this->getClientId () . ':' . $this->getClientSecret () ) ) 
+				);
+				$postvals = array (
+						'code' => $code,
+						'grant_type' => 'authorization_code',
+						'redirect_uri' => $this->getCallbackUri () 
+				);
+				$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals, $headers );
+				$this->processResponse ( $response );
 				return true;
 			} else {
 				$this->getLogger ()->debug ( 'Expected code in the request header but found none - user probably denied request' );

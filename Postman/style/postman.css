@@ -15,7 +15,7 @@ form#postman_wizard label,form#postman_test_email_wizard label {
 table#testing_table {
 	width: 600px;
 	font-size: 1.2em;
-	display: none"
+	display: none;
 }
 
 table#testing_table td.port {
@@ -32,4 +32,9 @@ fine_print {
 
 input.input_plugin_radio {
 	margin-left:20px;
+}
+
+.wizard > .content
+{
+    min-height: 29em;
 }

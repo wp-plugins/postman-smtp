@@ -26,14 +26,21 @@ if (! function_exists ( 'postmanHttpTransport' )) {
 	 * @param unknown $url        	
 	 * @param unknown $args        	
 	 */
-	function postmanHttpTransport($url, $parameters) {
+	function postmanHttpTransport($url, $parameters, array $headers = array()) {
 		$args = array (
 				'timeout' => PostmanOptions::getInstance ()->getConnectionTimeout (),
+				'headers' => $headers,
 				'body' => $parameters 
 		);
 		$logger = new PostmanLogger ( 'PostmanHttpTransport' );
-		$logger->debug ( sprintf ( 'Posting to %s with args %s', $url, implode ( $parameters ) ) );
-		$response = wp_remote_post (  $url, $args );
+		$logger->debug ( sprintf ( 'Posting to %s', $url ) );
+		$logger->debug ( sprintf ( 'Post header is %s', implode ( $headers ) ) );
+		$logger->debug ( sprintf ( 'Posting args are %s', implode ( $parameters ) ) );
+// 		var_dump($url);
+// 		var_dump($headers);
+// 		var_dump($parameters);
+// 		die();
+		$response = wp_remote_post ( $url, $args );
 		
 		// pre-process the response
 		if (is_wp_error ( $response )) {

@@ -69,6 +69,7 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		 * @param unknown $code        	
 		 */
 		protected function requestAuthorizationToken($accessTokenUrl, $redirectUri, $code) {
+			$this->logger->debug ( 'got headers ' . implode ( $headers ) );
 			$postvals = array (
 					'client_id' => $this->getClientId (),
 					'client_secret' => $this->getClientSecret (),
@@ -87,7 +88,7 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		 * @param unknown $response        	
 		 * @throws Exception
 		 */
-		private function processResponse($response) {
+		protected function processResponse($response) {
 			$authToken = json_decode ( stripslashes ( $response ) );
 			if ($authToken === NULL) {
 				$this->getLogger ()->error ( $response );
@@ -166,7 +167,7 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		}
 		/**
 		 * (non-PHPdoc)
-		 * 
+		 *
 		 * @see PostmanAuthenticationManager::getCallbackUri()
 		 */
 		public function getCallbackUri() {

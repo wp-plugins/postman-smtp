@@ -715,10 +715,23 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		function getAjaxRedirectUrl() {
 			$hostname = $_POST ['hostname'];
-			$avail25 = $_POST ['avail25'];
-			$avail465 = $_POST ['avail465'];
-			$avail587 = $_POST ['avail587'];
-			if (isset ( $_POST ['referer'] ) && $_POST ['referer'] == 'wizard') {
+			if (isset ( $_POST ['referer'] )) {
+				if ($_POST ['referer'] == 'wizard') {
+					$avail25 = $_POST ['avail25'];
+					$avail465 = $_POST ['avail465'];
+					$avail587 = $_POST ['avail587'];
+				} else if ($_POST ['referer'] == 'manual_config') {
+					if (! PostmanSmtpHostProperties::isOauthHost ( $hostname )) {
+						$response = array (
+								'redirect_url' => PostmanSmtpHostProperties::getRedirectUrl ( $hostname ),
+								'success' => false 
+						);
+						break;
+					}
+					$avail25 = true;
+					$avail465 = true;
+					$avail587 = true;
+				}
 				if (PostmanSmtpHostProperties::isGoogle ( $hostname ) && $avail465) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
@@ -761,12 +774,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'redirect_url_label' => $redirectUrlLabel,
 						PostmanOptions::AUTHENTICATION_TYPE => $authType,
 						PostmanOptions::ENCRYPTION_TYPE => $encType,
-						PostmanOptions::PORT => $port 
+						PostmanOptions::PORT => $port,
+						'success' => true 
 				);
 			} else {
 				$response = array (
 						'redirect_url' => PostmanSmtpHostProperties::getRedirectUrl ( $hostname ),
-						'help_text' => $this->getOAuthHelp ( $hostname ) 
+						'help_text' => $this->getOAuthHelp ( $hostname ),
+						'success' => true 
 				);
 			}
 			wp_send_json ( $response );
