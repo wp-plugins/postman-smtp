@@ -109,8 +109,6 @@ if (! class_exists ( "PostmanOptions" )) {
 			$clientId = $this->getClientId ();
 			$clientSecret = $this->getClientSecret ();
 			if (! $this->isAuthTypeOAuth2 () || empty ( $hostname ) || empty ( $port ) || empty ( $senderEmail ) || empty ( $clientId ) || empty ( $clientSecret )) {
-				$this->logger->debug ( 'authtype: ' . $authType );
-				$this->logger->debug ( 'doesnt look like this is OAuth 2.0' );
 				return false;
 			} else {
 				$accessToken = $token->getAccessToken ();

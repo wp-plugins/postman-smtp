@@ -124,6 +124,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		}
 		var chosenPort = jQuery(postman_port_element_name).val();
 		var hostname = jQuery(postman_hostname_element_name).val();
+		var authType = jQuery(postman_input_auth_type).val()
 
 		// on the Auth type drop-down, add events to enable/disable user/pass
 		jQuery(postman_input_auth_type).click(function() {
@@ -137,18 +138,18 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 				enable(postman_input_basic_username);
 				enable(postman_input_basic_password);
 				// for the next two lines, i assume this is port 587 because
-				// that's
-				// currently the only time the user can change the auth type
+				// that's currently the only other time a click event can be
+				// fired here
 				enable(postman_enc_for_password_el);
 				setEncryptionType(postman_enc_tls);
 			}
 		});
 
 		// hide both the oauth section and the password section
-		if (hostname == 'smtp.gmail.com' && chosenPort == 465) {
-			// setup Gmail with OAuth2
-		} else if (hostname == 'smtp.live.com' && chosenPort == 587) {
-			// setup Hotmail with OAuth2
+		if (authType == postman_auth_oauth2) {
+			// in oauth2 mode everything is already set to go
+			// in password mode, a lot changes based on the port
+			// the user chooses....
 		} else if (chosenPort == 465) {
 			// eanble user/pass fields
 			enablePasswordFields();
@@ -274,6 +275,7 @@ function wizardPortTest(input, state) {
 							el.removeAttr('disabled');
 							totalAvail++;
 						} else {
+							el.removeAttr('disabled');
 							elState.html('Closed');
 						}
 						if (portsChecked >= portsToCheck) {
@@ -290,15 +292,12 @@ function wizardPortTest(input, state) {
 							} else {
 								var data = {
 									'action' : 'get_redirect_url',
+									'referer' : 'wizard',
 									'hostname' : hostname,
 									'avail25' : el25_avail,
 									'avail465' : el465_avail,
 									'avail587' : el587_avail
 								};
-								hide('.wizard-auth-oauth2');
-								hide('.wizard-auth-basic');
-								disable(postman_auth_option_oauth2_id);
-								disable(postman_auth_option_none_id);
 								populateRedirectUrl(data);
 								jQuery('li + li').removeClass('disabled');
 								portCheckBlocksUi = false;

@@ -43,7 +43,17 @@ function getRedirectUrl(data) {
 			var el25 = jQuery('#wizard_port_25');
 			var el465 = jQuery('#wizard_port_465');
 			var el587 = jQuery('#wizard_port_587');
+			hide('.wizard-auth-oauth2');
+			hide('.wizard-auth-basic');
+			// disable the fields we don't use so validation will work
+			disable(postman_auth_option_oauth2_id);
+			disable(postman_auth_option_none_id);
+			disable(postman_input_basic_username);
+			disable(postman_input_basic_password);
 			if (response.auth_type == postman_auth_oauth2) {
+				jQuery('#client_id').html(response.client_id_label);
+				jQuery('#client_secret').html(response.client_secret_label);
+				jQuery('#redirect_url').html(response.redirect_url_label);
 				el25.attr('disabled', 'disabled');
 				el465.attr('disabled', 'disabled');
 				el587.attr('disabled', 'disabled');
@@ -52,6 +62,8 @@ function getRedirectUrl(data) {
 				hide(postman_enc_for_oauth2_el);
 				// allow oauth2 as an authentication choice
 				enable(postman_auth_option_oauth2_id);
+			} else {
+				disable(postman_auth_option_none_id);
 			}
 			if (response.port == 25) {
 				el25.prop("checked", true);

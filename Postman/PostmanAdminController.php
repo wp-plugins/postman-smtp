@@ -718,23 +718,28 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$avail25 = $_POST ['avail25'];
 			$avail465 = $_POST ['avail465'];
 			$avail587 = $_POST ['avail587'];
-			$response = array (
-					'redirect_url' => PostmanSmtpHostProperties::getRedirectUrl ( $hostname ),
-					'help_text' => $this->getOAuthHelp ( $hostname ) 
-			);
-			if (isset ( $avail25 )) {
+			if (isset ( $_POST ['referer'] ) && $_POST ['referer'] == 'wizard') {
 				if (PostmanSmtpHostProperties::isGoogle ( $hostname ) && $avail465) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
 					$port = 465;
+					$clientIdLabel = __ ( 'Client ID' );
+					$clientSecretLabel = __ ( 'Client Secret' );
+					$redirectUrlLabel = __ ( 'Authorized Redirect URI' );
 				} else if (PostmanSmtpHostProperties::isMicrosoft ( $hostname ) && $avail587) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 					$encType = PostmanOptions::ENCRYPTION_TYPE_TLS;
 					$port = 587;
+					$clientIdLabel = __ ( 'Client ID' );
+					$clientSecretLabel = __ ( 'Client secret' );
+					$redirectUrlLabel = __ ( 'Redirect URL' );
 				} else if (PostmanSmtpHostProperties::isYahoo ( $hostname ) && $avail465) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
 					$port = 465;
+					$clientIdLabel = __ ( 'Consumer Key' );
+					$clientSecretLabel = __ ( 'Consumer Secret' );
+					$redirectUrlLabel = __ ( 'Home Page URL' );
 				} else if ($avail465) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
 					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
@@ -750,10 +755,18 @@ if (! class_exists ( "PostmanAdminController" )) {
 				}
 				$response = array (
 						'redirect_url' => PostmanSmtpHostProperties::getRedirectUrl ( $hostname ),
-						'help_text' => $this->getOAuthHelp ( $hostname ),
+						'help_text' => $this->getOAuthHelp ( $hostname, $clientIdLabel, $clientSecretLabel, $redirectUrlLabel ),
+						'client_id_label' => $clientIdLabel,
+						'client_secret_label' => $clientSecretLabel,
+						'redirect_url_label' => $redirectUrlLabel,
 						PostmanOptions::AUTHENTICATION_TYPE => $authType,
 						PostmanOptions::ENCRYPTION_TYPE => $encType,
 						PostmanOptions::PORT => $port 
+				);
+			} else {
+				$response = array (
+						'redirect_url' => PostmanSmtpHostProperties::getRedirectUrl ( $hostname ),
+						'help_text' => $this->getOAuthHelp ( $hostname ) 
 				);
 			}
 			wp_send_json ( $response );
@@ -765,23 +778,17 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * @param unknown $hostname        	
 		 * @return multitype:string
 		 */
-		private function getOAuthHelp($hostname) {
+		private function getOAuthHelp($hostname, $clientIdLabel = '', $clientSecretLabel = '', $redirectUrlLabel = '') {
+			$oauthText = '<p id="wizard_oauth2_help"><span class="normal">Open the <a href="%1$s" target="_new">%2$s</a>,
+						create %7$s using the %5$s below, and enter the %3$s and %4$s.
+						See <a href="https://wordpress.org/plugins/postman-smtp/faq/" target="_new">
+						How do I get a %6$s %3$s?</a> in the F.A.Q. for help.</span></p>';
 			if (PostmanSmtpHostProperties::isGoogle ( $hostname )) {
-				$help = '<p id="wizard_oauth2_help"><span class="normal">Open the <a href="https://console.developers.google.com/" target="_new">Google Developer Console</a>, create a Client ID
-				using the Redirect URI below, and enter the Client ID and Client
-				Secret. See <a
-					href="https://wordpress.org/plugins/postman-smtp/faq/"
-					target="_new">How do I get a Google Client ID?</a> in the F.A.Q.
-				for help.</span></p>';
+				$help = sprintf ( $oauthText, 'https://console.developers.google.com/', 'Google Developer Console', $clientIdLabel, $clientSecretLabel, $redirectUrlLabel, 'Google', 'a Client ID for web application' );
 			} else if (PostmanSmtpHostProperties::isMicrosoft ( $hostname )) {
-				$help = '<p id="wizard_oauth2_help"><span class="normal">Open the <a
-					href="https://account.live.com/developers/applications/index"
-					target="_new">Microsoft Developer Center</a>, create an Application
-				using the Redirect URI below, and enter the Client ID and Client
-				Secret. See <a
-					href="https://wordpress.org/plugins/postman-smtp/faq/"
-					target="_new">How do I get a Windows Live Client ID?</a> in the F.A.Q.
-				for help.</span></p>';
+				$help = sprintf ( $oauthText, 'https://account.live.com/developers/applications/index', 'Microsoft Developer Center', $clientIdLabel, $clientSecretLabel, $redirectUrlLabel, 'Microsoft', 'an Application' );
+			} else if (PostmanSmtpHostProperties::isYahoo ( $hostname )) {
+				$help = sprintf ( $oauthText, 'https://developer.apps.yahoo.com/projects', 'Yahoo Developer Network', $clientIdLabel, $clientSecretLabel, $redirectUrlLabel, 'Yahoo', 'an Application' );
 			} else {
 				$help = '<p id="wizard_oauth2_help"><span class="error">You must enter an Outgoing Mail Server with OAuth 2.0 capabilities.</span></p>';
 			}
@@ -968,7 +975,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function reply_to_callback() {
-			printf ( '<input type="text" id="input_reply_to" name="postman_options[reply_to]" value="%s" />', null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
+			printf ( '<input type="text" id="input_reply_to" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
 		}
 		
 		/**
@@ -977,8 +984,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function log_level_callback() {
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::LOG_LEVEL );
 			printf ( '<option value="%s" %s>Off</option>', PostmanLogger::OFF_INT, PostmanLogger::OFF_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
-			printf ( '<option value="%s" %s>Debug</option>', PostmanLogger::OFF_INT, PostmanLogger::DEBUG_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
-			printf ( '<option value="%s" %s>Errors</option>', PostmanLogger::OFF_INT, PostmanLogger::ERROR_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
+			printf ( '<option value="%s" %s>Debug</option>', PostmanLogger::DEBUG_INT, PostmanLogger::DEBUG_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
+			printf ( '<option value="%s" %s>Errors</option>', PostmanLogger::ERROR_INT, PostmanLogger::ERROR_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
 			printf ( '</select>' );
 		}
 		
@@ -986,14 +993,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function connection_timeout_callback() {
-			printf ( '<input type="text" id="input_connection_timeout" name="postman_options[connection_timeout]" value="%s" />', $this->options->getConnectionTimeout () );
+			printf ( '<input type="text" id="input_connection_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::CONNECTION_TIMEOUT, $this->options->getConnectionTimeout () );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function read_timeout_callback() {
-			printf ( '<input type="text" id="input_read_timeout" name="postman_options[read_timeout]" value="%s" />', $this->options->getReadTimeout () );
+			printf ( '<input type="text" id="input_read_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::READ_TIMEOUT, $this->options->getReadTimeout () );
 		}
 		
 		/**
@@ -1205,7 +1212,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 
 <form id="postman_wizard" method="post" action="options.php">
 	<input type="hidden" name="purge_auth_token" value="purge_auth_token" />
-	<?php settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME ); ?>
+	<?php
+			printf ( '<input type="hidden" id="input_reply_to" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
+			printf ( '<input type="hidden" id="input_connection_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::CONNECTION_TIMEOUT, $this->options->getConnectionTimeout () );
+			printf ( '<input type="hidden" id="input_read_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::READ_TIMEOUT, $this->options->getReadTimeout () );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::LOG_LEVEL, $this->options->getLogLevel () );
+			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
+			?>
 	<h1>Sender Address Details</h1>
 	<fieldset>
 		<legend>Enter your Email Address </legend>
@@ -1266,12 +1279,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 		<legend> Setup Authentication </legend>
 		<section class="wizard-auth-oauth2">
 			<p id="wizard_oauth2_help">Help.</p>
-			<label for="redirect_uri">Redirect URI</label><br />
+			<label id="redirect_url" for="redirect_uri">Redirect URI</label><br />
 			<?php echo $this->redirect_url_callback(); ?><br /> 
 			<?php echo $this->encryption_type_for_oauth2_section_callback(); ?>
-			<label for="client_id">Client ID</label><br />
+			<label id="client_id" for="client_id">Client ID</label><br />
 			<?php echo $this->oauth_client_id_callback(); ?><br /> <label
-				for="client_id">Client Secret</label> <br />
+				id="client_secret" for="client_id">Client Secret</label> <br />
 			<?php echo $this->oauth_client_secret_callback(); ?><br />
 		</section>
 
