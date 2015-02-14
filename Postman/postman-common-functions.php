@@ -1,9 +1,6 @@
 <?php
 if (! class_exists ( "PostmanLogger" )) {
 	
-ini_set('display_errors', 'On');
-error_reporting(-1);
-ini_set('log_errors', 1);
 	//
 	class PostmanLogger {
 		private $name;

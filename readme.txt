@@ -11,7 +11,7 @@ Having Gmail problems? Lowering your security settings is not the answer! Introd
 
 == Description ==
 
-Having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed)? In 2014, Google began [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms. Since then, users of basic SMTP plugins have been plagued by [outbound mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html). Worse, when using the WordPress internal PHPMailer, mail that is 'successfully' delivered may be treated as SPAM or silently disappear like a mob witness the night before a trial.
+Having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed)? In 2014, Google began [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms. Since then, users of basic SMTP plugins have been plagued by [outbound mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) and delays. Worse, when using the WordPress internal PHPMailer, mail that is 'successfully' delivered may be treated as SPAM or silently disappear like a mob witness the night before a trial.
 
 Postman is a next-generation WordPress SMTP plugin, the first and only to implement OAuth 2.0, Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service provider [pre-approves Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
 
@@ -178,6 +178,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.4 - in development =
 * Sending Yahoo email now supported with OAuth 2.0 authentication! If the Wizard detects that a Yahoo server has been entered, it automatically configures OAuth 2.0. 
 * First time users may now choose to import Password-authentication settings from Easy WP SMTP
+* Suppressed the fsock warnings so that the Ajax Port Test calls don't hang if PHP warning messages are bring printed to the Http Response
 
 = 1.3.4 - 2015-02-11 =
 * 500 downloads and six 5-star ratings in only three weeks! Cool! 8-)

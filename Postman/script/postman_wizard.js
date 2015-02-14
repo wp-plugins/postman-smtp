@@ -79,9 +79,11 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 
 	// Start validation; Prevent going
 	// forward if false
-	valid = form.valid();
-	if (!valid) {
-		return false;
+	if (currentIndex != 2) {
+		valid = form.valid();
+		if (!valid) {
+			return false;
+		}
 	}
 
 	if (currentIndex === 0) {
@@ -92,6 +94,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		// page 2 : check the port
 		portsChecked = 0;
 		portsToCheck = 0;
+		totalAvail = 0;
 		// allow the user to choose any
 		// port
 		portCheckBlocksUi = true;
@@ -113,6 +116,10 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		}
 		// or all ports are unavailable
 		if (portCheckBlocksUi) {
+			return false;
+		}
+		valid = form.valid();
+		if (!valid) {
 			return false;
 		}
 		var chosenPort = jQuery(postman_port_element_name).val();
@@ -144,23 +151,8 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		disable(postman_auth_option_none_id);
 		if (hostname == 'smtp.gmail.com' && chosenPort == 465) {
 			// setup Gmail with OAuth2
-			populateRedirectUrl(hostname);
-			setAuthType(postman_auth_oauth2);
-			setEncryptionType(postman_enc_ssl);
-			// hide the auth type field for OAuth screen
-			show('.wizard-auth-oauth2');
-			hide(postman_enc_for_oauth2_el);
-			// allow oauth2 as an authentication choice
-			enable(postman_auth_option_oauth2_id);
 		} else if (hostname == 'smtp.live.com' && chosenPort == 587) {
 			// setup Hotmail with OAuth2
-			populateRedirectUrl(hostname);
-			setAuthType(postman_auth_oauth2);
-			setEncryptionType(postman_enc_tls);
-			// hide the auth type field for OAuth screen
-			show('.wizard-auth-oauth2');
-			hide(postman_enc_for_oauth2_el);
-			enable(postman_auth_option_oauth2_id);
 		} else if (chosenPort == 465) {
 			// eanble user/pass fields
 			enablePasswordFields();
@@ -269,7 +261,6 @@ function wizardPortTest(input, state) {
 	portsToCheck++;
 	var data = {
 		'action' : 'test_port',
-		'timeout' : postman_port_check_timeout,
 		'hostname' : hostname,
 		'port' : el.val()
 	// We pass php values differently!
@@ -285,6 +276,7 @@ function wizardPortTest(input, state) {
 						if (response.success) {
 							elState.html('Ok');
 							el.removeAttr('disabled');
+							totalAvail++;
 						} else {
 							elState.html('Closed');
 						}
@@ -295,39 +287,19 @@ function wizardPortTest(input, state) {
 							var el25_avail = el25.attr('disabled') != 'disabled';
 							var el465_avail = el465.attr('disabled') != 'disabled';
 							var el587_avail = el587.attr('disabled') != 'disabled';
-							var totalAvail = 0;
-							if (el25_avail)
-								totalAvail++;
-							if (el465_avail)
-								totalAvail++;
-							if (el587_avail)
-								totalAvail++;
-							if (hostname == 'smtp.gmail.com' && el465_avail) {
-								// select OAuth2 if the user can use it
-								el25.attr('disabled', 'disabled');
-								el465.prop("checked", true);
-								el587.attr('disabled', 'disabled');
-								portInput.val(465);
-							} else if (hostname == 'smtp.live.com'
-									&& el587_avail) {
-								// select OAuth2 if the user can use it
-								el25.attr('disabled', 'disabled');
-								el465.attr('disabled', 'disabled');
-								el587.attr("checked", true);
-								portInput.val(587);
-							} else if (el465_avail) {
-								el465.prop("checked", true);
-								portInput.val(465);
-							} else if (el587_avail) {
-								el587.attr("checked", true);
-								portInput.val(587);
-							} else if (el25_avail) {
-								el25.attr("checked", true);
-								portInput.val(25);
-							}
+							// ask the server what to do: oauth and on which
+							// port, or password and on which port
 							if (totalAvail == 0) {
 								alert("No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.")
 							} else {
+								var data = {
+									'action' : 'get_redirect_url',
+									'hostname' : hostname,
+									'avail25' : el25_avail,
+									'avail465' : el465_avail,
+									'avail587' : el587_avail
+								};
+								populateRedirectUrl(data);
 								jQuery('li + li').removeClass('disabled');
 								portCheckBlocksUi = false;
 							}

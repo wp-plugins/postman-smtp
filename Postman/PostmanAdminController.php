@@ -474,7 +474,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( 'postman_script', 'postman_input_basic_password', '#input_' . PostmanOptions::BASIC_AUTH_PASSWORD );
 			
 			// the auth input
-			wp_localize_script ( 'postman_script', 'postman_redirect_url_el', '#oauth_redirect_url' );
+			wp_localize_script ( 'postman_script', 'postman_redirect_url_el', '#input_oauth_redirect_url' );
 			wp_localize_script ( 'postman_script', 'postman_input_auth_type', '#input_' . PostmanOptions::AUTHENTICATION_TYPE );
 			wp_localize_script ( 'postman_script', 'postman_auth_none', PostmanOptions::AUTHENTICATION_TYPE_NONE );
 			wp_localize_script ( 'postman_script', 'postman_auth_login', PostmanOptions::AUTHENTICATION_TYPE_LOGIN );
@@ -640,14 +640,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		function getAjaxPortStatus() {
 			$hostname = $_POST ['hostname'];
 			$port = intval ( $_POST ['port'] );
-			if (isset ( $_POST ['timeout'] )) {
-				$timeout = intval ( $_POST ['timeout'] );
-			} else {
-				$timeout = PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT;
-			}
 			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ();
-			$success = $portTest->testSmtpPorts ( $hostname, $port, $timeout );
+			$success = $portTest->testSmtpPorts ( $hostname, $port, $this->options->getConnectionTimeout () );
 			$this->logger->debug ( 'testing port success=' . $success );
 			$response = array (
 					'message' => $portTest->getErrorMessage (),
@@ -674,7 +669,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		function getConfigurationViaAjax() {
 			$plugin = $_POST ['plugin'];
 			$this->logger->debug ( 'Looking for config=' . $plugin );
-			$options = $this->importableConfiguration->getAvailableOptions()[$plugin];
+			$options = $this->importableConfiguration->getAvailableOptions ()[$plugin];
 			if (isset ( $options )) {
 				$this->logger->debug ( 'Sending configuration response' );
 				$response = array (
@@ -715,7 +710,47 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		function getAjaxRedirectUrl() {
 			$hostname = $_POST ['hostname'];
-			$response = $this->getRedirectUrl ( $hostname );
+			$avail25 = $_POST ['avail25'];
+			$avail465 = $_POST ['avail465'];
+			$avail587 = $_POST ['avail587'];
+			$response = array (
+					'redirect_url' => PostmanSmtpHostProperties::getRedirectUrl ( $hostname ),
+					'help_text' => $this->getOAuthHelp ( $hostname ) 
+			);
+			if (isset ( $avail25 )) {
+				if (PostmanSmtpHostProperties::isGoogle ( $hostname ) && $avail465) {
+					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
+					$port = 465;
+				} else if (PostmanSmtpHostProperties::isMicrosoft ( $hostname ) && $avail587) {
+					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+					$encType = PostmanOptions::ENCRYPTION_TYPE_TLS;
+					$port = 587;
+				} else if (PostmanSmtpHostProperties::isYahoo ( $hostname ) && $avail465) {
+					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
+					$port = 465;
+				} else if ($avail465) {
+					$authType = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
+					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
+					$port = 465;
+				} else if ($avail587) {
+					$authType = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
+					$encType = PostmanOptions::ENCRYPTION_TYPE_TLS;
+					$port = 587;
+				} else {
+					$authType = PostmanOptions::AUTHENTICATION_TYPE_NONE;
+					$encType = PostmanOptions::ENCRYPTION_TYPE_NONE;
+					$port = 25;
+				}
+				$response = array (
+						'redirect_url' => PostmanSmtpHostProperties::getRedirectUrl ( $hostname ),
+						'help_text' => $this->getOAuthHelp ( $hostname ),
+						PostmanOptions::AUTHENTICATION_TYPE => $authType,
+						PostmanOptions::ENCRYPTION_TYPE => $encType,
+						PostmanOptions::PORT => $port 
+				);
+			}
 			wp_send_json ( $response );
 		}
 		
@@ -725,8 +760,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * @param unknown $hostname        	
 		 * @return multitype:string
 		 */
-		private function getRedirectUrl($hostname) {
-			$redirectUrl = PostmanSmtpHostProperties::getRedirectUrl ( $hostname );
+		private function getOAuthHelp($hostname) {
 			if (PostmanSmtpHostProperties::isGoogle ( $hostname )) {
 				$help = '<p id="wizard_oauth2_help"><span class="normal">Open the <a href="https://console.developers.google.com/" target="_new">Google Developer Console</a>, create a Client ID
 				using the Redirect URI below, and enter the Client ID and Client
@@ -746,11 +780,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			} else {
 				$help = '<p id="wizard_oauth2_help"><span class="error">You must enter an Outgoing Mail Server with OAuth 2.0 capabilities.</span></p>';
 			}
-			$response = array (
-					'redirect_url' => (! empty ( $redirectUrl ) ? $redirectUrl : ''),
-					'help_text' => $help 
-			);
-			return $response;
+			return $help;
 		}
 		
 		/**
@@ -784,8 +814,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printOAuthSectionInfo() {
-			$response = $this->getRedirectUrl ( $this->options->getHostname () );
-			print $response ['help_text'];
+			print $this->getOAuthHelp ( $this->options->getHostname () );
 		}
 		
 		/**
@@ -899,7 +928,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function redirect_url_callback() {
-			printf ( '<textarea onClick="this.setSelectionRange(0, this.value.length)" readonly="readonly" type="text" id="oauth_redirect_url" cols="60" >%s</textarea>', PostmanSmtpHostProperties::getRedirectUrl ( $this->options->getHostname () ) );
+			printf ( '<textarea onClick="this.setSelectionRange(0, this.value.length)" readonly="readonly" type="text" id="input_oauth_redirect_url" cols="60" >%s</textarea>', PostmanSmtpHostProperties::getRedirectUrl ( $this->options->getHostname () ) );
 		}
 		
 		/**

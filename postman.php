@@ -51,10 +51,14 @@ require_once 'Postman/postman-common-wp-functions.php';
 $logger = new PostmanLogger ( 'postman.php' );
 $logger->debug ( 'Postman v' . POSTMAN_PLUGIN_VERSION . ' starting' );
 
+ini_set ( 'display_errors', 0 );
+$displayErrors = ini_get ( 'display_errors' );
+$logger->debug ( 'displayErrors ' . $displayErrors . ' ' . ($displayErrors == '' || $displayErrors == 'off' ) );
+
 // register error handler
 register_shutdown_function ( 'postmanHandleErrors' );
 
 // start Postman
 require_once 'Postman/PostmanMain.php';
-$kevinCostner = new PostmanMain (__FILE__);
+$kevinCostner = new PostmanMain ( __FILE__ );
 
