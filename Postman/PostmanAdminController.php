@@ -469,7 +469,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( 'postman_script', 'postman_hostname_element_name', '#input_' . PostmanOptions::HOSTNAME );
 			
 			// the enc input
-			wp_localize_script ( 'postman_script', 'postman_enc_for_password_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_PASSWORD );
+			wp_localize_script ( 'postman_script', 'postman_enc_for_password_el', '#input_enc_type_password' );
 			wp_localize_script ( 'postman_script', 'postman_enc_for_oauth2_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
 			wp_localize_script ( 'postman_script', 'postman_enc_none', PostmanOptions::ENCRYPTION_TYPE_NONE );
 			wp_localize_script ( 'postman_script', 'postman_enc_ssl', PostmanOptions::ENCRYPTION_TYPE_SSL );
@@ -878,7 +878,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function encryption_type_for_password_section_callback() {
-			$this->encryption_type_callback ( PostmanOptions::AUTHENTICATION_TYPE_PASSWORD );
+			$this->encryption_type_callback ( 'password' );
 		}
 		public function encryption_type_for_oauth2_section_callback() {
 			$this->encryption_type_callback ( PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
@@ -1065,10 +1065,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 					print ' using <b>Password</b> (' . $this->options->getAuthorizationType () . ') authentication.</span></p>';
 				}
 				if ($this->options->isAuthTypeOAuth2 ()) {
-					print '<p style="margin:10px 10px"><span>Please note: <em>When OAuth 2.0 is enabled, WordPress may override the sender name only</em>.</span></p>';
-				}
-				else if ($this->options->is()) {
-					print '<p style="margin:10px 10px"><span>Please note: <em>When OAuth 2.0 is enabled, WordPress may override the sender name only</em>.</span></p>';
+					print '<p style="margin:10px 10px"><span>Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only</em>.</span></p>';
+				} else if ($this->options->isAuthTypePassword()) {
+					print '<p style="margin:10px 10px"><span>Please note: <em>When composing email, other WordPress plugins or themes may override the sender name and email address causing rejection with some email services, such as Yahoo Mail. If you experience problems, try leaving the sender email address empty in these plugins or themes.</em></span></p>';
 				}
 			} else {
 				print '<p><span style="color:red; padding:2px 5px; font-size:1.1em">Status: Postman is not sending mail.</span></p>';
