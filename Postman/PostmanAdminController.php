@@ -576,7 +576,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'callback_domain_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
-			add_settings_field ( 'redirect_url', '<span id="redirect_url">' ._x ( $this->oauthScribe->getCallbackUrlLabel () . '</span>', 'Configuration Input Field' ), array (
+			add_settings_field ( 'redirect_url', '<span id="redirect_url">' . _x ( $this->oauthScribe->getCallbackUrlLabel () . '</span>', 'Configuration Input Field' ), array (
 					$this,
 					'redirect_url_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
@@ -586,7 +586,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'oauth_client_id_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
-			add_settings_field ( PostmanOptions::CLIENT_SECRET, _x ( $this->oauthScribe->getClientSecretLabel(), 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::CLIENT_SECRET, _x ( $this->oauthScribe->getClientSecretLabel (), 'Configuration Input Field' ), array (
 					$this,
 					'oauth_client_secret_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
@@ -615,6 +615,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 			add_settings_field ( PostmanOptions::LOG_LEVEL, _x ( 'Log Level', 'Configuration Input Field' ), array (
 					$this,
 					'log_level_callback' 
+			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			
+			add_settings_field ( PostmanOptions::PRINT_ERRORS, _x ( 'Show Error Page', 'Configuration Input Field' ), array (
+					$this,
+					'print_errors_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
 			// the Port Test section
@@ -675,7 +680,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$email = $_POST ['email'];
 			$method = $_POST ['method'];
 			$emailTester = new PostmanSendTestEmailController ();
-			$success = $emailTester->simeplSend ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName() );
+			$success = $emailTester->simeplSend ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName () );
 			$response = array (
 					'message' => $emailTester->getMessage (),
 					'transcript' => $emailTester->getTranscript (),
@@ -984,6 +989,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<option value="%s" %s>Debug</option>', PostmanLogger::DEBUG_INT, PostmanLogger::DEBUG_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
 			printf ( '<option value="%s" %s>Errors</option>', PostmanLogger::ERROR_INT, PostmanLogger::ERROR_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
 			printf ( '</select>' );
+		}
+		
+		/**
+		 * Checkbox for Printing Errors
+		 */
+		public function print_errors_callback() {
+			printf ( '<input type="checkbox" id="input_print_errors" name="%1$s[%2$s]" %3$s />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PRINT_ERRORS, $this->options->isErrorPrintingEnabled () ? 'checked="checked"' : '' );
 		}
 		
 		/**

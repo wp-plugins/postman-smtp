@@ -47,6 +47,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			$this->sanitizeInt ( 'Read Timeout', PostmanOptions::READ_TIMEOUT, $input, $new_input );
 			$this->sanitizeInt ( 'Conenction Timeout', PostmanOptions::CONNECTION_TIMEOUT, $input, $new_input );
 			$this->sanitizeInt ( 'Log Level', PostmanOptions::LOG_LEVEL, $input, $new_input );
+			$this->sanitizeString ( 'Print Errors', PostmanOptions::PRINT_ERRORS, $input, $new_input );
 			
 			if (! empty ( $input [PostmanOptions::SENDER_EMAIL] )) {
 				$newEmail = $input [PostmanOptions::SENDER_EMAIL];

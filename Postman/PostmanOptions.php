@@ -121,14 +121,11 @@ if (! class_exists ( "PostmanOptions" )) {
 				}
 			}
 		}
-		public function getPrintErrors() {
+		public function isErrorPrintingEnabled() {
 			if (isset ( $this->options [PostmanOptions::PRINT_ERRORS] ))
 				return $this->options [PostmanOptions::PRINT_ERRORS];
 			else
 				return false;
-		}
-		public function setPrintErrors($printErrors) {
-			$this->options [PostmanOptions::PRINT_ERRORS] = $printErrors;
 		}
 		public function getLogLevel() {
 			if (isset ( $this->options [PostmanOptions::LOG_LEVEL] ))
