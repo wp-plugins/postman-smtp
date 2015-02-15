@@ -81,12 +81,15 @@ if (! function_exists ( 'stripUrlPath' )) {
 	 *
 	 * Return just the scheme and the host (e.g. http://mysite.com/this-is/the/path => http://mysite.com/)
 	 * http://stackoverflow.com/questions/19040904/php-strip-path-from-url-no-built-in-function
-	 * 
+	 *
 	 * @param unknown $url        	
 	 */
 	function stripUrlPath($url) {
 		$urlParts = parse_url ( $url );
-		$newUrl = $urlParts ['scheme'] . "://" . $urlParts ['host'] . "/";
-		return $newUrl;
+		if (isset ( $urlParts ['scheme'] ) && isset ( $urlParts ['host'] )) {
+			return $urlParts ['scheme'] . "://" . $urlParts ['host'] . "/";
+		} else {
+			return '';
+		}
 	}
 }
