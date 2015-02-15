@@ -89,7 +89,7 @@ if (! function_exists ( 'stripUrlPath' )) {
 		if (isset ( $urlParts ['scheme'] ) && isset ( $urlParts ['host'] )) {
 			return $urlParts ['scheme'] . "://" . $urlParts ['host'] . "/";
 		} else {
-			return '';
+			return 'error calculating your domain root - please enter it manually';
 		}
 	}
 }
