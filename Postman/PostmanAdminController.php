@@ -571,12 +571,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'encryption_type_for_oauth2_section_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
-			add_settings_field ( 'callback_domain', _x ( $this->oauthScribe->getCallbackDomainLabel (), 'Configuration Input Field' ), array (
+			add_settings_field ( 'callback_domain', '<span id="callback_domain">' . _x ( $this->oauthScribe->getCallbackDomainLabel () . '</span>', 'Configuration Input Field' ), array (
 					$this,
 					'callback_domain_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
-			add_settings_field ( 'redirect_url', _x ( $this->oauthScribe->getCallbackUrlLabel (), 'Configuration Input Field' ), array (
+			add_settings_field ( 'redirect_url', '<span id="redirect_url">' ._x ( $this->oauthScribe->getCallbackUrlLabel () . '</span>', 'Configuration Input Field' ), array (
 					$this,
 					'redirect_url_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
