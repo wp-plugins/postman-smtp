@@ -70,8 +70,14 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 				$this->getLogger ()->error ( $response );
 				throw new Exception ( $response );
 			} else if (isset ( $authToken->{'error'} )) {
-				$this->getLogger ()->error ( $authToken->{'error'} . ' processing response: ' . $authToken->{'error_description'} );
-				throw new Exception ( $authToken->{'error_description'} . '(' . $authToken->{'error'} . ')' );
+				if (isset ( $authToken->{'error_description'} )) {
+					$this->getLogger ()->error ( $authToken->{'error'} . ' processing response: ' . $authToken->{'error_description'} );
+					throw new Exception ( $authToken->{'error_description'} . '(' . $authToken->{'error'} . ')' );
+				} else {
+					// Yahoo doesn't give descriptions
+					$this->getLogger ()->error ( $authToken->{'error'} . ' processing response' );
+					throw new Exception ( $authToken->{'error'} );
+				}
 			} else {
 				$this->getLogger ()->debug ( 'Processing response ' . $response );
 				$this->decodeReceivedAuthorizationToken ( $authToken );
