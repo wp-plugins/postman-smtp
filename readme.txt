@@ -97,11 +97,11 @@ Google does have a setting to [allow less secure apps](https://support.google.co
 > **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = I want my email to come from a different email address. =
-This is a big **no-no** and in OAuth/Password authentication mode, Postman doesn't allow it. At best, your email provider will simply re-write the correct email address, or maybe give you an authentication error when you try to connect. At worst, your IP or entire domain will end up on a SPAM blacklist.
+This is not allowed in OAuth authentication mode, and is not recommended in Password authentication mode. At best, your email provider will probably re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a SPAM blacklist.
 
 Most likely want you mean to do is set the **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
 
-If you really, *really* want to send email from a different email address, connect anonymously by choosing "Authentication:none" in the configuration screen.
+If you really, *really* want to send email from a different email address, connect anonymously by choosing "Authentication:none" in the configuration.
 
 = What is a Client ID? =
 To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one.
