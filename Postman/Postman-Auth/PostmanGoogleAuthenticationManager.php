@@ -74,8 +74,7 @@ if (! class_exists ( "PostmanGoogleAuthenticationManager" )) {
 					'login_hint' => $this->senderEmail 
 			);
 			
-			build_query ( $params );
-			$authUrl = PostmanGoogleAuthenticationManager::GOOGLE_ENDPOINT . '?' . build_query ( $params );
+			$authUrl = $this->getAuthorizationUrl() . '?' . build_query ( $params );
 			
 			$this->getLogger ()->debug ( 'Requesting verification code from Google' );
 			$_SESSION [PostmanAdminController::POSTMAN_ACTION] = self::POSTMAN_AUTHORIZATION_IN_PROGRESS;
@@ -87,7 +86,7 @@ if (! class_exists ( "PostmanGoogleAuthenticationManager" )) {
 		 * (along with a client ID and client secret) for an access token and, in some cases,
 		 * a refresh token.
 		 *
-		 * (non-PHPdoc)
+		 * This code is identical for Google and Hotmail
 		 *
 		 * @see PostmanAuthenticationManager::processAuthorizationGrantCode()
 		 */
@@ -102,7 +101,15 @@ if (! class_exists ( "PostmanGoogleAuthenticationManager" )) {
 					$this->getLogger ()->error ( 'The grant code from Google had no accompanying state and may be a forgery' );
 					throw new PostmanStateIdMissingException ();
 				}
-				$this->requestAuthorizationToken ( $this->getTokenUrl (), $this->getCallbackUri (), $code );
+				$postvals = array (
+						'client_id' => $this->getClientId (),
+						'client_secret' => $this->getClientSecret (),
+						'grant_type' => 'authorization_code',
+						'redirect_uri' => $this->getCallbackUri(),
+						'code' => $code 
+				);
+				$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals );
+				$this->processResponse ( $response );
 				return true;
 			} else {
 				$this->getLogger ()->debug ( 'Expected code in the request header but found none - user probably denied request' );

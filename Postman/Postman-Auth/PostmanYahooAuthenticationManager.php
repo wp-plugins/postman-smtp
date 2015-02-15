@@ -62,7 +62,6 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 					'language' => 'en-us' 
 			);
 			
-			build_query ( $params );
 			$authUrl = $this->getAuthorizationUrl () . '?' . build_query ( $params );
 			
 			$this->getLogger ()->debug ( 'Requesting verification code from Yahoo' );

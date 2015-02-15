@@ -58,30 +58,6 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		}
 		
 		/**
-		 * Given an OAuth provider-specific URL, redirectUri and grant code,
-		 * issue an HttpRequest to get an authorization token
-		 *
-		 * This code is identical for Google and Hotmail
-		 *
-		 *
-		 * @param unknown $accessTokenUrl        	
-		 * @param unknown $redirectUri        	
-		 * @param unknown $code        	
-		 */
-		protected function requestAuthorizationToken($accessTokenUrl, $redirectUri, $code) {
-			$this->logger->debug ( 'got headers ' . implode ( $headers ) );
-			$postvals = array (
-					'client_id' => $this->getClientId (),
-					'client_secret' => $this->getClientSecret (),
-					'grant_type' => 'authorization_code',
-					'redirect_uri' => $redirectUri,
-					'code' => $code 
-			);
-			$response = postmanHttpTransport ( $accessTokenUrl, $postvals );
-			$this->processResponse ( $response );
-		}
-		
-		/**
 		 * Decoded the received token
 		 * This code is identical for Google and Hotmail
 		 *

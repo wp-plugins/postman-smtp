@@ -49,14 +49,20 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 		 * **********************************************
 		 */
 		public function requestVerificationCode() {
-			$_SESSION [PostmanAdminController::POSTMAN_ACTION] = self::POSTMAN_AUTHORIZATION_IN_PROGRESS;
+			$params = array (
+					'response_type' => 'code',
+					'redirect_uri' => urlencode ( $this->getCallbackUri () ),
+					'client_id' => $this->getClientId (),
+					'client_secret' => $this->getClientSecret (),
+					'scope' => urlencode ( self::SCOPE ),
+					'access_type' => 'offline',
+					'approval_prompt' => 'force' 
+			);
 			
-			$endpoint = $this->getAuthorizationUrl ();
-			$scope = PostmanMicrosoftAuthenticationManager::SCOPE;
-			
-			$authUrl = $endpoint . "?client_id=" . $this->getClientId () . "&client_secret=" . $this->getClientSecret () . "&response_type=code&scope=" . $scope . "&redirect_uri=" . urlencode ( $this->getCallbackUri () );
+			$authUrl = $this->getAuthorizationUrl() . '?' . build_query ( $params );
 			
 			$this->getLogger ()->debug ( 'Requesting verification code from Microsoft' );
+			$_SESSION [PostmanAdminController::POSTMAN_ACTION] = self::POSTMAN_AUTHORIZATION_IN_PROGRESS;
 			postmanRedirect ( $authUrl );
 		}
 		
@@ -72,7 +78,15 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 			if (isset ( $_GET ['code'] )) {
 				$code = $_GET ['code'];
 				$this->getLogger ()->debug ( 'Found authorization code in request header' );
-				$this->requestAuthorizationToken ( $this->getTokenUrl (), $this->getCallbackUri (), $code );
+				$postvals = array (
+						'client_id' => $this->getClientId (),
+						'client_secret' => $this->getClientSecret (),
+						'grant_type' => 'authorization_code',
+						'redirect_uri' => $this->getCallbackUri(),
+						'code' => $code 
+				);
+				$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals );
+				$this->processResponse ( $response );
 				return true;
 			} else {
 				$this->getLogger ()->debug ( 'Expected code in the request header but found none - user probably denied request' );
