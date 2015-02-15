@@ -125,7 +125,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::PRINT_ERRORS] ))
 				return $this->options [PostmanOptions::PRINT_ERRORS];
 			else
-				return true;
+				return false;
 		}
 		public function setPrintErrors($printErrors) {
 			$this->options [PostmanOptions::PRINT_ERRORS] = $printErrors;
