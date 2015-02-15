@@ -38,6 +38,8 @@ function getRedirectUrl(data) {
 						if (response.success) {
 							jQuery(postman_redirect_url_el).val(
 									response.redirect_url);
+							jQuery('#input_oauth_callback_domain').val(
+									response.callback_domain);
 							jQuery('#wizard_oauth2_help').html(
 									response.help_text);
 							if (response.auth_type) {
@@ -45,10 +47,14 @@ function getRedirectUrl(data) {
 										response.auth_type);
 								jQuery(postman_enc_for_password_el).val(
 										response.enc_type);
-								jQuery(postman_enc_for_oauth2_el).val(
-										response.enc_type);
-								jQuery(postman_port_element_name).val(
-										response.port);
+								if (response.enc_type != '') {
+									jQuery(postman_enc_for_oauth2_el).val(
+											response.enc_type);
+								}
+								if (response.port != '') {
+									jQuery(postman_port_element_name).val(
+											response.port);
+								}
 								var el25 = jQuery('#wizard_port_25');
 								var el465 = jQuery('#wizard_port_465');
 								var el587 = jQuery('#wizard_port_587');
@@ -56,8 +62,6 @@ function getRedirectUrl(data) {
 								hide('.wizard-auth-basic');
 								// disable the fields we don't use so validation
 								// will work
-								disable(postman_auth_option_oauth2_id);
-								disable(postman_auth_option_none_id);
 								disable(postman_input_basic_username);
 								disable(postman_input_basic_password);
 								if (response.auth_type == postman_auth_oauth2) {
@@ -67,7 +71,8 @@ function getRedirectUrl(data) {
 											response.client_secret_label);
 									jQuery('#redirect_url').html(
 											response.redirect_url_label);
-									jQuery('#callback_domain').html(response.callback_domain_label);
+									jQuery('#callback_domain').html(
+											response.callback_domain_label);
 									el25.attr('disabled', 'disabled');
 									el465.attr('disabled', 'disabled');
 									el587.attr('disabled', 'disabled');

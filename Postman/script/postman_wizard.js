@@ -164,6 +164,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 			// eanble user/pass fields
 			enablePasswordFields();
 
+			disable(postman_auth_option_oauth2_id);
 			// disallow ssl, set encryption to tls
 			setEncryptionType(postman_enc_tls);
 			disable(postman_enc_option_ssl_id);

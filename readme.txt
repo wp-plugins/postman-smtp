@@ -11,7 +11,7 @@ Having Gmail problems? Lowering your security settings is not the answer! Introd
 
 == Description ==
 
-Having [trouble sending your email](https://wordpress.org/support/topic/smtp-connect-failed)? In 2014, Google began [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms. Since then, users of basic SMTP plugins have been plagued by [outbound mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html). Worse, when using the WordPress internal PHPMailer, mail that is 'successfully' delivered may be treated as SPAM or silently disappear like a mob witness the night before a trial.
+Having [trouble sending email](https://wordpress.org/support/topic/smtp-connect-failed)? Email Services have begun [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms. Users of basic SMTP plugins have been plagued by [outbound mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) and delays. Worse, when using the WordPress internal mailer, email may be treated as SPAM or silently disappear like a mob witness the night before a trial.
 
 Postman is a next-generation WordPress SMTP plugin, the first and only to implement OAuth 2.0, Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service provider [pre-approves Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
 
@@ -19,9 +19,9 @@ Postman is a next-generation WordPress SMTP plugin, the first and only to implem
 *Featuring OAuth 2.0 for Gmail, Hotmail and now **Yahoo Mail** users!*
 
 = Features =
-* Send mail to any host with SMTP, just like the 'Big Five' WordPress SMTP plugins
-* Send mail to Gmail, Hotmail or Yahoo Mail using XOAUTH2 SMTPS
-* Fire-and-forget: OAuth 2.0 mail delivery continues even if your password changes
+* Send mail to any host just like the 'Big Five' WordPress SMTP plugins
+* Send mail to Gmail, Hotmail or Yahoo Mail using OAuth 2.0
+* Fire-and-forget: Mail delivery continues even if your password changes
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Easy to use Setup Wizard takes the guesswork out of configuring email
 * Supports International alphabets, HTML Mail and MultiPart/MIME
@@ -62,9 +62,21 @@ Postman is a next-generation WordPress SMTP plugin, the first and only to implem
 1. In 'Sender Email Address' enter your Hotmail email address. This MUST be the same address you login to Hotmail with.
 1. In 'Outgoing Mail Server (SMTP)' enter 'smtp.live.com'. In 'Port' enter '587'. In 'Encryption' choose 'TLS'.
 1. Go to [Microsoft Developer Center](https://account.live.com/developers/applications/create) and create an application for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
-1. Copy your generated 'Client ID' and 'Client Secret' into the plugin's Settings page.
+1. Copy your generated 'Client ID' and 'Client secret' into the plugin's Settings page.
 1. Choose the Save Changes button.
 1. Choose the 'Request Permission from Microsoft' link and follow the instructions.
+1. Send yourself a test email. 
+
+= To manually configure OAuth 2.0 Authentication for Yahoo =
+
+1. Choose configure manually
+1. In 'Authentication' choose 'OAuth2 2.0'
+1. In 'Sender Email Address' enter your Yahoo Mail email address. This MUST be the same address you login to Yahoo with.
+1. In 'Outgoing Mail Server (SMTP)' enter your Yahoo SMTP server. In 'Port' enter '465'. In 'Encryption' choose 'SSL'.
+1. Go to [Yahoo Developer Network](https://developer.apps.yahoo.com/projects) and create an application for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
+1. Copy your generated 'Consumer Key' and 'Consumer Secret' into the plugin's Settings page.
+1. Choose the Save Changes button.
+1. Choose the 'Request Permission from Yahoo' link and follow the instructions.
 1. Send yourself a test email. 
 
 = To manually configure Password Authentication for any SMTP provider =
@@ -90,16 +102,16 @@ Postman specifically requests a limited access OAuth 2.0 token (valet key) to ac
 
 If you use other plugins to send Gmail, Hotmail or Yahoo Mail, they're going to ask you for your account password. Anything you can do on your account, they can do. And if you change your password, those same plugins will break until you update them with your new password.
 
-Postman only receives access to mail. It can never access your Google Docs, your YouTube, etc. Postman can continue to deliver your email even if your password changes.
+Postman only receives access to mail. It can never access your Google Docs, YouTube, OneDrive, Flickr, etc. Postman can continue to deliver your email even if your password changes.
 
-Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. This option is not available if you're using *Google Apps* to manage a domain.
+Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. And that option is not available if you're using *Google Apps* to manage a domain.
 
 > **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = I want my email to come from a different email address. =
-This is not allowed in OAuth authentication mode, and is not recommended in Password authentication mode. At best, your email provider will probably re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a SPAM blacklist.
+This is not allowed in OAuth mode, and is not recommended in Password mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a SPAM blacklist.
 
-Most likely want you mean to do is set the **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
+Most likely what you mean to do is set the **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
 
 If you really, *really* want to send email from a different email address, connect anonymously by choosing "Authentication:none" in the configuration.
 
@@ -122,6 +134,17 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. In 'Redirect URL', enter the redirect URI shown on Postman's Settings page. Select Save.
 1. Select 'App Settings' from under 'Settings'.
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
+
+= How do I get a Yahoo Mail Client ID? =
+1. Go to [Yahoo Developer Network](https://developer.apps.yahoo.com/projects) and select 'Create an App'.
+1. In the 'Application Name' field enter the name of your WordPress site. For 'Application Type' choose 'Web-based'. In description write 'Postman SMTP'.
+1. In 'Home Page URL', enter the 'Home Page URL' shown on Postman's Settings page.
+1. In 'Access Scopes' choose 'This app requires access to private user data.'
+1. In Callback Domain, enter the root domain of your WordPress site
+1. Under 'Select APIs for private user data access' choose 'Mail Web Service'
+1. Under 'Mail Web Service' choose 'Read/Write'
+1. Click 'Create App'
+1. Enter the Consumer Key and Consumer Secret: displayed here into Postman's settings page.
 
 = How can I stop all this OAuth nonsense!? =
 If you have a Google Account, from the [Google Developer's Console](https://console.developers.google.com/) use the Delete button under the Client ID. If you have a Microsoft Live account, from the [Microsoft account Developer Center](https://account.live.com/developers/applications/index), select the Application and choose Delete Application.
@@ -177,7 +200,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 1.4 - 2015-02-14 =
 * Happy Valentine's Day! Sending Yahoo email now supported with OAuth 2.0 authentication! If the Wizard detects that a Yahoo server has been entered, it automatically configures OAuth 2.0 
-* First time users may choose to import settings from any of the Big Four WordPress SMTP plugins (five if you count Easy SMTP Mail, which is a clone of WP Mail SMTP): Easy WP SMTP, WP Mail Bank, WP Mail SMTP and WP SMTP
+* First time users may choose to import settings from any of the Big Four WordPress SMTP plugins (five if you count Easy SMTP Mail, a clone of WP Mail SMTP): Easy WP SMTP, WP Mail Bank, WP Mail SMTP and WP SMTP
 * Suppressed warning messages generated by calls to fsockopen - they were causing the remote Ajax queries to hang
 * The wizard was resetting some settings by accident, namely Connection Timeout, Read Timeout and Reply-To
 * error_log is disabled by default rather than enabled by default. The log may be enabled in Advanced Settings

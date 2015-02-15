@@ -211,7 +211,7 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 if (! class_exists ( 'PostmanNonOAuthScribe' )) {
 	class PostmanNonOAuthScribe extends PostmanAbstractOAuthHelper {
 			public function getOAuthHelp() {
-			return '<p><span style="color:red">Enter an Outgoing Mail Server with OAuth 2.0 capabilities.</span></p>';
+			return '<p id="wizard_oauth2_help"><span style="color:red" class="normal">Enter an Outgoing Mail Server with OAuth 2.0 capabilities.</span></p>';
 		}
 		public function getCallbackUrl() {
 			return '';
@@ -244,10 +244,10 @@ if (! class_exists ( 'PostmanNonOAuthScribe' )) {
 			return '';
 		}
 		public function getOAuthPort() {
-			return - 1;
+			return '';
 		}
 		public function getEncryptionType() {
-			return PostmanOptions::ENCRYPTION_TYPE_NONE;
+			return '';
 		}
 	}
 }

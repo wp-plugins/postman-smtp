@@ -27,6 +27,7 @@ jQuery(document)
 					var $el = jQuery(postman_input_auth_type);
 					jQuery(postman_input_auth_type).change(function() {
 						switchBetweenPasswordAndOAuth();
+						doneTyping();
 					});
 
 					// setup before functions

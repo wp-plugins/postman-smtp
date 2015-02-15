@@ -571,7 +571,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'encryption_type_for_oauth2_section_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
-			add_settings_field ( 'callback_domain', _x ( $this->oauthScribe->getCallbackDomainLabel(), 'Configuration Input Field' ), array (
+			add_settings_field ( 'callback_domain', _x ( $this->oauthScribe->getCallbackDomainLabel (), 'Configuration Input Field' ), array (
 					$this,
 					'callback_domain_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
@@ -730,26 +730,22 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		function getAjaxRedirectUrl() {
 			$hostname = $_POST ['hostname'];
+			$this->logger->debug ( 'ajaxRedirectUrl hostname:' . $hostname );
 			// don't care about what's in the database, i need a scribe based on the ajax parameter
 			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $hostname );
 			if (isset ( $_POST ['referer'] )) {
+				$this->logger->debug ( 'ajaxRedirectUrl referer:' . $_POST ['referer'] );
 				// this must be wizard or config from an oauth-related change
 				if ($_POST ['referer'] == 'wizard') {
 					$avail25 = $_POST ['avail25'];
 					$avail465 = $_POST ['avail465'];
 					$avail587 = $_POST ['avail587'];
 				} else if ($_POST ['referer'] == 'manual_config') {
-					if (! $scribe->isOauthHost ()) {
-						$response = array (
-								'success' => false 
-						);
-						wp_send_json ( $response );
-					}
 					$avail25 = true;
 					$avail465 = true;
 					$avail587 = true;
 				}
-				if (PostmanSmtpHostProperties::isOauthHost ( $hostname )) {
+				if ($scribe->isOauthHost () || $_POST ['referer'] == 'manual_config') {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 					$port = $scribe->getOAuthPort ();
 					$encType = $scribe->getEncryptionType ();
@@ -768,6 +764,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				}
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),
+						'callback_domain' => $scribe->getCallbackDomain (),
 						'help_text' => $scribe->getOAuthHelp (),
 						'client_id_label' => $scribe->getClientIdLabel (),
 						'client_secret_label' => $scribe->getClientSecretLabel (),
