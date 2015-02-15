@@ -52,6 +52,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 		// slugs
 		const POSTMAN_TEST_SLUG = 'postman-test';
 		
+		// style sheets and scripts
+		const POSTMAN_STYLE = 'postman_style';
+		const JQUERY_SCRIPT = 'jquery';
+		const POSTMAN_SCRIPT = 'postman_script';
+		
 		//
 		private $logger;
 		
@@ -217,7 +222,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function postmanModifyLinksOnPluginsListPage($links) {
 			$mylinks = array (
-					'<a href="' . esc_url ( POSTMAN_HOME_PAGE_ABSOLUTE_URL ) . '">Settings</a>' 
+					sprintf ( '<a href="%s">%s</a>', esc_url ( POSTMAN_HOME_PAGE_ABSOLUTE_URL ), __ ( 'Settings' ) ) 
 			);
 			return array_merge ( $links, $mylinks );
 		}
@@ -239,7 +244,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			return $page;
 		}
 		function enqueueHomeScreenStylesheet() {
-			wp_enqueue_style ( 'postman_style' );
+			wp_enqueue_style ( self::POSTMAN_STYLE );
 		}
 		
 		/**
@@ -257,7 +262,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 		}
 		function enqueueConfigurationResources() {
-			wp_enqueue_style ( 'postman_style' );
+			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_script ( 'postman_manual_config_script' );
 		}
 		
@@ -277,7 +282,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		function enqueueSetupWizardResources() {
 			wp_enqueue_style ( 'jquery_steps_style' );
-			wp_enqueue_style ( 'postman_style' );
+			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_script ( 'postman_wizard_script' );
 		}
 		
@@ -297,7 +302,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		function enqueueEmailTestResources() {
 			wp_enqueue_style ( 'jquery_steps_style' );
-			wp_enqueue_style ( 'postman_style' );
+			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_script ( 'postman_test_email_wizard_script' );
 		}
 		
@@ -316,7 +321,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 		}
 		function enqueuePortTestResources() {
-			wp_enqueue_style ( 'postman_style' );
+			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_script ( 'postman_port_test_script' );
 		}
 		
@@ -400,83 +405,83 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function initializeAdminPage() {
 			// register the stylesheet and javascript external resources
-			wp_register_style ( 'postman_style', plugins_url ( 'style/postman.css', __FILE__ ), null, POSTMAN_PLUGIN_VERSION );
-			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery.steps.css', __FILE__ ), 'postman_style', '1.1.0' );
+			wp_register_style ( self::POSTMAN_STYLE, plugins_url ( 'style/postman.css', __FILE__ ), null, POSTMAN_PLUGIN_VERSION );
+			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery.steps.css', __FILE__ ), self::POSTMAN_STYLE, '1.1.0' );
 			
-			wp_register_script ( 'postman_script', plugins_url ( 'script/postman.js', __FILE__ ), array (
-					'jquery' 
+			wp_register_script ( self::POSTMAN_SCRIPT, plugins_url ( 'script/postman.js', __FILE__ ), array (
+					self::JQUERY_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_register_script ( 'jquery_steps_script', plugins_url ( 'script/jquery.steps.js', __FILE__ ), array (
-					'jquery' 
+			wp_register_script ( 'jquery_steps_script', plugins_url ( 'script/jquery.steps.min.js', __FILE__ ), array (
+					self::JQUERY_SCRIPT 
 			), '1.1.0' );
-			wp_register_script ( 'jquery_validation', plugins_url ( 'script/jquery.validate.js', __FILE__ ), array (
-					'jquery' 
+			wp_register_script ( 'jquery_validation', plugins_url ( 'script/jquery.validate.min.js', __FILE__ ), array (
+					self::JQUERY_SCRIPT 
 			), '1.13.1' );
 			wp_register_script ( 'postman_wizard_script', plugins_url ( 'script/postman_wizard.js', __FILE__ ), array (
-					'jquery',
+					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					'jquery_steps_script',
-					'postman_script' 
+					self::POSTMAN_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
 			wp_register_script ( 'postman_test_email_wizard_script', plugins_url ( 'script/postman_test_email_wizard.js', __FILE__ ), array (
-					'jquery',
+					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					'jquery_steps_script',
-					'postman_script' 
+					self::POSTMAN_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
 			wp_register_script ( 'postman_manual_config_script', plugins_url ( 'script/postman_manual_config.js', __FILE__ ), array (
-					'jquery',
+					self::JQUERY_SCRIPT,
 					'jquery_validation',
-					'postman_script' 
+					self::POSTMAN_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
 			wp_register_script ( 'postman_port_test_script', plugins_url ( 'script/postman_port_test.js', __FILE__ ), array (
-					'jquery',
+					self::JQUERY_SCRIPT,
 					'jquery_validation',
-					'postman_script' 
+					self::POSTMAN_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_localize_script ( 'postman_script', 'postman_port_check_timeout', PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT . '' );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_check_timeout', PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT . '' );
 			
-			wp_localize_script ( 'postman_script', 'postman_smtp_section_element_name', 'div#smtp_section' );
-			wp_localize_script ( 'postman_script', 'postman_oauth_section_element_name', 'div#oauth_section' );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_smtp_section_element_name', 'div#smtp_section' );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_oauth_section_element_name', 'div#oauth_section' );
 			
 			// user input
-			wp_localize_script ( 'postman_script', 'postman_input_sender_email', '#input_' . PostmanOptions::SENDER_EMAIL );
-			wp_localize_script ( 'postman_script', 'postman_input_sender_name', '#input_' . PostmanOptions::SENDER_NAME );
-			wp_localize_script ( 'postman_script', 'postman_port_element_name', '#input_' . PostmanOptions::PORT );
-			wp_localize_script ( 'postman_script', 'postman_hostname_element_name', '#input_' . PostmanOptions::HOSTNAME );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_email', '#input_' . PostmanOptions::SENDER_EMAIL );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_name', '#input_' . PostmanOptions::SENDER_NAME );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_element_name', '#input_' . PostmanOptions::PORT );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_hostname_element_name', '#input_' . PostmanOptions::HOSTNAME );
 			
 			// the enc input
-			wp_localize_script ( 'postman_script', 'postman_enc_for_password_el', '#input_enc_type_password' );
-			wp_localize_script ( 'postman_script', 'postman_enc_for_oauth2_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
-			wp_localize_script ( 'postman_script', 'postman_enc_none', PostmanOptions::ENCRYPTION_TYPE_NONE );
-			wp_localize_script ( 'postman_script', 'postman_enc_ssl', PostmanOptions::ENCRYPTION_TYPE_SSL );
-			wp_localize_script ( 'postman_script', 'postman_enc_tls', PostmanOptions::ENCRYPTION_TYPE_TLS );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_for_password_el', '#input_enc_type_password' );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_for_oauth2_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_none', PostmanOptions::ENCRYPTION_TYPE_NONE );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_ssl', PostmanOptions::ENCRYPTION_TYPE_SSL );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_tls', PostmanOptions::ENCRYPTION_TYPE_TLS );
 			// these are the ids for the <option>s in the encryption <select>
 			
-			wp_localize_script ( 'postman_script', 'postman_enc_option_ssl_id', '.input_enc_type_ssl' );
-			wp_localize_script ( 'postman_script', 'postman_enc_option_tls_id', '.input_enc_type_tls' );
-			wp_localize_script ( 'postman_script', 'postman_enc_option_none_id', '.input_enc_type_none' );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_option_ssl_id', '.input_enc_type_ssl' );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_option_tls_id', '.input_enc_type_tls' );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_option_none_id', '.input_enc_type_none' );
 			// this is for both the label and input of encryption type
-			wp_localize_script ( 'postman_script', 'postman_encryption_group', '.input_encryption_type' );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_encryption_group', '.input_encryption_type' );
 			
 			// the password inputs
-			wp_localize_script ( 'postman_script', 'postman_input_basic_username', '#input_' . PostmanOptions::BASIC_AUTH_USERNAME );
-			wp_localize_script ( 'postman_script', 'postman_input_basic_password', '#input_' . PostmanOptions::BASIC_AUTH_PASSWORD );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_basic_username', '#input_' . PostmanOptions::BASIC_AUTH_USERNAME );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_basic_password', '#input_' . PostmanOptions::BASIC_AUTH_PASSWORD );
 			
 			// the auth input
-			wp_localize_script ( 'postman_script', 'postman_redirect_url_el', '#input_oauth_redirect_url' );
-			wp_localize_script ( 'postman_script', 'postman_input_auth_type', '#input_' . PostmanOptions::AUTHENTICATION_TYPE );
-			wp_localize_script ( 'postman_script', 'postman_auth_none', PostmanOptions::AUTHENTICATION_TYPE_NONE );
-			wp_localize_script ( 'postman_script', 'postman_auth_login', PostmanOptions::AUTHENTICATION_TYPE_LOGIN );
-			wp_localize_script ( 'postman_script', 'postman_auth_plain', PostmanOptions::AUTHENTICATION_TYPE_PLAIN );
-			wp_localize_script ( 'postman_script', 'postman_auth_crammd5', PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 );
-			wp_localize_script ( 'postman_script', 'postman_auth_oauth2', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_redirect_url_el', '#input_oauth_redirect_url' );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_auth_type', '#input_' . PostmanOptions::AUTHENTICATION_TYPE );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_none', PostmanOptions::AUTHENTICATION_TYPE_NONE );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_login', PostmanOptions::AUTHENTICATION_TYPE_LOGIN );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_plain', PostmanOptions::AUTHENTICATION_TYPE_PLAIN );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_crammd5', PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_oauth2', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
 			// these are the ids for the <option>s in the auth <select>
-			wp_localize_script ( 'postman_script', 'postman_auth_option_oauth2_id', '#input_auth_type_oauth2' );
-			wp_localize_script ( 'postman_script', 'postman_auth_option_none_id', '#input_auth_type_none' );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_option_oauth2_id', '#input_auth_type_oauth2' );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_option_none_id', '#input_auth_type_none' );
 			
 			// test email input
-			wp_localize_script ( 'postman_script', 'postman_input_test_email', '#input_' . PostmanOptions::TEST_EMAIL );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_test_email', '#input_' . PostmanOptions::TEST_EMAIL );
 			
 			//
 			$sanitizer = new PostmanInputSanitizer ( $this->options );
