@@ -67,6 +67,7 @@ function getRedirectUrl(data) {
 											response.client_secret_label);
 									jQuery('#redirect_url').html(
 											response.redirect_url_label);
+									jQuery('#callback_domain').html(response.callback_domain_label);
 									el25.attr('disabled', 'disabled');
 									el465.attr('disabled', 'disabled');
 									el587.attr('disabled', 'disabled');

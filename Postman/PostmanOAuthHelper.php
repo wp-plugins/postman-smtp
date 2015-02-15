@@ -32,9 +32,11 @@ if (! interface_exists ( 'PostmanOAuthHelper' )) {
 		public function isMicrosoft();
 		public function isYahoo();
 		public function getCallbackUrl();
+		public function getCallbackDomain();
 		public function getClientIdLabel();
 		public function getClientSecretLabel();
 		public function getCallbackUrlLabel();
+		public function getCallbackDomainLabel();
 		public function getOwnerName();
 		public function getServiceName();
 		public function getApplicationDescription();
@@ -52,7 +54,7 @@ if (! class_exists ( 'PostmanAbstractOAuthHelper' )) {
 	 */
 	abstract class PostmanAbstractOAuthHelper implements PostmanOAuthHelper {
 		const OAUTH_HELP_TEXT = '<p id="wizard_oauth2_help"><span class="normal">Open the <a href="%1$s" target="_new">%2$s</a>,
-						create %7$s using the %5$s below, and enter the %3$s and %4$s.
+						create %7$s using the URL\'s below, and enter the %3$s and %4$s.
 						See <a href="https://wordpress.org/plugins/postman-smtp/faq/" target="_new">
 						How do I get a %6$s %3$s?</a> in the F.A.Q. for help.</span></p>';
 		public function getOAuthHelp() {
@@ -69,6 +71,9 @@ if (! class_exists ( 'PostmanAbstractOAuthHelper' )) {
 		}
 		function isYahoo() {
 			return false;
+		}
+		function getCallbackDomain() {
+			return stripUrlPath ( $this->getCallbackUrl () );
 		}
 	}
 }
@@ -88,6 +93,9 @@ if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
 		}
 		public function getCallbackUrlLabel() {
 			return __ ( 'Authorized Redirect URI' );
+		}
+		public function getCallbackDomainLabel() {
+			return __ ( 'Javascript Origins' );
 		}
 		public function getOwnerName() {
 			return __ ( "Google" );
@@ -129,6 +137,9 @@ if (! class_exists ( 'PostmanMicrosoftOAuthScribe' )) {
 		public function getCallbackUrlLabel() {
 			return __ ( 'Redirect URL' );
 		}
+		public function getCallbackDomainLabel() {
+			return __ ( 'Root Domain' );
+		}
 		public function getOwnerName() {
 			return __ ( "Microsoft" );
 		}
@@ -169,6 +180,9 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 		public function getCallbackUrlLabel() {
 			return __ ( 'Home Page URL' );
 		}
+		public function getCallbackDomainLabel() {
+			return __ ( 'Callback Domain' );
+		}
 		public function getOwnerName() {
 			return __ ( "Yahoo" );
 		}
@@ -195,37 +209,40 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 if (! class_exists ( 'PostmanNonOAuthScribe' )) {
 	class PostmanNonOAuthScribe extends PostmanAbstractOAuthHelper {
 		public function getCallbackUrl() {
-			return admin_url ( 'options-general.php' ) . '?page=postman';
+			return '';
 		}
 		public function getClientIdLabel() {
-			return __ ( 'Consumer Key' );
+			return '';
 		}
 		public function getClientSecretLabel() {
-			return __ ( 'Consumer Secret' );
+			return '';
 		}
 		public function getCallbackUrlLabel() {
-			return __ ( 'Home Page URL' );
+			return '';
+		}
+		public function getCallbackDomainLabel() {
+			return '';
 		}
 		public function getOwnerName() {
-			return __ ( "Yahoo" );
+			return '';
 		}
 		public function getServiceName() {
-			return __ ( "Yahoo Mail" );
+			return '';
 		}
 		public function getApplicationDescription() {
-			return __ ( "an Application" );
+			return '';
 		}
 		public function getApplicationPortalName() {
-			return __ ( 'Yahoo Developer Network' );
+			return '';
 		}
 		public function getApplicationPortalUrl() {
-			return 'https://developer.apps.yahoo.com/projects';
+			return '';
 		}
 		public function getOAuthPort() {
-			return 465;
+			return - 1;
 		}
 		public function getEncryptionType() {
-			return PostmanOptions::ENCRYPTION_TYPE_SSL;
+			return PostmanOptions::ENCRYPTION_TYPE_NONE;
 		}
 	}
 }
