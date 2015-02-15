@@ -16,7 +16,7 @@ if (! class_exists ( 'PostmanMain' )) {
 	 */
 	class PostmanMain {
 		const POSTMAN_TCP_READ_TIMEOUT = 60;
-		const POSTMAN_TCP_CONNECTION_TIMEOUT = 15;
+		const POSTMAN_TCP_CONNECTION_TIMEOUT = 10;
 		
 		/**
 		 *
@@ -26,11 +26,6 @@ if (! class_exists ( 'PostmanMain' )) {
 
 			// calculate the basename
 			$basename = plugin_basename ( $postmanPhpFile );
-			
-			// create a session
-			if (! isset ( $_SESSION )) {
-				session_start ();
-			}
 			
 			// handle plugin activation/deactivation
 			require_once 'PostmanActivationHandler.php';

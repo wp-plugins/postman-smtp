@@ -48,7 +48,7 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 		 * code.
 		 * **********************************************
 		 */
-		public function requestVerificationCode() {
+		public function requestVerificationCode($transactionId) {
 			$params = array (
 					'response_type' => 'code',
 					'redirect_uri' => urlencode ( $this->getCallbackUri () ),
@@ -59,10 +59,9 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 					'approval_prompt' => 'force' 
 			);
 			
-			$authUrl = $this->getAuthorizationUrl() . '?' . build_query ( $params );
+			$authUrl = $this->getAuthorizationUrl () . '?' . build_query ( $params );
 			
 			$this->getLogger ()->debug ( 'Requesting verification code from Microsoft' );
-			$_SESSION [PostmanAdminController::POSTMAN_ACTION] = self::POSTMAN_AUTHORIZATION_IN_PROGRESS;
 			postmanRedirect ( $authUrl );
 		}
 		
@@ -74,7 +73,7 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 		 * bundle in the session, and redirect to ourself.
 		 * **********************************************
 		 */
-		public function processAuthorizationGrantCode() {
+		public function processAuthorizationGrantCode($transactionId) {
 			if (isset ( $_GET ['code'] )) {
 				$code = $_GET ['code'];
 				$this->getLogger ()->debug ( 'Found authorization code in request header' );
@@ -82,7 +81,7 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 						'client_id' => $this->getClientId (),
 						'client_secret' => $this->getClientSecret (),
 						'grant_type' => 'authorization_code',
-						'redirect_uri' => $this->getCallbackUri(),
+						'redirect_uri' => $this->getCallbackUri (),
 						'code' => $code 
 				);
 				$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals );

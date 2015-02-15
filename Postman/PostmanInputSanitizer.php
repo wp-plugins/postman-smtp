@@ -62,14 +62,15 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			}
 			
 			// set a request parameter
+			$session = PostmanSession::getInstance ();
 			if ($success) {
-				if (! isset ( $_SESSION [PostmanAdminController::POSTMAN_ACTION] )) {
+				if (! $session->isSetAction ()) {
 					$this->logger->debug ( 'Validation Success' );
-					$_SESSION [PostmanAdminController::POSTMAN_ACTION] = PostmanInputSanitizer::SAVE_SUCCESS;
+					$session->setAction ( PostmanInputSanitizer::SAVE_SUCCESS );
 				}
 			} else {
 				$this->logger->debug ( 'Validation Failure' );
-				$_SESSION [PostmanAdminController::POSTMAN_ACTION] = PostmanInputSanitizer::SAVE_FAILURE;
+				$session->setAction ( PostmanInputSanitizer::SAVE_FAILURE );
 			}
 			
 			// base-64 scramble password

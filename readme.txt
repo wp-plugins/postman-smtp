@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, yahoo, yahoo mail, windows live, outlook.com, wp smtp, outgoing mail, sendmail, ssl, tls, wp smtp, wordpress smtp, wp_mail, wp mail, google apps for work, google apps for business
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.3.4
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,6 +27,7 @@ Postman is a next-generation WordPress SMTP plugin, the first and only to implem
 * Supports International alphabets, HTML Mail and MultiPart/MIME
 * Supports Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Supports SMTPS SSL/TLS encryption
+* Easy to switch! Can import settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
 
 = Requirements =
 * WordPress 3.9 (or later)
@@ -153,11 +154,10 @@ If you have a Google Account, from the [Google Developer's Console](https://cons
 
 == Troubleshooting ==
 
-* If sometimes Postman can send mail and sometimes it fails, with no configuration changes, your host may have poor connectivity to your mail server. Try doubling the Read Timeout.
+* If Postman sends mail inconsistently, your host may have poor connectivity to your mail server. Try doubling the Read Timeout.
+* If you get a White Screen of Death (WSOD), you should enable "Show Error Page" to see what went wrong. This will break the Port Test function, however, so use it only when needed.
 
 Here are some common error messages and what they mean. If you do not find your answer here, please [open a ticket](https://wordpress.org/support/plugin/postman-smtp).
-
-* If you get a White Screen of Death (WSOD), then enable "Show Error Page" to see what went wrong. However, this will break the Port Test function, so use it only temporarily.
 
 = Communication Error [334] =
 
@@ -209,6 +209,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * The wizard was resetting some settings by accident, namely Connection Timeout, Read Timeout and Reply-To
 * Found an environment where calls to error_log were being display in the HTML even after display_errors was disabled. Therefore, disabled error_log calls by default. The log may be re-enabled in Advanced Settings
 * The Bad, Postman! screen was messing with the Port Test Ajax call when fsockopen generated an error and debug level is set to E_ALL in php.ini. Therefore added a switch in the configuration "Show Error Screen" that is off by default. When it is off, Port Test works perfect but errors generate a WSOD. When it is on, errors are displayed in the "Bad, Postman!" screen but Port Test fails.
+* I heard that some hosts, like WPEngine, do not allow writing to the Http Session. Well that's balls. I've modified the code to write to the database instead.
+* Postman is now tied with WP Mail Bank for 5-star reviews, but with 50x fewer downloads, and one of their 5-stars is from the authors themselves! :-D
 
 = 1.3.4 - 2015-02-11 =
 * 500 downloads and six 5-star ratings in only three weeks! Cool! 8-)

@@ -99,29 +99,35 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->logger->debug ( 'Found purge auth token key' );
 				delete_option ( PostmanAuthorizationToken::OPTIONS_NAME );
 			}
-			$action = null;
+			
+			$session = PostmanSession::getInstance ();
+			// test to see if an OAuth authentication is in progress
+			if ($session->isSetOauthInProgress ()) {
+				if (isset ( $_GET ['code'] )) {
+					// queue plugin setting page
+					$this->logger->debug ( 'Found authorization grant code' );
+					$this->registerInitFunction ( 'handleAuthorizationGrant' );
+					return;
+				} else {
+					// the user must have clicked cancel... abort the grant token check
+					$this->logger->debug ( 'Found NO authorization grant code -- user must probably cancelled' );
+					$session->unsetOauthInProgress ();
+				}
+			}
 			
 			// check to see if there is a session action..
-			if (isset ( $_SESSION [PostmanAdminController::POSTMAN_ACTION] )) {
-				$action = $_SESSION [PostmanAdminController::POSTMAN_ACTION];
-				unset ( $_SESSION [PostmanAdminController::POSTMAN_ACTION] );
-				$this->logger->debug ( "Got \$_SESSION action " . $action );
-				// special handling for handling of authorization grant
-				if (PostmanAuthenticationManager::POSTMAN_AUTHORIZATION_IN_PROGRESS == $action) {
-					if (isset ( $_GET ['code'] )) {
-						// redirect to plugin setting page and exit()
-						$this->logger->debug ( 'Found authorization grant code' );
-					} else {
-						// the user must have clicked cancel... abort the grant token check
-						$this->logger->debug ( 'Found NO authorization grant code -- user must probably cancelled' );
-						$action = '';
-					}
-				}
+			// currently the only session action are SAVE_SUCCESS and SAVE_FAILURE
+			$action = null;
+			if ($session->isSetAction ()) {
+				$action = $session->getAction ();
+				$session->unsetAction ();
+				$this->logger->debug ( "Got session action " . $action );
 			}
 			
 			// if the session action was Save Failure, then we can ignore it to "reload" whatever the user was just doing..
 			if (! isset ( $action ) || $action == PostmanInputSanitizer::SAVE_FAILURE) {
 				if (isset ( $_REQUEST [PostmanAdminController::POSTMAN_ACTION] )) {
+					// currently the only request action is POSTMAN_REQUEST_OAUTH_PERMISSION_ACTION
 					$action = $_REQUEST [PostmanAdminController::POSTMAN_ACTION];
 					$this->logger->debug ( "Got \$_REQUEST action " . $action );
 				}
@@ -147,10 +153,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 				
 				case PostmanAdminController::POSTMAN_REQUEST_OAUTH_PERMISSION_ACTION :
 					$this->registerInitFunction ( 'handleOAuthPermissionRequestAction' );
-					break;
-				
-				case PostmanAuthenticationManager::POSTMAN_AUTHORIZATION_IN_PROGRESS :
-					$this->registerInitFunction ( 'handleAuthorizationGrant' );
 					break;
 				
 				default :
@@ -370,6 +372,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			delete_option ( PostmanOptions::POSTMAN_OPTIONS );
 			delete_option ( PostmanAuthorizationToken::OPTIONS_NAME );
 			delete_option ( PostmanAdminController::TEST_OPTIONS );
+			$this->messageHandler->addMessage ( 'All plugin settings were removed.' );
 			postmanRedirect ( POSTMAN_HOME_PAGE_RELATIVE_URL );
 		}
 		/**
@@ -380,11 +383,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$options = $this->options;
 			$authorizationToken = $this->authorizationToken;
 			$logger->debug ( 'Authorization in progress' );
-			unset ( $_SESSION [PostmanGoogleAuthenticationManager::POSTMAN_AUTHORIZATION_IN_PROGRESS] );
+			$transactionId = PostmanSession::getInstance ()->getOauthInProgress ();
+			PostmanSession::getInstance ()->unsetOauthInProgress ();
 			
 			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $options, $authorizationToken );
 			try {
-				if ($authenticationManager->processAuthorizationGrantCode ()) {
+				if ($authenticationManager->processAuthorizationGrantCode ( $transactionId )) {
 					$logger->debug ( 'Authorization successful' );
 					// save to database
 					$authorizationToken->save ();
@@ -409,7 +413,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function handleOAuthPermissionRequestAction() {
 			$this->logger->debug ( 'handling OAuth Permission request' );
 			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $this->options, $this->authorizationToken );
-			$authenticationManager->requestVerificationCode ();
+			$transactionId = $authenticationManager->generateRequestTransactionId ();
+			PostmanSession::getInstance ()->setOauthInProgress ( $transactionId );
+			$authenticationManager->requestVerificationCode ( $transactionId );
 		}
 		
 		/**
@@ -463,7 +469,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( 'postman_script', 'postman_hostname_element_name', '#input_' . PostmanOptions::HOSTNAME );
 			
 			// the enc input
-			wp_localize_script ( 'postman_script', 'postman_enc_for_password_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_PASSWORD );
+			wp_localize_script ( 'postman_script', 'postman_enc_for_password_el', '#input_enc_type_password' );
 			wp_localize_script ( 'postman_script', 'postman_enc_for_oauth2_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
 			wp_localize_script ( 'postman_script', 'postman_enc_none', PostmanOptions::ENCRYPTION_TYPE_NONE );
 			wp_localize_script ( 'postman_script', 'postman_enc_ssl', PostmanOptions::ENCRYPTION_TYPE_SSL );
@@ -872,7 +878,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function encryption_type_for_password_section_callback() {
-			$this->encryption_type_callback ( PostmanOptions::AUTHENTICATION_TYPE_PASSWORD );
+			$this->encryption_type_callback ( 'password' );
 		}
 		public function encryption_type_for_oauth2_section_callback() {
 			$this->encryption_type_callback ( PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
@@ -1059,7 +1065,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 					print ' using <b>Password</b> (' . $this->options->getAuthorizationType () . ') authentication.</span></p>';
 				}
 				if ($this->options->isAuthTypeOAuth2 ()) {
-					print '<p style="margin:10px 10px"><span>Please note: <em>When OAuth 2.0 is enabled, WordPress may override the sender name only</em>.</span></p>';
+					print '<p style="margin:10px 10px"><span>Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only</em>.</span></p>';
+				} else if ($this->options->isAuthTypePassword()) {
+					print '<p style="margin:10px 10px"><span>Please note: <em>When composing email, other WordPress plugins or themes may override the sender name and email address causing rejection with some email services, such as Yahoo Mail. If you experience problems, try leaving the sender email address empty in these plugins or themes.</em></span></p>';
 				}
 			} else {
 				print '<p><span style="color:red; padding:2px 5px; font-size:1.1em">Status: Postman is not sending mail.</span></p>';

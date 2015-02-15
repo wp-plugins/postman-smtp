@@ -5,8 +5,8 @@ if (! interface_exists ( "PostmanAuthenticationManager" )) {
 		const FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE = 60;
 		public function isAccessTokenExpired();
 		public function refreshToken();
-		public function requestVerificationCode();
-		public function processAuthorizationGrantCode();
+		public function requestVerificationCode($transactionId);
+		public function processAuthorizationGrantCode($transactionId);
 		public function getAuthorizationUrl();
 		public function getTokenUrl();
 		public function getCallbackUri();

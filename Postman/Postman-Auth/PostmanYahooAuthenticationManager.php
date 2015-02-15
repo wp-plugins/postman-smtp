@@ -47,25 +47,18 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 		 *
 		 * @see PostmanAuthenticationManager::requestVerificationCode()
 		 */
-		public function requestVerificationCode() {
-			
-			// Create a state token to prevent request forgery.
-			// Store it in the session for later validation.
-			$state = md5 ( rand () );
-			$_SESSION [self::AUTH_TEMP_ID] = $state;
-			
+		public function requestVerificationCode($transactionId) {
 			$params = array (
 					'response_type' => 'code',
 					'redirect_uri' => urlencode ( $this->getCallbackUri () ),
 					'client_id' => $this->getClientId (),
-					'state' => $state,
+					'state' => $transactionId,
 					'language' => 'en-us' 
 			);
 			
 			$authUrl = $this->getAuthorizationUrl () . '?' . build_query ( $params );
 			
 			$this->getLogger ()->debug ( 'Requesting verification code from Yahoo' );
-			$_SESSION [PostmanAdminController::POSTMAN_ACTION] = self::POSTMAN_AUTHORIZATION_IN_PROGRESS;
 			postmanRedirect ( $authUrl );
 		}
 		
@@ -78,12 +71,11 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 		 *
 		 * @see PostmanAuthenticationManager::processAuthorizationGrantCode()
 		 */
-		public function processAuthorizationGrantCode() {
+		public function processAuthorizationGrantCode($transactionId) {
 			if (isset ( $_GET ['code'] )) {
 				$code = $_GET ['code'];
 				$this->getLogger ()->debug ( sprintf ( 'Found authorization code %s in request header', $code ) );
-				if (isset ( $_GET ['state'] ) && $_GET ['state'] == $_SESSION [self::AUTH_TEMP_ID]) {
-					unset ( $_SESSION [self::AUTH_TEMP_ID] );
+				if (isset ( $_GET ['state'] ) && $_GET ['state'] == $transactionId) {
 					$this->getLogger ()->debug ( 'Found valid state in request header' );
 				} else {
 					$this->getLogger ()->error ( 'The grant code from Yahoo had no accompanying state and may be a forgery' );

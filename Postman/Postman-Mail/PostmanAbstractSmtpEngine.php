@@ -76,7 +76,7 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		}
 		
 		// what should happen when WordPress asks to override the sender
-		protected abstract function overrideSender(PostmanEmailAddress $sender);
+		protected abstract function filterSender(PostmanEmailAddress $sender);
 		
 		/**
 		 * (non-PHPdoc)
@@ -208,31 +208,48 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		 * @param Zend_Mail $mail        	
 		 */
 		private function addFrom(Zend_Mail $mail) {
-			$sender = $this->sender;
-			if ($this->overrideSenderAllowed) {
-				if (! empty ( $this->overrideSender )) {
-					$sender = new PostmanEmailAddress ( $this->overrideSender );
+			
+			// by default, sender is what Postman set
+			$sender = PostmanEmailAddress::copy ( $this->sender );
+			
+			// but we will let other plugins override the sender via the headers
+			if (isset ( $this->overrideSender )) {
+				$s1 = new PostmanEmailAddress ( $this->overrideSender );
+				$s1name = $s1->getName ();
+				$s1email = $s1->getEmail ();
+				if (! empty ( $s1name )) {
+					$sender->setName ( $s1name );
 				}
-				/**
-				 * Filter the email address to send from.
-				 *
-				 * @since 2.2.0
-				 *       
-				 * @param string $from_email
-				 *        	Email address to send from.
-				 */
-				$sender->setEmail ( apply_filters ( 'wp_mail_from', $sender->getEmail () ) );
-				
-				/**
-				 * Filter the name to associate with the "from" email address.
-				 *
-				 * @since 2.3.0
-				 *       
-				 * @param string $from_name
-				 *        	Name associated with the "from" email address.
-				 */
-				$sender->setName ( apply_filters ( 'wp_mail_from_name', $sender->getName () ) );
+				if (! empty ( $s1email )) {
+					$sender->setEmail ( $s1email );
+				}
 			}
+			/**
+			 * Filter the email address to send from.
+			 *
+			 * @since 2.2.0
+			 *       
+			 * @param string $from_email
+			 *        	Email address to send from.
+			 */
+			// and other plugins can override the email via a filter
+			$sender->setEmail ( apply_filters ( 'wp_mail_from', $sender->getEmail () ) );
+			
+			/**
+			 * Filter the name to associate with the "from" email address.
+			 *
+			 * @since 2.3.0
+			 *       
+			 * @param string $from_name
+			 *        	Name associated with the "from" email address.
+			 */
+			// and other plugins can override the name via a filter
+			$sender->setName ( apply_filters ( 'wp_mail_from_name', $sender->getName () ) );
+			
+			// but the SmtpEngine has the final say
+			$this->filterSender ( $sender );
+			
+			// now log it and push it into the message
 			assert ( isset ( $sender ) );
 			if (isset ( $sender )) {
 				$senderEmail = $sender->getEmail ();

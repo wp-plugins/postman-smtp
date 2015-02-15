@@ -49,6 +49,14 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		}
 		
 		/**
+		 * Create a state token to prevent request forgery.
+		 * Store it in the session for later validation.
+		 */
+		public function generateRequestTransactionId() {
+			return $state = md5 ( rand () );
+		}
+		
+		/**
 		 */
 		public function isAccessTokenExpired() {
 			$expireTime = ($this->authorizationToken->getExpiryTime () - PostmanGoogleAuthenticationManager::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);

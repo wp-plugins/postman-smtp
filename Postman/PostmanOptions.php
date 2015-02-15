@@ -28,7 +28,6 @@ if (! class_exists ( "PostmanOptions" )) {
 		const PORT = 'port';
 		const AUTHENTICATION_TYPE = 'auth_type';
 		const AUTHENTICATION_TYPE_NONE = 'none';
-		const AUTHENTICATION_TYPE_PASSWORD = 'password';
 		const AUTHENTICATION_TYPE_PLAIN = 'plain';
 		const AUTHENTICATION_TYPE_LOGIN = 'login';
 		const AUTHENTICATION_TYPE_CRAMMD5 = 'crammd5';
@@ -131,7 +130,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::LOG_LEVEL] ))
 				return $this->options [PostmanOptions::LOG_LEVEL];
 			else
-				return PostmanLogger::OFF_INT;
+				return PostmanLogger::DEBUG_INT;
 		}
 		//
 		public function getHostname() {
@@ -271,11 +270,20 @@ if (! class_exists ( "PostmanOptions" )) {
 				$this->setReadTimeout ( $seconds );
 			}
 		}
+		public function isAuthTypePassword() {
+			return $this->isAuthTypeLogin() || $this->isAuthTypeCrammd5() || $this->isAuthTypePlain();
+		}
 		public function isAuthTypeOAuth2() {
 			return PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $this->getAuthorizationType ();
 		}
 		public function isAuthTypeLogin() {
 			return PostmanOptions::AUTHENTICATION_TYPE_LOGIN == $this->getAuthorizationType ();
+		}
+		public function isAuthTypePlain() {
+			return PostmanOptions::AUTHENTICATION_TYPE_PLAIN == $this->getAuthorizationType ();
+		}
+		public function isAuthTypeCrammd5() {
+			return PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 == $this->getAuthorizationType ();
 		}
 		public function isAuthTypeNone() {
 			return PostmanOptions::AUTHENTICATION_TYPE_NONE == $this->getAuthorizationType ();

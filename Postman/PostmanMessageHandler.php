@@ -1,6 +1,7 @@
 <?php
 if (! class_exists ( 'PostmanMessageHandler' )) {
 	require_once ('PostmanOptions.php');
+	require_once ('PostmanSession.php');
 	class PostmanMessageHandler {
 		
 		// The Session variables that carry messages
@@ -47,21 +48,25 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 				}
 			}
 			
-			if (isset ( $_SESSION [PostmanMessageHandler::ERROR_MESSAGE] )) {
+			$session = PostmanSession::getInstance ();
+			if ($session->isSetErrorMessage ()) {
+				$this->logger->debug ( 'Queueing error messages for output' );
 				add_action ( 'admin_notices', Array (
 						$this,
 						'displayErrorSessionMessage' 
 				) );
 			}
 			
-			if (isset ( $_SESSION [PostmanMessageHandler::WARNING_MESSAGE] )) {
+			if ($session->isSetWarningMessage ()) {
+				$this->logger->debug ( 'Queueing warning messages for output' );
 				add_action ( 'admin_notices', Array (
 						$this,
 						'displayWarningSessionMessage' 
 				) );
 			}
 			
-			if (isset ( $_SESSION [PostmanMessageHandler::SUCCESS_MESSAGE] )) {
+			if ($session->isSetSuccessMessage ()) {
+				$this->logger->debug ( 'Queueing success messages for output' );
 				add_action ( 'admin_notices', Array (
 						$this,
 						'displaySuccessSessionMessage' 
@@ -69,17 +74,17 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			}
 		}
 		function addError($message) {
-			$_SESSION [PostmanMessageHandler::ERROR_MESSAGE] = $message;
+			PostmanSession::getInstance ()->setErrorMessage ( $message );
 		}
 		function addWarning($message) {
-			$_SESSION [PostmanMessageHandler::WARNING_MESSAGE] = $message;
+			PostmanSession::getInstance ()->setWarningMessage ( $message );
 		}
 		function addMessage($message) {
-			$_SESSION [PostmanMessageHandler::SUCCESS_MESSAGE] = $message;
+			PostmanSession::getInstance ()->setSuccessMessage ( $message );
 		}
 		public function displayPermissionNeededWarning() {
-			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getHostname() );
-			$url = sprintf ( __ ( '<a href="%s">%s</a>', 'postman' ), PostmanAdminController::getActionUrl(PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG), 'Request permission' );
+			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getHostname () );
+			$url = sprintf ( __ ( '<a href="%s">%s</a>', 'postman' ), PostmanAdminController::getActionUrl ( PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG ), 'Request permission' );
 			$message = sprintf ( 'Warning: You entered a %s and %s, but have not received permission to use it. %s from %s.', $scribe->getClientIdLabel (), $scribe->getClientSecretLabel (), $url, $scribe->getOwnerName () );
 			$this->displayWarningMessage ( $message );
 		}
@@ -88,8 +93,8 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			$this->displayWarningMessage ( $message );
 		}
 		public function displaySwitchToOAuthWarning() {
-			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getHostname() );
-			$message = sprintf ( 'Warning: You may experience issues using password authentication with %s. Change your authentication type to OAuth 2.0.</span></p>', $scribe->getServiceName() );
+			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getHostname () );
+			$message = sprintf ( 'Warning: You may experience issues using password authentication with %s. Change your authentication type to OAuth 2.0.</span></p>', $scribe->getServiceName () );
 			$this->displayWarningMessage ( $message );
 		}
 		public function displayDebugDisplayIsEnabled() {
@@ -98,18 +103,19 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		}
 		//
 		public function displaySuccessSessionMessage() {
-			$this->displaySuccessMessage ( $this->retrieveSessionMessage ( PostmanMessageHandler::SUCCESS_MESSAGE ), 'updated' );
+			$message = PostmanSession::getInstance ()->getSuccessMessage ();
+			PostmanSession::getInstance ()->unsetSuccessMessage ();
+			$this->displaySuccessMessage ( $message, 'updated' );
 		}
 		public function displayErrorSessionMessage() {
-			$this->displayErrorMessage ( $this->retrieveSessionMessage ( PostmanMessageHandler::ERROR_MESSAGE ), 'error' );
+			$message = PostmanSession::getInstance ()->getErrorMessage ();
+			PostmanSession::getInstance ()->unsetErrorMessage ();
+			$this->displayErrorMessage ( $message, 'error' );
 		}
 		public function displayWarningSessionMessage() {
-			$this->displayWarningMessage ( $this->retrieveSessionMessage ( PostmanMessageHandler::WARNING_MESSAGE ), 'update-nag' );
-		}
-		private function retrieveSessionMessage($sessionVar) {
-			$message = $_SESSION [$sessionVar];
-			unset ( $_SESSION [$sessionVar] );
-			return $message;
+			$message = PostmanSession::getInstance ()->getWarningMessage ();
+			PostmanSession::getInstance ()->unsetWarningMessage ();
+			$this->displayWarningMessage ( $message, 'update-nag' );
 		}
 		//
 		public function displaySuccessMessage($message) {
