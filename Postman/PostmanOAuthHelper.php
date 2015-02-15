@@ -73,7 +73,9 @@ if (! class_exists ( 'PostmanAbstractOAuthHelper' )) {
 			return false;
 		}
 		function getCallbackDomain() {
-			return stripUrlPath ( $this->getCallbackUrl () );
+			$callbackUrl = $this->getCallbackUrl ();
+			if (! empty ( $callbackUrl ))
+				return stripUrlPath ( $this->getCallbackUrl () );
 		}
 	}
 }
@@ -208,20 +210,23 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 }
 if (! class_exists ( 'PostmanNonOAuthScribe' )) {
 	class PostmanNonOAuthScribe extends PostmanAbstractOAuthHelper {
+			public function getOAuthHelp() {
+			return '<p><span style="color:red">Enter an Outgoing Mail Server with OAuth 2.0 capabilities.</span></p>';
+		}
 		public function getCallbackUrl() {
 			return '';
 		}
 		public function getClientIdLabel() {
-			return '';
+			return 'Client ID';
 		}
 		public function getClientSecretLabel() {
-			return '';
+			return 'Client Secret';
 		}
 		public function getCallbackUrlLabel() {
-			return '';
+			return 'Redirect URL';
 		}
 		public function getCallbackDomainLabel() {
-			return '';
+			return 'Website Domain';
 		}
 		public function getOwnerName() {
 			return '';
