@@ -107,6 +107,30 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 				return false;
 			}
 		}
+		
+		/**
+		 * Given an OAuth provider-specific URL and redirectUri,
+		 * issue an HttpRequest to refresh the access token
+		 *
+		 * This code is identical for Google and Hotmail
+		 */
+		public function refreshToken() {
+			$this->getLogger ()->debug ( 'Refreshing Token' );
+			$refreshUrl = $this->getTokenUrl ();
+			$callbackUrl = $this->getCallbackUri ();
+			assert ( ! empty ( $refreshUrl ) );
+			assert ( ! empty ( $callbackUrl ) );
+			$headers = array (
+					'Authorization' => sprintf ( "Basic %s", base64_encode ( $this->getClientId () . ':' . $this->getClientSecret () ) ) 
+			);
+			$postvals = array (
+					'redirect_uri' => $callbackUrl,
+					'grant_type' => 'refresh_token',
+					'refresh_token' => $this->getAuthorizationToken ()->getRefreshToken () 
+			);
+			$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals, $headers );
+			$this->processResponse ( $response );
+		}
 		public function getAuthorizationUrl() {
 			return self::AUTHORIZATION_URL;
 		}
