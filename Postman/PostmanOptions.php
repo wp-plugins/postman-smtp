@@ -45,6 +45,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		const CONNECTION_TIMEOUT = 'connection_timeout';
 		const READ_TIMEOUT = 'read_timeout';
 		const LOG_LEVEL = 'log_level';
+		const PRINT_ERRORS = 'print_errors';
 		
 		// options data
 		private $options;
@@ -119,6 +120,15 @@ if (! class_exists ( "PostmanOptions" )) {
 					return false;
 				}
 			}
+		}
+		public function getPrintErrors() {
+			if (isset ( $this->options [PostmanOptions::PRINT_ERRORS] ))
+				return $this->options [PostmanOptions::PRINT_ERRORS];
+			else
+				return true;
+		}
+		public function setPrintErrors($printErrors) {
+			$this->options [PostmanOptions::PRINT_ERRORS] = $printErrors;
 		}
 		public function getLogLevel() {
 			if (isset ( $this->options [PostmanOptions::LOG_LEVEL] ))
