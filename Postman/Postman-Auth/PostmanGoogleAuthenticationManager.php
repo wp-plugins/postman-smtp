@@ -56,13 +56,7 @@ if (! class_exists ( "PostmanGoogleAuthenticationManager" )) {
 		 *
 		 * @see PostmanAuthenticationManager::requestVerificationCode()
 		 */
-		public function requestVerificationCode() {
-			
-			// Create a state token to prevent request forgery.
-			// Store it in the session for later validation.
-			$state = md5 ( rand () );
-			$_SESSION [PostmanGoogleAuthenticationManager::AUTH_TEMP_ID] = $state;
-			
+		public function requestVerificationCode($transactionId) {
 			$params = array (
 					'response_type' => 'code',
 					'redirect_uri' => urlencode ( $this->getCallbackUri () ),
@@ -70,14 +64,13 @@ if (! class_exists ( "PostmanGoogleAuthenticationManager" )) {
 					'scope' => urlencode ( self::SCOPE_FULL_ACCESS ),
 					'access_type' => 'offline',
 					'approval_prompt' => 'force',
-					'state' => $state,
+					'state' => $transactionId,
 					'login_hint' => $this->senderEmail 
 			);
 			
-			$authUrl = $this->getAuthorizationUrl() . '?' . build_query ( $params );
+			$authUrl = $this->getAuthorizationUrl () . '?' . build_query ( $params );
 			
 			$this->getLogger ()->debug ( 'Requesting verification code from Google' );
-			$_SESSION [PostmanAdminController::POSTMAN_ACTION] = self::POSTMAN_AUTHORIZATION_IN_PROGRESS;
 			postmanRedirect ( $authUrl );
 		}
 		
@@ -90,12 +83,11 @@ if (! class_exists ( "PostmanGoogleAuthenticationManager" )) {
 		 *
 		 * @see PostmanAuthenticationManager::processAuthorizationGrantCode()
 		 */
-		public function processAuthorizationGrantCode() {
+		public function processAuthorizationGrantCode($transactionId) {
 			if (isset ( $_GET ['code'] )) {
 				$this->getLogger ()->debug ( 'Found authorization code in request header' );
 				$code = $_GET ['code'];
-				if (isset ( $_GET ['state'] ) && $_GET ['state'] == $_SESSION [PostmanGoogleAuthenticationManager::AUTH_TEMP_ID]) {
-					unset ( $_SESSION [PostmanGoogleAuthenticationManager::AUTH_TEMP_ID] );
+				if (isset ( $_GET ['state'] ) && $_GET ['state'] == $transactionId) {
 					$this->getLogger ()->debug ( 'Found valid state in request header' );
 				} else {
 					$this->getLogger ()->error ( 'The grant code from Google had no accompanying state and may be a forgery' );
@@ -105,7 +97,7 @@ if (! class_exists ( "PostmanGoogleAuthenticationManager" )) {
 						'client_id' => $this->getClientId (),
 						'client_secret' => $this->getClientSecret (),
 						'grant_type' => 'authorization_code',
-						'redirect_uri' => $this->getCallbackUri(),
+						'redirect_uri' => $this->getCallbackUri (),
 						'code' => $code 
 				);
 				$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals );

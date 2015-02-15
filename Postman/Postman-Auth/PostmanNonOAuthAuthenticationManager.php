@@ -20,10 +20,10 @@ if (! class_exists ( "PostmanNonOAuthAuthenticationManager" )) {
 		 *
 		 * @see PostmanAuthenticationManager::requestVerificationCode()
 		 */
-		public function requestVerificationCode() {
+		public function requestVerificationCode($transactionId) {
 			// no-op
 		}
-		public function processAuthorizationGrantCode() {
+		public function processAuthorizationGrantCode($transactionId) {
 			// no-op
 		}
 		public function refreshToken() {

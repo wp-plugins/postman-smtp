@@ -209,6 +209,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * The wizard was resetting some settings by accident, namely Connection Timeout, Read Timeout and Reply-To
 * Found an environment where calls to error_log were being display in the HTML even after display_errors was disabled. Therefore, disabled error_log calls by default. The log may be re-enabled in Advanced Settings
 * The Bad, Postman! screen was messing with the Port Test Ajax call when fsockopen generated an error and debug level is set to E_ALL in php.ini. Therefore added a switch in the configuration "Show Error Screen" that is off by default. When it is off, Port Test works perfect but errors generate a WSOD. When it is on, errors are displayed in the "Bad, Postman!" screen but Port Test fails.
+* I heard that some hosts, like WPEngine, do not allow writing to the Http Session. Well that's balls. I've modified the code to write to the database instead.
+* Postman is now tied with WP Mail Bank for 5-star reviews, but with 50x fewer downloads, and one of their 5-stars is from the authors themselves! :-D
 
 = 1.3.4 - 2015-02-11 =
 * 500 downloads and six 5-star ratings in only three weeks! Cool! 8-)
