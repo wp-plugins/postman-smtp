@@ -42,9 +42,9 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		 * The $sender can only be the $sender that Google authorized
 		 * If the user tries to ignore the $sender with a From: header, ignore it.
 		 *
-		 * @see PostmanAbstractSmtpEngine::overrideSender()
+		 * @see PostmanAbstractSmtpEngine::filterSender()
 		 */
-		function overrideSender(PostmanEmailAddress $sender) {
+		function filterSender(PostmanEmailAddress $sender) {
 			$sender->setEmail ( $this->getSender ()->getEmail () );
 			return $sender;
 		}

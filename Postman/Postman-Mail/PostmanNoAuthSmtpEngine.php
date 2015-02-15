@@ -21,9 +21,9 @@ if (! class_exists ( "PostmanNoAuthSmtpEngine" )) {
 		/**
 		 * (non-PHPdoc)
 		 * 
-		 * @see PostmanAbstractSmtpEngine::overrideSender()
+		 * @see PostmanAbstractSmtpEngine::filterSender()
 		 */
-		function overrideSender(PostmanEmailAddress $sender) {
+		function filterSender(PostmanEmailAddress $sender) {
 			return $sender;
 		}
 		

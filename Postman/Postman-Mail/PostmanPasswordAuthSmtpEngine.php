@@ -33,9 +33,9 @@ if (! class_exists ( "PostmanPasswordAuthSmtpEngine" )) {
 		/**
 		 * (non-PHPdoc)
 		 *
-		 * @see PostmanAbstractSmtpEngine::overrideSender()
+		 * @see PostmanAbstractSmtpEngine::filterSender()
 		 */
-		function overrideSender(PostmanEmailAddress $sender) {
+		function filterSender(PostmanEmailAddress $sender) {
 			return $sender;
 		}
 		

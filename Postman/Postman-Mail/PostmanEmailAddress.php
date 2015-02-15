@@ -14,6 +14,9 @@ if (! class_exists ( 'PostmanEmailAddress' )) {
 			$this->setEmail ( trim ( $email ) );
 			$this->setName ( trim ( $name ) );
 		}
+		public static function copy(PostmanEmailAddress $orig) {
+			return new PostmanEmailAddress ( $orig->getEmail (), $orig->getName () );
+		}
 		public function getName() {
 			return $this->name;
 		}
