@@ -33,27 +33,34 @@ if (! class_exists ( "PostmanWpMail" )) {
 			// send the message
 			$logger->debug ( 'Sending mail' );
 			// interact with the SMTP Engine
-			$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken );
 			try {
-				$engine->allowSenderOverride ( ! $wpMailOptions->isSenderNameOverridePrevented () );
-				$engine->setBody ( $message );
-				$engine->setSubject ( $subject );
-				$engine->addTo ( $to );
-				$engine->setHeaders ( $headers );
-				$engine->setAttachments ( $attachments );
-				$engine->setSender ( $wpMailOptions->getSenderEmail (), $wpMailOptions->getSenderName () );
-				$engine->setHostname ( $wpMailOptions->getHostname () );
-				$engine->setPort ( $wpMailOptions->getPort () );
-				$engine->setReplyTo ( $wpMailOptions->getReplyTo () );
-				$engine->send ();
-				PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
-				$this->transcript = $engine->getTranscript ();
-				return true;
+				$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken );
+				try {
+					$engine->allowSenderOverride ( ! $wpMailOptions->isSenderNameOverridePrevented () );
+					$engine->setBody ( $message );
+					$engine->setSubject ( $subject );
+					$engine->addTo ( $to );
+					$engine->setHeaders ( $headers );
+					$engine->setAttachments ( $attachments );
+					$engine->setSender ( $wpMailOptions->getSenderEmail (), $wpMailOptions->getSenderName () );
+					$engine->setHostname ( $wpMailOptions->getHostname () );
+					$engine->setPort ( $wpMailOptions->getPort () );
+					$engine->setReplyTo ( $wpMailOptions->getReplyTo () );
+					$engine->send ();
+					PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
+					$this->transcript = $engine->getTranscript ();
+					return true;
+				} catch ( Exception $e ) {
+					$this->exception = $e;
+					$logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
+					PostmanStats::getInstance ()->incrementFailedDelivery ();
+					$this->transcript = $engine->getTranscript ();
+					return false;
+				}
 			} catch ( Exception $e ) {
 				$this->exception = $e;
 				$logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
 				PostmanStats::getInstance ()->incrementFailedDelivery ();
-				$this->transcript = $engine->getTranscript ();
 				return false;
 			}
 		}
