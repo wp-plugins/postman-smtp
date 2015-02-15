@@ -36,7 +36,7 @@ if (! class_exists ( "PostmanPasswordAuthSmtpEngine" )) {
 		 * @see PostmanAbstractSmtpEngine::overrideSender()
 		 */
 		function overrideSender(PostmanEmailAddress $sender) {
-			return $sender->setEmail ( $this->getSender ()->getEmail () );
+			return $sender;
 		}
 		
 		/**

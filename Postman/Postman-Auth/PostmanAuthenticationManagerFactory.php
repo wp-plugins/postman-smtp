@@ -21,18 +21,21 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 		private function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
-		public function createAuthenticationManager(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken) {
+		public function createAuthenticationManager(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, PostmanOAuthHelper $scribe = null) {
 			$authenticationType = $options->getAuthorizationType ();
 			$hostname = $options->getHostname ();
 			$clientId = $options->getClientId ();
 			$clientSecret = $options->getClientSecret ();
 			$senderEmail = $options->getSenderEmail ();
-			$redirectUrl = PostmanSmtpHostProperties::getRedirectUrl ( $hostname );
-			if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $options->isSmtpHostGmail ()) {
+			if (! isset ( $scribe )) {
+				$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $options->getHostname () );
+			}
+			$redirectUrl = $scribe->getCallbackUrl ();
+			if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $scribe->isGoogle ()) {
 				$authenticationManager = new PostmanGoogleAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl, $senderEmail );
-			} else if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $options->isSmtpHostHotmail ()) {
+			} else if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $scribe->isMicrosoft ()) {
 				$authenticationManager = new PostmanMicrosoftAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl );
-			} else if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $options->isSmtpHostYahoo ()) {
+			} else if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $scribe->isYahoo ()) {
 				$authenticationManager = new PostmanYahooAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl );
 			} else {
 				$authenticationManager = new PostmanNonOAuthAuthenticationManager ();

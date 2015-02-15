@@ -8,13 +8,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 	require_once 'Postman-Wizard/SmtpDiscovery.php';
 	require_once 'PostmanInputSanitizer.php';
 	require_once 'Postman-Connectors/PostmanImportableConfiguration.php';
+	require_once 'PostmanOAuthHelper.php';
 	
 	//
 	class PostmanAdminController {
-		public function getActionUrl($slug) {
+		public static function getActionUrl($slug) {
 			return get_admin_url () . 'admin-post.php?action=' . $slug;
 		}
-		public function getPageUrl($slug) {
+		public static function getPageUrl($slug) {
 			return get_admin_url () . 'options-general.php?page=' . $slug;
 		}
 		
@@ -64,6 +65,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		// the message handler
 		private $messageHandler;
 		
+		//
+		private $oauthScribe;
+		
 		/**
 		 * Holds the values to be used in the fields callbacks
 		 */
@@ -83,6 +87,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->messageHandler = $messageHandler;
+			
+			//
+			$this->oauthScribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getHostname () );
 			
 			// import from other plugins
 			$this->importableConfiguration = new PostmanImportableConfiguration ();
@@ -564,7 +571,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'encryption_type_for_oauth2_section_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
-			add_settings_field ( 'redirect_url', _x ( 'Redirect URI', 'Configuration Input Field' ), array (
+			add_settings_field ( 'redirect_url', _x ( $this->oauthScribe->getCallbackUrlLabel(), 'Configuration Input Field' ), array (
 					$this,
 					'redirect_url_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
@@ -606,7 +613,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
 			// the Port Test section
-			add_settings_section ( PostmanAdminController::PORT_TEST_SECTION, _x ( 'TCP Port Test', 'Configuration Input Field' ), array (
+			add_settings_section ( PostmanAdminController::PORT_TEST_SECTION, _x ( 'Port Connection Test', 'Configuration Input Field' ), array (
 					$this,
 					'printPortTestSectionInfo' 
 			), PostmanAdminController::PORT_TEST_OPTIONS );
@@ -715,44 +722,30 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		function getAjaxRedirectUrl() {
 			$hostname = $_POST ['hostname'];
+			// don't care about what's in the database, i need a scribe based on the ajax parameter
+			$scribe = PostmanOAuthScribeFactory::getInstance()->createPostmanOAuthScribe($hostname);
 			if (isset ( $_POST ['referer'] )) {
+				// this must be wizard or config from an oauth-related change
 				if ($_POST ['referer'] == 'wizard') {
 					$avail25 = $_POST ['avail25'];
 					$avail465 = $_POST ['avail465'];
 					$avail587 = $_POST ['avail587'];
 				} else if ($_POST ['referer'] == 'manual_config') {
-					if (! PostmanSmtpHostProperties::isOauthHost ( $hostname )) {
+					if (! $scribe->isOauthHost ()) {
+						$this->logger->debug($hostname . ' is not oauth');
 						$response = array (
-								'redirect_url' => PostmanSmtpHostProperties::getRedirectUrl ( $hostname ),
 								'success' => false 
 						);
-						break;
+						wp_send_json ( $response );
 					}
 					$avail25 = true;
 					$avail465 = true;
 					$avail587 = true;
 				}
-				if (PostmanSmtpHostProperties::isGoogle ( $hostname ) && $avail465) {
+				if (PostmanSmtpHostProperties::isOauthHost ( $hostname )) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
-					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
-					$port = 465;
-					$clientIdLabel = __ ( 'Client ID' );
-					$clientSecretLabel = __ ( 'Client Secret' );
-					$redirectUrlLabel = __ ( 'Authorized Redirect URI' );
-				} else if (PostmanSmtpHostProperties::isMicrosoft ( $hostname ) && $avail587) {
-					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
-					$encType = PostmanOptions::ENCRYPTION_TYPE_TLS;
-					$port = 587;
-					$clientIdLabel = __ ( 'Client ID' );
-					$clientSecretLabel = __ ( 'Client secret' );
-					$redirectUrlLabel = __ ( 'Redirect URL' );
-				} else if (PostmanSmtpHostProperties::isYahoo ( $hostname ) && $avail465) {
-					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
-					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
-					$port = 465;
-					$clientIdLabel = __ ( 'Consumer Key' );
-					$clientSecretLabel = __ ( 'Consumer Secret' );
-					$redirectUrlLabel = __ ( 'Home Page URL' );
+					$port = $scribe->getOAuthPort ();
+					$encType = $scribe->getEncryptionType ();
 				} else if ($avail465) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
 					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
@@ -767,11 +760,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$port = 25;
 				}
 				$response = array (
-						'redirect_url' => PostmanSmtpHostProperties::getRedirectUrl ( $hostname ),
-						'help_text' => $this->getOAuthHelp ( $hostname, $clientIdLabel, $clientSecretLabel, $redirectUrlLabel ),
-						'client_id_label' => $clientIdLabel,
-						'client_secret_label' => $clientSecretLabel,
-						'redirect_url_label' => $redirectUrlLabel,
+						'redirect_url' => $scribe->getCallbackUrl (),
+						'help_text' => $scribe->getOAuthHelp (),
+						'client_id_label' => $scribe->getClientIdLabel (),
+						'client_secret_label' => $scribe->getClientSecretLabel (),
+						'redirect_url_label' => $scribe->getCallbackUrlLabel (),
 						PostmanOptions::AUTHENTICATION_TYPE => $authType,
 						PostmanOptions::ENCRYPTION_TYPE => $encType,
 						PostmanOptions::PORT => $port,
@@ -785,29 +778,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 				);
 			}
 			wp_send_json ( $response );
-		}
-		
-		/**
-		 * This function returns a resonse array containing the redirectUrl and helpText for a given SMTP hostname
-		 *
-		 * @param unknown $hostname        	
-		 * @return multitype:string
-		 */
-		private function getOAuthHelp($hostname, $clientIdLabel = '', $clientSecretLabel = '', $redirectUrlLabel = '') {
-			$oauthText = '<p id="wizard_oauth2_help"><span class="normal">Open the <a href="%1$s" target="_new">%2$s</a>,
-						create %7$s using the %5$s below, and enter the %3$s and %4$s.
-						See <a href="https://wordpress.org/plugins/postman-smtp/faq/" target="_new">
-						How do I get a %6$s %3$s?</a> in the F.A.Q. for help.</span></p>';
-			if (PostmanSmtpHostProperties::isGoogle ( $hostname )) {
-				$help = sprintf ( $oauthText, 'https://console.developers.google.com/', 'Google Developer Console', $clientIdLabel, $clientSecretLabel, $redirectUrlLabel, 'Google', 'a Client ID for web application' );
-			} else if (PostmanSmtpHostProperties::isMicrosoft ( $hostname )) {
-				$help = sprintf ( $oauthText, 'https://account.live.com/developers/applications/index', 'Microsoft Developer Center', $clientIdLabel, $clientSecretLabel, $redirectUrlLabel, 'Microsoft', 'an Application' );
-			} else if (PostmanSmtpHostProperties::isYahoo ( $hostname )) {
-				$help = sprintf ( $oauthText, 'https://developer.apps.yahoo.com/projects', 'Yahoo Developer Network', $clientIdLabel, $clientSecretLabel, $redirectUrlLabel, 'Yahoo', 'an Application' );
-			} else {
-				$help = '<p id="wizard_oauth2_help"><span class="error">You must enter an Outgoing Mail Server with OAuth 2.0 capabilities.</span></p>';
-			}
-			return $help;
 		}
 		
 		/**
@@ -827,7 +797,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Port Test text
 		 */
 		public function printPortTestSectionInfo() {
-			print '<p><span>This test determines which ports are open for Postman to use. A</span> <span style="color:red">Closed</span><span> port indicates either <ol><li>Your host has placed a firewall between this site and the SMTP server or</li><li>The SMTP server has no service running on that port</li></ol></span></p><p><span><b>If the port you are trying to use is </span> <span style="color:red"><b>Closed</b></span><span>, Postman can not deliver mail. Contact your host to get the port opened.</b></span></p><p><span class="fine_print">Each test is given ' . PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT . ' seconds to complete and the entire test will take up to ' . (PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT * 3) . ' seconds to run. Javascript is required.</span></p>';
+			print '<p><span>This test determines which ports are open for Postman to use. A</span> <span style="color:red">Closed</span><span> port indicates either <ol><li>Your host has placed a firewall between this site and the SMTP server or</li><li>The SMTP server has no service running on that port</li></ol></span></p><p><span><b>If the port you are trying to use is </span> <span style="color:red"><b>Closed</b></span><span>, Postman can not deliver mail. Contact your host to get the port opened.</b></span></p><p><span class="fine_print">Each test is given ' . $this->options->getConnectionTimeout() . ' seconds to complete and the entire test will take up to ' . ($this->options->getConnectionTimeout() * 3) . ' seconds to run. Javascript is required.</span></p>';
 		}
 		
 		/**
@@ -841,7 +811,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printOAuthSectionInfo() {
-			print $this->getOAuthHelp ( $this->options->getHostname () );
+			print $this->oauthScribe->getOAuthHelp ();
 		}
 		
 		/**
@@ -955,7 +925,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function redirect_url_callback() {
-			printf ( '<textarea onClick="this.setSelectionRange(0, this.value.length)" readonly="readonly" type="text" id="input_oauth_redirect_url" cols="60" >%s</textarea>', PostmanSmtpHostProperties::getRedirectUrl ( $this->options->getHostname () ) );
+			printf ( '<textarea onClick="this.setSelectionRange(0, this.value.length)" readonly="readonly" type="text" id="input_oauth_redirect_url" cols="60" >%s</textarea>', $this->oauthScribe->getCallbackUrl () );
 		}
 		
 		/**
@@ -1168,6 +1138,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$emailCompany = __ ( 'Request permission from Google' );
 			} else if ($this->options->isSmtpHostHotmail ()) {
 				$emailCompany = __ ( 'Request permission from Microsoft' );
+			} else if ($this->options->isSmtpHostYahoo ()) {
+				$emailCompany = __ ( 'Request permission from Yahoo' );
 			}
 			if ($this->options->isRequestOAuthPermissionAllowed ()) {
 				printf ( '<a href="%s" class="welcome-icon send-test-email">%s</a>', $this->getActionUrl ( self::REQUEST_OAUTH2_GRANT_SLUG ), $emailCompany );
@@ -1191,7 +1163,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
 				printf ( '<a
 							href="%s"
-							class="welcome-icon send_test_email">Send a Test Email</a>', $this->getActionUrl ( self::EMAIL_TEST_SLUG ) );
+							class="welcome-icon send_test_email">Send a Test Email</a>', $this->getPageUrl ( self::EMAIL_TEST_SLUG ) );
 			} else {
 				print '<div class="welcome-icon send_test_emaail">';
 				print 'Send a Test Email';
@@ -1201,7 +1173,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			?></li>
 					<li><a
 						href="<?php echo $this->getPageUrl ( self::PORT_TEST_SLUG ) ?>"
-						class="welcome-icon run-port-test">Run a Port Test</a></li>
+						class="welcome-icon run-port-test">Run a Port Connection Test</a></li>
 					<li><a
 						href="https://wordpress.org/plugins/postman-smtp/other_notes/"
 						class="welcome-icon postman_support">Online Support</a></li>

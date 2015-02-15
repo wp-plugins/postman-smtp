@@ -33,7 +33,7 @@ if (! function_exists ( 'postmanHandleErrors' )) {
 			$last_error = error_get_last ();
 			$t = $last_error ['type'];
 			$logger = new PostmanLogger ( 'postman.php' );
-			if (! is_null ( $last_error ) && ($t & (E_ERROR | E_PARSE | E_NOTICE)) && preg_match ( "/postman/i", $last_error ['file'] )) {
+			if (! is_null ( $last_error ) && ($t & (E_COMPILE_ERROR | E_ERROR | E_PARSE | E_NOTICE)) && preg_match ( "/postman/i", $last_error ['file'] )) {
 				// if there has been a fatal error
 				$message = sprintf ( '%s in %s on line %d', $last_error ['message'], $last_error ['file'], $last_error ['line'] );
 				printf ( '<h2>Bad, Postman!</h2> <p><b><tt>X-(</b></tt></p> <p>Look at the mess you made:</p><code>%s</code>', $message );

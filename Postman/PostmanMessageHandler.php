@@ -78,8 +78,9 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			$_SESSION [PostmanMessageHandler::SUCCESS_MESSAGE] = $message;
 		}
 		public function displayPermissionNeededWarning() {
-			$url = sprintf ( __ ( '<a href="%s&postman_action=%s">%s</a>', 'postman' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL, PostmanAdminController::POSTMAN_REQUEST_OAUTH_PERMISSION_ACTION, 'Request permission' );
-			$message = 'Warning: You entered a Client ID and Client Secret, but have not received permission to use it. ' . $url . ' from ' . PostmanSmtpHostProperties::getServiceName ( $this->options->getHostname () ) . '.';
+			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getHostname() );
+			$url = sprintf ( __ ( '<a href="%s">%s</a>', 'postman' ), PostmanAdminController::getActionUrl(PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG), 'Request permission' );
+			$message = sprintf ( 'Warning: You entered a %s and %s, but have not received permission to use it. %s from %s.', $scribe->getClientIdLabel (), $scribe->getClientSecretLabel (), $url, $scribe->getOwnerName () );
 			$this->displayWarningMessage ( $message );
 		}
 		public function displayConfigurationRequiredWarning() {
@@ -87,7 +88,8 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			$this->displayWarningMessage ( $message );
 		}
 		public function displaySwitchToOAuthWarning() {
-			$message = sprintf ( 'Warning: You may experience problems attempting to use password authentication with %s. Change your authentication type to OAuth 2.0.</span></p>', PostmanSmtpHostProperties::getServiceName ( $this->options->getHostname () ) );
+			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getHostname() );
+			$message = sprintf ( 'Warning: You may experience issues using password authentication with %s. Change your authentication type to OAuth 2.0.</span></p>', $scribe->getServiceName() );
 			$this->displayWarningMessage ( $message );
 		}
 		public function displayDebugDisplayIsEnabled() {

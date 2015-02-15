@@ -195,7 +195,10 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 				$mail->send ( $transport );
 				$this->transcript = $transport->getConnection ()->getLog ();
 			} catch ( Exception $e ) {
-				$this->transcript = $transport->getConnection ()->getLog ();
+				$c = $transport->getConnection ();
+				if (isset ( $c )) {
+					$this->transcript = $transport->getConnection ()->getLog ();
+				}
 				throw $e;
 			}
 		}

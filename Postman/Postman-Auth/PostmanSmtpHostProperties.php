@@ -6,15 +6,6 @@ if (! class_exists ( 'PostmanSmtpHostProperties' )) {
 		const YAHOO_HOSTNAME = 'smtp.mail.yahoo.com';
 		
 		// get the callback URL
-		static function getRedirectUrl($hostname) {
-			if (self::isGoogle ( $hostname ) || self::isYahoo ( $hostname )) {
-				return admin_url ( 'options-general.php' ) . '?page=postman';
-			} else if (self::isMicrosoft ( $hostname )) {
-				return admin_url ( 'options-general.php' );
-			} else {
-				return admin_url ( 'options-general.php' ) . '?page=postman';
-			}
-		}
 		static function isOauthHost($hostname) {
 			return self::isGoogle ( $hostname ) || self::isMicrosoft ( $hostname ) || self::isYahoo ( $hostname );
 		}
@@ -26,17 +17,6 @@ if (! class_exists ( 'PostmanSmtpHostProperties' )) {
 		}
 		static function isYahoo($hostname) {
 			return endsWith ( $hostname, 'yahoo.com' );
-		}
-		static function getServiceName($hostname) {
-			if (self::isGoogle ( $hostname )) {
-				return 'Google';
-			} else if (self::isMicrosoft ( $hostname )) {
-				return 'Microsoft';
-			} else if (self::isYahoo ( $hostname )) {
-				return 'Yahoo';
-			} else {
-				return '';
-			}
 		}
 	}
 }

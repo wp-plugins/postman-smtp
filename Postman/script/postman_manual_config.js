@@ -47,13 +47,16 @@ jQuery(document)
 
 					// user is "finished typing," do something
 					function doneTyping() {
-						hostname = jQuery(postman_hostname_element_name).val();
-						var data = {
+						if (jQuery(postman_input_auth_type).val() == postman_auth_oauth2) {
+							hostname = jQuery(postman_hostname_element_name)
+									.val();
+							var data = {
 								'action' : 'get_redirect_url',
 								'referer' : 'manual_config',
 								'hostname' : hostname,
 							};
-						getRedirectUrl(data);
+							getRedirectUrl(data);
+						}
 					}
 				});
 function switchBetweenPasswordAndOAuth() {
