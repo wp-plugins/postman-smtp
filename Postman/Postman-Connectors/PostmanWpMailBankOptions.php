@@ -21,7 +21,9 @@ if (! class_exists ( 'PostmanWpMailBankOptions' )) {
 			// data is stored in table wp_mail_bank
 			// fields are id, from_name, from_email, mailer_type, return_path, return_email, smtp_host, smtp_port, word_wrap, encryption, smtp_keep_alive, authentication, smtp_username, smtp_password
 			global $wpdb;
-			$this->options = $wpdb->get_row ( "SELECT from_name, from_email, mailer_type, smtp_host, smtp_port, encryption, authentication, smtp_username, smtp_password FROM " . $wpdb->prefix . "mail_bank" );
+			$wpdb->show_errors();
+			$wpdb->suppress_errors();
+			$this->options = @$wpdb->get_row ( "SELECT from_name, from_email, mailer_type, smtp_host, smtp_port, encryption, authentication, smtp_username, smtp_password FROM " . $wpdb->prefix . "mail_bank" );
 		}
 		public function getPluginSlug() {
 			return self::SLUG;
