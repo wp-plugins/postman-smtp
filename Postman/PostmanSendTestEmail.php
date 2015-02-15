@@ -20,7 +20,7 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 		 * @param unknown $options        	
 		 * @param unknown $recipient        	
 		 */
-		public function send(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, $recipient, PostmanMessageHandler $messageHandler) {
+		public function send(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, $recipient, PostmanMessageHandler $messageHandler, $serviceName) {
 			assert ( ! empty ( $messageHandler ) );
 			$result = $this->simeplSend ( $options, $authorizationToken, $recipient );
 			if ($result) {
@@ -29,7 +29,7 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 				$messageHandler->addError ( $this->message );
 			}
 		}
-		public function simeplSend(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, $recipient) {
+		public function simeplSend(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, $recipient, $serviceName) {
 			assert ( ! empty ( $options ) );
 			assert ( ! empty ( $authorizationToken ) );
 			assert ( ! empty ( $recipient ) );
@@ -65,7 +65,6 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			} else if (! $postmanWpMailResult) {
 				$this->logger->error ( 'Test Email NOT delivered to SMTP server - ' . $postmanWpMail->getException ()->getCode () );
 				if ($postmanWpMail->getException ()->getCode () == 334) {
-					$serviceName = PostmanSmtpHostProperties::getServiceName ( $options->getHostname () );
 					$this->message = 'Communication Error [334] - check that your Sender Email is the same as your ' . $serviceName . ' account. You may need to re-create the Client ID.';
 				} else {
 					$this->message = $postmanWpMail->getException ()->getMessage ();

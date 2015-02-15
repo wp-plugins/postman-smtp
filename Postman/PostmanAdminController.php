@@ -675,7 +675,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$email = $_POST ['email'];
 			$method = $_POST ['method'];
 			$emailTester = new PostmanSendTestEmailController ();
-			$success = $emailTester->simeplSend ( $this->options, $this->authorizationToken, $email );
+			$success = $emailTester->simeplSend ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName() );
 			$response = array (
 					'message' => $emailTester->getMessage (),
 					'transcript' => $emailTester->getTranscript (),
