@@ -581,12 +581,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'redirect_url_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
-			add_settings_field ( PostmanOptions::CLIENT_ID, _x ( 'Client ID', 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::CLIENT_ID, _x ( $this->oauthScribe->getClientIdLabel (), 'Configuration Input Field' ), array (
 					$this,
 					'oauth_client_id_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
-			add_settings_field ( PostmanOptions::CLIENT_SECRET, _x ( 'Client Secret', 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::CLIENT_SECRET, _x ( $this->oauthScribe->getClientSecretLabel(), 'Configuration Input Field' ), array (
 					$this,
 					'oauth_client_secret_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
