@@ -571,7 +571,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'encryption_type_for_oauth2_section_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
-			add_settings_field ( 'redirect_url', _x ( $this->oauthScribe->getCallbackUrlLabel(), 'Configuration Input Field' ), array (
+			add_settings_field ( 'callback_domain', _x ( $this->oauthScribe->getCallbackDomainLabel(), 'Configuration Input Field' ), array (
+					$this,
+					'callback_domain_callback' 
+			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
+			
+			add_settings_field ( 'redirect_url', _x ( $this->oauthScribe->getCallbackUrlLabel (), 'Configuration Input Field' ), array (
 					$this,
 					'redirect_url_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
@@ -681,21 +686,24 @@ if (! class_exists ( "PostmanAdminController" )) {
 		function getConfigurationViaAjax() {
 			$plugin = $_POST ['plugin'];
 			$this->logger->debug ( 'Looking for config=' . $plugin );
-			$options = $this->importableConfiguration->getAvailableOptions ()[$plugin];
-			if (isset ( $options )) {
-				$this->logger->debug ( 'Sending configuration response' );
-				$response = array (
-						PostmanOptions::SENDER_EMAIL => $options->getSenderEmail (),
-						PostmanOptions::SENDER_NAME => $options->getSenderName (),
-						PostmanOptions::HOSTNAME => $options->getHostname (),
-						PostmanOptions::PORT => $options->getPort (),
-						PostmanOptions::AUTHENTICATION_TYPE => $options->getAuthenticationType (),
-						PostmanOptions::ENCRYPTION_TYPE => $options->getEncryptionType (),
-						PostmanOptions::BASIC_AUTH_USERNAME => $options->getUsername (),
-						PostmanOptions::BASIC_AUTH_PASSWORD => $options->getPassword (),
-						'success' => true 
-				);
-			} else {
+			foreach ( $this->importableConfiguration->getAvailableOptions () as $options ) {
+				if ($options->getPluginSlug () == $plugin) {
+					$this->logger->debug ( 'Sending configuration response' );
+					$response = array (
+							PostmanOptions::SENDER_EMAIL => $options->getSenderEmail (),
+							PostmanOptions::SENDER_NAME => $options->getSenderName (),
+							PostmanOptions::HOSTNAME => $options->getHostname (),
+							PostmanOptions::PORT => $options->getPort (),
+							PostmanOptions::AUTHENTICATION_TYPE => $options->getAuthenticationType (),
+							PostmanOptions::ENCRYPTION_TYPE => $options->getEncryptionType (),
+							PostmanOptions::BASIC_AUTH_USERNAME => $options->getUsername (),
+							PostmanOptions::BASIC_AUTH_PASSWORD => $options->getPassword (),
+							'success' => true 
+					);
+					break;
+				}
+			}
+			if (! isset ( $response )) {
 				$response = array (
 						'success' => false 
 				);
@@ -723,7 +731,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		function getAjaxRedirectUrl() {
 			$hostname = $_POST ['hostname'];
 			// don't care about what's in the database, i need a scribe based on the ajax parameter
-			$scribe = PostmanOAuthScribeFactory::getInstance()->createPostmanOAuthScribe($hostname);
+			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $hostname );
 			if (isset ( $_POST ['referer'] )) {
 				// this must be wizard or config from an oauth-related change
 				if ($_POST ['referer'] == 'wizard') {
@@ -732,7 +740,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$avail587 = $_POST ['avail587'];
 				} else if ($_POST ['referer'] == 'manual_config') {
 					if (! $scribe->isOauthHost ()) {
-						$this->logger->debug($hostname . ' is not oauth');
 						$response = array (
 								'success' => false 
 						);
@@ -765,6 +772,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'client_id_label' => $scribe->getClientIdLabel (),
 						'client_secret_label' => $scribe->getClientSecretLabel (),
 						'redirect_url_label' => $scribe->getCallbackUrlLabel (),
+						'callback_domain_label' => $scribe->getCallbackDomainLabel (),
 						PostmanOptions::AUTHENTICATION_TYPE => $authType,
 						PostmanOptions::ENCRYPTION_TYPE => $encType,
 						PostmanOptions::PORT => $port,
@@ -797,7 +805,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Port Test text
 		 */
 		public function printPortTestSectionInfo() {
-			print '<p><span>This test determines which ports are open for Postman to use. A</span> <span style="color:red">Closed</span><span> port indicates either <ol><li>Your host has placed a firewall between this site and the SMTP server or</li><li>The SMTP server has no service running on that port</li></ol></span></p><p><span><b>If the port you are trying to use is </span> <span style="color:red"><b>Closed</b></span><span>, Postman can not deliver mail. Contact your host to get the port opened.</b></span></p><p><span class="fine_print">Each test is given ' . $this->options->getConnectionTimeout() . ' seconds to complete and the entire test will take up to ' . ($this->options->getConnectionTimeout() * 3) . ' seconds to run. Javascript is required.</span></p>';
+			print '<p><span>This test determines which ports are open for Postman to use. A</span> <span style="color:red">Closed</span><span> port indicates either <ol><li>Your host has placed a firewall between this site and the SMTP server or</li><li>The SMTP server has no service running on that port</li></ol></span></p><p><span><b>If the port you are trying to use is </span> <span style="color:red"><b>Closed</b></span><span>, Postman can not deliver mail. Contact your host to get the port opened.</b></span></p><p><span class="fine_print">Each test is given ' . $this->options->getConnectionTimeout () . ' seconds to complete and the entire test will take up to ' . ($this->options->getConnectionTimeout () * 3) . ' seconds to run. Javascript is required.</span></p>';
 		}
 		
 		/**
@@ -925,7 +933,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function redirect_url_callback() {
-			printf ( '<textarea onClick="this.setSelectionRange(0, this.value.length)" readonly="readonly" type="text" id="input_oauth_redirect_url" cols="60" >%s</textarea>', $this->oauthScribe->getCallbackUrl () );
+			printf ( '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly="readonly" id="input_oauth_redirect_url" value="%s" size="60"/>', $this->oauthScribe->getCallbackUrl () );
+		}
+		
+		/**
+		 * Get the settings option array and print one of its values
+		 */
+		public function callback_domain_callback() {
+			printf ( '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly="readonly" id="input_oauth_callback_domain" value="%s" size="60"/>', $this->oauthScribe->getCallbackDomain () );
 		}
 		
 		/**
@@ -1034,8 +1049,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 				} else {
 					print ' using <b>Password</b> (' . $this->options->getAuthorizationType () . ') authentication.</span></p>';
 				}
-				if (! $this->options->isAuthTypeNone ()) {
-					print '<p style="margin:10px 10px"><span>Please note: <em>When authentication is enabled, WordPress may override the sender name only</em>.</span></p>';
+				if ($this->options->isAuthTypeOAuth2 ()) {
+					print '<p style="margin:10px 10px"><span>Please note: <em>When OAuth 2.0 is enabled, WordPress may override the sender name only</em>.</span></p>';
 				}
 			} else {
 				print '<p><span style="color:red; padding:2px 5px; font-size:1.1em">Status: Postman is not sending mail.</span></p>';
@@ -1266,12 +1281,15 @@ if (! class_exists ( "PostmanAdminController" )) {
 		<legend> Setup Authentication </legend>
 		<section class="wizard-auth-oauth2">
 			<p id="wizard_oauth2_help">Help.</p>
-			<label id="redirect_url" for="redirect_uri">Redirect URI</label><br />
+			<label id="callback_domain" for="callback_domain"><?php echo $this->oauthScribe->getCallbackDomainLabel();?></label><br />
+			<?php echo $this->callback_domain_callback(); ?><br /> <label
+				id="redirect_url" for="redirect_uri"><?php echo $this->oauthScribe->getCallbackUrlLabel();?></label><br />
 			<?php echo $this->redirect_url_callback(); ?><br /> 
-			<?php echo $this->encryption_type_for_oauth2_section_callback(); ?>
-			<label id="client_id" for="client_id">Client ID</label><br />
+						<?php echo $this->encryption_type_for_oauth2_section_callback(); ?>
+			<label id="client_id" for="client_id"><?php echo $this->oauthScribe->getClientIdLabel();?></label><br />
 			<?php echo $this->oauth_client_id_callback(); ?><br /> <label
-				id="client_secret" for="client_id">Client Secret</label> <br />
+				id="client_secret" for="client_id"><?php echo $this->oauthScribe->getClientSecretLabel();?></label>
+			<br />
 			<?php echo $this->oauth_client_secret_callback(); ?><br />
 		</section>
 
