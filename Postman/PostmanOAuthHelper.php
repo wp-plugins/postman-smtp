@@ -94,7 +94,7 @@ if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
 			return __ ( 'Client Secret' );
 		}
 		public function getCallbackUrlLabel() {
-			return __ ( 'Authorized Redirect URI' );
+			return __ ( 'Redirect URI' );
 		}
 		public function getCallbackDomainLabel() {
 			return __ ( 'Javascript Origins' );
