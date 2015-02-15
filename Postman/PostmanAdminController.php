@@ -44,9 +44,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 		const PORT_TEST_OPTIONS = 'postman_port_test_options';
 		const PORT_TEST_SECTION = 'postman_port_test_section';
 		
-		// action names
-		const POSTMAN_REQUEST_OAUTH_PERMISSION_ACTION = 'oauth_request_permission';
-		
 		// page titles
 		const NAME = 'Postman SMTP';
 		const PAGE_TITLE = 'Postman Settings';
@@ -54,7 +51,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 		
 		// slugs
 		const POSTMAN_TEST_SLUG = 'postman-test';
-		const POSTMAN_ACTION = 'postman_action';
 		
 		//
 		private $logger;
@@ -101,35 +97,27 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 			
 			$session = PostmanSession::getInstance ();
+			$this->logger->debug ( sprintf ( 'sanitize status: %s', $session->getAction () ) );
+			
+			// check if the user saved data, and if validation was successful
+			if ($session->getAction () == PostmanInputSanitizer::VALIDATION_SUCCESS) {
+				$session->unsetAction ();
+				$this->registerInitFunction ( HANDLE_SUCCESSFUL_SAVE );
+				$this->messageHandler->addMessage ( 'Settings saved.' );
+				return;
+			}
+			
 			// test to see if an OAuth authentication is in progress
 			if ($session->isSetOauthInProgress ()) {
 				if (isset ( $_GET ['code'] )) {
-					// queue plugin setting page
 					$this->logger->debug ( 'Found authorization grant code' );
+					// queue the function that processes the incoming grant code
 					$this->registerInitFunction ( 'handleAuthorizationGrant' );
 					return;
 				} else {
 					// the user must have clicked cancel... abort the grant token check
 					$this->logger->debug ( 'Found NO authorization grant code -- user must probably cancelled' );
 					$session->unsetOauthInProgress ();
-				}
-			}
-			
-			// check to see if there is a session action..
-			// currently the only session action are SAVE_SUCCESS and SAVE_FAILURE
-			$action = null;
-			if ($session->isSetAction ()) {
-				$action = $session->getAction ();
-				$session->unsetAction ();
-				$this->logger->debug ( "Got session action " . $action );
-			}
-			
-			// if the session action was Save Failure, then we can ignore it to "reload" whatever the user was just doing..
-			if (! isset ( $action ) || $action == PostmanInputSanitizer::SAVE_FAILURE) {
-				if (isset ( $_REQUEST [PostmanAdminController::POSTMAN_ACTION] )) {
-					// currently the only request action is POSTMAN_REQUEST_OAUTH_PERMISSION_ACTION
-					$action = $_REQUEST [PostmanAdminController::POSTMAN_ACTION];
-					$this->logger->debug ( "Got \$_REQUEST action " . $action );
 				}
 			}
 			
@@ -145,37 +133,26 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'initializeAdminPage' 
 			) );
 			
-			// determine which actions to perform
-			switch ($action) {
-				case PostmanInputSanitizer::SAVE_SUCCESS :
-					$this->registerInitFunction ( 'handleSuccessfulSave' );
-					break;
-				
-				case PostmanAdminController::POSTMAN_REQUEST_OAUTH_PERMISSION_ACTION :
-					$this->registerInitFunction ( 'handleOAuthPermissionRequestAction' );
-					break;
-				
-				default :
-					// Ajax handlers
-					if (is_admin ()) {
-						$this->registerAjaxHandler ( 'test_port', 'getAjaxPortStatus' );
-						$this->registerAjaxHandler ( 'check_email', 'getAjaxHostnameByEmail' );
-						$this->registerAjaxHandler ( 'get_redirect_url', 'getAjaxRedirectUrl' );
-						$this->registerAjaxHandler ( 'send_test_email', 'sendTestEmailViaAjax' );
-						$this->registerAjaxHandler ( 'get_configuration', 'getConfigurationViaAjax' );
-					}
-					
-					$this->registerAdminMenu ( 'generateDefaultContent' );
-					$this->registerAdminMenu ( 'addSetupWizardSubmenu' );
-					$this->registerAdminMenu ( 'addConfigurationSubmenu' );
-					$this->registerAdminMenu ( 'addEmailTestSubmenu' );
-					$this->registerAdminMenu ( 'addPortTestSubmenu' );
-					$this->registerAdminMenu ( 'addPurgeDataSubmenu' );
-					
-					// intercepts calls to purge_data action
-					$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );
-					$this->registerAdminPostAction ( self::REQUEST_OAUTH2_GRANT_SLUG, 'handleOAuthPermissionRequestAction' );
+			// register Ajax handlers
+			if (is_admin ()) {
+				$this->registerAjaxHandler ( 'test_port', 'getAjaxPortStatus' );
+				$this->registerAjaxHandler ( 'check_email', 'getAjaxHostnameByEmail' );
+				$this->registerAjaxHandler ( 'get_redirect_url', 'getAjaxRedirectUrl' );
+				$this->registerAjaxHandler ( 'send_test_email', 'sendTestEmailViaAjax' );
+				$this->registerAjaxHandler ( 'get_configuration', 'getConfigurationViaAjax' );
 			}
+			
+			// register content handlers
+			$this->registerAdminMenu ( 'generateDefaultContent' );
+			$this->registerAdminMenu ( 'addSetupWizardSubmenu' );
+			$this->registerAdminMenu ( 'addConfigurationSubmenu' );
+			$this->registerAdminMenu ( 'addEmailTestSubmenu' );
+			$this->registerAdminMenu ( 'addPortTestSubmenu' );
+			$this->registerAdminMenu ( 'addPurgeDataSubmenu' );
+			
+			// register action handlers
+			$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );
+			$this->registerAdminPostAction ( self::REQUEST_OAUTH2_GRANT_SLUG, 'handleOAuthPermissionRequestAction' );
 		}
 		
 		/**
@@ -269,7 +246,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Configuration screen
 		 */
 		public function addConfigurationSubmenu() {
-			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', self::CONFIGURATION_SLUG, array (
+			$page = add_submenu_page ( null, PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', self::CONFIGURATION_SLUG, array (
 					$this,
 					'outputManualConfigurationContent' 
 			) );
@@ -288,7 +265,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Setup Wizard screen
 		 */
 		public function addSetupWizardSubmenu() {
-			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', self::CONFIGURATION_WIZARD_SLUG, array (
+			$page = add_submenu_page ( null, PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', self::CONFIGURATION_WIZARD_SLUG, array (
 					$this,
 					'outputWizardContent' 
 			) );
@@ -308,7 +285,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Email Test screen
 		 */
 		public function addEmailTestSubmenu() {
-			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', self::EMAIL_TEST_SLUG, array (
+			$page = add_submenu_page ( null, PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', self::EMAIL_TEST_SLUG, array (
 					$this,
 					'outputTestEmailWizardContent' 
 			) );
@@ -328,7 +305,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Email Test screen
 		 */
 		public function addPortTestSubmenu() {
-			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', self::PORT_TEST_SLUG, array (
+			$page = add_submenu_page ( null, PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', self::PORT_TEST_SLUG, array (
 					$this,
 					'outputPortTestContent' 
 			) );
@@ -347,7 +324,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Email Test screen
 		 */
 		public function addPurgeDataSubmenu() {
-			$page = add_submenu_page ( null, 'My Custom Submenu Page', 'My Custom Submenu Page', 'manage_options', self::PURGE_DATA_SLUG, array (
+			$page = add_submenu_page ( null, PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', self::PURGE_DATA_SLUG, array (
 					$this,
 					'outputPurgeDataContent' 
 			) );
@@ -1066,7 +1043,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				}
 				if ($this->options->isAuthTypeOAuth2 ()) {
 					print '<p style="margin:10px 10px"><span>Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only</em>.</span></p>';
-				} else if ($this->options->isAuthTypePassword()) {
+				} else if ($this->options->isAuthTypePassword ()) {
 					print '<p style="margin:10px 10px"><span>Please note: <em>When composing email, other WordPress plugins or themes may override the sender name and email address causing rejection with some email services, such as Yahoo Mail. If you experience problems, try leaving the sender email address empty in these plugins or themes.</em></span></p>';
 				}
 			} else {

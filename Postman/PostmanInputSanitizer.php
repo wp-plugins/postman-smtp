@@ -3,8 +3,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 	class PostmanInputSanitizer {
 		private $logger;
 		private $options;
-		const SAVE_SUCCESS = 'save_success';
-		const SAVE_FAILURE = 'save_failure';
+		const VALIDATION_SUCCESS = 'validation_success';
 		public function __construct(PostmanOptions $options) {
 			assert ( isset ( $options ) );
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
@@ -61,16 +60,8 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 				}
 			}
 			
-			// set a request parameter
-			$session = PostmanSession::getInstance ();
 			if ($success) {
-				if (! $session->isSetAction ()) {
-					$this->logger->debug ( 'Validation Success' );
-					$session->setAction ( PostmanInputSanitizer::SAVE_SUCCESS );
-				}
-			} else {
-				$this->logger->debug ( 'Validation Failure' );
-				$session->setAction ( PostmanInputSanitizer::SAVE_FAILURE );
+				PostmanSession::getInstance ()->setAction ( self::VALIDATION_SUCCESS );
 			}
 			
 			// base-64 scramble password
