@@ -109,10 +109,8 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 		}
 		
 		/**
-		 * Given an OAuth provider-specific URL and redirectUri,
-		 * issue an HttpRequest to refresh the access token
-		 *
-		 * This code is identical for Google and Hotmail
+		 * Step 5: Exchange refresh token for new access token
+		 * After the access token expires, you can use the refresh token, which has a long lifetime, to get a new access token.
 		 */
 		public function refreshToken() {
 			$this->getLogger ()->debug ( 'Refreshing Token' );
