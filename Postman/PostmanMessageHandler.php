@@ -104,33 +104,33 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		}
 		public function displayPermissionNeededWarning() {
 			$scribe = $this->scribe;
-			$message = sprintf ( __ ( 'Warning: You have configured OAuth 2.0 authentication, but have not received permission to use it.' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
+			$message = sprintf ( __ ( 'Warning: You have configured OAuth 2.0 authentication, but have not received permission to use it.' , 'postman-smtp'), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
 			$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanAdminController::getActionUrl ( PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG ), $scribe->getRequestPermissionLinkText () );
 			$this->displayWarningMessage ( $message );
 		}
 		public function displayPasswordCredentialsNeededWarning() {
-			$this->displayWarningMessage ( __ ( 'Warning: Password authentication (Plain/Login/CRAMMD5) requires a username and password.' ) );
+			$this->displayWarningMessage ( __ ( 'Warning: Password authentication (Plain/Login/CRAMMD5) requires a username and password.' , 'postman-smtp') );
 		}
 		public function displayOauthCredentialsNeededWarning() {
 			$scribe = $this->scribe;
-			$this->displayWarningMessage ( sprintf ( __ ( 'Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, %1$s, and %2$s.' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () ) );
+			$this->displayWarningMessage ( sprintf ( __ ( 'Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, %1$s, and %2$s.' , 'postman-smtp'), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () ) );
 		}
 		public function displaySmtpServerNeededWarning() {
 			$scribe = $this->scribe;
-			$this->displayWarningMessage ( __ ( 'Warning: Outgoing Mail Server (SMTP) and Port can not be empty.' ) );
+			$this->displayWarningMessage ( __ ( 'Warning: Outgoing Mail Server (SMTP) and Port can not be empty.' , 'postman-smtp') );
 		}
 		public function displayConfigurationRequiredWarning() {
-			$this->displayWarningMessage ( sprintf ( __ ( 'Warning: Postman is <em>not</em> intercepting mail requests. <a href="%s">Configure</a> the plugin.' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL ) );
+			$this->displayWarningMessage ( sprintf ( __ ( 'Warning: Postman is <em>not</em> intercepting mail requests. <a href="%s">Configure</a> the plugin.' , 'postman-smtp'), POSTMAN_HOME_PAGE_ABSOLUTE_URL ) );
 		}
 		public function displaySwitchToOAuthWarning() {
 			$scribe = $this->scribe;
-			$this->displayWarningMessage ( sprintf ( __ ( 'Warning: You may experience issues using older authentication. Change your authentication type to OAuth 2.0.' ) ) );
+			$this->displayWarningMessage ( sprintf ( __ ( 'Warning: You may experience issues using older authentication. Change your authentication type to OAuth 2.0.' , 'postman-smtp') ) );
 		}
 		public function displayDebugDisplayIsEnabled() {
-			$this->displayWarningMessage ( sprintf ( __ ( 'Warning: Debug messages are being piped into the HTML output. This is a <span style="color:red"><b>serious security risk</b></span> and may hang Postman\'s remote AJAX calls. Disable <a href="%s">WP_DEBUG_DISPLAY</a>.' ), 'http://codex.wordpress.org/WP_DEBUG#WP_DEBUG_LOG_and_WP_DEBUG_DISPLAY' ) );
+			$this->displayWarningMessage ( sprintf ( __ ( 'Warning: Debug messages are being piped into the HTML output. This is a <span style="color:red"><b>serious security risk</b></span> and may hang Postman\'s remote AJAX calls. Disable <a href="%s">WP_DEBUG_DISPLAY</a>.' , 'postman-smtp'), 'http://codex.wordpress.org/WP_DEBUG#WP_DEBUG_LOG_and_WP_DEBUG_DISPLAY' ) );
 		}
 		public function displayCouldNotReplaceWpMail() {
-			$this->displayWarningMessage ( __ ( 'Postman is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.' ) );
+			$this->displayWarningMessage ( __ ( 'Postman is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.' , 'postman-smtp') );
 		}
 		//
 		public function displaySuccessSessionMessage() {
