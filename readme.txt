@@ -208,6 +208,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.4.1 - 2015-02-16 =
 * All text has been externalized in prep for [I18N Internationalization and localization](http://codex.wordpress.org/I18n_for_WordPress_Developers)
 * Fixed a bug where the Setup Wizard would try to force OAuth 2.0 even if the required port was closed
+* Added more error checking, and more warning messages.
 * Translated into French
 
 = 1.4 - 2015-02-15 =
