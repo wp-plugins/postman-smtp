@@ -439,14 +439,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'jquery_validation',
 					self::POSTMAN_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_testing', __ ( 'Testing', 'TCP Port Test Status' ) );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_open', __ ( 'Open', 'TCP Port Test Status' ) );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_testing', __ ( 'Checking...', 'TCP Port Test Status' ) );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_open', __ ( 'Ok', 'TCP Port Test Status' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_closed', __ ( 'Closed', 'TCP Port Test Status' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_email_test_not_started', __ ( 'In Outbox', 'Email Test Status' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_email_test_sending', __ ( 'Sending...', 'Email Test Status' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_email_test_success', __ ( 'Success', 'Email Test Status' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_email_test_failed', __ ( 'Failed', 'Email Test Status' ) );
-				
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_wizard_wait', __ ( 'Please wait for the port test to finish' ) );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_wizard_no_ports', __ ( 'No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.' ) );
+			
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_check_timeout', PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT . '' );
 			
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_smtp_section_element_name', 'div#smtp_section' );

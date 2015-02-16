@@ -111,7 +111,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 
 		// user has clicked next but we haen't finished the check
 		if (portsChecked < portsToCheck) {
-			alert('Please wait for the check to finish');
+			alert(postman_wizard_wait);
 			return false;
 		}
 		// or all ports are unavailable
@@ -250,7 +250,7 @@ function wizardPortTest(input, state) {
 	var el = jQuery(input);
 	var elState = jQuery(state);
 	var portInput = jQuery(postman_port_element_name);
-	elState.html('Checking..');
+	elState.html(postman_port_test_testing);
 	el.attr('disabled', 'disabled');
 	el.prop('checked', false);
 	el.click(function() {
@@ -272,11 +272,11 @@ function wizardPortTest(input, state) {
 					function(response) {
 						portsChecked++;
 						if (response.success) {
-							elState.html('Ok');
+							elState.html(postman_port_test_open);
 							el.removeAttr('disabled');
 							totalAvail++;
 						} else {
-							elState.html('Closed');
+							elState.html(postman_port_test_closed);
 						}
 						if (portsChecked >= portsToCheck) {
 							var el25 = jQuery('#wizard_port_25');
@@ -287,8 +287,8 @@ function wizardPortTest(input, state) {
 							var el587_avail = el587.attr('disabled') != 'disabled';
 							// ask the server what to do: oauth and on which
 							// port, or password and on which port
-							if (totalAvail == 0) {
-								alert("No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.")
+							if (totalAvail == 0 || true) {
+								alert(postman_wizard_no_ports);
 							} else {
 								var data = {
 									'action' : 'get_redirect_url',
