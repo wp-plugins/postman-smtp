@@ -28,6 +28,7 @@ Postman is a next-generation WordPress SMTP plugin, the first and only to implem
 * Supports Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Supports SMTPS SSL/TLS encryption
 * Its easy to upgrade! Postman can import SMTP settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
+* Available in English and French
 
 = Requirements =
 * WordPress 3.9 (or later)
@@ -205,6 +206,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.4.1 - 2015-02-16 =
 * All text has been externalized in prep for [I18N Internationalization and localization](http://codex.wordpress.org/I18n_for_WordPress_Developers)
 * Fixed a bug where the Setup Wizard would try to force OAuth 2.0 even if the required port was closed
+* Translated into French
 
 = 1.4 - 2015-02-15 =
 * Happy Valentine's Day! Sending Yahoo email now supported with OAuth 2.0 authentication! If the Wizard detects that a Yahoo server has been entered, it automatically configures OAuth 2.0 
