@@ -35,12 +35,11 @@ function portTest(tdValue, port, button) {
 	jQuery.post(ajaxurl, data, function(response) {
 		totalPortsTested += 1;
 		if (response.success) {
-			testEl.html('<span style="color:green">'
-					+ postman_port_test_open + '</span>');
+			testEl.html('<span style="color:green">' + postman_port_test_open
+					+ '</span>');
 		} else {
-			testEl.html('<span style="color:red">'
-					+ postman_port_test_closed + ' (' + response.message
-					+ ")</span>");
+			testEl.html('<span style="color:red">' + postman_port_test_closed
+					+ '</span> (' + response.message + ")");
 		}
 		if (totalPortsTested >= portsToBeTested) {
 			enable(button);
