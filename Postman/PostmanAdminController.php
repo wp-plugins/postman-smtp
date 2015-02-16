@@ -44,11 +44,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 		const PORT_TEST_OPTIONS = 'postman_port_test_options';
 		const PORT_TEST_SECTION = 'postman_port_test_section';
 		
-		// page titles
-		const NAME = 'Postman SMTP';
-		const PAGE_TITLE = 'Postman Settings';
-		const MENU_TITLE = 'Postman SMTP';
-		
 		// slugs
 		const POSTMAN_TEST_SLUG = 'postman-test';
 		
@@ -234,7 +229,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function generateDefaultContent() {
 			// This page will be under "Settings"
-			$page = add_options_page ( __ ( 'Postman Settings', 'Page Title', 'postman-smtp' ), PostmanAdminController::MENU_TITLE, 'manage_options', self::POSTMAN_MENU_SLUG, array (
+			$page = add_options_page ( _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::POSTMAN_MENU_SLUG, array (
 					$this,
 					'outputDefaultContent' 
 			) );
@@ -253,7 +248,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Configuration screen
 		 */
 		public function addConfigurationSubmenu() {
-			$page = add_submenu_page ( null, __ ( 'Postman Settings', 'Page Title', 'postman-smtp' ), PostmanAdminController::MENU_TITLE, 'manage_options', self::CONFIGURATION_SLUG, array (
+			$page = add_submenu_page ( null, _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::CONFIGURATION_SLUG, array (
 					$this,
 					'outputManualConfigurationContent' 
 			) );
@@ -272,7 +267,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Setup Wizard screen
 		 */
 		public function addSetupWizardSubmenu() {
-			$page = add_submenu_page ( null, __ ( 'Postman Settings', 'Page Title', 'postman-smtp' ), PostmanAdminController::MENU_TITLE, 'manage_options', self::CONFIGURATION_WIZARD_SLUG, array (
+			$page = add_submenu_page ( null, _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::CONFIGURATION_WIZARD_SLUG, array (
 					$this,
 					'outputWizardContent' 
 			) );
@@ -292,7 +287,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Email Test screen
 		 */
 		public function addEmailTestSubmenu() {
-			$page = add_submenu_page ( null, __ ( 'Postman Settings', 'Page Title', 'postman-smtp' ), PostmanAdminController::MENU_TITLE, 'manage_options', self::EMAIL_TEST_SLUG, array (
+			$page = add_submenu_page ( null, _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::EMAIL_TEST_SLUG, array (
 					$this,
 					'outputTestEmailWizardContent' 
 			) );
@@ -312,7 +307,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Email Test screen
 		 */
 		public function addPortTestSubmenu() {
-			$page = add_submenu_page ( null, __ ( 'Postman Settings', 'Page Title', 'postman-smtp' ), PostmanAdminController::MENU_TITLE, 'manage_options', self::PORT_TEST_SLUG, array (
+			$page = add_submenu_page ( null, _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::PORT_TEST_SLUG, array (
 					$this,
 					'outputPortTestContent' 
 			) );
@@ -331,7 +326,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Email Test screen
 		 */
 		public function addPurgeDataSubmenu() {
-			$page = add_submenu_page ( null, __ ( 'Postman Settings', 'Page Title', 'postman-smtp' ), PostmanAdminController::MENU_TITLE, 'manage_options', self::PURGE_DATA_SLUG, array (
+			$page = add_submenu_page ( null, _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::PURGE_DATA_SLUG, array (
 					$this,
 					'outputPurgeDataContent' 
 			) );
@@ -1268,7 +1263,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<legend>%s</legend>', _x ( 'Authentication', 'Wizard Step Title', 'postman-smtp' ) );
 			
 			print '<section class="wizard-auth-oauth2">';
-			printf ( '<p id="%s</p>', __ ( 'wizard_oauth2_help">Help.', 'postman-smtp' ) );
+			printf ( '<p id="wizard_oauth2_help">%s</p>', __ ( 'Jason.', 'postman-smtp' ) );
 			printf ( '<label id="callback_domain" for="callback_domain">%s</label>', $this->oauthScribe->getCallbackDomainLabel () );
 			print '<br />';
 			print $this->callback_domain_callback ();

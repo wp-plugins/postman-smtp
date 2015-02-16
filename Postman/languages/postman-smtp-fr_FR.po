@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
 "POT-Creation-Date: 2015-02-16 21:28:02+00:00\n"
-"PO-Revision-Date: 2015-02-16 17:18-0500\n"
+"PO-Revision-Date: 2015-02-16 17:35-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -38,11 +38,15 @@ msgstr ""
 msgid ""
 "The grant code from Google had no accompanying state and may be a forgery"
 msgstr ""
+"Le code de subvention de Google ne avait pas l'état d'accompagnement et peut "
+"être un faux"
 
 #: Postman/PostmanAdminController.php:386
 msgid ""
 "Error authenticating with this Client ID - please create a new one. [%s]"
 msgstr ""
+"Erreur authentification avec cet ID client - se il vous plaît créer un "
+"nouveau. [%s]"
 
 #: Postman/PostmanAdminController.php:444
 msgctxt "TCP Port Test Status"
@@ -52,7 +56,7 @@ msgstr "Vérification... "
 #: Postman/PostmanAdminController.php:445
 msgctxt "TCP Port Test Status"
 msgid "Ok"
-msgstr ""
+msgstr "Succès"
 
 #: Postman/PostmanAdminController.php:446
 msgctxt "TCP Port Test Status"
@@ -62,12 +66,12 @@ msgstr "Fermer"
 #: Postman/PostmanAdminController.php:448
 msgctxt "Email Test Status"
 msgid "In Outbox"
-msgstr ""
+msgstr "En boîte d'envoi"
 
 #: Postman/PostmanAdminController.php:449
 msgctxt "Email Test Status"
 msgid "Sending..."
-msgstr ""
+msgstr "Envoyer..."
 
 #: Postman/PostmanAdminController.php:450
 msgctxt "Email Test Status"
@@ -77,42 +81,44 @@ msgstr "Succès"
 #: Postman/PostmanAdminController.php:451
 msgctxt "Email Test Status"
 msgid "Failed"
-msgstr ""
+msgstr "Echoué"
 
 #: Postman/PostmanAdminController.php:453
 msgid "Please wait for the port test to finish"
-msgstr ""
+msgstr "Se il vous plaît attendre le test du port pour terminer"
 
 #: Postman/PostmanAdminController.php:454
 msgid ""
 "No ports are available for this SMTP server. Try a different SMTP host or "
 "contact your WordPress host for their specific solution."
 msgstr ""
+"Pas de ports sont disponibles pour ce serveur SMTP. Essayez un hôte SMTP ou "
+"contactez votre hôte WordPress pour leur solution spécifique."
 
 #: Postman/PostmanAdminController.php:514
 msgctxt "Configuration Input Field"
 msgid "Import from Plugin"
-msgstr ""
+msgstr "Importer de l'Extension"
 
 #: Postman/PostmanAdminController.php:617
 msgctxt "Configuration Input Field"
 msgid "Log Level"
-msgstr ""
+msgstr "Niveau du journal "
 
 #: Postman/PostmanAdminController.php:622
 msgctxt "Configuration Input Field"
 msgid "Show Error Page"
-msgstr ""
+msgstr "Afficher le page d'erreurs"
 
 #: Postman/PostmanAdminController.php:628
 msgctxt "Configuration Input Field"
 msgid "Port Connection Test"
-msgstr ""
+msgstr "Test de connexion du port"
 
 #: Postman/PostmanAdminController.php:633
 msgctxt "Configuration Input Field"
 msgid "Outgoing Mail Server (SMTP)"
-msgstr ""
+msgstr "Serveur de messagerie sortant (SMTP)"
 
 #: Postman/PostmanAdminController.php:644
 msgctxt "Configuration Section"
@@ -355,12 +361,12 @@ msgstr ""
 #: Postman/PostmanAdminController.php:1164
 msgctxt "Page Title"
 msgid "Postman Settings"
-msgstr ""
+msgstr "Réglages de Postman"
 
 #: Postman/PostmanAdminController.php:1169
 msgctxt "Main Menu"
 msgid "Get Started"
-msgstr ""
+msgstr "Démarrez"
 
 #: Postman/PostmanAdminController.php:1170
 msgctxt "Button Label"
@@ -385,7 +391,7 @@ msgstr ""
 #: Postman/PostmanAdminController.php:1185
 msgctxt "Main Menu"
 msgid "Troubleshooting"
-msgstr ""
+msgstr "Dépannage"
 
 #: Postman/PostmanAdminController.php:1188
 #: Postman/PostmanAdminController.php:1190
@@ -401,7 +407,7 @@ msgstr ""
 #: Postman/PostmanAdminController.php:1193
 msgctxt "Main Menu"
 msgid "Online Support"
-msgstr ""
+msgstr "Assistance en ligne "
 
 #: Postman/PostmanAdminController.php:1207
 msgctxt "Page Title"
@@ -468,28 +474,28 @@ msgstr ""
 
 #: Postman/PostmanAdminController.php:1248
 msgid "Port 25"
-msgstr ""
+msgstr "Port 25"
 
 #: Postman/PostmanAdminController.php:1250
 #: Postman/PostmanAdminController.php:1255
 #: Postman/PostmanAdminController.php:1260
 msgctxt "TCP Port Status"
 msgid "Unknown"
-msgstr ""
+msgstr "indéterminé"
 
 #: Postman/PostmanAdminController.php:1253
 msgid "Port 465"
-msgstr ""
+msgstr "Port 465"
 
 #: Postman/PostmanAdminController.php:1258
 msgid "Port 587"
-msgstr ""
+msgstr "Port 587"
 
 #: Postman/PostmanAdminController.php:1266
 #: Postman/PostmanAdminController.php:1268
 msgctxt "Wizard Step Title"
 msgid "Authentication"
-msgstr ""
+msgstr "Facteur d'authentification"
 
 #: Postman/PostmanAdminController.php:1271
 msgid "wizard_oauth2_help\">Help."

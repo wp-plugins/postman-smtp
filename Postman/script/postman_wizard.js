@@ -287,7 +287,7 @@ function wizardPortTest(input, state) {
 							var el587_avail = el587.attr('disabled') != 'disabled';
 							// ask the server what to do: oauth and on which
 							// port, or password and on which port
-							if (totalAvail == 0 || true) {
+							if (totalAvail == 0) {
 								alert(postman_wizard_no_ports);
 							} else {
 								var data = {
