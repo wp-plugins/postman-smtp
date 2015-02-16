@@ -120,6 +120,9 @@ if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
 		public function getEncryptionType() {
 			return PostmanOptions::ENCRYPTION_TYPE_SSL;
 		}
+		public function getRequestPermissionLinkText() {
+			return 'Request permission from Google';
+		}
 	}
 }
 if (! class_exists ( 'PostmanMicrosoftOAuthScribe' )) {
@@ -162,6 +165,9 @@ if (! class_exists ( 'PostmanMicrosoftOAuthScribe' )) {
 		}
 		public function getEncryptionType() {
 			return PostmanOptions::ENCRYPTION_TYPE_TLS;
+		}
+		public function getRequestPermissionLinkText() {
+			return 'Request permission from Microsoft';
 		}
 	}
 }
@@ -206,11 +212,14 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 		public function getEncryptionType() {
 			return PostmanOptions::ENCRYPTION_TYPE_SSL;
 		}
+		public function getRequestPermissionLinkText() {
+			return 'Request permission from Yahoo';
+		}
 	}
 }
 if (! class_exists ( 'PostmanNonOAuthScribe' )) {
 	class PostmanNonOAuthScribe extends PostmanAbstractOAuthHelper {
-			public function getOAuthHelp() {
+		public function getOAuthHelp() {
 			return '<p id="wizard_oauth2_help"><span style="color:red" class="normal">Enter an Outgoing Mail Server with OAuth 2.0 capabilities.</span></p>';
 		}
 		public function getCallbackUrl() {
@@ -248,6 +257,9 @@ if (! class_exists ( 'PostmanNonOAuthScribe' )) {
 		}
 		public function getEncryptionType() {
 			return '';
+		}
+		public function getRequestPermissionLinkText() {
+			return 'Request OAuth Permission';
 		}
 	}
 }

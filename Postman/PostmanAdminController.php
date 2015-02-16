@@ -107,7 +107,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// check if the user saved data, and if validation was successful
 			if ($session->getAction () == PostmanInputSanitizer::VALIDATION_SUCCESS) {
 				$session->unsetAction ();
-				$this->registerInitFunction ( HANDLE_SUCCESSFUL_SAVE );
+				$this->registerInitFunction ( 'handleSuccessfulSave' );
 				$this->messageHandler->addMessage ( 'Settings saved.' );
 				return;
 			}
@@ -232,7 +232,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function generateDefaultContent() {
 			// This page will be under "Settings"
-			$page = add_options_page ( PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', self::POSTMAN_MENU_SLUG, array (
+			$page = add_options_page ( __ ( 'Postman Settings', 'Page Title' ), PostmanAdminController::MENU_TITLE, 'manage_options', self::POSTMAN_MENU_SLUG, array (
 					$this,
 					'outputDefaultContent' 
 			) );
@@ -251,7 +251,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Configuration screen
 		 */
 		public function addConfigurationSubmenu() {
-			$page = add_submenu_page ( null, PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', self::CONFIGURATION_SLUG, array (
+			$page = add_submenu_page ( null, __ ( 'Postman Settings', 'Page Title' ), PostmanAdminController::MENU_TITLE, 'manage_options', self::CONFIGURATION_SLUG, array (
 					$this,
 					'outputManualConfigurationContent' 
 			) );
@@ -270,7 +270,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Setup Wizard screen
 		 */
 		public function addSetupWizardSubmenu() {
-			$page = add_submenu_page ( null, PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', self::CONFIGURATION_WIZARD_SLUG, array (
+			$page = add_submenu_page ( null, __ ( 'Postman Settings', 'Page Title' ), PostmanAdminController::MENU_TITLE, 'manage_options', self::CONFIGURATION_WIZARD_SLUG, array (
 					$this,
 					'outputWizardContent' 
 			) );
@@ -290,7 +290,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Email Test screen
 		 */
 		public function addEmailTestSubmenu() {
-			$page = add_submenu_page ( null, PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', self::EMAIL_TEST_SLUG, array (
+			$page = add_submenu_page ( null, __ ( 'Postman Settings', 'Page Title' ), PostmanAdminController::MENU_TITLE, 'manage_options', self::EMAIL_TEST_SLUG, array (
 					$this,
 					'outputTestEmailWizardContent' 
 			) );
@@ -310,7 +310,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Email Test screen
 		 */
 		public function addPortTestSubmenu() {
-			$page = add_submenu_page ( null, PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', self::PORT_TEST_SLUG, array (
+			$page = add_submenu_page ( null, __ ( 'Postman Settings', 'Page Title' ), PostmanAdminController::MENU_TITLE, 'manage_options', self::PORT_TEST_SLUG, array (
 					$this,
 					'outputPortTestContent' 
 			) );
@@ -329,7 +329,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Register the Email Test screen
 		 */
 		public function addPurgeDataSubmenu() {
-			$page = add_submenu_page ( null, PostmanAdminController::PAGE_TITLE, PostmanAdminController::MENU_TITLE, 'manage_options', self::PURGE_DATA_SLUG, array (
+			$page = add_submenu_page ( null, __ ( 'Postman Settings', 'Page Title' ), PostmanAdminController::MENU_TITLE, 'manage_options', self::PURGE_DATA_SLUG, array (
 					$this,
 					'outputPurgeDataContent' 
 			) );
@@ -491,7 +491,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 			
 			// Sanitize
-			add_settings_section ( PostmanAdminController::SMTP_SECTION, _x ( 'SMTP Settings', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::SMTP_SECTION, _x ( __ ( 'SMTP Settings' ), 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printSmtpSectionInfo' 
 			), PostmanAdminController::SMTP_OPTIONS );
@@ -503,58 +503,58 @@ if (! class_exists ( "PostmanAdminController" )) {
 				), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			}
 			
-			add_settings_field ( PostmanOptions::AUTHENTICATION_TYPE, _x ( 'Authentication', 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::AUTHENTICATION_TYPE, _x ( __ ( 'Authentication' ), 'Configuration Input Field' ), array (
 					$this,
 					'authentication_type_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::SENDER_NAME, _x ( 'Sender Name', 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::SENDER_NAME, _x ( __ ( 'Sender Name' ), 'Configuration Input Field' ), array (
 					$this,
 					'sender_name_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::SENDER_EMAIL, _x ( 'Sender Email Address', 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::SENDER_EMAIL, _x ( __ ( 'Sender Email Address' ), 'Configuration Input Field' ), array (
 					$this,
 					'sender_email_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::HOSTNAME, _x ( 'Outgoing Mail Server (SMTP)', 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::HOSTNAME, _x ( __ ( 'Outgoing Mail Server (SMTP)' ), 'Configuration Input Field' ), array (
 					$this,
 					'hostname_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::PORT, _x ( 'Port', 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::PORT, _x ( __ ( 'Port' ), 'Configuration Input Field' ), array (
 					$this,
 					'port_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, _x ( 'Authentication Settings', 'Configuration Section' ), array (
+			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, _x ( __ ( 'Authentication Settings' ), 'Configuration Section' ), array (
 					$this,
 					'printBasicAuthSectionInfo' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( 'Encryption', 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( __ ( 'Encryption' ), 'Configuration Input Field' ), array (
 					$this,
 					'encryption_type_for_password_section_callback' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
 			
-			add_settings_field ( PostmanOptions::BASIC_AUTH_USERNAME, _x ( 'Username', 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::BASIC_AUTH_USERNAME, _x ( __ ( 'Username' ), 'Configuration Input Field' ), array (
 					$this,
 					'basic_auth_username_callback' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
 			
-			add_settings_field ( PostmanOptions::BASIC_AUTH_PASSWORD, _x ( 'Password', 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::BASIC_AUTH_PASSWORD, _x ( __ ( 'Password' ), 'Configuration Input Field' ), array (
 					$this,
 					'basic_auth_password_callback' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
 			
 			// the OAuth section
-			add_settings_section ( PostmanAdminController::OAUTH_SECTION, _x ( 'Authentication Settings', 'Configuration Section' ), array (
+			add_settings_section ( PostmanAdminController::OAUTH_SECTION, _x ( __ ( 'Authentication Settings' ), 'Configuration Section' ), array (
 					$this,
 					'printOAuthSectionInfo' 
 			), PostmanAdminController::OAUTH_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( 'Encryption', 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( __ ( 'Encryption' ), 'Configuration Input Field' ), array (
 					$this,
 					'encryption_type_for_oauth2_section_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
@@ -580,22 +580,22 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
 			// the Advanced section
-			add_settings_section ( PostmanAdminController::ADVANCED_SECTION, _x ( 'Advanced Settings', 'Configuration Section' ), array (
+			add_settings_section ( PostmanAdminController::ADVANCED_SECTION, _x ( __ ( 'Advanced Settings' ), 'Configuration Section' ), array (
 					$this,
 					'printAdvancedSectionInfo' 
 			), PostmanAdminController::ADVANCED_OPTIONS );
 			
-			add_settings_field ( 'connection_timeout', _x ( 'Connection Timeout (sec)', 'Configuration Input Field' ), array (
+			add_settings_field ( 'connection_timeout', _x ( __ ( 'Connection Timeout (sec)' ), 'Configuration Input Field' ), array (
 					$this,
 					'connection_timeout_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( 'read_timeout', _x ( 'Read Timeout (sec)', 'Configuration Input Field' ), array (
+			add_settings_field ( 'read_timeout', _x ( __ ( 'Read Timeout (sec)' ), 'Configuration Input Field' ), array (
 					$this,
 					'read_timeout_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( PostmanOptions::REPLY_TO, _x ( 'Reply-To Email Address', 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::REPLY_TO, _x ( __ ( 'Reply-To Email Address' ), 'Configuration Input Field' ), array (
 					$this,
 					'reply_to_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
@@ -795,14 +795,28 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Port Test text
 		 */
 		public function printPortTestSectionInfo() {
-			print '<p><span>This test determines which ports are open for Postman to use. A</span> <span style="color:red">Closed</span><span> port indicates either <ol><li>Your host has placed a firewall between this site and the SMTP server or</li><li>The SMTP server has no service running on that port</li></ol></span></p><p><span><b>If the port you are trying to use is </span> <span style="color:red"><b>Closed</b></span><span>, Postman can not deliver mail. Contact your host to get the port opened.</b></span></p><p><span class="fine_print">Each test is given ' . $this->options->getConnectionTimeout () . ' seconds to complete and the entire test will take up to ' . ($this->options->getConnectionTimeout () * 3) . ' seconds to run. Javascript is required.</span></p>';
+			print '<p><span>';
+			print __ ( 'This test determines which ports are open for Postman to use.' );
+			print ' ';
+			printf ( _n ( 'Each test is given %d second to complete.', 'Each test is given %d seconds to complete.', $this->options->getConnectionTimeout () ), $this->options->getConnectionTimeout () );
+			print ' ';
+			printf ( 'The entire test will take up to %d seconds.', ($this->options->getConnectionTimeout () * 3) );
+			print ' ';
+			print __ ( 'A Closed port indicates either:' );
+			print '<ol>';
+			printf ( '<li>%s</li>', __ ( 'Your host has placed a firewall between this site and the SMTP server or' ) );
+			printf ( '<li>%s</li>', __ ( 'The SMTP server has no service running on that port' ) );
+			printf ( '</ol></span></p><p><span><b>%s</b></span></p>', __ ( 'If the port you are trying to use is Closed, Postman can not deliver mail. Contact your host to get the port opened.' ) );
+			printf ( '<p><span class="fine_print">' );
+			print ' ';
+			print '</span></p>';
 		}
 		
 		/**
 		 * Print the Section text
 		 */
 		public function printBasicAuthSectionInfo() {
-			print 'Enter the username (email address) and password you use to send email';
+			print __ ( 'Enter the username (email address) and password you use to send email' );
 		}
 		
 		/**
@@ -816,21 +830,21 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printTestEmailSectionInfo() {
-			print 'You will receive an email from Postman with the subject "WordPress Postman SMTP Test."';
+			print __ ( 'You will receive an email from Postman with the subject "WordPress Postman SMTP Test."' );
 		}
 		
 		/**
 		 * Print the Section text
 		 */
 		public function printPurgeDataSectionInfo() {
-			print '<p><span>This will purge all of Postman\'s settings, including SMTP server info, username/password and Client ID.</span></p><p><span>Are you sure?</span></p>';
+			printf ( '<p><span>%s.</span></p><p><span>%s</span></p>', __ ( 'This will purge all of Postman\'s settings, including SMTP server info, username/password and OAuth Credentials' ), __ ( 'Are you sure?' ) );
 		}
 		
 		/**
 		 * Print the Section text
 		 */
 		public function printAdvancedSectionInfo() {
-			print 'Increase the read timeout if your host is intermittenly failing to send mail. Be careful, this also correlates to how long your user must wait if your mail server is unreachable.';
+			print __ ( 'Increase the read timeout if your host is intermittenly failing to send mail. Be careful, this also correlates to how long your user must wait if your mail server is unreachable.' );
 		}
 		
 		/**
@@ -839,21 +853,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function authentication_type_callback() {
 			$authType = $this->options->getAuthorizationType ();
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::AUTHENTICATION_TYPE );
-			print '<option id="input_auth_type_none" value="' . PostmanOptions::AUTHENTICATION_TYPE_NONE . '"';
-			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_NONE ? 'selected="selected"' : '' );
-			print '>None</option>';
-			print '<option id="input_auth_type_plain" value="' . PostmanOptions::AUTHENTICATION_TYPE_PLAIN . '"';
-			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_PLAIN ? 'selected="selected"' : '' );
-			print '>Plain</option>';
-			print '<option id="input_auth_type_login" value="' . PostmanOptions::AUTHENTICATION_TYPE_LOGIN . '"';
-			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_LOGIN ? 'selected="selected"' : '' );
-			print '>Login</option>';
-			print '<option id="input_auth_type_crammd5" value="' . PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 . '"';
-			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 ? 'selected="selected"' : '' );
-			print '>CRAM-MD5</option>';
-			print '<option id="input_auth_type_oauth2" value="' . PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 . '"';
-			printf ( '%s', $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 ? 'selected="selected"' : '' );
-			print '>OAuth 2.0</option>';
+			printf ( '<option class="input_auth_type_none" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_NONE, $authType == PostmanOptions::AUTHENTICATION_TYPE_NONE ? 'selected="selected"' : '', __ ( 'None', 'Authentication Type' ) );
+			printf ( '<option class="input_auth_type_plain" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_PLAIN, $authType == PostmanOptions::AUTHENTICATION_TYPE_PLAIN ? 'selected="selected"' : '', __ ( 'Plain', 'Authentication Type' ) );
+			printf ( '<option class="input_auth_type_login" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_LOGIN, $authType == PostmanOptions::AUTHENTICATION_TYPE_LOGIN ? 'selected="selected"' : '', __ ( 'Login', 'Authentication Type' ) );
+			printf ( '<option class="input_auth_type_crammd5" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5, $authType == PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 ? 'selected="selected"' : '', __ ( 'CRAMMD5', 'Authentication Type' ) );
+			printf ( '<option class="input_auth_type_oauth2" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 ? 'selected="selected"' : '', __ ( 'OAuth 2.0', 'Authentication Type' ) );
 			print '</select>';
 		}
 		/**
@@ -866,17 +870,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->encryption_type_callback ( PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
 		}
 		public function encryption_type_callback($section) {
-			$authType = $this->options->getEncryptionType ();
+			$encType = $this->options->getEncryptionType ();
 			print '<select id="input_enc_type_' . $section . '" class="input_encryption_type" name="postman_options[enc_type]">';
-			print '<option class="input_enc_type_none" value="' . PostmanOptions::ENCRYPTION_TYPE_NONE . '"';
-			printf ( '%s', $authType == PostmanOptions::ENCRYPTION_TYPE ? 'selected="selected"' : '' );
-			print '>None</option>';
-			print '<option class="input_enc_type_ssl" value="' . PostmanOptions::ENCRYPTION_TYPE_SSL . '"';
-			printf ( '%s', $authType == PostmanOptions::ENCRYPTION_TYPE_SSL ? 'selected="selected"' : '' );
-			print '>SSL</option>';
-			print '<option class="input_enc_type_tls" value="' . PostmanOptions::ENCRYPTION_TYPE_TLS . '"';
-			printf ( '%s', $authType == PostmanOptions::ENCRYPTION_TYPE_TLS ? 'selected="selected"' : '' );
-			print '>TLS</option>';
+			printf ( '<option class="input_enc_type_none" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_NONE, $encType == PostmanOptions::ENCRYPTION_TYPE_NONE ? 'selected="selected"' : '', __ ( 'None', 'Encryption Type' ) );
+			printf ( '<option class="input_enc_type_none" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_SSL, $encType == PostmanOptions::ENCRYPTION_TYPE_SSL ? 'selected="selected"' : '', __ ( 'SSL', 'Encryption Type' ) );
+			printf ( '<option class="input_enc_type_none" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_TLS, $encType == PostmanOptions::ENCRYPTION_TYPE_TLS ? 'selected="selected"' : '', __ ( 'TLS', 'Encryption Type' ) );
 			print '</select>';
 		}
 		
@@ -1026,40 +1024,40 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			// Set class property
 			print '<div class="wrap">';
-			screen_icon ();
-			print '<h2>' . PostmanAdminController::PAGE_TITLE . '</h2>';
 			$this->displayTopNavigation ();
-			if (! $sslRequirement || ! $splAutoloadRegisterRequirement || ! $arrayObjectRequirement) {
-				print '<div style="background-color: white; padding: 10px;"><b style="color: red">Warning, your system does not meet the pre-requisites - something may fail:</b><ul>';
-				print '<li>PHP v5.3: ' . ($phpVersionRequirement ? 'Yes' : 'No (' . PHP_VERSION . ')') . '</li>';
-				print '<li>SSL Extension: ' . ($sslRequirement ? 'Yes' : 'No') . '</li>';
-				print '<li>spl_autoload_register: ' . ($splAutoloadRegisterRequirement ? 'Yes' : 'No') . '</li>';
-				print '<li>ArrayObject: ' . ($arrayObjectRequirement ? 'Yes' : 'No') . '</li>';
-				print '<ul></div>';
-			}
 			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
-				print '<p><span style="color:green;padding:2px 5px; font-size:1.2em">Postman is configured.</span><p style="margin:0 10px">Postman will send mail  via <b>' . $this->options->getHostname () . ':' . $this->options->getPort () . '</b>';
+				printf ( '<p><span style="color:green;padding:2px 5px; font-size:1.2em">%s</span></p>', __ ( 'Postman is configured.' ) );
 				if ($this->options->isAuthTypeOAuth2 ()) {
-					print ' using <b>OAuth 2.0</b> authentication.</span></p>';
+					$authDesc = __ ( 'OAuth 2.0', 'Authentication Type' );
 				} else if ($this->options->isAuthTypeNone ()) {
-					print ' using no authentication.</span></p>';
+					$authDesc = __ ( 'no', 'Authentication Type' );
 				} else {
-					print ' using <b>Password</b> (' . $this->options->getAuthorizationType () . ') authentication.</span></p>';
+					$authDesc = sprintf ( __ ( 'Password (%s)', 'Authentication Type' ), $this->options->getAuthorizationType () );
 				}
+				printf ( '<p style="margin:0 10px"><span>%s</span></p>', sprintf ( __ ( 'Postman will send mail via %1$s using %2$s authentication.' ), '<b>' . $this->options->getHostname () . ':' . $this->options->getPort () . '</b>', '<b>' . $authDesc . '</b>' ) );
 				if ($this->options->isAuthTypeOAuth2 ()) {
-					print '<p style="margin:10px 10px"><span>Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only</em>.</span></p>';
+					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only</em>.' ) );
 				} else if ($this->options->isAuthTypePassword ()) {
-					print '<p style="margin:10px 10px"><span>Please note: <em>When composing email, other WordPress plugins or themes may override the sender name and email address causing rejection with some email services, such as Yahoo Mail. If you experience problems, try leaving the sender email address empty in these plugins or themes.</em></span></p>';
+					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins or themes may override the sender name and email address causing rejection with some email services, such as Yahoo Mail. If you experience problems, try leaving the sender email address empty in these plugins or themes.</em>' ) );
 				}
 			} else {
-				print '<p><span style="color:red; padding:2px 5px; font-size:1.1em">Status: Postman is not sending mail.</span></p>';
+				printf ( '<p><span style="color:red; padding:2px 5px; font-size:1.1em">%s</span></p>', __ ( 'Status: Postman is not sending mail.' ) );
 				if ($this->options->isNew ()) {
-					print '<h3>Thank-you for choosing Postman!</h3>';
-					print '<p><span>Let\'s get started! All users are strongly encouraged to start by <a href="' . POSTMAN_HOME_PAGE_ABSOLUTE_URL . '/configuration_wizard">running the Setup Wizard</a>.</span></p>';
+					printf ( '<h3>%s</h3>', __ ( 'Thank-you for choosing Postman!' ) );
+					printf ( '<p><span>%s</span></p>', sprintf ( __ ( 'Let\'s get started! All users are strongly encouraged to start by <a href="%s">running the Setup Wizard</a>.' ), $this->getPageUrl ( self::CONFIGURATION_WIZARD_SLUG ) ) );
 					if ($this->importableConfiguration->isImportAvailable ()) {
-						print 'However, if you wish, Postman can <a href="' . POSTMAN_HOME_PAGE_ABSOLUTE_URL . '/configuration">import your SMTP configuration</a> from another plugin. You can run the Wizard later if the imported settings don\'t work.';
+						printf ( '<p><span>%s</span></p>', sprintf ( __ ( 'However, if you wish, Postman can <a href="%s">import your SMTP configuration</a> from another plugin. You can run the Wizard later if you need to.' ), $this->getPageUrl ( self::CONFIGURATION_SLUG ) ) );
 					}
 				}
+			}
+			
+			if (! $sslRequirement || ! $splAutoloadRegisterRequirement || ! $arrayObjectRequirement) {
+				printf ( '<div style="padding: 10px;"><b style="color: red">%s:</b><ul>', __ ( 'Your system seems to be missing one or more pre-requisites - something may fail:' ) );
+				printf ( '<li>PHP v5.3: %s</li>', ($phpVersionRequirement ? __ ( 'Yes' ) : sprintf ( __ ( 'No (%s)' ), PHP_VERSION )) );
+				printf ( '<li>SSL Extension: %s</li>', ($sslRequirement ? __ ( 'Yes' ) : __ ( 'No' )) );
+				printf ( '<li>spl_autoload_register: %s</li>', ($splAutoloadRegisterRequirement ? __ ( 'Yes' ) : __ ( 'No' )) );
+				printf ( '<li>ArrayObject: %s</li>', ($arrayObjectRequirement ? __ ( 'Yes' ) : __ ( 'No' )) );
+				print '<ul></div>';
 			}
 			print '</div>';
 		}
@@ -1067,8 +1065,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function outputManualConfigurationContent() {
 			print '<div class="wrap">';
-			screen_icon ();
-			print '<h2>' . PostmanAdminController::PAGE_TITLE . '</h2>';
 			$this->displayTopNavigation ();
 			print '<form method="post" action="options.php">';
 			// This prints out all hidden setting fields
@@ -1081,7 +1077,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<div id="oauth_section">';
 			do_settings_sections ( PostmanAdminController::OAUTH_OPTIONS );
 			print ('</div>') ;
-			print '<p id="advanced_options_configuration_display" class="fineprint"><span><a href="#">Show Advanced Settings</a></span></p>';
+			printf ( '<p id="advanced_options_configuration_display" class="fineprint"><span><a href="#">%s</a></span></p>', __ ( 'Show Advanced Settings', 'Configuration Section' ) );
 			print '<div id="advanced_options_configuration_section">';
 			do_settings_sections ( PostmanAdminController::ADVANCED_OPTIONS );
 			print ('</div>') ;
@@ -1094,13 +1090,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function outputPurgeDataContent() {
 			print '<div class="wrap">';
-			screen_icon ();
-			print '<h2>' . PostmanAdminController::PAGE_TITLE . '</h2>';
 			$this->displayTopNavigation ();
 			print '<form method="POST" action="' . get_admin_url () . 'admin-post.php">';
 			printf ( '<input type="hidden" name="action" value="%s" />', self::PURGE_DATA_SLUG );
 			do_settings_sections ( 'PURGE_DATA' );
-			submit_button ( 'Delete All Data', 'delete', 'submit', true, 'style="background-color:red;color:white"' );
+			submit_button ( __ ( 'Delete All Data', 'Button Label' ), 'delete', 'submit', true, 'style="background-color:red;color:white"' );
 			print '</form>';
 			print '</div>';
 		}
@@ -1109,18 +1103,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function outputPortTestContent() {
 			print '<div class="wrap">';
-			screen_icon ();
-			print '<h2>' . PostmanAdminController::PAGE_TITLE . '</h2>';
 			$this->displayTopNavigation ();
 			print '<form id="port_test_form_id" method="post">';
 			do_settings_sections ( PostmanAdminController::PORT_TEST_OPTIONS );
 			// This prints out all hidden setting fields
-			submit_button ( 'Begin Test', 'primary', 'begin-port-test', true );
+			submit_button ( __ ( 'Begin Test', 'Button Label' ), 'primary', 'begin-port-test', true );
 			print '</form>';
 			print '<table id="testing_table">';
-			print '<tr><td class="port">Port 25</td><td id="port-test-port-25">Unknown</td>';
-			print '<tr><td class="port">Port 465</td><td id="port-test-port-465">Unknown</td>';
-			print '<tr><td class="port">Port 587</td><td id="port-test-port-587">Unknown</td>';
+			printf ( '<tr><td class="port">Port 25</td><td id="port-test-port-25">%s</td>', __ ( 'Unknown' ) );
+			printf ( '<tr><td class="port">Port 465</td><td id="port-test-port-465">%s</td>', __ ( 'Unknown' ) );
+			printf ( '<tr><td class="port">Port 587</td><td id="port-test-port-587">%s</td>', __ ( 'Unknown' ) );
 			print '</table>';
 			print '</div>';
 		}
@@ -1128,75 +1120,40 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 */
 		private function displayTopNavigation() {
-			?>
-<div id="welcome-panel" class="welcome-panel">
-	<div class="welcome-panel-content">
-		<div class="welcome-panel-column-container">
-			<div class="welcome-panel-column">
-				<h4>Get Started</h4>
-				<a class="button button-primary button-hero"
-					href="<?php echo $this->getPageUrl ( self::CONFIGURATION_WIZARD_SLUG ) ?>">Start
-					the Wizard</a>
-				<p class="">
-					or, <a
-						href="<?php echo $this->getPageUrl(self::CONFIGURATION_SLUG) ?>">configure
-						manually</a>.
-				</p>
-			</div>
-			<div class="welcome-panel-column">
-				<h4>Actions</h4>
-				<ul>
-					<li><?php
-			$emailCompany = __ ( 'Request OAuth Permission' );
-			if ($this->options->isSmtpHostGmail ()) {
-				$emailCompany = __ ( 'Request permission from Google' );
-			} else if ($this->options->isSmtpHostHotmail ()) {
-				$emailCompany = __ ( 'Request permission from Microsoft' );
-			} else if ($this->options->isSmtpHostYahoo ()) {
-				$emailCompany = __ ( 'Request permission from Yahoo' );
-			}
+			screen_icon ();
+			printf ( '<h2>%s</h2>', __ ( 'Postman Settings', 'Page Title' ) );
+			print '<div id="welcome-panel" class="welcome-panel">';
+			print '<div class="welcome-panel-content">';
+			print '<div class="welcome-panel-column-container">';
+			print '<div class="welcome-panel-column">';
+			printf ( '<h4>%s</h4>', __ ( 'Get Started', 'Main Menu' ) );
+			printf ( '<a class="button button-primary button-hero" href="%s">%s</a>', $this->getPageUrl ( self::CONFIGURATION_WIZARD_SLUG ), __ ( 'Start the Wizard', 'Button Label' ) );
+			printf ( '<p class="">or, <a href="%s">%s</a>. </p>', $this->getPageUrl ( self::CONFIGURATION_SLUG ), __ ( 'configure manually', 'Main Menu' ) );
+			print '</div>';
+			print '<div class="welcome-panel-column">';
+			printf ( '<h4>%s</h4>', __ ( 'Actions', 'Main Menu' ) );
+			print '<ul>';
 			if ($this->options->isRequestOAuthPermissionAllowed ()) {
-				printf ( '<a href="%s" class="welcome-icon send-test-email">%s</a>', $this->getActionUrl ( self::REQUEST_OAUTH2_GRANT_SLUG ), $emailCompany );
+				printf ( '<li><a href="%s" class="welcome-icon send-test-email">%s</a></li>', $this->getActionUrl ( self::REQUEST_OAUTH2_GRANT_SLUG ), $this->oauthScribe->getRequestPermissionLinkText () );
 			} else {
-				print '<div class="welcome-icon send_test_emaail">';
-				print $emailCompany;
-				print '</div>';
+				printf ( '<li><div class="welcome-icon send_test_emaail">%s</div></li>', $this->oauthScribe->getRequestPermissionLinkText () );
 			}
-			?></li>
-					<li><a
-						href="<?php echo $this->getPageUrl(self::PURGE_DATA_SLUG); ?>"
-						class="welcome-icon oauth-authorize">Delete plugin settings</a></li>
-
-				</ul>
-			</div>
-			<div class="welcome-panel-column welcome-panel-last">
-				<h4>Troubleshooting</h4>
-				<ul>
-					<li><?php
-			
+			printf ( '<li><a href="%s" class="welcome-icon oauth-authorize">%s</a></li>', $this->getPageUrl ( self::PURGE_DATA_SLUG ), __ ( 'Delete plugin settings', 'Main Menu' ) );
+			print '</ul>';
+			print '</div>';
+			print '<div class="welcome-panel-column welcome-panel-last">';
+			printf ( '<h4>%s</h4>', __ ( 'Troubleshooting', 'Main Menu' ) );
+			print '<ul>';
 			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
-				printf ( '<a
-							href="%s"
-							class="welcome-icon send_test_email">Send a Test Email</a>', $this->getPageUrl ( self::EMAIL_TEST_SLUG ) );
+				printf ( '<li><a href="%s" class="welcome-icon send_test_email">%s</a></li>', $this->getPageUrl ( self::EMAIL_TEST_SLUG ), __ ( 'Send a Test Email', 'Main Menu' ) );
 			} else {
-				print '<div class="welcome-icon send_test_emaail">';
-				print 'Send a Test Email';
-				print '</div>';
+				printf ( '<li><div class="welcome-icon send_test_email">%s</div></li>', __ ( 'Send a Test Email', 'Main Menu' ) );
 			}
-			
-			?></li>
-					<li><a
-						href="<?php echo $this->getPageUrl ( self::PORT_TEST_SLUG ) ?>"
-						class="welcome-icon run-port-test">Run a Port Connection Test</a></li>
-					<li><a
-						href="https://wordpress.org/plugins/postman-smtp/other_notes/"
-						class="welcome-icon postman_support">Online Support</a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</div><?php
+			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::PORT_TEST_SLUG ), __ ( 'Run a Port Connection Test', 'Main Menu' ) );
+			printf ( '<li><a href="https://wordpress.org/plugins/postman-smtp/other_notes/" class="welcome-icon postman_support">%s</a></li>', __ ( 'Online Support', 'Main Menu' ) );
+			print '</ul></div></div></div></div>';
 		}
+		
 		/**
 		 */
 		public function outputWizardContent() {
@@ -1205,8 +1162,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->options->setSenderNameIfEmpty ( wp_get_current_user ()->display_name );
 			
 			print '<div class="wrap">';
-			screen_icon ();
-			print '<h2>' . PostmanAdminController::PAGE_TITLE . '</h2>';
 			$this->displayTopNavigation ();
 			?>
 <h3>Postman Setup Wizard</h3>
@@ -1329,8 +1284,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function outputTestEmailWizardContent() {
 			print '<div class="wrap">';
-			screen_icon ();
-			print '<h2>' . PostmanAdminController::PAGE_TITLE . '</h2>';
 			$this->displayTopNavigation ();
 			
 			// set default recipient for test emails
@@ -1338,45 +1291,35 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if (! isset ( $testEmail )) {
 				$this->testOptions [PostmanOptions::TEST_EMAIL] = wp_get_current_user ()->user_email;
 			}
-			?>
-<h3>Send a Test Email</h3>
-
-<form id="postman_test_email_wizard" method="post"
-	action="<?php echo POSTMAN_HOME_PAGE_ABSOLUTE_URL ?>">
-	<h1>Input Email Address</h1>
-	<fieldset>
-		<legend>Enter your Email Address </legend>
-		<p>This utility allows you to send an email for testing. It may take up to <?php echo $this->options->getReadTimeout() * 2?> seconds to complete.</p>
-
-		<label for="postman_test_options[test_email]">Recipient Email Address</label>
-		<?php echo $this->test_email_callback(); ?>
-	</fieldset>
-
-	<h1>Deliver The Message</h1>
-	<fieldset>
-		<legend>
-			Sending the message: <span id="postman_test_message_status">In Outbox</span>
-		</legend>
-		<section id="test-success">
-			<p>Your message was delivered to the SMTP server! Congratulations :)</p>
-		</section>
-		<section id="test-fail">
-			<p>
-				<label>Error Message</label>
-			</p>
-			<textarea id="postman_test_message_error_message" readonly="readonly"
-				cols="70" rows="2"></textarea>
-			<p>
-				<label for="postman_test_message_transcript">SMTP Session Transcript</label>
-			</p>
-			<textarea readonly="readonly" id="postman_test_message_transcript"
-				cols="70" rows="6"></textarea>
-		</section>
-	</fieldset>
-
-</form>
-
-<?php
+			printf ( '<h3>%s</h3>', __ ( 'Send a Test Email', 'Page Title' ) );
+			printf ( '<form id="postman_test_email_wizard" method="post" action="%s">', POSTMAN_HOME_PAGE_ABSOLUTE_URL );
+			printf ( '<h1>%s</h1>', __ ( 'Choose the Recipient' ) );
+			print '<fieldset>';
+			printf ( '<legend>%s</legend>', __ ( 'Input Email Address' ) );
+			printf ( '<p>%s', __ ( 'This utility allows you to send an email message for testing.' ) );
+			print ' ';
+			printf ( '%s</p>', sprintf ( _n ( 'If there is a problem, Postman will give up after %d second.', 'If there is a problem, Postman will give up after %d seconds.', $this->options->getReadTimeout () * 2 ), $this->options->getReadTimeout () * 2 ) );
+			printf ( '<label for="postman_test_options[test_email]">%s</label>', __ ( 'Recipient Email Address', 'Configuration Input Field' ) );
+			print $this->test_email_callback ();
+			print '</fieldset>';
+			
+			printf ( '<h1>%s</h1>', __ ( 'Send The Message' ) );
+			print '<fieldset>';
+			print '<legend>';
+			print __ ( 'Sending the message:' );
+			printf ( ' <span id="postman_test_message_status">%s</span>', __ ( 'In Outbox', 'Send a Test Email' ) );
+			print '</legend>';
+			print '<section id="test-success">';
+			printf ( '<p>%s</p>', __ ( 'Your message was delivered to the SMTP server! Congratulations :)' ) );
+			print '</section>';
+			print '<section id="test-fail">';
+			printf ( '<p><label>%s</label></p>', 'Error Message' );
+			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="70" rows="2"></textarea>';
+			printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript' ) );
+			print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="70" rows="6"></textarea>';
+			print '</section>';
+			print '</fieldset>';
+			print '</form>';
 		}
 	}
 }
