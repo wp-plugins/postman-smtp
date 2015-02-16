@@ -89,7 +89,12 @@ if (! function_exists ( 'stripUrlPath' )) {
 		if (isset ( $urlParts ['scheme'] ) && isset ( $urlParts ['host'] )) {
 			return $urlParts ['scheme'] . "://" . $urlParts ['host'] . "/";
 		} else {
-			return 'error calculating your domain root - please enter it manually';
+			throw new ParseUrlException ();
 		}
+	}
+}
+
+if (! class_exists ( 'ParseUrlException' )) {
+	class ParseUrlException extends Exception {
 	}
 }

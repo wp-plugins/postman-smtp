@@ -775,6 +775,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$encType = PostmanOptions::ENCRYPTION_TYPE_NONE;
 					$port = 25;
 				}
+				$callbackDomain = $this->getCallbackDomain ();
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),
 						'callback_domain' => $scribe->getCallbackDomain (),
@@ -782,7 +783,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'client_id_label' => $scribe->getClientIdLabel (),
 						'client_secret_label' => $scribe->getClientSecretLabel (),
 						'redirect_url_label' => $scribe->getCallbackUrlLabel (),
-						'callback_domain_label' => $scribe->getCallbackDomainLabel (),
+						'callback_domain_label' => $callbackDomain,
 						PostmanOptions::AUTHENTICATION_TYPE => $authType,
 						PostmanOptions::ENCRYPTION_TYPE => $encType,
 						PostmanOptions::PORT => $port,
@@ -940,12 +941,19 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function redirect_url_callback() {
 			printf ( '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly="readonly" id="input_oauth_redirect_url" value="%s" size="60"/>', $this->oauthScribe->getCallbackUrl () );
 		}
+		private function getCallbackDomain() {
+			try {
+				return $this->oauthScribe->getCallbackDomain ();
+			} catch ( Exception $e ) {
+				return __ ( 'Error computing your domain root - please enter it manually' );
+			}
+		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function callback_domain_callback() {
-			printf ( '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly="readonly" id="input_oauth_callback_domain" value="%s" size="60"/>', $this->oauthScribe->getCallbackDomain () );
+			printf ( '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" readonly="readonly" id="input_oauth_callback_domain" value="%s" size="60"/>', $this->getCallbackDomain () );
 		}
 		
 		/**
