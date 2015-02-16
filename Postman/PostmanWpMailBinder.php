@@ -18,7 +18,7 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			
 			// the bind should happen as soon as possible, but the error messages have to wait
-			// until the rest of WordPress has loaded
+			// until the admin_init event
 			add_action ( 'admin_init', array (
 					$this,
 					'warnIfCanNotBindToWpMail' 
@@ -63,13 +63,10 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 			if ($this->couldNotReplaceWpMail) {
 				$this->logger->error ( 'Alerting administrator about bind problem' );
 				add_action ( 'admin_notices', Array (
-						$this,
+						$this->messageHandler,
 						'displayCouldNotReplaceWpMail' 
 				) );
 			}
-		}
-		public function displayCouldNotReplaceWpMail() {
-			$this->messageHandler->displayWarningMessage ( PostmanAdminController::NAME . ' is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.' );
 		}
 	}
 }
