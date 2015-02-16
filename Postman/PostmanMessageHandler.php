@@ -33,7 +33,8 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 							'displayPermissionNeededWarning' 
 					) );
 				}
-				if (! $this->options->isAuthTypeOAuth2 () && ($this->options->isSmtpHostGmail () || $this->options->isSmtpHostHotmail ())) {
+				$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getHostname () );
+				if (! $scribe->isOauthHost () && ($scribe->isGoogle () || $scribe->isMicrosoft () || $scribe->isYahoo ())) {
 					add_action ( 'admin_notices', Array (
 							$this,
 							'displaySwitchToOAuthWarning' 

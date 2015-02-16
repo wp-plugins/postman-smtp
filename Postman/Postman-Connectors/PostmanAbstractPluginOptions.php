@@ -32,7 +32,7 @@ if (! class_exists ( 'PostmanAbstractPluginOptions' )) {
 			return $valid;
 		}
 		public function isImportable() {
-			return ! PostmanSmtpHostProperties::isOauthHost ( $this->getHostname () ) && $this->isValid ();
+			return ! PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->getHostname () )->isOauthHost () && $this->isValid ();
 		}
 	}
 }

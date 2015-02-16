@@ -1,8 +1,6 @@
 <?php
 if (! class_exists ( "PostmanOptions" )) {
 	
-	require_once 'Postman-Auth/PostmanSmtpHostProperties.php';
-	
 	/**
 	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api
 	 * http://pastebin.com/jA9sBNTk
@@ -287,15 +285,6 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function isAuthTypeNone() {
 			return PostmanOptions::AUTHENTICATION_TYPE_NONE == $this->getAuthorizationType ();
-		}
-		public function isSmtpHostGmail() {
-			return PostmanSmtpHostProperties::isGoogle ( $this->getHostname () );
-		}
-		public function isSmtpHostHotmail() {
-			return PostmanSmtpHostProperties::isMicrosoft ( $this->getHostname () );
-		}
-		public function isSmtpHostYahoo() {
-			return PostmanSmtpHostProperties::isYahoo ( $this->getHostname () );
 		}
 	}
 }

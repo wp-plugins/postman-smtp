@@ -770,7 +770,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				);
 			} else {
 				$response = array (
-						'redirect_url' => PostmanSmtpHostProperties::getRedirectUrl ( $hostname ),
+						'redirect_url' => $scribe->getCallbackUrl(),
 						'help_text' => $this->getOAuthHelp ( $hostname ),
 						'success' => true 
 				);
