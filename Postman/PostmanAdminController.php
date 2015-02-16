@@ -90,7 +90,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->messageHandler = $messageHandler;
 			
 			//
-			$this->oauthScribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getHostname () );
+			$this->oauthScribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getAuthorizationType(), $this->options->getHostname () );
 			
 			// import from other plugins
 			$this->importableConfiguration = new PostmanImportableConfiguration ();
@@ -724,8 +724,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 		function getAjaxRedirectUrl() {
 			$hostname = $_POST ['hostname'];
 			$this->logger->debug ( 'ajaxRedirectUrl hostname:' . $hostname );
-			// don't care about what's in the database, i need a scribe based on the ajax parameter
-			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $hostname );
+			// don't care about what's in the database, i need a scribe based on the ajax parameter assuming this is OAUTH2
+			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $hostname );
 			if (isset ( $_POST ['referer'] )) {
 				$this->logger->debug ( 'ajaxRedirectUrl referer:' . $_POST ['referer'] );
 				// this must be wizard or config from an oauth-related change
@@ -1226,7 +1226,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			print '<section class="wizard-auth-oauth2">';
 			printf ( '<p id="%s</p>', __ ( 'wizard_oauth2_help">Help.' ) );
-			printf ( '<label id="callback_domain" for="callback_domain">%s</label>', $this->oauthScribe->getCallbackDomainLabel );
+			printf ( '<label id="callback_domain" for="callback_domain">%s</label>', $this->oauthScribe->getCallbackDomainLabel() );
 			print '<br />';
 			print $this->callback_domain_callback ();
 			print '<br />';
