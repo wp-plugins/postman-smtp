@@ -224,7 +224,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function postmanModifyLinksOnPluginsListPage($links) {
 			$mylinks = array (
-					sprintf ( '<a href="%s">%s</a>', esc_url ( POSTMAN_HOME_PAGE_ABSOLUTE_URL ), __ ( 'Settings', 'postman-smtp' ) ) 
+					sprintf ( '<a href="%s">%s</a>', esc_url ( POSTMAN_HOME_PAGE_ABSOLUTE_URL ), __ ( 'Settings', 'Plugin Action Links', 'postman-smtp' ) ) 
 			);
 			return array_merge ( $links, $mylinks );
 		}
