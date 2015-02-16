@@ -17,7 +17,7 @@ if (! class_exists ( 'PostmanMain' )) {
 	class PostmanMain {
 		const POSTMAN_TCP_READ_TIMEOUT = 60;
 		const POSTMAN_TCP_CONNECTION_TIMEOUT = 10;
-		private $basename;
+		private $postmanPhpFile;
 		/**
 		 *
 		 * @param unknown $postmanPhpFile        	
@@ -26,7 +26,7 @@ if (! class_exists ( 'PostmanMain' )) {
 			
 			// calculate the basename
 			$basename = plugin_basename ( $postmanPhpFile );
-			$this->basename = $basename;
+			$this->postmanPhpFile = $postmanPhpFile;
 			
 			// handle plugin activation/deactivation
 			require_once 'PostmanActivationHandler.php';
@@ -65,7 +65,8 @@ if (! class_exists ( 'PostmanMain' )) {
 			) );
 		}
 		public function loadTextDomain() {
-			load_plugin_textdomain ( 'postman-smtp', false, $this->basename . 'Postman/lang' );
+			$base = basename ( dirname ( $this->postmanPhpFile ) );
+			load_plugin_textdomain ( 'postman-smtp', false, $base . '/Postman/languages/' );
 		}
 		
 		/**
