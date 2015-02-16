@@ -77,7 +77,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		// this disables the finish button during the screen slide
 		jQuery('li + li').addClass('disabled');
 		jQuery('#postman_test_message_status').html(
-				postman_email_test_not_started);
+				postman_email_test.not_started);
 		jQuery('#postman_test_message_status').css('color', '');
 		jQuery('#postman_test_message_error_message').val('');
 		jQuery('#postman_test_message_transcript').val('');
@@ -100,19 +100,19 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 			'method' : 'wp_mail'
 		};
 		jQuery('#postman_test_message_status').html(
-				postman_email_test_sending);
+				postman_email_test.sending);
 		jQuery('#postman_test_message_status').css('color', 'blue');
 		jQuery.post(ajaxurl, data, function(response) {
 			ready = 1;
 			jQuery('li + li').removeClass('disabled');
 			if (response.success) {
 				jQuery('#postman_test_message_status').html(
-						postman_email_test_success);
+						postman_email_test.success);
 				jQuery('#postman_test_message_status').css('color', 'green');
 				show(jQuery('#test-success'));
 			} else {
 				jQuery('#postman_test_message_status').html(
-						postman_email_test_failed);
+						postman_email_test.failed);
 				jQuery('#postman_test_message_status').css('color', 'red');
 				jQuery('#postman_test_message_error_message').val(
 						response.message);
