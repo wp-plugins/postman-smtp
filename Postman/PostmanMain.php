@@ -18,6 +18,7 @@ if (! class_exists ( 'PostmanMain' )) {
 		const POSTMAN_TCP_READ_TIMEOUT = 60;
 		const POSTMAN_TCP_CONNECTION_TIMEOUT = 10;
 		private $postmanPhpFile;
+		private $logger;
 		/**
 		 *
 		 * @param unknown $postmanPhpFile        	
@@ -27,6 +28,7 @@ if (! class_exists ( 'PostmanMain' )) {
 			// calculate the basename
 			$basename = plugin_basename ( $postmanPhpFile );
 			$this->postmanPhpFile = $postmanPhpFile;
+			$this->logger = new PostmanLogger ( 'PostmanMain' );
 			
 			// handle plugin activation/deactivation
 			require_once 'PostmanActivationHandler.php';
@@ -65,8 +67,11 @@ if (! class_exists ( 'PostmanMain' )) {
 			) );
 		}
 		public function loadTextDomain() {
-			$base = basename ( dirname ( $this->postmanPhpFile ) );
-			load_plugin_textdomain ( 'postman-smtp', false, $base . '/Postman/languages/' );
+			$langDir = basename ( dirname ( $this->postmanPhpFile ) ) . '/Postman/languages/';
+			$success = load_plugin_textdomain ( 'postman-smtp', false, $langDir );
+			if (! $success) {
+				$this->logger->error ( 'Could not load text domain ' . $langDir . 'postman-smtp-' . get_locale () . '.po' );
+			}
 		}
 		
 		/**
