@@ -1,54 +1,51 @@
 portsChecked = 0;
 portsToCheck = 0;
-jQuery(document)
-		.ready(
-				function() {
-					ready = 0;
-					jQuery(postman_input_sender_email).focus();
-					jQuery("#postman_test_email_wizard")
-							.steps(
-									{
-										forceMoveForward : true,
-										bodyTag : "fieldset",
-										headerTag : "h5",
-										transitionEffect : "slideLeft",
-										stepsOrientation : "vertical",
-										autoFocus : true,
-										onStepChanging : function(event,
-												currentIndex, newIndex) {
-											return handleStepChange(event,
-													currentIndex, newIndex,
-													jQuery(this));
+jQuery(document).ready(
+		function() {
+			ready = 0;
+			jQuery(postman_input_sender_email).focus();
+			jQuery("#postman_test_email_wizard")
+					.steps(
+							{
+								forceMoveForward : true,
+								bodyTag : "fieldset",
+								headerTag : "h5",
+								transitionEffect : "slideLeft",
+								stepsOrientation : "vertical",
+								autoFocus : true,
+								onStepChanging : function(event, currentIndex,
+										newIndex) {
+									return handleStepChange(event,
+											currentIndex, newIndex,
+											jQuery(this));
 
-										},
-										onInit : function() {
-											jQuery(postman_input_test_email).focus();
-										},
-										onStepChanged : function(event,
-												currentIndex, priorIndex) {
-											return postHandleStepChange(event,
-													currentIndex, priorIndex,
-													jQuery(this));
-										},
-										onFinishing : function(event,
-												currentIndex) {
-											return true;
-										},
-										onFinished : function(event,
-												currentIndex) {
-											if (ready == 0) {
-												return false;
-											} else {
-												var form = jQuery(this);
-												form.submit();
-											}
-										}
-									}).validate({
-								errorPlacement : function(error, element) {
-									element.before(error);
+								},
+								onInit : function() {
+									jQuery(postman_input_test_email).focus();
+								},
+								onStepChanged : function(event, currentIndex,
+										priorIndex) {
+									return postHandleStepChange(event,
+											currentIndex, priorIndex,
+											jQuery(this));
+								},
+								onFinishing : function(event, currentIndex) {
+									return true;
+								},
+								onFinished : function(event, currentIndex) {
+									if (ready == 0) {
+										return false;
+									} else {
+										var form = jQuery(this);
+										form.submit();
+									}
 								}
-							});
-				});
+							}).validate({
+						errorPlacement : function(error, element) {
+							element.before(error);
+						}
+					});
+		});
 function handleStepChange(event, currentIndex, newIndex, form) {
 	// Always allow going backward even if
 	// the current step contains invalid fields!
@@ -79,7 +76,8 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		ready = 0;
 		// this disables the finish button during the screen slide
 		jQuery('li + li').addClass('disabled');
-		jQuery('#postman_test_message_status').html('In Outbox');
+		jQuery('#postman_test_message_status').html(
+				postman_email_test_not_started);
 		jQuery('#postman_test_message_status').css('color', '');
 		jQuery('#postman_test_message_error_message').val('');
 		jQuery('#postman_test_message_transcript').val('');
@@ -93,24 +91,28 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	if (currentIndex === 0) {
 	} else if (currentIndex === 1) {
-		// this is the second place i disable the finish button but Steps re-enables it after the screen slides
+		// this is the second place i disable the finish button but Steps
+		// re-enables it after the screen slides
 		jQuery('li + li').addClass('disabled');
 		var data = {
 			'action' : 'send_test_email',
 			'email' : jQuery(postman_input_test_email).val(),
 			'method' : 'wp_mail'
 		};
-		jQuery('#postman_test_message_status').html('Sending...');
+		jQuery('#postman_test_message_status').html(
+				postman_email_test_sending);
 		jQuery('#postman_test_message_status').css('color', 'blue');
 		jQuery.post(ajaxurl, data, function(response) {
 			ready = 1;
 			jQuery('li + li').removeClass('disabled');
 			if (response.success) {
-				jQuery('#postman_test_message_status').html('Success');
+				jQuery('#postman_test_message_status').html(
+						postman_email_test_success);
 				jQuery('#postman_test_message_status').css('color', 'green');
 				show(jQuery('#test-success'));
 			} else {
-				jQuery('#postman_test_message_status').html('Failed');
+				jQuery('#postman_test_message_status').html(
+						postman_email_test_failed);
 				jQuery('#postman_test_message_status').css('color', 'red');
 				jQuery('#postman_test_message_error_message').val(
 						response.message);
