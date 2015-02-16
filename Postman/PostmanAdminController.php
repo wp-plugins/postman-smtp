@@ -439,9 +439,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'jquery_validation',
 					self::POSTMAN_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_text_port_test_testing', __ ( 'Testing', 'TCP Port Test Status' ) );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_text_port_test_open', __ ( 'Open', 'TCP Port Test Status' ) );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_text_port_test_closed', __ ( 'Closed', 'TCP Port Test Status' ) );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_testing', __ ( 'Testing', 'TCP Port Test Status' ) );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_open', __ ( 'Open', 'TCP Port Test Status' ) );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_closed', __ ( 'Closed', 'TCP Port Test Status' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_email_test_not_started', __ ( 'In Outbox', 'Email Test Status' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_email_test_sending', __ ( 'Sending...', 'Email Test Status' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_email_test_success', __ ( 'Success', 'Email Test Status' ) );

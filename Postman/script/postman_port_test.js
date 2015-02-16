@@ -23,7 +23,7 @@ jQuery(document).ready(function() {
 function portTest(tdValue, port, button) {
 	portsToBeTested += 1;
 	var testEl = jQuery(tdValue);
-	testEl.html('Testing');
+	testEl.html(postman_port_test_testing);
 	var data = {
 		'action' : 'test_port',
 		'hostname' : jQuery(postman_hostname_element_name).val(),
@@ -35,9 +35,11 @@ function portTest(tdValue, port, button) {
 	jQuery.post(ajaxurl, data, function(response) {
 		totalPortsTested += 1;
 		if (response.success) {
-			testEl.html('<span style="color:green">Open</span>');
+			testEl.html('<span style="color:green">'
+					+ postman_port_test_open + '</span>');
 		} else {
-			testEl.html('<span style="color:red">Closed (' + response.message
+			testEl.html('<span style="color:red">'
+					+ postman_port_test_closed + ' (' + response.message
 					+ ")</span>");
 		}
 		if (totalPortsTested >= portsToBeTested) {
