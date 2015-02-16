@@ -90,7 +90,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->messageHandler = $messageHandler;
 			
 			//
-			$this->oauthScribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getAuthorizationType(), $this->options->getHostname () );
+			$this->oauthScribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getAuthorizationType (), $this->options->getHostname () );
 			
 			// import from other plugins
 			$this->importableConfiguration = new PostmanImportableConfiguration ();
@@ -730,23 +730,26 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->logger->debug ( 'ajaxRedirectUrl referer:' . $_POST ['referer'] );
 				// this must be wizard or config from an oauth-related change
 				if ($_POST ['referer'] == 'wizard') {
-					$avail25 = $_POST ['avail25'];
-					$avail465 = $_POST ['avail465'];
-					$avail587 = $_POST ['avail587'];
+					$avail[25] = filter_var ( $_POST ['avail25'], FILTER_VALIDATE_BOOLEAN );
+					$avail[465] = filter_var ( $_POST ['avail465'], FILTER_VALIDATE_BOOLEAN );
+					$avail[587] = filter_var ( $_POST ['avail587'], FILTER_VALIDATE_BOOLEAN );
 				} else if ($_POST ['referer'] == 'manual_config') {
-					$avail25 = true;
-					$avail465 = true;
-					$avail587 = true;
+					$avail[25] = true;
+					$avail[465] = true;
+					$avail[587] = true;
 				}
-				if ($scribe->isOauthHost () || $_POST ['referer'] == 'manual_config') {
+				$configureOAuth = false;
+				$configureOAuth |= $_POST ['referer'] == 'manual_config';
+				$configureOAuth |= $scribe->isOauthHost () && $avail[$scribe->getOAuthPort()];
+				if ($configureOAuth) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 					$port = $scribe->getOAuthPort ();
 					$encType = $scribe->getEncryptionType ();
-				} else if ($avail465) {
+				} else if ($avail[465]) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
 					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
 					$port = 465;
-				} else if ($avail587) {
+				} else if ($avail[587]) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
 					$encType = PostmanOptions::ENCRYPTION_TYPE_TLS;
 					$port = 587;
@@ -1226,11 +1229,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			print '<section class="wizard-auth-oauth2">';
 			printf ( '<p id="%s</p>', __ ( 'wizard_oauth2_help">Help.' ) );
-			printf ( '<label id="callback_domain" for="callback_domain">%s</label>', $this->oauthScribe->getCallbackDomainLabel() );
+			printf ( '<label id="callback_domain" for="callback_domain">%s</label>', $this->oauthScribe->getCallbackDomainLabel () );
 			print '<br />';
 			print $this->callback_domain_callback ();
 			print '<br />';
-			printf ('<label id="redirect_url" for="redirect_uri">%s</label>', $this->oauthScribe->getCallbackUrlLabel());
+			printf ( '<label id="redirect_url" for="redirect_uri">%s</label>', $this->oauthScribe->getCallbackUrlLabel () );
 			print '<br />';
 			print $this->redirect_url_callback ();
 			print '<br />';
@@ -1257,7 +1260,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<label for="password">%s</label>', __ ( 'Password', 'Configuration Input Field' ) );
 			print $this->basic_auth_password_callback ();
 			print '</section>';
-
+			
 			print '</fieldset>';
 			
 			// Wizard Step 5
