@@ -17,15 +17,16 @@ if (! class_exists ( 'PostmanMain' )) {
 	class PostmanMain {
 		const POSTMAN_TCP_READ_TIMEOUT = 60;
 		const POSTMAN_TCP_CONNECTION_TIMEOUT = 10;
-		
+		private $basename;
 		/**
 		 *
 		 * @param unknown $postmanPhpFile        	
 		 */
 		public function __construct($postmanPhpFile) {
-
+			
 			// calculate the basename
 			$basename = plugin_basename ( $postmanPhpFile );
+			$this->basename = $basename;
 			
 			// handle plugin activation/deactivation
 			require_once 'PostmanActivationHandler.php';
@@ -33,6 +34,12 @@ if (! class_exists ( 'PostmanMain' )) {
 			register_activation_hook ( $postmanPhpFile, array (
 					$upgrader,
 					'activatePostman' 
+			) );
+			
+			// load the text domain
+			add_action ( 'plugins_loaded', array (
+					$this,
+					'loadTextDomain' 
 			) );
 			
 			// load the options and the auth token
@@ -57,6 +64,11 @@ if (! class_exists ( 'PostmanMain' )) {
 					'version_shortcode' 
 			) );
 		}
+		public function loadTextDomain() {
+			$plugin_dir = basename ( dirname ( __FILE__ ) );
+			load_plugin_textdomain ( 'postman-smtp', false, $this->basename );
+		}
+		
 		/**
 		 * Shortcode to return the current plugin version.
 		 * From http://code.garyjones.co.uk/get-wordpress-plugin-version/
