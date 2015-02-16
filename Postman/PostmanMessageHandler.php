@@ -29,13 +29,28 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 							'displayDebugDisplayIsEnabled' 
 					) );
 				}
-				if ($this->options->isPermissionNeeded ( $authToken )) {
+				
+				if ($this->options->isSmtpServerRequirementsNotMet ()) {
+					add_action ( 'admin_notices', Array (
+							$this,
+							'displaySmtpServerNeededWarning' 
+					) );
+				} else if ($this->options->isOAuthRequirementsNotMet ( $this->scribe->isOauthHost () )) {
+					add_action ( 'admin_notices', Array (
+							$this,
+							'displayOauthCredentialsNeededWarning' 
+					) );
+				} else if ($this->options->isPermissionNeeded ( $authToken )) {
 					add_action ( 'admin_notices', Array (
 							$this,
 							'displayPermissionNeededWarning' 
 					) );
-				}
-				if (! $this->scribe->isOauthHost () && ($this->scribe->isGoogle () || $this->scribe->isMicrosoft () || $this->scribe->isYahoo ())) {
+				} else if ($this->options->isPasswordCredentialsNeeded ()) {
+					add_action ( 'admin_notices', Array (
+							$this,
+							'displayPasswordCredentialsNeededWarning' 
+					) );
+				} else if (! $this->scribe->isOauthHost () && ($this->scribe->isGoogle () || $this->scribe->isMicrosoft () || $this->scribe->isYahoo ())) {
 					add_action ( 'admin_notices', Array (
 							$this,
 							'displaySwitchToOAuthWarning' 
@@ -86,9 +101,20 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		}
 		public function displayPermissionNeededWarning() {
 			$scribe = $this->scribe;
-			$message = sprintf ( __ ( 'Warning: You entered a %1$s and %2$s, but have not received permission to use it.' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
+			$message = sprintf ( __ ( 'Warning: You have configured OAuth 2.0 authentication, but have not received permission to use it.' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
 			$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanAdminController::getActionUrl ( PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG ), $scribe->getRequestPermissionLinkText () );
 			$this->displayWarningMessage ( $message );
+		}
+		public function displayPasswordCredentialsNeededWarning() {
+			$this->displayWarningMessage ( __ ( 'Warning: Password authentication (Plain/Login/CRAMMD5) requires a username and password.' ) );
+		}
+		public function displayOauthCredentialsNeededWarning() {
+			$scribe = $this->scribe;
+			$this->displayWarningMessage ( sprintf ( __ ( 'Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, %1$s, and %2$s.' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () ) );
+		}
+		public function displaySmtpServerNeededWarning() {
+			$scribe = $this->scribe;
+			$this->displayWarningMessage ( __ ( 'Warning: Outgoing Mail Server (SMTP) and Port can not be empty.' ) );
 		}
 		public function displayConfigurationRequiredWarning() {
 			$message = sprintf ( __ ( 'Warning: Postman is <em>not</em> intercepting mail requests. <a href="%s">Configure</a> the plugin.' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL );
@@ -96,7 +122,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		}
 		public function displaySwitchToOAuthWarning() {
 			$scribe = $this->scribe;
-			$message = sprintf ( __ ( 'Warning: You may experience issues using password authentication with %s. Change your authentication type to OAuth 2.0.' ), $scribe->getServiceName () );
+			$message = sprintf ( __ ( 'Warning: You may experience issues using older authentication. Change your authentication type to OAuth 2.0.' ) );
 			$this->displayWarningMessage ( $message );
 		}
 		public function displayDebugDisplayIsEnabled() {
@@ -130,7 +156,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			$this->displayMessage ( $message, 'update-nag' );
 		}
 		private function displayMessage($message, $className) {
-			printf('<div class="%s"><p>%s</p></div>', $className, $message);
+			printf ( '<div class="%s"><p>%s</p></div>', $className, $message );
 		}
 	}
 }

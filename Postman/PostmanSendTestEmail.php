@@ -38,8 +38,7 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			$subject = PostmanSendTestEmailController::SUBJECT;
 			// Lines in email are terminated by CRLF ("\r\n") according to RFC2821
 			// Englsih - Mandarin - French - Hindi - Spanish - Arabic - Portuguese - Russian - Bengali - Japanese - Punjabi
-			$message = 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - السلام عليكم - Olá - Привет! - নমস্কার - 今日は - ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ।';
-			$message .= PostmanSendTestEmailController::EOL . PostmanSendTestEmailController::EOL . 'Sent by Postman v' . POSTMAN_PLUGIN_VERSION . ' - https://wordpress.org/plugins/postman-smtp/';
+			$message .= sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - السلام عليكم - Olá - Привет! - নমস্কার - 今日は - ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ।%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSendTestEmailController::EOL, PostmanSendTestEmailController::EOL, sprintf ( __ ( 'Sent by Postman v%s' ), POSTMAN_PLUGIN_VERSION ) );
 			// $headers = array (
 			// 'Content-Type: text/html;'
 			// );

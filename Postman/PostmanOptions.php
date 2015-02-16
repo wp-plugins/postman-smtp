@@ -78,19 +78,14 @@ if (! class_exists ( "PostmanOptions" )) {
 			return $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && ! empty ( $clientId ) && ! empty ( $clientSecret );
 		}
 		public function isSendingEmailAllowed(PostmanAuthorizationToken $token) {
-			$authType = $this->getAuthorizationType ();
-			$hostname = $this->getHostname ();
-			$port = $this->getPort ();
-			$username = $this->getUsername ();
-			$password = $this->getPassword ();
-			if (empty ( $hostname ) || empty ( $port )) {
+			if ($this->isSmtpServerRequirementsNotMet ()) {
 				return false;
 			}
-			if ($authType == PostmanOptions::AUTHENTICATION_TYPE_NONE) {
+			if ($this->isAuthTypeNone ()) {
 				return true;
-			} else if ($authType == PostmanOptions::AUTHENTICATION_TYPE_LOGIN || $authType == PostmanOptions::AUTHENTICATION_TYPE_PLAIN) {
-				return ! empty ( $username ) && ! empty ( $password );
-			} else if ($authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
+			} else if ($this->isAuthTypePassword ()) {
+				return ! $this->isPasswordCredentialsNeeded ();
+			} else if ($this->isAuthTypeOAuth2 ()) {
 				$accessToken = $token->getAccessToken ();
 				$refreshToken = $token->getRefreshToken ();
 				$senderEmail = $this->getSenderEmail ();
@@ -106,7 +101,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			$senderEmail = $this->getSenderEmail ();
 			$clientId = $this->getClientId ();
 			$clientSecret = $this->getClientSecret ();
-			if (! $this->isAuthTypeOAuth2 () || empty ( $hostname ) || empty ( $port ) || empty ( $senderEmail ) || empty ( $clientId ) || empty ( $clientSecret )) {
+			if (! $this->isAuthTypeOAuth2 () || empty ( $clientId ) || empty ( $clientSecret )) {
 				return false;
 			} else {
 				$accessToken = $token->getAccessToken ();
@@ -117,6 +112,23 @@ if (! class_exists ( "PostmanOptions" )) {
 					return false;
 				}
 			}
+		}
+		public function isSmtpServerRequirementsNotMet() {
+			$hostname = $this->getHostname ();
+			$port = $this->getPort ();
+			return empty ( $hostname ) || empty ( $port );
+		}
+		public function isOAuthRequirementsNotMet($isOauthHost) {
+			$clientId = $this->getClientId ();
+			$clientSecret = $this->getClientSecret ();
+			$senderEmail = $this->getSenderEmail ();
+			$hostname = $this->getHostname ();
+			return $this->isAuthTypeOAuth2 () && (empty ( $clientId ) || empty ( $clientSecret ) || empty ( $senderEmail ) || ! $isOauthHost);
+		}
+		public function isPasswordCredentialsNeeded() {
+			$username = $this->getUsername ();
+			$password = $this->getPassword ();
+			return $this->isAuthTypePassword () && (empty ( $username ) || empty ( $password ));
 		}
 		public function isErrorPrintingEnabled() {
 			if (isset ( $this->options [PostmanOptions::PRINT_ERRORS] ))
@@ -269,7 +281,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			}
 		}
 		public function isAuthTypePassword() {
-			return $this->isAuthTypeLogin() || $this->isAuthTypeCrammd5() || $this->isAuthTypePlain();
+			return $this->isAuthTypeLogin () || $this->isAuthTypeCrammd5 () || $this->isAuthTypePlain ();
 		}
 		public function isAuthTypeOAuth2() {
 			return PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $this->getAuthorizationType ();

@@ -22,6 +22,9 @@ if (! class_exists ( 'PostmanOAuthScribeFactory' )) {
 					return new PostmanMicrosoftOAuthScribe ( $hostname );
 				} else if (endsWith ( $hostname, 'yahoo.com' )) {
 					return new PostmanYahooOAuthScribe ( $hostname );
+				} else {
+					// bad hostname, but OAuth selected
+					return new PostmanNonOAuthScribe ( $hostname );
 				}
 			}
 		}
