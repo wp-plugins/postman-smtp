@@ -31,10 +31,13 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 				}
 				
 				if ($this->options->isSmtpServerRequirementsNotMet ()) {
-					add_action ( 'admin_notices', Array (
-							$this,
-							'displaySmtpServerNeededWarning' 
-					) );
+					if (! $this->options->isNew ()) {
+						// dont show this warning if this is a brand new install
+						add_action ( 'admin_notices', Array (
+								$this,
+								'displaySmtpServerNeededWarning' 
+						) );
+					}
 				} else if ($this->options->isOAuthRequirementsNotMet ( $this->scribe->isOauthHost () )) {
 					add_action ( 'admin_notices', Array (
 							$this,

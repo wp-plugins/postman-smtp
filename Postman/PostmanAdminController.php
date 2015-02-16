@@ -667,13 +667,30 @@ if (! class_exists ( "PostmanAdminController" )) {
 		function sendTestEmailViaAjax() {
 			$email = $_POST ['email'];
 			$method = $_POST ['method'];
-			$emailTester = new PostmanSendTestEmailController ();
-			$success = $emailTester->simeplSend ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName () );
-			$response = array (
-					'message' => $emailTester->getMessage (),
-					'transcript' => $emailTester->getTranscript (),
-					'success' => $success 
-			);
+			try {
+				$emailTester = new PostmanSendTestEmailController ();
+				$subject = __ ( 'WordPress Postman SMTP Test', 'Test Email Subject' );
+				// Englsih - Mandarin - French - Hindi - Spanish - Arabic - Portuguese - Russian - Bengali - Japanese - Punjabi
+				$message = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - السلام عليكم - Olá - Привет! - নমস্কার - 今日は - ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ।%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( __ ( 'Sent by Postman v%s', 'Test Email Tagline' ), POSTMAN_PLUGIN_VERSION ) );
+				$success = $emailTester->sendTestEmail ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName (), $subject, $message );
+				$response = array (
+						'message' => $emailTester->getMessage (),
+						'transcript' => $emailTester->getTranscript (),
+						'success' => $success 
+				);
+			} catch ( PostmanSendMailCommunicationError334 $e ) {
+				$response = array (
+						'message' => sprintf ( __ ( 'Communication Error [334] - make sure the Sender Email belongs to the account which provided the %s OAuth 2.0 consent.' ), $serviceName ),
+						'transcript' => $emailTester->getTranscript (),
+						'success' => false 
+				);
+			} catch ( PostmanSendMailInexplicableException $e ) {
+				$response = array (
+						'message' => __ ( 'The impossible is possible; sending through wp_mail() failed, but sending through internal engine succeeded.' ),
+						'transcript' => $emailTester->getTranscript (),
+						'success' => false 
+				);
+			}
 			wp_send_json ( $response );
 		}
 		function getConfigurationViaAjax() {
@@ -730,26 +747,26 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->logger->debug ( 'ajaxRedirectUrl referer:' . $_POST ['referer'] );
 				// this must be wizard or config from an oauth-related change
 				if ($_POST ['referer'] == 'wizard') {
-					$avail[25] = filter_var ( $_POST ['avail25'], FILTER_VALIDATE_BOOLEAN );
-					$avail[465] = filter_var ( $_POST ['avail465'], FILTER_VALIDATE_BOOLEAN );
-					$avail[587] = filter_var ( $_POST ['avail587'], FILTER_VALIDATE_BOOLEAN );
+					$avail [25] = filter_var ( $_POST ['avail25'], FILTER_VALIDATE_BOOLEAN );
+					$avail [465] = filter_var ( $_POST ['avail465'], FILTER_VALIDATE_BOOLEAN );
+					$avail [587] = filter_var ( $_POST ['avail587'], FILTER_VALIDATE_BOOLEAN );
 				} else if ($_POST ['referer'] == 'manual_config') {
-					$avail[25] = true;
-					$avail[465] = true;
-					$avail[587] = true;
+					$avail [25] = true;
+					$avail [465] = true;
+					$avail [587] = true;
 				}
 				$configureOAuth = false;
 				$configureOAuth |= $_POST ['referer'] == 'manual_config';
-				$configureOAuth |= $scribe->isOauthHost () && $avail[$scribe->getOAuthPort()];
+				$configureOAuth |= $scribe->isOauthHost () && $avail [$scribe->getOAuthPort ()];
 				if ($configureOAuth) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 					$port = $scribe->getOAuthPort ();
 					$encType = $scribe->getEncryptionType ();
-				} else if ($avail[465]) {
+				} else if ($avail [465]) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
 					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
 					$port = 465;
-				} else if ($avail[587]) {
+				} else if ($avail [587]) {
 					$authType = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
 					$encType = PostmanOptions::ENCRYPTION_TYPE_TLS;
 					$port = 587;
