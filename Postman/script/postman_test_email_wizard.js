@@ -10,7 +10,7 @@ jQuery(document)
 									{
 										forceMoveForward : true,
 										bodyTag : "fieldset",
-										headerTag : "h1",
+										headerTag : "h5",
 										transitionEffect : "slideLeft",
 										stepsOrientation : "vertical",
 										autoFocus : true,

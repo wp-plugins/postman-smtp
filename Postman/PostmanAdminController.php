@@ -770,7 +770,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				);
 			} else {
 				$response = array (
-						'redirect_url' => $scribe->getCallbackUrl(),
+						'redirect_url' => $scribe->getCallbackUrl (),
 						'help_text' => $this->getOAuthHelp ( $hostname ),
 						'success' => true 
 				);
@@ -795,21 +795,18 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Port Test text
 		 */
 		public function printPortTestSectionInfo() {
-			print '<p><span>';
+			print '<p>';
 			print __ ( 'This test determines which ports are open for Postman to use.' );
 			print ' ';
 			printf ( _n ( 'Each test is given %d second to complete.', 'Each test is given %d seconds to complete.', $this->options->getConnectionTimeout () ), $this->options->getConnectionTimeout () );
 			print ' ';
 			printf ( 'The entire test will take up to %d seconds.', ($this->options->getConnectionTimeout () * 3) );
 			print ' ';
-			print __ ( 'A Closed port indicates either:' );
+			print __ ( 'A <span style="color:red">Closed</span> port indicates either:' );
 			print '<ol>';
 			printf ( '<li>%s</li>', __ ( 'Your host has placed a firewall between this site and the SMTP server or' ) );
 			printf ( '<li>%s</li>', __ ( 'The SMTP server has no service running on that port' ) );
-			printf ( '</ol></span></p><p><span><b>%s</b></span></p>', __ ( 'If the port you are trying to use is Closed, Postman can not deliver mail. Contact your host to get the port opened.' ) );
-			printf ( '<p><span class="fine_print">' );
-			print ' ';
-			print '</span></p>';
+			printf ( '</ol></p><p><b>%s</b></p>', __ ( 'If the port you are trying to use is  <span style="color:red">Closed</span>, Postman can not deliver mail. Contact your host to get the port opened.' ) );
 		}
 		
 		/**
@@ -949,14 +946,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function oauth_client_id_callback() {
-			printf ( '<textarea type="text" onClick="this.setSelectionRange(0, this.value.length)" id="oauth_client_id" name="postman_options[oauth_client_id]" cols="60" class="required">%s</textarea>', null !== $this->options->getClientId () ? esc_attr ( $this->options->getClientId () ) : '' );
+			printf ( '<textarea type="text" onClick="this.setSelectionRange(0, this.value.length)" style="overflow:hidden;resize:none" id="oauth_client_id" name="postman_options[oauth_client_id]" cols="60" class="required">%s</textarea>', null !== $this->options->getClientId () ? esc_attr ( $this->options->getClientId () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function oauth_client_secret_callback() {
-			printf ( '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" autocomplete="off" id="oauth_client_secret" name="postman_options[oauth_client_secret]" value="%s" size="60" class="required"/>', null !== $this->options->getClientSecret () ? esc_attr ( $this->options->getClientSecret () ) : '' );
+			printf ( '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" style="overflow:hidden;resize:none" autocomplete="off" id="oauth_client_secret" name="postman_options[oauth_client_secret]" value="%s" size="60" class="required"/>', null !== $this->options->getClientSecret () ? esc_attr ( $this->options->getClientSecret () ) : '' );
 		}
 		
 		/**
@@ -1157,129 +1154,127 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 */
 		public function outputWizardContent() {
-			// Set class property
+			// Set default values for input fields
 			$this->options->setSenderEmailIfEmpty ( wp_get_current_user ()->user_email );
 			$this->options->setSenderNameIfEmpty ( wp_get_current_user ()->display_name );
 			
+			// construct Wizard
 			print '<div class="wrap">';
 			$this->displayTopNavigation ();
-			?>
-<h3>Postman Setup Wizard</h3>
-
-<form id="postman_wizard" method="post" action="options.php">
-	<input type="hidden" name="purge_auth_token" value="purge_auth_token" />
-	<?php
+			printf ( '<h3></h3>', __ ( 'Postman Setup Wizard', 'Page Title' ) );
+			print '<form id="postman_wizard" method="post" action="options.php">';
+			print '<input type="hidden" name="purge_auth_token" value="purge_auth_token" />';
 			printf ( '<input type="hidden" id="input_reply_to" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
 			printf ( '<input type="hidden" id="input_connection_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::CONNECTION_TIMEOUT, $this->options->getConnectionTimeout () );
 			printf ( '<input type="hidden" id="input_read_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::READ_TIMEOUT, $this->options->getReadTimeout () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::LOG_LEVEL, $this->options->getLogLevel () );
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
-			?>
-	<h1>Sender Address Details</h1>
-	<fieldset>
-		<legend>Enter your Email Address </legend>
-		<p>Let's begin! Please enter the email address and name you'd like to
-			send mail from.</p>
-		<p>
-			Please note that to combat Spam, many email services will <em>not</em>
-			let you send from an e-mail address that is not your own.
-		</p>
+			
+			// Wizard Step 1
+			printf ( '<h5>%s</h5>', __ ( 'Sender Address Details' ), 'Wizard Step Title' );
+			print '<fieldset>';
+			printf ( '<legend>%s</legend>', __ ( 'Enter your Email Address' ), 'Wizard Step 1' );
+			printf ( '<p>%s</p>', __ ( 'Let\'s begin! Please enter the email address and name you\'d like to send mail from.' ) );
+			printf ( '<p>%s</p>', __ ( '<p>Please note that to combat Spam, many email services will <em>not</em> let you send from an e-mail address that is not your own.</p>' ) );
+			printf ( '<label for="postman_options[sender_email]">%s</label>', __ ( 'Sender Email Address', 'Configuration Input Field' ) );
+			print $this->sender_email_callback ();
+			printf ( '<label for="postman_options[sender_name]">%s</label>', __ ( 'Sender Email Name', 'Configuration Input Field' ) );
+			print $this->sender_name_callback ();
+			print '</fieldset>';
+			
+			// Wizard Step 2
+			printf ( '<h5>%s</h5>', __ ( 'SMTP Server Hostname', 'Wizard Step Title' ) );
+			print '<fieldset>';
+			printf ( '<legend>%s</legend>', __ ( 'Enter your SMTP hostname.', 'Wizard Step 2' ) );
+			printf ( '<p>%s</p>', __ ( 'This is the server that Postman will use to deliver your mail.' ) );
+			printf ( '<label for="hostname">%s</label>', __ ( 'SMTP Server Hostname', 'Configuration Input Field' ) );
+			print $this->hostname_callback ();
+			print '</fieldset>';
+			
+			// Wizard Step 3
+			printf ( '<h5>%s</h5>', __ ( 'SMTP Server Port', 'Wizard Step Title' ) );
+			print '<fieldset>';
+			printf ( '<legend>%s</legend>', __ ( 'Choose an SMTP port', 'Wizard Step 3' ) );
+			printf ( '<p>%s</p>', __ ( 'Your email provider will dictate which port to use.' ) );
+			printf ( '<label for="hostname">%s</label>', __ ( 'SMTP Server Port', 'Configuration Input Field' ) );
+			print $this->port_callback ( array (
+					'style' => 'style="display:none"' 
+			) );
+			print '<table>';
+			print '<tr>';
+			printf ( '<td><span>%s</span></td>', __ ( 'Port 25' ) );
+			print '<td><input type="radio" id="wizard_port_25" name="wizard-port" value="25" class="required" style="margin-top: 0px" /></td>';
+			printf ( '<td id="wizard_port_25_status">%s</td>', __ ( 'Unknown', 'TCP Port Status' ) );
+			print '</tr>';
+			print '<tr>';
+			printf ( '<td><span>%s</span></td>', __ ( 'Port 465' ) );
+			print '<td><input type="radio" id="wizard_port_465" name="wizard-port" value="465" class="required" style="margin-top: 0px" /></td>';
+			printf ( '<td id="wizard_port_465_status">%s</td>', __ ( 'Unknown', 'TCP Port Status' ) );
+			print '</tr>';
+			print '<tr>';
+			printf ( '<td><span>%s</span></td>', __ ( 'Port 587' ) );
+			print '<td><input type="radio" id="wizard_port_587" name="wizard-port" value="587" class="required" style="margin-top: 0px" /></td>';
+			printf ( '<td id="wizard_port_587_status">%s</td>', __ ( 'Unknown', 'TCP Port Status' ) );
+			print '</tr>';
+			print '</table>';
+			print '</fieldset>';
+			
+			// Wizard Step 4
+			printf ( '<h5>%s</h5>', __ ( 'Authentication', 'Wizard Step Title' ) );
+			print '<fieldset>';
+			printf ( '<legend>%s</legend>', __ ( 'Setup Authentication', 'Wizard Step 4' ) );
+			
+			print '<section class="wizard-auth-oauth2">';
+			printf ( '<p id="%s</p>', __ ( 'wizard_oauth2_help">Help.' ) );
+			printf ( '<label id="callback_domain" for="callback_domain">%s</label>', $this->oauthScribe->getCallbackDomainLabel );
+			print '<br />';
+			print $this->callback_domain_callback ();
+			print '<br />';
+			printf ('<label id="redirect_url" for="redirect_uri">%s</label>', $this->oauthScribe->getCallbackUrlLabel());
+			print '<br />';
+			print $this->redirect_url_callback ();
+			print '<br />';
+			print $this->encryption_type_for_oauth2_section_callback ();
+			printf ( '<label id="client_id" for="client_id">%s</label>', $this->oauthScribe->getClientIdLabel () );
+			print '<br />';
+			print $this->oauth_client_id_callback ();
+			print '<br />';
+			printf ( '<label id="client_secret" for="client_id">%s</label>', $this->oauthScribe->getClientSecretLabel () );
+			print '<br />';
+			print $this->oauth_client_secret_callback ();
+			print '<br />';
+			print '</section>';
+			
+			print '<section class="wizard-auth-basic">';
+			printf ( '<p class="port-explanation-ssl">%s</p>', __ ( 'Choose Login authentication unless you\'ve been instructed otherwise. Your username is most likely your email address.' ) );
+			printf ( '<label class="input_authorization_type" for="auth_type">%s</label>', __ ( 'Authentication Type', 'Configuration Input Field' ) );
+			print $this->authentication_type_callback ();
+			printf ( '<label class="input_encryption_type" for="enc_type">%s</label>', __ ( 'Encryption Type', 'Configuration Input Field' ) );
+			print $this->encryption_type_for_password_section_callback ();
+			print '<br />';
+			printf ( '<label for="username">%s</label>', __ ( 'Username', 'Configuration Input Field' ) );
+			print $this->basic_auth_username_callback ();
+			printf ( '<label for="password">%s</label>', __ ( 'Password', 'Configuration Input Field' ) );
+			print $this->basic_auth_password_callback ();
+			print '</section>';
 
-		<label for="postman_options[sender_email]">Sender Email Address</label>
-		<?php echo $this->sender_email_callback(); ?>
-		<label for="postman_options[sender_name]">Sender Email Name</label>
-		<?php echo $this->sender_name_callback(); ?>
-	</fieldset>
-
-	<h1>SMTP Server Hostname</h1>
-	<fieldset>
-		<legend>Enter your SMTP hostname. </legend>
-		<p>This is the server that Postman will use to deliver your mail.</p>
-		<label for="hostname">SMTP Server Hostname</label>
-		<?php echo $this->hostname_callback(); ?>
-	
-	
-	</fieldset>
-
-	<h1>SMTP Server Port</h1>
-	<fieldset>
-		<legend>Choose an SMTP port</legend>
-		<p>Your email provider will dictate which port to use.</p>
-
-		<label for="hostname">SMTP Server Port</label>
-		<?php echo $this->port_callback(array('style'=>'style="display:none"')); ?>
-		<table>
-			<tr>
-				<td><span>Port 25 </span></td>
-				<td><input type="radio" id="wizard_port_25" name="wizard-port"
-					value="25" class="required" style="margin-top: 0px" /></td>
-				<td id="wizard_port_25_status">Unknown</td>
-			</tr>
-			<tr>
-				<td><span>Port 465</span></td>
-				<td><input type="radio" id="wizard_port_465" name="wizard-port"
-					value="465" class="required" style="margin-top: 0px" /></td>
-				<td id="wizard_port_465_status">Unknown</td>
-			</tr>
-			<tr>
-				<td><span>Port 587</span></td>
-				<td><input type="radio" id="wizard_port_587" name="wizard-port"
-					value="587" class="required" style="margin-top: 0px" /></td>
-				<td id="wizard_port_587_status">Unknown</td>
-			</tr>
-		</table>
-	</fieldset>
-
-	<h1>Authentication</h1>
-	<fieldset>
-		<legend> Setup Authentication </legend>
-		<section class="wizard-auth-oauth2">
-			<p id="wizard_oauth2_help">Help.</p>
-			<label id="callback_domain" for="callback_domain"><?php echo $this->oauthScribe->getCallbackDomainLabel();?></label><br />
-			<?php echo $this->callback_domain_callback(); ?><br /> <label
-				id="redirect_url" for="redirect_uri"><?php echo $this->oauthScribe->getCallbackUrlLabel();?></label><br />
-			<?php echo $this->redirect_url_callback(); ?><br /> 
-						<?php echo $this->encryption_type_for_oauth2_section_callback(); ?>
-			<label id="client_id" for="client_id"><?php echo $this->oauthScribe->getClientIdLabel();?></label><br />
-			<?php echo $this->oauth_client_id_callback(); ?><br /> <label
-				id="client_secret" for="client_id"><?php echo $this->oauthScribe->getClientSecretLabel();?></label>
-			<br />
-			<?php echo $this->oauth_client_secret_callback(); ?><br />
-		</section>
-
-		<section class="wizard-auth-basic">
-			<p class="port-explanation-ssl">Unless you've been told otherwise,
-				choose Login authentication. Your username is most likely your email
-				address.</p>
-			<label class="input_authorization_type" for="auth_type">Authentication
-				Type</label>
-			<?php echo $this->authentication_type_callback(); ?>
-			<label class="input_encryption_type" for="enc_type">Encryption Type</label>
-			<?php echo $this->encryption_type_for_password_section_callback(); ?>
-			<br /> <label for="username">Username</label>
-			<?php echo $this->basic_auth_username_callback();?>
-			<label for="password">Password</label>
-			<?php echo $this->basic_auth_password_callback();?>
-			</section>
-	</fieldset>
-
-	<h1>Finish</h1>
-	<fieldset>
-		<legend>All done!</legend>
-		<section>
-			<p>Click Finish to save these settings. Then:</p>
-			<ul style='margin-left: 20px'>
-				<li class="wizard-auth-oauth2">Request permission from the Email
-					Provider to allow Postman to send email and</li>
-				<li>Send yourself a Test Email to make sure everything is working!</li>
-			</ul>
-		</section>
-	</fieldset>
-
-</form>
-
-<?php
+			print '</fieldset>';
+			
+			// Wizard Step 5
+			printf ( '<h5>%s</h5>', __ ( 'Finish' ) );
+			print '<fieldset>';
+			printf ( '<legend>%s</legend>', __ ( 'All done!' ) );
+			print '<section>';
+			printf ( '<p>%s</p>', __ ( 'Click Finish to save these settings. Then:' ) );
+			print '<ul style="margin-left: 20px">';
+			printf ( '<li class="wizard-auth-oauth2">%s</li>', __ ( 'Request permission from the Email Provider to allow Postman to send email and' ) );
+			printf ( '<li>%s</li>', __ ( 'Send yourself a Test Email to make sure everything is working!' ) );
+			print '</ul>';
+			print '</section>';
+			print '</fieldset>';
+			print '</form>';
 		}
+		
 		/**
 		 */
 		public function outputTestEmailWizardContent() {
@@ -1293,7 +1288,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 			printf ( '<h3>%s</h3>', __ ( 'Send a Test Email', 'Page Title' ) );
 			printf ( '<form id="postman_test_email_wizard" method="post" action="%s">', POSTMAN_HOME_PAGE_ABSOLUTE_URL );
-			printf ( '<h1>%s</h1>', __ ( 'Choose the Recipient' ) );
+			
+			// Step 1
+			printf ( '<h5>%s</h5>', __ ( 'Choose the Recipient' ) );
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', __ ( 'Input Email Address' ) );
 			printf ( '<p>%s', __ ( 'This utility allows you to send an email message for testing.' ) );
@@ -1303,7 +1300,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print $this->test_email_callback ();
 			print '</fieldset>';
 			
-			printf ( '<h1>%s</h1>', __ ( 'Send The Message' ) );
+			// Step 2
+			printf ( '<h5>%s</h5>', __ ( 'Send The Message' ) );
 			print '<fieldset>';
 			print '<legend>';
 			print __ ( 'Sending the message:' );
@@ -1314,9 +1312,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '</section>';
 			print '<section id="test-fail">';
 			printf ( '<p><label>%s</label></p>', 'Error Message' );
-			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="70" rows="2"></textarea>';
+			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="65" rows="2"></textarea>';
 			printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript' ) );
-			print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="70" rows="6"></textarea>';
+			print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="6"></textarea>';
 			print '</section>';
 			print '</fieldset>';
 			print '</form>';
