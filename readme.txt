@@ -30,6 +30,8 @@ Postman is a next-generation WordPress SMTP plugin, the first and only to implem
 * Its easy to upgrade! Postman can import SMTP settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
 * Available in English and French
 
+If you are willing to help translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
+
 = Requirements =
 * WordPress 3.9 (or later)
 * PHP 5.3 (or later) with OpenSSL; or PHP 5.2 with SPL and OpenSSL 
