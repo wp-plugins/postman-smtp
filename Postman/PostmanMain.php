@@ -65,8 +65,7 @@ if (! class_exists ( 'PostmanMain' )) {
 			) );
 		}
 		public function loadTextDomain() {
-			$plugin_dir = basename ( dirname ( __FILE__ ) );
-			load_plugin_textdomain ( 'postman-smtp', false, $this->basename );
+			load_plugin_textdomain ( 'postman-smtp', false, $this->basename . 'Postman/lang' );
 		}
 		
 		/**
