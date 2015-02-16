@@ -53,7 +53,7 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 					'redirect_uri' => urlencode ( $this->getCallbackUri () ),
 					'client_id' => $this->getClientId (),
 					'state' => $transactionId,
-					'language' => 'en-us' 
+					'language' => get_locale() 
 			);
 			
 			$authUrl = $this->getAuthorizationUrl () . '?' . build_query ( $params );
