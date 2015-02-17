@@ -787,7 +787,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$encType = PostmanOptions::ENCRYPTION_TYPE_NONE;
 					$port = 25;
 				}
-				$callbackDomain = $this->getCallbackDomain ();
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),
 						'callback_domain' => $scribe->getCallbackDomain (),
@@ -795,7 +794,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'client_id_label' => $scribe->getClientIdLabel (),
 						'client_secret_label' => $scribe->getClientSecretLabel (),
 						'redirect_url_label' => $scribe->getCallbackUrlLabel (),
-						'callback_domain_label' => $callbackDomain,
+						'callback_domain_label' => $scribe->getCallbackDomainLabel (),
 						PostmanOptions::AUTHENTICATION_TYPE => $authType,
 						PostmanOptions::ENCRYPTION_TYPE => $encType,
 						PostmanOptions::PORT => $port,
@@ -841,7 +840,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<ol>';
 			printf ( '<li>%s</li>', __ ( 'Your host has placed a firewall between this site and the SMTP server or', 'postman-smtp' ) );
 			printf ( '<li>%s</li>', __ ( 'The SMTP server has no service running on that port', 'postman-smtp' ) );
-			printf ( '</ol></p><p><b>%s</b></p>', __ ( 'If the port you are trying to use is  <span style="color:red">Closed</span>, Postman can not deliver mail. Contact your host to get the port opened.', 'postman-smtp' ) );
+			printf ( '</ol></p><p><b>%s</b></p>', __ ( 'If the port you are trying to use is <span style="color:red">Closed</span>, Postman can not deliver mail. Contact your host to get the port opened.', 'postman-smtp' ) );
 		}
 		
 		/**
@@ -870,7 +869,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printPurgeDataSectionInfo() {
-			printf ( '<p><span>%s.</span></p><p><span>%s</span></p>', __ ( 'This will purge all of Postman\'s settings, including SMTP server info, username/password and OAuth Credentials', 'postman-smtp' ), __ ( 'Are you sure?', 'postman-smtp' ) );
+			printf ( '<p><span>%s</span></p><p><span>%s</span></p>', __ ( 'This will purge all of Postman\'s settings, including SMTP server info, username/password and OAuth Credentials.', 'postman-smtp' ), __ ( 'Are you sure?', 'postman-smtp' ) );
 		}
 		
 		/**
@@ -1078,7 +1077,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				/* translators: where %1$s is the SMTP server and %2$s is the Authentication Type (e.g. Postman will send mail via smtp.gmail.com:465 using OAuth 2.0 authentication.) */
 				printf ( '<p style="margin:0 10px"><span>%s</span></p>', sprintf ( __ ( 'Postman will send mail via %1$s using %2$s authentication.', 'postman-smtp' ), '<b>' . $this->options->getHostname () . ':' . $this->options->getPort () . '</b>', '<b>' . $authDesc . '</b>' ) );
 				if ($this->options->isAuthTypeOAuth2 ()) {
-					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only</em>.', 'postman-smtp' ) );
+					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only.</em>', 'postman-smtp' ) );
 				} else if ($this->options->isAuthTypePassword ()) {
 					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins or themes may override the sender name and email address causing rejection with some email services, such as Yahoo Mail. If you experience problems, try leaving the sender email address empty in these plugins or themes.</em>', 'postman-smtp' ) );
 				}
@@ -1274,7 +1273,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<legend>%s</legend>', _x ( 'Authentication', 'Wizard Step Title', 'postman-smtp' ) );
 			
 			print '<section class="wizard-auth-oauth2">';
-			printf ( '<p id="wizard_oauth2_help">%s</p>', __ ( 'Jason.', 'postman-smtp' ) );
+			print '<p id="wizard_oauth2_help"></p>';
 			printf ( '<label id="callback_domain" for="callback_domain">%s</label>', $this->oauthScribe->getCallbackDomainLabel () );
 			print '<br />';
 			print $this->callback_domain_callback ();
@@ -1314,7 +1313,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'Finish', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<section>';
-			printf ( '<p>%s</p>', __ ( 'Click Finish to save these settings. Then:', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'Click Finish to save these settings, then:', 'postman-smtp' ) );
 			print '<ul style="margin-left: 20px">';
 			printf ( '<li class="wizard-auth-oauth2">%s</li>', __ ( 'Request permission from the Email Provider to allow Postman to send email and', 'postman-smtp' ) );
 			printf ( '<li>%s</li>', __ ( 'Send yourself a Test Email to make sure everything is working!', 'postman-smtp' ) );
