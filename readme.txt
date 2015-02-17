@@ -7,7 +7,7 @@ Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Having Gmail problems? Lowering your security settings is not the answer! Introducing Postman, the only OAuth 2.0-enabled SMTP Plugin for WordPress.
+Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, the next-generation OAuth 2.0-enabled SMTP Plugin for WordPress.
 
 == Description ==
 
