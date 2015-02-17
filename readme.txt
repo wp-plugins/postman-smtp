@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, yahoo, yahoo mail, windows live, outlook.com, wp smtp, outgoing mail, sendmail, ssl, tls, wp smtp, wordpress smtp, wp_mail, wp mail, google apps for work, google apps for business
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.4
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -208,11 +208,11 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.4.1 - 2015-02-16 =
+= 1.4.1 - 2015-02-17 =
 * All text has been externalized in prep for [I18N Internationalization and localization](http://codex.wordpress.org/I18n_for_WordPress_Developers)
 * Fixed a bug where the Setup Wizard would try to force OAuth 2.0 even if the required port was closed
 * Added more error checking, and more warning messages.
-* Translated into French
+* Translated into French, thank-you Etienne Provost
 
 = 1.4 - 2015-02-15 =
 * Happy Valentine's Day! Sending Yahoo email now supported with OAuth 2.0 authentication! If the Wizard detects that a Yahoo server has been entered, it automatically configures OAuth 2.0 
