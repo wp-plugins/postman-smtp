@@ -833,6 +833,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print ' ';
 			printf ( _n ( 'Each test is given %d second to complete.', 'Each test is given %d seconds to complete.', $this->options->getConnectionTimeout (), 'postman-smtp' ), $this->options->getConnectionTimeout () );
 			print ' ';
+			/* translators: where %d is an amount of time, in seconds */
 			printf ( 'The entire test will take up to %d seconds.', ($this->options->getConnectionTimeout () * 3) );
 			print ' ';
 			print __ ( 'A <span style="color:red">Closed</span> port indicates either:', 'postman-smtp' );
@@ -1340,6 +1341,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<legend>%s</legend>', __ ( 'Choose the Recipient', 'postman-smtp' ) );
 			printf ( '<p>%s', __ ( 'This utility allows you to send an email message for testing.', 'postman-smtp' ) );
 			print ' ';
+			/* translators: where %d is an amount of time, in seconds */
 			printf ( '%s</p>', sprintf ( _n ( 'If there is a problem, Postman will give up after %d second.', 'If there is a problem, Postman will give up after %d seconds.', $this->options->getReadTimeout () * 2, 'postman-smtp' ), $this->options->getReadTimeout () * 2 ) );
 			printf ( '<label for="postman_test_options[test_email]">%s</label>', _x ( 'Recipient Email Address', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->test_email_callback ();
