@@ -105,7 +105,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($session->getAction () == PostmanInputSanitizer::VALIDATION_SUCCESS) {
 				$session->unsetAction ();
 				$this->registerInitFunction ( 'handleSuccessfulSave' );
-				$this->messageHandler->addMessage ( 'Settings saved.' );
+				$this->messageHandler->addMessage ( __ ( 'Settings saved.' ) );
 				return;
 			}
 			

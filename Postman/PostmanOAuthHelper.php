@@ -63,9 +63,9 @@ if (! class_exists ( 'PostmanAbstractOAuthHelper' )) {
 			$this->hostname = $hostname;
 		}
 		public function getOAuthHelp() {
-			/* translators: parameters available are 1=portal-url, 2=portal-name, 3=clientId-name, 4=clientSecret-name, 5=callbackUrl, 6=service-name, 7=portal-application (e.g. Open the Google Developer Console, create a Client ID for web application using the URL's displayed below, and copy the Client ID and Client Secret here.)*/
+			/* translators: parameters available are 1=portal-url, 2=portal-name, 3=clientId-name, 4=clientSecret-name, 5=callbackUrl, 6=service-name, 7=portal-application (e.g. Open the Google Developer Console, create a Client ID for web application using the URL's displayed below, and copy the Client ID and Client Secret here.) */
 			$text = sprintf ( '<p id="wizard_oauth2_help">%s', sprintf ( __ ( 'Open the <a href="%1$s" target="_new">%2$s</a>, create %7$s using the URL\'s displayed below, and copy the %3$s and %4$s here.', 'postman-smtp' ), $this->getApplicationPortalUrl (), $this->getApplicationPortalName (), $this->getClientIdLabel (), $this->getClientSecretLabel (), $this->getCallbackUrlLabel (), $this->getOwnerName (), $this->getApplicationDescription () ) );
-			/* translators: parameters available are 1=portal-url, 2=portal-name, 3=clientId-name, 4=clientSecret-name, 5=callbackUrl, 6=service-name, 7=portal-application (e.g. See How do I get a Google Client ID? in the F.A.Q. for help.)*/
+			/* translators: parameters available are 1=portal-url, 2=portal-name, 3=clientId-name, 4=clientSecret-name, 5=callbackUrl, 6=service-name, 7=portal-application (e.g. See How do I get a Google Client ID? in the F.A.Q. for help.) */
 			$text .= sprintf ( ' %s</p>', sprintf ( __ ( 'See <a href="https://wordpress.org/plugins/postman-smtp/faq/" target="_new">How do I get a %6$s %3$s?</a> in the F.A.Q. for help.', 'postman-smtp' ), $this->getApplicationPortalUrl (), $this->getApplicationPortalName (), $this->getClientIdLabel (), $this->getClientSecretLabel (), $this->getCallbackUrlLabel (), $this->getOwnerName (), $this->getApplicationDescription () ) );
 			return $text;
 		}
