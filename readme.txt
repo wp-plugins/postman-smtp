@@ -106,7 +106,7 @@ Postman specifically requests a limited access OAuth 2.0 token (valet key) to ac
 
 If you use other plugins to send Gmail, Hotmail or Yahoo Mail, they're going to ask you for your account password. Anything you can do on your account, they can do. And if you change your password, those same plugins will break until you update them with your new password.
 
-Postman only receives access to mail. It can never access your Google Docs, YouTube, OneDrive, Flickr, etc. Postman can continue to deliver your email even if your password changes.
+In OAuth 2.0 mode, Postman only receives access to mail. It can never access your Google Docs, YouTube, OneDrive, Flickr, etc. Postman can continue to deliver your email even if your password changes.
 
 Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. And that option is not available if you're using *Google Apps* to manage a domain.
 
