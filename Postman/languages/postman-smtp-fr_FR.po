@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-02-17 03:54:51+00:00\n"
-"PO-Revision-Date: 2015-02-16 23:25-0500\n"
+"POT-Creation-Date: 2015-02-17 04:42:59+00:00\n"
+"PO-Revision-Date: 2015-02-16 23:53-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -99,10 +99,88 @@ msgstr ""
 "Aucuns ports  disponibles pour ce serveur SMTP. Essayez un hôte SMTP "
 "différent ou contactez votre hôte WordPress pour une solution spécifique."
 
+#: Postman/PostmanAdminController.php:504
+msgctxt "Configuration Section"
+msgid "SMTP Settings"
+msgstr "Paramètres SMTP"
+
 #: Postman/PostmanAdminController.php:510
 msgctxt "Configuration Input Field"
 msgid "Import from Plugin"
 msgstr "Importer de l'Extension"
+
+#: Postman/PostmanAdminController.php:516
+#: Postman/PostmanAdminController.php:1298
+msgctxt "Configuration Input Field"
+msgid "Authentication"
+msgstr "Authentification"
+
+#: Postman/PostmanAdminController.php:521
+msgctxt "Configuration Input Field"
+msgid "Sender Name"
+msgstr "Nom de l'expéditeur"
+
+#: Postman/PostmanAdminController.php:526
+#: Postman/PostmanAdminController.php:1227
+msgctxt "Configuration Input Field"
+msgid "Sender Email Address"
+msgstr "Adresse de l'expéditeur"
+
+#: Postman/PostmanAdminController.php:531
+#: Postman/PostmanAdminController.php:629
+msgctxt "Configuration Input Field"
+msgid "Outgoing Mail Server (SMTP)"
+msgstr "Serveur de messagerie sortant (SMTP)"
+
+#: Postman/PostmanAdminController.php:536
+msgctxt "Configuration Input Field"
+msgid "Port"
+msgstr "Port"
+
+#: Postman/PostmanAdminController.php:541
+#: Postman/PostmanAdminController.php:562
+msgctxt "Configuration Section"
+msgid "Authentication Settings"
+msgstr "Réglages d'Authentification"
+
+#: Postman/PostmanAdminController.php:546
+#: Postman/PostmanAdminController.php:567
+#: Postman/PostmanAdminController.php:1300
+msgctxt "Configuration Input Field"
+msgid "Encryption"
+msgstr "Cryptage"
+
+#: Postman/PostmanAdminController.php:551
+#: Postman/PostmanAdminController.php:1303
+msgctxt "Configuration Input Field"
+msgid "Username"
+msgstr "Nom d'Utilisateur"
+
+#: Postman/PostmanAdminController.php:556
+#: Postman/PostmanAdminController.php:1305
+msgctxt "Configuration Input Field"
+msgid "Password"
+msgstr "Mot de Passe"
+
+#: Postman/PostmanAdminController.php:593
+msgctxt "Configuration Section"
+msgid "Advanced Settings"
+msgstr "Paramètres avancés"
+
+#: Postman/PostmanAdminController.php:598
+msgctxt "Configuration Input Field"
+msgid "Connection Timeout (sec)"
+msgstr "Délai d'attente de connexion (sec)"
+
+#: Postman/PostmanAdminController.php:603
+msgctxt "Configuration Input Field"
+msgid "Read Timeout (sec)"
+msgstr "Délai pour l'interrogation des données (sec)"
+
+#: Postman/PostmanAdminController.php:608
+msgctxt "Configuration Input Field"
+msgid "Reply-To Email Address"
+msgstr "L'adresse de courriel"
 
 #: Postman/PostmanAdminController.php:613
 msgctxt "Configuration Input Field"
@@ -118,11 +196,6 @@ msgstr "Afficher la page d'erreur"
 msgctxt "Configuration Input Field"
 msgid "Port Connection Test"
 msgstr "Test de connexion du port"
-
-#: Postman/PostmanAdminController.php:629
-msgctxt "Configuration Input Field"
-msgid "Outgoing Mail Server (SMTP)"
-msgstr "Serveur de messagerie sortant (SMTP)"
 
 #: Postman/PostmanAdminController.php:640
 msgctxt "Configuration Section"
@@ -180,6 +253,10 @@ msgstr[0] "Chaque test prends %d secondes à complêter."
 msgstr[1] ""
 
 #. translators: where %d is an amount of time, in seconds
+#: Postman/PostmanAdminController.php:837
+msgid "The entire test will take up to %d seconds."
+msgstr "Tous les tests peux durer jusqu'à %d secondes."
+
 #: Postman/PostmanAdminController.php:839
 msgid "A <span style=\"color:red\">Closed</span> port indicates either:"
 msgstr "Un port <span style=\"color:red\">Fermé</span> peut vouloir dire ceci:"
@@ -481,11 +558,6 @@ msgstr ""
 "messagerie <em>ne permettrons pas</em>l'envoi d'un message provenant d'une "
 "autre adresse que la vôtre.</p>"
 
-#: Postman/PostmanAdminController.php:1227
-msgctxt "Configuration Input Field"
-msgid "Sender Email Address"
-msgstr "Adresse de l'expéditeur"
-
 #: Postman/PostmanAdminController.php:1229
 msgctxt "Configuration Input Field"
 msgid "Sender Email Name"
@@ -553,26 +625,6 @@ msgid ""
 msgstr ""
 "À moins d'avis contraire, choisir l'Authentification. Votre nom "
 "d'utilisateur est sans doutes votre adresse de messagerie."
-
-#: Postman/PostmanAdminController.php:1298
-msgctxt "Configuration Input Field"
-msgid "Authentication Type"
-msgstr "Méthode d'Authentification"
-
-#: Postman/PostmanAdminController.php:1300
-msgctxt "Configuration Input Field"
-msgid "Encryption Type"
-msgstr "Type de Cryptage"
-
-#: Postman/PostmanAdminController.php:1303
-msgctxt "Configuration Input Field"
-msgid "Username"
-msgstr "Nom d'Utilisateur"
-
-#: Postman/PostmanAdminController.php:1305
-msgctxt "Configuration Input Field"
-msgid "Password"
-msgstr "Mot de Passe"
 
 #: Postman/PostmanAdminController.php:1312
 #: Postman/PostmanAdminController.php:1314
@@ -893,6 +945,14 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgctxt "Configuration Input Field"
+#~ msgid "Authentication Type"
+#~ msgstr "Méthode d'Authentification"
+
+#~ msgctxt "Configuration Input Field"
+#~ msgid "Encryption Type"
+#~ msgstr "Type de Cryptage"
 
 #~ msgid ""
 #~ "If the port you are trying to use is  <span style=\"color:red\">Closed</"
