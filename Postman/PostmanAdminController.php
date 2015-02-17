@@ -1295,9 +1295,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			print '<section class="wizard-auth-basic">';
 			printf ( '<p class="port-explanation-ssl">%s</p>', __ ( 'Choose Login authentication unless you\'ve been instructed otherwise. Your username is most likely your email address.', 'postman-smtp' ) );
-			printf ( '<label class="input_authorization_type" for="auth_type">%s</label>', _x ( 'Authentication Type', 'Configuration Input Field', 'postman-smtp' ) );
+			printf ( '<label class="input_authorization_type" for="auth_type">%s</label>', _x ( 'Authentication', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->authentication_type_callback ();
-			printf ( '<label class="input_encryption_type" for="enc_type">%s</label>', _x ( 'Encryption Type', 'Configuration Input Field', 'postman-smtp' ) );
+			printf ( '<label class="input_encryption_type" for="enc_type">%s</label>', _x ( 'Encryption', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->encryption_type_for_password_section_callback ();
 			print '<br />';
 			printf ( '<label for="username">%s</label>', _x ( 'Username', 'Configuration Input Field', 'postman-smtp' ) );
