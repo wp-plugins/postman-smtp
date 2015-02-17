@@ -69,7 +69,7 @@ if (! class_exists ( 'PostmanMain' )) {
 		public function loadTextDomain() {
 			$langDir = basename ( dirname ( $this->postmanPhpFile ) ) . '/Postman/languages/';
 			$success = load_plugin_textdomain ( 'postman-smtp', false, $langDir );
-			if (! $success) {
+			if (! $success && get_locale () != 'en_US') {
 				$this->logger->error ( 'Could not load text domain ' . $langDir . 'postman-smtp-' . get_locale () . '.po' );
 			}
 		}
