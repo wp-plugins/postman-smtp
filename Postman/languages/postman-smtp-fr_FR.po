@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
 "POT-Creation-Date: 2015-02-17 00:48:08+00:00\n"
-"PO-Revision-Date: 2015-02-16 22:57-0500\n"
+"PO-Revision-Date: 2015-02-16 22:59-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: Postman/PostmanAdminController.php:222
 msgctxt "Plugin Action Links"
 msgid "Settings"
-msgstr ""
+msgstr "Réglages"
 
 #: Postman/PostmanAdminController.php:232
 #: Postman/PostmanAdminController.php:251
