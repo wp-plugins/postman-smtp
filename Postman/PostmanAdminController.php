@@ -1089,15 +1089,17 @@ if (! class_exists ( "PostmanAdminController" )) {
 					/* translators: where %s is the URL of the Setup Wizard */
 					printf ( '<p><span>%s</span></p>', sprintf ( __ ( 'Let\'s get started! All users are strongly encouraged to start by <a href="%s">running the Setup Wizard</a>.', 'postman-smtp' ), $this->getPageUrl ( self::CONFIGURATION_WIZARD_SLUG ) ) );
 					if ($this->importableConfiguration->isImportAvailable ()) {
+						/* translators: where %s is the URL of the Manual Configuration */
 						printf ( '<p><span>%s</span></p>', sprintf ( __ ( 'However, if you wish, Postman can <a href="%s">import your SMTP configuration</a> from another plugin. You can run the Wizard later if you need to.', 'postman-smtp' ), $this->getPageUrl ( self::CONFIGURATION_SLUG ) ) );
 					}
 				}
 			}
 			
 			if (! $sslRequirement || ! $splAutoloadRegisterRequirement || ! $arrayObjectRequirement) {
-				printf ( '<div style="padding: 10px;"><b style="color: red">%s:</b><ul>', __ ( 'Your system seems to be missing one or more pre-requisites - something may fail:', 'postman-smtp' ) );
+				printf ( '<div style="padding: 10px;"><b style="color: red">%s</b><ul>', __ ( 'Your system seems to be missing one or more pre-requisites - something may fail:', 'postman-smtp' ) );
 				/* translators: where %s is the PHP version */
-				printf ( '<li>PHP v5.3: %s</li>', ($phpVersionRequirement ? __ ( 'Yes', 'postman-smtp' ) : sprintf ( __ ( 'No (%s)', 'postman-smtp' ), PHP_VERSION )) );
+				$versionNo = sprintf ( __ ( 'No (%s)', 'postman-smtp' ), PHP_VERSION );
+				printf ( '<li>PHP v5.3: %s</li>', ($phpVersionRequirement ? __ ( 'Yes', 'postman-smtp' ) : $versionNo) );
 				printf ( '<li>SSL Extension: %s</li>', ($sslRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
 				printf ( '<li>spl_autoload_register: %s</li>', ($splAutoloadRegisterRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
 				printf ( '<li>ArrayObject: %s</li>', ($arrayObjectRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
