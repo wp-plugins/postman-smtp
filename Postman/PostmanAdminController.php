@@ -831,6 +831,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<p>';
 			print __ ( 'This test determines which ports are open for Postman to use.', 'postman-smtp' );
 			print ' ';
+			/* translators: where %d is an amount of time, in seconds */
 			printf ( _n ( 'Each test is given %d second to complete.', 'Each test is given %d seconds to complete.', $this->options->getConnectionTimeout (), 'postman-smtp' ), $this->options->getConnectionTimeout () );
 			print ' ';
 			/* translators: where %d is an amount of time, in seconds */
