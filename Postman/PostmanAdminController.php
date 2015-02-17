@@ -501,7 +501,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 			
 			// Sanitize
-			add_settings_section ( PostmanAdminController::SMTP_SECTION, _x ( __ ( 'SMTP Settings', 'postman-smtp' ), 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::SMTP_SECTION, _x ( 'SMTP Settings', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printSmtpSectionInfo' 
 			), PostmanAdminController::SMTP_OPTIONS );
@@ -513,68 +513,68 @@ if (! class_exists ( "PostmanAdminController" )) {
 				), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			}
 			
-			add_settings_field ( PostmanOptions::AUTHENTICATION_TYPE, _x ( __ ( 'Authentication', 'postman-smtp' ), 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::AUTHENTICATION_TYPE, _x ( 'Authentication', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'authentication_type_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::SENDER_NAME, _x ( __ ( 'Sender Name', 'postman-smtp' ), 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::SENDER_NAME, _x ( 'Sender Name', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'sender_name_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::SENDER_EMAIL, _x ( __ ( 'Sender Email Address', 'postman-smtp' ), 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::SENDER_EMAIL, _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'sender_email_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::HOSTNAME, _x ( __ ( 'Outgoing Mail Server (SMTP)', 'postman-smtp' ), 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::HOSTNAME, _x ( 'Outgoing Mail Server (SMTP)', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'hostname_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::PORT, _x ( __ ( 'Port', 'postman-smtp' ), 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::PORT, _x ( 'Port', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'port_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, _x ( __ ( 'Authentication Settings', 'postman-smtp' ), 'Configuration Section' ), array (
+			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, _x ( 'Authentication Settings', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printBasicAuthSectionInfo' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( __ ( 'Encryption', 'postman-smtp' ), 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( 'Encryption', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'encryption_type_for_password_section_callback' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
 			
-			add_settings_field ( PostmanOptions::BASIC_AUTH_USERNAME, _x ( __ ( 'Username', 'postman-smtp' ), 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::BASIC_AUTH_USERNAME, _x ( 'Username', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'basic_auth_username_callback' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
 			
-			add_settings_field ( PostmanOptions::BASIC_AUTH_PASSWORD, _x ( __ ( 'Password', 'postman-smtp' ), 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::BASIC_AUTH_PASSWORD, _x ( 'Password', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'basic_auth_password_callback' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
 			
 			// the OAuth section
-			add_settings_section ( PostmanAdminController::OAUTH_SECTION, _x ( __ ( 'Authentication Settings', 'postman-smtp' ), 'Configuration Section' ), array (
+			add_settings_section ( PostmanAdminController::OAUTH_SECTION, _x ( 'Authentication Settings', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printOAuthSectionInfo' 
 			), PostmanAdminController::OAUTH_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( __ ( 'Encryption', 'postman-smtp' ), 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( 'Encryption', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'encryption_type_for_oauth2_section_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
-			add_settings_field ( 'callback_domain', '<span id="callback_domain">' . _x ( $this->oauthScribe->getCallbackDomainLabel () . '</span>', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( 'callback_domain', sprintf ( '<span id="callback_domain">%s</span>', $this->oauthScribe->getCallbackDomainLabel () ), array (
 					$this,
 					'callback_domain_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
-			add_settings_field ( 'redirect_url', '<span id="redirect_url">' . _x ( $this->oauthScribe->getCallbackUrlLabel () . '</span>', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( 'redirect_url', sprintf ( '<span id="redirect_url">%s</span>', $this->oauthScribe->getCallbackUrlLabel () ), array (
 					$this,
 					'redirect_url_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
@@ -590,22 +590,22 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
 			// the Advanced section
-			add_settings_section ( PostmanAdminController::ADVANCED_SECTION, _x ( __ ( 'Advanced Settings', 'postman-smtp' ), 'Configuration Section' ), array (
+			add_settings_section ( PostmanAdminController::ADVANCED_SECTION, _x ( 'Advanced Settings', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printAdvancedSectionInfo' 
 			), PostmanAdminController::ADVANCED_OPTIONS );
 			
-			add_settings_field ( 'connection_timeout', _x ( __ ( 'Connection Timeout (sec)', 'postman-smtp' ), 'Configuration Input Field' ), array (
+			add_settings_field ( 'connection_timeout', _x ( 'Connection Timeout (sec)', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'connection_timeout_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( 'read_timeout', _x ( __ ( 'Read Timeout (sec)', 'postman-smtp' ), 'Configuration Input Field' ), array (
+			add_settings_field ( 'read_timeout', _x ( 'Read Timeout (sec)', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'read_timeout_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( PostmanOptions::REPLY_TO, _x ( __ ( 'Reply-To Email Address', 'postman-smtp' ), 'Configuration Input Field' ), array (
+			add_settings_field ( PostmanOptions::REPLY_TO, _x ( 'Reply-To Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'reply_to_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
@@ -834,7 +834,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( _n ( 'Each test is given %d second to complete.', 'Each test is given %d seconds to complete.', $this->options->getConnectionTimeout (), 'postman-smtp' ), $this->options->getConnectionTimeout () );
 			print ' ';
 			/* translators: where %d is an amount of time, in seconds */
-			printf ( 'The entire test will take up to %d seconds.', ($this->options->getConnectionTimeout () * 3) );
+			printf ( __ ( 'The entire test will take up to %d seconds.' ), ($this->options->getConnectionTimeout () * 3) );
 			print ' ';
 			print __ ( 'A <span style="color:red">Closed</span> port indicates either:', 'postman-smtp' );
 			print '<ol>';
