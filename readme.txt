@@ -13,14 +13,14 @@ Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, the next
 
 Having [trouble sending email](https://wordpress.org/support/topic/smtp-connect-failed)? Email Services have begun [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms. Users of typical SMTP plugins have been plagued by [outbound mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) and delays, or forced to jump through hoops like app-specific passwords and two-factor authentication. When using the WordPress internal mailer, email may be treated as SPAM or disappear without explanation.
 
-Postman is a next-generation WordPress SMTP plugin, the first and only to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service provider [pre-approves Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
+Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service provider [pre-approves Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
 
 ###* What's New for v1.4 *
 *Featuring OAuth 2.0 for Gmail, Hotmail and now **Yahoo Mail** users!*
 
 = Features =
 * Send mail to any host just like the 'Big Five' WordPress SMTP plugins
-* Send mail to Gmail, Hotmail or Yahoo Mail using OAuth 2.0
+* Send mail to Gmail, Hotmail or Yahoo Mail using traditional auth or OAuth 2.0
 * Fire-and-forget: Mail delivery continues even if your password changes
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Easy to use Setup Wizard takes the guesswork out of configuring email
