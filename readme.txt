@@ -209,7 +209,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.4.1 - 2015-02-17 =
-* All text has been externalized in prep for [I18N Internationalization and localization](http://codex.wordpress.org/I18n_for_WordPress_Developers)
+* All text has been [externalized](http://plugins.svn.wordpress.org/postman-smtp/trunk/Postman/languages/postman-smtp.pot) in prep for [I18N Internationalization and localization](http://codex.wordpress.org/I18n_for_WordPress_Developers)
 * Fixed a bug where the Setup Wizard would try to force OAuth 2.0 even if the required port was closed
 * Added more error checking, and more warning messages.
 * Translated into French, thank-you Etienne Provost
