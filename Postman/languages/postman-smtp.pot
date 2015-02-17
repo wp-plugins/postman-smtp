@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-02-17 00:48:08+00:00\n"
+"POT-Creation-Date: 2015-02-17 03:54:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: Postman/PostmanAdminController.php:290
 #: Postman/PostmanAdminController.php:310
 #: Postman/PostmanAdminController.php:329
-#: Postman/PostmanAdminController.php:1170
+#: Postman/PostmanAdminController.php:1169
 msgctxt "Page Title"
 msgid "Postman Settings"
 msgstr ""
@@ -119,7 +119,7 @@ msgid "Test Your Setup"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:645
-#: Postman/PostmanAdminController.php:1349
+#: Postman/PostmanAdminController.php:1348
 msgctxt "Configuration Input Field"
 msgid "Recipient Email Address"
 msgstr ""
@@ -153,122 +153,122 @@ msgid ""
 "through internal engine succeeded."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:832
+#: Postman/PostmanAdminController.php:831
 msgid "This test determines which ports are open for Postman to use."
 msgstr ""
 
 #. translators: where %d is an amount of time, in seconds
-#: Postman/PostmanAdminController.php:835
+#: Postman/PostmanAdminController.php:834
 msgid "Each test is given %d second to complete."
 msgid_plural "Each test is given %d seconds to complete."
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: where %d is an amount of time, in seconds
-#: Postman/PostmanAdminController.php:840
+#: Postman/PostmanAdminController.php:839
 msgid "A <span style=\"color:red\">Closed</span> port indicates either:"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:842
+#: Postman/PostmanAdminController.php:841
 msgid ""
 "Your host has placed a firewall between this site and the SMTP server or"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:843
+#: Postman/PostmanAdminController.php:842
 msgid "The SMTP server has no service running on that port"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:844
+#: Postman/PostmanAdminController.php:843
 msgid ""
-"If the port you are trying to use is  <span style=\"color:red\">Closed</"
+"If the port you are trying to use is <span style=\"color:red\">Closed</"
 "span>, Postman can not deliver mail. Contact your host to get the port "
 "opened."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:851
+#: Postman/PostmanAdminController.php:850
 msgid "Enter the username (email address) and password you use to send email"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:866
+#: Postman/PostmanAdminController.php:865
 msgid ""
 "You will receive an email from Postman with the subject \"WordPress Postman "
 "SMTP Test.\""
 msgstr ""
 
-#: Postman/PostmanAdminController.php:873
+#: Postman/PostmanAdminController.php:872
 msgid ""
 "This will purge all of Postman's settings, including SMTP server info, "
-"username/password and OAuth Credentials"
+"username/password and OAuth Credentials."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:873
+#: Postman/PostmanAdminController.php:872
 msgid "Are you sure?"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:880
+#: Postman/PostmanAdminController.php:879
 msgid ""
 "Increase the read timeout if your host is intermittenly failing to send "
 "mail. Be careful, this also correlates to how long your user must wait if "
 "your mail server is unreachable."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:889
+#: Postman/PostmanAdminController.php:888
 msgctxt "Authentication Type"
 msgid "None"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:890
+#: Postman/PostmanAdminController.php:889
 msgctxt "Authentication Type"
 msgid "Plain"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:891
+#: Postman/PostmanAdminController.php:890
 msgctxt "Authentication Type"
 msgid "Login"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:892
+#: Postman/PostmanAdminController.php:891
 msgctxt "Authentication Type"
 msgid "CRAMMD5"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:893
-#: Postman/PostmanAdminController.php:1071
+#: Postman/PostmanAdminController.php:892
+#: Postman/PostmanAdminController.php:1070
 msgctxt "Authentication Type"
 msgid "OAuth 2.0"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:908
+#: Postman/PostmanAdminController.php:907
 msgctxt "Encryption Type"
 msgid "None"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:909
+#: Postman/PostmanAdminController.php:908
 msgctxt "Encryption Type"
 msgid "SSL"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:910
+#: Postman/PostmanAdminController.php:909
 msgctxt "Encryption Type"
 msgid "TLS"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:963
+#: Postman/PostmanAdminController.php:962
 msgid "Error computing your domain root - please enter it manually"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1069
+#: Postman/PostmanAdminController.php:1068
 msgid "Postman is configured."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1073
+#: Postman/PostmanAdminController.php:1072
 msgctxt "Authentication Type"
 msgid "no"
 msgstr ""
 
 #. translators: where %s is the Authentication Type (e.g. plain, login or
 #. crammd5)
-#: Postman/PostmanAdminController.php:1076
+#: Postman/PostmanAdminController.php:1075
 msgctxt "Authentication Type"
 msgid "Password (%s)"
 msgstr ""
@@ -276,17 +276,17 @@ msgstr ""
 #. translators: where %1$s is the SMTP server and %2$s is the Authentication
 #. Type (e.g. Postman will send mail via smtp.gmail.com:465 using OAuth 2.0
 #. authentication.)
-#: Postman/PostmanAdminController.php:1079
+#: Postman/PostmanAdminController.php:1078
 msgid "Postman will send mail via %1$s using %2$s authentication."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1081
+#: Postman/PostmanAdminController.php:1080
 msgid ""
 "Please note: <em>When composing email, other WordPress plugins or themes may "
-"override the sender name only</em>."
+"override the sender name only.</em>"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1083
+#: Postman/PostmanAdminController.php:1082
 msgid ""
 "Please note: <em>When composing email, other WordPress plugins or themes may "
 "override the sender name and email address causing rejection with some email "
@@ -294,296 +294,292 @@ msgid ""
 "sender email address empty in these plugins or themes.</em>"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1086
+#: Postman/PostmanAdminController.php:1085
 msgid "Status: Postman is not sending mail."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1088
+#: Postman/PostmanAdminController.php:1087
 msgid "Thank-you for choosing Postman!"
 msgstr ""
 
 #. translators: where %s is the URL of the Setup Wizard
-#: Postman/PostmanAdminController.php:1090
+#: Postman/PostmanAdminController.php:1089
 msgid ""
 "Let's get started! All users are strongly encouraged to start by <a href=\"%s"
 "\">running the Setup Wizard</a>."
 msgstr ""
 
 #. translators: where %s is the URL of the Manual Configuration
-#: Postman/PostmanAdminController.php:1093
+#: Postman/PostmanAdminController.php:1092
 msgid ""
 "However, if you wish, Postman can <a href=\"%s\">import your SMTP "
 "configuration</a> from another plugin. You can run the Wizard later if you "
 "need to."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1099
+#: Postman/PostmanAdminController.php:1098
 msgid ""
 "Your system seems to be missing one or more pre-requisites - something may "
 "fail:"
 msgstr ""
 
 #. translators: where %s is the PHP version
-#: Postman/PostmanAdminController.php:1101
+#: Postman/PostmanAdminController.php:1100
 msgid "No (%s)"
+msgstr ""
+
+#: Postman/PostmanAdminController.php:1101
+#: Postman/PostmanAdminController.php:1102
+#: Postman/PostmanAdminController.php:1103
+#: Postman/PostmanAdminController.php:1104
+msgid "Yes"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:1102
 #: Postman/PostmanAdminController.php:1103
 #: Postman/PostmanAdminController.php:1104
-#: Postman/PostmanAdminController.php:1105
-msgid "Yes"
-msgstr ""
-
-#: Postman/PostmanAdminController.php:1103
-#: Postman/PostmanAdminController.php:1104
-#: Postman/PostmanAdminController.php:1105
 msgid "No"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1126
+#: Postman/PostmanAdminController.php:1125
 msgctxt "Configuration Section"
 msgid "Show Advanced Settings"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1143
+#: Postman/PostmanAdminController.php:1142
 msgctxt "Button Label"
 msgid "Delete All Data"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1156
+#: Postman/PostmanAdminController.php:1155
 msgctxt "Button Label"
 msgid "Begin Test"
 msgstr ""
 
+#: Postman/PostmanAdminController.php:1158
 #: Postman/PostmanAdminController.php:1159
 #: Postman/PostmanAdminController.php:1160
-#: Postman/PostmanAdminController.php:1161
 msgctxt "Port Test Status"
 msgid "Unknown"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1175
+#: Postman/PostmanAdminController.php:1174
 msgctxt "Main Menu"
 msgid "Get Started"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1176
+#: Postman/PostmanAdminController.php:1175
 msgctxt "Button Label"
 msgid "Start the Wizard"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1177
+#: Postman/PostmanAdminController.php:1176
 msgctxt "Main Menu"
 msgid "configure manually"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1180
+#: Postman/PostmanAdminController.php:1179
 msgctxt "Main Menu"
 msgid "Actions"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1187
+#: Postman/PostmanAdminController.php:1186
 msgctxt "Main Menu"
 msgid "Delete plugin settings"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1191
+#: Postman/PostmanAdminController.php:1190
 msgctxt "Main Menu"
 msgid "Troubleshooting"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1194
-#: Postman/PostmanAdminController.php:1196
+#: Postman/PostmanAdminController.php:1193
+#: Postman/PostmanAdminController.php:1195
 msgctxt "Main Menu"
 msgid "Send a Test Email"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1198
+#: Postman/PostmanAdminController.php:1197
 msgctxt "Main Menu"
 msgid "Run a Port Connection Test"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1199
+#: Postman/PostmanAdminController.php:1198
 msgctxt "Main Menu"
 msgid "Online Support"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1213
+#: Postman/PostmanAdminController.php:1212
 msgctxt "Page Title"
 msgid "Postman Setup Wizard"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1223
-#: Postman/PostmanAdminController.php:1225
+#: Postman/PostmanAdminController.php:1222
+#: Postman/PostmanAdminController.php:1224
 msgctxt "Wizard Step Title"
 msgid "Sender Address Details"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1226
+#: Postman/PostmanAdminController.php:1225
 msgid ""
 "Let's begin! Please enter the email address and name you'd like to send mail "
 "from."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1227
+#: Postman/PostmanAdminController.php:1226
 msgid ""
 "<p>Please note that to combat Spam, many email services will <em>not</em> "
 "let you send from an e-mail address that is not your own.</p>"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1228
+#: Postman/PostmanAdminController.php:1227
 msgctxt "Configuration Input Field"
 msgid "Sender Email Address"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1230
+#: Postman/PostmanAdminController.php:1229
 msgctxt "Configuration Input Field"
 msgid "Sender Email Name"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1235
-#: Postman/PostmanAdminController.php:1237
+#: Postman/PostmanAdminController.php:1234
+#: Postman/PostmanAdminController.php:1236
 msgctxt "Wizard Step Title"
 msgid "SMTP Server Hostname"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1238
+#: Postman/PostmanAdminController.php:1237
 msgid "This is the server that Postman will use to deliver your mail."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1239
+#: Postman/PostmanAdminController.php:1238
 msgctxt "Configuration Input Field"
 msgid "SMTP Server Hostname"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1244
-#: Postman/PostmanAdminController.php:1246
+#: Postman/PostmanAdminController.php:1243
+#: Postman/PostmanAdminController.php:1245
 msgctxt "Wizard Step Title"
 msgid "SMTP Server Port"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1247
+#: Postman/PostmanAdminController.php:1246
 msgid "Your email provider will dictate which port to use."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1248
+#: Postman/PostmanAdminController.php:1247
 msgctxt "Configuration Input Field"
 msgid "SMTP Server Port"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1254
+#: Postman/PostmanAdminController.php:1253
 msgid "Port 25"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1256
-#: Postman/PostmanAdminController.php:1261
-#: Postman/PostmanAdminController.php:1266
+#: Postman/PostmanAdminController.php:1255
+#: Postman/PostmanAdminController.php:1260
+#: Postman/PostmanAdminController.php:1265
 msgctxt "TCP Port Status"
 msgid "Unknown"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1259
+#: Postman/PostmanAdminController.php:1258
 msgid "Port 465"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1264
+#: Postman/PostmanAdminController.php:1263
 msgid "Port 587"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1272
-#: Postman/PostmanAdminController.php:1274
+#: Postman/PostmanAdminController.php:1271
+#: Postman/PostmanAdminController.php:1273
 msgctxt "Wizard Step Title"
 msgid "Authentication"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1277
-msgid "Jason."
-msgstr ""
-
-#: Postman/PostmanAdminController.php:1298
+#: Postman/PostmanAdminController.php:1297
 msgid ""
 "Choose Login authentication unless you've been instructed otherwise. Your "
 "username is most likely your email address."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1299
+#: Postman/PostmanAdminController.php:1298
 msgctxt "Configuration Input Field"
 msgid "Authentication Type"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1301
+#: Postman/PostmanAdminController.php:1300
 msgctxt "Configuration Input Field"
 msgid "Encryption Type"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1304
+#: Postman/PostmanAdminController.php:1303
 msgctxt "Configuration Input Field"
 msgid "Username"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1306
+#: Postman/PostmanAdminController.php:1305
 msgctxt "Configuration Input Field"
 msgid "Password"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1313
-#: Postman/PostmanAdminController.php:1315
+#: Postman/PostmanAdminController.php:1312
+#: Postman/PostmanAdminController.php:1314
 msgctxt "Wizard Step Title"
 msgid "Finish"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1317
-msgid "Click Finish to save these settings. Then:"
+#: Postman/PostmanAdminController.php:1316
+msgid "Click Finish to save these settings, then:"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1319
+#: Postman/PostmanAdminController.php:1318
 msgid ""
 "Request permission from the Email Provider to allow Postman to send email and"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1320
+#: Postman/PostmanAdminController.php:1319
 msgid "Send yourself a Test Email to make sure everything is working!"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1338
+#: Postman/PostmanAdminController.php:1337
 msgctxt "Page Title"
 msgid "Send a Test Email"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1342
-#: Postman/PostmanAdminController.php:1344
+#: Postman/PostmanAdminController.php:1341
+#: Postman/PostmanAdminController.php:1343
 msgid "Choose the Recipient"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1345
+#: Postman/PostmanAdminController.php:1344
 msgid "This utility allows you to send an email message for testing."
 msgstr ""
 
 #. translators: where %d is an amount of time, in seconds
-#: Postman/PostmanAdminController.php:1348
+#: Postman/PostmanAdminController.php:1347
 msgid "If there is a problem, Postman will give up after %d second."
 msgid_plural "If there is a problem, Postman will give up after %d seconds."
 msgstr[0] ""
 msgstr[1] ""
 
-#: Postman/PostmanAdminController.php:1354
+#: Postman/PostmanAdminController.php:1353
 msgid "Send The Message"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1357
+#: Postman/PostmanAdminController.php:1356
 msgid "Sending the message:"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1358
+#: Postman/PostmanAdminController.php:1357
 msgid "In Outbox"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1361
+#: Postman/PostmanAdminController.php:1360
 msgid "Your message was delivered to the SMTP server! Congratulations :)"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:1366
+#: Postman/PostmanAdminController.php:1365
 msgid "SMTP Session Transcript"
 msgstr ""
 
