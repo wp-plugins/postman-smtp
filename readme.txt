@@ -1,6 +1,6 @@
 === Postman SMTP ===
 Contributors: jasonhendriks
-Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, yahoo, yahoo mail, windows live, outlook.com, wp smtp, outgoing mail, sendmail, ssl, tls, wp smtp, wordpress smtp, wp_mail, wp mail, google apps for work, google apps for business
+Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, yahoo, yahoo mail, windows live, outlook.com, wp smtp, outgoing mail, send mail, wp smtp, wordpress smtp, wp_mail, wp mail, google apps for work, google apps for business
 Requires at least: 3.9
 Tested up to: 4.1
 Stable tag: 1.4.1
