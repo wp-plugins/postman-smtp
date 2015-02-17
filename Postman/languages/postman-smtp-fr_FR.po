@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-02-17 04:42:59+00:00\n"
-"PO-Revision-Date: 2015-02-16 23:59-0500\n"
+"POT-Creation-Date: 2015-02-17 05:03:48+00:00\n"
+"PO-Revision-Date: 2015-02-17 00:14-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -14,6 +14,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.7.4\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: Postman/PostmanAdminController.php:108
+msgid "Settings saved."
+msgstr "Options enregistrées."
 
 #: Postman/PostmanAdminController.php:222
 msgctxt "Plugin Action Links"
@@ -249,8 +253,8 @@ msgstr "Ce test déterminera quels ports Postman pourra utiliser."
 #: Postman/PostmanAdminController.php:834
 msgid "Each test is given %d second to complete."
 msgid_plural "Each test is given %d seconds to complete."
-msgstr[0] "Chaque test prends %d secondes à complêter."
-msgstr[1] ""
+msgstr[0] "Chaque test prends %d seconde à complêter."
+msgstr[1] "Chaque test prends %d secondes à complêter."
 
 #. translators: where %d is an amount of time, in seconds
 #: Postman/PostmanAdminController.php:837
@@ -554,9 +558,9 @@ msgid ""
 "<p>Please note that to combat Spam, many email services will <em>not</em> "
 "let you send from an e-mail address that is not your own.</p>"
 msgstr ""
-"<p>Veuillez noter que pour combattre le Spam, plusieurs services de "
-"messagerie <em>ne permettrons pas</em>l'envoi d'un message provenant d'une "
-"autre adresse que la vôtre.</p>"
+"Veuillez noter que pour combattre le Spam, plusieurs services de messagerie "
+"<em>ne permettrons pas</em>l'envoi d'un message provenant d'une autre "
+"adresse que la vôtre."
 
 #: Postman/PostmanAdminController.php:1229
 msgctxt "Configuration Input Field"

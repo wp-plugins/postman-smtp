@@ -1223,7 +1223,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'Sender Address Details', 'Wizard Step Title', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'Let\'s begin! Please enter the email address and name you\'d like to send mail from.', 'postman-smtp' ) );
-			printf ( '<p>%s</p>', __ ( '<p>Please note that to combat Spam, many email services will <em>not</em> let you send from an e-mail address that is not your own.</p>', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'Please note that to combat Spam, many email services will <em>not</em> let you send from an e-mail address that is not your own.', 'postman-smtp' ) );
 			printf ( '<label for="postman_options[sender_email]">%s</label>', _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->sender_email_callback ();
 			printf ( '<label for="postman_options[sender_name]">%s</label>', _x ( 'Sender Email Name', 'Configuration Input Field', 'postman-smtp' ) );

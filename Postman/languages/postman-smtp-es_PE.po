@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-02-17 04:42:59+00:00\n"
-"PO-Revision-Date: 2015-02-16 23:53-0500\n"
+"POT-Creation-Date: 2015-02-17 05:03:48+00:00\n"
+"PO-Revision-Date: 2015-02-17 00:06-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_PE\n"
@@ -14,6 +14,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.7.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: Postman/PostmanAdminController.php:108
+msgid "Settings saved."
+msgstr ""
 
 #: Postman/PostmanAdminController.php:222
 msgctxt "Plugin Action Links"
