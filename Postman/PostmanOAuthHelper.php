@@ -245,7 +245,8 @@ if (! class_exists ( 'PostmanNonOAuthScribe' )) {
 			return endsWith ( $this->hostname, 'yahoo.com' );
 		}
 		public function getOAuthHelp() {
-			return sprintf ( '<p id="wizard_oauth2_help"><span style="color:red" class="normal">%s</span></p>', __ ( 'Enter an Outgoing Mail Server with OAuth 2.0 capabilities.' ) );
+			$text = __ ( 'Enter an Outgoing Mail Server with OAuth2 capabilities.' );
+			return sprintf ( '<p id="wizard_oauth2_help"><span style="color:red" class="normal">%s</span></p>', $text );
 		}
 		public function getCallbackUrl() {
 			return '';
