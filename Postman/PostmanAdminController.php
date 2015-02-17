@@ -378,6 +378,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->messageHandler->addError ( __ ( 'The grant code from Google had no accompanying state and may be a forgery', 'postman-smtp' ) );
 			} catch ( Exception $e ) {
 				$logger->error ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
+				/* translators: %s is the error message */
 				$this->messageHandler->addError ( sprintf ( __ ( 'Error authenticating with this Client ID - please create a new one. [%s]', 'postman-smtp' ), '<em>' . $e->getMessage () . '</em>' ) );
 			}
 			// redirect home
@@ -680,6 +681,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$emailTester = new PostmanSendTestEmailController ();
 				$subject = _x ( 'WordPress Postman SMTP Test', 'Test Email Subject', 'postman-smtp' );
 				// Englsih - Mandarin - French - Hindi - Spanish - Arabic - Portuguese - Russian - Bengali - Japanese - Punjabi
+				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
 				$message = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - السلام عليكم - Olá - Привет! - নমস্কার - 今日は - ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ।%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline' ), POSTMAN_PLUGIN_VERSION ) );
 				$success = $emailTester->sendTestEmail ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName (), $subject, $message );
 				$response = array (
@@ -688,6 +690,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'success' => $success 
 				);
 			} catch ( PostmanSendMailCommunicationError334 $e ) {
+				/* translators: where %s is the email service name (e.g. Gmail) */
 				$response = array (
 						'message' => sprintf ( __ ( 'Communication Error [334] - make sure the Sender Email belongs to the account which provided the %s OAuth 2.0 consent.', 'postman-smtp' ), $serviceName ),
 						'transcript' => $emailTester->getTranscript (),
@@ -1067,8 +1070,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 				} else if ($this->options->isAuthTypeNone ()) {
 					$authDesc = _x ( 'no', 'Authentication Type', 'postman-smtp' );
 				} else {
+					/* translators: where %s is the Authentication Type (e.g. plain, login or crammd5) */
 					$authDesc = sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $this->options->getAuthorizationType () );
 				}
+				/* translators: where %1$s is the SMTP server and %2$s is the Authentication Type (e.g. Postman will send mail via smtp.gmail.com:465 using OAuth 2.0 authentication.) */
 				printf ( '<p style="margin:0 10px"><span>%s</span></p>', sprintf ( __ ( 'Postman will send mail via %1$s using %2$s authentication.', 'postman-smtp' ), '<b>' . $this->options->getHostname () . ':' . $this->options->getPort () . '</b>', '<b>' . $authDesc . '</b>' ) );
 				if ($this->options->isAuthTypeOAuth2 ()) {
 					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only</em>.', 'postman-smtp' ) );
@@ -1079,6 +1084,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				printf ( '<p><span style="color:red; padding:2px 5px; font-size:1.1em">%s</span></p>', __ ( 'Status: Postman is not sending mail.', 'postman-smtp' ) );
 				if ($this->options->isNew ()) {
 					printf ( '<h3>%s</h3>', __ ( 'Thank-you for choosing Postman!', 'postman-smtp' ) );
+					/* translators: where %s is the URL of the Setup Wizard */
 					printf ( '<p><span>%s</span></p>', sprintf ( __ ( 'Let\'s get started! All users are strongly encouraged to start by <a href="%s">running the Setup Wizard</a>.', 'postman-smtp' ), $this->getPageUrl ( self::CONFIGURATION_WIZARD_SLUG ) ) );
 					if ($this->importableConfiguration->isImportAvailable ()) {
 						printf ( '<p><span>%s</span></p>', sprintf ( __ ( 'However, if you wish, Postman can <a href="%s">import your SMTP configuration</a> from another plugin. You can run the Wizard later if you need to.', 'postman-smtp' ), $this->getPageUrl ( self::CONFIGURATION_SLUG ) ) );
@@ -1088,6 +1094,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			if (! $sslRequirement || ! $splAutoloadRegisterRequirement || ! $arrayObjectRequirement) {
 				printf ( '<div style="padding: 10px;"><b style="color: red">%s:</b><ul>', __ ( 'Your system seems to be missing one or more pre-requisites - something may fail:', 'postman-smtp' ) );
+				/* translators: where %s is the PHP version */
 				printf ( '<li>PHP v5.3: %s</li>', ($phpVersionRequirement ? __ ( 'Yes', 'postman-smtp' ) : sprintf ( __ ( 'No (%s)', 'postman-smtp' ), PHP_VERSION )) );
 				printf ( '<li>SSL Extension: %s</li>', ($sslRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
 				printf ( '<li>spl_autoload_register: %s</li>', ($splAutoloadRegisterRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );

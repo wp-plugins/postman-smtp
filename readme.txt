@@ -155,6 +155,9 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 = How can I stop all this OAuth nonsense!? =
 If you have a Google Account, from the [Google Developer's Console](https://console.developers.google.com/) use the Delete button under the Client ID. If you have a Microsoft Live account, from the [Microsoft account Developer Center](https://account.live.com/developers/applications/index), select the Application and choose Delete Application.
 
+= Who do we thank for translations? =
+* French - [Etienne Provost](https://www.facebook.com/eprovost3)
+
 == Troubleshooting ==
 
 * If Postman sends mail inconsistently, your host may have poor connectivity to your mail server. Try doubling the Read Timeout.
