@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-02-17 05:03:48+00:00\n"
-"PO-Revision-Date: 2015-02-17 00:14-0500\n"
+"POT-Creation-Date: 2015-02-17 05:17:40+00:00\n"
+"PO-Revision-Date: 2015-02-17 00:24-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -555,8 +555,8 @@ msgstr ""
 
 #: Postman/PostmanAdminController.php:1226
 msgid ""
-"<p>Please note that to combat Spam, many email services will <em>not</em> "
-"let you send from an e-mail address that is not your own.</p>"
+"Please note that to combat Spam, many email services will <em>not</em> let "
+"you send from an e-mail address other than your own."
 msgstr ""
 "Veuillez noter que pour combattre le Spam, plusieurs services de messagerie "
 "<em>ne permettrons pas</em>l'envoi d'un message provenant d'une autre "
@@ -797,17 +797,17 @@ msgid "Request permission from %s"
 msgstr "Demandez la permission à %s"
 
 #: Postman/PostmanOAuthHelper.php:107 Postman/PostmanOAuthHelper.php:153
-#: Postman/PostmanOAuthHelper.php:254
+#: Postman/PostmanOAuthHelper.php:255
 msgctxt "Name of the OAuth 2.0 Client ID"
 msgid "Client ID"
 msgstr "ID du client"
 
-#: Postman/PostmanOAuthHelper.php:110 Postman/PostmanOAuthHelper.php:257
+#: Postman/PostmanOAuthHelper.php:110 Postman/PostmanOAuthHelper.php:258
 msgctxt "Name of the OAuth 2.0 Client Secret"
 msgid "Client Secret"
 msgstr "Secret du client"
 
-#: Postman/PostmanOAuthHelper.php:113 Postman/PostmanOAuthHelper.php:260
+#: Postman/PostmanOAuthHelper.php:113 Postman/PostmanOAuthHelper.php:261
 msgctxt "Name of the Application Callback URI"
 msgid "Redirect URI"
 msgstr "Rediriger URI"
@@ -908,15 +908,15 @@ msgid "Yahoo Developer Network"
 msgstr "Réseau de Développement de Yahoo"
 
 #: Postman/PostmanOAuthHelper.php:248
-msgid "Enter an Outgoing Mail Server with OAuth 2.0 capabilities."
+msgid "Enter an Outgoing Mail Server with OAuth2 capabilities."
 msgstr "Adhérer à un serveur d'envoi avec des compatibilitées OAuth 2.0."
 
-#: Postman/PostmanOAuthHelper.php:263
+#: Postman/PostmanOAuthHelper.php:264
 msgctxt "Name of the Application Callback Domain"
 msgid "Website Domain"
 msgstr "Nom de domaine web"
 
-#: Postman/PostmanOAuthHelper.php:287
+#: Postman/PostmanOAuthHelper.php:288
 msgctxt "Command to initiate OAuth authentication"
 msgid "Request OAuth Permission"
 msgstr "Demander l'autorisation de OAuth."
@@ -949,54 +949,3 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
-
-#~ msgctxt "Configuration Input Field"
-#~ msgid "Authentication Type"
-#~ msgstr "Méthode d'Authentification"
-
-#~ msgctxt "Configuration Input Field"
-#~ msgid "Encryption Type"
-#~ msgstr "Type de Cryptage"
-
-#~ msgid ""
-#~ "If the port you are trying to use is  <span style=\"color:red\">Closed</"
-#~ "span>, Postman can not deliver mail. Contact your host to get the port "
-#~ "opened."
-#~ msgstr ""
-#~ "Si vous tentez d'utiliser le port <span style=\"color:red\">Fermé</span>, "
-#~ "Postman ne pourra pas livrer le courrier. Contactez votre hôte afin "
-#~ "d'ouvrir le port."
-
-#~ msgid ""
-#~ "This will purge all of Postman's settings, including SMTP server info, "
-#~ "username/password and OAuth Credentials"
-#~ msgstr ""
-#~ "Cette action réinitialiser a tous les réglages de Postman, incluant les "
-#~ "informations du serveur SMTP, nom d'utilisateur/mot de passe et "
-#~ "l'accréditation OAuth."
-
-#~ msgid ""
-#~ "Please note: <em>When composing email, other WordPress plugins or themes "
-#~ "may override the sender name only</em>."
-#~ msgstr ""
-#~ "Notez bien: <em> En composant votre message, d'autres thèmes ou "
-#~ "extensions de WordPress risque d'écraser le nom de l'expéditeur seulement."
-#~ "</em>"
-
-#~ msgid "Jason."
-#~ msgstr "Jason."
-
-#~ msgid "Click Finish to save these settings. Then:"
-#~ msgstr "Cliquer sur Fin pour sauver ces réglages, ensuite:"
-
-#~ msgid "Settings"
-#~ msgstr "Réglages de Postman"
-
-#~ msgid "Postman Settings"
-#~ msgstr "Réglages de Postman"
-
-#~ msgid "Closed"
-#~ msgstr "Fermer"
-
-#~ msgid "Success"
-#~ msgstr "Succès"

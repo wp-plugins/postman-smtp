@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-02-17 05:03:48+00:00\n"
+"POT-Creation-Date: 2015-02-17 05:17:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -509,8 +509,8 @@ msgstr ""
 
 #: Postman/PostmanAdminController.php:1226
 msgid ""
-"<p>Please note that to combat Spam, many email services will <em>not</em> "
-"let you send from an e-mail address that is not your own.</p>"
+"Please note that to combat Spam, many email services will <em>not</em> let "
+"you send from an e-mail address other than your own."
 msgstr ""
 
 #: Postman/PostmanAdminController.php:1229
@@ -720,17 +720,17 @@ msgid "Request permission from %s"
 msgstr ""
 
 #: Postman/PostmanOAuthHelper.php:107 Postman/PostmanOAuthHelper.php:153
-#: Postman/PostmanOAuthHelper.php:254
+#: Postman/PostmanOAuthHelper.php:255
 msgctxt "Name of the OAuth 2.0 Client ID"
 msgid "Client ID"
 msgstr ""
 
-#: Postman/PostmanOAuthHelper.php:110 Postman/PostmanOAuthHelper.php:257
+#: Postman/PostmanOAuthHelper.php:110 Postman/PostmanOAuthHelper.php:258
 msgctxt "Name of the OAuth 2.0 Client Secret"
 msgid "Client Secret"
 msgstr ""
 
-#: Postman/PostmanOAuthHelper.php:113 Postman/PostmanOAuthHelper.php:260
+#: Postman/PostmanOAuthHelper.php:113 Postman/PostmanOAuthHelper.php:261
 msgctxt "Name of the Application Callback URI"
 msgid "Redirect URI"
 msgstr ""
@@ -831,15 +831,15 @@ msgid "Yahoo Developer Network"
 msgstr ""
 
 #: Postman/PostmanOAuthHelper.php:248
-msgid "Enter an Outgoing Mail Server with OAuth 2.0 capabilities."
+msgid "Enter an Outgoing Mail Server with OAuth2 capabilities."
 msgstr ""
 
-#: Postman/PostmanOAuthHelper.php:263
+#: Postman/PostmanOAuthHelper.php:264
 msgctxt "Name of the Application Callback Domain"
 msgid "Website Domain"
 msgstr ""
 
-#: Postman/PostmanOAuthHelper.php:287
+#: Postman/PostmanOAuthHelper.php:288
 msgctxt "Command to initiate OAuth authentication"
 msgid "Request OAuth Permission"
 msgstr ""

@@ -232,9 +232,6 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 }
 if (! class_exists ( 'PostmanNonOAuthScribe' )) {
 	class PostmanNonOAuthScribe extends PostmanAbstractOAuthHelper {
-		public function __construct($hostname) {
-			parent::__construct ( $hostname );
-		}
 		public function isGoogle() {
 			return endsWith ( $this->hostname, 'gmail.com' );
 		}
