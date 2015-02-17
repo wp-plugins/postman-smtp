@@ -11,16 +11,16 @@ Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, the next
 
 == Description ==
 
-Having [trouble sending email](https://wordpress.org/support/topic/smtp-connect-failed)? Email Services have begun [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms. Users of typical SMTP plugins have been plagued by [outbound mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) and delays, or forced to jump through hoops like app-specific passwords and two-factor authentication. When using the WordPress internal mailer, email may be treated as SPAM or disappear without explanation.
+Having [trouble sending email](https://wordpress.org/support/topic/smtp-connect-failed)? Email Services have begun [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms. Users of typical plugins have been plagued by [mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) and delays. They are forced to use app-specific passwords, two-factor authentication, CAPTCHA and make account changes to enable less-secure apps. If not, messages may be treated as SPAM or simply disappear altogether.
 
-Postman is a next-generation WordPress SMTP plugin, the first and only to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service provider [pre-approves Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Unlike other plugins that seek approval each time they connect, you can rest assured that when your site generates an email, Postman will deliver your message without rejection.
+Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service provider [pre-approves Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Other plugins seek approval each time they connect, but Postman will deliver your email every time without rejection.
 
 ###* What's New for v1.4 *
 *Featuring OAuth 2.0 for Gmail, Hotmail and now **Yahoo Mail** users!*
 
 = Features =
 * Send mail to any host just like the 'Big Five' WordPress SMTP plugins
-* Send mail to Gmail, Hotmail or Yahoo Mail using OAuth 2.0
+* Send mail to Gmail, Hotmail or Yahoo Mail using traditional auth or OAuth 2.0
 * Fire-and-forget: Mail delivery continues even if your password changes
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Easy to use Setup Wizard takes the guesswork out of configuring email
@@ -28,7 +28,7 @@ Postman is a next-generation WordPress SMTP plugin, the first and only to implem
 * Supports Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Supports SMTPS SSL/TLS encryption
 * Its easy to upgrade! Postman can import SMTP settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
-* Available in English and French
+* Available translations: English, French
 
 If you are willing to help translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
 
@@ -209,8 +209,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.4.1 - 2015-02-17 =
-* All text has been externalized in prep for [I18N Internationalization and localization](http://codex.wordpress.org/I18n_for_WordPress_Developers)
-* Fixed a bug where the Setup Wizard would try to force OAuth 2.0 even if the required port was closed
+* All text has been [externalized](http://plugins.svn.wordpress.org/postman-smtp/trunk/Postman/languages/postman-smtp.pot) in prep for [I18N Internationalization and localization](http://codex.wordpress.org/I18n_for_WordPress_Developers)
+* Fixed a bug where the Setup Wizard would force OAuth 2.0 configuration, instead of falling back to Password, even if the required port was closed
 * Added more error checking, and more warning messages.
 * Translated into French, thank-you Etienne Provost
 
