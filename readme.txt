@@ -133,7 +133,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Choose 'Create Client ID'.
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
-= How do I get a Hotmail/Windows Live/Outlook.com Client ID? =
+= How do I get a Microsoft Client ID? =
 1. Go to [Microsoft account Developer Center](https://account.live.com/developers/applications/index) and select 'Create application'.
 1. In the 'Application name' field enter the name of your WordPress site. Select 'I accept.'
 1. Select 'API Settings' from under 'Settings'.
@@ -141,7 +141,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Select 'App Settings' from under 'Settings'.
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
-= How do I get a Yahoo Mail Client ID? =
+= How do I get a Yahoo Client ID? =
 1. Go to [Yahoo Developer Network](https://developer.apps.yahoo.com/projects) and select 'Create an App'.
 1. In the 'Application Name' field enter the name of your WordPress site. For 'Application Type' choose 'Web-based'. In description write 'Postman SMTP'.
 1. In 'Home Page URL', enter the 'Home Page URL' shown on Postman's Settings page.
