@@ -57,3 +57,5 @@ $logger->debug ( 'Postman v' . POSTMAN_PLUGIN_VERSION . ' starting' );
 register_shutdown_function ( 'postmanHandleErrors' );
 
 //read for coding child plugins: http://wordpress.stackexchange.com/questions/127818/how-to-make-a-plugin-require-another-plugin
+
+// read for coding WHEN to look for available extensions: http://codex.wordpress.org/Plugin_API/Action_Reference/plugins_loaded
