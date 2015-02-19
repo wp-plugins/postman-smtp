@@ -35,7 +35,7 @@ if (! class_exists ( "PostmanGoogleAuthenticationManager" )) {
 		 *
 		 * Get a Client ID from https://account.live.com/developers/applications/index
 		 */
-		public function __construct($clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken, $callbackUri, $senderEmail) {
+		public function __construct($clientId, $clientSecret, PostmanOAuthToken $authorizationToken, $callbackUri, $senderEmail) {
 			assert ( ! empty ( $clientId ) );
 			assert ( ! empty ( $clientSecret ) );
 			assert ( ! empty ( $authorizationToken ) );

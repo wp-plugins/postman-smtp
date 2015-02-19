@@ -24,7 +24,7 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		/**
 		 * Constructor
 		 */
-		public function __construct(PostmanLogger $logger, $clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken, $callbackUri) {
+		public function __construct(PostmanLogger $logger, $clientId, $clientSecret, PostmanOAuthToken $authorizationToken, $callbackUri) {
 			assert ( ! empty ( $clientId ) );
 			assert ( ! empty ( $clientSecret ) );
 			assert ( ! empty ( $authorizationToken ) );
@@ -59,7 +59,7 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		/**
 		 */
 		public function isAccessTokenExpired() {
-			$expireTime = ($this->authorizationToken->getExpiryTime () - PostmanGoogleAuthenticationManager::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
+			$expireTime = ($this->authorizationToken->getExpiryTime () - self::FORCE_REFRESH_X_SECONDS_BEFORE_EXPIRE);
 			$tokenHasExpired = time () > $expireTime;
 			$this->logger->debug ( 'Access Token Expiry Time is ' . $expireTime . ', expires_in=' . ($expireTime - time ()) . ', expired=' . ($tokenHasExpired ? 'yes' : 'no') );
 			return $tokenHasExpired;
@@ -102,28 +102,28 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 		 */
 		protected function decodeReceivedAuthorizationToken($newtoken) {
 			assert ( ! empty ( $newtoken ) );
-			assert ( ! empty ( $newtoken->{PostmanAbstractAuthenticationManager::EXPIRES} ) );
-			assert ( ! empty ( $newtoken->{PostmanAbstractAuthenticationManager::ACCESS_TOKEN} ) );
+			assert ( ! empty ( $newtoken->{self::EXPIRES} ) );
+			assert ( ! empty ( $newtoken->{self::ACCESS_TOKEN} ) );
 			
 			// update expiry time
-			if (empty ( $newtoken->{PostmanAbstractAuthenticationManager::EXPIRES} )) {
+			if (empty ( $newtoken->{self::EXPIRES} )) {
 				throw new Exception ( '[expires_in] value is missing from the authentication token' );
 			}
-			$newExpiryTime = time () + $newtoken->{PostmanAbstractAuthenticationManager::EXPIRES};
+			$newExpiryTime = time () + $newtoken->{self::EXPIRES};
 			$this->getAuthorizationToken ()->setExpiryTime ( $newExpiryTime );
 			$this->getLogger ()->debug ( 'Updating Access Token Expiry Time ' );
 			
 			// update acccess token
-			if (empty ( $newtoken->{PostmanAbstractAuthenticationManager::ACCESS_TOKEN} )) {
+			if (empty ( $newtoken->{self::ACCESS_TOKEN} )) {
 				throw new Exception ( '[access_token] value is missing from the authentication token' );
 			}
-			$newAccessToken = $newtoken->{PostmanAbstractAuthenticationManager::ACCESS_TOKEN};
+			$newAccessToken = $newtoken->{self::ACCESS_TOKEN};
 			$this->getAuthorizationToken ()->setAccessToken ( $newAccessToken );
 			$this->getLogger ()->debug ( 'Updating Access Token' );
 			
 			// update refresh token, if there is one
-			if (isset ( $newtoken->{PostmanAbstractAuthenticationManager::REFRESH_TOKEN} )) {
-				$newRefreshToken = $newtoken->{PostmanGoogleAuthenticationManager::REFRESH_TOKEN};
+			if (isset ( $newtoken->{self::REFRESH_TOKEN} )) {
+				$newRefreshToken = $newtoken->{self::REFRESH_TOKEN};
 				$this->getAuthorizationToken ()->setRefreshToken ( $newRefreshToken );
 				$this->getLogger ()->debug ( 'Updating Refresh Token ' );
 			}

@@ -25,7 +25,7 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 		 *
 		 * Get a Client ID from https://account.live.com/developers/applications/index
 		 */
-		public function __construct($clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken, $callbackUri) {
+		public function __construct($clientId, $clientSecret, PostmanOAuthToken $authorizationToken, $callbackUri) {
 			assert ( ! empty ( $clientId ) );
 			assert ( ! empty ( $clientSecret ) );
 			assert ( ! empty ( $authorizationToken ) );

@@ -133,3 +133,15 @@ http://biostall.com/capturing-and-handling-php-errors-gracefully
 
 Gmail SMTP Settings and New Security Measures Demystified
 http://www.wpsitecare.com/gmail-smtp-settings/
+
+
+
+Google API
+----------
+
+Gmail API
+https://developers.google.com/gmail/api/
+
+Mail PHP API Overview
+https://cloud.google.com/appengine/docs/php/mail/
+

@@ -17,7 +17,7 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 		 * @param unknown $options        	
 		 * @param unknown $recipient        	
 		 */
-		public function sendTestEmailWithMessageHandler(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, $recipient, PostmanMessageHandler $messageHandler, $serviceName, $subject, $message) {
+		public function sendTestEmailWithMessageHandler(PostmanOptions $options, PostmanOAuthToken $authorizationToken, $recipient, PostmanMessageHandler $messageHandler, $serviceName, $subject, $message) {
 			assert ( ! empty ( $messageHandler ) );
 			$result = $this->sendTestEmail ( $options, $authorizationToken, $recipient, $message );
 			if ($result) {
@@ -26,7 +26,7 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 				$messageHandler->addError ( $this->message );
 			}
 		}
-		public function sendTestEmail(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, $recipient, $serviceName, $subject, $message) {
+		public function sendTestEmail(PostmanOptions $options, PostmanOAuthToken $authorizationToken, $recipient, $serviceName, $subject, $message) {
 			assert ( ! empty ( $options ) );
 			assert ( ! empty ( $authorizationToken ) );
 			assert ( ! empty ( $recipient ) );

@@ -22,7 +22,7 @@ class PostmanSmtpEngineFactory {
 	private function __construct() {
 		$this->logger = new PostmanLogger ( get_class ( $this ) );
 	}
-	public function createSmtpEngine(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken) {
+	public function createSmtpEngine(PostmanOptions $options, PostmanOAuthToken $authorizationToken) {
 		if ($options->isAuthTypeOAuth2 ()) {
 			// ensure the token is up-to-date
 			$this->logger->debug ( 'Ensuring Access Token is up-to-date' );

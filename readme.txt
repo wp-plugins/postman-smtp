@@ -7,7 +7,7 @@ Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, the next-generation OAuth 2.0-enabled SMTP Plugin for WordPress.
+Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, a next-generation OAuth 2.0-capable SMTP Plugin for WordPress.
 
 == Description ==
 
@@ -25,8 +25,8 @@ Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
 * Easy to use Setup Wizard takes the guesswork out of configuring email
 * Supports International alphabets, HTML Mail and MultiPart/MIME
-* Supports Plain/Login/CRAM-MD5/XOAUTH2 authentication
-* Supports SMTPS SSL/TLS encryption
+* Supports  Plain, Login, CRAM-MD5 and XOAUTH2 authentication (SASL)
+* Supports SSL and TLS security (SMTPS)
 * Its easy to upgrade! Postman can import SMTP settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
 * Available translations: English, French
 
@@ -86,7 +86,7 @@ If you are willing to help translate Postman into your language, [please let me 
 = To manually configure Password Authentication for any SMTP provider =
 
 1. Choose configure manually
-1. In 'Authentication' choose 'Login', unless your provider has told you different.
+1. In 'Authentication' choose 'Plain', unless your provider has told you different.
 1. In 'Sender Email Address' enter your account's email address.
 1. Enter the SMTP Server's hostname and port.
 1. If you chose Plain, Login or CRAM-MD5 as your authentication method then: Choose 'SSL' for encryption if your port is 465, or 'TLS' if your port is 587.

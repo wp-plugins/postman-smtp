@@ -2,7 +2,7 @@
 // handle plugin activation
 if (! class_exists ( 'PostmanActivationHandler' )) {
 	
-	require_once ('PostmanAuthorizationToken.php');
+	require_once ('PostmanOAuthToken.php');
 	require_once ('PostmanOptions.php');
 	
 	/**

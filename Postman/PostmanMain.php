@@ -1,9 +1,9 @@
 <?php
 
 // setup the main entry point
-if (! class_exists ( 'PostmanMain' )) {
+if (! class_exists ( 'Postman' )) {
 	
-	require_once 'PostmanAuthorizationToken.php';
+	require_once 'PostmanOAuthToken.php';
 	require_once 'PostmanOptions.php';
 	require_once 'PostmanMessageHandler.php';
 	require_once 'PostmanWpMailBinder.php';
@@ -14,7 +14,7 @@ if (! class_exists ( 'PostmanMain' )) {
 	 * @author jasonhendriks
 	 *        
 	 */
-	class PostmanMain {
+	class Postman {
 		const POSTMAN_TCP_READ_TIMEOUT = 60;
 		const POSTMAN_TCP_CONNECTION_TIMEOUT = 10;
 		private $postmanPhpFile;
@@ -46,7 +46,7 @@ if (! class_exists ( 'PostmanMain' )) {
 			
 			// load the options and the auth token
 			$options = PostmanOptions::getInstance ();
-			$authToken = PostmanAuthorizationToken::getInstance ();
+			$authToken = PostmanOAuthToken::getInstance ();
 			
 			// create a message handler
 			$messageHandler = new PostmanMessageHandler ( $options, $authToken );

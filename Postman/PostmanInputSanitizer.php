@@ -64,6 +64,12 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 				PostmanSession::getInstance ()->setAction ( self::VALIDATION_SUCCESS );
 			}
 			
+			if ($new_input [PostmanOptions::CLIENT_ID] != $this->options->getClientId () || $new_input [PostmanOptions::CLIENT_SECRET] != $this->options->getClientSecret ()) {
+				$this->logger->debug ( "Recognized new Client ID" );
+				// the user entered a new client id and we should destroy the stored auth token
+				delete_option ( PostmanOAuthToken::OPTIONS_NAME );
+			}
+			
 			// base-64 scramble password
 			if (! empty ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] )) {
 				$new_input [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] );

@@ -16,7 +16,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		 *
 		 * @param unknown $options        	
 		 */
-		function __construct(PostmanOptions $options, PostmanAuthorizationToken $authToken) {
+		function __construct(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->options = $options;
 			$this->scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getAuthorizationType (), $this->options->getHostname () );
@@ -104,7 +104,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		}
 		public function displayPermissionNeededWarning() {
 			$scribe = $this->scribe;
-			$message = sprintf ( __ ( 'Warning: You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
+			$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
 			$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanAdminController::getActionUrl ( PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG ), $scribe->getRequestPermissionLinkText () );
 			$this->displayWarningMessage ( $message );
 		}

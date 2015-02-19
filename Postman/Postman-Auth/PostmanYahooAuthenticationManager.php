@@ -27,7 +27,7 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 		 *
 		 * Get a Client ID from https://account.live.com/developers/applications/index
 		 */
-		public function __construct($clientId, $clientSecret, PostmanAuthorizationToken $authorizationToken, $callbackUri) {
+		public function __construct($clientId, $clientSecret, PostmanOAuthToken $authorizationToken, $callbackUri) {
 			assert ( ! empty ( $clientId ) );
 			assert ( ! empty ( $clientSecret ) );
 			assert ( ! empty ( $authorizationToken ) );
@@ -93,6 +93,7 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 				);
 				$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals, $headers );
 				$this->processResponse ( $response );
+				$this->getAuthorizationToken ()->setCreateDate($time() );
 				return true;
 			} else {
 				$this->getLogger ()->debug ( 'Expected code in the request header but found none - user probably denied request' );

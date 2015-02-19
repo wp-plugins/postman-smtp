@@ -24,6 +24,9 @@ if (! class_exists ( "PostmanOptions" )) {
 		const TEST_EMAIL = 'test_email';
 		const HOSTNAME = 'hostname';
 		const PORT = 'port';
+		const TRANSPORT_TYPE = 'transport_type';
+		const TRANSPORT_TYPE_SMTP = 'smtp';
+		const TRANSPORT_TYPE_GMAIL = 'gmail';
 		const AUTHENTICATION_TYPE = 'auth_type';
 		const AUTHENTICATION_TYPE_NONE = 'none';
 		const AUTHENTICATION_TYPE_PLAIN = 'plain';
@@ -77,7 +80,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			$authType = $this->getAuthorizationType ();
 			return $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && ! empty ( $clientId ) && ! empty ( $clientSecret );
 		}
-		public function isSendingEmailAllowed(PostmanAuthorizationToken $token) {
+		public function isSendingEmailAllowed(PostmanOAuthToken $token) {
 			if ($this->isSmtpServerRequirementsNotMet ()) {
 				return false;
 			}
@@ -94,7 +97,7 @@ if (! class_exists ( "PostmanOptions" )) {
 				$authType = null;
 			}
 		}
-		public function isPermissionNeeded(PostmanAuthorizationToken $token) {
+		public function isPermissionNeeded(PostmanOAuthToken $token) {
 			$authType = $this->getAuthorizationType ();
 			$hostname = $this->getHostname ();
 			$port = $this->getPort ();
@@ -167,6 +170,10 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::CLIENT_SECRET] ))
 				return $this->options [PostmanOptions::CLIENT_SECRET];
 		}
+		public function getTransportType() {
+			if (isset ( $this->options [PostmanOptions::TRANSPORT_TYPE] ))
+				return $this->options [PostmanOptions::TRANSPORT_TYPE];
+		}
 		public function getAuthorizationType() {
 			if (isset ( $this->options [PostmanOptions::AUTHENTICATION_TYPE] ))
 				return $this->options [PostmanOptions::AUTHENTICATION_TYPE];
@@ -191,13 +198,13 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (! empty ( $this->options [self::CONNECTION_TIMEOUT] ))
 				return $this->options [self::CONNECTION_TIMEOUT];
 			else
-				return PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT;
+				return Postman::POSTMAN_TCP_CONNECTION_TIMEOUT;
 		}
 		public function getReadTimeout() {
 			if (! empty ( $this->options [self::READ_TIMEOUT] ))
 				return $this->options [self::READ_TIMEOUT];
 			else
-				return PostmanMain::POSTMAN_TCP_READ_TIMEOUT;
+				return Postman::POSTMAN_TCP_READ_TIMEOUT;
 		}
 		public function isSenderNameOverridePrevented() {
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] ))

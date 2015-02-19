@@ -3,7 +3,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	
 	require_once "PostmanSendTestEmail.php";
 	require_once 'PostmanOptions.php';
-	require_once 'PostmanAuthorizationToken.php';
+	require_once 'PostmanOAuthToken.php';
 	require_once 'Postman-Wizard/PortTest.php';
 	require_once 'Postman-Wizard/SmtpDiscovery.php';
 	require_once 'PostmanInputSanitizer.php';
@@ -74,7 +74,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 * Start up
 		 */
-		public function __construct($basename, PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, PostmanMessageHandler $messageHandler) {
+		public function __construct($basename, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanMessageHandler $messageHandler) {
 			assert ( ! empty ( $basename ) );
 			assert ( ! empty ( $options ) );
 			assert ( ! empty ( $authorizationToken ) );
@@ -89,12 +89,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			// import from other plugins
 			$this->importableConfiguration = new PostmanImportableConfiguration ();
-			
-			if (isset ( $_POST ['purge_auth_token'] )) {
-				// this means the wizard completed successfully and we should destroy the stored auth token
-				$this->logger->debug ( 'Found purge auth token key' );
-				delete_option ( PostmanAuthorizationToken::OPTIONS_NAME );
-			}
 			
 			$session = PostmanSession::getInstance ();
 			if ($session->isSetAction ()) {
@@ -349,7 +343,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function handlePurgeDataAction() {
 			$this->logger->debug ( 'Purging stored data' );
 			delete_option ( PostmanOptions::POSTMAN_OPTIONS );
-			delete_option ( PostmanAuthorizationToken::OPTIONS_NAME );
+			delete_option ( PostmanOAuthToken::OPTIONS_NAME );
 			delete_option ( PostmanAdminController::TEST_OPTIONS );
 			$this->messageHandler->addMessage ( 'All plugin settings were removed.' );
 			postmanRedirect ( POSTMAN_HOME_PAGE_RELATIVE_URL );
@@ -449,7 +443,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_wizard_wait', __ ( 'Please wait for the port test to finish', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_wizard_no_ports', __ ( 'No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.', 'postman-smtp' ) );
 			
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_check_timeout', PostmanMain::POSTMAN_TCP_CONNECTION_TIMEOUT . '' );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_check_timeout', Postman::POSTMAN_TCP_CONNECTION_TIMEOUT . '' );
 			
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_smtp_section_element_name', 'div#smtp_section' );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_oauth_section_element_name', 'div#oauth_section' );
@@ -501,31 +495,47 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 			
 			// Sanitize
+			add_settings_section ( 'transport_section', _x ( 'Transport Settings', 'Configuration Section', 'postman-smtp' ), array (
+					$this,
+					'printTransportSectionInfo' 
+			), 'transport_options' );
+			
+			if (false && $this->options->isNew () && $this->importableConfiguration->isImportAvailable ()) {
+				add_settings_field ( 'import_configuration', _x ( 'Import from Plugin', 'Configuration Input Field', 'postman-smtp' ), array (
+						$this,
+						'import_configuration_callback' 
+				), 'transport_options', 'transport_section' );
+			}
+			
+			add_settings_field ( PostmanOptions::TRANSPORT_TYPE, _x ( 'Transport', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'transport_type_callback' 
+			), 'transport_options', 'transport_section' );
+			
+			add_settings_field ( PostmanOptions::SENDER_NAME, _x ( 'Sender Name', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'sender_name_callback' 
+			), 'transport_options', 'transport_section' );
+			
+			add_settings_field ( PostmanOptions::SENDER_EMAIL, _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'sender_email_callback' 
+			), 'transport_options', 'transport_section' );
+			
+			// Sanitize
 			add_settings_section ( PostmanAdminController::SMTP_SECTION, _x ( 'SMTP Settings', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printSmtpSectionInfo' 
 			), PostmanAdminController::SMTP_OPTIONS );
-			
-			if ($this->options->isNew () && $this->importableConfiguration->isImportAvailable ()) {
-				add_settings_field ( 'import_configuration', _x ( 'Import from Plugin', 'Configuration Input Field', 'postman-smtp' ), array (
-						$this,
-						'import_configuration_callback' 
-				), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
-			}
 			
 			add_settings_field ( PostmanOptions::AUTHENTICATION_TYPE, _x ( 'Authentication', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'authentication_type_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::SENDER_NAME, _x ( 'Sender Name', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( 'Security', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
-					'sender_name_callback' 
-			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
-			
-			add_settings_field ( PostmanOptions::SENDER_EMAIL, _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
-					$this,
-					'sender_email_callback' 
+					'encryption_type_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
 			add_settings_field ( PostmanOptions::HOSTNAME, _x ( 'Outgoing Mail Server (SMTP)', 'Configuration Input Field', 'postman-smtp' ), array (
@@ -543,11 +553,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printBasicAuthSectionInfo' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( 'Encryption', 'Configuration Input Field', 'postman-smtp' ), array (
-					$this,
-					'encryption_type_for_password_section_callback' 
-			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
-			
 			add_settings_field ( PostmanOptions::BASIC_AUTH_USERNAME, _x ( 'Username', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'basic_auth_username_callback' 
@@ -563,11 +568,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this,
 					'printOAuthSectionInfo' 
 			), PostmanAdminController::OAUTH_OPTIONS );
-			
-			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( 'Encryption', 'Configuration Input Field', 'postman-smtp' ), array (
-					$this,
-					'encryption_type_for_oauth2_section_callback' 
-			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
 			add_settings_field ( 'callback_domain', sprintf ( '<span id="callback_domain">%s</span>', $this->oauthScribe->getCallbackDomainLabel () ), array (
 					$this,
@@ -775,11 +775,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$port = $scribe->getOAuthPort ();
 					$encType = $scribe->getEncryptionType ();
 				} else if ($avail [465]) {
-					$authType = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
+					$authType = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
 					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
 					$port = 465;
 				} else if ($avail [587]) {
-					$authType = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
+					$authType = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
 					$encType = PostmanOptions::ENCRYPTION_TYPE_TLS;
 					$port = 587;
 				} else {
@@ -809,18 +809,24 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 			wp_send_json ( $response );
 		}
-		
+
+		/**
+		 * Print the Transport section info
+		 */
+		public function printTransportSectionInfo() {
+			print __('Select the transport and enter the sender\'s name and email address:');
+		}
 		/**
 		 * Print the Section text
 		 */
 		public function print_section_info() {
-			print 'Enter your settings below:';
+			print __('Enter your settings below:');
 		}
 		/**
 		 * Print the Section text
 		 */
 		public function printSmtpSectionInfo() {
-			print '';
+			print __('Select the Authentication Type and enter the SMTP server hostname and port:');
 		}
 		
 		/**
@@ -882,6 +888,17 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 * Get the settings option array and print one of its values
 		 */
+		public function transport_type_callback() {
+			$authType = $this->options->getTransportType ();
+			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE );
+			printf ( '<option class="input_tx_type_smtp" value="%s" %s>%s</option>', PostmanOptions::TRANSPORT_TYPE_SMTP, $authType == PostmanOptions::TRANSPORT_TYPE_SMTP ? 'selected="selected"' : '', _x ( 'SMTP', 'Transport Type', 'postman-smtp' ) );
+			printf ( '<option class="input_tx_type_gmail" value="%s" %s>%s</option>', PostmanOptions::TRANSPORT_TYPE_GMAIL, $authType == PostmanOptions::TRANSPORT_TYPE_GMAIL ? 'selected="selected"' : '', _x ( 'Gmail API', 'Transport Type', 'postman-smtp' ) );
+			print '</select>';
+		}
+		
+		/**
+		 * Get the settings option array and print one of its values
+		 */
 		public function authentication_type_callback() {
 			$authType = $this->options->getAuthorizationType ();
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::AUTHENTICATION_TYPE );
@@ -901,9 +918,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function encryption_type_for_oauth2_section_callback() {
 			$this->encryption_type_callback ( PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
 		}
-		public function encryption_type_callback($section) {
+		public function encryption_type_callback() {
 			$encType = $this->options->getEncryptionType ();
-			print '<select id="input_enc_type_' . $section . '" class="input_encryption_type" name="postman_options[enc_type]">';
+			print '<select id="input_enc_type" class="input_encryption_type" name="postman_options[enc_type]">';
 			printf ( '<option class="input_enc_type_none" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_NONE, $encType == PostmanOptions::ENCRYPTION_TYPE_NONE ? 'selected="selected"' : '', _x ( 'None', 'Encryption Type', 'postman-smtp' ) );
 			printf ( '<option class="input_enc_type_none" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_SSL, $encType == PostmanOptions::ENCRYPTION_TYPE_SSL ? 'selected="selected"' : '', _x ( 'SSL', 'Encryption Type', 'postman-smtp' ) );
 			printf ( '<option class="input_enc_type_none" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_TLS, $encType == PostmanOptions::ENCRYPTION_TYPE_TLS ? 'selected="selected"' : '', _x ( 'TLS', 'Encryption Type', 'postman-smtp' ) );
@@ -1114,18 +1131,23 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<form method="post" action="options.php">';
 			// This prints out all hidden setting fields
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
+			print '<section id="transport_config">';
+			do_settings_sections ( 'transport_options' );
+			print '</section>';
+			print '<section id="smtp_config">';
 			do_settings_sections ( PostmanAdminController::SMTP_OPTIONS );
+			print '</section>';
 			$authType = $this->options->getAuthorizationType ();
-			print '<div id="smtp_section">';
+			print '<section id="password_auth_config">';
 			do_settings_sections ( PostmanAdminController::BASIC_AUTH_OPTIONS );
-			print ('</div>') ;
-			print '<div id="oauth_section">';
+			print ('</section>') ;
+			print '<section id="oauth_auth_config">';
 			do_settings_sections ( PostmanAdminController::OAUTH_OPTIONS );
-			print ('</div>') ;
-			printf ( '<p id="advanced_options_configuration_display" class="fineprint"><span><a href="#">%s</a></span></p>', _x ( 'Show Advanced Settings', 'Configuration Section', 'postman-smtp' ) );
-			print '<div id="advanced_options_configuration_section">';
+			print ('</section>') ;
+			printf ( '<p id="advanced_options_config" class="fineprint"><span><a href="#">%s</a></span></p>', _x ( 'Show Advanced Settings', 'Configuration Section', 'postman-smtp' ) );
+			print '<section id="advanced_options_config">';
 			do_settings_sections ( PostmanAdminController::ADVANCED_OPTIONS );
-			print ('</div>') ;
+			print ('</section>') ;
 			submit_button ();
 			print '</form>';
 			print '</div>';
@@ -1211,7 +1233,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->displayTopNavigation ();
 			printf ( '<h3></h3>', _x ( 'Postman Setup Wizard', 'Page Title', 'postman-smtp' ) );
 			print '<form id="postman_wizard" method="post" action="options.php">';
-			print '<input type="hidden" name="purge_auth_token" value="purge_auth_token" />';
 			printf ( '<input type="hidden" id="input_reply_to" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
 			printf ( '<input type="hidden" id="input_connection_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::CONNECTION_TIMEOUT, $this->options->getConnectionTimeout () );
 			printf ( '<input type="hidden" id="input_read_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::READ_TIMEOUT, $this->options->getReadTimeout () );
@@ -1357,10 +1378,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( ' <span id="postman_test_message_status">%s</span>', __ ( 'In Outbox', 'Send a Test Email', 'postman-smtp' ) );
 			print '</legend>';
 			print '<section id="test-success">';
-			printf ( '<p>%s</p>', __ ( 'Your message was delivered to the SMTP server! Congratulations :)', 'postman-smtp' ) );
-			print '</section>';
-			print '<section id="test-fail">';
-			printf ( '<p><label>%s</label></p>', 'Error Message' );
+			printf ( '<p><label>%s</label></p>', 'Status Message' );
 			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="65" rows="2"></textarea>';
 			printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );
 			print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="6"></textarea>';

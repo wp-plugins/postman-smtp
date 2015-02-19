@@ -20,7 +20,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * Exceptions are held for later inspection. An instance of PostmanStats updates the success/fail tally.
 		 *
 		 * @param PostmanOptions $wpMailOptions        	
-		 * @param PostmanAuthorizationToken $wpMailAuthorizationToken        	
+		 * @param PostmanOAuthToken $wpMailAuthorizationToken        	
 		 * @param unknown $to        	
 		 * @param unknown $subject        	
 		 * @param unknown $message        	
@@ -28,7 +28,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @param unknown $attachments        	
 		 * @return boolean
 		 */
-		public function send(PostmanOptions $wpMailOptions, PostmanAuthorizationToken $wpMailAuthorizationToken, $to, $subject, $message, $headers = '', $attachments = array()) {
+		public function send(PostmanOptions $wpMailOptions, PostmanOAuthToken $wpMailAuthorizationToken, $to, $subject, $message, $headers = '', $attachments = array()) {
 			$logger = new PostmanLogger ( get_class ( $this ) );
 			// send the message
 			$logger->debug ( 'Sending mail' );

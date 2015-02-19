@@ -8,7 +8,7 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 		private $basename;
 		private $couldNotReplaceWpMail;
 		private $messageHandler;
-		function __construct($basename, PostmanOptions $binderOptions, PostmanAuthorizationToken $binderAuthorizationToken, PostmanMessageHandler $messageHandler) {
+		function __construct($basename, PostmanOptions $binderOptions, PostmanOAuthToken $binderAuthorizationToken, PostmanMessageHandler $messageHandler) {
 			assert ( ! empty ( $basename ) );
 			assert ( ! empty ( $binderOptions ) );
 			assert ( ! empty ( $binderAuthorizationToken ) );
@@ -44,7 +44,7 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 					function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
 						// get the Options and AuthToken
 						$wp_mail_options = PostmanOptions::getInstance ();
-						$wp_mail_authToken = PostmanAuthorizationToken::getInstance ();
+						$wp_mail_authToken = PostmanOAuthToken::getInstance ();
 						// create an instance of PostmanWpMail to send the message
 						$wp_mail_postmanWpMail = new PostmanWpMail ();
 						// send the message

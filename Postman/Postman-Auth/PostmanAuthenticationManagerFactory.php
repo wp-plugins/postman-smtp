@@ -21,7 +21,7 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 		private function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
-		public function createAuthenticationManager(PostmanOptions $options, PostmanAuthorizationToken $authorizationToken, PostmanOAuthHelper $scribe = null) {
+		public function createAuthenticationManager(PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanOAuthHelper $scribe = null) {
 			$authenticationType = $options->getAuthorizationType ();
 			$hostname = $options->getHostname ();
 			$clientId = $options->getClientId ();
