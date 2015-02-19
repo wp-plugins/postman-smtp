@@ -1,10 +1,10 @@
 <?php
 
 /*
- * Plugin Name: Postman SMTP
+ * Plugin Name: Postman Gmail Extension
  * Plugin URI: https://wordpress.org/plugins/postman/
- * Description: Email not working? Postman is the first and only WordPress SMTP plugin to implement OAuth 2.0 for Gmail, Hotmail and Yahoo Mail. Setup is a breeze with the Configuration Wizard and integrated Port Tester. Enjoy worry-free delivery even if your password changes!
- * Version: 1.4.2
+ * Description: Can't send Gmail because ports 465 and 587 are blocked on your host? No problem! The Postman Gmail Extension works with Postman SMTP to send your mail out on the HTTPS port, port 443.
+ * Version: 0.1
  * Author: Jason Hendriks
  * Text Domain: postman-smtp
  * Author URI: https://profiles.wordpress.org/jasonhendriks/
@@ -18,7 +18,7 @@
 // -- send mail in the background using ajax - the single mail thread can block the PHP server for quite some time
 
 // define constants
-define ( 'POSTMAN_PLUGIN_VERSION', '1.4.2' );
+define ( 'POSTMAN_GMAIL_API_PLUGIN_VERSION', '0.1' );
 
 // set-up the error handler
 if (! function_exists ( 'postmanHandleErrors' )) {
@@ -50,13 +50,10 @@ if (! function_exists ( 'postmanHandleErrors' )) {
 require_once 'Postman/postman-common-wp-functions.php';
 
 // create a Logger
-$logger = new PostmanLogger ( 'postman.php' );
+$logger = new PostmanLogger ( 'postman-gmail-api.php' );
 $logger->debug ( 'Postman v' . POSTMAN_PLUGIN_VERSION . ' starting' );
 
 // register error handler
 register_shutdown_function ( 'postmanHandleErrors' );
 
-// start Postman
-require_once 'Postman/PostmanMain.php';
-$kevinCostner = new Postman ( __FILE__ );
-
+//read for coding child plugins: http://wordpress.stackexchange.com/questions/127818/how-to-make-a-plugin-require-another-plugin
