@@ -19,7 +19,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		function __construct(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->options = $options;
-			$this->scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getAuthorizationType (), $this->options->getHostname () );
+			$this->scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getTransport(), $this->options->getAuthorizationType (), $this->options->getHostname () );
 			
 			if (isset ( $_GET ['page'] ) && substr ( $_GET ['page'], 0, 7 ) === 'postman') {
 				

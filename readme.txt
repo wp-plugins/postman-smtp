@@ -113,11 +113,9 @@ Google does have a setting to [allow less secure apps](https://support.google.co
 > **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = I want my email to come from a different email address. =
-This is not allowed in OAuth mode, and is not recommended in Password (Plain, Login or CRAM-MD5) mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a SPAM blacklist.
+This is not recommended in Password (Plain, Login or CRAM-MD5) mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a SPAM blacklist. Instead, look into setting the  **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
 
-Most likely what you mean to do is set the **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
-
-If you really, *really* want to send email from a different email address, connect anonymously by choosing "Authentication:none" in the configuration.
+In OAuth 2.0 mode, Gmail allows you to send from a different Sender Email Address by [creating a Google Account](https://www.google.com/accounts/NewAccount) with that e-mail address, and then adding that account as an administrator in the Permissions section of the [Developer Console](http://console.developers.google.com/?_ga=1.121770313.313901992.1422721496). See [Sending mail](https://cloud.google.com/appengine/docs/php/mail/).
 
 = What is a Client ID? =
 To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one.

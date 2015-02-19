@@ -99,29 +99,26 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 			'email' : jQuery(postman_input_test_email).val(),
 			'method' : 'wp_mail'
 		};
-		jQuery('#postman_test_message_status').html(
-				postman_email_test.sending);
+		jQuery('#postman_test_message_status').html(postman_email_test.sending);
 		jQuery('#postman_test_message_status').css('color', 'blue');
 		jQuery.post(ajaxurl, data, function(response) {
-			ready = 1;
-			jQuery('li + li').removeClass('disabled');
-			if (response.success) {
-				jQuery('#postman_test_message_status').html(
-						postman_email_test.success);
-				jQuery('#postman_test_message_status').css('color', 'green');
-				show(jQuery('#test-success'));
-			} else {
-				jQuery('#postman_test_message_status').html(
-						postman_email_test.failed);
-				jQuery('#postman_test_message_status').css('color', 'red');
-				jQuery('#postman_test_message_error_message').val(
-						response.message);
-				jQuery('#postman_test_message_transcript').val(
-						response.transcript);
-				show(jQuery('#test-fail'));
-			}
+			handleResponse(response);
 		});
 
 	}
-
+	function handleResponse(response) {
+		ready = 1;
+		jQuery('li + li').removeClass('disabled');
+		if (response.success) {
+			jQuery('#postman_test_message_status').html(
+					postman_email_test.success);
+			jQuery('#postman_test_message_status').css('color', 'green');
+		} else {
+			jQuery('#postman_test_message_status').html(
+					postman_email_test.failed);
+			jQuery('#postman_test_message_status').css('color', 'red');
+		}
+		jQuery('#postman_test_message_error_message').val(response.message);
+		jQuery('#postman_test_message_transcript').val(response.transcript);
+	}
 }

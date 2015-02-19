@@ -1,6 +1,8 @@
 <?php
 if (! class_exists ( "PostmanOptions" )) {
 	
+	require_once 'Postman-Mail/Transport.php';
+	
 	/**
 	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api
 	 * http://pastebin.com/jA9sBNTk
@@ -26,7 +28,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		const PORT = 'port';
 		const TRANSPORT_TYPE = 'transport_type';
 		const TRANSPORT_TYPE_SMTP = 'smtp';
-		const TRANSPORT_TYPE_GMAIL = 'gmail';
+		const TRANSPORT_TYPE_GMAIL_API = 'gmail_api';
 		const AUTHENTICATION_TYPE = 'auth_type';
 		const AUTHENTICATION_TYPE_NONE = 'none';
 		const AUTHENTICATION_TYPE_PLAIN = 'plain';
@@ -114,6 +116,13 @@ if (! class_exists ( "PostmanOptions" )) {
 				} else {
 					return false;
 				}
+			}
+		}
+		public function getTransport() {
+			if($this->getTransportType() == PostmanOptions::TRANSPORT_TYPE_GMAIL_API) {
+				return new PostmanGmailApiTransport($this->getClientId(), $this->getClientSecret(), PostmanOAuthToken::getInstance()->getAccessToken());
+			} else {
+				return new PostmanSmtpTransport();
 			}
 		}
 		public function isSmtpServerRequirementsNotMet() {

@@ -85,7 +85,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->messageHandler = $messageHandler;
 			
 			//
-			$this->oauthScribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getAuthorizationType (), $this->options->getHostname () );
+			$this->oauthScribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getTransport (), $this->options->getAuthorizationType (), $this->options->getHostname () );
 			
 			// import from other plugins
 			$this->importableConfiguration = new PostmanImportableConfiguration ();
@@ -683,25 +683,34 @@ if (! class_exists ( "PostmanAdminController" )) {
 				// Englsih - Mandarin - French - Hindi - Spanish - Arabic - Portuguese - Russian - Bengali - Japanese - Punjabi
 				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
 				$message = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - السلام عليكم - Olá - Привет! - নমস্কার - 今日は - ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ।%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline' ), POSTMAN_PLUGIN_VERSION ) );
+				$startTime = microtime ( true ) * 1000;
 				$success = $emailTester->sendTestEmail ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName (), $subject, $message );
+				$endTime = microtime ( true ) * 1000;
+				if ($success) {
+					$statusMessage = sprintf ( __ ( 'Your message was delivered (%d ms) to the SMTP server! Congratulations :)', 'postman-smtp' ), ($endTime - $startTime) );
+				} else {
+					$statusMessage = $emailTester->getMessage ();
+				}
 				$response = array (
-						'message' => $emailTester->getMessage (),
+						'message' => $statusMessage,
 						'transcript' => $emailTester->getTranscript (),
 						'success' => $success 
 				);
 			} catch ( PostmanSendMailCommunicationError334 $e ) {
 				/* translators: where %s is the email service name (e.g. Gmail) */
 				$response = array (
-						'message' => sprintf ( __ ( 'Communication Error [334] - make sure the Sender Email belongs to the account which provided the %s OAuth 2.0 consent.', 'postman-smtp' ), $serviceName ),
+						'message' => sprintf ( __ ( 'Communication Error [334] - make sure the Sender Email belongs to the account which provided the %s OAuth 2.0 consent.', 'postman-smtp' ), $this->oauthScribe->getServiceName () ),
 						'transcript' => $emailTester->getTranscript (),
 						'success' => false 
 				);
+				$this->logger->error ( "SMTP session transcript follows:\n" . $emailTester->getTranscript () );
 			} catch ( PostmanSendMailInexplicableException $e ) {
 				$response = array (
 						'message' => __ ( 'The impossible is possible; sending through wp_mail() failed, but sending through internal engine succeeded.', 'postman-smtp' ),
 						'transcript' => $emailTester->getTranscript (),
 						'success' => false 
 				);
+				$this->logger->error ( "SMTP session transcript follows:\n" . $emailTester->getTranscript () );
 			}
 			wp_send_json ( $response );
 		}
@@ -754,7 +763,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$hostname = $_POST ['hostname'];
 			$this->logger->debug ( 'ajaxRedirectUrl hostname:' . $hostname );
 			// don't care about what's in the database, i need a scribe based on the ajax parameter assuming this is OAUTH2
-			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $hostname );
+			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( new PostmanSmtpTransport (), PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $hostname );
 			if (isset ( $_POST ['referer'] )) {
 				$this->logger->debug ( 'ajaxRedirectUrl referer:' . $_POST ['referer'] );
 				// this must be wizard or config from an oauth-related change
@@ -809,24 +818,24 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 			wp_send_json ( $response );
 		}
-
+		
 		/**
 		 * Print the Transport section info
 		 */
 		public function printTransportSectionInfo() {
-			print __('Select the transport and enter the sender\'s name and email address:');
+			print __ ( 'Select the transport and enter the sender\'s name and email address:' );
 		}
 		/**
 		 * Print the Section text
 		 */
 		public function print_section_info() {
-			print __('Enter your settings below:');
+			print __ ( 'Enter your settings below:' );
 		}
 		/**
 		 * Print the Section text
 		 */
 		public function printSmtpSectionInfo() {
-			print __('Select the Authentication Type and enter the SMTP server hostname and port:');
+			print __ ( 'Select the Authentication Type and enter the SMTP server hostname and port:' );
 		}
 		
 		/**
@@ -892,7 +901,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$authType = $this->options->getTransportType ();
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE );
 			printf ( '<option class="input_tx_type_smtp" value="%s" %s>%s</option>', PostmanOptions::TRANSPORT_TYPE_SMTP, $authType == PostmanOptions::TRANSPORT_TYPE_SMTP ? 'selected="selected"' : '', _x ( 'SMTP', 'Transport Type', 'postman-smtp' ) );
-			printf ( '<option class="input_tx_type_gmail" value="%s" %s>%s</option>', PostmanOptions::TRANSPORT_TYPE_GMAIL, $authType == PostmanOptions::TRANSPORT_TYPE_GMAIL ? 'selected="selected"' : '', _x ( 'Gmail API', 'Transport Type', 'postman-smtp' ) );
+			printf ( '<option class="input_tx_type_gmail" value="%s" %s>%s</option>', PostmanOptions::TRANSPORT_TYPE_GMAIL_API, $authType == PostmanOptions::TRANSPORT_TYPE_GMAIL_API ? 'selected="selected"' : '', _x ( 'Gmail API', 'Transport Type', 'postman-smtp' ) );
 			print '</select>';
 		}
 		
@@ -1377,11 +1386,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print __ ( 'Sending the message:', 'postman-smtp' );
 			printf ( ' <span id="postman_test_message_status">%s</span>', __ ( 'In Outbox', 'Send a Test Email', 'postman-smtp' ) );
 			print '</legend>';
-			print '<section id="test-success">';
-			printf ( '<p><label>%s</label></p>', 'Status Message' );
+			print '<section>';
+			printf ( '<p><label>%s</label></p>', __ ( 'Status Message' ) );
 			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="65" rows="2"></textarea>';
-			printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );
-			print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="6"></textarea>';
+			if ($this->options->getTransportType () != PostmanOptions::TRANSPORT_TYPE_GMAIL_API) {
+				printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );
+				print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="10"></textarea>';
+			}
 			print '</section>';
 			print '</fieldset>';
 			print '</form>';

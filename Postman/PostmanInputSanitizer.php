@@ -35,6 +35,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 				}
 			}
 			// check the auth type AFTER the hostname because we reset the hostname if auth is bad
+			$this->sanitizeString ( 'Transport Type', PostmanOptions::TRANSPORT_TYPE, $input, $new_input );
 			$this->sanitizeString ( 'Authorization Type', PostmanOptions::AUTHENTICATION_TYPE, $input, $new_input );
 			$this->sanitizeString ( 'Sender Name', PostmanOptions::SENDER_NAME, $input, $new_input );
 			$this->sanitizeString ( 'Client ID', PostmanOptions::CLIENT_ID, $input, $new_input );

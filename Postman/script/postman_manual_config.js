@@ -62,7 +62,7 @@ jQuery(document).ready(function() {
 });
 function switchBetweenPasswordAndOAuth() {
 	console.debug('showHide:authenticationType=' + $choice);
-	if (jQuery('select#input_transport_type').val() == 'gmail') {
+	if (jQuery('select#input_transport_type').val() == 'gmail_api') {
 		hide('section#smtp_config');
 		hide('section#password_auth_config');
 		show('section#oauth_auth_config');

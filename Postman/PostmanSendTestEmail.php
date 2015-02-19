@@ -39,22 +39,26 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			// send through wp_mail
 			$this->logger->debug ( 'Sending Test email' );
 			PostmanStats::getInstance ()->disable ();
-			$wp_mail_result = wp_mail ( $recipient, $subject, $message, $headers );
+			// $wp_mail_result = wp_mail ( $recipient, $subject, $message, $headers );
 			
-			if (! $wp_mail_result) {
-				$this->logger->error ( 'wp_mail failed :( re-trying through the internal engine' );
+			if (true) {
+				// $this->logger->error ( 'wp_mail failed :( re-trying through the internal engine' );
 				$postmanWpMail = new PostmanWpMail ();
-				$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message, $headers );
-				$this->transcript = $postmanWpMail->getTranscript ();
+				$gmailApi = $options->getTransport();
+				$postmanWpMailResult = $gmailApi->mail();
+				//$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message, $headers );
+				//$this->transcript = $postmanWpMail->getTranscript ();
 			}
 			PostmanStats::getInstance ()->enable ();
 			
 			//
-			if ($wp_mail_result) {
-				$this->logger->debug ( 'Test Email delivered to SMTP server' );
+			if ($postmanWpMailResult) {
+				$this->logger->debug ( 'Test Email delivered to server' );
 				return true;
 			} else if (! $postmanWpMailResult) {
-				$this->logger->error ( 'Test Email NOT delivered to SMTP server - ' . $postmanWpMail->getException ()->getCode () );
+				$this->logger->error ( 'Test Email NOT delivered to server - '  );
+				return false;
+				$this->logger->error ( 'Test Email NOT delivered to server - ' . $postmanWpMail->getException ()->getCode () );
 				if ($postmanWpMail->getException ()->getCode () == 334) {
 					$this->logger->error ( 'Communication Error [334]!' );
 					throw new PostmanSendMailCommunicationError334 ();

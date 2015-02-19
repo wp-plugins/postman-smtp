@@ -145,3 +145,8 @@ https://developers.google.com/gmail/api/
 Mail PHP API Overview
 https://cloud.google.com/appengine/docs/php/mail/
 
+Bulk Mail with Analytics via SendGrid
+https://cloud.google.com/appengine/docs/php/mail/sendgrid
+
+Google APIs Client Library for PHP
+https://github.com/google/google-api-php-client
