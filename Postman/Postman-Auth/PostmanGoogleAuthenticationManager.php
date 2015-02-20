@@ -26,7 +26,7 @@ if (! class_exists ( "PostmanGoogleAuthenticationManager" )) {
 		// Full access to the account, including permanent deletion of threads and messages. This scope should only be requested if your application needs to immediately and permanently delete threads and messages, bypassing Trash; all other actions can be performed with less permissive scopes.
 		const SCOPE_FULL_ACCESS = 'https://mail.google.com/';
 		const AUTH_TEMP_ID = 'GOOGLE_OAUTH_TEMP_ID';
-		
+		const VENDOR_NAME = 'google';
 		// the sender email address
 		private $senderEmail;
 		
@@ -102,6 +102,7 @@ if (! class_exists ( "PostmanGoogleAuthenticationManager" )) {
 				);
 				$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals );
 				$this->processResponse ( $response );
+				$this->getAuthorizationToken ()->setVendorName ( self::VENDOR_NAME );
 				return true;
 			} else {
 				$this->getLogger ()->debug ( 'Expected code in the request header but found none - user probably denied request' );

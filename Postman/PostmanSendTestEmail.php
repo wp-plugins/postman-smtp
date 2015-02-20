@@ -40,15 +40,10 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			$this->logger->debug ( 'Sending Test email' );
 			PostmanStats::getInstance ()->disable ();
 			// $wp_mail_result = wp_mail ( $recipient, $subject, $message, $headers );
-			
-			if (true) {
-				// $this->logger->error ( 'wp_mail failed :( re-trying through the internal engine' );
-				$postmanWpMail = new PostmanWpMail ();
-				$gmailApi = $options->getTransport();
-				$postmanWpMailResult = $gmailApi->mail();
-				//$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message, $headers );
-				//$this->transcript = $postmanWpMail->getTranscript ();
-			}
+			// $this->logger->error ( 'wp_mail failed :( re-trying through the internal engine' );
+			$postmanWpMail = new PostmanWpMail ();
+			$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message, $headers );
+			$this->transcript = $postmanWpMail->getTranscript ();
 			PostmanStats::getInstance ()->enable ();
 			
 			//
@@ -56,8 +51,6 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 				$this->logger->debug ( 'Test Email delivered to server' );
 				return true;
 			} else if (! $postmanWpMailResult) {
-				$this->logger->error ( 'Test Email NOT delivered to server - '  );
-				return false;
 				$this->logger->error ( 'Test Email NOT delivered to server - ' . $postmanWpMail->getException ()->getCode () );
 				if ($postmanWpMail->getException ()->getCode () == 334) {
 					$this->logger->error ( 'Communication Error [334]!' );

@@ -1,3 +1,10 @@
+General
+-------
+
+Visitor Pattern
+http://butunclebob.com/ArticleS.UncleBob.IuseVisitor
+
+
 Wordpress
 ---------
 
@@ -25,6 +32,9 @@ http://www.chargenevier.com/2013/02/google-smtp-and-oauth2-authentication/
 
 PHP, SMTP, XOAUTH2 and Gmail - Feb 2014
 http://www.boxuk.com/blog/php-smtp-xoauth2-gmail/
+
+SASL XOAUTH2 protocol documentation
+https://developers.google.com/gmail/xoauth2_protocol
 
 
 Creating a Gmail Token

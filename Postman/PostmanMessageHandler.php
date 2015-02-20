@@ -2,6 +2,7 @@
 if (! class_exists ( 'PostmanMessageHandler' )) {
 	require_once ('PostmanOptions.php');
 	require_once ('PostmanSession.php');
+	require_once ('PostmanTransportDirectory.php');
 	class PostmanMessageHandler {
 		
 		// The Session variables that carry messages
@@ -10,6 +11,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		const SUCCESS_MESSAGE = 'POSTMAN_SUCCESS_MESSAGE';
 		private $logger;
 		private $options;
+		private $authToken;
 		private $scribe;
 		
 		/**
@@ -19,7 +21,24 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		function __construct(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->options = $options;
-			$this->scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getTransport(), $this->options->getAuthorizationType (), $this->options->getHostname () );
+			$this->authToken = $authToken;
+			add_action ( 'init', array (
+					$this,
+					'init' 
+			) );
+		}
+		function init() {
+			$transport = PostmanTransportDirectory::getInstance ()->getCurrentTransport ();
+			$this->scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $transport, $this->options->getAuthorizationType (), $this->options->getHostname () );
+			
+			// is the saved transport installed?
+			$transportType = $this->options->getTransportType ();
+			if ($transport->getSlug () != $this->options->getTransportType ()) {
+				add_action ( 'admin_notices', Array (
+						$this,
+						'canNotFindTransport' 
+				) );
+			}
 			
 			if (isset ( $_GET ['page'] ) && substr ( $_GET ['page'], 0, 7 ) === 'postman') {
 				
@@ -43,7 +62,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 							$this,
 							'displayOauthCredentialsNeededWarning' 
 					) );
-				} else if ($this->options->isPermissionNeeded ( $authToken )) {
+				} else if ($this->options->isPermissionNeeded ( $this->authToken )) {
 					add_action ( 'admin_notices', Array (
 							$this,
 							'displayPermissionNeededWarning' 
@@ -60,7 +79,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 					) );
 				}
 			} else {
-				if (! $options->isSendingEmailAllowed ( $authToken )) {
+				if (! $this->options->isSendingEmailAllowed ( $this->authToken )) {
 					add_action ( 'admin_notices', Array (
 							$this,
 							'displayConfigurationRequiredWarning' 
@@ -107,6 +126,9 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
 			$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanAdminController::getActionUrl ( PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG ), $scribe->getRequestPermissionLinkText () );
 			$this->displayWarningMessage ( $message );
+		}
+		public function canNotFindTransport() {
+			$this->displayErrorMessage ( sprintf ( __ ( 'The external Postman transport "%s" is missing. Correct the error immediately or deactive Postman.' ), $this->options->getTransportType () ) );
 		}
 		public function displayPasswordCredentialsNeededWarning() {
 			$this->displayWarningMessage ( __ ( 'Warning: Password authentication (Plain/Login/CRAMMD5) requires a username and password.', 'postman-smtp' ) );

@@ -21,6 +21,7 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 		
 		// The SESSION key for the OAuth Transaction Id
 		const AUTH_TEMP_ID = 'OAUTH_TEMP_ID';
+		const VENDOR_NAME = 'yahoo';
 		
 		/**
 		 * Constructor
@@ -53,7 +54,7 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 					'redirect_uri' => urlencode ( $this->getCallbackUri () ),
 					'client_id' => $this->getClientId (),
 					'state' => $transactionId,
-					'language' => get_locale() 
+					'language' => get_locale () 
 			);
 			
 			$authUrl = $this->getAuthorizationUrl () . '?' . build_query ( $params );
@@ -93,7 +94,7 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 				);
 				$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals, $headers );
 				$this->processResponse ( $response );
-				$this->getAuthorizationToken ()->setCreateDate($time() );
+				$this->getAuthorizationToken ()->setVendorName ( self::VENDOR_NAME );
 				return true;
 			} else {
 				$this->getLogger ()->debug ( 'Expected code in the request header but found none - user probably denied request' );

@@ -70,6 +70,12 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		// the result
 		private $transcript;
 		
+		//
+		private $transport;
+		public function setTransport(PostmanTransport $transport) {
+			$this->transport = $transport;
+		}
+		
 		// hooks for the subclasses to use
 		protected function getSender() {
 			return $this->sender;
@@ -186,18 +192,19 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 			assert ( ! empty ( $config ) );
 			
 			// create the SMTP transport
-			$transport = new Zend_Mail_Transport_Smtp ( $this->hostname, $config );
-			assert ( ! empty ( $transport ) );
+			$zendTransport = $this->transport->createZendMailTransport ( $this->hostname, $config );
+			assert ( ! empty ( $zendTransport ) );
 			
 			// send the message
 			$this->logger->debug ( "Sending mail" );
 			try {
-				$mail->send ( $transport );
-				$this->transcript = $transport->getConnection ()->getLog ();
+				$mail->send ( $zendTransport );
+				if ($zendTransport->getConnection ())
+					$this->transcript = $zendTransport->getConnection ()->getLog ();
 			} catch ( Exception $e ) {
-				$c = $transport->getConnection ();
+				$c = $zendTransport->getConnection ();
 				if (isset ( $c )) {
-					$this->transcript = $transport->getConnection ()->getLog ();
+					$this->transcript = $zendTransport->getConnection ()->getLog ();
 				}
 				throw $e;
 			}

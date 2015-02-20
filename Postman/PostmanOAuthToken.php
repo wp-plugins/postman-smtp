@@ -7,7 +7,9 @@ if (! class_exists ( 'PostmanOAuthToken.php' )) {
 		const REFRESH_TOKEN = 'refresh_token';
 		const EXPIRY_TIME = 'auth_token_expires';
 		const ACCESS_TOKEN = 'access_token';
+		const VENDOR_NAME = 'vendor_name';
 		//
+		private $vendorName;
 		private $accessToken;
 		private $refreshToken;
 		private $expiryTime;
@@ -23,7 +25,7 @@ if (! class_exists ( 'PostmanOAuthToken.php' )) {
 		
 		// private constructor
 		private function __construct() {
-			$this->load();
+			$this->load ();
 		}
 		
 		/**
@@ -34,6 +36,7 @@ if (! class_exists ( 'PostmanOAuthToken.php' )) {
 			$this->setAccessToken ( $a [PostmanOAuthToken::ACCESS_TOKEN] );
 			$this->setRefreshToken ( $a [PostmanOAuthToken::REFRESH_TOKEN] );
 			$this->setExpiryTime ( $a [PostmanOAuthToken::EXPIRY_TIME] );
+			$this->setVendorName ( $a [PostmanOAuthToken::VENDOR_NAME] );
 		}
 		
 		/**
@@ -43,7 +46,11 @@ if (! class_exists ( 'PostmanOAuthToken.php' )) {
 			$a [PostmanOAuthToken::ACCESS_TOKEN] = $this->getAccessToken ();
 			$a [PostmanOAuthToken::REFRESH_TOKEN] = $this->getRefreshToken ();
 			$a [PostmanOAuthToken::EXPIRY_TIME] = $this->getExpiryTime ();
+			$a [PostmanOAuthToken::VENDOR_NAME] = $this->getVendorName ();
 			update_option ( PostmanOAuthToken::OPTIONS_NAME, $a );
+		}
+		public function getVendorName() {
+			return $this->vendorName;
 		}
 		public function getExpiryTime() {
 			return $this->expiryTime;
@@ -53,6 +60,9 @@ if (! class_exists ( 'PostmanOAuthToken.php' )) {
 		}
 		public function getRefreshToken() {
 			return $this->refreshToken;
+		}
+		public function setVendorName($name) {
+			$this->vendorName = sanitize_text_field ( $name );
 		}
 		public function setExpiryTime($time) {
 			$this->expiryTime = sanitize_text_field ( $time );

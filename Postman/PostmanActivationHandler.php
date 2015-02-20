@@ -79,6 +79,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 				}
 				update_option ( 'postman_options', $options );
 			}
+			// prior to 1.4.1, the transport was not identified
 		}
 	}
 }

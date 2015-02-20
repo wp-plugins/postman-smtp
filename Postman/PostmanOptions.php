@@ -8,11 +8,6 @@ if (! class_exists ( "PostmanOptions" )) {
 	 * http://pastebin.com/jA9sBNTk
 	 *
 	 * Make sure these emails are permitted (see http://en.wikipedia.org/wiki/E-mail_address#Internationalization):
-	 * Latin Alphabet (with diacritics): Pelé@example.com
-	 * Greek Alphabet: δοκιμή@παράδειγμα.δοκιμή
-	 * Traditional Chinese Characters: 我買@屋企.香港
-	 * Japanese Characters: 甲斐@黒川.日本
-	 * Cyrillic Characters: чебурашка@ящик-с-апельсинами.рф
 	 */
 	class PostmanOptions {
 		// the option database name
@@ -27,8 +22,6 @@ if (! class_exists ( "PostmanOptions" )) {
 		const HOSTNAME = 'hostname';
 		const PORT = 'port';
 		const TRANSPORT_TYPE = 'transport_type';
-		const TRANSPORT_TYPE_SMTP = 'smtp';
-		const TRANSPORT_TYPE_GMAIL_API = 'gmail_api';
 		const AUTHENTICATION_TYPE = 'auth_type';
 		const AUTHENTICATION_TYPE_NONE = 'none';
 		const AUTHENTICATION_TYPE_PLAIN = 'plain';
@@ -116,13 +109,6 @@ if (! class_exists ( "PostmanOptions" )) {
 				} else {
 					return false;
 				}
-			}
-		}
-		public function getTransport() {
-			if($this->getTransportType() == PostmanOptions::TRANSPORT_TYPE_GMAIL_API) {
-				return new PostmanGmailApiTransport($this->getClientId(), $this->getClientSecret(), PostmanOAuthToken::getInstance()->getAccessToken());
-			} else {
-				return new PostmanSmtpTransport();
 			}
 		}
 		public function isSmtpServerRequirementsNotMet() {
@@ -259,6 +245,9 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function setClientSecret($clientSecret) {
 			$this->options [PostmanOptions::CLIENT_SECRET] = $clientSecret;
+		}
+		public function setTransportType($transportType) {
+			$this->options[PostmanOptions::TRANSPORT_TYPE] = $transportType;
 		}
 		public function setAuthorizationType($authType) {
 			$this->options [PostmanOptions::AUTHENTICATION_TYPE] = $authType;

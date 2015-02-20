@@ -14,7 +14,7 @@ if (! class_exists ( 'PostmanOAuthScribeFactory' )) {
 			return $inst;
 		}
 		public function createPostmanOAuthScribe(PostmanTransport $transport, $authType, $hostname) {
-			if ($transport->isGmailApi ()) {
+			if ($transport->isGoogleOAuthRequired ()) {
 				return new PostmanGoogleOAuthScribe ();
 			}
 			if ($authType != PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {

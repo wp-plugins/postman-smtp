@@ -67,6 +67,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 * Holds the values to be used in the fields callbacks
 		 */
+		private $basename;
 		private $options;
 		private $testOptions;
 		private $importableConfiguration;
@@ -83,26 +84,20 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->messageHandler = $messageHandler;
-			
-			//
-			$this->oauthScribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->options->getTransport (), $this->options->getAuthorizationType (), $this->options->getHostname () );
-			
-			// import from other plugins
-			$this->importableConfiguration = new PostmanImportableConfiguration ();
-			
+			$this->basename = $basename;
+
+			// check if the user saved data, and if validation was successful
 			$session = PostmanSession::getInstance ();
 			if ($session->isSetAction ()) {
 				$this->logger->debug ( sprintf ( 'session action: %s', $session->getAction () ) );
 			}
-			
-			// check if the user saved data, and if validation was successful
 			if ($session->getAction () == PostmanInputSanitizer::VALIDATION_SUCCESS) {
 				$session->unsetAction ();
 				$this->registerInitFunction ( 'handleSuccessfulSave' );
 				$this->messageHandler->addMessage ( __ ( 'Settings saved.' ) );
 				return;
 			}
-			
+
 			// test to see if an OAuth authentication is in progress
 			if ($session->isSetOauthInProgress ()) {
 				if (isset ( $_GET ['code'] )) {
@@ -116,9 +111,23 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$session->unsetOauthInProgress ();
 				}
 			}
+
+			// continue to initialize the AdminController
+			add_action ( 'init', array (
+					$this,
+					'init' 
+			) );
+		}
+		public function init() {
+			//
+			$transport = PostmanTransportDirectory::getInstance ()->getCurrentTransport ();
+			$this->oauthScribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $transport, $this->options->getAuthorizationType (), $this->options->getHostname () );
+			
+			// import from other plugins
+			$this->importableConfiguration = new PostmanImportableConfiguration ();
 			
 			// Adds "Settings" link to the plugin action page
-			add_filter ( 'plugin_action_links_' . $basename, array (
+			add_filter ( 'plugin_action_links_' . $this->basename, array (
 					$this,
 					'postmanModifyLinksOnPluginsListPage' 
 			) );
@@ -898,10 +907,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function transport_type_callback() {
-			$authType = $this->options->getTransportType ();
+			$transportType = $this->options->getTransportType ();
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE );
-			printf ( '<option class="input_tx_type_smtp" value="%s" %s>%s</option>', PostmanOptions::TRANSPORT_TYPE_SMTP, $authType == PostmanOptions::TRANSPORT_TYPE_SMTP ? 'selected="selected"' : '', _x ( 'SMTP', 'Transport Type', 'postman-smtp' ) );
-			printf ( '<option class="input_tx_type_gmail" value="%s" %s>%s</option>', PostmanOptions::TRANSPORT_TYPE_GMAIL_API, $authType == PostmanOptions::TRANSPORT_TYPE_GMAIL_API ? 'selected="selected"' : '', _x ( 'Gmail API', 'Transport Type', 'postman-smtp' ) );
+			foreach ( PostmanTransportDirectory::getInstance ()->getTransports () as $transport ) {
+				printf ( '<option class="input_tx_type_%1$s" value="%1$s" %3$s>%2$s</option>', $transport->getSlug(), $transport->getName(), $transportType == $transport->getSlug() ? 'selected="selected"' : '' );
+			}
 			print '</select>';
 		}
 		
@@ -1101,7 +1111,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$authDesc = sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $this->options->getAuthorizationType () );
 				}
 				/* translators: where %1$s is the SMTP server and %2$s is the Authentication Type (e.g. Postman will send mail via smtp.gmail.com:465 using OAuth 2.0 authentication.) */
-				printf ( '<p style="margin:0 10px"><span>%s</span></p>', sprintf ( __ ( 'Postman will send mail via %1$s using %2$s authentication.', 'postman-smtp' ), '<b>' . $this->options->getHostname () . ':' . $this->options->getPort () . '</b>', '<b>' . $authDesc . '</b>' ) );
+				$deliveryDetails = PostmanTransportDirectory::getInstance()->getCurrentTransport()->getDeliveryDetails();
+				printf ( '<p style="margin:0 10px"><span>%s</span></p>', sprintf ( __ ( 'Postman will send mail via %1$s using %2$s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails . '</b>', '<b>' . $authDesc . '</b>' ) );
 				if ($this->options->isAuthTypeOAuth2 ()) {
 					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only.</em>', 'postman-smtp' ) );
 				} else if ($this->options->isAuthTypePassword ()) {
@@ -1389,7 +1400,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<section>';
 			printf ( '<p><label>%s</label></p>', __ ( 'Status Message' ) );
 			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="65" rows="2"></textarea>';
-			if ($this->options->getTransportType () != PostmanOptions::TRANSPORT_TYPE_GMAIL_API) {
+			if (PostmanTransportDirectory::getInstance()->getCurrentTransport()->isTranscriptSupported()) {
 				printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );
 				print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="10"></textarea>';
 			}

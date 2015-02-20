@@ -19,6 +19,7 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 		// http://stackoverflow.com/questions/7163786/messenger-connect-oauth-wrap-api-to-get-user-emails
 		// http://quabr.com/26329398/outlook-oauth-send-emails-with-wl-imap-scope-in-php
 		const SCOPE = 'wl.imap,wl.offline_access';
+		const VENDOR_NAME = 'microsoft';
 		
 		/**
 		 * Constructor
@@ -86,6 +87,7 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 				);
 				$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals );
 				$this->processResponse ( $response );
+				$this->getAuthorizationToken ()->setVendorName ( self::VENDOR_NAME );
 				return true;
 			} else {
 				$this->getLogger ()->debug ( 'Expected code in the request header but found none - user probably denied request' );
