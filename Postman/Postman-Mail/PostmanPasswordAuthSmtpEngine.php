@@ -51,10 +51,12 @@ if (! class_exists ( "PostmanPasswordAuthSmtpEngine" )) {
 			$config = array (
 					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => $this->encryptionType,
 					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_PORT => $port,
-					'auth' => $this->authenticationType,
 					'username' => $this->username,
 					'password' => $this->password 
 			);
+			if ($this->authenticationType != PostmanOptions::AUTHENTICATION_TYPE_NONE) {
+				$config ['auth'] = $this->authenticationType;
+			}
 			$mangledPassword = str_repeat ( '*', strlen ( $this->password ) );
 			$this->getLogger ()->debug ( sprintf ( 'Routing mail via %1$s:%2$s using auth:%3$s over ssl:%4$s for user %5$s?%6$s', $hostname, $port, $this->authenticationType, $this->encryptionType, $this->username, $mangledPassword ) );
 			return $config;
