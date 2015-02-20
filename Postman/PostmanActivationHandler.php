@@ -79,7 +79,22 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 				}
 				update_option ( 'postman_options', $options );
 			}
-			// prior to 1.4.1, the transport was not identified
+			// prior to 1.4.2, the transport was not identified and the auth token had no vendor
+			if (isset ( $options ['auth_type'] ) && ! isset ( $options ['transport_type'] )) {
+				$logger->debug ( "Upgrading database: added transport_type and vendor_name" );
+				$options ['transport_type'] = 'smtp';
+				update_option ( 'postman_options', $options );
+				if (isset ( $authOptions ['access_token'] ) && isset ( $options ['oauth_client_id'] )) {
+					// if there is a stored token..
+					if (endsWith ( $options ['oauth_client_id'], 'googleusercontent.com' ))
+						$authOptions ['vendor_name'] = 'google';
+					else if (strlen ( $options ['oauth_client_id'] < strlen ( $options ['oauth_client_secret'] ) ))
+						$authOptions ['vendor_name'] = 'microsoft';
+					else
+						$authOptions ['vendor_name'] = 'yahoo';
+					update_option ( 'postman_auth_token', $authOptions );
+				}
+			}
 		}
 	}
 }
