@@ -49,16 +49,19 @@ if (! class_exists ( "PostmanPasswordAuthSmtpEngine" )) {
 			assert ( ! empty ( $hostname ) );
 			// $config = array('ssl' => 'tls', 'port' => 587, 'auth' => 'login', 'username' => 'webmaster@mydomain.com', 'password' => 'password');
 			$config = array (
-					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL => $this->encryptionType,
 					PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_PORT => $port,
+					'auth' => $this->authenticationType,
 					'username' => $this->username,
 					'password' => $this->password 
 			);
-			if ($this->authenticationType != PostmanOptions::AUTHENTICATION_TYPE_NONE) {
-				$config ['auth'] = $this->authenticationType;
+			if ($this->encryptionType != PostmanOptions::ENCRYPTION_TYPE_NONE) {
+				$config [PostmanSmtpEngine::ZEND_TRANSPORT_CONFIG_SSL] = $this->encryptionType;
+				$mangledPassword = str_repeat ( '*', strlen ( $this->password ) );
+				$this->getLogger ()->debug ( sprintf ( 'Routing mail via %1$s:%2$s using auth:%3$s over ssl:%4$s for user %5$s?%6$s', $hostname, $port, $this->authenticationType, $this->encryptionType, $this->username, $mangledPassword ) );
+			} else {
+				$mangledPassword = str_repeat ( '*', strlen ( $this->password ) );
+				$this->getLogger ()->debug ( sprintf ( 'Routing mail via %1$s:%2$s using auth:%3$s for user %5$s?%6$s', $hostname, $port, $this->authenticationType, $this->username, $mangledPassword ) );
 			}
-			$mangledPassword = str_repeat ( '*', strlen ( $this->password ) );
-			$this->getLogger ()->debug ( sprintf ( 'Routing mail via %1$s:%2$s using auth:%3$s over ssl:%4$s for user %5$s?%6$s', $hostname, $port, $this->authenticationType, $this->encryptionType, $this->username, $mangledPassword ) );
 			return $config;
 		}
 	}
