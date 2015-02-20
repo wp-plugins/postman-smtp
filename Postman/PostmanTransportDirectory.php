@@ -9,7 +9,7 @@ if (! class_exists ( 'PostmanTransportDirectory' )) {
 		 */
 		private function __construct() {
 			// add the default Transport
-			$this->logger = new PostmanLogger ( 'PostmanTransportDirectory' );
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->registerTransport ( new PostmanSmtpTransport () );
 		}
 		

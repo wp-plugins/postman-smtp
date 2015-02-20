@@ -698,6 +698,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				} else {
 					$statusMessage = $emailTester->getMessage ();
 				}
+				$this->logger->debug('statusmessage: '. $statusMessage);
 				$response = array (
 						'message' => $statusMessage,
 						'transcript' => $emailTester->getTranscript (),

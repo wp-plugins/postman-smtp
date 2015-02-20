@@ -29,14 +29,14 @@ if (! class_exists ( 'PostmanGmail' )) {
 		public function init() {
 			if (class_exists ( 'PostmanLogger' )) {
 				require_once 'PostmanTransportDirectory.php';
-				$this->logger = new PostmanLogger ( 'PostmanGmailMain' );
+				$this->logger = new PostmanLogger ( get_class ( $this ) );
 				$this->logger->debug ( 'Postman Gmail Extension v' . POSTMAN_GMAIL_API_PLUGIN_VERSION . ' starting' );
 				$this->addTransport ();
 				$this->loadTextDomain ();
 			}
 		}
 		public function handleDeactivationEvent() {
-			$this->logger = new PostmanLogger ( 'PostmanGmailMain' );
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->logger->debug ( 'Deactivating' );
 			$options = PostmanOptions::getInstance ();
 			if ($options->getTransportType () == PostmanGmailApiTransport::SLUG) {
@@ -51,7 +51,7 @@ if (! class_exists ( 'PostmanGmail' )) {
 				$options = PostmanOptions::getInstance ();
 				$authToken = PostmanOAuthToken::getInstance ();
 				require_once 'Postman-Mail/PostmanGmailTransport.php';
-				PostmanTransportDirectory::getInstance ()->registerTransport ( new PostmanGmailApiTransport ( $options->getClientId (), $options->getClientSecret (), $options->getSenderEmail(), $authToken->getAccessToken () ) );
+				PostmanTransportDirectory::getInstance ()->registerTransport ( new PostmanGmailApiTransport () );
 			}
 		}
 		public function loadTextDomain() {

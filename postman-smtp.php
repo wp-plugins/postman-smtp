@@ -30,7 +30,7 @@ if (! function_exists ( 'postmanHandleErrors' )) {
 		if (function_exists ( 'error_get_last' )) {
 			$last_error = error_get_last ();
 			$t = $last_error ['type'];
-			$logger = new PostmanLogger ( 'postman.php' );
+			$logger = new PostmanLogger ( 'postman-smtp.php' );
 			// E_ALL screws up my port test ajax!!
 			if (! is_null ( $last_error ) && ($t & (E_ALL | E_COMPILE_ERROR | E_ERROR | E_PARSE | E_NOTICE)) && preg_match ( "/postman/i", $last_error ['file'] )) {
 				// if there has been a fatal error
@@ -52,7 +52,7 @@ ini_set ( 'display_errors', 'On' );
 require_once 'Postman/postman-common-wp-functions.php';
 
 // create a Logger
-$logger = new PostmanLogger ( 'postman.php' );
+$logger = new PostmanLogger ( 'postman-smtp.php' );
 $logger->debug ( 'Postman SMTP v' . POSTMAN_PLUGIN_VERSION . ' starting' );
 
 // register error handler

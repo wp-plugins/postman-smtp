@@ -32,7 +32,7 @@ if (! function_exists ( 'postmanHttpTransport' )) {
 				'headers' => $headers,
 				'body' => $parameters 
 		);
-		$logger = new PostmanLogger ( 'PostmanHttpTransport' );
+		$logger = new PostmanLogger ( get_class ( $this ) );
 		$logger->debug ( sprintf ( 'Posting to %s', $url ) );
 		$logger->debug ( sprintf ( 'Post header is %s', implode ( $headers ) ) );
 		$logger->debug ( sprintf ( 'Posting args are %s', implode ( $parameters ) ) );

@@ -11,18 +11,9 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 	 *        
 	 */
 	class PostmanGmailApiTransport implements PostmanTransport {
-		private $clientId;
-		private $clientSecret;
-		private $accessToken;
-		private $senderEmail;
-		private $logger;
 		const SLUG = 'gmail_api';
-		public function __construct($clientId, $clientSecret, $senderEmail, $accessToken) {
-			$this->clientId = $clientId;
-			$this->clientSecret = $clientSecret;
-			$this->accessToken = $accessToken;
-			$this->logger = new PostmanLogger ( 'PostmanGmailApiTransport' );
-			$this->senderEmail = $senderEmail;
+		public function __construct() {
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
 		public function isSmtp() {
 			return false;
@@ -40,17 +31,16 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 			return _x ( 'Gmail API', 'Transport Name' );
 		}
 		public function createZendMailTransport($hostname, $config) {
-			assert ( ! empty ( $this->clientId ) );
-			assert ( ! empty ( $this->clientSecret ) );
-			assert ( ! empty ( $this->accessToken ) );
+			$options = PostmanOptions::getInstance ();
+			$authToken = PostmanOAuthToken::getInstance ();
 			$client = new Google_Client ();
-			$client->setClientId ( $this->clientId );
-			$client->setClientSecret ( $this->clientSecret );
+			$client->setClientId ( $options->getClientId () );
+			$client->setClientSecret ( $options->getClientSecret () );
 			$client->setRedirectUri ( '' );
 			// rebuild the google access token
-			$token = new stdClass();
-			$token->access_token = $this->accessToken;
-			$token->refresh_token = $this->accessToken;
+			$token = new stdClass ();
+			$token->access_token = $authToken->getAccessToken ();
+			$token->refresh_token = $authToken->getRefreshToken ();
 			$token->token_type = 'Bearer';
 			$token->expires_in = 3600;
 			$token->id_token = null;
@@ -60,8 +50,6 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 			$client->addScope ( "https://www.googleapis.com/auth/gmail.compose" );
 			$service = new Google_Service_Gmail ( $client );
 			$config [PostmanZendMailTransportGmailApi::SERVICE_OPTION] = $service;
-			$config [PostmanZendMailTransportGmailApi::SENDER_EMAIL_OPTION] = $this->senderEmail;
-			$this->logger->debug('Sender Email='.$this->senderEmail);
 			return new PostmanZendMailTransportGmailApi ( $hostname, $config );
 		}
 		public function getDeliveryDetails() {

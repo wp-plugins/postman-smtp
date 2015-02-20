@@ -28,7 +28,7 @@ if (! class_exists ( 'Postman' )) {
 			// calculate the basename
 			$basename = plugin_basename ( $postmanPhpFile );
 			$this->postmanPhpFile = $postmanPhpFile;
-			$this->logger = new PostmanLogger ( 'PostmanMain' );
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			
 			// handle plugin activation/deactivation
 			require_once 'PostmanActivationHandler.php';

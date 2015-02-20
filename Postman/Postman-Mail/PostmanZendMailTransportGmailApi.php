@@ -171,10 +171,10 @@ if (! class_exists ( 'PostmanZendMailTransportGmailApi' )) {
 		}
 		
 		/**
-		 * Send an email via the SMTP connection protocol
+		 * Send an email via the Gmail API
+		 * 
+		 * Uses URI https://www.googleapis.com
 		 *
-		 * The connection via the protocol adapter is made just-in-time to allow a
-		 * developer to add a custom adapter if required before mail is sent.
 		 *
 		 * @return void
 		 * @todo Rename this to sendMail, it's a public method...
@@ -190,8 +190,7 @@ if (! class_exists ( 'PostmanZendMailTransportGmailApi' )) {
 			$msg = new Google_Service_Gmail_Message ();
 			$msg->setRaw ( $mime );
 			$service = $this->_config [self::SERVICE_OPTION];
-			$senderEmailAddress = $this->_config [self::SENDER_EMAIL_OPTION];
-			$service->users_messages->send ( $senderEmailAddress, $msg );
+			$service->users_messages->send ( 'me', $msg );
 			
 		}
 		
