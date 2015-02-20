@@ -72,9 +72,7 @@ function switchBetweenPasswordAndOAuth() {
 		if ($choice == postman_auth_none) {
 			hide('section#password_auth_config');
 			hide('section#oauth_auth_config');
-		} else if ($choice == postman_auth_plain
-				|| $choice == postman_auth_login
-				|| $choice == postman_auth_crammd5) {
+		} else if ($choice == postman_auth_plain) {
 			show('section#password_auth_config');
 			hide('section#oauth_auth_config');
 		} else {

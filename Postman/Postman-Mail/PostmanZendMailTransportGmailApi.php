@@ -51,6 +51,11 @@
  */
 if (! class_exists ( 'PostmanZendMailTransportGmailApi' )) {
 	class PostmanZendMailTransportGmailApi extends Zend_Mail_Transport_Abstract {
+		const SERVICE_OPTION = 'service';
+		const SENDER_EMAIL_OPTION = 'sender_email';
+		
+		private $logger;
+		
 		/**
 		 * EOL character string used by transport
 		 *
@@ -126,6 +131,7 @@ if (! class_exists ( 'PostmanZendMailTransportGmailApi' )) {
 			
 			$this->_host = $host;
 			$this->_config = $config;
+			$this->logger = new PostmanLogger('PostmanZendMailTransportGmailApi');
 		}
 		
 		/**
@@ -177,14 +183,16 @@ if (! class_exists ( 'PostmanZendMailTransportGmailApi' )) {
 			
 			// Prepare the message in message/rfc822
 			$message = $this->header . Zend_Mime::LINEEND . $this->body;
+			$this->logger->debug ( 'message: ' . $message );
 			
 			// The message needs to be encoded in Base64URL
 			$mime = rtrim ( strtr ( base64_encode ( $message ), '+/', '-_' ), '=' );
 			$msg = new Google_Service_Gmail_Message ();
 			$msg->setRaw ( $mime );
-			$service = $this->_config ['service'];
-			$sendEmailAddress = $this->config ['senderEmail'];
+			$service = $this->_config [self::SERVICE_OPTION];
+			$senderEmailAddress = $this->_config [self::SENDER_EMAIL_OPTION];
 			$service->users_messages->send ( $senderEmailAddress, $msg );
+			
 		}
 		
 		/**

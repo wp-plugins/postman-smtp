@@ -85,7 +85,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->authorizationToken = $authorizationToken;
 			$this->messageHandler = $messageHandler;
 			$this->basename = $basename;
-
+			
 			// check if the user saved data, and if validation was successful
 			$session = PostmanSession::getInstance ();
 			if ($session->isSetAction ()) {
@@ -97,7 +97,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->messageHandler->addMessage ( __ ( 'Settings saved.' ) );
 				return;
 			}
-
+			
 			// test to see if an OAuth authentication is in progress
 			if ($session->isSetOauthInProgress ()) {
 				if (isset ( $_GET ['code'] )) {
@@ -111,7 +111,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$session->unsetOauthInProgress ();
 				}
 			}
-
+			
 			// continue to initialize the AdminController
 			add_action ( 'init', array (
 					$this,
@@ -485,9 +485,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_redirect_url_el', '#input_oauth_redirect_url' );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_auth_type', '#input_' . PostmanOptions::AUTHENTICATION_TYPE );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_none', PostmanOptions::AUTHENTICATION_TYPE_NONE );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_login', PostmanOptions::AUTHENTICATION_TYPE_LOGIN );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_plain', PostmanOptions::AUTHENTICATION_TYPE_PLAIN );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_crammd5', PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_oauth2', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
 			// these are the ids for the <option>s in the auth <select>
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_option_oauth2_id', '#input_auth_type_oauth2' );
@@ -504,7 +502,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 			
 			// Sanitize
-			add_settings_section ( 'transport_section', _x ( 'Transport Settings', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( 'transport_section', _x ( 'General Settings', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printTransportSectionInfo' 
 			), 'transport_options' );
@@ -532,7 +530,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), 'transport_options', 'transport_section' );
 			
 			// Sanitize
-			add_settings_section ( PostmanAdminController::SMTP_SECTION, _x ( 'SMTP Settings', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::SMTP_SECTION, _x ( 'Transport Settings', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printSmtpSectionInfo' 
 			), PostmanAdminController::SMTP_OPTIONS );
@@ -689,9 +687,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			try {
 				$emailTester = new PostmanSendTestEmailController ();
 				$subject = _x ( 'WordPress Postman SMTP Test', 'Test Email Subject', 'postman-smtp' );
-				// Englsih - Mandarin - French - Hindi - Spanish - Arabic - Portuguese - Russian - Bengali - Japanese - Punjabi
+				// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
 				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
-				$message = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - السلام عليكم - Olá - Привет! - নমস্কার - 今日は - ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ।%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline' ), POSTMAN_PLUGIN_VERSION ) );
+				$message = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline' ), POSTMAN_PLUGIN_VERSION ) );
 				$startTime = microtime ( true ) * 1000;
 				$success = $emailTester->sendTestEmail ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName (), $subject, $message );
 				$endTime = microtime ( true ) * 1000;
@@ -910,7 +908,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$transportType = $this->options->getTransportType ();
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE );
 			foreach ( PostmanTransportDirectory::getInstance ()->getTransports () as $transport ) {
-				printf ( '<option class="input_tx_type_%1$s" value="%1$s" %3$s>%2$s</option>', $transport->getSlug(), $transport->getName(), $transportType == $transport->getSlug() ? 'selected="selected"' : '' );
+				printf ( '<option class="input_tx_type_%1$s" value="%1$s" %3$s>%2$s</option>', $transport->getSlug (), $transport->getName (), $transportType == $transport->getSlug () ? 'selected="selected"' : '' );
 			}
 			print '</select>';
 		}
@@ -931,19 +929,21 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 * Get the settings option array and print one of its values
 		 */
-		public function encryption_type_for_password_section_callback() {
-			$this->encryption_type_callback ( 'password' );
-		}
-		public function encryption_type_for_oauth2_section_callback() {
-			$this->encryption_type_callback ( PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
-		}
 		public function encryption_type_callback() {
 			$encType = $this->options->getEncryptionType ();
 			print '<select id="input_enc_type" class="input_encryption_type" name="postman_options[enc_type]">';
 			printf ( '<option class="input_enc_type_none" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_NONE, $encType == PostmanOptions::ENCRYPTION_TYPE_NONE ? 'selected="selected"' : '', _x ( 'None', 'Encryption Type', 'postman-smtp' ) );
-			printf ( '<option class="input_enc_type_none" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_SSL, $encType == PostmanOptions::ENCRYPTION_TYPE_SSL ? 'selected="selected"' : '', _x ( 'SSL', 'Encryption Type', 'postman-smtp' ) );
-			printf ( '<option class="input_enc_type_none" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_TLS, $encType == PostmanOptions::ENCRYPTION_TYPE_TLS ? 'selected="selected"' : '', _x ( 'TLS', 'Encryption Type', 'postman-smtp' ) );
+			printf ( '<option class="input_enc_type_ssl" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_SSL, $encType == PostmanOptions::ENCRYPTION_TYPE_SSL ? 'selected="selected"' : '', _x ( 'SSL', 'Encryption Type', 'postman-smtp' ) );
+			printf ( '<option class="input_enc_type_tls" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_TLS, $encType == PostmanOptions::ENCRYPTION_TYPE_TLS ? 'selected="selected"' : '', _x ( 'TLS', 'Encryption Type', 'postman-smtp' ) );
 			print '</select>';
+		}
+		public function encryption_type_radio_callback() {
+			$encType = $this->options->getEncryptionType ();
+			print '<table class="input_encryption_type"><tr>';
+			printf ( '<td><input type="radio" name="input_enc_type" class="input_enc_type_none" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_NONE, _x ( 'None', 'Encryption Type', 'postman-smtp' ) );
+			printf ( '<td><input type="radio" name="input_enc_type" class="input_enc_type_ssl" value="%s"/></td><td> <label class="input_enc_type_ssl"> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_SSL, _x ( 'SSL', 'Encryption Type', 'postman-smtp' ) );
+			printf ( '<td><input type="radio" name="input_enc_type" class="input_enc_type_tls" value="%s"/></td><td> <label> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_TLS, _x ( 'TLS', 'Encryption Type', 'postman-smtp' ) );
+			print '</tr></table>';
 		}
 		
 		/**
@@ -1024,14 +1024,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function oauth_client_id_callback() {
-			printf ( '<textarea type="text" onClick="this.setSelectionRange(0, this.value.length)" style="overflow:hidden;resize:none" id="oauth_client_id" name="postman_options[oauth_client_id]" cols="60" class="required">%s</textarea>', null !== $this->options->getClientId () ? esc_attr ( $this->options->getClientId () ) : '' );
+			printf ( '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" id="oauth_client_id" name="postman_options[oauth_client_id]" value="%s" size="60" class="required"/>', null !== $this->options->getClientId () ? esc_attr ( $this->options->getClientId () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function oauth_client_secret_callback() {
-			printf ( '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" style="overflow:hidden;resize:none" autocomplete="off" id="oauth_client_secret" name="postman_options[oauth_client_secret]" value="%s" size="60" class="required"/>', null !== $this->options->getClientSecret () ? esc_attr ( $this->options->getClientSecret () ) : '' );
+			printf ( '<input type="text" onClick="this.setSelectionRange(0, this.value.length)" autocomplete="off" id="oauth_client_secret" name="postman_options[oauth_client_secret]" value="%s" size="60" class="required"/>', null !== $this->options->getClientSecret () ? esc_attr ( $this->options->getClientSecret () ) : '' );
 		}
 		
 		/**
@@ -1111,7 +1111,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$authDesc = sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $this->options->getAuthorizationType () );
 				}
 				/* translators: where %1$s is the SMTP server and %2$s is the Authentication Type (e.g. Postman will send mail via smtp.gmail.com:465 using OAuth 2.0 authentication.) */
-				$deliveryDetails = PostmanTransportDirectory::getInstance()->getCurrentTransport()->getDeliveryDetails();
+				$deliveryDetails = PostmanTransportDirectory::getInstance ()->getCurrentTransport ()->getDeliveryDetails ();
 				printf ( '<p style="margin:0 10px"><span>%s</span></p>', sprintf ( __ ( 'Postman will send mail via %1$s using %2$s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails . '</b>', '<b>' . $authDesc . '</b>' ) );
 				if ($this->options->isAuthTypeOAuth2 ()) {
 					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only.</em>', 'postman-smtp' ) );
@@ -1323,12 +1323,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<br />';
 			print $this->redirect_url_callback ();
 			print '<br />';
-			print $this->encryption_type_for_oauth2_section_callback ();
 			printf ( '<label id="client_id" for="client_id">%s</label>', $this->oauthScribe->getClientIdLabel () );
 			print '<br />';
 			print $this->oauth_client_id_callback ();
 			print '<br />';
-			printf ( '<label id="client_secret" for="client_id">%s</label>', $this->oauthScribe->getClientSecretLabel () );
+			printf ( '<label id="client_secret" for="client_secret">%s</label>', $this->oauthScribe->getClientSecretLabel () );
 			print '<br />';
 			print $this->oauth_client_secret_callback ();
 			print '<br />';
@@ -1337,13 +1336,18 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<section class="wizard-auth-basic">';
 			printf ( '<p class="port-explanation-ssl">%s</p>', __ ( 'Choose Login authentication unless you\'ve been instructed otherwise. Your username is most likely your email address.', 'postman-smtp' ) );
 			printf ( '<label class="input_authorization_type" for="auth_type">%s</label>', _x ( 'Authentication', 'Configuration Input Field', 'postman-smtp' ) );
-			print $this->authentication_type_callback ();
-			printf ( '<label class="input_encryption_type" for="enc_type">%s</label>', _x ( 'Encryption', 'Configuration Input Field', 'postman-smtp' ) );
-			print $this->encryption_type_for_password_section_callback ();
 			print '<br />';
+			print $this->authentication_type_callback ();
+			print '<br />';
+			printf ( '<label class="input_encryption_type" for="enc_type">%s</label>', _x ( 'Encryption', 'Configuration Input Field', 'postman-smtp' ) );
+			print '<br class="input_encryption_type" />';
+			print $this->encryption_type_radio_callback ();
 			printf ( '<label for="username">%s</label>', _x ( 'Username', 'Configuration Input Field', 'postman-smtp' ) );
+			print '<br />';
 			print $this->basic_auth_username_callback ();
+			print '<br />';
 			printf ( '<label for="password">%s</label>', _x ( 'Password', 'Configuration Input Field', 'postman-smtp' ) );
+			print '<br />';
 			print $this->basic_auth_password_callback ();
 			print '</section>';
 			
@@ -1400,7 +1404,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<section>';
 			printf ( '<p><label>%s</label></p>', __ ( 'Status Message' ) );
 			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="65" rows="2"></textarea>';
-			if (PostmanTransportDirectory::getInstance()->getCurrentTransport()->isTranscriptSupported()) {
+			if (PostmanTransportDirectory::getInstance ()->getCurrentTransport ()->isTranscriptSupported ()) {
 				printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );
 				print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="10"></textarea>';
 			}

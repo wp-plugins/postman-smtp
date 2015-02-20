@@ -33,7 +33,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			
 			// is the saved transport installed?
 			$transportType = $this->options->getTransportType ();
-			if ($transport->getSlug () != $this->options->getTransportType ()) {
+			if (!empty($transportType) && $transport->getSlug () != $this->options->getTransportType ()) {
 				add_action ( 'admin_notices', Array (
 						$this,
 						'canNotFindTransport' 

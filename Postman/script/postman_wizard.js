@@ -132,7 +132,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 			if ($val == 'none') {
 				disable(postman_input_basic_username);
 				disable(postman_input_basic_password);
-				disable(postman_enc_for_password_el);
+				disable('select#input_enc_type');
 				setEncryptionType(postman_enc_none);
 			} else {
 				enable(postman_input_basic_username);
@@ -140,7 +140,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 				// for the next two lines, i assume this is port 587 because
 				// that's currently the only other time a click event can be
 				// fired here
-				enable(postman_enc_for_password_el);
+				enable('select#input_enc_type');
 				setEncryptionType(postman_enc_tls);
 			}
 		});
@@ -164,10 +164,11 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 			// eanble user/pass fields
 			enablePasswordFields();
 
-			disable(postman_auth_option_oauth2_id);
+			disable('.input_auth_type_oauth2');
 			// disallow ssl, set encryption to tls
-			setEncryptionType(postman_enc_tls);
 			disable(postman_enc_option_ssl_id);
+			hide(postman_enc_option_ssl_id);
+			jQuery('input.input_enc_type_tls').prop('checked', true);
 
 			// show the encryption menu
 			show(postman_encryption_group);
@@ -198,11 +199,10 @@ function setAuthType($authType) {
 	jQuery(postman_input_auth_type).val($authType);
 }
 function setEncryptionType($encType) {
-	jQuery(postman_enc_for_password_el).val($encType);
-	jQuery(postman_enc_for_oauth2_el).val($encType);
+	jQuery('select#input_enc_type').val($encType);
 }
 function enablePasswordFields() {
-	setAuthType(postman_auth_login);
+	setAuthType(postman_auth_plain);
 	enable(postman_input_basic_username);
 	enable(postman_input_basic_password);
 	show('.wizard-auth-basic');

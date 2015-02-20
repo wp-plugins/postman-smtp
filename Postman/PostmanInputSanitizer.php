@@ -65,7 +65,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 				PostmanSession::getInstance ()->setAction ( self::VALIDATION_SUCCESS );
 			}
 			
-			if ($new_input [PostmanOptions::CLIENT_ID] != $this->options->getClientId () || $new_input [PostmanOptions::CLIENT_SECRET] != $this->options->getClientSecret ()) {
+			if ($new_input [PostmanOptions::CLIENT_ID] != $this->options->getClientId () || $new_input [PostmanOptions::CLIENT_SECRET] != $this->options->getClientSecret () || $new_input [PostmanOptions::HOSTNAME] != $this->options->getHostname ()) {
 				$this->logger->debug ( "Recognized new Client ID" );
 				// the user entered a new client id and we should destroy the stored auth token
 				delete_option ( PostmanOAuthToken::OPTIONS_NAME );

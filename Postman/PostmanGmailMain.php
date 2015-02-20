@@ -51,7 +51,7 @@ if (! class_exists ( 'PostmanGmail' )) {
 				$options = PostmanOptions::getInstance ();
 				$authToken = PostmanOAuthToken::getInstance ();
 				require_once 'Postman-Mail/PostmanGmailTransport.php';
-				PostmanTransportDirectory::getInstance ()->registerTransport ( new PostmanGmailApiTransport ( $options->getClientId (), $options->getClientSecret (), $authToken->getAccessToken () ) );
+				PostmanTransportDirectory::getInstance ()->registerTransport ( new PostmanGmailApiTransport ( $options->getClientId (), $options->getClientSecret (), $options->getSenderEmail(), $authToken->getAccessToken () ) );
 			}
 		}
 		public function loadTextDomain() {
