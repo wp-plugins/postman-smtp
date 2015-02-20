@@ -1096,6 +1096,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$phpVersionRequirement = PHP_VERSION_ID >= 50300;
 			$arrayObjectRequirement = class_exists ( 'ArrayObject' );
 			$getmxrrRequirement = function_exists ( 'getmxrr' );
+			$displayErrors = ini_get ( 'display_errors' );
+			$errorReporting = ini_get ( 'error_reporting' );
 			
 			// Set class property
 			print '<div class="wrap">';
@@ -1131,14 +1133,15 @@ if (! class_exists ( "PostmanAdminController" )) {
 				}
 			}
 			
-			if (! $sslRequirement || ! $splAutoloadRegisterRequirement || ! $arrayObjectRequirement) {
+			if (true || ! $sslRequirement || ! $splAutoloadRegisterRequirement || ! $arrayObjectRequirement) {
 				printf ( '<div style="padding: 10px;"><b style="color: red">%s</b><ul>', __ ( 'Your system seems to be missing one or more pre-requisites - something may fail:', 'postman-smtp' ) );
 				/* translators: where %s is the PHP version */
-				$versionNo = sprintf ( __ ( 'No (%s)', 'postman-smtp' ), PHP_VERSION );
-				printf ( '<li>PHP v5.3: %s</li>', ($phpVersionRequirement ? __ ( 'Yes', 'postman-smtp' ) : $versionNo) );
+				printf ( '<li>PHP v5.3: %s (%s)</li>', ($phpVersionRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )), PHP_VERSION );
 				printf ( '<li>SSL Extension: %s</li>', ($sslRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
 				printf ( '<li>spl_autoload_register: %s</li>', ($splAutoloadRegisterRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
 				printf ( '<li>ArrayObject: %s</li>', ($arrayObjectRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
+				printf ( '<li>display_errors: %s</li>', $displayErrors );
+				printf ( '<li>errorReporting: %s</li>', $errorReporting );
 				print '<ul></div>';
 			}
 			print '</div>';

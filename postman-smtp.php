@@ -46,6 +46,8 @@ if (! function_exists ( 'postmanHandleErrors' )) {
 	}
 }
 
+ini_set ( 'display_errors', 'On' );
+
 // load the common functions
 require_once 'Postman/postman-common-wp-functions.php';
 
