@@ -1135,14 +1135,18 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 			
 			if (true || ! $sslRequirement || ! $splAutoloadRegisterRequirement || ! $arrayObjectRequirement) {
-				printf ( '<div style="padding: 10px;"><b style="color: red">%s</b><ul>', __ ( 'Your system seems to be missing one or more pre-requisites - something may fail:', 'postman-smtp' ) );
+				// printf ( '<div style="padding: 10px;"><b style="color: red">%s</b><ul>', __ ( 'Your system seems to be missing one or more pre-requisites - something may fail:', 'postman-smtp' ) );
+				printf ( '<div style="padding: 10px;"><b style="color: red">%s</b><ul>', __ ( 'System Info:', 'postman-smtp' ) );
 				/* translators: where %s is the PHP version */
 				printf ( '<li>PHP v5.3: %s (%s)</li>', ($phpVersionRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )), PHP_VERSION );
-				printf ( '<li>SSL Extension: %s</li>', ($sslRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
-				printf ( '<li>spl_autoload_register: %s</li>', ($splAutoloadRegisterRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
-				printf ( '<li>ArrayObject: %s</li>', ($arrayObjectRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
-				printf ( '<li>display_errors: %s</li>', $displayErrors );
-				printf ( '<li>errorReporting: %s</li>', $errorReporting );
+				printf ( '<li>PHP SSL Extension: %s</li>', ($sslRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
+				printf ( '<li>PHP spl_autoload_register: %s</li>', ($splAutoloadRegisterRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
+				printf ( '<li>PHP ArrayObject: %s</li>', ($arrayObjectRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
+				printf ( '<li>PHP display_errors: %s</li>', $displayErrors );
+				printf ( '<li>PHP errorReporting: %s</li>', $errorReporting );
+				printf ( '<li>WordPress WP_DEBUG: %s</li>', WP_DEBUG );
+				printf ( '<li>WordPress WP_DEBUG_LOG: %s</li>', WP_DEBUG_LOG );
+				printf ( '<li>WordPress WP_DEBUG_DISPLAY: %s</li>', WP_DEBUG_DISPLAY );
 				print '<ul></div>';
 			}
 			print '</div>';
