@@ -22,6 +22,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			// prior to version 0.2.5, $authOptions did not exist
 			$authOptions = get_option ( 'postman_auth_token' );
 			$options = get_option ( 'postman_options' );
+			$postmanState = get_option ( 'postman_state' );
 			if (empty ( $authOptions ) && ! (empty ( $options )) && ! empty ( $options ['access_token'] )) {
 				$logger->debug ( "Upgrading database: copying Authorization token from postman_options to postman_auth_token" );
 				// copy the variables from $options to $authToken
@@ -95,6 +96,12 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 					update_option ( 'postman_auth_token', $authOptions );
 				}
 			}
+			// always update the version number
+			if (!isset ( $postmanState ['install_date'] )) {
+				$postmanState ['install_date'] = time ();
+			}
+			$postmanState ['version'] = POSTMAN_PLUGIN_VERSION;
+			update_option ( 'postman_state', $postmanState );
 		}
 	}
 }
