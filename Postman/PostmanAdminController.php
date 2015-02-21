@@ -773,7 +773,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->logger->debug ( 'ajaxRedirectUrl hostname:' . $hostname );
 			$this->logger->debug ( 'ajaxRedirectUrl transport:' . $transport );
 			// don't care about what's in the database, i need a scribe based on the ajax parameter assuming this is OAUTH2
-			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( PostmanTransportDirectory::getInstance()->getTransport($transport), PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $hostname );
+			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( PostmanTransportDirectory::getInstance ()->getTransport ( $transport ), PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $hostname );
 			if (isset ( $_POST ['referer'] )) {
 				$this->logger->debug ( 'ajaxRedirectUrl referer:' . $_POST ['referer'] );
 				// this must be wizard or config from an oauth-related change
@@ -833,19 +833,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Transport section info
 		 */
 		public function printTransportSectionInfo() {
-			print __ ( 'Select the transport and enter the sender\'s name and email address:' );
-		}
-		/**
-		 * Print the Section text
-		 */
-		public function print_section_info() {
-			print __ ( 'Enter your settings below:' );
+			$totalTransportsAvailable = sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () );
+			print _n ( 'Enter the sender\'s name and email address:', 'Select the transport and enter the sender\'s name and email address:', $totalTransportsAvailable );
 		}
 		/**
 		 * Print the Section text
 		 */
 		public function printSmtpSectionInfo() {
-			print __ ( 'Select the Authentication Type and enter the SMTP server hostname and port:' );
+			print __ ( 'Select the authentication method and enter the SMTP server hostname and port:' );
 		}
 		
 		/**
@@ -1105,7 +1100,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// Set class property
 			print '<div class="wrap">';
 			$this->displayTopNavigation ();
-			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
+			if (PostmanTransportUtils::isPostmanConfiguredToSendEmail ( $this->options, $this->authorizationToken )) {
 				printf ( '<p><span style="color:green;padding:2px 5px; font-size:1.2em">%s</span></p>', __ ( 'Postman is configured.', 'postman-smtp' ) );
 				if ($this->options->isAuthTypeOAuth2 ()) {
 					$authDesc = _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' );
@@ -1116,7 +1111,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$authDesc = sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $this->options->getAuthorizationType () );
 				}
 				/* translators: where %1$s is the SMTP server and %2$s is the Authentication Type (e.g. Postman will send mail via smtp.gmail.com:465 using OAuth 2.0 authentication.) */
-				$deliveryDetails = PostmanTransportDirectory::getInstance ()->getCurrentTransport ()->getDeliveryDetails ();
+				$deliveryDetails = PostmanTransportDirectory::getInstance ()->getCurrentTransport ()->getDeliveryDetails ( $this->options );
 				printf ( '<p style="margin:0 10px"><span>%s</span></p>', sprintf ( __ ( 'Postman will send mail via %1$s using %2$s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails . '</b>', '<b>' . $authDesc . '</b>' ) );
 				if ($this->options->isAuthTypeOAuth2 ()) {
 					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only.</em>', 'postman-smtp' ) );

@@ -23,7 +23,7 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 					$this,
 					'warnIfCanNotBindToWpMail' 
 			) );
-			if ($binderOptions->isSendingEmailAllowed ( $binderAuthorizationToken )) {
+			if (PostmanTransportUtils::isPostmanConfiguredToSendEmail ( $binderOptions, $binderAuthorizationToken )) {
 				
 				if (! function_exists ( 'wp_mail' )) {
 					/**

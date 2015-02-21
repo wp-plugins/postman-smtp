@@ -2,7 +2,7 @@
 Contributors: jasonhendriks
 Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, yahoo, yahoo mail, windows live, outlook.com, wp smtp, outgoing mail, send mail, wp smtp, wordpress smtp, wp_mail, wp mail, google apps for work, google apps for business
 Requires at least: 3.9
-Tested up to: 4.1
+Tested up to: 4.1.1
 Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -27,7 +27,7 @@ Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail
 * Supports International alphabets, HTML Mail and MultiPart/MIME
 * Supports  Plain, Login, CRAM-MD5 and XOAUTH2 authentication (SASL)
 * Supports SSL and TLS security (SMTPS)
-* Its easy to upgrade! Postman can import SMTP settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
+* Upgrading is easy! Postman can import SMTP settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
 * Available translations: English, French
 
 If you are willing to help translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!

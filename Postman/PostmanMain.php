@@ -83,5 +83,6 @@ if (! class_exists ( 'Postman' )) {
 		function version_shortcode() {
 			return POSTMAN_PLUGIN_VERSION;
 		}
+		
 	}
 }

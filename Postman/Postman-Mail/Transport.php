@@ -13,6 +13,11 @@ if (! interface_exists ( 'PostmanTransport' )) {
 
 if (! class_exists ( 'PostmanSmtpTransport' )) {
 	class PostmanSmtpTransport implements PostmanTransport {
+		private $logger;
+		
+		public function __construct() {
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
+		}
 		const SLUG = 'smtp';
 		public function isSmtp() {
 			return true;
@@ -36,8 +41,24 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			return $this->getName () . ' (' . $options->getHostname () . ':' . $options->getPort () . ')';
 		}
 		public function isConfigured(PostmanOptions $options, PostmanOAuthToken $token) {
-			return true;
+			$configured = true;
+			$configured &= false;
+			$this->logger->debug('isConfigured ' . $configured);
+			return $configured;
 		}
 	}
 }
 
+if (! class_exists ( 'PostmanTransportUtils' )) {
+	class PostmanTransportUtils {
+		public static function isPostmanConfiguredToSendEmail(PostmanOptions $options, PostmanOAuthToken $token) {
+			$directory = PostmanTransportDirectory::getInstance ();
+			foreach ( $directory->getTransports () as $transport ) {
+				if ($transport->isConfigured ( $options, $token )) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+}
