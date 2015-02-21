@@ -768,10 +768,26 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * This Ajax function retrieves the OAuth redirectUrl and help text for based on the SMTP hostname supplied
 		 */
 		function getAjaxRedirectUrl() {
-			$queryHostname = $_POST ['hostname'];
-			$queryAuthType = $_POST ['auth_type'];
-			$queryTransportType = $_POST ['transport'];
+			$queryHostname = '';
+			if (isset ( $_POST ['hostname'] )) {
+				$queryHostname = $_POST ['hostname'];
+			}
+			$queryAuthType = '';
+			if (isset ( $_POST ['auth_type'] )) {
+				$queryAuthType = $_POST ['auth_type'];
+			}
+			$queryTransportType = '';
+			if (isset ( $_POST ['transport'] )) {
+				$queryTransportType = $_POST ['transport'];
+			}
+			if (isset ( $_POST ['host_data'] )) {
+				$queryHostData = $_POST ['host_data'];
+			}
+			
 			$transport = PostmanTransportUtils::getTransport ( $queryTransportType );
+			if (! $transport) {
+				$transport = new PostmanDummyTransport ();
+			}
 			$displayAuth = 'none';
 			if ($transport->isOAuthUsed ( $queryAuthType )) {
 				$displayAuth = 'oauth2';
@@ -779,6 +795,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->logger->debug ( 'ajaxRedirectUrl transport:' . $queryTransportType );
 			$this->logger->debug ( 'ajaxRedirectUrl authType:' . $queryAuthType );
 			$this->logger->debug ( 'ajaxRedirectUrl hostname:' . $queryHostname );
+			
 			// don't care about what's in the database, i need a scribe based on the ajax parameter assuming this is OAUTH2
 			$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $queryHostname );
 			if (isset ( $_POST ['referer'] )) {
@@ -793,16 +810,30 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$avail [465] = true;
 					$avail [587] = true;
 				}
-				$authType = $_POST ['auth_type'];
+				$authType = $queryAuthType;
 				$encType = null;
 				$port = null;
-				$configureOAuth = false;
-				$configureOAuth |= $queryAuthType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
-				$configureOAuth |= $scribe->isOauthHost () && $avail [$scribe->getOAuthPort ()];
-				if (! $_POST ['referer'] == 'manual_config') {
-					if ($queryTransportType != PostmanSmtpTransport::SLUG) {
-						// set none of these things
-					} else if ($configureOAuth) {
+				
+				if ($_POST ['referer'] != 'manual_config') {
+					// for each successful host/port combination
+					// ask a transport if they support it, and if they do at what priority is it
+					// configure for the highest priority you find
+					$recommendation = -1;
+					foreach ( $queryHostData as $id => $value ) {
+						if ($value ['avail']) {
+							$hostData ['host'] = $value ['host'];
+							$hostData ['port'] = $value ['port'];
+							$this->logger->debug ( 'Available host: ' . $hostData ['host'] . ':' . $hostData ['port'] );
+							$configure = PostmanTransportUtils::getConfigurationRecommendation ( $hostData );
+						}
+					}
+					if($recommendation == -1) {
+						$this->logger->debug('Could not recommend any solutions');
+					}
+					$this->logger->debug ( 'ajaxRedirectUrl processing for wizard' );
+					$host = $queryHostname . ':' . '25';
+					
+					if ($configureOAuth) {
 						$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 						$port = $scribe->getOAuthPort ();
 						$encType = $scribe->getEncryptionType ();

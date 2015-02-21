@@ -137,13 +137,13 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 			return false;
 		}
 		public function isServiceProviderGoogle($hostname) {
-			return false;
+			return endsWith ( $hostname, 'gmail.com' );
 		}
 		public function isServiceProviderMicrosoft($hostname) {
-			return false;
+			return endsWith ( $hostname, 'live.com' );
 		}
 		public function isServiceProviderYahoo($hostname) {
-			return false;
+			return endsWith ( $hostname, 'yahoo.com' );
 		}
 		public function isOAuthUsed($authType) {
 			return false;

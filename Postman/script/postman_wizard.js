@@ -265,44 +265,59 @@ function wizardPortTest(input, state) {
 	};
 	// We can also pass the url value separately from ajaxurl for front end AJAX
 	// implementations
-	jQuery
-			.post(
-					ajaxurl,
-					data,
-					function(response) {
-						portsChecked++;
-						if (response.success) {
-							elState.html(postman_port_test_open);
-							el.removeAttr('disabled');
-							totalAvail++;
-						} else {
-							elState.html(postman_port_test_closed);
-						}
-						if (portsChecked >= portsToCheck) {
-							var el25 = jQuery('#wizard_port_25');
-							var el465 = jQuery('#wizard_port_465');
-							var el587 = jQuery('#wizard_port_587');
-							var el25_avail = el25.attr('disabled') != 'disabled';
-							var el465_avail = el465.attr('disabled') != 'disabled';
-							var el587_avail = el587.attr('disabled') != 'disabled';
-							// ask the server what to do: oauth and on which
-							// port, or password and on which port
-							if (totalAvail == 0) {
-								alert(postman_wizard_no_ports);
-							} else {
-								var data = {
-									'action' : 'get_redirect_url',
-									'referer' : 'wizard',
-									'hostname' : hostname,
-									'avail25' : el25_avail,
-									'avail465' : el465_avail,
-									'avail587' : el587_avail
-								};
-								populateRedirectUrl(data);
-								jQuery('li + li').removeClass('disabled');
-								portCheckBlocksUi = false;
-							}
+	jQuery.post(ajaxurl, data, function(response) {
+		portsChecked++;
+		if (response.success) {
+			elState.html(postman_port_test_open);
+			el.removeAttr('disabled');
+			totalAvail++;
+		} else {
+			elState.html(postman_port_test_closed);
+		}
+		if (portsChecked >= portsToCheck) {
+			var el25 = jQuery('#wizard_port_25');
+			var el465 = jQuery('#wizard_port_465');
+			var el587 = jQuery('#wizard_port_587');
+			var el25_avail = el25.attr('disabled') != 'disabled';
+			var el465_avail = el465.attr('disabled') != 'disabled';
+			var el587_avail = el587.attr('disabled') != 'disabled';
+			// ask the server what to do: oauth and on which
+			// port, or password and on which port
+			if (totalAvail == 0) {
+				alert(postman_wizard_no_ports);
+			} else {
+				// var person = {firstName:"John", lastName:"Doe", age:46};
 
-						}
-					});
+				// Create the hashmap
+				var portCheck = {};
+				// Add keys to the hashmap
+				portCheck['1'] = {
+					host : 'smtp.gmail.com',
+					port : 25,
+					avail : el25_avail
+				};
+				portCheck['2'] = {
+					host : 'smtp.gmail.com',
+					port : 465,
+					avail : el465_avail
+				};
+				portCheck['3'] = {
+					host : 'smtp.gmail.com',
+					port : 687,
+					avail : el587_avail
+				};
+
+				var data = {
+					'action' : 'get_redirect_url',
+					'referer' : 'wizard',
+					'hostname' : hostname,
+					'host_data' : portCheck
+				};
+				populateRedirectUrl(data);
+				jQuery('li + li').removeClass('disabled');
+				portCheckBlocksUi = false;
+			}
+
+		}
+	});
 }

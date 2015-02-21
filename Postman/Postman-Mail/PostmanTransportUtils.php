@@ -80,6 +80,22 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 			
 			return $oauthUsed && $configured;
 		}
+		
+		/**
+		 * If the host port is a possible configuration option, recommend it
+		 *
+		 * $hostData includes ['host'] and ['port']
+		 *
+		 * response should include ['success'], ['message'], ['priority']
+		 *
+		 * @param unknown $hostData        	
+		 */
+		public static function getConfigurationRecommendation($hostData) {
+			$directory = PostmanTransportDirectory::getInstance ();
+			foreach ( $directory->getTransports () as $transport ) {
+				;
+			}
+		}
 	}
 }
 
