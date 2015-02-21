@@ -1,6 +1,7 @@
 <?php
 if (! class_exists ( "PostmanOptions" )) {
 	
+	require_once 'PostmanOptionsInterface.php';
 	require_once 'Postman-Mail/Transport.php';
 	
 	/**
@@ -9,7 +10,8 @@ if (! class_exists ( "PostmanOptions" )) {
 	 *
 	 * Make sure these emails are permitted (see http://en.wikipedia.org/wiki/E-mail_address#Internationalization):
 	 */
-	class PostmanOptions {
+	class PostmanOptions implements PostmanOptionsInterface {
+		
 		// the option database name
 		const POSTMAN_OPTIONS = 'postman_options';
 		
@@ -193,13 +195,13 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (! empty ( $this->options [self::CONNECTION_TIMEOUT] ))
 				return $this->options [self::CONNECTION_TIMEOUT];
 			else
-				return Postman::POSTMAN_TCP_CONNECTION_TIMEOUT;
+				return PostmanSmtp::POSTMAN_TCP_CONNECTION_TIMEOUT;
 		}
 		public function getReadTimeout() {
 			if (! empty ( $this->options [self::READ_TIMEOUT] ))
 				return $this->options [self::READ_TIMEOUT];
 			else
-				return Postman::POSTMAN_TCP_READ_TIMEOUT;
+				return PostmanSmtp::POSTMAN_TCP_READ_TIMEOUT;
 		}
 		public function isSenderNameOverridePrevented() {
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] ))
@@ -247,7 +249,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			$this->options [PostmanOptions::CLIENT_SECRET] = $clientSecret;
 		}
 		public function setTransportType($transportType) {
-			$this->options[PostmanOptions::TRANSPORT_TYPE] = $transportType;
+			$this->options [PostmanOptions::TRANSPORT_TYPE] = $transportType;
 		}
 		public function setAuthorizationType($authType) {
 			$this->options [PostmanOptions::AUTHENTICATION_TYPE] = $authType;

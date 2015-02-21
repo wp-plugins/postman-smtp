@@ -14,7 +14,7 @@ if (! class_exists ( 'Postman' )) {
 	 * @author jasonhendriks
 	 *        
 	 */
-	class Postman {
+	class PostmanSmtp {
 		const POSTMAN_TCP_READ_TIMEOUT = 60;
 		const POSTMAN_TCP_CONNECTION_TIMEOUT = 10;
 		private $postmanPhpFile;
