@@ -28,8 +28,8 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 			$clientSecret = $options->getClientSecret ();
 			$senderEmail = $options->getSenderEmail ();
 			if (! isset ( $scribe )) {
-				$transport = PostmanTransportDirectory::getInstance()->getCurrentTransport();
-				$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ($transport , $options->getAuthorizationType(), $options->getHostname() );
+				$transport = PostmanTransportUtils::getCurrentTransport ();
+				$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $transport, $hostname );
 			}
 			$redirectUrl = $scribe->getCallbackUrl ();
 			if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $scribe->isGoogle ()) {

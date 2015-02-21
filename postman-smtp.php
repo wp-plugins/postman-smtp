@@ -59,6 +59,6 @@ $logger = new PostmanLogger ( 'postman-smtp.php' );
 register_shutdown_function ( 'postmanHandleErrors' );
 
 // start Postman
-require_once 'Postman/PostmanMain.php';
+require_once 'Postman/PostmanSmtpMain.php';
 $kevinCostner = new PostmanSmtp ( __FILE__ );
 

@@ -121,7 +121,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function init() {
 			//
 			$transport = PostmanTransportUtils::getCurrentTransport ();
-			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options );
+			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
 			// import from other plugins
 			$this->importableConfiguration = new PostmanImportableConfiguration ();
@@ -771,12 +771,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$queryHostname = $_POST ['hostname'];
 			$queryAuthType = $_POST ['auth_type'];
 			$queryTransportType = $_POST ['transport'];
-			$transport = PostmanTransportDirectory::getInstance ()->getTransport ( $queryTransportType );
+			$transport = PostmanTransportUtils::getTransport ( $queryTransportType );
+			$displayAuth = 'none';
+			if (PostmanTransportUtils::isOAuthRequired ( $transport, $queryHostname )) {
+				$displayAuth = 'oauth2';
+			}
 			$this->logger->debug ( 'ajaxRedirectUrl transport:' . $queryTransportType );
 			$this->logger->debug ( 'ajaxRedirectUrl authType:' . $queryAuthType );
 			$this->logger->debug ( 'ajaxRedirectUrl hostname:' . $queryHostname );
 			// don't care about what's in the database, i need a scribe based on the ajax parameter assuming this is OAUTH2
-			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $transport, PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $queryHostname );
+			$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $queryHostname );
 			if (isset ( $_POST ['referer'] )) {
 				$this->logger->debug ( 'ajaxRedirectUrl referer:' . $_POST ['referer'] );
 				// this must be wizard or config from an oauth-related change
@@ -806,10 +810,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 						$authType = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
 						$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
 						$port = 465;
+						$displayAuth = 'password';
 					} else if ($avail [587]) {
 						$authType = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
 						$encType = PostmanOptions::ENCRYPTION_TYPE_TLS;
 						$port = 587;
+						$displayAuth = 'password';
 					} else {
 						$authType = PostmanOptions::AUTHENTICATION_TYPE_NONE;
 						$encType = PostmanOptions::ENCRYPTION_TYPE_NONE;
@@ -827,6 +833,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 						PostmanOptions::AUTHENTICATION_TYPE => $authType,
 						PostmanOptions::ENCRYPTION_TYPE => $encType,
 						PostmanOptions::PORT => $port,
+						'display_auth' => $displayAuth,
 						'success' => true 
 				);
 				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url:' . $scribe->getCallbackUrl () );
@@ -839,6 +846,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->logger->debug ( 'ajaxRedirectUrl answer auth_type:' . $authType );
 				$this->logger->debug ( 'ajaxRedirectUrl answer enc_type:' . $encType );
 				$this->logger->debug ( 'ajaxRedirectUrl answer port:' . $port );
+				$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $displayAuth );
 			} else {
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),

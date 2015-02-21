@@ -34,9 +34,9 @@ if (! class_exists ( "PostmanLogger" )) {
 if (! interface_exists ( 'PostmanTransport' )) {
 	interface PostmanTransport {
 		public function isSmtp();
-		public function isGoogleOAuthRequired(PostmanOptionsInterface $options);
-		public function isMicrosoftOAuthRequired(PostmanOptionsInterface $options);
-		public function isYahooOAuthRequired(PostmanOptionsInterface $options);
+		public function isGoogleOAuthRequired($hostname);
+		public function isMicrosoftOAuthRequired($hostname);
+		public function isYahooOAuthRequired($hostname);
 		public function isTranscriptSupported();
 		public function getSlug();
 		public function getName();

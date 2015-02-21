@@ -59,8 +59,8 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 			}
 			return false;
 		}
-		public static function isOAuthRequired(PostmanTransport $transport, PostmanOptions $options) {
-			return $transport->isGoogleOAuthRequired ( $options ) || $transport->isMicrosoftOAuthRequired ( $options ) || $transport->isYahooOAuthRequired ( $options );
+		public static function isOAuthRequired(PostmanTransport $transport, $hostname) {
+			return $transport->isGoogleOAuthRequired ( $hostname ) || $transport->isMicrosoftOAuthRequired ( $hostname ) || $transport->isYahooOAuthRequired ( $hostname );
 		}
 	}
 }
@@ -76,13 +76,13 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		public function isSmtp() {
 			return false;
 		}
-		public function isGoogleOAuthRequired(PostmanOptionsInterface $options) {
+		public function isGoogleOAuthRequired($hostname) {
 			return false;
 		}
-		public function isMicrosoftOAuthRequired(PostmanOptionsInterface $options) {
+		public function isMicrosoftOAuthRequired($hostname) {
 			return false;
 		}
-		public function isYahooOAuthRequired(PostmanOptionsInterface $options) {
+		public function isYahooOAuthRequired($hostname) {
 			return false;
 		}
 		public function isTranscriptSupported() {

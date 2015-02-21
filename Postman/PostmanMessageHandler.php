@@ -29,7 +29,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		}
 		function init() {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
-			$this->scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options );
+			$this->scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
 			// is the saved transport installed?
 			$transportType = $this->options->getTransportType ();

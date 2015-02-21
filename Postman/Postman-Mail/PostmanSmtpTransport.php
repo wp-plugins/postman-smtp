@@ -9,14 +9,14 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function isSmtp() {
 			return true;
 		}
-		public function isGoogleOAuthRequired(PostmanOptionsInterface $options) {
-			return endsWith ( $options->getHostname (), 'gmail.com' );
+		public function isGoogleOAuthRequired($hostname) {
+			return endsWith ( $hostname, 'gmail.com' );
 		}
-		public function isMicrosoftOAuthRequired(PostmanOptionsInterface $options) {
-			return endsWith ( $options->getHostname (), 'live.com' );
+		public function isMicrosoftOAuthRequired($hostname) {
+			return endsWith ( $hostname, 'live.com' );
 		}
-		public function isYahooOAuthRequired(PostmanOptionsInterface $options) {
-			return endsWith ( $options->getHostname (), 'yahoo.com' );
+		public function isYahooOAuthRequired($hostname) {
+			return endsWith ( $hostname, 'yahoo.com' );
 		}
 		public function isTranscriptSupported() {
 			return true;
@@ -37,7 +37,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				$deliveryDetails ['transport_name'] = sprintf ( '%1$s-%2$s', _x ( 'SMTPS', 'Transport Name', 'postman-smtp' ), strtoupper ( $options->getEncryptionType () ) );
 			}
 			$deliveryDetails ['host'] = $options->getHostname () . ':' . $options->getPort ();
-			if (PostmanTransportUtils::isOAuthRequired ( $this, $options )) {
+			if (PostmanTransportUtils::isOAuthRequired ( $this, $options->getHostname() )) {
 				$deliveryDetails ['auth_desc'] = _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' );
 			} else if ($options->isAuthTypeNone ()) {
 				$deliveryDetails ['auth_desc'] = _x ( 'no', 'Authentication Type', 'postman-smtp' );
