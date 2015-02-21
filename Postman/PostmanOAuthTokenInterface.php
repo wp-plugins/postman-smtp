@@ -8,5 +8,6 @@ if (! interface_exists ( 'PostmanOAuthTokenInterface.php' )) {
 		public function getExpiryTime();
 		public function getAccessToken();
 		public function getRefreshToken();
+		public function isValid();
 	}
 }

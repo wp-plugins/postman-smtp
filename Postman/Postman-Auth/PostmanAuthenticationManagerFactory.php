@@ -21,7 +21,7 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 		private function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
-		public function createAuthenticationManager(PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanOAuthHelper $scribe = null) {
+		public function createAuthenticationManager(PostmanTransport $transport, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanConfigTextHelper $scribe = null) {
 			$authenticationType = $options->getAuthorizationType ();
 			$hostname = $options->getHostname ();
 			$clientId = $options->getClientId ();
@@ -29,14 +29,14 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 			$senderEmail = $options->getSenderEmail ();
 			if (! isset ( $scribe )) {
 				$transport = PostmanTransportUtils::getCurrentTransport ();
-				$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $transport, $hostname );
+				$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $hostname );
 			}
 			$redirectUrl = $scribe->getCallbackUrl ();
-			if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $scribe->isGoogle ()) {
+			if ($transport->isOAuthUsed ( $authorizationToken ) && $scribe->isGoogle ()) {
 				$authenticationManager = new PostmanGoogleAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl, $senderEmail );
-			} else if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $scribe->isMicrosoft ()) {
+			} else if ($transport->isOAuthUsed ( $authorizationToken ) && $scribe->isMicrosoft ()) {
 				$authenticationManager = new PostmanMicrosoftAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl );
-			} else if ($authenticationType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 && $scribe->isYahoo ()) {
+			} else if ($transport->isOAuthUsed ( $authorizationToken ) && $scribe->isYahoo ()) {
 				$authenticationManager = new PostmanYahooAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl );
 			} else {
 				$authenticationManager = new PostmanNonOAuthAuthenticationManager ();

@@ -8,7 +8,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	require_once 'Postman-Wizard/SmtpDiscovery.php';
 	require_once 'PostmanInputSanitizer.php';
 	require_once 'Postman-Connectors/PostmanImportableConfiguration.php';
-	require_once 'PostmanOAuthHelper.php';
+	require_once 'PostmanConfigTextHelper.php';
 	
 	//
 	class PostmanAdminController {
@@ -368,7 +368,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$transactionId = PostmanSession::getInstance ()->getOauthInProgress ();
 			PostmanSession::getInstance ()->unsetOauthInProgress ();
 			
-			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $options, $authorizationToken );
+			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( PostmanTransportUtils::getCurrentTransport (), $options, $authorizationToken );
 			try {
 				if ($authenticationManager->processAuthorizationGrantCode ( $transactionId )) {
 					$logger->debug ( 'Authorization successful' );
@@ -395,7 +395,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function handleOAuthPermissionRequestAction() {
 			$this->logger->debug ( 'handling OAuth Permission request' );
-			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $this->options, $this->authorizationToken );
+			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( PostmanTransportUtils::getCurrentTransport (), $this->options, $this->authorizationToken );
 			$transactionId = $authenticationManager->generateRequestTransactionId ();
 			PostmanSession::getInstance ()->setOauthInProgress ( $transactionId );
 			$authenticationManager->requestVerificationCode ( $transactionId );
@@ -773,7 +773,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$queryTransportType = $_POST ['transport'];
 			$transport = PostmanTransportUtils::getTransport ( $queryTransportType );
 			$displayAuth = 'none';
-			if (PostmanTransportUtils::isOAuthRequired ( $transport, $queryHostname )) {
+			if (PostmanTransportUtils::isOAuthRequired ( $transport, $queryAuthType, $queryHostname )) {
 				$displayAuth = 'oauth2';
 			}
 			$this->logger->debug ( 'ajaxRedirectUrl transport:' . $queryTransportType );
@@ -1245,7 +1245,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<div class="welcome-panel-column">';
 			printf ( '<h4>%s</h4>', _x ( 'Actions', 'Main Menu', 'postman-smtp' ) );
 			print '<ul>';
-			if ($this->options->isRequestOAuthPermissionAllowed ()) {
+			if (PostmanTransportUtils::isRequestOAuthPermissionAllowed ( $this->options, $this->authorizationToken )) {
 				printf ( '<li><a href="%s" class="welcome-icon send-test-email">%s</a></li>', $this->getActionUrl ( self::REQUEST_OAUTH2_GRANT_SLUG ), $this->oauthScribe->getRequestPermissionLinkText () );
 			} else {
 				printf ( '<li><div class="welcome-icon send_test_emaail">%s</div></li>', $this->oauthScribe->getRequestPermissionLinkText () );

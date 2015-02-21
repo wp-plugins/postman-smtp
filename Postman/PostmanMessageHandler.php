@@ -22,7 +22,10 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->options = $options;
 			$this->authToken = $authToken;
-			add_action ( 'init', array (
+			
+			// we'll let the 'init' functions run first; some of them may end the request
+			// we'll look for messages at 'admin_init'
+			add_action ( 'admin_init', array (
 					$this,
 					'init' 
 			) );
@@ -100,12 +103,6 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		}
 		function addMessage($message) {
 			PostmanSession::getInstance ()->setSuccessMessage ( $message );
-		}
-		public function displayPermissionNeededWarning() {
-			$scribe = $this->scribe;
-			$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
-			$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanAdminController::getActionUrl ( PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG ), $scribe->getRequestPermissionLinkText () );
-			$this->displayWarningMessage ( $message );
 		}
 		public function canNotFindTransport() {
 			$this->displayErrorMessage ( sprintf ( __ ( 'The external Postman transport "%s" is missing. Correct the error immediately or deactive Postman.' ), $this->options->getTransportType () ) );

@@ -31,6 +31,15 @@ if (! class_exists ( 'PostmanOAuthToken.php' )) {
 		}
 		
 		/**
+		 * Is there a valid access token and refresh token
+		 */
+		public function isValid() {
+			$accessToken = $this->getAccessToken ();
+			$refreshToken = $this->getRefreshToken ();
+			return ! (empty ( $accessToken ) || empty ( $refreshToken ));
+		}
+		
+		/**
 		 * Load the Postman OAuth token properties to the database
 		 */
 		private function load() {

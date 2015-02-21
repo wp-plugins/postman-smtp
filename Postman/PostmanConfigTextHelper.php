@@ -2,11 +2,11 @@
 if (! class_exists ( 'PostmanConfigTextHelperFactory' )) {
 	class PostmanConfigTextHelperFactory {
 		static function createScribe(PostmanTransport $transport, $hostname) {
-			if ($transport->isGoogleOAuthRequired ( $hostname )) {
+			if ($transport->isServiceProviderGoogle ( $hostname )) {
 				return new PostmanGoogleOAuthScribe ();
-			} else if ($transport->isMicrosoftOAuthRequired ( $hostname )) {
+			} else if ($transport->isServiceProviderMicrosoft ( $hostname )) {
 				return new PostmanMicrosoftOAuthScribe ();
-			} else if ($transport->isYahooOAuthRequired ( $hostname )) {
+			} else if ($transport->isServiceProviderYahoo ( $hostname )) {
 				return new PostmanYahooOAuthScribe ();
 			} else {
 				return new PostmanNonOAuthScribe ( $hostname );
@@ -14,8 +14,8 @@ if (! class_exists ( 'PostmanConfigTextHelperFactory' )) {
 		}
 	}
 }
-if (! interface_exists ( 'PostmanOAuthHelper' )) {
-	interface PostmanOAuthHelper {
+if (! interface_exists ( 'PostmanConfigTextHelper' )) {
+	interface PostmanConfigTextHelper {
 		public function isOauthHost();
 		public function isGoogle();
 		public function isMicrosoft();
@@ -35,13 +35,13 @@ if (! interface_exists ( 'PostmanOAuthHelper' )) {
 		public function getEncryptionType();
 	}
 }
-if (! class_exists ( 'PostmanAbstractOAuthHelper' )) {
+if (! class_exists ( 'PostmanAbstractConfigTextHelper' )) {
 	
 	/**
 	 *
 	 * @author jasonhendriks
 	 */
-	abstract class PostmanAbstractOAuthHelper implements PostmanOAuthHelper {
+	abstract class PostmanAbstractConfigTextHelper implements PostmanConfigTextHelper {
 		public function getOAuthHelp() {
 			/* translators: parameters available are 1=portal-url, 2=portal-name, 3=clientId-name, 4=clientSecret-name, 5=callbackUrl, 6=service-name, 7=portal-application (e.g. Open the Google Developer Console, create a Client ID for web application using the URL's displayed below, and copy the Client ID and Client Secret here.) */
 			$text = sprintf ( '%s', sprintf ( __ ( 'Open the <a href="%1$s" target="_new">%2$s</a>, create %7$s using the URL\'s displayed below, and copy the %3$s and %4$s here.', 'postman-smtp' ), $this->getApplicationPortalUrl (), $this->getApplicationPortalName (), $this->getClientIdLabel (), $this->getClientSecretLabel (), $this->getCallbackUrlLabel (), $this->getOwnerName (), $this->getApplicationDescription () ) );
@@ -73,7 +73,7 @@ if (! class_exists ( 'PostmanAbstractOAuthHelper' )) {
 	}
 }
 if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
-	class PostmanGoogleOAuthScribe extends PostmanAbstractOAuthHelper {
+	class PostmanGoogleOAuthScribe extends PostmanAbstractConfigTextHelper {
 		public function isGoogle() {
 			return true;
 		}
@@ -119,7 +119,7 @@ if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
 	}
 }
 if (! class_exists ( 'PostmanMicrosoftOAuthScribe' )) {
-	class PostmanMicrosoftOAuthScribe extends PostmanAbstractOAuthHelper {
+	class PostmanMicrosoftOAuthScribe extends PostmanAbstractConfigTextHelper {
 		public function isMicrosoft() {
 			return true;
 		}
@@ -165,7 +165,7 @@ if (! class_exists ( 'PostmanMicrosoftOAuthScribe' )) {
 	}
 }
 if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
-	class PostmanYahooOAuthScribe extends PostmanAbstractOAuthHelper {
+	class PostmanYahooOAuthScribe extends PostmanAbstractConfigTextHelper {
 		public function isYahoo() {
 			return true;
 		}
@@ -211,7 +211,7 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 	}
 }
 if (! class_exists ( 'PostmanNonOAuthScribe' )) {
-	class PostmanNonOAuthScribe extends PostmanAbstractOAuthHelper {
+	class PostmanNonOAuthScribe extends PostmanAbstractConfigTextHelper {
 		protected $hostname;
 		public function __construct($hostname) {
 			$this->hostname = $hostname;

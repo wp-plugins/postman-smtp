@@ -34,15 +34,16 @@ if (! class_exists ( "PostmanLogger" )) {
 if (! interface_exists ( 'PostmanTransport' )) {
 	interface PostmanTransport {
 		public function isSmtp();
-		public function isGoogleOAuthRequired($hostname);
-		public function isMicrosoftOAuthRequired($hostname);
-		public function isYahooOAuthRequired($hostname);
+		public function isServiceProviderGoogle($hostname);
+		public function isServiceProviderMicrosoft($hostname);
+		public function isServiceProviderYahoo($hostname);
+		public function isOAuthUsed($authType);
 		public function isTranscriptSupported();
 		public function getSlug();
 		public function getName();
 		public function createZendMailTransport($hostname, $config);
 		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
-		public function getMisconfigurationMessage(PostmanOAuthHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token);
+		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token);
 	}
 }
 

@@ -10,7 +10,6 @@ if (! interface_exists ( "PostmanOptionsInterface" )) {
 	interface PostmanOptionsInterface {
 		public function save();
 		public function isNew();
-		public function isRequestOAuthPermissionAllowed();
 		public function isSendingEmailAllowed(PostmanOAuthToken $token);
 		public function isPermissionNeeded(PostmanOAuthToken $token);
 		public function isSmtpServerRequirementsNotMet();

@@ -9,14 +9,17 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function isSmtp() {
 			return true;
 		}
-		public function isGoogleOAuthRequired($hostname) {
+		public function isServiceProviderGoogle($hostname) {
 			return endsWith ( $hostname, 'gmail.com' );
 		}
-		public function isMicrosoftOAuthRequired($hostname) {
+		public function isServiceProviderMicrosoft($hostname) {
 			return endsWith ( $hostname, 'live.com' );
 		}
-		public function isYahooOAuthRequired($hostname) {
+		public function isServiceProviderYahoo($hostname) {
 			return endsWith ( $hostname, 'yahoo.com' );
+		}
+		public function isOAuthUsed($authType) {
+			return $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 		}
 		public function isTranscriptSupported() {
 			return true;
@@ -37,7 +40,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				$deliveryDetails ['transport_name'] = sprintf ( '%1$s-%2$s', _x ( 'SMTPS', 'Transport Name', 'postman-smtp' ), strtoupper ( $options->getEncryptionType () ) );
 			}
 			$deliveryDetails ['host'] = $options->getHostname () . ':' . $options->getPort ();
-			if (PostmanTransportUtils::isOAuthRequired ( $this, $options->getHostname() )) {
+			if (PostmanTransportUtils::isOAuthRequired ( $this, $options->getAuthorizationType (), $options->getHostname () )) {
 				$deliveryDetails ['auth_desc'] = _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' );
 			} else if ($options->isAuthTypeNone ()) {
 				$deliveryDetails ['auth_desc'] = _x ( 'no', 'Authentication Type', 'postman-smtp' );
@@ -87,7 +90,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$refreshToken = $token->getRefreshToken ();
 			return ! (empty ( $accessToken ) || empty ( $refreshToken ));
 		}
-		public function getMisconfigurationMessage(PostmanOAuthHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			if (! $this->isTransportConfigured ( $options )) {
 				return __ ( 'Warning: Outgoing Mail Server (SMTP) and Port can not be empty.', 'postman-smtp' );
 			} else if (! $this->isPasswordAuthenticationConfigured ( $options )) {
@@ -104,4 +107,47 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 	}
 }
+
+if (! class_exists ( 'PostmanDummyTransport' )) {
+	class PostmanDummyTransport implements PostmanTransport {
+		const UNCONFIGURED = 'unconfigured';
+		private $logger;
+		public function __construct() {
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
+		}
+		const SLUG = 'smtp';
+		public function isSmtp() {
+			return false;
+		}
+		public function isServiceProviderGoogle($hostname) {
+			return false;
+		}
+		public function isServiceProviderMicrosoft($hostname) {
+			return false;
+		}
+		public function isServiceProviderYahoo($hostname) {
+			return false;
+		}
+		public function isOAuthUsed($authType) {
+			return false;
+		}
+		public function isTranscriptSupported() {
+			return false;
+		}
+		public function getSlug() {
+		}
+		public function getName() {
+		}
+		public function createZendMailTransport($hostname, $config) {
+		}
+		public function getDeliveryDetails(PostmanOptionsInterface $options) {
+		}
+		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+			return false;
+		}
+		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+		}
+	}
+}
+
 
