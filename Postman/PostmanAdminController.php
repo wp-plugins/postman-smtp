@@ -94,7 +94,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($session->getAction () == PostmanInputSanitizer::VALIDATION_SUCCESS) {
 				$session->unsetAction ();
 				$this->registerInitFunction ( 'handleSuccessfulSave' );
-				$this->messageHandler->addMessage ( __ ( 'Settings saved.' ) );
+				$this->messageHandler->addMessage ( __ ( 'Settings saved.' , 'postman-smtp') );
 				return;
 			}
 			
@@ -689,7 +689,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$subject = _x ( 'WordPress Postman SMTP Test', 'Test Email Subject', 'postman-smtp' );
 				// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
 				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
-				$message = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline' ), POSTMAN_PLUGIN_VERSION ) );
+				$message = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline' , 'postman-smtp'), POSTMAN_PLUGIN_VERSION ) );
 				$startTime = microtime ( true ) * 1000;
 				$success = $emailTester->sendTestEmail ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName (), $subject, $message );
 				$endTime = microtime ( true ) * 1000;
@@ -834,13 +834,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function printTransportSectionInfo() {
 			$totalTransportsAvailable = sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () );
-			print _n ( 'Enter the sender\'s name and email address:', 'Select the transport and enter the sender\'s name and email address:', $totalTransportsAvailable );
+			print _n ( 'Enter the sender\'s name and email address:', 'Select the transport and enter the sender\'s name and email address:', $totalTransportsAvailable , 'postman-smtp');
 		}
 		/**
 		 * Print the Section text
 		 */
 		public function printSmtpSectionInfo() {
-			print __ ( 'Select the authentication method and enter the SMTP server hostname and port:' );
+			print __ ( 'Select the authentication method and enter the SMTP server hostname and port:' , 'postman-smtp');
 		}
 		
 		/**
@@ -854,7 +854,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( _n ( 'Each test is given %d second to complete.', 'Each test is given %d seconds to complete.', $this->options->getConnectionTimeout (), 'postman-smtp' ), $this->options->getConnectionTimeout () );
 			print ' ';
 			/* translators: where %d is an amount of time, in seconds */
-			printf ( __ ( 'The entire test will take up to %d seconds.' ), ($this->options->getConnectionTimeout () * 3) );
+			printf ( __ ( 'The entire test will take up to %d seconds.' , 'postman-smtp'), ($this->options->getConnectionTimeout () * 3) );
 			print ' ';
 			print __ ( 'A <span style="color:red">Closed</span> port indicates either:', 'postman-smtp' );
 			print '<ol>';
@@ -1407,7 +1407,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( ' <span id="postman_test_message_status">%s</span>', __ ( 'In Outbox', 'Send a Test Email', 'postman-smtp' ) );
 			print '</legend>';
 			print '<section>';
-			printf ( '<p><label>%s</label></p>', __ ( 'Status Message' ) );
+			printf ( '<p><label>%s</label></p>', __ ( 'Status Message' , 'postman-smtp') );
 			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="65" rows="2"></textarea>';
 			if (PostmanTransportDirectory::getInstance ()->getCurrentTransport ()->isTranscriptSupported ()) {
 				printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );
