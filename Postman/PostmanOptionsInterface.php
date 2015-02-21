@@ -1,7 +1,5 @@
 <?php
-if (! class_exists ( "PostmanOptionsInterface" )) {
-	
-	require_once 'Postman-Mail/Transport.php';
+if (! interface_exists ( "PostmanOptionsInterface" )) {
 	
 	/**
 	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api

@@ -1,7 +1,9 @@
 <?php
 if (! class_exists ( 'PostmanOAuthToken.php' )) {
+	
+	require_once 'PostmanOAuthTokenInterface.php';
 	//
-	class PostmanOAuthToken {
+	class PostmanOAuthToken implements PostmanOAuthTokenInterface {
 		const OPTIONS_NAME = 'postman_auth_token';
 		//
 		const REFRESH_TOKEN = 'refresh_token';
