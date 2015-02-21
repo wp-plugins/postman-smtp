@@ -29,7 +29,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		}
 		function init() {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
-			$this->scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $transport, $this->options->getAuthorizationType (), $this->options->getHostname () );
+			$this->scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options );
 			
 			// is the saved transport installed?
 			$transportType = $this->options->getTransportType ();
@@ -52,37 +52,12 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 				if (PostmanTransportUtils::isPostmanConfiguredToSendEmail ( $this->options, $this->authToken )) {
 					// no configuration errors to show
 				} else {
-					$message = PostmanTransportUtils::getCurrentTransport ()->getMisconfigurationMessage ( $this->options, $this->authToken );
-					$this->logger->debug ( 'Transport has a configuration error: ' . $message );
-					$this->addWarning ( $message );
+					$message = PostmanTransportUtils::getCurrentTransport ()->getMisconfigurationMessage ( $this->scribe, $this->options, $this->authToken );
+					if ($message) {
+						$this->logger->debug ( 'Transport has a configuration error: ' . $message );
+						$this->addWarning ( $message );
+					}
 				}
-				// if ($this->options->isSmtpServerRequirementsNotMet () && $this->options->getTransportType () == PostmanSmtpTransport::SLUG) {
-				// // dont show this warning if this is a brand new install
-				// add_action ( 'admin_notices', Array (
-				// $this,
-				// 'displaySmtpServerNeededWarning'
-				// ) );
-				// } else if ($this->options->isOAuthRequirementsNotMet ( $this->scribe->isOauthHost () )) {
-				// add_action ( 'admin_notices', Array (
-				// $this,
-				// 'displayOauthCredentialsNeededWarning'
-				// ) );
-				// } else if ($this->options->isPermissionNeeded ( $this->authToken )) {
-				// add_action ( 'admin_notices', Array (
-				// $this,
-				// 'displayPermissionNeededWarning'
-				// ) );
-				// } else if ($this->options->isPasswordCredentialsNeeded ()) {
-				// add_action ( 'admin_notices', Array (
-				// $this,
-				// 'displayPasswordCredentialsNeededWarning'
-				// ) );
-				// } else if (! $this->scribe->isOauthHost () && ($this->scribe->isGoogle () || $this->scribe->isMicrosoft () || $this->scribe->isYahoo ())) {
-				// add_action ( 'admin_notices', Array (
-				// $this,
-				// 'displaySwitchToOAuthWarning'
-				// ) );
-				// }
 			} else {
 				if (! PostmanTransportUtils::isPostmanConfiguredToSendEmail ( $this->options, $this->authToken )) {
 					add_action ( 'admin_notices', Array (

@@ -1,35 +1,15 @@
 <?php
-if (! class_exists ( 'PostmanOAuthScribeFactory' )) {
-	require_once 'Postman-Mail/PostmanTransportUtils.php';
-	class PostmanOAuthScribeFactory {
-		private function __construct() {
-		}
-		
-		// singleton instance
-		public static function getInstance() {
-			static $inst = null;
-			if ($inst === null) {
-				$inst = new PostmanOAuthScribeFactory ();
-			}
-			return $inst;
-		}
-		public function createPostmanOAuthScribe(PostmanTransport $transport, $authType, $hostname) {
-			if ($transport->isGoogleOAuthRequired ()) {
+if (! class_exists ( 'PostmanConfigTextHelperFactory' )) {
+	class PostmanConfigTextHelperFactory {
+		static function createScribe(PostmanTransport $transport, PostmanOptions $options) {
+			if ($transport->isGoogleOAuthRequired ( $options )) {
 				return new PostmanGoogleOAuthScribe ();
-			}
-			if ($authType != PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
-				return new PostmanNonOAuthScribe ( $hostname );
+			} else if ($transport->isMicrosoftOAuthRequired ( $options )) {
+				return new PostmanMicrosoftOAuthScribe ();
+			} else if ($transport->isYahooOAuthRequired ( $options )) {
+				return new PostmanYahooOAuthScribe ();
 			} else {
-				if (endsWith ( $hostname, 'gmail.com' )) {
-					return new PostmanGoogleOAuthScribe ();
-				} else if (endsWith ( $hostname, 'live.com' )) {
-					return new PostmanMicrosoftOAuthScribe ();
-				} else if (endsWith ( $hostname, 'yahoo.com' )) {
-					return new PostmanYahooOAuthScribe ();
-				} else {
-					// bad hostname, but OAuth selected
-					return new PostmanNonOAuthScribe ( $hostname );
-				}
+				return new PostmanNonOAuthScribe ( $options->getHostname () );
 			}
 		}
 	}

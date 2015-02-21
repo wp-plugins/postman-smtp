@@ -121,7 +121,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function init() {
 			//
 			$transport = PostmanTransportUtils::getCurrentTransport ();
-			$this->oauthScribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $transport, $this->options->getAuthorizationType (), $this->options->getHostname () );
+			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options );
 			
 			// import from other plugins
 			$this->importableConfiguration = new PostmanImportableConfiguration ();
@@ -507,7 +507,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printTransportSectionInfo' 
 			), 'transport_options' );
 			
-			if (false && $this->options->isNew () && $this->importableConfiguration->isImportAvailable ()) {
+			if ($this->options->isNew () && $this->importableConfiguration->isImportAvailable ()) {
 				add_settings_field ( 'import_configuration', _x ( 'Import from Plugin', 'Configuration Input Field', 'postman-smtp' ), array (
 						$this,
 						'import_configuration_callback' 
@@ -1122,7 +1122,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->displayTopNavigation ();
 			if (PostmanTransportUtils::isPostmanConfiguredToSendEmail ( $this->options, $this->authorizationToken )) {
 				printf ( '<p><span style="color:green;padding:2px 5px; font-size:1.2em">%s</span></p>', __ ( 'Postman is configured.', 'postman-smtp' ) );
-				if ($this->options->isAuthTypeOAuth2 ()) {
+				$currentTransport = PostmanTransportUtils::getCurrentTransport ();
+				$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
+				if (PostmanTransportUtils::isOAuthRequired ( $currentTransport, $this->options )) {
 					$authDesc = _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' );
 				} else if ($this->options->isAuthTypeNone ()) {
 					$authDesc = _x ( 'no', 'Authentication Type', 'postman-smtp' );
@@ -1131,7 +1133,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$authDesc = sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $this->options->getAuthorizationType () );
 				}
 				/* translators: where %1$s is the SMTP server and %2$s is the Authentication Type (e.g. Postman will send mail via smtp.gmail.com:465 using OAuth 2.0 authentication.) */
-				$deliveryDetails = PostmanTransportUtils::getCurrentTransport ()->getDeliveryDetails ( $this->options );
 				printf ( '<p style="margin:0 10px"><span>%s</span></p>', sprintf ( __ ( 'Postman will send mail via %1$s using %2$s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails . '</b>', '<b>' . $authDesc . '</b>' ) );
 				if ($this->options->isAuthTypeOAuth2 ()) {
 					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only.</em>', 'postman-smtp' ) );

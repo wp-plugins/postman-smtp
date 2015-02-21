@@ -34,13 +34,15 @@ if (! class_exists ( "PostmanLogger" )) {
 if (! interface_exists ( 'PostmanTransport' )) {
 	interface PostmanTransport {
 		public function isSmtp();
-		public function isGoogleOAuthRequired();
+		public function isGoogleOAuthRequired(PostmanOptionsInterface $options);
+		public function isMicrosoftOAuthRequired(PostmanOptionsInterface $options);
+		public function isYahooOAuthRequired(PostmanOptionsInterface $options);
 		public function isTranscriptSupported();
 		public function getSlug();
 		public function getName();
 		public function createZendMailTransport($hostname, $config);
 		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
-		public function getMisconfigurationMessage(PostmanOptionsInterface $options, PostmanOAuthToken $token);
+		public function getMisconfigurationMessage(PostmanOAuthHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token);
 	}
 }
 
@@ -68,26 +70,8 @@ if (! class_exists ( 'PostmanTransportDirectory' )) {
 			$this->logger->debug ( 'Registering ' . $instance->getName () . ' transport as ' . $instance->getSlug () );
 			$this->transports [$instance->getSlug ()] = $instance;
 		}
-		public function isRegistered($slug) {
-			return isset ( $this->transports [$slug] );
-		}
 		public function getTransports() {
 			return $this->transports;
-		}
-		/**
-		 * Retrieve a Transport by slug
-		 * Look up a specific Transport use:
-		 * A) when retrieving the transport saved in the database
-		 * B) when querying what a theoretical scenario involving this transport is like
-		 * (ie.for ajax in config screen)
-		 *
-		 * @param unknown $slug        	
-		 */
-		public function getTransport($slug) {
-			$this->logger->debug ( 'Looking for transport ' . $slug );
-			if (isset ( $this->transports [$slug] )) {
-				return $this->transports [$slug];
-			}
 		}
 	}
 }

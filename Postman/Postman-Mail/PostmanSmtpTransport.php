@@ -9,8 +9,14 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function isSmtp() {
 			return true;
 		}
-		public function isGoogleOAuthRequired() {
-			return false;
+		public function isGoogleOAuthRequired(PostmanOptionsInterface $options) {
+			return endsWith ( $options->getHostname (), 'gmail.com' );
+		}
+		public function isMicrosoftOAuthRequired(PostmanOptionsInterface $options) {
+			return endsWith ( $options->getHostname (), 'live.com' );
+		}
+		public function isYahooOAuthRequired(PostmanOptionsInterface $options) {
+			return endsWith ( $options->getHostname (), 'yahoo.com' );
 		}
 		public function isTranscriptSupported() {
 			return true;
@@ -33,8 +39,8 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$this->logger->debug ( 'isConfigured ' . $configured );
 			return $configured;
 		}
-		public function getMisconfigurationMessage(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
-			return 'oops';
+		public function getMisconfigurationMessage(PostmanOAuthHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+			return 'SMTP not configured.';
 		}
 	}
 }

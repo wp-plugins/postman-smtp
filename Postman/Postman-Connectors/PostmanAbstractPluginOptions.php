@@ -32,7 +32,8 @@ if (! class_exists ( 'PostmanAbstractPluginOptions' )) {
 			return $valid;
 		}
 		public function isImportable() {
-			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $this->getAuthenticationType (), $this->getHostname () );
+			$transport = new PostmanSmtpTransport ();
+			$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, PostmanOptions::getInstance () );
 			$hostHasOAuthPotential = $scribe->isGoogle () || $scribe->isMicrosoft () || $scribe->isYahoo ();
 			return ! $hostHasOAuthPotential && $this->isValid ();
 		}

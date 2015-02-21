@@ -100,6 +100,7 @@ function getConfiguration() {
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response.success) {
+				jQuery('select#input_transport_type').val('smtp');
 				jQuery(postman_input_sender_email).val(response.sender_email);
 				jQuery(postman_input_sender_name).val(response.sender_name);
 				jQuery(postman_hostname_element_name).val(response.hostname);
