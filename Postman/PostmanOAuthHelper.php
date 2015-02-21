@@ -96,10 +96,10 @@ if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
 			return _x ( 'Javascript Origins', 'Name of the Application Callback Domain', 'postman-smtp' );
 		}
 		public function getOwnerName() {
-			return _x ( "Google", 'Name of the email service owner', 'postman-smtp' );
+			return _x ( 'Google', 'Name of the email service owner', 'postman-smtp' );
 		}
 		public function getServiceName() {
-			return _x ( "Gmail", 'Name of the email service', 'postman-smtp' );
+			return _x ( 'Gmail', 'Name of the email service', 'postman-smtp' );
 		}
 		public function getApplicationDescription() {
 			return _x ( 'a Client ID for web application', 'Description of the email service OAuth 2.0 Application', 'postman-smtp' );

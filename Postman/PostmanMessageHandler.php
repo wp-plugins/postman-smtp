@@ -110,17 +110,10 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		public function canNotFindTransport() {
 			$this->displayErrorMessage ( sprintf ( __ ( 'The external Postman transport "%s" is missing. Correct the error immediately or deactive Postman.' ), $this->options->getTransportType () ) );
 		}
-		public function displayPasswordCredentialsNeededWarning() {
-			$this->displayWarningMessage ( __ ( 'Warning: Password authentication (Plain/Login/CRAMMD5) requires a username and password.', 'postman-smtp' ) );
-		}
 		public function displayOauthCredentialsNeededWarning() {
 			$scribe = $this->scribe;
 			/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label (e.g. Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, Client ID, and Client Secret.) */
 			$this->displayWarningMessage ( sprintf ( __ ( 'Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, %1$s, and %2$s.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () ) );
-		}
-		public function displaySmtpServerNeededWarning() {
-			$scribe = $this->scribe;
-			$this->displayWarningMessage ( __ ( 'Warning: Outgoing Mail Server (SMTP) and Port can not be empty.', 'postman-smtp' ) );
 		}
 		public function displayConfigurationRequiredWarning() {
 			/* translators: where %s is the URL to the Postman Settings page */

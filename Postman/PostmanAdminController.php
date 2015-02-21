@@ -1124,16 +1124,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				printf ( '<p><span style="color:green;padding:2px 5px; font-size:1.2em">%s</span></p>', __ ( 'Postman is configured.', 'postman-smtp' ) );
 				$currentTransport = PostmanTransportUtils::getCurrentTransport ();
 				$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
-				if (PostmanTransportUtils::isOAuthRequired ( $currentTransport, $this->options )) {
-					$authDesc = _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' );
-				} else if ($this->options->isAuthTypeNone ()) {
-					$authDesc = _x ( 'no', 'Authentication Type', 'postman-smtp' );
-				} else {
-					/* translators: where %s is the Authentication Type (e.g. plain, login or crammd5) */
-					$authDesc = sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $this->options->getAuthorizationType () );
-				}
-				/* translators: where %1$s is the SMTP server and %2$s is the Authentication Type (e.g. Postman will send mail via smtp.gmail.com:465 using OAuth 2.0 authentication.) */
-				printf ( '<p style="margin:0 10px"><span>%s</span></p>', sprintf ( __ ( 'Postman will send mail via %1$s using %2$s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails . '</b>', '<b>' . $authDesc . '</b>' ) );
+				printf ( '<p style="margin:0 10px"><span>%s</span></p>', $deliveryDetails );
 				if ($this->options->isAuthTypeOAuth2 ()) {
 					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only.</em>', 'postman-smtp' ) );
 				} else if ($this->options->isAuthTypePassword ()) {
