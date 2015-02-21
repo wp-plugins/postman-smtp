@@ -52,8 +52,8 @@ ini_set ( 'display_errors', 'On' );
 require_once 'Postman/postman-common-wp-functions.php';
 
 // create a Logger
+require_once 'Postman/Common.php';
 $logger = new PostmanLogger ( 'postman-smtp.php' );
-$logger->debug ( 'Postman SMTP v' . POSTMAN_PLUGIN_VERSION . ' starting' );
 
 // register error handler
 register_shutdown_function ( 'postmanHandleErrors' );

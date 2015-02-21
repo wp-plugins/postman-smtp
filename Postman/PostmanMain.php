@@ -1,9 +1,11 @@
 <?php
 
 // setup the main entry point
-if (! class_exists ( 'Postman' )) {
+if (! class_exists ( 'PostmanSmtp' )) {
 	
 	require_once 'Common.php';
+	require_once 'Postman-Mail/Transport.php';
+	
 	require_once 'PostmanOAuthToken.php';
 	require_once 'PostmanOptions.php';
 	require_once 'PostmanMessageHandler.php';
@@ -20,7 +22,12 @@ if (! class_exists ( 'Postman' )) {
 		const POSTMAN_TCP_CONNECTION_TIMEOUT = 10;
 		private $postmanPhpFile;
 		private $logger;
+		
 		/**
+		 * The constructor contains the procedures that HAVE to run
+		 * right away.
+		 *
+		 * Delaying them until the WordPress init() hook won't do.
 		 *
 		 * @param unknown $postmanPhpFile        	
 		 */
@@ -29,21 +36,9 @@ if (! class_exists ( 'Postman' )) {
 			// calculate the basename
 			$basename = plugin_basename ( $postmanPhpFile );
 			$this->postmanPhpFile = $postmanPhpFile;
+			
+			// start the logger
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			
-			// handle plugin activation/deactivation
-			require_once 'PostmanActivationHandler.php';
-			$upgrader = new PostmanActivationHandler ();
-			register_activation_hook ( $postmanPhpFile, array (
-					$upgrader,
-					'activatePostman' 
-			) );
-			
-			// initialzie the plugin
-			add_action ( 'plugins_loaded', array (
-					$this,
-					'init' 
-			) );
 			
 			// add the SMTP transport
 			$this->addTransport ();
@@ -66,6 +61,48 @@ if (! class_exists ( 'Postman' )) {
 				$adminController = new PostmanAdminController ( $basename, $options, $authToken, $messageHandler );
 			}
 			
+			// handle plugin activation/deactivation
+			require_once 'PostmanActivationHandler.php';
+			$upgrader = new PostmanActivationHandler ();
+			register_activation_hook ( $postmanPhpFile, array (
+					$upgrader,
+					'activatePostman' 
+			) );
+			
+			// initialize the plugin
+			add_action ( 'plugins_loaded', array (
+					$this,
+					'init' 
+			) );
+		}
+		
+		/**
+		 * Initializes the Plugin
+		 *
+		 * 1. Loads the text domain
+		 * 2. Binds to wp_mail()
+		 * 3. adds the [postman-version] shortcode
+		 */
+		public function init() {
+			$this->logger->debug ( 'Postman Smtp v' . POSTMAN_PLUGIN_VERSION . ' starting' );
+			
+			// load the text domain
+			$this->loadTextDomain ();
+			
+			// are we bound?
+			if (PostmanWpMailBinder::getInstance ()->getBindError ()) {
+				// add an error message for the user
+				$options = PostmanOptions::getInstance ();
+				$authToken = PostmanOAuthToken::getInstance ();
+				$messageHandler = new PostmanMessageHandler ( $options, $authToken );
+				add_action ( 'admin_notices', Array (
+						$messageHandler,
+						'displayCouldNotReplaceWpMail' 
+				) );
+			} else if (! PostmanWpMailBinder::getInstance ()->getBound ()) {
+				$this->logger->debug ( ' Not binding, plugin is not configured.' );
+			}
+			
 			// add the version shortcode
 			// register WordPress hooks
 			add_shortcode ( 'postman-version', array (
@@ -73,14 +110,17 @@ if (! class_exists ( 'Postman' )) {
 					'version_shortcode' 
 			) );
 		}
-		public function init() {
-			$this->logger->debug ( 'Postman Smtp v' . POSTMAN_PLUGIN_VERSION . ' starting' );
-			// load the text domain
-			$this->loadTextDomain ();
-		}
+		
+		/**
+		 * Adds the regular SMTP transport
+		 */
 		private function addTransport() {
 			PostmanTransportDirectory::getInstance ()->registerTransport ( new PostmanSmtpTransport () );
 		}
+		
+		/**
+		 * Loads the appropriate language file
+		 */
 		private function loadTextDomain() {
 			$langDir = basename ( dirname ( $this->postmanPhpFile ) ) . '/Postman/languages/';
 			$success = load_plugin_textdomain ( 'postman-smtp', false, $langDir );

@@ -31,6 +31,19 @@ if (! class_exists ( "PostmanLogger" )) {
 	}
 }
 
+if (! interface_exists ( 'PostmanTransport' )) {
+	interface PostmanTransport {
+		public function isSmtp();
+		public function isGoogleOAuthRequired();
+		public function isTranscriptSupported();
+		public function getSlug();
+		public function getName();
+		public function createZendMailTransport($hostname, $config);
+		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
+		public function getMisconfigurationMessage(PostmanOptionsInterface $options, PostmanOAuthToken $token);
+	}
+}
+
 if (! class_exists ( 'PostmanTransportDirectory' )) {
 	class PostmanTransportDirectory {
 		private $transports;
@@ -85,19 +98,6 @@ if (! class_exists ( 'PostmanTransportDirectory' )) {
 				return $this->transports [$slug];
 			}
 		}
-	}
-}
-
-if (! interface_exists ( 'PostmanTransport' )) {
-	interface PostmanTransport {
-		public function isSmtp();
-		public function isGoogleOAuthRequired();
-		public function isTranscriptSupported();
-		public function getSlug();
-		public function getName();
-		public function createZendMailTransport($hostname, $config);
-		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
-		public function getMisconfigurationMessage(PostmanOptionsInterface $options, PostmanOAuthToken $token);
 	}
 }
 
