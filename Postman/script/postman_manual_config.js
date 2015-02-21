@@ -59,9 +59,11 @@ jQuery(document).ready(function() {
 function reloadOauthSection(hostname) {
 	var hostname = jQuery(postman_hostname_element_name).val();
 	var transport = jQuery('select#input_transport_type').val();
+	var authtype = jQuery('select#input_auth_type').val();
 	var data = {
 			'action' : 'get_redirect_url',
 			'referer' : 'manual_config',
+			'auth_type' : authtype,
 			'hostname' : hostname,
 			'transport' : transport,
 		};

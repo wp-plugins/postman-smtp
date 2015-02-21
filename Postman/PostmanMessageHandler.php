@@ -2,7 +2,7 @@
 if (! class_exists ( 'PostmanMessageHandler' )) {
 	require_once ('PostmanOptions.php');
 	require_once ('PostmanSession.php');
-	require_once ('Postman-Mail/Transport.php');
+	require_once ('Postman-Mail/PostmanTransportUtils.php');
 	class PostmanMessageHandler {
 		
 		// The Session variables that carry messages
@@ -28,7 +28,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			) );
 		}
 		function init() {
-			$transport = PostmanTransportDirectory::getInstance ()->getCurrentTransport ();
+			$transport = PostmanTransportUtils::getCurrentTransport ();
 			$this->scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $transport, $this->options->getAuthorizationType (), $this->options->getHostname () );
 			
 			// is the saved transport installed?
@@ -52,7 +52,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 				if (PostmanTransportUtils::isPostmanConfiguredToSendEmail ( $this->options, $this->authToken )) {
 					// no configuration errors to show
 				} else {
-					$message = PostmanTransportDirectory::getInstance ()->getCurrentTransport ()->getMisconfigurationMessage ( $this->options, $this->authToken );
+					$message = PostmanTransportUtils::getCurrentTransport ()->getMisconfigurationMessage ( $this->options, $this->authToken );
 					$this->logger->debug ( 'Transport has a configuration error: ' . $message );
 					$this->addWarning ( $message );
 				}

@@ -94,7 +94,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($session->getAction () == PostmanInputSanitizer::VALIDATION_SUCCESS) {
 				$session->unsetAction ();
 				$this->registerInitFunction ( 'handleSuccessfulSave' );
-				$this->messageHandler->addMessage ( __ ( 'Settings saved.' , 'postman-smtp') );
+				$this->messageHandler->addMessage ( __ ( 'Settings saved.', 'postman-smtp' ) );
 				return;
 			}
 			
@@ -120,7 +120,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		public function init() {
 			//
-			$transport = PostmanTransportDirectory::getInstance ()->getCurrentTransport ();
+			$transport = PostmanTransportUtils::getCurrentTransport ();
 			$this->oauthScribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $transport, $this->options->getAuthorizationType (), $this->options->getHostname () );
 			
 			// import from other plugins
@@ -689,7 +689,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$subject = _x ( 'WordPress Postman SMTP Test', 'Test Email Subject', 'postman-smtp' );
 				// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
 				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
-				$message = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline' , 'postman-smtp'), POSTMAN_PLUGIN_VERSION ) );
+				$message = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) );
 				$startTime = microtime ( true ) * 1000;
 				$success = $emailTester->sendTestEmail ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName (), $subject, $message );
 				$endTime = microtime ( true ) * 1000;
@@ -768,12 +768,15 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * This Ajax function retrieves the OAuth redirectUrl and help text for based on the SMTP hostname supplied
 		 */
 		function getAjaxRedirectUrl() {
-			$hostname = $_POST ['hostname'];
-			$transport = $_POST ['transport'];
-			$this->logger->debug ( 'ajaxRedirectUrl hostname:' . $hostname );
-			$this->logger->debug ( 'ajaxRedirectUrl transport:' . $transport );
+			$queryHostname = $_POST ['hostname'];
+			$queryAuthType = $_POST ['auth_type'];
+			$queryTransportType = $_POST ['transport'];
+			$transport = PostmanTransportDirectory::getInstance ()->getTransport ( $queryTransportType );
+			$this->logger->debug ( 'ajaxRedirectUrl transport:' . $queryTransportType );
+			$this->logger->debug ( 'ajaxRedirectUrl authType:' . $queryAuthType );
+			$this->logger->debug ( 'ajaxRedirectUrl hostname:' . $queryHostname );
 			// don't care about what's in the database, i need a scribe based on the ajax parameter assuming this is OAUTH2
-			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( PostmanTransportDirectory::getInstance ()->getTransport ( $transport ), PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $hostname );
+			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( $transport, PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $queryHostname );
 			if (isset ( $_POST ['referer'] )) {
 				$this->logger->debug ( 'ajaxRedirectUrl referer:' . $_POST ['referer'] );
 				// this must be wizard or config from an oauth-related change
@@ -786,25 +789,32 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$avail [465] = true;
 					$avail [587] = true;
 				}
-				$configureOAuth = false;
-				$configureOAuth |= $_POST ['referer'] == 'manual_config';
-				$configureOAuth |= $scribe->isOauthHost () && $avail [$scribe->getOAuthPort ()];
-				if ($configureOAuth) {
-					$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
-					$port = $scribe->getOAuthPort ();
-					$encType = $scribe->getEncryptionType ();
-				} else if ($avail [465]) {
-					$authType = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
-					$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
-					$port = 465;
-				} else if ($avail [587]) {
-					$authType = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
-					$encType = PostmanOptions::ENCRYPTION_TYPE_TLS;
-					$port = 587;
-				} else {
-					$authType = PostmanOptions::AUTHENTICATION_TYPE_NONE;
-					$encType = PostmanOptions::ENCRYPTION_TYPE_NONE;
-					$port = 25;
+				$authType = $_POST ['auth_type'];
+				$encType = null;
+				$port = null;
+				if (! $_POST ['referer'] == 'manual_config') {
+					$configureOAuth = false;
+					$configureOAuth |= $queryAuthType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+					$configureOAuth |= $scribe->isOauthHost () && $avail [$scribe->getOAuthPort ()];
+					if ($queryTransportType != PostmanSmtpTransport::SLUG) {
+						// set none of these things
+					} else if ($configureOAuth) {
+						$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+						$port = $scribe->getOAuthPort ();
+						$encType = $scribe->getEncryptionType ();
+					} else if ($avail [465]) {
+						$authType = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
+						$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
+						$port = 465;
+					} else if ($avail [587]) {
+						$authType = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
+						$encType = PostmanOptions::ENCRYPTION_TYPE_TLS;
+						$port = 587;
+					} else {
+						$authType = PostmanOptions::AUTHENTICATION_TYPE_NONE;
+						$encType = PostmanOptions::ENCRYPTION_TYPE_NONE;
+						$port = 25;
+					}
 				}
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),
@@ -819,6 +829,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 						PostmanOptions::PORT => $port,
 						'success' => true 
 				);
+				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url:' . $scribe->getCallbackUrl () );
+				$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain:' . $scribe->getCallbackDomain () );
+				$this->logger->debug ( 'ajaxRedirectUrl answer help_text:' . $scribe->getOAuthHelp () );
+				$this->logger->debug ( 'ajaxRedirectUrl answer client_id_label:' . $scribe->getClientIdLabel () );
+				$this->logger->debug ( 'ajaxRedirectUrl answer client_secret_label:' . $scribe->getClientSecretLabel () );
+				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url_label:' . $scribe->getCallbackUrlLabel () );
+				$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain_label:' . $scribe->getCallbackDomainLabel () );
+				$this->logger->debug ( 'ajaxRedirectUrl answer auth_type:' . $authType );
+				$this->logger->debug ( 'ajaxRedirectUrl answer enc_type:' . $encType );
+				$this->logger->debug ( 'ajaxRedirectUrl answer port:' . $port );
 			} else {
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),
@@ -834,13 +854,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function printTransportSectionInfo() {
 			$totalTransportsAvailable = sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () );
-			print _n ( 'Enter the sender\'s name and email address:', 'Select the transport and enter the sender\'s name and email address:', $totalTransportsAvailable , 'postman-smtp');
+			print _n ( 'Enter the sender\'s name and email address:', 'Select the transport and enter the sender\'s name and email address:', $totalTransportsAvailable, 'postman-smtp' );
 		}
 		/**
 		 * Print the Section text
 		 */
 		public function printSmtpSectionInfo() {
-			print __ ( 'Select the authentication method and enter the SMTP server hostname and port:' , 'postman-smtp');
+			print __ ( 'Select the authentication method and enter the SMTP server hostname and port:', 'postman-smtp' );
 		}
 		
 		/**
@@ -854,7 +874,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( _n ( 'Each test is given %d second to complete.', 'Each test is given %d seconds to complete.', $this->options->getConnectionTimeout (), 'postman-smtp' ), $this->options->getConnectionTimeout () );
 			print ' ';
 			/* translators: where %d is an amount of time, in seconds */
-			printf ( __ ( 'The entire test will take up to %d seconds.' , 'postman-smtp'), ($this->options->getConnectionTimeout () * 3) );
+			printf ( __ ( 'The entire test will take up to %d seconds.', 'postman-smtp' ), ($this->options->getConnectionTimeout () * 3) );
 			print ' ';
 			print __ ( 'A <span style="color:red">Closed</span> port indicates either:', 'postman-smtp' );
 			print '<ol>';
@@ -1111,7 +1131,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$authDesc = sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $this->options->getAuthorizationType () );
 				}
 				/* translators: where %1$s is the SMTP server and %2$s is the Authentication Type (e.g. Postman will send mail via smtp.gmail.com:465 using OAuth 2.0 authentication.) */
-				$deliveryDetails = PostmanTransportDirectory::getInstance ()->getCurrentTransport ()->getDeliveryDetails ( $this->options );
+				$deliveryDetails = PostmanTransportUtils::getCurrentTransport ()->getDeliveryDetails ( $this->options );
 				printf ( '<p style="margin:0 10px"><span>%s</span></p>', sprintf ( __ ( 'Postman will send mail via %1$s using %2$s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails . '</b>', '<b>' . $authDesc . '</b>' ) );
 				if ($this->options->isAuthTypeOAuth2 ()) {
 					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins or themes may override the sender name only.</em>', 'postman-smtp' ) );
@@ -1407,7 +1427,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( ' <span id="postman_test_message_status">%s</span>', __ ( 'In Outbox', 'Send a Test Email', 'postman-smtp' ) );
 			print '</legend>';
 			print '<section>';
-			printf ( '<p><label>%s</label></p>', __ ( 'Status Message' , 'postman-smtp') );
+			printf ( '<p><label>%s</label></p>', __ ( 'Status Message', 'postman-smtp' ) );
 			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="65" rows="2"></textarea>';
 			if (PostmanTransportDirectory::getInstance ()->getCurrentTransport ()->isTranscriptSupported ()) {
 				printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );

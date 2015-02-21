@@ -1,6 +1,6 @@
 <?php
 if (! class_exists ( 'PostmanOAuthScribeFactory' )) {
-	require_once 'Postman-Mail/Transport.php';
+	require_once 'Postman-Mail/PostmanTransportUtils.php';
 	class PostmanOAuthScribeFactory {
 		private function __construct() {
 		}

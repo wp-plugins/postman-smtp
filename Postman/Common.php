@@ -74,15 +74,6 @@ if (! class_exists ( 'PostmanTransportDirectory' )) {
 		public function getTransports() {
 			return $this->transports;
 		}
-		public function getCurrentTransport() {
-			$transportType = PostmanOptions::getInstance ()->getTransportType ();
-			$transport = $this->transports [$transportType];
-			if (! $transport) {
-				$this->logger->error ( 'Could not load transport \'' . $transportType . '\'' );
-				return new PostmanSmtpTransport ();
-			}
-			return $transport;
-		}
 		/**
 		 * Retrieve a Transport by slug
 		 * Look up a specific Transport use:
