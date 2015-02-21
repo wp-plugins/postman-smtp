@@ -49,36 +49,36 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 		 * @param PostmanOAuthToken $token        	
 		 * @return boolean
 		 */
-		public static function isPostmanConfiguredToSendEmail(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+		public static function isPostmanReadyToSendEmail(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			$directory = PostmanTransportDirectory::getInstance ();
 			$selectedTransport = $options->getTransportType ();
 			foreach ( $directory->getTransports () as $transport ) {
-				if ($transport->getSlug () == $selectedTransport && $transport->isConfigured ( $options, $token )) {
+				if ($transport->getSlug () == $selectedTransport && $transport->isReady ( $options, $token )) {
 					return true;
 				}
 			}
 			return false;
 		}
-		public static function isOAuthRequired(PostmanTransport $transport, $authType, $hostname) {
-			return $transport->isOAuthUsed ( $authType ) && ($transport->isServiceProviderGoogle ( $hostname ) || $transport->isServiceProviderMicrosoft ( $hostname ) || $transport->isServiceProviderYahoo ( $hostname ));
-		}
+		
 		/**
 		 * Determine whether to show the Request Permission link on the main menu
 		 *
 		 * This link is displayed if
 		 * 1. the current transport requires OAuth 2.0
-		 * 2. we have a valid Client ID and Client Secret without an Auth Token
+		 * 2. the transport is properly configured
+		 * 3. we have a valid Client ID and Client Secret without an Auth Token
 		 *
 		 * @param PostmanOptionsInterface $options        	
 		 * @return boolean
 		 */
 		public static function isRequestOAuthPermissionAllowed(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authToken) {
-			// does the current transport need OAuth 2.0
-			$oauthUsed = self::isOAuthRequired ( self::getCurrentTransport (), $options->getAuthorizationType (), $options->getHostname () );
-			$clientId = $options->getClientId ();
-			$clientSecret = $options->getClientSecret ();
-			$validClientIdAndSecret = ! (empty ( $clientId ) || empty ( $clientSecret ));
-			return $oauthUsed && $validClientIdAndSecret;
+			// does the current transport use OAuth 2.0
+			$oauthUsed = self::getCurrentTransport ()->isOAuthUsed ( $options->getAuthorizationType () );
+			
+			// is the transport configured
+			$configured = self::getCurrentTransport ()->isConfigured ( $options, $authToken );
+			
+			return $oauthUsed && $configured;
 		}
 	}
 }

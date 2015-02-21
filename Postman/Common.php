@@ -43,6 +43,7 @@ if (! interface_exists ( 'PostmanTransport' )) {
 		public function getName();
 		public function createZendMailTransport($hostname, $config);
 		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
+		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token);
 	}
 }

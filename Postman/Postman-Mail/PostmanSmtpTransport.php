@@ -40,7 +40,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				$deliveryDetails ['transport_name'] = sprintf ( '%1$s-%2$s', _x ( 'SMTPS', 'Transport Name', 'postman-smtp' ), strtoupper ( $options->getEncryptionType () ) );
 			}
 			$deliveryDetails ['host'] = $options->getHostname () . ':' . $options->getPort ();
-			if (PostmanTransportUtils::isOAuthRequired ( $this, $options->getAuthorizationType (), $options->getHostname () )) {
+			if ($this->isOAuthUsed ( $options->getAuthorizationType () )) {
 				$deliveryDetails ['auth_desc'] = _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' );
 			} else if ($options->isAuthTypeNone ()) {
 				$deliveryDetails ['auth_desc'] = _x ( 'no', 'Authentication Type', 'postman-smtp' );
@@ -68,6 +68,23 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			// return the status
 			return $configured;
 		}
+		/**
+		 * The transport can have all the configuration it needs, but still not be ready for use
+		 * Check to see if permission is required from the OAuth 2.0 provider
+		 *
+		 * @param PostmanOptionsInterface $options        	
+		 * @param PostmanOAuthToken $token        	
+		 * @return boolean
+		 */
+		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+			// 1. is the transport configured
+			$configured = $this->isConfigured ( $options, $token );
+			
+			// 2. do we have permission from the OAuth 2.0 provider
+			$configured &= ! $this->isPermissionNeeded ( $token );
+			
+			return $configured;
+		}
 		private function isTransportConfigured(PostmanOptionsInterface $options) {
 			$hostname = $options->getHostname ();
 			$port = $options->getPort ();
@@ -92,9 +109,9 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			if (! $this->isTransportConfigured ( $options )) {
-				return __ ( 'Warning: Outgoing Mail Server (SMTP) and Port can not be empty.', 'postman-smtp' );
+				return __ ( 'Outgoing Mail Server (SMTP) and Port can not be empty.', 'postman-smtp' );
 			} else if (! $this->isPasswordAuthenticationConfigured ( $options )) {
-				return __ ( 'Warning: Password authentication (Plain/Login/CRAMMD5) requires a username and password.', 'postman-smtp' );
+				return __ ( 'Password authentication (Plain/Login/CRAMMD5) requires a username and password.', 'postman-smtp' );
 			} else if (! $this->isOAuthAuthenticationConfigured ( $options )) {
 				/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label (e.g. Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, Client ID, and Client Secret.) */
 				$this->displayWarningMessage ( sprintf ( __ ( 'Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, %1$s, and %2$s.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () ) );
@@ -143,6 +160,9 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		public function getDeliveryDetails(PostmanOptionsInterface $options) {
 		}
 		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+			return false;
+		}
+		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			return false;
 		}
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {

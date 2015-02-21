@@ -90,8 +90,6 @@ if (! class_exists ( "PostmanOAuthSmtpEngine" )) {
 		 * @see PostmanSmtpEngine::send()
 		 */
 		public function send() {
-			assert ( ! empty ( $this->port ) );
-			assert ( ! empty ( $this->hostname ) );
 			
 			// pre-processing
 			$this->processHeaders ();

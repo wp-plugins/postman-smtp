@@ -773,7 +773,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$queryTransportType = $_POST ['transport'];
 			$transport = PostmanTransportUtils::getTransport ( $queryTransportType );
 			$displayAuth = 'none';
-			if (PostmanTransportUtils::isOAuthRequired ( $transport, $queryAuthType, $queryHostname )) {
+			if ($transport->isOAuthUsed ( $queryAuthType )) {
 				$displayAuth = 'oauth2';
 			}
 			$this->logger->debug ( 'ajaxRedirectUrl transport:' . $queryTransportType );
@@ -796,16 +796,17 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$authType = $_POST ['auth_type'];
 				$encType = null;
 				$port = null;
+				$configureOAuth = false;
+				$configureOAuth |= $queryAuthType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+				$configureOAuth |= $scribe->isOauthHost () && $avail [$scribe->getOAuthPort ()];
 				if (! $_POST ['referer'] == 'manual_config') {
-					$configureOAuth = false;
-					$configureOAuth |= $queryAuthType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
-					$configureOAuth |= $scribe->isOauthHost () && $avail [$scribe->getOAuthPort ()];
 					if ($queryTransportType != PostmanSmtpTransport::SLUG) {
 						// set none of these things
 					} else if ($configureOAuth) {
 						$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 						$port = $scribe->getOAuthPort ();
 						$encType = $scribe->getEncryptionType ();
+						$displayAuth = 'oauth2';
 					} else if ($avail [465]) {
 						$authType = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
 						$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
@@ -1128,7 +1129,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// Set class property
 			print '<div class="wrap">';
 			$this->displayTopNavigation ();
-			if (PostmanTransportUtils::isPostmanConfiguredToSendEmail ( $this->options, $this->authorizationToken )) {
+			if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
 				printf ( '<p><span style="color:green;padding:2px 5px; font-size:1.2em">%s</span></p>', __ ( 'Postman is configured.', 'postman-smtp' ) );
 				$currentTransport = PostmanTransportUtils::getCurrentTransport ();
 				$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
@@ -1256,7 +1257,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<div class="welcome-panel-column welcome-panel-last">';
 			printf ( '<h4>%s</h4>', _x ( 'Troubleshooting', 'Main Menu', 'postman-smtp' ) );
 			print '<ul>';
-			if ($this->options->isSendingEmailAllowed ( $this->authorizationToken )) {
+			if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
 				printf ( '<li><a href="%s" class="welcome-icon send_test_email">%s</a></li>', $this->getPageUrl ( self::EMAIL_TEST_SLUG ), _x ( 'Send a Test Email', 'Main Menu', 'postman-smtp' ) );
 			} else {
 				printf ( '<li><div class="welcome-icon send_test_email">%s</div></li>', _x ( 'Send a Test Email', 'Main Menu', 'postman-smtp' ) );
@@ -1429,7 +1430,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<section>';
 			printf ( '<p><label>%s</label></p>', __ ( 'Status Message', 'postman-smtp' ) );
 			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="65" rows="2"></textarea>';
-			if (PostmanTransportDirectory::getInstance ()->getCurrentTransport ()->isTranscriptSupported ()) {
+			if (PostmanTransportUtils::getCurrentTransport ()->isTranscriptSupported ()) {
 				printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );
 				print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="10"></textarea>';
 			}

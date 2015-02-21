@@ -52,7 +52,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 					) );
 				}
 				
-				if (PostmanTransportUtils::isPostmanConfiguredToSendEmail ( $this->options, $this->authToken )) {
+				if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
 					// no configuration errors to show
 				} else {
 					$message = PostmanTransportUtils::getCurrentTransport ()->getMisconfigurationMessage ( $this->scribe, $this->options, $this->authToken );
@@ -62,7 +62,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 					}
 				}
 			} else {
-				if (! PostmanTransportUtils::isPostmanConfiguredToSendEmail ( $this->options, $this->authToken )) {
+				if (! PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
 					add_action ( 'admin_notices', Array (
 							$this,
 							'displayConfigurationRequiredWarning' 

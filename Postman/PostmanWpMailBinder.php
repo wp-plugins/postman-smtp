@@ -37,7 +37,7 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 			if (! $this->bound) {
 				$binderOptions = PostmanOptions::getInstance ();
 				$binderAuthorizationToken = PostmanOAuthToken::getInstance ();
-				if (PostmanTransportUtils::isPostmanConfiguredToSendEmail ( $binderOptions, $binderAuthorizationToken )) {
+				if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $binderOptions, $binderAuthorizationToken )) {
 					$this->replacePluggableFunctionWpMail ();
 				}
 			}
