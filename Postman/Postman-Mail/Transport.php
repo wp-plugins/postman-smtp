@@ -1,17 +1,4 @@
 <?php
-if (! interface_exists ( 'PostmanTransport' )) {
-	interface PostmanTransport {
-		public function isSmtp();
-		public function isGoogleOAuthRequired();
-		public function isTranscriptSupported();
-		public function getSlug();
-		public function getName();
-		public function createZendMailTransport($hostname, $config);
-		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
-		public function getMisconfigurationMessage(PostmanOptionsInterface $options, PostmanOAuthToken $token);
-	}
-}
-
 if (! class_exists ( 'PostmanSmtpTransport' )) {
 	class PostmanSmtpTransport implements PostmanTransport {
 		private $logger;
@@ -56,8 +43,9 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 	class PostmanTransportUtils {
 		public static function isPostmanConfiguredToSendEmail(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			$directory = PostmanTransportDirectory::getInstance ();
+			$selectedTransport = $options->getTransportType ();
 			foreach ( $directory->getTransports () as $transport ) {
-				if ($transport->isConfigured ( $options, $token )) {
+				if ($transport->getSlug () == $selectedTransport && $transport->isConfigured ( $options, $token )) {
 					return true;
 				}
 			}

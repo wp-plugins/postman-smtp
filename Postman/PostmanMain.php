@@ -3,6 +3,7 @@
 // setup the main entry point
 if (! class_exists ( 'Postman' )) {
 	
+	require_once 'Common.php';
 	require_once 'PostmanOAuthToken.php';
 	require_once 'PostmanOptions.php';
 	require_once 'PostmanMessageHandler.php';
@@ -38,11 +39,20 @@ if (! class_exists ( 'Postman' )) {
 					'activatePostman' 
 			) );
 			
-			// load the text domain
+			// initialzie the plugin
 			add_action ( 'plugins_loaded', array (
 					$this,
-					'loadTextDomain' 
+					'init' 
 			) );
+			
+			// add the SMTP transport
+			$this->addTransport ();
+			
+			// bind to wp_mail
+			if (class_exists ( 'PostmanWpMailBinder' )) {
+				// once the PostmanWpMailBinder has been loaded, ask it to bind
+				PostmanWpMailBinder::getInstance ()->bind ();
+			}
 			
 			// load the options and the auth token
 			$options = PostmanOptions::getInstance ();
@@ -50,9 +60,6 @@ if (! class_exists ( 'Postman' )) {
 			
 			// create a message handler
 			$messageHandler = new PostmanMessageHandler ( $options, $authToken );
-			
-			// bind to wp_mail()
-			new PostmanWpMailBinder ( $basename, $options, $authToken, $messageHandler );
 			
 			if (is_admin ()) {
 				// fire up the AdminController
@@ -66,7 +73,15 @@ if (! class_exists ( 'Postman' )) {
 					'version_shortcode' 
 			) );
 		}
-		public function loadTextDomain() {
+		public function init() {
+			$this->logger->debug ( 'Postman Smtp v' . POSTMAN_PLUGIN_VERSION . ' starting' );
+			// load the text domain
+			$this->loadTextDomain ();
+		}
+		private function addTransport() {
+			PostmanTransportDirectory::getInstance ()->registerTransport ( new PostmanSmtpTransport () );
+		}
+		private function loadTextDomain() {
 			$langDir = basename ( dirname ( $this->postmanPhpFile ) ) . '/Postman/languages/';
 			$success = load_plugin_textdomain ( 'postman-smtp', false, $langDir );
 			if (! $success && get_locale () != 'en_US') {
@@ -83,6 +98,5 @@ if (! class_exists ( 'Postman' )) {
 		function version_shortcode() {
 			return POSTMAN_PLUGIN_VERSION;
 		}
-		
 	}
 }

@@ -2,7 +2,6 @@
 if (! class_exists ( 'PostmanMessageHandler' )) {
 	require_once ('PostmanOptions.php');
 	require_once ('PostmanSession.php');
-	require_once ('PostmanTransportDirectory.php');
 	require_once ('Postman-Mail/Transport.php');
 	class PostmanMessageHandler {
 		
