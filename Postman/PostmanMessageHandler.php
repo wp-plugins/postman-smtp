@@ -33,7 +33,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			
 			// is the saved transport installed?
 			$transportType = $this->options->getTransportType ();
-			if (!empty($transportType) && $transport->getSlug () != $this->options->getTransportType ()) {
+			if (! empty ( $transportType ) && $transport->getSlug () != $this->options->getTransportType ()) {
 				add_action ( 'admin_notices', Array (
 						$this,
 						'canNotFindTransport' 
@@ -49,14 +49,12 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 					) );
 				}
 				
-				if ($this->options->isSmtpServerRequirementsNotMet ()) {
-					if (! $this->options->isNew ()) {
-						// dont show this warning if this is a brand new install
-						add_action ( 'admin_notices', Array (
-								$this,
-								'displaySmtpServerNeededWarning' 
-						) );
-					}
+				if ($this->options->isSmtpServerRequirementsNotMet () && $this->options->getTransportType () == PostmanSmtpTransport::SLUG) {
+					// dont show this warning if this is a brand new install
+					add_action ( 'admin_notices', Array (
+							$this,
+							'displaySmtpServerNeededWarning' 
+					) );
 				} else if ($this->options->isOAuthRequirementsNotMet ( $this->scribe->isOauthHost () )) {
 					add_action ( 'admin_notices', Array (
 							$this,

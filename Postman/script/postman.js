@@ -78,6 +78,7 @@ function getRedirectUrl(data) {
 									el587.attr('disabled', 'disabled');
 									// hide the auth type field for OAuth screen
 									show('.wizard-auth-oauth2');
+									show('#wizard_oauth2_help');
 									if (data.referer == 'wizard')
 										hide(postman_enc_for_oauth2_el);
 									// allow oauth2 as an authentication choice

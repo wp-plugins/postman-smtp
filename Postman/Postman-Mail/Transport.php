@@ -7,6 +7,7 @@ if (! interface_exists ( 'PostmanTransport' )) {
 		public function getSlug();
 		public function getName();
 		public function createZendMailTransport($hostname, $config);
+		public function isConfigured(PostmanOptions $options, PostmanOAuthToken $token);
 	}
 }
 
@@ -31,9 +32,11 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function createZendMailTransport($hostname, $config) {
 			return new Zend_Mail_Transport_Smtp ( $hostname, $config );
 		}
-		public function getDeliveryDetails() {
-			$options = PostmanOptions::getInstance ();
+		public function getDeliveryDetails(PostmanOptions $options) {
 			return $this->getName () . ' (' . $options->getHostname () . ':' . $options->getPort () . ')';
+		}
+		public function isConfigured(PostmanOptions $options, PostmanOAuthToken $token) {
+			return true;
 		}
 	}
 }

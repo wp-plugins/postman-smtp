@@ -15,6 +15,8 @@ jQuery(document).ready(function() {
 	// when the user changes the transport, determine whether
 	// to show or hide the SMTP Settings
 	jQuery('select#input_transport_type').change(function() {
+		hide('#wizard_oauth2_help');
+		reloadOauthSection();
 		switchBetweenPasswordAndOAuth();
 	});
 
@@ -50,16 +52,21 @@ jQuery(document).ready(function() {
 	// user is "finished typing," do something
 	function doneTyping() {
 		if (jQuery(postman_input_auth_type).val() == postman_auth_oauth2) {
-			hostname = jQuery(postman_hostname_element_name).val();
-			var data = {
-				'action' : 'get_redirect_url',
-				'referer' : 'manual_config',
-				'hostname' : hostname,
-			};
-			getRedirectUrl(data);
+			reloadOauthSection();
 		}
 	}
 });
+function reloadOauthSection(hostname) {
+	var hostname = jQuery(postman_hostname_element_name).val();
+	var transport = jQuery('select#input_transport_type').val();
+	var data = {
+			'action' : 'get_redirect_url',
+			'referer' : 'manual_config',
+			'hostname' : hostname,
+			'transport' : transport,
+		};
+		getRedirectUrl(data);
+}
 function switchBetweenPasswordAndOAuth() {
 	console.debug('showHide:authenticationType=' + $choice);
 	if (jQuery('select#input_transport_type').val() == 'gmail_api') {

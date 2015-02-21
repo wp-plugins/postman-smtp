@@ -698,7 +698,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				} else {
 					$statusMessage = $emailTester->getMessage ();
 				}
-				$this->logger->debug('statusmessage: '. $statusMessage);
+				$this->logger->debug ( 'statusmessage: ' . $statusMessage );
 				$response = array (
 						'message' => $statusMessage,
 						'transcript' => $emailTester->getTranscript (),
@@ -769,9 +769,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		function getAjaxRedirectUrl() {
 			$hostname = $_POST ['hostname'];
+			$transport = $_POST ['transport'];
 			$this->logger->debug ( 'ajaxRedirectUrl hostname:' . $hostname );
+			$this->logger->debug ( 'ajaxRedirectUrl transport:' . $transport );
 			// don't care about what's in the database, i need a scribe based on the ajax parameter assuming this is OAUTH2
-			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( new PostmanSmtpTransport (), PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $hostname );
+			$scribe = PostmanOAuthScribeFactory::getInstance ()->createPostmanOAuthScribe ( PostmanTransportDirectory::getInstance()->getTransport($transport), PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $hostname );
 			if (isset ( $_POST ['referer'] )) {
 				$this->logger->debug ( 'ajaxRedirectUrl referer:' . $_POST ['referer'] );
 				// this must be wizard or config from an oauth-related change

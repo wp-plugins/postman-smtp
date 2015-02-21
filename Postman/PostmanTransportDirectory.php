@@ -1,6 +1,5 @@
 <?php
 if (! class_exists ( 'PostmanTransportDirectory' )) {
-	
 	class PostmanTransportDirectory {
 		private $transports;
 		private $logger;
@@ -42,11 +41,14 @@ if (! class_exists ( 'PostmanTransportDirectory' )) {
 		}
 		/**
 		 * Retrieve a Transport by slug
-		 * Look up a specific Transport, normally used only when retrieving the transport saved in the database
+		 * Look up a specific Transport use:
+		 * A) when retrieving the transport saved in the database
+		 * B) when querying what a theoretical scenario involving this transport is like
+		 * (ie.for ajax in config screen)
 		 *
 		 * @param unknown $slug        	
 		 */
-		private function getTransport($slug) {
+		public function getTransport($slug) {
 			$this->logger->debug ( 'Looking for transport ' . $slug );
 			if (isset ( $this->transports [$slug] )) {
 				return $this->transports [$slug];
