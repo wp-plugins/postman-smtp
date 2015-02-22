@@ -207,6 +207,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.5 - 2015-02-22 =
+* Added support for modular transports. The first external transport is the Postman Gmail Extension, which uses the Gmail API to send mail out on the HTTPS port, a convenient way around traditional mail port blocks for Gmail users
+* Fixed a bug in the Setup Wizard where it would not use OAuth 2.0 on port 587
+
 = 1.4.1 - 2015-02-17 =
 * All text has been [externalized](http://plugins.svn.wordpress.org/postman-smtp/trunk/Postman/languages/postman-smtp.pot) in prep for [I18N Internationalization and localization](http://codex.wordpress.org/I18n_for_WordPress_Developers)
 * Fixed a bug where the Setup Wizard would force OAuth 2.0 configuration, instead of falling back to Password, even if the required port was closed

@@ -864,7 +864,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				}
 				$hideAuth = true;
 				$hideEnc = true;
-				if ($winningRecommendation ['port'] == 587) {
+				if ($winningRecommendation ['auth'] != 'oauth2' && $winningRecommendation ['enc'] == 587) {
 					$hideAuth = false;
 					$hideEnc = false;
 				}
@@ -876,6 +876,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'client_secret_label' => $scribe->getClientSecretLabel (),
 						'redirect_url_label' => $scribe->getCallbackUrlLabel (),
 						'callback_domain_label' => $scribe->getCallbackDomainLabel (),
+						'referer' => $_POST ['referer'],
 						PostmanOptions::TRANSPORT_TYPE => $winningRecommendation ['transport'],
 						PostmanOptions::AUTHENTICATION_TYPE => $winningRecommendation ['auth'],
 						PostmanOptions::ENCRYPTION_TYPE => $winningRecommendation ['enc'],

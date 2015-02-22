@@ -40,7 +40,7 @@ function getRedirectUrl(data) {
 }
 function handleConfigurationResponse(response) {
 	jQuery('#input_oauth_callback_domain').val(response.callback_domain);
-	if (response.auth_type) {
+	if (response.referer == 'wizard') {
 		jQuery('#input_transport_type').val(response.transport_type);
 		jQuery('#input_auth_type').val(response.auth_type);
 		jQuery('#input_auth_' + response.auth_type).prop('checked', true);
