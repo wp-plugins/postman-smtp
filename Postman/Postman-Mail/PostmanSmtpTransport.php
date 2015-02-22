@@ -112,7 +112,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		private function isPermissionNeeded(PostmanOAuthToken $token) {
 			$accessToken = $token->getAccessToken ();
 			$refreshToken = $token->getRefreshToken ();
-			return ! (empty ( $accessToken ) || empty ( $refreshToken ));
+			return (empty ( $accessToken ) || empty ( $refreshToken ));
 		}
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			if (! $this->isTransportConfigured ( $options )) {

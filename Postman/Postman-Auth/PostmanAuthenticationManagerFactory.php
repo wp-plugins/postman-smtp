@@ -32,11 +32,11 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 				$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $hostname );
 			}
 			$redirectUrl = $scribe->getCallbackUrl ();
-			if ($transport->isOAuthUsed ( $authorizationToken ) && $scribe->isGoogle ()) {
+			if ($transport->isOAuthUsed ( $options->getAuthorizationType () ) && $transport->isServiceProviderGoogle ( $hostname )) {
 				$authenticationManager = new PostmanGoogleAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl, $senderEmail );
-			} else if ($transport->isOAuthUsed ( $authorizationToken ) && $scribe->isMicrosoft ()) {
+			} else if ($transport->isOAuthUsed ( $options->getAuthorizationType () ) && $transport->isServiceProviderMicrosoft ( $hostname )) {
 				$authenticationManager = new PostmanMicrosoftAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl );
-			} else if ($transport->isOAuthUsed ( $authorizationToken ) && $scribe->isYahoo ()) {
+			} else if ($transport->isOAuthUsed ( $options->getAuthorizationType () ) && $transport->isServiceProviderYahoo ( $hostname )) {
 				$authenticationManager = new PostmanYahooAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl );
 			} else {
 				$authenticationManager = new PostmanNonOAuthAuthenticationManager ();

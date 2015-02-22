@@ -38,5 +38,8 @@ if (! class_exists ( "PostmanNonOAuthAuthenticationManager" )) {
 		public function getCallbackUri() {
 			return null;
 		}
+		public function generateRequestTransactionId() {
+			return 0;
+		}
 	}
 }
