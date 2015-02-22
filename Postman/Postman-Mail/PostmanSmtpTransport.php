@@ -34,22 +34,29 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			return new Zend_Mail_Transport_Smtp ( $hostname, $config );
 		}
 		public function getDeliveryDetails(PostmanOptionsInterface $options) {
-			$deliveryDetails ['transport_name'] = $this->getName ();
-			if ($options->getEncryptionType () != PostmanOptions::ENCRYPTION_TYPE_NONE) {
-				/* translators: where %1$s is the Transport type (e.g. SMTP or SMTPS) and %2$s is the encryption type (e.g. SSL or TLS) */
-				$deliveryDetails ['transport_name'] = sprintf ( '%1$s-%2$s', _x ( 'SMTPS', 'Transport Name', 'postman-smtp' ), strtoupper ( $options->getEncryptionType () ) );
-			}
+			$deliveryDetails ['transport_name'] = getTransportDescription ( $options->getEncryptionType () );
 			$deliveryDetails ['host'] = $options->getHostname () . ':' . $options->getPort ();
-			if ($this->isOAuthUsed ( $options->getAuthorizationType () )) {
-				$deliveryDetails ['auth_desc'] = _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' );
-			} else if ($options->isAuthTypeNone ()) {
-				$deliveryDetails ['auth_desc'] = _x ( 'no', 'Authentication Type', 'postman-smtp' );
-			} else {
-				/* translators: where %s is the Authentication Type (e.g. plain, login or crammd5) */
-				$deliveryDetails ['auth_desc'] = sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $options->getAuthorizationType () );
-			}
+			$deliveryDetails ['auth_desc'] = $this->getAuthenticationDescription ( $options->getAuthorizationType () );
 			/* translators: where %1$s is the transport type, %2$s is the host, and %3$s is the Authentication Type (e.g. Postman will send mail via smtp.gmail.com:465 using OAuth 2.0 authentication.) */
 			return sprintf ( __ ( 'Postman will send mail via %1$s to %2$s using %3$s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails ['transport_name'] . '</b>', '<b>' . $deliveryDetails ['host'] . '</b>', '<b>' . $deliveryDetails ['auth_desc'] . '</b>' );
+		}
+		private function getTransportDescription($encType) {
+			$deliveryDetails = $this->getName ();
+			if ($encType != PostmanOptions::ENCRYPTION_TYPE_NONE) {
+				/* translators: where %1$s is the Transport type (e.g. SMTP or SMTPS) and %2$s is the encryption type (e.g. SSL or TLS) */
+				$deliveryDetails = sprintf ( '%1$s-%2$s', _x ( 'SMTPS', 'Transport Name', 'postman-smtp' ), strtoupper ( $encType ) );
+			}
+			return $deliveryDetails;
+		}
+		private function getAuthenticationDescription($authType) {
+			if (PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $authType) {
+				return _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' );
+			} else if (PostmanOptions::AUTHENTICATION_TYPE_NONE == $authType) {
+				return _x ( 'no', 'Authentication Type', 'postman-smtp' );
+			} else {
+				/* translators: where %s is the Authentication Type (e.g. plain, login or crammd5) */
+				return sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $authType );
+			}
 		}
 		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			// This is configured if:
@@ -122,6 +129,90 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				return $message;
 			}
 		}
+		
+		/**
+		 * Given a hostname, what ports should we test?
+		 *
+		 * May return an array of several combinations.
+		 */
+		public function getHostsToTest($hostname) {
+			$hosts = array (
+					array (
+							'host' => $hostname,
+							'port' => '25' 
+					),
+					array (
+							'host' => $hostname,
+							'port' => '465' 
+					),
+					array (
+							'host' => $hostname,
+							'port' => '587' 
+					) 
+			);
+			return $hosts;
+		}
+		
+		/**
+		 * SMTP supports sending with these combinations in this order of preferences:
+		 *
+		 * 100 oauth on port 465 to smtp.gmail.com|smtp.live.com|yahoo.com
+		 * 80 password/tls on port 587 to smtp.gmail.com|smtp.live.com|yahoo.com
+		 * 60 password/ssl on port 465 to everybody
+		 * 40 password/tls on port 587 to everybody
+		 * 20 no auth on port 25 to everybody
+		 *
+		 * @param unknown $hostData        	
+		 */
+		public function getConfigurationRecommendation($hostData) {
+			$port = $hostData ['port'];
+			$hostname = $hostData ['host'];
+			$oauthPotential = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
+			if ($oauthPotential && $port == 465) {
+				$recommendation ['priority'] = 100;
+				$recommendation ['success'] = true;
+				$recommendation ['message'] = __ ( 'Postman recommends OAuth 2.0 configuration on port 465.' );
+				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
+				$recommendation ['port'] = 465;
+			} else if ($oauthPotential && $port == 587) {
+				$recommendation ['priority'] = 80;
+				$recommendation ['success'] = true;
+				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
+				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
+				$recommendation ['port'] = 587;
+				$recommendation ['transport'] = self::SLUG;
+			} else if ($port == 465) {
+				$recommendation ['priority'] = 60;
+				$recommendation ['success'] = true;
+				$recommendation ['message'] = __ ( 'Postman recommends Password configuration with SSL Security on port 465.' );
+				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
+				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
+				$recommendation ['port'] = 465;
+				$recommendation ['transport'] = self::SLUG;
+			} else if ($port == 587) {
+				$recommendation ['priority'] = 40;
+				$recommendation ['success'] = true;
+				$recommendation ['message'] = __ ( 'Postman recommends Password configuration with TLS Security on port 587.' );
+				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
+				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
+				$recommendation ['port'] = 587;
+				$recommendation ['transport'] = self::SLUG;
+			} else {
+				$recommendation ['priority'] = 20;
+				$recommendation ['success'] = true;
+				$recommendation ['message'] = sprintf ( __ ( 'Postman recommends no authentication on port %d.' ), $port );
+				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_NONE;
+				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
+				$recommendation ['port'] = $port;
+				$recommendation ['transport'] = self::SLUG;
+			}
+			$transportDescription = $this->getTransportDescription ( $recommendation ['enc'] );
+			$encType = strtoupper ( $recommendation ['enc'] );
+			$authDesc = $this->getAuthenticationDescription ( $recommendation ['auth'] );
+			$recommendation ['message'] = sprintf ( __ ( 'Postman recommends %1$s with %2$s authentication on port %3$d.' ), $transportDescription, $authDesc, $port );
+			return $recommendation;
+		}
 	}
 }
 
@@ -166,6 +257,10 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 			return false;
 		}
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+		}
+		public function getHostsToTest($hostname) {
+		}
+		public function getConfigurationRecommendation($hostData) {
 		}
 	}
 }

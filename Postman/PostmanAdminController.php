@@ -145,6 +145,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->registerAjaxHandler ( 'get_redirect_url', 'getAjaxRedirectUrl' );
 				$this->registerAjaxHandler ( 'send_test_email', 'sendTestEmailViaAjax' );
 				$this->registerAjaxHandler ( 'get_configuration', 'getConfigurationViaAjax' );
+				$this->registerAjaxHandler ( 'get_hosts_to_test', 'getPortsToTestViaAjax' );
 			}
 			
 			// register content handlers
@@ -670,7 +671,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ();
 			$success = $portTest->testSmtpPorts ( $hostname, $port, $this->options->getConnectionTimeout () );
-			$this->logger->debug ( 'testing port success=' . $success );
+			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
 			$response = array (
 					'message' => $portTest->getErrorMessage (),
 					'success' => $success 
@@ -765,6 +766,22 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		
 		/**
+		 * This Ajax function determines which hosts/ports to test in the Wizard Port Test
+		 */
+		function getPortsToTestViaAjax() {
+			$queryHostname = '';
+			if (isset ( $_POST ['hostname'] )) {
+				$queryHostname = $_POST ['hostname'];
+			}
+			$hosts = PostmanTransportUtils::getHostsToTest ( $queryHostname );
+			$response = array (
+					'hosts' => $hosts,
+					'success' => true 
+			);
+			wp_send_json ( $response );
+		}
+		
+		/**
 		 * This Ajax function retrieves the OAuth redirectUrl and help text for based on the SMTP hostname supplied
 		 */
 		function getAjaxRedirectUrl() {
@@ -801,11 +818,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if (isset ( $_POST ['referer'] )) {
 				$this->logger->debug ( 'ajaxRedirectUrl referer:' . $_POST ['referer'] );
 				// this must be wizard or config from an oauth-related change
-				if ($_POST ['referer'] == 'wizard') {
-					$avail [25] = filter_var ( $_POST ['avail25'], FILTER_VALIDATE_BOOLEAN );
-					$avail [465] = filter_var ( $_POST ['avail465'], FILTER_VALIDATE_BOOLEAN );
-					$avail [587] = filter_var ( $_POST ['avail587'], FILTER_VALIDATE_BOOLEAN );
-				} else if ($_POST ['referer'] == 'manual_config') {
+				if ($_POST ['referer'] == 'manual_config') {
 					$avail [25] = true;
 					$avail [465] = true;
 					$avail [587] = true;
@@ -814,45 +827,34 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$encType = null;
 				$port = null;
 				
+				$winningRecommendation = null;
 				if ($_POST ['referer'] != 'manual_config') {
 					// for each successful host/port combination
 					// ask a transport if they support it, and if they do at what priority is it
 					// configure for the highest priority you find
-					$recommendation = -1;
+					$recommendationPriority = - 1;
 					foreach ( $queryHostData as $id => $value ) {
 						if ($value ['avail']) {
 							$hostData ['host'] = $value ['host'];
 							$hostData ['port'] = $value ['port'];
 							$this->logger->debug ( 'Available host: ' . $hostData ['host'] . ':' . $hostData ['port'] );
-							$configure = PostmanTransportUtils::getConfigurationRecommendation ( $hostData );
+							$recommendation = PostmanTransportUtils::getConfigurationRecommendation ( $hostData );
+							if ($recommendation && $recommendation ['priority'] > $recommendationPriority) {
+								$recommendationPriority = $recommendation ['priority'];
+								$winningRecommendation = $recommendation;
+							}
 						}
 					}
-					if($recommendation == -1) {
-						$this->logger->debug('Could not recommend any solutions');
+					if (! $winningRecommendation) {
+						$winningRecommendation ['priority'] = 1;
+						$winningRecommendation ['success'] = false;
+						if (endsWith ( $hostData ['host'], 'gmail.com' )) {
+							$winningRecommendation ['message'] = __ ( 'Postman can\'t find any way to send mail on your system. Contact your host to get some ports opened, or considering installing the Postman Gmail Extension to send mail over the HTTPS port (443).' );
+						} else {
+							$winningRecommendation ['message'] = __ ( 'Postman can\'t find any way to send mail on your system. Contact your host to get some ports opened.' );
+						}
 					}
-					$this->logger->debug ( 'ajaxRedirectUrl processing for wizard' );
-					$host = $queryHostname . ':' . '25';
-					
-					if ($configureOAuth) {
-						$authType = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
-						$port = $scribe->getOAuthPort ();
-						$encType = $scribe->getEncryptionType ();
-						$displayAuth = 'oauth2';
-					} else if ($avail [465]) {
-						$authType = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
-						$encType = PostmanOptions::ENCRYPTION_TYPE_SSL;
-						$port = 465;
-						$displayAuth = 'password';
-					} else if ($avail [587]) {
-						$authType = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
-						$encType = PostmanOptions::ENCRYPTION_TYPE_TLS;
-						$port = 587;
-						$displayAuth = 'password';
-					} else {
-						$authType = PostmanOptions::AUTHENTICATION_TYPE_NONE;
-						$encType = PostmanOptions::ENCRYPTION_TYPE_NONE;
-						$port = 25;
-					}
+					$this->logger->debug ( 'Configuration recommendation: ' . $winningRecommendation ['message'] );
 				}
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),
@@ -1346,22 +1348,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print $this->port_callback ( array (
 					'style' => 'style="display:none"' 
 			) );
-			print '<table>';
-			print '<tr>';
-			printf ( '<td><span>%s</span></td>', __ ( 'Port 25', 'postman-smtp' ) );
-			print '<td><input type="radio" id="wizard_port_25" name="wizard-port" value="25" class="required" style="margin-top: 0px" /></td>';
-			printf ( '<td id="wizard_port_25_status">%s</td>', _x ( 'Unknown', 'TCP Port Status', 'postman-smtp' ) );
-			print '</tr>';
-			print '<tr>';
-			printf ( '<td><span>%s</span></td>', __ ( 'Port 465', 'postman-smtp' ) );
-			print '<td><input type="radio" id="wizard_port_465" name="wizard-port" value="465" class="required" style="margin-top: 0px" /></td>';
-			printf ( '<td id="wizard_port_465_status">%s</td>', _x ( 'Unknown', 'TCP Port Status', 'postman-smtp' ) );
-			print '</tr>';
-			print '<tr>';
-			printf ( '<td><span>%s</span></td>', __ ( 'Port 587', 'postman-smtp' ) );
-			print '<td><input type="radio" id="wizard_port_587" name="wizard-port" value="587" class="required" style="margin-top: 0px" /></td>';
-			printf ( '<td id="wizard_port_587_status">%s</td>', _x ( 'Unknown', 'TCP Port Status', 'postman-smtp' ) );
-			print '</tr>';
+			print '<table id="wizard_port_test">';
 			print '</table>';
 			print '</fieldset>';
 			

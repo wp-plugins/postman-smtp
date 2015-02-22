@@ -32,15 +32,13 @@ if (! function_exists ( 'postmanHandleErrors' )) {
 			$t = $last_error ['type'];
 			$logger = new PostmanLogger ( 'PostmanSmtp' );
 			// E_ALL screws up my port test ajax!!
-			if (! is_null ( $last_error ) && ($t & (E_ALL | E_COMPILE_ERROR | E_ERROR | E_PARSE | E_NOTICE)) && preg_match ( "/postman/i", $last_error ['file'] )) {
+			if (! is_null ( $last_error ) && ($t & (E_COMPILE_ERROR | E_ERROR | E_PARSE | E_NOTICE)) && preg_match ( "/postman/i", $last_error ['file'] )) {
 				// if there has been a fatal error
 				$message = sprintf ( '%s in %s on line %d', $last_error ['message'], $last_error ['file'], $last_error ['line'] );
 				if (PostmanOptions::getInstance ()->isErrorPrintingEnabled ()) {
 					printf ( '<h2>Bad, Postman!</h2> <p><b><tt>X-(</b></tt></p> <p>Look at the mess you made:</p><code>%s</code>', $message );
 				}
 				$logger->error ( $message );
-			} else {
-				$logger->debug ( 'Normal exit' );
 			}
 		}
 	}

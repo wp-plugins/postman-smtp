@@ -101,12 +101,17 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		// this should be the only place i disable the next button but Steps
 		// enables it after the screen slides
 		jQuery('li + li').addClass('disabled');
-		wizardPortTest(jQuery('#wizard_port_465'),
-				jQuery('#wizard_port_465_status'));
-		wizardPortTest(jQuery('#wizard_port_25'),
-				jQuery('#wizard_port_25_status'));
-		wizardPortTest(jQuery('#wizard_port_587'),
-				jQuery('#wizard_port_587_status'));
+
+		getHostsToCheck(jQuery(postman_hostname_element_name).val());
+
+		/*
+		 * wizardPortTest(jQuery('#wizard_port_465'),
+		 * jQuery('#wizard_port_465_status'));
+		 * wizardPortTest(jQuery('#wizard_port_25'),
+		 * jQuery('#wizard_port_25_status'));
+		 * wizardPortTest(jQuery('#wizard_port_587'),
+		 * jQuery('#wizard_port_587_status'));
+		 */
 	} else if (currentIndex === 2) {
 
 		// user has clicked next but we haen't finished the check
@@ -231,40 +236,52 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	}
 
 }
+function getHostsToCheck(hostname) {
+	var data = {
+		'action' : 'get_hosts_to_test',
+		'hostname' : hostname
+	};
+	jQuery.post(ajaxurl, data, function(response) {
+		jQuery('table#wizard_port_test').html('');
+		for ( var x in response.hosts) {
+			var html = '';
+			var host = response.hosts[x].host;
+			var port = response.hosts[x].port
+			var value = "{host : '" + host + "', port : " + port + "}";
+			var id = 'port-' + x;
+			var id_status = id + '_status';
+			html += '<tr><td><span>' + host + ':' + port + "</span></td>";
+			html += '<td><input type="radio" id="' + id + '" name="wizard-port" value="'+ value +'" class="required" style="margin-top: 0px" /></td>';
+			html += '<td id="' + id_status + '"></td></tr>';
+			jQuery('table#wizard_port_test').append(html);
+			wizardPortTest(host, port, 'input#'+id, '#' + id_status);
+		}
+	});
+}
 function checkEmail(email) {
 	var data = {
 		'action' : 'check_email',
 		'email' : email
-	// We pass php values differently!
 	};
-	// We can also pass the url value separately from ajaxurl for front end AJAX
-	// implementations
 	jQuery.post(ajaxurl, data, function(response) {
 		if (response.hostname != '') {
 			jQuery(postman_hostname_element_name).val(response.hostname);
 		}
 	});
 }
-function wizardPortTest(input, state) {
-	var hostname = jQuery(postman_hostname_element_name).val();
+function wizardPortTest(hostname, port, input, state) {
 	var el = jQuery(input);
 	var elState = jQuery(state);
 	var portInput = jQuery(postman_port_element_name);
 	elState.html(postman_port_test_testing);
 	el.attr('disabled', 'disabled');
-	el.prop('checked', false);
-	el.click(function() {
-		jQuery(postman_port_element_name).val(el.val());
-	});
+	el.prop('checked', true);
 	portsToCheck++;
 	var data = {
 		'action' : 'test_port',
 		'hostname' : hostname,
-		'port' : el.val()
-	// We pass php values differently!
+		'port' : port
 	};
-	// We can also pass the url value separately from ajaxurl for front end AJAX
-	// implementations
 	jQuery.post(ajaxurl, data, function(response) {
 		portsChecked++;
 		if (response.success) {
@@ -303,7 +320,7 @@ function wizardPortTest(input, state) {
 				};
 				portCheck['3'] = {
 					host : 'smtp.gmail.com',
-					port : 687,
+					port : 587,
 					avail : el587_avail
 				};
 

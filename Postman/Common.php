@@ -45,6 +45,8 @@ if (! interface_exists ( 'PostmanTransport' )) {
 		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token);
+		public function getConfigurationRecommendation($hostData);
+		public function getHostsToTest($hostname);
 	}
 }
 

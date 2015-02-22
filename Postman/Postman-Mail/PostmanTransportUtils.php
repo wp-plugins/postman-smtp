@@ -80,6 +80,14 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 			
 			return $oauthUsed && $configured;
 		}
+		public static function getHostsToTest($hostname) {
+			$directory = PostmanTransportDirectory::getInstance ();
+			$hosts = array ();
+			foreach ( $directory->getTransports () as $transport ) {
+				$hosts = array_merge ( $hosts, $transport->getHostsToTest ( $hostname ) );
+			}
+			return $hosts;
+		}
 		
 		/**
 		 * If the host port is a possible configuration option, recommend it
@@ -92,9 +100,20 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 		 */
 		public static function getConfigurationRecommendation($hostData) {
 			$directory = PostmanTransportDirectory::getInstance ();
+			$priority = - 1;
+			$winningRecommendation = null;
+			$logger = new PostmanLogger ( 'PostmanTransportUtils' );
 			foreach ( $directory->getTransports () as $transport ) {
-				;
+				$recommendation = $transport->getConfigurationRecommendation ( $hostData );
+				if ($recommendation) {
+					$logger->debug ( sprintf ( 'Got a recommendation: [%d] %s', $recommendation ['priority'], $recommendation ['message'] ) );
+				}
+				if ($recommendation && $recommendation ['priority'] > $priority) {
+					$priority = $recommendation ['priority'];
+					$winningRecommendation = $recommendation;
+				}
 			}
+			return $winningRecommendation;
 		}
 	}
 }
