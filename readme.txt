@@ -160,7 +160,6 @@ If you have a Google Account, from the [Google Developer's Console](https://cons
 == Troubleshooting ==
 
 * If Postman sends mail inconsistently, your host may have poor connectivity to your mail server. Try doubling the Read Timeout.
-* If you get a White Screen of Death (WSOD), you should enable "Show Error Page" to see what went wrong. This will break the Port Test function, however, so use it only when needed.
 
 Here are some common error messages and what they mean. If you do not find your answer here, please [open a ticket](https://wordpress.org/support/plugin/postman-smtp).
 
