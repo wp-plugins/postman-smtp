@@ -94,3 +94,11 @@ function handleConfigurationResponse(response) {
 		}
 	}
 }
+// add an event on the authentication input field
+// on user changing the auth type, determine whether to show
+// password or oauth section
+jQuery(document).ready(function() {
+	jQuery('a#show-diagnostics').click(function() {
+		show('#diagnostic-text');
+	});
+});

@@ -4,6 +4,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	require_once "PostmanSendTestEmail.php";
 	require_once 'PostmanOptions.php';
 	require_once 'PostmanState.php';
+	require_once 'PostmanStats.php';
 	require_once 'PostmanOAuthToken.php';
 	require_once 'Postman-Wizard/PortTest.php';
 	require_once 'Postman-Wizard/SmtpDiscovery.php';
@@ -247,6 +248,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		function enqueueHomeScreenStylesheet() {
 			wp_enqueue_style ( self::POSTMAN_STYLE );
+			wp_enqueue_script ( 'postman_script' );
 		}
 		
 		/**
@@ -1222,26 +1224,32 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			if (PostmanState::getInstance ()->isTimeToReviewPostman ()) {
 				printf ( '<h4>%s</h4>', __ ( 'Has Postman been working well for you?' ) );
-				printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Please considering leaving a <a href="%s">review of Postman SMTP</a> at WordPress.org to help spread the word<br/> about the new way to send email from WordPress! I love to read your comments :)' ), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp' ) );
+				/* translators: where %1$d is the number of messages delivered and %2$s is the URL to the WordPress.org review and ratings page */
+				printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Postman has delivered %1$d emails for you! Please considering leaving a <a href="%2$s">review of Postman SMTP</a> at WordPress.org to help spread the word<br/> about the new way to send email from WordPress! I love to read your comments :)' ), PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp' ) );
 			}
 			
-			if (true || ! $sslRequirement || ! $splAutoloadRegisterRequirement || ! $arrayObjectRequirement) {
-				// printf ( '<div style="padding: 10px;"><b style="color: red">%s</b><ul>', __ ( 'Your system seems to be missing one or more pre-requisites - something may fail:', 'postman-smtp' ) );
-				printf ( '<div style="padding: 10px;"><b style="color: red">%s</b><ul>', __ ( 'System Info:', 'postman-smtp' ) );
-				/* translators: where %s is the PHP version */
-				printf ( '<li>PHP v5.3: %s (%s)</li>', ($phpVersionRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )), PHP_VERSION );
-				printf ( '<li>PHP SSL Extension: %s</li>', ($sslRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
-				printf ( '<li>PHP spl_autoload_register: %s</li>', ($splAutoloadRegisterRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
-				printf ( '<li>PHP ArrayObject: %s</li>', ($arrayObjectRequirement ? __ ( 'Yes', 'postman-smtp' ) : __ ( 'No', 'postman-smtp' )) );
-				printf ( '<li>PHP display_errors: %s</li>', $displayErrors );
-				printf ( '<li>PHP errorReporting: %s</li>', $errorReporting );
-				printf ( '<li>WordPress WP_DEBUG: %s</li>', WP_DEBUG );
-				printf ( '<li>WordPress WP_DEBUG_LOG: %s</li>', WP_DEBUG_LOG );
-				printf ( '<li>WordPress WP_DEBUG_DISPLAY: %s</li>', WP_DEBUG_DISPLAY );
-				print '<ul></div>';
-			}
-			print '</div>';
+			$diagnostics = sprintf ( 'PHP v5.3: %s (%s)%s', ($phpVersionRequirement ? 'Yes' : 'No'), PHP_VERSION, PHP_EOL );
+			$diagnostics .= sprintf ( 'PHP SSL Extension: %s%s', ($sslRequirement ? 'Yes' : 'No'), PHP_EOL );
+			$diagnostics .= sprintf ( 'PHP spl_autoload_register: %s%s', ($splAutoloadRegisterRequirement ? 'Yes' : 'No'), PHP_EOL );
+			$diagnostics .= sprintf ( 'PHP ArrayObject: %s%s', ($arrayObjectRequirement ? 'Yes' : 'No'), PHP_EOL );
+			$diagnostics .= sprintf ( 'PHP display_errors: %s%s', $displayErrors, PHP_EOL );
+			$diagnostics .= sprintf ( 'PHP errorReporting: %s%s', $errorReporting, PHP_EOL );
+			$diagnostics .= sprintf ( 'WordPress WP_DEBUG: %s%s', WP_DEBUG, PHP_EOL );
+			$diagnostics .= sprintf ( 'WordPress WP_DEBUG_LOG: %s%s', WP_DEBUG_LOG, PHP_EOL );
+			$diagnostics .= sprintf ( 'WordPress WP_DEBUG_DISPLAY: %s%s', WP_DEBUG_DISPLAY, PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Transport: %s%s', $this->options->getTransportType (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Transport Configured: %s%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Transport Ready: %s%s', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Authorization Type: %s%s', $this->options->getAuthorizationType (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Encryption Type: %s%s', $this->options->getEncryptionType (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman SMTP Host: %s%s', $this->options->getHostname (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman SMTP Port: %s%s', $this->options->getPort (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Sender Matches user: %s%s', ($this->options->getSenderEmail () == $this->options->getUsername () ? 'Yes' : 'No'), PHP_EOL );
+			printf ( '<h4>%s</h4>', __ ( 'Are you having any issues with Postman?' ) );
+			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Here is some <a id="show-diagnostics" href="#">diagnostic info</a> that you can report to the author.' ) ) );
+			printf ( '<textarea id="diagnostic-text" hidden="hidden" cols="80" rows="10">%s</textarea>', $diagnostics );
 		}
+		
 		/**
 		 */
 		public function outputManualConfigurationContent() {
@@ -1476,7 +1484,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// Step 1
 			printf ( '<h5>%s</h5>', __ ( 'Choose the Recipient', 'postman-smtp' ) );
 			print '<fieldset>';
-			printf ( '<legend>%s</legend>', __ ( 'Choose the Recipient', 'postman-smtp' ) );
+			printf ( '<legend>%s</legend>', __ ( 'Who is this message going to?', 'postman-smtp' ) );
 			printf ( '<p>%s', __ ( 'This utility allows you to send an email message for testing.', 'postman-smtp' ) );
 			print ' ';
 			/* translators: where %d is an amount of time, in seconds */
