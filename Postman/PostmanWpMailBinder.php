@@ -87,10 +87,10 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 				$this->bindError = true;
 			}
 		}
-		public function getBound() {
+		public function isBound() {
 			return $this->bound;
 		}
-		public function getBindError() {
+		public function isUnboundDueToException() {
 			return $this->bindError;
 		}
 	}

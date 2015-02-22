@@ -92,7 +92,7 @@ if (! class_exists ( 'PostmanSmtp' )) {
 			$this->loadTextDomain ();
 			
 			// are we bound?
-			if (PostmanWpMailBinder::getInstance ()->getBindError ()) {
+			if (PostmanWpMailBinder::getInstance ()->isUnboundDueToException ()) {
 				// add an error message for the user
 				$options = PostmanOptions::getInstance ();
 				$authToken = PostmanOAuthToken::getInstance ();
@@ -101,7 +101,7 @@ if (! class_exists ( 'PostmanSmtp' )) {
 						$messageHandler,
 						'displayCouldNotReplaceWpMail' 
 				) );
-			} else if (! PostmanWpMailBinder::getInstance ()->getBound ()) {
+			} else if (! PostmanWpMailBinder::getInstance ()->isBound ()) {
 				$this->logger->debug ( ' Not binding, plugin is not configured.' );
 			}
 			
