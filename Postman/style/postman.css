@@ -4,18 +4,27 @@
 	padding: 0px 10px 0;
 }
 
-form#postman_wizard legend,form#postman_test_email_wizard legend {
+form#postman_wizard legend, form#postman_test_email_wizard legend {
 	font-weight: bold;
 }
 
-form#postman_wizard label,form#postman_test_email_wizard label {
+form#postman_wizard label, form#postman_test_email_wizard label {
 	font-weight: bold;
 }
 
 table#testing_table {
-	width: 600px;
-	font-size: 1.2em;
+	width: 100%;
 	display: none;
+	border: solid 1px #ddd;
+}
+
+table#testing_table tr {
+	background-color:#fff;
+}
+
+table#testing_table tr td {
+	padding:5px;
+	margin:0;
 }
 
 table#testing_table td.port {
@@ -31,10 +40,9 @@ fine_print {
 }
 
 input.input_plugin_radio {
-	margin-left:20px;
+	margin-left: 20px;
 }
 
-.wizard > .content
-{
-    min-height: 32em;
+.wizard>.content {
+	min-height: 32em;
 }

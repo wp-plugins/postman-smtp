@@ -637,7 +637,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			add_settings_field ( PostmanOptions::HOSTNAME, _x ( 'Outgoing Mail Server (SMTP)', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
-					'hostname_callback' 
+					'port_test_hostname_callback' 
 			), PostmanAdminController::PORT_TEST_OPTIONS, PostmanAdminController::PORT_TEST_SECTION );
 			
 			// the Test Email section
@@ -934,7 +934,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print ' ';
 			/* translators: where %d is an amount of time, in seconds */
 			printf ( _n ( 'Each test is given %d second to complete.', 'Each test is given %d seconds to complete.', $this->options->getConnectionTimeout (), 'postman-smtp' ), $this->options->getConnectionTimeout () );
-			print ' ';
+			print '<br/>';
 			/* translators: where %d is an amount of time, in seconds */
 			printf ( __ ( 'The entire test will take up to %d seconds.', 'postman-smtp' ), ($this->options->getConnectionTimeout () * 3) );
 			print ' ';
@@ -1050,6 +1050,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function hostname_callback() {
 			printf ( '<input type="text" id="input_hostname" name="postman_options[hostname]" value="%s" size="40" class="required"/>', null !== $this->options->getHostname () ? esc_attr ( $this->options->getHostname () ) : '' );
+		}
+		
+		/**
+		 * Get the settings option array and print one of its values
+		 */
+		public function port_test_hostname_callback() {
+			printf ( '<input type="text" id="input_hostname" name="postman_options[hostname]" value="portquiz.net" size="40" class="required"/>' );
 		}
 		
 		/**
@@ -1289,9 +1296,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 			submit_button ( _x ( 'Begin Test', 'Button Label', 'postman-smtp' ), 'primary', 'begin-port-test', true );
 			print '</form>';
 			print '<table id="testing_table">';
-			printf ( '<tr><td class="port">Port 25</td><td id="port-test-port-25">%s</td>', _x ( 'Unknown', 'Port Test Status', 'postman-smtp' ) );
-			printf ( '<tr><td class="port">Port 465</td><td id="port-test-port-465">%s</td>', _x ( 'Unknown', 'Port Test Status', 'postman-smtp' ) );
-			printf ( '<tr><td class="port">Port 587</td><td id="port-test-port-587">%s</td>', _x ( 'Unknown', 'Port Test Status', 'postman-smtp' ) );
+			$portName = _x ( 'Port %s', 'Port Test', 'postman-smtp' );
+			$portStatus = _x ( 'Unknown', 'Port Test Status', 'postman-smtp' );
+			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 25, sprintf ( $portName, 25 ), __ ( 'SMTP port; commonly blocked', 'Port Test', 'postman-smtp' ), $portStatus );
+			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 443, sprintf ( $portName, 443 ), __ ( 'HTTPS port; can be used by the Postman Gmail Extension', 'Port Test', 'postman-smtp' ), $portStatus );
+			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 465, sprintf ( $portName, 465 ), __ ( 'SMTPS-SSL port;', 'Port Test', 'postman-smtp' ), $portStatus );
+			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 587, sprintf ( $portName, 587 ), __ ( 'SMTPS-TLS port;', 'Port Test', 'postman-smtp' ), $portStatus );
 			print '</table>';
 			print '</div>';
 		}

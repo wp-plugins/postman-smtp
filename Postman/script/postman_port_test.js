@@ -13,6 +13,7 @@ jQuery(document).ready(function() {
 		totalPortsTested = 0;
 		portsToBeTested = 0;
 		portTest('#port-test-port-25', 25, $el);
+		portTest('#port-test-port-443', 443, $el);
 		portTest('#port-test-port-587', 587, $el);
 		portTest('#port-test-port-465', 465, $el);
 
