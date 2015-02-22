@@ -854,9 +854,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 						$winningRecommendation ['priority'] = 1;
 						$winningRecommendation ['success'] = false;
 						if (endsWith ( $hostData ['host'], 'gmail.com' )) {
-							$winningRecommendation ['message'] = __ ( 'Postman can\'t find any way to send mail on your system. Contact your host to get some ports opened, or considering installing the Postman Gmail Extension to send mail over the HTTPS port (443).' );
+							$winningRecommendation ['message'] = __ ( 'Postman can\'t find any way to send mail on your system. Contact your host to get some ports opened, or considering installing the Postman Gmail Extension to send mail over the HTTPS port (443).' , 'postman-smtp');
 						} else {
-							$winningRecommendation ['message'] = __ ( 'Postman can\'t find any way to send mail on your system. Contact your host to get some ports opened.' );
+							$winningRecommendation ['message'] = __ ( 'Postman can\'t find any way to send mail on your system. Contact your host to get some ports opened.' , 'postman-smtp');
 						}
 					}
 					$this->logger->debug ( 'Configuration recommendation: ' . $winningRecommendation ['message'] );
@@ -1223,9 +1223,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 			
 			if (PostmanState::getInstance ()->isTimeToReviewPostman ()) {
-				printf ( '<h4>%s</h4>', __ ( 'Has Postman been working well for you?' ) );
+				printf ( '<h4>%s</h4>', __ ( 'Has Postman been working well for you?' , 'postman-smtp') );
 				/* translators: where %1$d is the number of messages delivered and %2$s is the URL to the WordPress.org review and ratings page */
-				printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Postman has delivered %1$d emails for you! Please considering leaving a <a href="%2$s">review of Postman SMTP</a> at WordPress.org to help spread the word<br/> about the new way to send email from WordPress! I love to read your comments :)' ), PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp' ) );
+				printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Postman has delivered %1$d emails for you! Please considering leaving a <a href="%2$s">review of Postman SMTP</a> at WordPress.org to help spread the word<br/> about the new way to send email from WordPress! I love to read your comments :)' , 'postman-smtp'), PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp' ) );
 			}
 			
 			$diagnostics = sprintf ( 'PHP v5.3: %s (%s)%s', ($phpVersionRequirement ? 'Yes' : 'No'), PHP_VERSION, PHP_EOL );
@@ -1245,8 +1245,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$diagnostics .= sprintf ( 'Postman SMTP Host: %s%s', $this->options->getHostname (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman SMTP Port: %s%s', $this->options->getPort (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Sender Matches user: %s%s', ($this->options->getSenderEmail () == $this->options->getUsername () ? 'Yes' : 'No'), PHP_EOL );
-			printf ( '<h4>%s</h4>', __ ( 'Are you having any issues with Postman?' ) );
-			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Here is some <a id="show-diagnostics" href="#">diagnostic info</a> that you can report to the author.' ) ) );
+			printf ( '<h4>%s</h4>', __ ( 'Are you having any issues with Postman?' , 'postman-smtp') );
+			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Here is some <a id="show-diagnostics" href="#">diagnostic info</a> that you can report to the author.' , 'postman-smtp') ) );
 			printf ( '<textarea id="diagnostic-text" hidden="hidden" cols="80" rows="10">%s</textarea>', $diagnostics );
 		}
 		

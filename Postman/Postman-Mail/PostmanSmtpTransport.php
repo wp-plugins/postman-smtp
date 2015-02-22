@@ -200,7 +200,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$authDesc = $this->getAuthenticationDescription ( $recommendation ['auth'] );
 			$recommendation ['port'] = $port;
 			$recommendation ['transport'] = self::SLUG;
-			$recommendation ['message'] = sprintf ( __ ( 'Postman recommends %1$s with %2$s authentication on port %3$d.' ), $transportDescription, $authDesc, $port );
+			$recommendation ['message'] = sprintf ( __ ( 'Postman recommends %1$s with %2$s authentication on port %3$d.' , 'postman-smtp'), $transportDescription, $authDesc, $port );
 			return $recommendation;
 		}
 	}
