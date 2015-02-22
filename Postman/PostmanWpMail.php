@@ -34,8 +34,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$logger->debug ( 'Sending mail' );
 			// interact with the SMTP Engine
 			try {
-				$transport = PostmanTransportUtils::getCurrentTransport ();
-				$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken, $transport );
+				$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken );
 				try {
 					$engine->allowSenderOverride ( ! $wpMailOptions->isSenderNameOverridePrevented () );
 					$engine->setBody ( $message );

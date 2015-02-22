@@ -22,7 +22,7 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
 		public function createAuthenticationManager(PostmanTransport $transport, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanConfigTextHelper $scribe = null) {
-			$authenticationType = $options->getAuthorizationType ();
+			$authenticationType = $options->getAuthenticationType ();
 			$hostname = $options->getHostname ();
 			$clientId = $options->getClientId ();
 			$clientSecret = $options->getClientSecret ();
@@ -32,11 +32,11 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 				$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $hostname );
 			}
 			$redirectUrl = $scribe->getCallbackUrl ();
-			if ($transport->isOAuthUsed ( $options->getAuthorizationType () ) && $transport->isServiceProviderGoogle ( $hostname )) {
+			if ($transport->isOAuthUsed ( $options->getAuthenticationType () ) && $transport->isServiceProviderGoogle ( $hostname )) {
 				$authenticationManager = new PostmanGoogleAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl, $senderEmail );
-			} else if ($transport->isOAuthUsed ( $options->getAuthorizationType () ) && $transport->isServiceProviderMicrosoft ( $hostname )) {
+			} else if ($transport->isOAuthUsed ( $options->getAuthenticationType () ) && $transport->isServiceProviderMicrosoft ( $hostname )) {
 				$authenticationManager = new PostmanMicrosoftAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl );
-			} else if ($transport->isOAuthUsed ( $options->getAuthorizationType () ) && $transport->isServiceProviderYahoo ( $hostname )) {
+			} else if ($transport->isOAuthUsed ( $options->getAuthenticationType () ) && $transport->isServiceProviderYahoo ( $hostname )) {
 				$authenticationManager = new PostmanYahooAuthenticationManager ( $clientId, $clientSecret, $authorizationToken, $redirectUrl );
 			} else {
 				$authenticationManager = new PostmanNonOAuthAuthenticationManager ();

@@ -187,6 +187,7 @@ function getHostsToCheck(hostname) {
 	};
 	jQuery.post(ajaxurl, data, function(response) {
 		jQuery('table#wizard_port_test').html('');
+		jQuery('#wizard_recommendation').html('');
 		for ( var x in response.hosts) {
 			var html = '';
 			var host = response.hosts[x].host;

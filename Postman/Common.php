@@ -41,6 +41,7 @@ if (! interface_exists ( 'PostmanTransport' )) {
 		public function isTranscriptSupported();
 		public function getSlug();
 		public function getName();
+		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken);
 		public function createZendMailTransport($hostname, $config);
 		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token);

@@ -24,7 +24,7 @@ if (! interface_exists ( "PostmanOptionsInterface" )) {
 		public function getClientId();
 		public function getClientSecret();
 		public function getTransportType();
-		public function getAuthorizationType();
+		public function getAuthenticationType();
 		public function getEncryptionType();
 		public function getUsername();
 		public function getPassword();

@@ -88,7 +88,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			}
 		}
 		public function isPermissionNeeded(PostmanOAuthToken $token) {
-			$authType = $this->getAuthorizationType ();
+			$authType = $this->getAuthenticationType ();
 			$hostname = $this->getHostname ();
 			$port = $this->getPort ();
 			$senderEmail = $this->getSenderEmail ();
@@ -164,7 +164,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::TRANSPORT_TYPE] ))
 				return $this->options [PostmanOptions::TRANSPORT_TYPE];
 		}
-		public function getAuthorizationType() {
+		public function getAuthenticationType() {
 			if (isset ( $this->options [PostmanOptions::AUTHENTICATION_TYPE] ))
 				return $this->options [PostmanOptions::AUTHENTICATION_TYPE];
 		}
@@ -284,19 +284,19 @@ if (! class_exists ( "PostmanOptions" )) {
 			return $this->isAuthTypeLogin () || $this->isAuthTypeCrammd5 () || $this->isAuthTypePlain ();
 		}
 		public function isAuthTypeOAuth2() {
-			return PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $this->getAuthorizationType ();
+			return PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $this->getAuthenticationType ();
 		}
 		public function isAuthTypeLogin() {
-			return PostmanOptions::AUTHENTICATION_TYPE_LOGIN == $this->getAuthorizationType ();
+			return PostmanOptions::AUTHENTICATION_TYPE_LOGIN == $this->getAuthenticationType ();
 		}
 		public function isAuthTypePlain() {
-			return PostmanOptions::AUTHENTICATION_TYPE_PLAIN == $this->getAuthorizationType ();
+			return PostmanOptions::AUTHENTICATION_TYPE_PLAIN == $this->getAuthenticationType ();
 		}
 		public function isAuthTypeCrammd5() {
-			return PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 == $this->getAuthorizationType ();
+			return PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 == $this->getAuthenticationType ();
 		}
 		public function isAuthTypeNone() {
-			return PostmanOptions::AUTHENTICATION_TYPE_NONE == $this->getAuthorizationType ();
+			return PostmanOptions::AUTHENTICATION_TYPE_NONE == $this->getAuthenticationType ();
 		}
 	}
 }

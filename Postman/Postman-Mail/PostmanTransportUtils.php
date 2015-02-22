@@ -73,7 +73,7 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 		 */
 		public static function isRequestOAuthPermissionAllowed(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authToken) {
 			// does the current transport use OAuth 2.0
-			$oauthUsed = self::getCurrentTransport ()->isOAuthUsed ( $options->getAuthorizationType () );
+			$oauthUsed = self::getCurrentTransport ()->isOAuthUsed ( $options->getAuthenticationType () );
 			
 			// is the transport configured
 			$configured = self::getCurrentTransport ()->isConfigured ( $options, $authToken );
@@ -107,10 +107,10 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 				$recommendation = $transport->getConfigurationRecommendation ( $hostData );
 				if ($recommendation) {
 					$logger->debug ( sprintf ( 'Got a recommendation: [%d] %s', $recommendation ['priority'], $recommendation ['message'] ) );
-				}
-				if ($recommendation && $recommendation ['priority'] > $priority) {
-					$priority = $recommendation ['priority'];
-					$winningRecommendation = $recommendation;
+					if ($recommendation ['priority'] > $priority) {
+						$priority = $recommendation ['priority'];
+						$winningRecommendation = $recommendation;
+					}
 				}
 			}
 			return $winningRecommendation;

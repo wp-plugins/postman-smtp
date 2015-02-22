@@ -9,6 +9,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 * @param string $hostname        	
 		 */
 		public function testSmtpPorts($hostname, $port, $timeout = 20) {
+			if($port==465) return false;
 			$fp = @fsockopen ( $hostname, $port, $errno, $this->errstr, $timeout );
 			if (! $fp) {
 				return false;

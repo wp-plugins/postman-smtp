@@ -30,13 +30,20 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function getName() {
 			return _x ( 'SMTP', 'Transport Name', 'postman-smtp' );
 		}
+		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
+			if ($options->getAuthenticationType () == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
+				return new PostmanOAuth2MailAuthenticator ( $options, $authToken );
+			} else {
+				return new PostmanGeneralMailAuthenticator ( $options, $authToken );
+			}
+		}
 		public function createZendMailTransport($hostname, $config) {
 			return new Zend_Mail_Transport_Smtp ( $hostname, $config );
 		}
 		public function getDeliveryDetails(PostmanOptionsInterface $options) {
 			$deliveryDetails ['transport_name'] = $this->getTransportDescription ( $options->getEncryptionType () );
 			$deliveryDetails ['host'] = $options->getHostname () . ':' . $options->getPort ();
-			$deliveryDetails ['auth_desc'] = $this->getAuthenticationDescription ( $options->getAuthorizationType () );
+			$deliveryDetails ['auth_desc'] = $this->getAuthenticationDescription ( $options->getAuthenticationType () );
 			/* translators: where %1$s is the transport type, %2$s is the host, and %3$s is the Authentication Type (e.g. Postman will send mail via smtp.gmail.com:465 using OAuth 2.0 authentication.) */
 			return sprintf ( __ ( 'Postman will send mail via %1$s to %2$s using %3$s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails ['transport_name'] . '</b>', '<b>' . $deliveryDetails ['host'] . '</b>', '<b>' . $deliveryDetails ['auth_desc'] . '</b>' );
 		}
@@ -88,7 +95,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$configured = $this->isConfigured ( $options, $token );
 			
 			// 2. do we have permission from the OAuth 2.0 provider
-			$configured &= ! $this->isPermissionNeeded ( $token );
+			$configured &= ! $this->isPermissionNeeded ( $options, $token );
 			
 			return $configured;
 		}
@@ -109,10 +116,10 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$hostname = $options->getHostname ();
 			return $options->isAuthTypeOAuth2 () && ! (empty ( $clientId ) || empty ( $clientSecret ) || empty ( $senderEmail ));
 		}
-		private function isPermissionNeeded(PostmanOAuthToken $token) {
+		private function isPermissionNeeded(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			$accessToken = $token->getAccessToken ();
 			$refreshToken = $token->getRefreshToken ();
-			return (empty ( $accessToken ) || empty ( $refreshToken ));
+			return $options->isAuthTypeOAuth2 () && (empty ( $accessToken ) || empty ( $refreshToken ));
 		}
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			if (! $this->isTransportConfigured ( $options )) {
@@ -122,7 +129,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			} else if ($options->isAuthTypeOAuth2 () && ! $this->isOAuthAuthenticationConfigured ( $options )) {
 				/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label (e.g. Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, Client ID, and Client Secret.) */
 				return sprintf ( __ ( 'Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, %1$s, and %2$s.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
-			} else if ($this->isPermissionNeeded ( $token )) {
+			} else if ($this->isPermissionNeeded ( $options, $token )) {
 				/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label */
 				$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
 				$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanAdminController::getActionUrl ( PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG ), $scribe->getRequestPermissionLinkText () );
@@ -169,6 +176,11 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$hostname = $hostData ['host'];
 			$oauthPotential = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
 			if ($oauthPotential && $port == 465) {
+				$recommendation ['priority'] = 120;
+				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
+				$recommendation ['display_auth'] = 'oauth2';
+			} else if ($oauthPotential && $port == 587) {
 				$recommendation ['priority'] = 100;
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
@@ -188,20 +200,22 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
 				$recommendation ['display_auth'] = 'password';
-			} else {
+			} else if ($port == 25) {
 				$recommendation ['priority'] = 20;
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_NONE;
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
 				$recommendation ['display_auth'] = 'none';
 			}
-			$recommendation ['success'] = true;
-			$transportDescription = $this->getTransportDescription ( $recommendation ['enc'] );
-			$encType = strtoupper ( $recommendation ['enc'] );
-			$authDesc = $this->getAuthenticationDescription ( $recommendation ['auth'] );
-			$recommendation ['port'] = $port;
-			$recommendation ['transport'] = self::SLUG;
-			$recommendation ['message'] = sprintf ( __ ( 'Postman recommends %1$s with %2$s authentication on port %3$d.' , 'postman-smtp'), $transportDescription, $authDesc, $port );
-			return $recommendation;
+			if (isset ( $recommendation )) {
+				$recommendation ['success'] = true;
+				$transportDescription = $this->getTransportDescription ( $recommendation ['enc'] );
+				$encType = strtoupper ( $recommendation ['enc'] );
+				$authDesc = $this->getAuthenticationDescription ( $recommendation ['auth'] );
+				$recommendation ['port'] = $port;
+				$recommendation ['transport'] = self::SLUG;
+				$recommendation ['message'] = sprintf ( __ ( 'Postman recommends %1$s with %2$s authentication on port %3$d.', 'postman-smtp' ), $transportDescription, $authDesc, $port );
+				return $recommendation;
+			}
 		}
 	}
 }
@@ -235,6 +249,8 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		public function getSlug() {
 		}
 		public function getName() {
+		}
+		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
 		}
 		public function createZendMailTransport($hostname, $config) {
 		}

@@ -2,6 +2,7 @@
 if (! class_exists ( "PostmanAdminController" )) {
 	
 	require_once "PostmanSendTestEmail.php";
+	require_once "Postman-Mail/PostmanSmtpEngine.php";
 	require_once 'PostmanOptions.php';
 	require_once 'PostmanState.php';
 	require_once 'PostmanStats.php';
@@ -999,7 +1000,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function authentication_type_callback() {
-			$authType = $this->options->getAuthorizationType ();
+			$authType = $this->options->getAuthenticationType ();
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::AUTHENTICATION_TYPE );
 			printf ( '<option class="input_auth_type_none" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_NONE, $authType == PostmanOptions::AUTHENTICATION_TYPE_NONE ? 'selected="selected"' : '', _x ( 'None', 'Authentication Type', 'postman-smtp' ) );
 			printf ( '<option class="input_auth_type_plain" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_PLAIN, $authType == PostmanOptions::AUTHENTICATION_TYPE_PLAIN ? 'selected="selected"' : '', _x ( 'Plain', 'Authentication Type', 'postman-smtp' ) );
@@ -1009,7 +1010,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '</select>';
 		}
 		public function authenticationTypeRadioCallback() {
-			$authType = $this->options->getAuthorizationType ();
+			$authType = $this->options->getAuthenticationType ();
 			print '<table class="input_authentication_type"><tr>';
 			printf ( '<td><input type="radio" id="input_auth_none"   name="postman_options[auth_type]" class="input_auth_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::AUTHENTICATION_TYPE_NONE, _x ( 'None', 'Authentication Type', 'postman-smtp' ) );
 			printf ( '<td><input type="radio" id="input_auth_plain"  name="postman_options[auth_type]" class="input_auth_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::AUTHENTICATION_TYPE_PLAIN, _x ( 'Plain', 'Authentication Type', 'postman-smtp' ) );
@@ -1240,7 +1241,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$diagnostics .= sprintf ( 'Postman Transport: %s%s', $this->options->getTransportType (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Transport Configured: %s%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Transport Ready: %s%s', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Authorization Type: %s%s', $this->options->getAuthorizationType (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Authorization Type: %s%s', $this->options->getAuthenticationType (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Encryption Type: %s%s', $this->options->getEncryptionType (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman SMTP Host: %s%s', $this->options->getHostname (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman SMTP Port: %s%s', $this->options->getPort (), PHP_EOL );
@@ -1272,7 +1273,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<section id="smtp_config">';
 			do_settings_sections ( PostmanAdminController::SMTP_OPTIONS );
 			print '</section>';
-			$authType = $this->options->getAuthorizationType ();
+			$authType = $this->options->getAuthenticationType ();
 			print '<section id="password_auth_config">';
 			do_settings_sections ( PostmanAdminController::BASIC_AUTH_OPTIONS );
 			print ('</section>') ;

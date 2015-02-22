@@ -15,22 +15,23 @@ Having [trouble sending email](https://wordpress.org/support/topic/smtp-connect-
 
 Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service provider [pre-approves Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Other plugins seek approval each time they connect, but Postman will deliver your email every time without rejection.
 
-###* What's New for v1.4 *
-*Featuring OAuth 2.0 for Gmail, Hotmail and now **Yahoo Mail** users!*
+###* What's New for v1.5 *
+*Postman is one month old! :D We're celebrating by sending your Gmail through the HTTPS port! That's right, blocked port problems are SO last year!*
 
 = Features =
 * Send mail to any host just like the 'Big Five' WordPress SMTP plugins
 * Send mail to Gmail, Hotmail or Yahoo Mail using traditional auth or OAuth 2.0
+* Blocked ports? No problem! Send your Gmail through the HTTPS port (443) with the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-api/)
+* Easy to use Setup Wizard takes the guesswork out of configuring email
 * Fire-and-forget: Mail delivery continues even if your password changes
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
-* Easy to use Setup Wizard takes the guesswork out of configuring email
 * Supports International alphabets, HTML Mail and MultiPart/MIME
 * Supports  Plain, Login, CRAM-MD5 and XOAUTH2 authentication (SASL)
 * Supports SSL and TLS security (SMTPS)
 * Upgrading is easy! Postman can import SMTP settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
 * Available translations: English, French
 
-If you are willing to help translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
+If you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
 
 = Requirements =
 * WordPress 3.9 (or later)

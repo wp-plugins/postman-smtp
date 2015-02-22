@@ -1,7 +1,5 @@
 <?php
-require_once 'PostmanOAuthSmtpEngine.php';
-require_once 'PostmanPasswordAuthSmtpEngine.php';
-require_once 'PostmanNoAuthSmtpEngine.php';
+require_once 'PostmanMailAuthenticator.php';
 
 /**
  *
@@ -22,25 +20,35 @@ class PostmanSmtpEngineFactory {
 	private function __construct() {
 		$this->logger = new PostmanLogger ( get_class ( $this ) );
 	}
-	public function createSmtpEngine(PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanTransport $transport) {
+	
+	/**
+	 *
+	 * @param PostmanOptions $options        	
+	 * @param PostmanOAuthToken $authorizationToken        	
+	 * @return PostmanSmtpEngine
+	 */
+	public function createSmtpEngine(PostmanOptions $options, PostmanOAuthToken $authorizationToken) {
+		$transport = PostmanTransportUtils::getCurrentTransport ();
+		assert ( isset ( $transport ) );
+		$authenticator = $transport->createPostmanMailAuthenticator ( $options, $authorizationToken );
 		if ($options->isAuthTypeOAuth2 ()) {
-			// ensure the token is up-to-date
-			$this->logger->debug ( 'Ensuring Access Token is up-to-date' );
-			// interact with the Authentication Manager
-			$wpMailAuthManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager($transport, $options, $authorizationToken);
-			if ($wpMailAuthManager->isAccessTokenExpired ()) {
-				$this->logger->debug ( 'Access Token has expired, attempting refresh' );
-				$wpMailAuthManager->refreshToken ();
-				$authorizationToken->save ();
-			}
-			$engine = new PostmanOAuthSmtpEngine($authorizationToken->getAccessToken (), $options->getAuthorizationType(), $options->getEncryptionType());
-		} else if ($options->isAuthTypeNone ()) {
-			$engine = new PostmanNoAuthSmtpEngine ();
-		} else {
-			$engine = new PostmanPasswordAuthSmtpEngine ( $options->getUsername (), $options->getPassword (), $options->getAuthorizationType (), $options->getEncryptionType () );
+			$this->ensureAuthtokenIsUpdated ( $transport, $options, $authorizationToken );
 		}
-		$this->logger->debug ( 'Created ' . get_class ( $engine ) );
-		$engine->setTransport($transport);
+		$engine = new PostmanSmtpEngine ( $authenticator, $transport );
 		return $engine;
+	}
+	
+	/**
+	 */
+	private function ensureAuthtokenIsUpdated(PostmanTransport $transport, PostmanOptions $options, PostmanOAuthToken $authorizationToken) {
+		// ensure the token is up-to-date
+		$this->logger->debug ( 'Ensuring Access Token is up-to-date' );
+		// interact with the Authentication Manager
+		$wpMailAuthManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $transport, $options, $authorizationToken );
+		if ($wpMailAuthManager->isAccessTokenExpired ()) {
+			$this->logger->debug ( 'Access Token has expired, attempting refresh' );
+			$wpMailAuthManager->refreshToken ();
+			$authorizationToken->save ();
+		}
 	}
 }
