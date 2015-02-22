@@ -1328,9 +1328,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
 			
 			// Wizard Step 1
-			printf ( '<h5>%s</h5>', _x ( 'Sender Address Details', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<h5>%s</h5>', _x ( 'Sender Details', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
-			printf ( '<legend>%s</legend>', _x ( 'Sender Address Details', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<legend>%s</legend>', _x ( 'Who is the mail coming from?', 'Wizard Step Title', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'Let\'s begin! Please enter the email address and name you\'d like to send mail from.', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'Please note that to combat Spam, many email services will <em>not</em> let you send from an e-mail address other than your own.', 'postman-smtp' ) );
 			printf ( '<label for="postman_options[sender_email]">%s</label>', _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ) );
@@ -1342,18 +1342,18 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// Wizard Step 2
 			printf ( '<h5>%s</h5>', _x ( 'SMTP Server Hostname', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
-			printf ( '<legend>%s</legend>', _x ( 'SMTP Server Hostname', 'Wizard Step Title', 'postman-smtp' ) );
-			printf ( '<p>%s</p>', __ ( 'This is the server that Postman will use to deliver your mail.', 'postman-smtp' ) );
+			printf ( '<legend>%s</legend>', _x ( 'Who will relay the mail?', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'This is the server, also known as a Mail Submission Agent (MSA), that Postman will use to deliver your mail. If possible, Postman will try to determine this hostname based on the e-mail address.', 'postman-smtp' ) );
 			printf ( '<label for="hostname">%s</label>', _x ( 'SMTP Server Hostname', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->hostname_callback ();
 			print '</fieldset>';
 			
 			// Wizard Step 3
-			printf ( '<h5>%s</h5>', _x ( 'SMTP Server Port', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<h5>%s</h5>', _x ( 'Connectivity Test', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
-			printf ( '<legend>%s</legend>', _x ( 'SMTP Server Port', 'Wizard Step Title', 'postman-smtp' ) );
-			printf ( '<p>%s</p>', __ ( 'Your email provider will dictate which port to use.', 'postman-smtp' ) );
-			printf ( '<label for="hostname">%s</label>', _x ( 'SMTP Server Port', 'Configuration Input Field', 'postman-smtp' ) );
+			printf ( '<legend>%s</legend>', _x ( 'How will the connection to the MSA be established?', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'The server hostname and port you can use is a combination of what your mail service provider offers, and what your WordPress host allows.', 'postman-smtp' ) );
+			printf ( '<label for="hostname">%s</label>', _x ( 'Available routes', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->port_callback ( array (
 					'style' => 'style="display:none"' 
 			) );
