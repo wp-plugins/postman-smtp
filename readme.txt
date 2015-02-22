@@ -16,12 +16,12 @@ The big email services have begun [increasing their security](http://googleonlin
 Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. This allows Postman to ensure your email will always be accepted. During OAuth configuration, your email service provider [pre-approves Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Other plugins seek approval each time they connect, but Postman will deliver your email every time with no fear of rejection.
 
 ###* What's New for v1.5 *
-*Postman is one month old and 1000 downloads strong! :D We're celebrating by [sending your Gmail through the HTTPS port](https://wordpress.org/plugins/postman-gmail-api/)! That's right, blocked port problems are SO last year!*
+*Postman is one month old and 1000 downloads strong! :D We're celebrating by [sending your Gmail through the HTTPS port](https://wordpress.org/plugins/postman-gmail-extension/)! That's right, blocked port problems are SO last year!*
 
 = Features =
 * Send mail to any host just like the 'Big Five' WordPress SMTP plugins
 * Send mail to Gmail, Hotmail or Yahoo Mail using traditional auth or OAuth 2.0
-* Blocked ports? No problem! Send your Gmail through the HTTPS port (443) with the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-api/)
+* Blocked ports? No problem! Send your Gmail through the HTTPS port (443) with the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-extension/)
 * Easy to use Setup Wizard takes the guesswork out of configuring email
 * Fire-and-forget: Mail delivery continues even if your password changes
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
@@ -41,7 +41,7 @@ If you are willing to translate Postman into your language, [please let me know]
 
 == Installation ==
 
-> Please be aware that if your host provides an internal mail server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to external SMTP servers and Postman will not work for you. Use Postman's Port Test utility to determine if your host has a firewal in place. If all your ports are blocked, you may want to try the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-api/) to send email over the Web (HTTPS) port.
+> Please be aware that if your host provides an internal mail server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to external SMTP servers and Postman will not work for you. Use Postman's Port Test utility to determine if your host has a firewal in place. If all your ports are blocked, you may want to try the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-extension/) to send email over the Web (HTTPS) port.
 
 = Easy install and setup! (Recommended for all users) =
 1. Install and activate the plugin through the 'Plugins' menu in WordPress.
@@ -210,6 +210,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Added support for modular transports. The first external transport is the Postman Gmail Extension, which uses the Gmail API to send mail out on the HTTPS port, a convenient way around traditional TCP port blocks for Gmail users
 * Made my debug logging "less agressive" so that broken systems (those that pipe warning messages to STDOUT regardless of the WordPress WP_DEBUG_DISPLAY setting or PHP's display_errors settings) will no longer experience the Port Test hanging during a check
 * Fixed a bug in the Setup Wizard where it would not use OAuth 2.0 on port 587
+* Fixed a bug where Postman refused to send mail with Password authentication and no encryption (who does that??)
 
 = 1.4.1 - 2015-02-17 =
 * All text has been [externalized](http://plugins.svn.wordpress.org/postman-smtp/trunk/Postman/languages/postman-smtp.pot) in prep for [I18N Internationalization and localization](http://codex.wordpress.org/I18n_for_WordPress_Developers)
