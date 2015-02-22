@@ -48,12 +48,13 @@ function handleConfigurationResponse(response) {
 		if (response.enc_type != '') {
 			jQuery(postman_enc_for_oauth2_el).val(response.enc_type);
 		}
-		if (response.port != '') {
-			jQuery(postman_port_element_name).val(response.port);
+		if (response.port_id != '') {
+			jQuery('#' + response.port_id).prop('checked', true);
 		}
-		var el25 = jQuery('#wizard_port_25');
-		var el465 = jQuery('#wizard_port_465');
-		var el587 = jQuery('#wizard_port_587');
+		if(!response.user_override) {
+		jQuery('#wizard_recommendation').html(
+				'<span style="color:green">' + response.message + '</span>');
+		}
 		// disable the fields we don't use so validation
 		// will work
 		if (response.display_auth == 'oauth2') {
@@ -83,16 +84,6 @@ function handleConfigurationResponse(response) {
 		} else {
 			hide('.wizard-auth-oauth2');
 			hide('.wizard-auth-basic');
-		}
-		if (response.port == 25) {
-			el25.prop("checked", true);
-			enable('#wizard_port_25');
-		} else if (response.port == 465) {
-			el465.prop("checked", true);
-			enable('#wizard_port_465');
-		} else if (response.port == 587) {
-			el587.prop("checked", true);
-			enable('#wizard_port_587');
 		}
 	}
 }

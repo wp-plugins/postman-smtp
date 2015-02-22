@@ -34,7 +34,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			return new Zend_Mail_Transport_Smtp ( $hostname, $config );
 		}
 		public function getDeliveryDetails(PostmanOptionsInterface $options) {
-			$deliveryDetails ['transport_name'] = getTransportDescription ( $options->getEncryptionType () );
+			$deliveryDetails ['transport_name'] = $this->getTransportDescription ( $options->getEncryptionType () );
 			$deliveryDetails ['host'] = $options->getHostname () . ':' . $options->getPort ();
 			$deliveryDetails ['auth_desc'] = $this->getAuthenticationDescription ( $options->getAuthorizationType () );
 			/* translators: where %1$s is the transport type, %2$s is the host, and %3$s is the Authentication Type (e.g. Postman will send mail via smtp.gmail.com:465 using OAuth 2.0 authentication.) */
@@ -170,46 +170,36 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$oauthPotential = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
 			if ($oauthPotential && $port == 465) {
 				$recommendation ['priority'] = 100;
-				$recommendation ['success'] = true;
-				$recommendation ['message'] = __ ( 'Postman recommends OAuth 2.0 configuration on port 465.' );
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
-				$recommendation ['port'] = 465;
+				$recommendation ['display_auth'] = 'oauth2';
 			} else if ($oauthPotential && $port == 587) {
 				$recommendation ['priority'] = 80;
-				$recommendation ['success'] = true;
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
-				$recommendation ['port'] = 587;
-				$recommendation ['transport'] = self::SLUG;
+				$recommendation ['display_auth'] = 'password';
 			} else if ($port == 465) {
 				$recommendation ['priority'] = 60;
-				$recommendation ['success'] = true;
-				$recommendation ['message'] = __ ( 'Postman recommends Password configuration with SSL Security on port 465.' );
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
-				$recommendation ['port'] = 465;
-				$recommendation ['transport'] = self::SLUG;
+				$recommendation ['display_auth'] = 'password';
 			} else if ($port == 587) {
 				$recommendation ['priority'] = 40;
-				$recommendation ['success'] = true;
-				$recommendation ['message'] = __ ( 'Postman recommends Password configuration with TLS Security on port 587.' );
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
-				$recommendation ['port'] = 587;
-				$recommendation ['transport'] = self::SLUG;
+				$recommendation ['display_auth'] = 'password';
 			} else {
 				$recommendation ['priority'] = 20;
-				$recommendation ['success'] = true;
-				$recommendation ['message'] = sprintf ( __ ( 'Postman recommends no authentication on port %d.' ), $port );
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_NONE;
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
-				$recommendation ['port'] = $port;
-				$recommendation ['transport'] = self::SLUG;
+				$recommendation ['display_auth'] = 'none';
 			}
+			$recommendation ['success'] = true;
 			$transportDescription = $this->getTransportDescription ( $recommendation ['enc'] );
 			$encType = strtoupper ( $recommendation ['enc'] );
 			$authDesc = $this->getAuthenticationDescription ( $recommendation ['auth'] );
+			$recommendation ['port'] = $port;
+			$recommendation ['transport'] = self::SLUG;
 			$recommendation ['message'] = sprintf ( __ ( 'Postman recommends %1$s with %2$s authentication on port %3$d.' ), $transportDescription, $authDesc, $port );
 			return $recommendation;
 		}

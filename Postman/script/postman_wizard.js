@@ -104,14 +104,6 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 
 		getHostsToCheck(jQuery(postman_hostname_element_name).val());
 
-		/*
-		 * wizardPortTest(jQuery('#wizard_port_465'),
-		 * jQuery('#wizard_port_465_status'));
-		 * wizardPortTest(jQuery('#wizard_port_25'),
-		 * jQuery('#wizard_port_25_status'));
-		 * wizardPortTest(jQuery('#wizard_port_587'),
-		 * jQuery('#wizard_port_587_status'));
-		 */
 	} else if (currentIndex === 2) {
 
 		// user has clicked next but we haen't finished the check
@@ -247,15 +239,33 @@ function getHostsToCheck(hostname) {
 			var html = '';
 			var host = response.hosts[x].host;
 			var port = response.hosts[x].port
-			var value = "{host : '" + host + "', port : " + port + "}";
+			var value = JSON.stringify(response.hosts[x]);
 			var id = 'port-' + x;
 			var id_status = id + '_status';
 			html += '<tr><td><span>' + host + ':' + port + "</span></td>";
-			html += '<td><input type="radio" id="' + id + '" name="wizard-port" value="'+ value +'" class="required" style="margin-top: 0px" /></td>';
+			html += '<td><input type="radio" id="' + id
+					+ '" name="wizard-port" value=\'' + value
+					+ '\' class="required" style="margin-top: 0px" /></td>';
 			html += '<td id="' + id_status + '"></td></tr>';
 			jQuery('table#wizard_port_test').append(html);
-			wizardPortTest(host, port, 'input#'+id, '#' + id_status);
+			wizardPortTest(host, port, 'input#' + id, '#' + id_status);
 		}
+		jQuery('input[name="wizard-port"]').click(function() {
+			var portCheck = {};
+			portSelection = jQuery('input[name="wizard-port"]:checked');
+			var host = JSON.parse(portSelection.val());
+			host.available = true;
+			host.port_id = portSelection.attr('id');
+			portCheck[0] = host;
+			var data = {
+				'action' : 'get_redirect_url',
+				'referer' : 'wizard',
+				'user_override' : true,
+				'hostname' : hostname,
+				'host_data' : portCheck
+			};
+			populateRedirectUrl(data);
+		});
 	});
 }
 function checkEmail(email) {
@@ -282,59 +292,43 @@ function wizardPortTest(hostname, port, input, state) {
 		'hostname' : hostname,
 		'port' : port
 	};
-	jQuery.post(ajaxurl, data, function(response) {
-		portsChecked++;
-		if (response.success) {
-			elState.html(postman_port_test_open);
-			el.removeAttr('disabled');
-			totalAvail++;
-		} else {
-			elState.html(postman_port_test_closed);
-		}
-		if (portsChecked >= portsToCheck) {
-			var el25 = jQuery('#wizard_port_25');
-			var el465 = jQuery('#wizard_port_465');
-			var el587 = jQuery('#wizard_port_587');
-			var el25_avail = el25.attr('disabled') != 'disabled';
-			var el465_avail = el465.attr('disabled') != 'disabled';
-			var el587_avail = el587.attr('disabled') != 'disabled';
-			// ask the server what to do: oauth and on which
-			// port, or password and on which port
-			if (totalAvail == 0) {
-				alert(postman_wizard_no_ports);
-			} else {
-				// var person = {firstName:"John", lastName:"Doe", age:46};
+	jQuery.post(ajaxurl, data,
+			function(response) {
+				portsChecked++;
+				if (response.success) {
+					elState.html(postman_port_test_open);
+					el.removeAttr('disabled');
+					totalAvail++;
+				} else {
+					elState.html(postman_port_test_closed);
+				}
+				if (portsChecked >= portsToCheck) {
+					if (totalAvail == 0) {
+						alert(postman_wizard_no_ports);
+					} else {
+						var rows = jQuery('table#wizard_port_test tr');
+						var portCheck = {};
+						rows
+								.each(function(index) {
+									portSelection = jQuery('input', this);
+									var host = JSON.parse(portSelection.val());
+									host.available = portSelection
+											.attr('disabled') != 'disabled';
+									host.port_id = portSelection.attr('id');
+									portCheck[index] = host;
+								});
 
-				// Create the hashmap
-				var portCheck = {};
-				// Add keys to the hashmap
-				portCheck['1'] = {
-					host : 'smtp.gmail.com',
-					port : 25,
-					avail : el25_avail
-				};
-				portCheck['2'] = {
-					host : 'smtp.gmail.com',
-					port : 465,
-					avail : el465_avail
-				};
-				portCheck['3'] = {
-					host : 'smtp.gmail.com',
-					port : 587,
-					avail : el587_avail
-				};
+						var data = {
+							'action' : 'get_redirect_url',
+							'referer' : 'wizard',
+							'hostname' : hostname,
+							'host_data' : portCheck
+						};
+						populateRedirectUrl(data);
+						jQuery('li + li').removeClass('disabled');
+						portCheckBlocksUi = false;
+					}
 
-				var data = {
-					'action' : 'get_redirect_url',
-					'referer' : 'wizard',
-					'hostname' : hostname,
-					'host_data' : portCheck
-				};
-				populateRedirectUrl(data);
-				jQuery('li + li').removeClass('disabled');
-				portCheckBlocksUi = false;
-			}
-
-		}
-	});
+				}
+			});
 }

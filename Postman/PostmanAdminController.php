@@ -800,14 +800,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if (isset ( $_POST ['host_data'] )) {
 				$queryHostData = $_POST ['host_data'];
 			}
+			$userOverride = false;
+			if (isset ( $_POST ['user_override'] )) {
+				$userOverride = filter_var ( $_POST ['user_override'], FILTER_VALIDATE_BOOLEAN );
+			}
 			
 			$transport = PostmanTransportUtils::getTransport ( $queryTransportType );
 			if (! $transport) {
 				$transport = new PostmanDummyTransport ();
-			}
-			$displayAuth = 'none';
-			if ($transport->isOAuthUsed ( $queryAuthType )) {
-				$displayAuth = 'oauth2';
 			}
 			$this->logger->debug ( 'ajaxRedirectUrl transport:' . $queryTransportType );
 			$this->logger->debug ( 'ajaxRedirectUrl authType:' . $queryAuthType );
@@ -834,11 +834,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 					// configure for the highest priority you find
 					$recommendationPriority = - 1;
 					foreach ( $queryHostData as $id => $value ) {
-						if ($value ['avail']) {
+						$available = filter_var ( $value ['available'], FILTER_VALIDATE_BOOLEAN );
+						if ($available) {
 							$hostData ['host'] = $value ['host'];
 							$hostData ['port'] = $value ['port'];
-							$this->logger->debug ( 'Available host: ' . $hostData ['host'] . ':' . $hostData ['port'] );
+							$this->logger->debug ( 'Available host: ' . $hostData ['host'] . ':' . $hostData ['port'] . ' port_id ' . $value ['port_id'] );
 							$recommendation = PostmanTransportUtils::getConfigurationRecommendation ( $hostData );
+							$recommendation ['port_id'] = $value ['port_id'];
 							if ($recommendation && $recommendation ['priority'] > $recommendationPriority) {
 								$recommendationPriority = $recommendation ['priority'];
 								$winningRecommendation = $recommendation;
@@ -864,10 +866,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'client_secret_label' => $scribe->getClientSecretLabel (),
 						'redirect_url_label' => $scribe->getCallbackUrlLabel (),
 						'callback_domain_label' => $scribe->getCallbackDomainLabel (),
-						PostmanOptions::AUTHENTICATION_TYPE => $authType,
-						PostmanOptions::ENCRYPTION_TYPE => $encType,
-						PostmanOptions::PORT => $port,
-						'display_auth' => $displayAuth,
+						PostmanOptions::TRANSPORT_TYPE => $winningRecommendation ['transport'],
+						PostmanOptions::AUTHENTICATION_TYPE => $winningRecommendation ['auth'],
+						PostmanOptions::ENCRYPTION_TYPE => $winningRecommendation ['enc'],
+						PostmanOptions::PORT => $winningRecommendation ['port'],
+						'port_id' => $winningRecommendation ['port_id'],
+						'display_auth' => $winningRecommendation ['display_auth'],
+						'message' => $winningRecommendation ['message'],
+						'user_override' => $userOverride,
 						'success' => true 
 				);
 				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url:' . $scribe->getCallbackUrl () );
@@ -877,10 +883,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->logger->debug ( 'ajaxRedirectUrl answer client_secret_label:' . $scribe->getClientSecretLabel () );
 				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url_label:' . $scribe->getCallbackUrlLabel () );
 				$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain_label:' . $scribe->getCallbackDomainLabel () );
-				$this->logger->debug ( 'ajaxRedirectUrl answer auth_type:' . $authType );
-				$this->logger->debug ( 'ajaxRedirectUrl answer enc_type:' . $encType );
-				$this->logger->debug ( 'ajaxRedirectUrl answer port:' . $port );
-				$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $displayAuth );
+				$this->logger->debug ( 'ajaxRedirectUrl answer transport:' . $response [PostmanOptions::TRANSPORT_TYPE] );
+				$this->logger->debug ( 'ajaxRedirectUrl answer auth_type:' . $response [PostmanOptions::AUTHENTICATION_TYPE] );
+				$this->logger->debug ( 'ajaxRedirectUrl answer enc_type:' . $response [PostmanOptions::ENCRYPTION_TYPE] );
+				$this->logger->debug ( 'ajaxRedirectUrl answer port:' . $response [PostmanOptions::PORT] );
+				$this->logger->debug ( 'ajaxRedirectUrl answer port_id:' . $response ['port_id'] );
+				$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $response ['display_auth'] );
+				$this->logger->debug ( 'ajaxRedirectUrl answer message:' . $response ['message'] );
 			} else {
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),
@@ -1350,6 +1359,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 			print '<table id="wizard_port_test">';
 			print '</table>';
+			print '<br/><p id="wizard_recommendation"></p>';
 			print '</fieldset>';
 			
 			// Wizard Step 4
