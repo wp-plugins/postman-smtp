@@ -851,22 +851,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 							}
 						}
 					}
-					if (! $winningRecommendation) {
-						$winningRecommendation ['priority'] = 1;
-						$winningRecommendation ['success'] = false;
-						if (endsWith ( $hostData ['host'], 'gmail.com' )) {
-							$winningRecommendation ['message'] = __ ( 'Postman can\'t find any way to send mail on your system. Contact your host to get some ports opened, or considering installing the Postman Gmail Extension to send mail over the HTTPS port (443).', 'postman-smtp' );
-						} else {
-							$winningRecommendation ['message'] = __ ( 'Postman can\'t find any way to send mail on your system. Contact your host to get some ports opened.', 'postman-smtp' );
-						}
-					}
-					$this->logger->debug ( 'Configuration recommendation: ' . $winningRecommendation ['message'] );
-				}
-				$hideAuth = true;
-				$hideEnc = true;
-				if ($winningRecommendation ['auth'] != 'oauth2' && $winningRecommendation ['enc'] == 587) {
-					$hideAuth = false;
-					$hideEnc = false;
 				}
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),
@@ -877,17 +861,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'redirect_url_label' => $scribe->getCallbackUrlLabel (),
 						'callback_domain_label' => $scribe->getCallbackDomainLabel (),
 						'referer' => $_POST ['referer'],
-						PostmanOptions::TRANSPORT_TYPE => $winningRecommendation ['transport'],
-						PostmanOptions::AUTHENTICATION_TYPE => $winningRecommendation ['auth'],
-						PostmanOptions::ENCRYPTION_TYPE => $winningRecommendation ['enc'],
-						PostmanOptions::PORT => $winningRecommendation ['port'],
-						'port_id' => $winningRecommendation ['port_id'],
-						'display_auth' => $winningRecommendation ['display_auth'],
-						'message' => $winningRecommendation ['message'],
 						'user_override' => $userOverride,
-						'hide_auth' => $hideAuth,
-						'hide_enc' => $hideEnc,
-						'success' => true 
+						'hide_auth' => true,
+						'hide_enc' => true
 				);
 				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url:' . $scribe->getCallbackUrl () );
 				$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain:' . $scribe->getCallbackDomain () );
@@ -896,23 +872,37 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->logger->debug ( 'ajaxRedirectUrl answer client_secret_label:' . $scribe->getClientSecretLabel () );
 				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url_label:' . $scribe->getCallbackUrlLabel () );
 				$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain_label:' . $scribe->getCallbackDomainLabel () );
-				$this->logger->debug ( 'ajaxRedirectUrl answer transport_type:' . $response [PostmanOptions::TRANSPORT_TYPE] );
-				$this->logger->debug ( 'ajaxRedirectUrl answer auth_type:' . $response [PostmanOptions::AUTHENTICATION_TYPE] );
-				$this->logger->debug ( 'ajaxRedirectUrl answer enc_type:' . $response [PostmanOptions::ENCRYPTION_TYPE] );
-				$this->logger->debug ( 'ajaxRedirectUrl answer port:' . $response [PostmanOptions::PORT] );
-				$this->logger->debug ( 'ajaxRedirectUrl answer port_id:' . $response ['port_id'] );
-				$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $response ['display_auth'] );
-				$this->logger->debug ( 'ajaxRedirectUrl answer message:' . $response ['message'] );
 				$this->logger->debug ( 'ajaxRedirectUrl answer hide_auth:' . $response ['hide_auth'] );
 				$this->logger->debug ( 'ajaxRedirectUrl answer hide_enc:' . $response ['hide_enc'] );
+				if ($winningRecommendation) {
+					$response [PostmanOptions::TRANSPORT_TYPE] = $winningRecommendation ['transport'];
+					$response [PostmanOptions::AUTHENTICATION_TYPE] = $winningRecommendation ['auth'];
+					$response [PostmanOptions::ENCRYPTION_TYPE] = $winningRecommendation ['enc'];
+					$response [PostmanOptions::PORT] = $winningRecommendation ['port'];
+					$response ['port_id'] = $winningRecommendation ['port_id'];
+					$response ['display_auth'] = $winningRecommendation ['display_auth'];
+					$response ['message'] = $winningRecommendation ['message'];
+					if ($winningRecommendation ['auth'] != 'oauth2' && $winningRecommendation ['enc'] == 587) {
+						$response ['hide_auth'] = false;
+						$response ['hide_enc'] = false;
+					}
+					$this->logger->debug ( 'ajaxRedirectUrl answer transport_type:' . $response [PostmanOptions::TRANSPORT_TYPE] );
+					$this->logger->debug ( 'ajaxRedirectUrl answer auth_type:' . $response [PostmanOptions::AUTHENTICATION_TYPE] );
+					$this->logger->debug ( 'ajaxRedirectUrl answer enc_type:' . $response [PostmanOptions::ENCRYPTION_TYPE] );
+					$this->logger->debug ( 'ajaxRedirectUrl answer port:' . $response [PostmanOptions::PORT] );
+					$this->logger->debug ( 'ajaxRedirectUrl answer port_id:' . $response ['port_id'] );
+					$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $response ['display_auth'] );
+				} else {
+					$response ['message'] = __ ( 'Postman can\'t find any way to send mail on your system. Contact your host to get some ports opened.', 'postman-smtp' );
+				}
+				$this->logger->debug ( 'ajaxRedirectUrl answer message:' . $response ['message'] );
 			} else {
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),
-						'help_text' => $this->getOAuthHelp ( $hostname ),
-						'success' => true 
+						'help_text' => $this->getOAuthHelp ( $hostname )
 				);
 			}
-			wp_send_json ( $response );
+			wp_send_json_success ( $response );
 		}
 		
 		/**

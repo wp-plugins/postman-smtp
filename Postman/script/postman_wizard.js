@@ -124,16 +124,18 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		var authType = jQuery(postman_input_auth_type).val()
 
 		// on the Auth type drop-down, add events to enable/disable user/pass
-		jQuery('input:radio[name="postman_options[auth_type]"]').click(function() {
-			handleEncryptionTypeInputClick();
-		});
-		
+		jQuery('input:radio[name="postman_options[auth_type]"]').click(
+				function() {
+					handleEncryptionTypeInputClick();
+				});
+
 	}
 
 	return true;
 }
 function handleEncryptionTypeInputClick() {
-	var $val = jQuery('input:radio[name="postman_options[auth_type]"]:checked').val();
+	var $val = jQuery('input:radio[name="postman_options[auth_type]"]:checked')
+			.val();
 	if ($val == 'none') {
 		disable(postman_input_basic_username);
 		disable(postman_input_basic_password);
@@ -259,30 +261,27 @@ function handleWizardPortTestResponse(el, elState, response, hostname) {
 		elState.html(postman_port_test_closed);
 	}
 	if (portsChecked >= portsToCheck) {
-		if (totalAvail == 0) {
-			alert(postman_wizard_no_ports);
-		} else {
-			var rows = jQuery('table#wizard_port_test tr');
-			var portCheck = {};
-			rows.each(function(index) {
-				portSelection = jQuery('input', this);
-				var host = JSON.parse(portSelection.val());
-				host.available = portSelection.attr('disabled') != 'disabled';
-				host.port_id = portSelection.attr('id');
-				portCheck[index] = host;
-			});
-
-			var data = {
-				'action' : 'get_redirect_url',
-				'referer' : 'wizard',
-				'hostname' : hostname,
-				'host_data' : portCheck
-			};
-			populateRedirectUrl(data);
+		if (totalAvail != 0) {
 			jQuery('li + li').removeClass('disabled');
 			portCheckBlocksUi = false;
 		}
+		var rows = jQuery('table#wizard_port_test tr');
+		var portCheck = {};
+		rows.each(function(index) {
+			portSelection = jQuery('input', this);
+			var host = JSON.parse(portSelection.val());
+			host.available = portSelection.attr('disabled') != 'disabled';
+			host.port_id = portSelection.attr('id');
+			portCheck[index] = host;
+		});
 
+		var data = {
+			'action' : 'get_redirect_url',
+			'referer' : 'wizard',
+			'hostname' : hostname,
+			'host_data' : portCheck
+		};
+		populateRedirectUrl(data);
 	}
 
 }

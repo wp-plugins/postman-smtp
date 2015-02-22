@@ -39,6 +39,7 @@ function getRedirectUrl(data) {
 	});
 }
 function handleConfigurationResponse(response) {
+	response = response.data;
 	jQuery('#input_oauth_callback_domain').val(response.callback_domain);
 	if (response.referer == 'wizard') {
 		jQuery('#input_transport_type').val(response.transport_type);
@@ -47,15 +48,20 @@ function handleConfigurationResponse(response) {
 		jQuery(postman_enc_for_password_el).val(response.enc_type);
 		jQuery('#input_enc_type').val(response.enc_type);
 		jQuery('#input_enc_' + response.enc_type).prop('checked', true);
-		if(response.port) {
+		if (response.port) {
 			enable('#input_port');
 		} else {
 			disable('#input_port');
 		}
 		jQuery('#' + response.port_id).prop('checked', true);
 		if (!response.user_override) {
-			$message = '<span style="color:green">' + response.message
-					+ '</span>';
+			if (response.transport) {
+				$message = '<span style="color:green">' + response.message
+						+ '</span>';
+			} else {
+				$message = '<span style="color:red">' + response.message
+						+ '</span>';
+			}
 			jQuery('#wizard_recommendation').append($message);
 		}
 		if (response.hide_auth) {
