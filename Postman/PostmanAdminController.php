@@ -3,6 +3,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	
 	require_once "PostmanSendTestEmail.php";
 	require_once 'PostmanOptions.php';
+	require_once 'PostmanState.php';
 	require_once 'PostmanOAuthToken.php';
 	require_once 'Postman-Wizard/PortTest.php';
 	require_once 'Postman-Wizard/SmtpDiscovery.php';
@@ -1210,6 +1211,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 						printf ( '<p><span>%s</span></p>', sprintf ( __ ( 'However, if you wish, Postman can <a href="%s">import your SMTP configuration</a> from another plugin. You can run the Wizard later if you need to.', 'postman-smtp' ), $this->getPageUrl ( self::CONFIGURATION_SLUG ) ) );
 					}
 				}
+			}
+			
+			if (PostmanState::getInstance ()->isTimeToReviewPostman ()) {
+				printf ( '<h4>%s</h4>', __ ( 'Has Postman been working well for you?' ) );
+				printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Please considering leaving a <a href="%s">review of Postman SMTP</a> at WordPress.org to help spread the word<br/> about the new way to send email from WordPress! I love to read your comments :)' ), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp' ) );
 			}
 			
 			if (true || ! $sslRequirement || ! $splAutoloadRegisterRequirement || ! $arrayObjectRequirement) {
