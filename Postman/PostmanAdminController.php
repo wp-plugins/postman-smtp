@@ -1222,7 +1222,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if (PostmanState::getInstance ()->isTimeToReviewPostman ()) {
 				printf ( '<h4>%s</h4>', __ ( 'Has Postman been working well for you?', 'postman-smtp' ) );
 				/* translators: where %1$d is the number of messages delivered and %2$s is the URL to the WordPress.org review and ratings page */
-				printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Postman has delivered %1$d emails for you! Please considering leaving a <a href="%2$s">review of Postman SMTP</a> at WordPress.org to help spread the word<br/> about the new way to send email from WordPress! I love to read your comments :)', 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp' ) );
+				printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Postman has delivered %1$d emails for you! Please considering leaving a <a href="%2$s">review of Postman SMTP</a> at WordPress.org to help spread the word<br/> about the new way to send email from WordPress! :D', 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp' ) );
 			}
 			
 			if (! $this->options->isNew ()) {

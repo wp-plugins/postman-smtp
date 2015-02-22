@@ -19,12 +19,12 @@ table#testing_table {
 }
 
 table#testing_table tr {
-	background-color:#fff;
+	background-color: #fff;
 }
 
 table#testing_table tr td {
-	padding:5px;
-	margin:0;
+	padding: 5px;
+	margin: 0;
 }
 
 table#testing_table td.port {
@@ -44,5 +44,5 @@ input.input_plugin_radio {
 }
 
 .wizard>.content {
-	min-height: 52em;
+	min-height: 32em;
 }
