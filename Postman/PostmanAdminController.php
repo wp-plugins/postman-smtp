@@ -858,6 +858,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 					}
 					$this->logger->debug ( 'Configuration recommendation: ' . $winningRecommendation ['message'] );
 				}
+				$hideAuth = true;
+				$hideEnc = true;
+				if ($winningRecommendation ['port'] == 587) {
+					$hideAuth = false;
+					$hideEnc = false;
+				}
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),
 						'callback_domain' => $scribe->getCallbackDomain (),
@@ -874,6 +880,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'display_auth' => $winningRecommendation ['display_auth'],
 						'message' => $winningRecommendation ['message'],
 						'user_override' => $userOverride,
+						'hide_auth' => $hideAuth,
+						'hide_enc' => $hideEnc,
 						'success' => true 
 				);
 				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url:' . $scribe->getCallbackUrl () );
@@ -883,13 +891,15 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->logger->debug ( 'ajaxRedirectUrl answer client_secret_label:' . $scribe->getClientSecretLabel () );
 				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url_label:' . $scribe->getCallbackUrlLabel () );
 				$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain_label:' . $scribe->getCallbackDomainLabel () );
-				$this->logger->debug ( 'ajaxRedirectUrl answer transport:' . $response [PostmanOptions::TRANSPORT_TYPE] );
+				$this->logger->debug ( 'ajaxRedirectUrl answer transport_type:' . $response [PostmanOptions::TRANSPORT_TYPE] );
 				$this->logger->debug ( 'ajaxRedirectUrl answer auth_type:' . $response [PostmanOptions::AUTHENTICATION_TYPE] );
 				$this->logger->debug ( 'ajaxRedirectUrl answer enc_type:' . $response [PostmanOptions::ENCRYPTION_TYPE] );
 				$this->logger->debug ( 'ajaxRedirectUrl answer port:' . $response [PostmanOptions::PORT] );
 				$this->logger->debug ( 'ajaxRedirectUrl answer port_id:' . $response ['port_id'] );
 				$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $response ['display_auth'] );
 				$this->logger->debug ( 'ajaxRedirectUrl answer message:' . $response ['message'] );
+				$this->logger->debug ( 'ajaxRedirectUrl answer hide_auth:' . $response ['hide_auth'] );
+				$this->logger->debug ( 'ajaxRedirectUrl answer hide_enc:' . $response ['hide_enc'] );
 			} else {
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),
@@ -995,6 +1005,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<option class="input_auth_type_oauth2" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 ? 'selected="selected"' : '', _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' ) );
 			print '</select>';
 		}
+		public function authenticationTypeRadioCallback() {
+			$authType = $this->options->getAuthorizationType ();
+			print '<table class="input_authentication_type"><tr>';
+			printf ( '<td><input type="radio" id="input_auth_none"   name="postman_options[auth_type]" class="input_auth_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::AUTHENTICATION_TYPE_NONE, _x ( 'None', 'Authentication Type', 'postman-smtp' ) );
+			printf ( '<td><input type="radio" id="input_auth_plain"  name="postman_options[auth_type]" class="input_auth_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::AUTHENTICATION_TYPE_PLAIN, _x ( 'Plain', 'Authentication Type', 'postman-smtp' ) );
+			printf ( '<td><input type="radio" id="input_auth_oauth2" name="postman_options[auth_type]" class="input_auth_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, _x ( 'Oauth 2.0', 'Authentication Type', 'postman-smtp' ) );
+			print '</tr></table>';
+		}
 		/**
 		 * Get the settings option array and print one of its values
 		 */
@@ -1009,9 +1027,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function encryption_type_radio_callback() {
 			$encType = $this->options->getEncryptionType ();
 			print '<table class="input_encryption_type"><tr>';
-			printf ( '<td><input type="radio" name="input_enc_type" class="input_enc_type_none" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_NONE, _x ( 'None', 'Encryption Type', 'postman-smtp' ) );
-			printf ( '<td><input type="radio" name="input_enc_type" class="input_enc_type_ssl" value="%s"/></td><td> <label class="input_enc_type_ssl"> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_SSL, _x ( 'SSL', 'Encryption Type', 'postman-smtp' ) );
-			printf ( '<td><input type="radio" name="input_enc_type" class="input_enc_type_tls" value="%s"/></td><td> <label> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_TLS, _x ( 'TLS', 'Encryption Type', 'postman-smtp' ) );
+			printf ( '<td><input type="radio" id="input_enc_none" name="postman_options[enc_type]" class="input_encryption_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_NONE, _x ( 'None', 'Encryption Type', 'postman-smtp' ) );
+			printf ( '<td><input type="radio" id="input_enc_ssl" name="postman_options[enc_type]" class="input_encryption_type" value="%s"/></td><td> <label class="input_enc_type_ssl"> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_SSL, _x ( 'SSL', 'Encryption Type', 'postman-smtp' ) );
+			printf ( '<td><input type="radio" id="input_enc_tls" name="postman_options[enc_type]" class="input_encryption_type" value="%s"/></td><td> <label> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_TLS, _x ( 'TLS', 'Encryption Type', 'postman-smtp' ) );
 			print '</tr></table>';
 		}
 		
@@ -1325,6 +1343,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<input type="hidden" id="input_connection_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::CONNECTION_TIMEOUT, $this->options->getConnectionTimeout () );
 			printf ( '<input type="hidden" id="input_read_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::READ_TIMEOUT, $this->options->getReadTimeout () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::LOG_LEVEL, $this->options->getLogLevel () );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE, $this->options->getTransportType () );
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
 			
 			// Wizard Step 1
@@ -1352,7 +1371,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<h5>%s</h5>', _x ( 'Connectivity Test', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'How will the connection to the MSA be established?', 'Wizard Step Title', 'postman-smtp' ) );
-			printf ( '<p>%s</p>', __ ( 'The server hostname and port you can use is a combination of what your mail service provider offers, and what your WordPress host allows.', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'The server hostname and port you can use is a combination of what your mail service provider offers, and what your WordPress host allows. Postman will attempt to determine which options are available to you.', 'postman-smtp' ) );
 			printf ( '<label for="hostname">%s</label>', _x ( 'Available routes', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->port_callback ( array (
 					'style' => 'style="display:none"' 
@@ -1391,11 +1410,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<p class="port-explanation-ssl">%s</p>', __ ( 'Choose Login authentication unless you\'ve been instructed otherwise. Your username is most likely your email address.', 'postman-smtp' ) );
 			printf ( '<label class="input_authorization_type" for="auth_type">%s</label>', _x ( 'Authentication', 'Configuration Input Field', 'postman-smtp' ) );
 			print '<br />';
-			print $this->authentication_type_callback ();
+			print $this->authenticationTypeRadioCallback ();
 			print '<br />';
-			printf ( '<label class="input_encryption_type" for="enc_type">%s</label>', _x ( 'Encryption', 'Configuration Input Field', 'postman-smtp' ) );
+			print '<div id="encryption_group">';
+			printf ( '<label class="input_encryption_type" for="enc_type">%s</label>', _x ( 'Security', 'Configuration Input Field', 'postman-smtp' ) );
 			print '<br class="input_encryption_type" />';
 			print $this->encryption_type_radio_callback ();
+			print '</div>';
 			printf ( '<label for="username">%s</label>', _x ( 'Username', 'Configuration Input Field', 'postman-smtp' ) );
 			print '<br />';
 			print $this->basic_auth_username_callback ();

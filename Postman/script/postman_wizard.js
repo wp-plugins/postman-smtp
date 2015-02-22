@@ -124,71 +124,29 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		var authType = jQuery(postman_input_auth_type).val()
 
 		// on the Auth type drop-down, add events to enable/disable user/pass
-		jQuery(postman_input_auth_type).click(function() {
-			var $val = jQuery(postman_input_auth_type).val();
-			if ($val == 'none') {
-				disable(postman_input_basic_username);
-				disable(postman_input_basic_password);
-				disable('select#input_enc_type');
-				setEncryptionType(postman_enc_none);
-			} else {
-				enable(postman_input_basic_username);
-				enable(postman_input_basic_password);
-				// for the next two lines, i assume this is port 587 because
-				// that's currently the only other time a click event can be
-				// fired here
-				enable('select#input_enc_type');
-				setEncryptionType(postman_enc_tls);
-			}
+		jQuery('input:radio[name="postman_options[auth_type]"]').click(function() {
+			handleEncryptionTypeInputClick();
 		});
-
-		// hide both the oauth section and the password section
-		if (authType == postman_auth_oauth2) {
-			// in oauth2 mode everything is already set to go
-			// in password mode, a lot changes based on the port
-			// the user chooses....
-		} else if (chosenPort == 465) {
-			// eanble user/pass fields
-			enablePasswordFields();
-
-			// allow ssl, set encryption to ssl
-			enable(postman_enc_option_ssl_id);
-			setEncryptionType(postman_enc_ssl);
-
-			// hide the encryption menu
-			hide(postman_encryption_group);
-		} else if (chosenPort == 587) {
-			// eanble user/pass fields
-			enablePasswordFields();
-
-			disable('.input_auth_type_oauth2');
-			// disallow ssl, set encryption to tls
-			disable(postman_enc_option_ssl_id);
-			hide(postman_enc_option_ssl_id);
-			jQuery('input.input_enc_type_tls').prop('checked', true);
-
-			// show the encryption menu
-			show(postman_encryption_group);
-
-			// allow none as an authentication choice
-			enable(postman_auth_option_none_id);
-
-		} else {
-			// allow none as an authentication choice
-			enable(postman_auth_option_none_id);
-
-			// set authentication and encryption types
-			setAuthType(postman_auth_none);
-			setEncryptionType(postman_enc_none);
-
-			hide(postman_encryption_group);
-			disable(postman_input_basic_username);
-			disable(postman_input_basic_password);
-		}
+		
 	}
 
 	return true;
 }
+function handleEncryptionTypeInputClick() {
+	var $val = jQuery('input:radio[name="postman_options[auth_type]"]:checked').val();
+	if ($val == 'none') {
+		disable(postman_input_basic_username);
+		disable(postman_input_basic_password);
+		hide('.input_encryption_type');
+		jQuery('#input_enc_none').prop('checked', true);
+	} else {
+		enable(postman_input_basic_username);
+		enable(postman_input_basic_password);
+		show('.input_encryption_type');
+		jQuery('#input_enc_tls').prop('checked', true);
+	}
+}
+
 function populateRedirectUrl(hostname) {
 	getRedirectUrl(hostname, postman_redirect_url_el, '#wizard_oauth2_help');
 }
@@ -197,12 +155,6 @@ function setAuthType($authType) {
 }
 function setEncryptionType($encType) {
 	jQuery('select#input_enc_type').val($encType);
-}
-function enablePasswordFields() {
-	setAuthType(postman_auth_plain);
-	enable(postman_input_basic_username);
-	enable(postman_input_basic_password);
-	show('.wizard-auth-basic');
 }
 function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	var chosenPort = jQuery('#input_port').val();
@@ -292,43 +244,44 @@ function wizardPortTest(hostname, port, input, state) {
 		'hostname' : hostname,
 		'port' : port
 	};
-	jQuery.post(ajaxurl, data,
-			function(response) {
-				portsChecked++;
-				if (response.success) {
-					elState.html(postman_port_test_open);
-					el.removeAttr('disabled');
-					totalAvail++;
-				} else {
-					elState.html(postman_port_test_closed);
-				}
-				if (portsChecked >= portsToCheck) {
-					if (totalAvail == 0) {
-						alert(postman_wizard_no_ports);
-					} else {
-						var rows = jQuery('table#wizard_port_test tr');
-						var portCheck = {};
-						rows
-								.each(function(index) {
-									portSelection = jQuery('input', this);
-									var host = JSON.parse(portSelection.val());
-									host.available = portSelection
-											.attr('disabled') != 'disabled';
-									host.port_id = portSelection.attr('id');
-									portCheck[index] = host;
-								});
-
-						var data = {
-							'action' : 'get_redirect_url',
-							'referer' : 'wizard',
-							'hostname' : hostname,
-							'host_data' : portCheck
-						};
-						populateRedirectUrl(data);
-						jQuery('li + li').removeClass('disabled');
-						portCheckBlocksUi = false;
-					}
-
-				}
+	jQuery.post(ajaxurl, data, function(response) {
+		handleWizardPortTestResponse(el, elState, response, hostname);
+	});
+}
+function handleWizardPortTestResponse(el, elState, response, hostname) {
+	portsChecked++;
+	if (response.success) {
+		elState.html(postman_port_test_open);
+		el.removeAttr('disabled');
+		totalAvail++;
+	} else {
+		elState.html(postman_port_test_closed);
+	}
+	if (portsChecked >= portsToCheck) {
+		if (totalAvail == 0) {
+			alert(postman_wizard_no_ports);
+		} else {
+			var rows = jQuery('table#wizard_port_test tr');
+			var portCheck = {};
+			rows.each(function(index) {
+				portSelection = jQuery('input', this);
+				var host = JSON.parse(portSelection.val());
+				host.available = portSelection.attr('disabled') != 'disabled';
+				host.port_id = portSelection.attr('id');
+				portCheck[index] = host;
 			});
+
+			var data = {
+				'action' : 'get_redirect_url',
+				'referer' : 'wizard',
+				'hostname' : hostname,
+				'host_data' : portCheck
+			};
+			populateRedirectUrl(data);
+			jQuery('li + li').removeClass('disabled');
+			portCheckBlocksUi = false;
+		}
+
+	}
+
 }

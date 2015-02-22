@@ -11,7 +11,7 @@ Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, a next-g
 
 == Description ==
 
-Having [trouble sending email](https://wordpress.org/support/topic/smtp-connect-failed)? Email Services have begun [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms. Users of typical plugins have been plagued by [mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) and delays. They are forced to use app-specific passwords, two-factor authentication, CAPTCHA and make account changes to enable less-secure apps. If not, messages may be treated as SPAM or simply disappear altogether.
+Having [trouble sending email](https://wordpress.org/support/topic/smtp-connect-failed)? Email Services have begun [increasing their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and [blocking traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms. Users of typical plugins have been plagued by [mail failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) and delays. They are forced to use app-specific passwords, two-factor authentication, CAPTCHA and make account changes to enable less-secure apps. If not, messages may be treated as Spam or simply disappear altogether.
 
 Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service provider [pre-approves Postman](https://developers.google.com/accounts/docs/OAuth2) to send messages on your behalf. Other plugins seek approval each time they connect, but Postman will deliver your email every time without rejection.
 
@@ -113,7 +113,7 @@ Google does have a setting to [allow less secure apps](https://support.google.co
 > **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = I want my email to come from a different email address. =
-This is not recommended in Password (Plain, Login or CRAM-MD5) mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a SPAM blacklist. Instead, look into setting the  **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
+This is not recommended in Password (Plain, Login or CRAM-MD5) mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a Spam blacklist. Instead, look into setting the  **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
 
 In OAuth 2.0 mode, Gmail allows you to send from a different Sender Email Address by [creating a Google Account](https://www.google.com/accounts/NewAccount) with that e-mail address, and then adding that account as an administrator in the Permissions section of the [Developer Console](http://console.developers.google.com/?_ga=1.121770313.313901992.1422721496). See [Sending mail](https://cloud.google.com/appengine/docs/php/mail/).
 
@@ -248,7 +248,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Clarified text in 'Run a Port Test' so people won't continue to ask me about connection problems (hopefully)
 
 = 1.2 - 2015-02-04 =
-* Support for Sender Name and Reply-To. Turns out Google no longer honours the MUA Return-Path header due to spam. Makes sense, so I've decided not to add a Return-Path field to Postman's configuration.
+* Support for Sender Name and Reply-To. Turns out Google no longer honours the MUA Return-Path header due to Spam. Makes sense, so I've decided not to add a Return-Path field to Postman's configuration.
 * Support for WordPress filters [wp_mail_from](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail_from) and [wp_mail_from_name](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail_from_name)
 * Disable stats-keeping for email sent by the test function
 * Minor tweaks to the Wizard to support WordPress v3.9

@@ -41,19 +41,29 @@ function getRedirectUrl(data) {
 function handleConfigurationResponse(response) {
 	jQuery('#input_oauth_callback_domain').val(response.callback_domain);
 	if (response.auth_type) {
-		if (response.auth_type != '') {
-			jQuery(postman_input_auth_type).val(response.auth_type);
-		}
+		jQuery('#input_transport_type').val(response.transport_type);
+		jQuery('#input_auth_type').val(response.auth_type);
+		jQuery('#input_auth_' + response.auth_type).prop('checked', true);
 		jQuery(postman_enc_for_password_el).val(response.enc_type);
-		if (response.enc_type != '') {
-			jQuery(postman_enc_for_oauth2_el).val(response.enc_type);
+		jQuery('#input_enc_type').val(response.enc_type);
+		jQuery('#input_enc_' + response.enc_type).prop('checked', true);
+		jQuery('#' + response.port_id).prop('checked', true);
+		if (!response.user_override) {
+			$message = '<span style="color:green">' + response.message
+					+ '</span>';
+			jQuery('#wizard_recommendation').append($message);
 		}
-		if (response.port_id != '') {
-			jQuery('#' + response.port_id).prop('checked', true);
+		if (response.hide_auth) {
+			hide('.input_auth_type');
+		} else {
+			show('.input_auth_type');
 		}
-		if(!response.user_override) {
-		jQuery('#wizard_recommendation').html(
-				'<span style="color:green">' + response.message + '</span>');
+		if (response.hide_enc) {
+			hide('.input_encryption_type');
+			enable('#input_enc_ssl');
+		} else {
+			show('.input_encryption_type');
+			disable('#input_enc_ssl');
 		}
 		// disable the fields we don't use so validation
 		// will work
@@ -66,24 +76,21 @@ function handleConfigurationResponse(response) {
 			jQuery('#client_secret').html(response.client_secret_label);
 			jQuery('#redirect_url').html(response.redirect_url_label);
 			jQuery('#callback_domain').html(response.callback_domain_label);
-			el25.attr('disabled', 'disabled');
-			el465.attr('disabled', 'disabled');
-			el587.attr('disabled', 'disabled');
 			// hide the auth type field for OAuth screen
-			if (data.referer == 'wizard')
+			if (response.referer == 'wizard')
 				hide(postman_enc_for_oauth2_el);
 			// allow oauth2 as an authentication choice
-			enable(postman_auth_option_oauth2_id);
-			disable(postman_input_basic_username);
-			disable(postman_input_basic_password);
-		} else if (response.displayAuth == 'password') {
+			enable('#input_auth_oauth2');
+		} else if (response.display_auth == 'password') {
+			hide('.wizard-auth-oauth2');
 			show('.wizard-auth-basic');
-			disable(postman_auth_option_none_id);
 			enable(postman_input_basic_username);
 			enable(postman_input_basic_password);
+			disable('#input_auth_oauth2');
 		} else {
 			hide('.wizard-auth-oauth2');
 			hide('.wizard-auth-basic');
+			enable('#input_auth_oauth2');
 		}
 	}
 }
