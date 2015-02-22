@@ -863,7 +863,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'referer' => $_POST ['referer'],
 						'user_override' => $userOverride,
 						'hide_auth' => true,
-						'hide_enc' => true
+						'hide_enc' => true 
 				);
 				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url:' . $scribe->getCallbackUrl () );
 				$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain:' . $scribe->getCallbackDomain () );
@@ -893,13 +893,18 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this->logger->debug ( 'ajaxRedirectUrl answer port_id:' . $response ['port_id'] );
 					$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $response ['display_auth'] );
 				} else {
+					// for manual config.. you need to separate wizard from manual this is a mess
+					if ($transport->isOAuthUsed ( $queryAuthType )) {
+						$response ['display_auth'] = 'oauth2';
+					}
+					$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $response ['display_auth'] );
 					$response ['message'] = __ ( 'Postman can\'t find any way to send mail on your system. Contact your host to get some ports opened.', 'postman-smtp' );
 				}
 				$this->logger->debug ( 'ajaxRedirectUrl answer message:' . $response ['message'] );
 			} else {
 				$response = array (
 						'redirect_url' => $scribe->getCallbackUrl (),
-						'help_text' => $this->getOAuthHelp ( $hostname )
+						'help_text' => $this->getOAuthHelp ( $hostname ) 
 				);
 			}
 			wp_send_json_success ( $response );

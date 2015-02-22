@@ -40,7 +40,16 @@ function getRedirectUrl(data) {
 }
 function handleConfigurationResponse(response) {
 	response = response.data;
-	jQuery('#input_oauth_callback_domain').val(response.callback_domain);
+	if (response.display_auth == 'oauth2') {
+		show('p#wizard_oauth2_help');
+		jQuery('p#wizard_oauth2_help').html(response.help_text);
+		jQuery(postman_redirect_url_el).val(response.redirect_url);
+		jQuery('#input_oauth_callback_domain').val(response.callback_domain);
+		jQuery('#client_id').html(response.client_id_label);
+		jQuery('#client_secret').html(response.client_secret_label);
+		jQuery('#redirect_url').html(response.redirect_url_label);
+		jQuery('#callback_domain').html(response.callback_domain_label);
+	}
 	if (response.referer == 'wizard') {
 		jQuery('#input_transport_type').val(response.transport_type);
 		jQuery('#input_auth_type').val(response.auth_type);
@@ -81,14 +90,7 @@ function handleConfigurationResponse(response) {
 		// will work
 		if (response.display_auth == 'oauth2') {
 			show('.wizard-auth-oauth2');
-			show('p#wizard_oauth2_help');
 			hide('.wizard-auth-basic');
-			jQuery(postman_redirect_url_el).val(response.redirect_url);
-			jQuery('p#wizard_oauth2_help').html(response.help_text);
-			jQuery('#client_id').html(response.client_id_label);
-			jQuery('#client_secret').html(response.client_secret_label);
-			jQuery('#redirect_url').html(response.redirect_url_label);
-			jQuery('#callback_domain').html(response.callback_domain_label);
 			// hide the auth type field for OAuth screen
 			if (response.referer == 'wizard')
 				hide(postman_enc_for_oauth2_el);
