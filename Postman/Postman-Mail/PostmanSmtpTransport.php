@@ -176,20 +176,15 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$hostname = $hostData ['host'];
 			$oauthPotential = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
 			if ($oauthPotential && $port == 465) {
-				$recommendation ['priority'] = 120;
-				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
-				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
-				$recommendation ['display_auth'] = 'oauth2';
-			} else if ($oauthPotential && $port == 587) {
 				$recommendation ['priority'] = 100;
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
 				$recommendation ['display_auth'] = 'oauth2';
 			} else if ($oauthPotential && $port == 587) {
 				$recommendation ['priority'] = 80;
-				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
+				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
-				$recommendation ['display_auth'] = 'password';
+				$recommendation ['display_auth'] = 'oauth2';
 			} else if ($port == 465) {
 				$recommendation ['priority'] = 60;
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;

@@ -50,12 +50,13 @@ function handleConfigurationResponse(response) {
 		jQuery('#input_enc_' + response.enc_type).prop('checked', true);
 		if (response.port) {
 			enable('#input_port');
+			jQuery('#input_port').val(response.port);
 		} else {
 			disable('#input_port');
 		}
 		jQuery('#' + response.port_id).prop('checked', true);
 		if (!response.user_override) {
-			if (response.transport) {
+			if (response.transport_type) {
 				$message = '<span style="color:green">' + response.message
 						+ '</span>';
 			} else {
