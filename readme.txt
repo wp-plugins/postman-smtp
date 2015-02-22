@@ -208,7 +208,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.5 - 2015-02-22 =
-* Added support for modular transports. The first external transport is the Postman Gmail Extension, which uses the Gmail API to send mail out on the HTTPS port, a convenient way around traditional mail port blocks for Gmail users
+* Added support for modular transports. The first external transport is the Postman Gmail Extension, which uses the Gmail API to send mail out on the HTTPS port, a convenient way around traditional TCP port blocks for Gmail users
+* Made my debug logging "less agressive" so that broken systems (those that pipe warning messages to STDOUT regardless of the WordPress WP_DEBUG_DISPLAY setting or PHP's display_errors settings) will no longer experience the Port Test hanging during a check
 * Fixed a bug in the Setup Wizard where it would not use OAuth 2.0 on port 587
 
 = 1.4.1 - 2015-02-17 =
