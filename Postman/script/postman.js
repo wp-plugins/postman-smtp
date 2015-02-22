@@ -47,6 +47,11 @@ function handleConfigurationResponse(response) {
 		jQuery(postman_enc_for_password_el).val(response.enc_type);
 		jQuery('#input_enc_type').val(response.enc_type);
 		jQuery('#input_enc_' + response.enc_type).prop('checked', true);
+		if(response.port) {
+			enable('#input_port');
+		} else {
+			disable('#input_port');
+		}
 		jQuery('#' + response.port_id).prop('checked', true);
 		if (!response.user_override) {
 			$message = '<span style="color:green">' + response.message
@@ -70,6 +75,7 @@ function handleConfigurationResponse(response) {
 		if (response.display_auth == 'oauth2') {
 			show('.wizard-auth-oauth2');
 			show('p#wizard_oauth2_help');
+			hide('.wizard-auth-basic');
 			jQuery(postman_redirect_url_el).val(response.redirect_url);
 			jQuery('p#wizard_oauth2_help').html(response.help_text);
 			jQuery('#client_id').html(response.client_id_label);

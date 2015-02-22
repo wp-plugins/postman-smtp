@@ -1067,7 +1067,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function port_callback($args) {
-			printf ( '<input type="text" id="input_port" name="postman_options[port]" value="%s" class="required" %s/>', null !== $this->options->getPort () ? esc_attr ( $this->options->getPort () ) : '', isset ( $args ['style'] ) ? $args ['style'] : '' );
+			printf ( '<input type="text" id="input_port" name="postman_options[port]" value="%s" %s/>', null !== $this->options->getPort () ? esc_attr ( $this->options->getPort () ) : '', isset ( $args ['style'] ) ? $args ['style'] : '' );
 		}
 		
 		/**
@@ -1230,34 +1230,36 @@ if (! class_exists ( "PostmanAdminController" )) {
 				printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Postman has delivered %1$d emails for you! Please considering leaving a <a href="%2$s">review of Postman SMTP</a> at WordPress.org to help spread the word<br/> about the new way to send email from WordPress! I love to read your comments :)', 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp' ) );
 			}
 			
-			$diagnostics = sprintf ( 'PHP v5.3: %s (%s)%s', ($phpVersionRequirement ? 'Yes' : 'No'), PHP_VERSION, PHP_EOL );
-			$diagnostics .= sprintf ( 'PHP SSL Extension: %s%s', ($sslRequirement ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'PHP spl_autoload_register: %s%s', ($splAutoloadRegisterRequirement ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'PHP ArrayObject: %s%s', ($arrayObjectRequirement ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'PHP display_errors: %s%s', $displayErrors, PHP_EOL );
-			$diagnostics .= sprintf ( 'PHP errorReporting: %s%s', $errorReporting, PHP_EOL );
-			$diagnostics .= sprintf ( 'WordPress WP_DEBUG: %s%s', WP_DEBUG, PHP_EOL );
-			$diagnostics .= sprintf ( 'WordPress WP_DEBUG_LOG: %s%s', WP_DEBUG_LOG, PHP_EOL );
-			$diagnostics .= sprintf ( 'WordPress WP_DEBUG_DISPLAY: %s%s', WP_DEBUG_DISPLAY, PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Transport: %s%s', $this->options->getTransportType (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Transport Configured: %s%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Transport Ready: %s%s', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Authorization Type: %s%s', $this->options->getAuthenticationType (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Encryption Type: %s%s', $this->options->getEncryptionType (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman SMTP Host: %s%s', $this->options->getHostname (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman SMTP Port: %s%s', $this->options->getPort (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Sender Matches user: %s%s', ($this->options->getSenderEmail () == $this->options->getUsername () ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Successful Deliveries: %s%s', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Failed Deliveries: %s%s', PostmanStats::getInstance ()->getFailedDeliveries (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Bound: %s%s', (PostmanWpMailBinder::getInstance ()->isBound () ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Bind failure: %s%s', (PostmanWpMailBinder::getInstance ()->isUnboundDueToException () ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Available Transports: %s%s', sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () ), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman LogLevel: %s%s', $this->options->getLogLevel (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Connection Timeout: %d%s', $this->options->getConnectionTimeout (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Read Timeout: %s%s', $this->options->getReadTimeout (), PHP_EOL );
-			printf ( '<h4>%s</h4>', __ ( 'Are you having any issues with Postman?', 'postman-smtp' ) );
-			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Here is some <a id="show-diagnostics" href="#">diagnostic info</a> that you can report to the author.', 'postman-smtp' ) ) );
-			printf ( '<textarea id="diagnostic-text" hidden="hidden" cols="80" rows="10">%s</textarea>', $diagnostics );
+			if (! $this->options->isNew ()) {
+				$diagnostics = sprintf ( 'PHP v5.3: %s (%s)%s', ($phpVersionRequirement ? 'Yes' : 'No'), PHP_VERSION, PHP_EOL );
+				$diagnostics .= sprintf ( 'PHP SSL Extension: %s%s', ($sslRequirement ? 'Yes' : 'No'), PHP_EOL );
+				$diagnostics .= sprintf ( 'PHP spl_autoload_register: %s%s', ($splAutoloadRegisterRequirement ? 'Yes' : 'No'), PHP_EOL );
+				$diagnostics .= sprintf ( 'PHP ArrayObject: %s%s', ($arrayObjectRequirement ? 'Yes' : 'No'), PHP_EOL );
+				$diagnostics .= sprintf ( 'PHP display_errors: %s%s', $displayErrors, PHP_EOL );
+				$diagnostics .= sprintf ( 'PHP errorReporting: %s%s', $errorReporting, PHP_EOL );
+				$diagnostics .= sprintf ( 'WordPress WP_DEBUG: %s%s', WP_DEBUG, PHP_EOL );
+				$diagnostics .= sprintf ( 'WordPress WP_DEBUG_LOG: %s%s', WP_DEBUG_LOG, PHP_EOL );
+				$diagnostics .= sprintf ( 'WordPress WP_DEBUG_DISPLAY: %s%s', WP_DEBUG_DISPLAY, PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Transport: %s%s', $this->options->getTransportType (), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Transport Configured: %s%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Transport Ready: %s%s', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Authorization Type: %s%s', $this->options->getAuthenticationType (), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Encryption Type: %s%s', $this->options->getEncryptionType (), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman SMTP Host: %s%s', $this->options->getHostname (), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman SMTP Port: %s%s', $this->options->getPort (), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Sender Matches user: %s%s', ($this->options->getSenderEmail () == $this->options->getUsername () ? 'Yes' : 'No'), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Successful Deliveries: %s%s', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Failed Deliveries: %s%s', PostmanStats::getInstance ()->getFailedDeliveries (), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Bound: %s%s', (PostmanWpMailBinder::getInstance ()->isBound () ? 'Yes' : 'No'), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Bind failure: %s%s', (PostmanWpMailBinder::getInstance ()->isUnboundDueToException () ? 'Yes' : 'No'), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Available Transports: %s%s', sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () ), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman LogLevel: %s%s', $this->options->getLogLevel (), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Connection Timeout: %d%s', $this->options->getConnectionTimeout (), PHP_EOL );
+				$diagnostics .= sprintf ( 'Postman Read Timeout: %s%s', $this->options->getReadTimeout (), PHP_EOL );
+				printf ( '<h4>%s</h4>', __ ( 'Are you having any issues with Postman?', 'postman-smtp' ) );
+				printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Here is some <a id="show-diagnostics" href="#">diagnostic info</a> that you can report to the author.', 'postman-smtp' ) ) );
+				printf ( '<textarea id="diagnostic-text" hidden="hidden" cols="80" rows="10">%s</textarea>', $diagnostics );
+			}
 		}
 		
 		/**

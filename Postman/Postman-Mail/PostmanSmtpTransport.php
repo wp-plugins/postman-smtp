@@ -183,7 +183,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			} else if ($oauthPotential && $port == 587) {
 				$recommendation ['priority'] = 100;
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
-				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
+				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
 				$recommendation ['display_auth'] = 'oauth2';
 			} else if ($oauthPotential && $port == 587) {
 				$recommendation ['priority'] = 80;
