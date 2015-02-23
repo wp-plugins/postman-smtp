@@ -110,6 +110,7 @@ Postman specifically requests a limited access OAuth 2.0 token (valet key) to ac
 Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but but this option is not available if you're using *Google Apps* to manage a domain.
 
 There are many reasons why OAuth 2.0 is better than any password-based mechanism:
+
 * When Postman uses OAuth 2.0, it never ask for your password, making it much harder for a password to be stolen
 * If you change your password regularly, you will never have to update Postman's configuration
 * You have tighter control over what data Postman have access to - for Google users it can never access your YouTube; for Yahoo users it can never access your Flickr
