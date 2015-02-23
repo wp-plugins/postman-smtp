@@ -13,7 +13,9 @@ Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, a next-g
 
 As the big email services [increase their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and [block traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms, users face [connection issues](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), delays and vanishing messages. Most turn to the black magic of app-specific passwords, two-factor authentication, and CAPTCHA work-arounds.
 
-Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service provider pre-approves Postman to send messages on your behalf. Other plugins seek approval each time they connect, but Postman will deliver your email every time without rejection.
+Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service provider pre-approves Postman to send messages on your behalf.
+
+Other plugins seek approval each time they connect, but Postman will deliver your email every time without rejection.
 
 ###* What's New for v1.5 *
 *Postman is one month old and 1000 downloads strong! :D We're celebrating by [sending your Gmail through the HTTPS port](https://wordpress.org/plugins/postman-gmail-extension/)! That's right, blocked port problems are SO last year!*
