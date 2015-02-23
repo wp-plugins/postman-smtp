@@ -107,13 +107,13 @@ Postman specifically requests a limited access OAuth 2.0 token (valet key) to ac
 
 = Can't I just tell Google to allow less secure apps and keep using my old password? =
 
-Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but but this option is not available if you're using *Google Apps* to manage a domain.
+Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but this option is not available if you're using *Google Apps* to manage a domain.
 
 There are many reasons why OAuth 2.0 is better than any password-based mechanism:
 
-* Postman will never ask for your password, making it much harder for your password to be stolen
+* Postman will never ask for your password, making it much harder to be stolen
 * If you change your password regularly, you will never have to update Postman's configuration
-* You have tighter control over the data Postman has access to - for Google users it can never access your YouTube; for Yahoo users it can never access your Flickr
+* You have tighter control over the data Postman has access to. For Google users it can never access your YouTube; for Yahoo users it can never access your Flickr
 * If your WordPress site gets hacked, you can revoke Postman's email access without impacting any other application or website that has access to your account
 
 > **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
