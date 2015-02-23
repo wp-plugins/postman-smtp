@@ -18,12 +18,12 @@ Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail
 Other plugins seek approval each time they connect, but Postman will deliver your email every time without rejection.
 
 ###* What's New for v1.5 *
-*Postman is one month old and 1000 downloads strong! :D We're celebrating by [sending your Gmail through the HTTPS port](https://wordpress.org/plugins/postman-gmail-extension/)! That's right, blocked port problems are SO last year!*
+*Postman is one month old and 1000 downloads strong! :D We're celebrating by [sending your Gmail through the HTTPS port](https://wordpress.org/plugins/postman-gmail-extension/)! Blocked port problems are a thing of the past.*
 
 = Features =
 * Send mail to any host just like the 'Big Five' WordPress SMTP plugins
 * Send mail to Gmail, Hotmail or Yahoo Mail using traditional auth or OAuth 2.0
-* Blocked ports are no problem! Install the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-extension/) to tunnel your Gmail through the HTTPS port
+* Blocked ports are no problem! Install the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-extension/) to send your Gmail through the HTTPS port
 * Easy to use Setup Wizard takes the guesswork out of configuring email
 * Fire-and-forget: Mail delivery continues even if your password changes
 * Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
@@ -43,7 +43,7 @@ If you are willing to translate Postman into your language, [please let me know]
 
 == Installation ==
 
-> Please be aware that if your host provides an internal mail server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to external SMTP servers and Postman will not work for you. Use Postman's Port Test utility to determine if your host has a firewal in place. If all your ports are blocked, consider the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-extension/) to send email over the Web (HTTPS) port.
+> Please be aware that if your host provides an internal mail server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to the standard SMTP ports and Postman will not work for you. Use Postman's Port Test utility to determine if your host has a firewal in place. If all your ports are blocked, consider the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-extension/) to send email over the Secure Web (HTTPS) port.
 
 = Easy install and setup! (Recommended for all users) =
 1. Install and activate the plugin through the 'Plugins' menu in WordPress.
@@ -103,11 +103,7 @@ If you are willing to translate Postman into your language, [please let me know]
 
 = How does OAuth 2.0 work? =
 
-Postman specifically requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) on your behalf to perform a specific service (collect Gmail in the living room, stay out of Google Docs in the bedroom) without you giving up you user and password credentials (master house key). Once you grant access, Postman can do its work.
-
-= Why should I use Postman over any other plugins?  =
-
-Right now, Postman is the most modern SMTP plugin on WordPress.org and the only one offering an OAuth 2.0 implementation
+Postman requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) and perform a service (handle Gmail, stay out of Google Docs) with no need for you to surrender your username and password credentials (master house key). Once you grant access, Postman can do its work.
 
 = Can't I just tell Google to allow less secure apps and keep using my old password? =
 
@@ -115,15 +111,17 @@ Google does have a setting to [allow less secure apps](https://support.google.co
 
 There are many reasons why OAuth 2.0 is better than any password-based mechanism:
 
-* Postman will never ask for your password, making it much harder to be stolen
+* Postman will never ask for your password, so your password can't be stolen
 * If you change your password regularly, you will never have to update Postman's configuration
-* You have tighter control over the data Postman has access to. For Google users it can never access your YouTube; for Yahoo users it can never access your Flickr
+* You have tighter control over the data Postman has access to. For Google users it can never access your Calendar or Docs or YouTube; for Yahoo users it can never access your Flickr
 * If your WordPress site gets hacked, you can revoke Postman's email access without impacting any other application or website that has access to your account
 
 > **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
-= I want my email to come from a different email address. =
-This is not possible in OAuth 2.0 mode, and not recommended in Password (Plain, Login or CRAM-MD5) mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a Spam blacklist.
+= How can I get my email to show up with a different From: addres? =
+Google supports custom domains with the paid services Google Apps for [Work](https://www.google.com/work/apps/business/products/gmail/)/[Government](https://www.google.com/work/apps/government/products.html#gmail) and the free services Google Apps for [Education](https://www.google.com/work/apps/education/products.html#gmail)/[Non-Profits](https://www.google.com/nonprofits/products/)/[Free Edition](https://support.google.com/a/answer/2855120?hl=en).
+
+Otherwise, changing the sender address is not possible in OAuth 2.0 mode, and not recommended in Password (Plain, Login or CRAM-MD5) mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a Spam blacklist.
 
 Instead, consider setting the  **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
 
