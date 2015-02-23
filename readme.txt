@@ -103,7 +103,7 @@ If you are willing to translate Postman into your language, [please let me know]
 
 = How does OAuth 2.0 help to send mail? =
 
-Postman specifically requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) on the user's behalf to perform a particular service (get Gmail working in the living room, stay out of Google Docs in the bedroom) without the user giving up their user and password credentials (master house key). If the user grants that access, Postman receives a unique token to do its work.
+Postman specifically requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) on the user's behalf to perform a particular service (get Gmail working in the living room, stay out of Google Docs in the bedroom) without the user giving up their user and password credentials (master house key). If the user grants that access, Postman can do its work.
 
 = Why should I use Postman over any other plugins? Can't I just tell Google to allow less secure apps?  =
 
