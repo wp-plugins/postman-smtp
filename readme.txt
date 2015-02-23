@@ -118,7 +118,7 @@ There are many reasons why OAuth 2.0 is better than any password-based mechanism
 
 > **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
-= How can I get my email to show up with a different From: addres? =
+= How can I get my email to show up with a different From: address? =
 Google supports custom domains with the paid services Google Apps for [Work](https://www.google.com/work/apps/business/products/gmail/)/[Government](https://www.google.com/work/apps/government/products.html#gmail) and the free services Google Apps for [Education](https://www.google.com/work/apps/education/products.html#gmail)/[Non-Profits](https://www.google.com/nonprofits/products/)/[Free Edition](https://support.google.com/a/answer/2855120?hl=en).
 
 Otherwise, changing the sender address is not possible in OAuth 2.0 mode, and not recommended in Password (Plain, Login or CRAM-MD5) mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a Spam blacklist.
