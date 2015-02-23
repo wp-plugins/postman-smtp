@@ -101,24 +101,28 @@ If you are willing to translate Postman into your language, [please let me know]
 
 == Frequently Asked Questions == 
 
-= How does OAuth 2.0 help to send mail? =
+= How does OAuth 2.0 work? =
 
 Postman specifically requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) on the user's behalf to perform a particular service (get Gmail working in the living room, stay out of Google Docs in the bedroom) without the user giving up their user and password credentials (master house key). If the user grants that access, Postman can do its work.
 
-= Why should I use Postman over any other plugins? Can't I just tell Google to allow less secure apps?  =
+= Can't I just tell Google to allow less secure apps and keep using my old password? =
 
-If you use other plugins to send Gmail, Hotmail or Yahoo Mail, they're going to ask you for your account password. Anything you can do on your account, they can do. And if you change your password, those same plugins will break until you update them with your new password.
+Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but but this option is not available if you're using *Google Apps* to manage a domain.
 
-In OAuth 2.0 mode, Postman only receives access to mail. It can never access your Google Docs, YouTube, OneDrive, Flickr, etc. Postman can continue to deliver your email even if your password changes.
-
-Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but that's a band-aid, not a solution. And that option is not available if you're using *Google Apps* to manage a domain.
+There are many reasons why OAuth 2.0 is better than any password-based mechanism:
+* When Postman uses OAuth 2.0, it never ask for your password, making it much harder for a password to be stolen
+* If you change your password regularly, you will never have to update Postman's configuration
+* You have tighter control over what data Postman have access to - for Google users it can never access your YouTube; for Yahoo users it can never access your Flickr
+* If your WordPress site gets hacked, you can revoke Postman's OAuth 2.0 access without impacting any other application or website that has access to your account
 
 > **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
-= I want my email to come from a different email address. =
-This is not recommended in Password (Plain, Login or CRAM-MD5) mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a Spam blacklist. Instead, look into setting the  **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
+= Why should I use Postman over any other plugins?  =
 
-In OAuth 2.0 mode, Gmail allows you to send from a different Sender Email Address by [creating a Google Account](https://www.google.com/accounts/NewAccount) with that e-mail address, and then adding that account as an administrator in the Permissions section of the [Developer Console](http://console.developers.google.com/?_ga=1.121770313.313901992.1422721496). See [Sending mail](https://cloud.google.com/appengine/docs/php/mail/).
+Right now, Postman is the most modern SMTP plugin on WordPress.org and the only one offering an OAuth 2.0 implementation
+
+= I want my email to come from a different email address. =
+This is not possible in OAuth 2.0 mode, and not recommended in Password (Plain, Login or CRAM-MD5) mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a Spam blacklist. Instead, consider setting the  **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
 
 = What is a Client ID? =
 To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one.
