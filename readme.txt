@@ -160,8 +160,9 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Click 'Create App'
 1. Enter the Consumer Key and Consumer Secret: displayed here into Postman's settings page.
 
-= How can I stop all this OAuth nonsense!? =
-If you have a Google Account, from the [Google Developer's Console](https://console.developers.google.com/) use the Delete button under the Client ID. If you have a Microsoft Live account, from the [Microsoft account Developer Center](https://account.live.com/developers/applications/index), select the Application and choose Delete Application.
+= How can I revoke Postman's OAuth 2.0 access? =
+* If you have a Google Account, from the [Google Developer's Console](https://console.developers.google.com/) use the Delete button under the Client ID
+* If you have a Microsoft Live account, from the [Microsoft account Developer Center](https://account.live.com/developers/applications/index), select the Application and choose Delete Application.
 
 = Who do we thank for translations? =
 * French - [Etienne Provost](https://www.facebook.com/eprovost3)
