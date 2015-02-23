@@ -311,6 +311,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Upgrade Notice ==
 
+= 1.5 =
+Added support for external transports, such as the new Postman Gmail Extension.
+
 = 1.4 =
 Now supporting Yahoo Mail via OAuth 2.0!
 
