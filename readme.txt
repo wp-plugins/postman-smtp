@@ -111,10 +111,10 @@ Google does have a setting to [allow less secure apps](https://support.google.co
 
 There are many reasons why OAuth 2.0 is better than any password-based mechanism:
 
-* When Postman uses OAuth 2.0, it never ask for your password, making it much harder for a password to be stolen
+* Postman will never ask for your password, making it much harder for your password to be stolen
 * If you change your password regularly, you will never have to update Postman's configuration
-* You have tighter control over what data Postman have access to - for Google users it can never access your YouTube; for Yahoo users it can never access your Flickr
-* If your WordPress site gets hacked, you can revoke Postman's OAuth 2.0 access without impacting any other application or website that has access to your account
+* You have tighter control over the data Postman has access to - for Google users it can never access your YouTube; for Yahoo users it can never access your Flickr
+* If your WordPress site gets hacked, you can revoke Postman's email access without impacting any other application or website that has access to your account
 
 > **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
 
