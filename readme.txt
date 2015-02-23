@@ -105,6 +105,10 @@ If you are willing to translate Postman into your language, [please let me know]
 
 Postman specifically requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) on your behalf to perform a specific service (collect Gmail in the living room, stay out of Google Docs in the bedroom) without you giving up you user and password credentials (master house key). Once you grant access, Postman can do its work.
 
+= Why should I use Postman over any other plugins?  =
+
+Right now, Postman is the most modern SMTP plugin on WordPress.org and the only one offering an OAuth 2.0 implementation
+
 = Can't I just tell Google to allow less secure apps and keep using my old password? =
 
 Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but this option is not available if you're using *Google Apps* to manage a domain.
@@ -117,10 +121,6 @@ There are many reasons why OAuth 2.0 is better than any password-based mechanism
 * If your WordPress site gets hacked, you can revoke Postman's email access without impacting any other application or website that has access to your account
 
 > **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
-
-= Why should I use Postman over any other plugins?  =
-
-Right now, Postman is the most modern SMTP plugin on WordPress.org and the only one offering an OAuth 2.0 implementation
 
 = I want my email to come from a different email address. =
 This is not possible in OAuth 2.0 mode, and not recommended in Password (Plain, Login or CRAM-MD5) mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a Spam blacklist.
