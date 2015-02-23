@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
 "POT-Creation-Date: 2015-02-22 23:11:03+00:00\n"
-"PO-Revision-Date: 2015-02-22 18:12-0500\n"
+"PO-Revision-Date: 2015-02-23 00:23-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -64,6 +64,8 @@ msgid ""
 "Password authentication (Plain/Login/CRAMMD5) requires a username and "
 "password."
 msgstr ""
+"L'authentification par mot de passe (plaine / Connexion / CRAMMD5) nécessite "
+"un nom d'utilisateur et mot de passe."
 
 #. translators: %1$s is the Client ID label, and %2$s is the Client Secret
 #. label (e.g. Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable
@@ -92,6 +94,7 @@ msgstr ""
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:212
 msgid "Postman recommends %1$s with %2$s authentication on port %3$d."
 msgstr ""
+"Postman recommande %1$s avec l'authentification de %2$s sur le port %3$d."
 
 #: Postman/PostmanAdminController.php:100
 msgid "Settings saved."
@@ -342,6 +345,8 @@ msgid ""
 "Postman can't find any way to send mail on your system. Contact your host to "
 "get some ports opened."
 msgstr ""
+"Postman ne peut pas trouver un moyen pour envoyer des messages sur votre "
+"système. Contactez votre hôte pour obtenir des ports ouverts."
 
 #. translators: These two phrases represent the cases for 1) a single transport
 #. installed and 2) mulitple transports installed
@@ -349,13 +354,17 @@ msgstr ""
 msgid "Enter the sender's name and email address:"
 msgid_plural ""
 "Select the transport and enter the sender's name and email address:"
-msgstr[0] ""
+msgstr[0] "Entrez le nom et l'adresse électronique de l'expéditeur:"
 msgstr[1] ""
+"Sélectionnez le transport et entrez le nom et l'adresse électronique de "
+"l'expéditeur:"
 
 #: Postman/PostmanAdminController.php:925
 msgid ""
 "Select the authentication method and enter the SMTP server hostname and port:"
 msgstr ""
+"Sélectionnez la méthode d'authentification et entrez le nom du serveur SMTP "
+"et le port:"
 
 #: Postman/PostmanAdminController.php:933
 msgid "This test determines which ports are open for Postman to use."
@@ -532,7 +541,7 @@ msgstr ""
 
 #: Postman/PostmanAdminController.php:1224
 msgid "Has Postman been working well for you?"
-msgstr ""
+msgstr "Postman a été fonctionne bien pour vous?"
 
 #. translators: where %1$d is the number of messages delivered and %2$s is the
 #. URL to the WordPress.org review and ratings page
@@ -542,10 +551,14 @@ msgid ""
 "href=\"%2$s\">review of Postman SMTP</a> at WordPress.org to help spread the "
 "word<br/> about the new way to send email from WordPress! :D"
 msgstr ""
+"Postman a livré% %1$d e-mails pour vous! Se il vous plaît envisager de "
+"laisser une critique de href=\"%2$s\"> <a de Postman SMTP </a> au WordPress."
+"org pour aider à passer le mot à propos de <br/> la nouvelle façon d'envoyer "
+"des courriels à partir de WordPress! : D"
 
 #: Postman/PostmanAdminController.php:1255
 msgid "Are you having any issues with Postman?"
-msgstr ""
+msgstr "Vous rencontrez des problèmes avec Postman?"
 
 #: Postman/PostmanAdminController.php:1256
 msgid ""
@@ -580,7 +593,7 @@ msgstr "Inconnu"
 
 #: Postman/PostmanAdminController.php:1317
 msgid "SMTP port; commonly blocked"
-msgstr ""
+msgstr "SMTP port; couramment bloqué"
 
 #: Postman/PostmanAdminController.php:1318
 msgid "HTTPS port; can be used by the Postman Gmail Extension"
@@ -588,11 +601,11 @@ msgstr ""
 
 #: Postman/PostmanAdminController.php:1319
 msgid "SMTPS-SSL port;"
-msgstr ""
+msgstr "SMTPS-SSL port;"
 
 #: Postman/PostmanAdminController.php:1320
 msgid "SMTPS-TLS port;"
-msgstr ""
+msgstr "SMTPS-TLS port;"
 
 #: Postman/PostmanAdminController.php:1334
 msgctxt "Main Menu"
