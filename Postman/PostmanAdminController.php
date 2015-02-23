@@ -1258,6 +1258,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				printf ( '<h4>%s</h4>', __ ( 'Are you having any issues with Postman?', 'postman-smtp' ) );
 				printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Here is some <a id="show-diagnostics" href="#">diagnostic info</a> that you can report to the author.', 'postman-smtp' ) ) );
 				printf ( '<textarea id="diagnostic-text" hidden="hidden" cols="80" rows="10">%s</textarea>', $diagnostics );
+				// TODO add the list of plugins http://stackoverflow.com/questions/20488264/how-do-i-get-activated-plugin-list-in-wordpress-plugin-development
 			}
 		}
 		

@@ -18,6 +18,7 @@ if (! class_exists ( "PostmanLogger" )) {
 			$this->name = $name;
 			$this->logLevel = PostmanOptions::getInstance ()->getLogLevel ();
 		}
+		// TODO better logging http://www.smashingmagazine.com/2011/03/08/ten-things-every-wordpress-plugin-developer-should-know/
 		function debug($text) {
 			if (self::DEBUG_INT >= $this->logLevel) {
 				error_log ( 'DEBUG ' . $this->name . ': ' . $text );
