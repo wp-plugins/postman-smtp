@@ -625,11 +625,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'log_level_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( PostmanOptions::PRINT_ERRORS, _x ( 'Show Error Page', 'Configuration Input Field', 'postman-smtp' ), array (
-					$this,
-					'print_errors_callback' 
-			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
-			
 			// the Port Test section
 			add_settings_section ( PostmanAdminController::PORT_TEST_SECTION, _x ( 'Port Connection Test', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,

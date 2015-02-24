@@ -214,6 +214,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.5.2 - 2015-02-24 =
+* Forgot to remove display_errors=On
+
 = 1.5.1 - 2015-02-23 =
 * Bugs slipped through. In the Wizard, choosing port 465 was not hiding the authentication label. Worse, choosing port 587 was not showing the authentication buttons.
 * In the wizard, if no ports are available for use, the error message was not being displayed.
@@ -322,6 +325,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 1.5.2 =
+Fixed a critical bug.. display_errors is forced on as I forgot to remove some debug code
 
 = 1.5 =
 Added support for external transports, such as the new Postman Gmail Extension.
