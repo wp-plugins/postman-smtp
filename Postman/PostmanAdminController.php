@@ -479,8 +479,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_option_ssl_id', '.input_enc_type_ssl' );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_option_tls_id', '.input_enc_type_tls' );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_option_none_id', '.input_enc_type_none' );
-			// this is for both the label and input of encryption type
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_encryption_group', '.input_encryption_type' );
 			
 			// the password inputs
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_basic_username', '#input_' . PostmanOptions::BASIC_AUTH_USERNAME );
@@ -872,8 +870,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->logger->debug ( 'ajaxRedirectUrl answer client_secret_label:' . $scribe->getClientSecretLabel () );
 				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url_label:' . $scribe->getCallbackUrlLabel () );
 				$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain_label:' . $scribe->getCallbackDomainLabel () );
-				$this->logger->debug ( 'ajaxRedirectUrl answer hide_auth:' . $response ['hide_auth'] );
-				$this->logger->debug ( 'ajaxRedirectUrl answer hide_enc:' . $response ['hide_enc'] );
 				if ($winningRecommendation) {
 					$response [PostmanOptions::TRANSPORT_TYPE] = $winningRecommendation ['transport'];
 					$response [PostmanOptions::AUTHENTICATION_TYPE] = $winningRecommendation ['auth'];
@@ -882,7 +878,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$response ['port_id'] = $winningRecommendation ['port_id'];
 					$response ['display_auth'] = $winningRecommendation ['display_auth'];
 					$response ['message'] = $winningRecommendation ['message'];
-					if ($winningRecommendation ['auth'] != 'oauth2' && $winningRecommendation ['enc'] == 587) {
+					if ($winningRecommendation ['auth'] != 'oauth2' && $winningRecommendation ['enc'] == 'tls') {
 						$response ['hide_auth'] = false;
 						$response ['hide_enc'] = false;
 					}
@@ -896,10 +892,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 					// for manual config.. you need to separate wizard from manual this is a mess
 					if ($transport->isOAuthUsed ( $queryAuthType )) {
 						$response ['display_auth'] = 'oauth2';
+						$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $response ['display_auth'] );
 					}
-					$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $response ['display_auth'] );
 					$response ['message'] = __ ( 'Postman can\'t find any way to send mail on your system. Contact your host to get some ports opened.', 'postman-smtp' );
 				}
+				$this->logger->debug ( 'ajaxRedirectUrl answer hide_auth:' . $response ['hide_auth'] );
+				$this->logger->debug ( 'ajaxRedirectUrl answer hide_enc:' . $response ['hide_enc'] );
 				$this->logger->debug ( 'ajaxRedirectUrl answer message:' . $response ['message'] );
 			} else {
 				$response = array (
@@ -1008,7 +1006,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		public function authenticationTypeRadioCallback() {
 			$authType = $this->options->getAuthenticationType ();
-			print '<table class="input_authentication_type"><tr>';
+			print '<table class="input_auth_type"><tr>';
 			printf ( '<td><input type="radio" id="input_auth_none"   name="postman_options[auth_type]" class="input_auth_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::AUTHENTICATION_TYPE_NONE, _x ( 'None', 'Authentication Type', 'postman-smtp' ) );
 			printf ( '<td><input type="radio" id="input_auth_plain"  name="postman_options[auth_type]" class="input_auth_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::AUTHENTICATION_TYPE_PLAIN, _x ( 'Plain', 'Authentication Type', 'postman-smtp' ) );
 			printf ( '<td><input type="radio" id="input_auth_oauth2" name="postman_options[auth_type]" class="input_auth_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' ) );
@@ -1236,9 +1234,21 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$diagnostics .= sprintf ( 'PHP ArrayObject: %s%s', ($arrayObjectRequirement ? 'Yes' : 'No'), PHP_EOL );
 				$diagnostics .= sprintf ( 'PHP display_errors: %s%s', $displayErrors, PHP_EOL );
 				$diagnostics .= sprintf ( 'PHP errorReporting: %s%s', $errorReporting, PHP_EOL );
+				$diagnostics .= sprintf ( 'WordPress Version: %s%s', get_bloginfo ( 'version' ), PHP_EOL );
 				$diagnostics .= sprintf ( 'WordPress WP_DEBUG: %s%s', WP_DEBUG, PHP_EOL );
 				$diagnostics .= sprintf ( 'WordPress WP_DEBUG_LOG: %s%s', WP_DEBUG_LOG, PHP_EOL );
 				$diagnostics .= sprintf ( 'WordPress WP_DEBUG_DISPLAY: %s%s', WP_DEBUG_DISPLAY, PHP_EOL );
+				$diagnostics .= ('WordPress Active Plugins');
+				// from http://stackoverflow.com/questions/20488264/how-do-i-get-activated-plugin-list-in-wordpress-plugin-development
+				$apl = get_option ( 'active_plugins' );
+				$plugins = get_plugins ();
+				$activated_plugins = array ();
+				foreach ( $apl as $p ) {
+					if (isset ( $plugins [$p] )) {
+						$diagnostics .= ' : ' . $plugins [$p] ['Name'];
+					}
+				}
+				$diagnostics .= (PHP_EOL);
 				$diagnostics .= sprintf ( 'Postman Transport: %s%s', $this->options->getTransportType (), PHP_EOL );
 				$diagnostics .= sprintf ( 'Postman Transport Configured: %s%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
 				$diagnostics .= sprintf ( 'Postman Transport Ready: %s%s', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
@@ -1258,7 +1268,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 				printf ( '<h4>%s</h4>', __ ( 'Are you having any issues with Postman?', 'postman-smtp' ) );
 				printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Here is some <a id="show-diagnostics" href="#">diagnostic info</a> that you can report to the author.', 'postman-smtp' ) ) );
 				printf ( '<textarea id="diagnostic-text" hidden="hidden" cols="80" rows="10">%s</textarea>', $diagnostics );
-				// TODO add the list of plugins http://stackoverflow.com/questions/20488264/how-do-i-get-activated-plugin-list-in-wordpress-plugin-development
 			}
 		}
 		
@@ -1319,7 +1328,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$portName = _x ( 'Port %s', 'Port Test', 'postman-smtp' );
 			$portStatus = _x ( 'Unknown', 'Port Test Status', 'postman-smtp' );
 			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 25, sprintf ( $portName, 25 ), __ ( 'SMTP port; commonly blocked', 'Port Test', 'postman-smtp' ), $portStatus );
-			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 443, sprintf ( $portName, 443 ), __ ( 'HTTPS port; can be used by the Postman Gmail Extension', 'Port Test', 'postman-smtp' ), $portStatus );
+			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 443, sprintf ( $portName, 443 ), sprintf ( __ ( 'HTTPS port; can be used by the <a href="%s">Postman Gmail Extension</a>', 'Port Test', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-gmail-extension/' ), $portStatus );
 			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 465, sprintf ( $portName, 465 ), __ ( 'SMTPS-SSL port;', 'Port Test', 'postman-smtp' ), $portStatus );
 			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 587, sprintf ( $portName, 587 ), __ ( 'SMTPS-TLS port;', 'Port Test', 'postman-smtp' ), $portStatus );
 			print '</table>';
@@ -1444,15 +1453,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			print '<section class="wizard-auth-basic">';
 			printf ( '<p class="port-explanation-ssl">%s</p>', __ ( 'Choose Login authentication unless you\'ve been instructed otherwise. Your username is most likely your email address.', 'postman-smtp' ) );
-			printf ( '<label class="input_authorization_type" for="auth_type">%s</label>', _x ( 'Authentication', 'Configuration Input Field', 'postman-smtp' ) );
-			print '<br />';
+			printf ( '<label class="input_auth_type" for="auth_type">%s</label>', _x ( 'Authentication', 'Configuration Input Field', 'postman-smtp' ) );
+			print '<br class="input_auth_type" />';
 			print $this->authenticationTypeRadioCallback ();
-			print '<br />';
-			print '<div id="encryption_group">';
+			print '<br class="input_auth_type" />';
 			printf ( '<label class="input_encryption_type" for="enc_type">%s</label>', _x ( 'Security', 'Configuration Input Field', 'postman-smtp' ) );
 			print '<br class="input_encryption_type" />';
 			print $this->encryption_type_radio_callback ();
-			print '</div>';
 			printf ( '<label for="username">%s</label>', _x ( 'Username', 'Configuration Input Field', 'postman-smtp' ) );
 			print '<br />';
 			print $this->basic_auth_username_callback ();
