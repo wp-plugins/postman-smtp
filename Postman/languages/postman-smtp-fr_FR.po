@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-02-24 02:43:29+00:00\n"
-"PO-Revision-Date: 2015-02-23 21:45-0500\n"
+"POT-Creation-Date: 2015-02-24 03:54:26+00:00\n"
+"PO-Revision-Date: 2015-02-23 22:55-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -222,7 +222,7 @@ msgid "Authentication"
 msgstr "Authentification"
 
 #: Postman/PostmanAdminController.php:546
-#: Postman/PostmanAdminController.php:1460
+#: Postman/PostmanAdminController.php:1459
 msgctxt "Configuration Input Field"
 msgid "Security"
 msgstr "Sécurité "
@@ -245,13 +245,13 @@ msgid "Authentication Settings"
 msgstr "Réglages d'Authentification"
 
 #: Postman/PostmanAdminController.php:566
-#: Postman/PostmanAdminController.php:1463
+#: Postman/PostmanAdminController.php:1462
 msgctxt "Configuration Input Field"
 msgid "Username"
 msgstr "Nom d'Utilisateur"
 
 #: Postman/PostmanAdminController.php:571
-#: Postman/PostmanAdminController.php:1467
+#: Postman/PostmanAdminController.php:1466
 msgctxt "Configuration Input Field"
 msgid "Password"
 msgstr "Mot de Passe"
@@ -297,7 +297,7 @@ msgid "Test Your Setup"
 msgstr "Tester votre configuration"
 
 #: Postman/PostmanAdminController.php:655
-#: Postman/PostmanAdminController.php:1511
+#: Postman/PostmanAdminController.php:1510
 msgctxt "Configuration Input Field"
 msgid "Recipient Email Address"
 msgstr "Adresse d'envoi"
@@ -760,52 +760,49 @@ msgstr "Authentification"
 
 #: Postman/PostmanAdminController.php:1455
 msgid ""
-"Choose Login authentication unless you've been instructed otherwise. Your "
-"username is most likely your email address."
-msgstr ""
-"À moins d'avis contraire, choisir l'Authentification. Votre nom "
-"d'utilisateur est sans doutes votre adresse de messagerie."
+"Enter your credentials. Your username is most likely your email address."
+msgstr "Votre nom d'utilisateur est sans doutes votre adresse de messagerie."
 
-#: Postman/PostmanAdminController.php:1475
-#: Postman/PostmanAdminController.php:1477
+#: Postman/PostmanAdminController.php:1474
+#: Postman/PostmanAdminController.php:1476
 msgctxt "Wizard Step Title"
 msgid "Finish"
 msgstr "Fin"
 
-#: Postman/PostmanAdminController.php:1479
+#: Postman/PostmanAdminController.php:1478
 msgid "Click Finish to save these settings, then:"
 msgstr "Cliquer sur Fin pour sauver ces réglages, ensuite:"
 
-#: Postman/PostmanAdminController.php:1481
+#: Postman/PostmanAdminController.php:1480
 msgid ""
 "Request permission from the Email Provider to allow Postman to send email and"
 msgstr ""
 "Demandez la permission  à votre service de messagerie de permettre à Postman "
 "d'envoyer du courrier puis"
 
-#: Postman/PostmanAdminController.php:1482
+#: Postman/PostmanAdminController.php:1481
 msgid "Send yourself a Test Email to make sure everything is working!"
 msgstr "Envoyez-vous un message test pour vérifier que tout fonctionne!"
 
-#: Postman/PostmanAdminController.php:1500
+#: Postman/PostmanAdminController.php:1499
 msgctxt "Page Title"
 msgid "Send a Test Email"
 msgstr "Envoyer un Email de Test"
 
-#: Postman/PostmanAdminController.php:1504
+#: Postman/PostmanAdminController.php:1503
 msgid "Choose the Recipient"
 msgstr "Choisir un récipiandaire"
 
-#: Postman/PostmanAdminController.php:1506
+#: Postman/PostmanAdminController.php:1505
 msgid "Who is this message going to?"
 msgstr "Qui est ce message pour?"
 
-#: Postman/PostmanAdminController.php:1507
+#: Postman/PostmanAdminController.php:1506
 msgid "This utility allows you to send an email message for testing."
 msgstr "Cette fonction vous permet d'envoyer un message en test."
 
 #. translators: where %d is an amount of time, in seconds
-#: Postman/PostmanAdminController.php:1510
+#: Postman/PostmanAdminController.php:1509
 msgid "If there is a problem, Postman will give up after %d second."
 msgid_plural "If there is a problem, Postman will give up after %d seconds."
 msgstr[0] ""
@@ -813,23 +810,23 @@ msgstr[0] ""
 msgstr[1] ""
 "S'il rencontre un problème, Postman abandonnera la tâche après %d secondes."
 
-#: Postman/PostmanAdminController.php:1516
+#: Postman/PostmanAdminController.php:1515
 msgid "Send The Message"
 msgstr "Envoyez le Message"
 
-#: Postman/PostmanAdminController.php:1519
+#: Postman/PostmanAdminController.php:1518
 msgid "Sending the message:"
 msgstr "Envoi du message:"
 
-#: Postman/PostmanAdminController.php:1520
+#: Postman/PostmanAdminController.php:1519
 msgid "In Outbox"
 msgstr "Dans la boîte d'envoi"
 
-#: Postman/PostmanAdminController.php:1523
+#: Postman/PostmanAdminController.php:1522
 msgid "Status Message"
 msgstr "Message d'état"
 
-#: Postman/PostmanAdminController.php:1526
+#: Postman/PostmanAdminController.php:1525
 msgid "SMTP Session Transcript"
 msgstr "Transcription de la session SMTP"
 
@@ -1062,6 +1059,13 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid ""
+#~ "Choose Login authentication unless you've been instructed otherwise. Your "
+#~ "username is most likely your email address."
+#~ msgstr ""
+#~ "À moins d'avis contraire, choisir l'Authentification. Votre nom "
+#~ "d'utilisateur est sans doutes votre adresse de messagerie."
 
 #~ msgid "Postman has delivered %d emails for you!"
 #~ msgid_plural "Postman has delivered %d emails for you!"
