@@ -216,6 +216,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 1.5.1 - 2015-02-23 =
 * Bugs slipped through. In the Wizard, choosing port 465 was not hiding the authentication label. Worse, choosing port 587 was not showing the authentication buttons.
+* In the wizard, if no ports are available for use, the error message was not being displayed.
 
 = 1.5 - 2015-02-22 =
 * Added support for modular transports. The first external transport is the Postman Gmail Extension, which uses the Gmail API to send mail out on the HTTPS port, a convenient way around traditional TCP port blocks for Gmail users
