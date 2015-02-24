@@ -43,7 +43,7 @@ If you are willing to translate Postman into your language, [please let me know]
 
 == Installation ==
 
-> Please be aware that if your host provides an internal mail server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to the standard SMTP ports and Postman will not work for you. Use Postman's Port Test utility to determine if your host has a firewal in place. If all your ports are blocked, consider the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-extension/) to send email over the Secure Web (HTTPS) port.
+> Please be aware that if your host provides an internal mail server for you to use (e.g. GoDaddy), there is a good chance they have blocked access to the standard SMTP ports and Postman will not work for you. Use Postman's Port Test utility to determine if your host has a firewal in place. If all your ports are blocked, consider the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-extension/) to send your Gmail over the Secure Web port (HTTPS).
 
 = Easy install and setup! (Recommended for all users) =
 1. Install and activate the plugin through the 'Plugins' menu in WordPress.
