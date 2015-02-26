@@ -893,7 +893,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 						$response ['display_auth'] = 'oauth2';
 						$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $response ['display_auth'] );
 					}
-					$response ['message'] = __ ( 'Postman can\'t find any way to send mail on your system. Contact your host to get some ports opened.', 'postman-smtp' );
+					/* translators: where %s is the URL to the Connectivity Test page */
+					$response ['message'] = sprintf ( __ ( 'Postman can\'t find any way to send mail on your system. Run a <a href="%s">connectivity test</a>.', 'postman-smtp' ), $this->getPageUrl ( self::PORT_TEST_SLUG ) );
 				}
 				$this->logger->debug ( 'ajaxRedirectUrl answer hide_auth:' . $response ['hide_auth'] );
 				$this->logger->debug ( 'ajaxRedirectUrl answer hide_enc:' . $response ['hide_enc'] );
@@ -1261,11 +1262,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 					),
 					array (
 							'port' => 465,
-							'message' => __ ( 'SMTPS-SSL port;', 'Port Test', 'postman-smtp' ) 
+							'message' => __ ( 'SMTPS-SSL port', 'Port Test', 'postman-smtp' ) 
 					),
 					array (
 							'port' => 587,
-							'message' => __ ( 'SMTPS-TLS port;', 'Port Test', 'postman-smtp' ) 
+							'message' => __ ( 'SMTPS-TLS port', 'Port Test', 'postman-smtp' ) 
 					) 
 			);
 			print '<div class="wrap">';
@@ -1280,9 +1281,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 			/* translators: where %d is an amount of time, in seconds */
 			printf ( __ ( 'The entire test will take up to %d seconds.', 'postman-smtp' ), ($this->options->getConnectionTimeout () * sizeof ( $ports )) );
 			print ' ';
-			print __ ( 'A <span style="color:red">Closed</span> port indicates either:', 'postman-smtp' );
+			print __ ( 'A <span style="color:red">Closed</span> port indicates:', 'postman-smtp' );
 			print '<ol>';
-			printf ( '<li>%s</li>', __ ( 'Your host has placed a firewall between this site and the SMTP server or', 'postman-smtp' ) );
+			printf ( '<li>%s</li>', __ ( 'Your host has placed a firewall between this site and the SMTP server', 'postman-smtp' ) );
+			printf ( '<li>%s</li>', sprintf ( __ ( 'Your <a href="%s">PHP configuration</a> is preventing outbound connections', 'postman-smtp' ), 'http://php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen' ) );
+			printf ( '<li>%s</li>', sprintf ( __ ( 'Your <a href="%s">WordPress configuration</a> is preventing outbound connections', 'postman-smtp' ), 'http://wp-mix.com/disable-external-url-requests/' ) );
 			printf ( '<li>%s</li>', __ ( 'The SMTP server has no service running on that port', 'postman-smtp' ) );
 			printf ( '</ol></p><p><b>%s</b></p>', __ ( 'If the port you are trying to use is <span style="color:red">Closed</span>, Postman can not deliver mail. Contact your host to get the port opened.', 'postman-smtp' ) );
 			print '<form id="port_test_form_id" method="post">';
@@ -1358,16 +1361,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$diagnostics .= sprintf ( 'Postman Read Timeout: %s%s', $this->options->getReadTimeout (), PHP_EOL );
 			printf ( '<h4>%s</h4>', __ ( 'Are you having any issues with Postman?', 'postman-smtp' ) );
 			print '<dl>';
-			printf ( '<dt>%s</dt>', 'The Wizard Can\'t find any Open Ports' );
-			printf ( '<dd>%s</dd>', 'Run a Connectivity Test to find out what\'s wrong. You may find that the HTTPS port is open.' );
+			printf ( '<dt>%s</dt>', __ ( 'The Wizard Can\'t find any Open Ports', 'postman-smtp' ) );
+			printf ( '<dd>%s</dd>', sprintf ( __ ( 'Run a <a href="%s">connectivity test</a> to find out what\'s wrong. You may find that the HTTPS port is open.', 'postman-smtp' ), $this->getPageUrl ( self::PORT_TEST_SLUG ) ) );
 			print '</dl>';
 			print '<dl>';
-			printf ( '<dt>%s</dt>', '"Request OAuth permission" is not working' );
-			printf ( '<dd>%s</dd>', 'Please note that the Client ID and Client Secret fields are NOT for your username and password. They are for OAuth Credentials only.' );
+			printf ( '<dt>%s</dt>', __ ( '"Request OAuth permission" is not working', 'postman-smtp' ) );
+			printf ( '<dd>%s</dd>', __ ( 'Please note that the Client ID and Client Secret fields are NOT for your username and password. They are for OAuth Credentials only.', 'postman-smtp' ) );
 			print '</dl>';
 			print '<dl>';
-			printf ( '<dt>%s</dt>', 'Sometimes sending mail still fails' );
-			printf ( '<dd>%s</dd>', 'Your host may have poor connectivity to your email server. Open up the advanced configuration and double the Read Timeout setting.' );
+			printf ( '<dt>%s</dt>', __ ( 'Sometimes sending mail still fails', 'postman-smtp' ) );
+			printf ( '<dd>%s</dd>', __ ( 'Your host may have poor connectivity to your email server. Open up the advanced configuration and double the TCP Read Timeout setting.', 'postman-smtp' ) );
 			print '</dl>';
 			printf ( '<h3>%s</h3>', _x ( 'Diagnostic Info', 'Page Title', 'postman-smtp' ) );
 			printf ( '<p style="margin:0 10px">%s</p>', __ ( 'Do the above tips fail to resolve your issue? Pease check the <a href="https://wordpress.org/plugins/postman-smtp/other_notes/">error messages</a> page and the <a href="https://wordpress.org/support/plugin/postman-smtp">support forum</a>.</br>If you write for help, please include the following diagnostic information:', 'postman-smtp' ) );
