@@ -21,12 +21,12 @@ Other plugins seek permission each time they connect, but Postman will deliver y
 *Postman is one month old and 1000 downloads strong! :D We're celebrating by [sending your Gmail through the HTTPS port](https://wordpress.org/plugins/postman-gmail-extension/)! Blocked port problems are a thing of the past.*
 
 = Features =
-* Send mail to any host just like the 'Big Five' WordPress SMTP plugins
-* Send mail to Gmail, Hotmail or Yahoo Mail using traditional auth or OAuth 2.0
+* Send mail to any host just like the 'Big Five' SMTP plugins
+* Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0
 * Blocked ports are no problem! Install the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-extension/) to send your Gmail through the HTTPS port
-* Easy to use Setup Wizard takes the guesswork out of configuring email
-* Fire-and-forget: Mail delivery continues even if your password changes
-* Integrated TCP Port Tester for troubleshooting connectivity issues due to firewalls
+* Easy to use Setup Wizard takes the guesswork out of configuration
+* Fire-and-forget: delivery continues even if your password changes
+* Integrated TCP Port Tester for troubleshooting connectivity issues
 * Supports International alphabets, HTML Mail and MultiPart/MIME
 * Supports  Plain, Login, CRAM-MD5 and XOAUTH2 authentication (SASL)
 * Supports SSL and TLS security (SMTPS)
