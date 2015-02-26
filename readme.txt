@@ -25,7 +25,7 @@ Other plugins seek permission each time they connect, but Postman will deliver y
 * Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0
 * Easy-to-use Setup Wizard makes configuration a breeze
 * Fire-and-forget: delivery continues even if your password changes
-* The extension for [blocked SMTP ports](https://wordpress.org/plugins/postman-gmail-extension/) sends your mail over HTTPS
+* The extension for [blocked SMTP ports](https://wordpress.org/plugins/postman-gmail-extension/) sends mail over HTTPS
 * Integrated TCP Port Tester for troubleshooting connectivity issues
 * Supports International alphabets, HTML Mail and MultiPart/MIME
 * Supports  Plain/Login/CRAM-MD5/XOAUTH2 authentication (SASL)
