@@ -24,12 +24,12 @@ Other plugins seek permission each time they connect, but Postman will deliver y
 * Send mail to any host just like the 'Big Five' SMTP plugins
 * Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0
 * Blocked ports are no problem! Install the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-extension/) to send your Gmail through the HTTPS port
-* Easy to use Setup Wizard takes the guesswork out of configuration
+* Easy-to-use Setup Wizard makes configuration a breeze
 * Fire-and-forget: delivery continues even if your password changes
 * Integrated TCP Port Tester for troubleshooting connectivity issues
 * Supports International alphabets, HTML Mail and MultiPart/MIME
-* Supports  Plain, Login, CRAM-MD5 and XOAUTH2 authentication (SASL)
-* Supports SSL and TLS security (SMTPS)
+* Supports  Plain/Login/CRAM-MD5/XOAUTH2 authentication (SASL)
+* Supports SSL/TLS security (SMTPS)
 * Upgrading is easy! Postman can import settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
 * Available translations: English, French
 
