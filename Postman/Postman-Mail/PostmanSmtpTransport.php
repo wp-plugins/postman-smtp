@@ -30,6 +30,9 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function getName() {
 			return _x ( 'SMTP', 'Transport Name', 'postman-smtp' );
 		}
+		public function getVersion() {
+			return POSTMAN_PLUGIN_VERSION;
+		}
 		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			if ($options->getAuthenticationType () == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
 				return new PostmanOAuth2MailAuthenticator ( $options, $authToken );

@@ -12,6 +12,7 @@ if (! class_exists ( 'PostmanSmtp' )) {
 	require_once 'PostmanMessageHandler.php';
 	require_once 'PostmanWpMailBinder.php';
 	require_once 'PostmanAdminController.php';
+	require_once 'PostmanActivationHandler.php';
 	
 	/**
 	 *
@@ -24,54 +25,62 @@ if (! class_exists ( 'PostmanSmtp' )) {
 		const LONG_ENOUGH_SEC = 432000;
 		private $postmanPhpFile;
 		private $logger;
+		private $messageHandler;
+		private $options;
+		private $authToken;
+		private $wpMailBinder;
 		
 		/**
-		 * The constructor contains the procedures that HAVE to run
-		 * right away.
-		 *
-		 * Delaying them until the WordPress init() hook won't do.
 		 *
 		 * @param unknown $postmanPhpFile        	
 		 */
 		public function __construct($postmanPhpFile) {
 			
 			// calculate the basename
-			$basename = plugin_basename ( $postmanPhpFile );
 			$this->postmanPhpFile = $postmanPhpFile;
 			
 			// start the logger
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			
-			// add the SMTP transport
-			$this->addTransport ();
+			// store instances of the Options and OAuthToken
+			$this->options = PostmanOptions::getInstance ();
+			$this->authToken = PostmanOAuthToken::getInstance ();
+			
+			// create am instance of the MessageHandler
+			$this->messageHandler = new PostmanMessageHandler ( $this->options, $this->authToken );
+			
+			// store an instance of the WpMailBinder
+			$this->wpMailBinder = PostmanWpMailBinder::getInstance ();
+			
+			// These are operations that have to happen NOW, before the init() hook
+			// and even before WordPress loads its interna pluggable functions
+			$this->preInit ();
+		}
+		
+		/**
+		 * These functions have to be called before the WordPress pluggables are loaded
+		 */
+		private function preInit() {
+			// register the SMTP transport
+			$this->registerTransport ();
 			
 			// bind to wp_mail
-			if (class_exists ( 'PostmanWpMailBinder' )) {
-				// once the PostmanWpMailBinder has been loaded, ask it to bind
-				PostmanWpMailBinder::getInstance ()->bind ();
-			}
-			
-			// load the options and the auth token
-			$options = PostmanOptions::getInstance ();
-			$authToken = PostmanOAuthToken::getInstance ();
-			
-			// create a message handler
-			$messageHandler = new PostmanMessageHandler ( $options, $authToken );
+			$this->wpMailBinder->bind ();
 			
 			if (is_admin ()) {
 				// fire up the AdminController
-				$adminController = new PostmanAdminController ( $basename, $options, $authToken, $messageHandler );
+				$basename = plugin_basename ( $this->postmanPhpFile );
+				$adminController = new PostmanAdminController ( $basename, $this->options, $this->authToken, $this->messageHandler );
 			}
 			
 			// handle plugin activation/deactivation
-			require_once 'PostmanActivationHandler.php';
 			$upgrader = new PostmanActivationHandler ();
-			register_activation_hook ( $postmanPhpFile, array (
+			register_activation_hook ( $this->postmanPhpFile, array (
 					$upgrader,
 					'activatePostman' 
 			) );
 			
-			// initialize the plugin
+			// call the initialization on the standard WordPress plugins_loaded hook
 			add_action ( 'plugins_loaded', array (
 					$this,
 					'init' 
@@ -88,19 +97,15 @@ if (! class_exists ( 'PostmanSmtp' )) {
 		public function init() {
 			$this->logger->debug ( 'Postman Smtp v' . POSTMAN_PLUGIN_VERSION . ' starting' );
 			
+			// verify that the transport we want is loaded
+			$this->validateTransports ();
+			
 			// load the text domain
 			$this->loadTextDomain ();
 			
 			// are we bound?
-			if (PostmanWpMailBinder::getInstance ()->isUnboundDueToException ()) {
-				// add an error message for the user
-				$options = PostmanOptions::getInstance ();
-				$authToken = PostmanOAuthToken::getInstance ();
-				$messageHandler = new PostmanMessageHandler ( $options, $authToken );
-				add_action ( 'admin_notices', Array (
-						$messageHandler,
-						'displayCouldNotReplaceWpMail' 
-				) );
+			if ($this->wpMailBinder->isUnboundDueToException ()) {
+				$this->messageHandler->addError ( __ ( 'Postman is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.', 'postman-smtp' ) );
 			} else if (! PostmanWpMailBinder::getInstance ()->isBound ()) {
 				$this->logger->debug ( ' Not binding, plugin is not configured.' );
 			}
@@ -116,8 +121,34 @@ if (! class_exists ( 'PostmanSmtp' )) {
 		/**
 		 * Adds the regular SMTP transport
 		 */
-		private function addTransport() {
+		private function registerTransport() {
 			PostmanTransportDirectory::getInstance ()->registerTransport ( new PostmanSmtpTransport () );
+		}
+		
+		/**
+		 * Make sure that the current transport is available
+		 * If it's not activate the default transport
+		 * (The current transport may come unavailable if the user deactivates the extension)
+		 */
+		private function validateTransports() {
+			if (! $this->options->isNew ()) {
+				$directory = PostmanTransportDirectory::getInstance ();
+				$selectedTransport = $this->options->getTransportType ();
+				$found = false;
+				foreach ( $directory->getTransports () as $transport ) {
+					$message = 'Available transport: ' . $transport->getName ();
+					if ($transport->getSlug () == $selectedTransport) {
+						$found = true;
+						$message .= ' [current]';
+					}
+					$this->logger->debug ( $message );
+				}
+				if (! $found) {
+					$this->options->setTransportType ( PostmanSmtpTransport::SLUG );
+					$this->options->save ();
+					$this->messageHandler->addError ( __ ( 'Postman Transport reset to SMTP. Attention may be required.' ) );
+				}
+			}
 		}
 		
 		/**

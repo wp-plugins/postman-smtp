@@ -1,37 +1,4 @@
 <?php
-if (! class_exists ( "PostmanLogger" )) {
-	
-	require_once 'PostmanOptions.php';
-	
-	//
-	class PostmanLogger {
-		const ALL_INT = - 2147483648;
-		const DEBUG_INT = 10000;
-		const ERROR_INT = 40000;
-		const FATAL_INT = 50000;
-		const INFO_INT = 20000;
-		const OFF_INT = 2147483647;
-		const WARN_INT = 30000;
-		private $name;
-		private $logLevel;
-		function __construct($name) {
-			$this->name = $name;
-			$this->logLevel = PostmanOptions::getInstance ()->getLogLevel ();
-		}
-		// TODO better logging http://www.smashingmagazine.com/2011/03/08/ten-things-every-wordpress-plugin-developer-should-know/
-		function debug($text) {
-			if (self::DEBUG_INT >= $this->logLevel) {
-				error_log ( 'DEBUG ' . $this->name . ': ' . $text );
-			}
-		}
-		function error($text) {
-			if (self::ERROR_INT >= $this->logLevel) {
-				error_log ( 'ERROR ' . $this->name . ': ' . $text );
-			}
-		}
-	}
-}
-
 if (! interface_exists ( 'PostmanTransport' )) {
 	interface PostmanTransport {
 		public function isSmtp();
@@ -55,14 +22,6 @@ if (! interface_exists ( 'PostmanTransport' )) {
 if (! class_exists ( 'PostmanTransportDirectory' )) {
 	class PostmanTransportDirectory {
 		private $transports;
-		private $logger;
-		/**
-		 * private constructor
-		 */
-		private function __construct() {
-			// add the default Transport
-			$this->logger = new PostmanLogger ( get_class ( $this ) );
-		}
 		
 		// singleton instance
 		public static function getInstance() {
@@ -73,7 +32,6 @@ if (! class_exists ( 'PostmanTransportDirectory' )) {
 			return $inst;
 		}
 		public function registerTransport(PostmanTransport $instance) {
-			$this->logger->debug ( 'Registering ' . $instance->getName () . ' transport as ' . $instance->getSlug () );
 			$this->transports [$instance->getSlug ()] = $instance;
 		}
 		public function getTransports() {
@@ -82,3 +40,57 @@ if (! class_exists ( 'PostmanTransportDirectory' )) {
 	}
 }
 
+if (! interface_exists ( "PostmanOptionsInterface" )) {
+	
+	/**
+	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api
+	 * http://pastebin.com/jA9sBNTk
+	 *
+	 * Make sure these emails are permitted (see http://en.wikipedia.org/wiki/E-mail_address#Internationalization):
+	 */
+	interface PostmanOptionsInterface {
+		public function save();
+		public function isNew();
+		public function isSendingEmailAllowed(PostmanOAuthToken $token);
+		public function isPermissionNeeded(PostmanOAuthToken $token);
+		public function isSmtpServerRequirementsNotMet();
+		public function isOAuthRequirementsNotMet($isOauthHost);
+		public function isPasswordCredentialsNeeded();
+		public function isErrorPrintingEnabled();
+		public function getLogLevel();
+		public function getHostname();
+		public function getPort();
+		public function getSenderEmail();
+		public function getSenderName();
+		public function getClientId();
+		public function getClientSecret();
+		public function getTransportType();
+		public function getAuthenticationType();
+		public function getEncryptionType();
+		public function getUsername();
+		public function getPassword();
+		public function getReplyTo();
+		public function getConnectionTimeout();
+		public function getReadTimeout();
+		public function isSenderNameOverridePrevented();
+		public function isAuthTypePassword();
+		public function isAuthTypeOAuth2();
+		public function isAuthTypeLogin();
+		public function isAuthTypePlain();
+		public function isAuthTypeCrammd5();
+		public function isAuthTypeNone();
+	}
+}
+
+if (! interface_exists ( 'PostmanOAuthTokenInterface' )) {
+	//
+	interface PostmanOAuthTokenInterface {
+		public static function getInstance();
+		public function save();
+		public function getVendorName();
+		public function getExpiryTime();
+		public function getAccessToken();
+		public function getRefreshToken();
+		public function isValid();
+	}
+}

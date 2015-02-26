@@ -20,6 +20,17 @@
 // define constants
 define ( 'POSTMAN_PLUGIN_VERSION', '1.5.2' );
 
+// mailpoet
+add_action ( 'init', 'mailpoet_hidden_options' );
+function mailpoet_hidden_options() {
+	if (class_exists ( 'WYSIJA' )) {
+		$model_config = WYSIJA::get ( 'config', 'model' );
+		$model_config->save ( array (
+				'allow_wpmail' => true 
+		) );
+	}
+}
+
 // load the common functions
 require_once 'Postman/postman-common-wp-functions.php';
 
