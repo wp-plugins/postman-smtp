@@ -214,6 +214,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 1.5.3 - 2015-02-25 =
 * Forgot to remove display_errors=On
+* If a Postman extension is suddenly removed, the SMTP transport is automatically re-installed
 * Added a Tips and Diagnostics Info section to the menu
 
 = 1.5.1 - 2015-02-23 =
