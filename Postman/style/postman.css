@@ -47,3 +47,7 @@ input.input_plugin_radio {
 .wizard>.content {
 	min-height: 32em;
 }
+
+dt {
+	font-style: italic;
+}

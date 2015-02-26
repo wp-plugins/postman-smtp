@@ -19,10 +19,10 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		 * @param unknown $options        	
 		 */
 		function __construct(PostmanOptions $options, PostmanOAuthToken $authToken) {
-			assert(isset($options));
-			assert(isset($authToken));
+			assert ( isset ( $options ) );
+			assert ( isset ( $authToken ) );
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			$this->logger->debug('Construct');
+			$this->logger->debug ( 'Construct' );
 			$this->options = $options;
 			$this->authToken = $authToken;
 			
@@ -37,15 +37,6 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
 			$this->scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
-			// is the saved transport installed?
-			$transportType = $this->options->getTransportType ();
-			if (! empty ( $transportType ) && $transport->getSlug () != $this->options->getTransportType ()) {
-				add_action ( 'admin_notices', Array (
-						$this,
-						'canNotFindTransport' 
-				) );
-			}
-			
 			if (isset ( $_GET ['page'] ) && substr ( $_GET ['page'], 0, 7 ) === 'postman') {
 				
 				if (WP_DEBUG_LOG && WP_DEBUG_DISPLAY) {
@@ -57,7 +48,8 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 				
 				if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
 					// no configuration errors to show
-				} else {
+				} else if (! $this->options->isNew ()) {
+					// show the errors as long as this is not a virgin install
 					$message = PostmanTransportUtils::getCurrentTransport ()->getMisconfigurationMessage ( $this->scribe, $this->options, $this->authToken );
 					if ($message) {
 						$this->logger->debug ( 'Transport has a configuration error: ' . $message );
@@ -106,9 +98,6 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		}
 		function addMessage($message) {
 			PostmanSession::getInstance ()->setSuccessMessage ( $message );
-		}
-		public function canNotFindTransport() {
-			$this->displayErrorMessage ( sprintf ( __ ( 'The external Postman transport "%s" is missing. Correct the error immediately or deactive Postman.' , 'postman-smtp'), $this->options->getTransportType () ) );
 		}
 		public function displayConfigurationRequiredWarning() {
 			/* translators: where %s is the URL to the Postman Settings page */

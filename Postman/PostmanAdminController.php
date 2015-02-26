@@ -620,12 +620,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printAdvancedSectionInfo' 
 			), PostmanAdminController::ADVANCED_OPTIONS );
 			
-			add_settings_field ( 'connection_timeout', _x ( 'Connection Timeout (sec)', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( 'connection_timeout', _x ( 'TCP Connection Timeout (sec)', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'connection_timeout_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( 'read_timeout', _x ( 'Read Timeout (sec)', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( 'read_timeout', _x ( 'TCP Read Timeout (sec)', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'read_timeout_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
@@ -1168,15 +1168,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Options page callback
 		 */
 		public function outputDefaultContent() {
-			// test features
-			$sslRequirement = extension_loaded ( 'openssl' );
-			$splAutoloadRegisterRequirement = function_exists ( 'spl_autoload_register' );
-			$phpVersionRequirement = PHP_VERSION_ID >= 50300;
-			$arrayObjectRequirement = class_exists ( 'ArrayObject' );
-			$getmxrrRequirement = function_exists ( 'getmxrr' );
-			$displayErrors = ini_get ( 'display_errors' );
-			$errorReporting = ini_get ( 'error_reporting' );
-			
 			// Set class property
 			print '<div class="wrap">';
 			$this->displayTopNavigation ();
@@ -1312,9 +1303,18 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 */
 		public function outputDiagnosticsContent() {
+			// test features
+			$sslRequirement = extension_loaded ( 'openssl' );
+			$splAutoloadRegisterRequirement = function_exists ( 'spl_autoload_register' );
+			$phpVersionRequirement = PHP_VERSION_ID >= 50300;
+			$arrayObjectRequirement = class_exists ( 'ArrayObject' );
+			$getmxrrRequirement = function_exists ( 'getmxrr' );
+			$displayErrors = ini_get ( 'display_errors' );
+			$errorReporting = ini_get ( 'error_reporting' );
+			
 			print '<div class="wrap">';
 			$this->displayTopNavigation ();
-			printf ( '<h3>%s</h3>', _x ( 'Diagnostic Info', 'Page Title', 'postman-smtp' ) );
+			printf ( '<h3>%s</h3>', _x ( 'Tips', 'Page Title', 'postman-smtp' ) );
 			$diagnostics = sprintf ( 'PHP v5.3: %s (%s)%s', ($phpVersionRequirement ? 'Yes' : 'No'), PHP_VERSION, PHP_EOL );
 			$diagnostics .= sprintf ( 'PHP SSL Extension: %s%s', ($sslRequirement ? 'Yes' : 'No'), PHP_EOL );
 			$diagnostics .= sprintf ( 'PHP spl_autoload_register: %s%s', ($splAutoloadRegisterRequirement ? 'Yes' : 'No'), PHP_EOL );
@@ -1335,6 +1335,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$diagnostics .= ' : ' . $plugins [$p] ['Name'];
 				}
 			}
+			$transports = '';
+			foreach ( PostmanTransportDirectory::getInstance ()->getTransports () as $transport ) {
+				$transports .= ' : ' . $transport->getName ();
+			}
 			$diagnostics .= (PHP_EOL);
 			$diagnostics .= sprintf ( 'Postman Transport: %s%s', $this->options->getTransportType (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Transport Configured: %s%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
@@ -1348,14 +1352,27 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$diagnostics .= sprintf ( 'Postman Failed Deliveries: %s%s', PostmanStats::getInstance ()->getFailedDeliveries (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Bound: %s%s', (PostmanWpMailBinder::getInstance ()->isBound () ? 'Yes' : 'No'), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Bind failure: %s%s', (PostmanWpMailBinder::getInstance ()->isUnboundDueToException () ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Available Transports: %s%s', sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () ), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Available Transports%s%s', $transports, PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman LogLevel: %s%s', $this->options->getLogLevel (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Connection Timeout: %d%s', $this->options->getConnectionTimeout (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Read Timeout: %s%s', $this->options->getReadTimeout (), PHP_EOL );
-			printf ( '<p style="margin:0 10px">%s', __ ( 'Are you having any issues with Postman?', 'postman-smtp' ) );
-			printf ( ' %s</p>', __ ( 'Here is some information that you can report to the author.', 'postman-smtp' ) );
+			printf ( '<h4>%s</h4>', __ ( 'Are you having any issues with Postman?', 'postman-smtp' ) );
+			print '<dl>';
+			printf ( '<dt>%s</dt>', 'The Wizard Can\'t find any Open Ports' );
+			printf ( '<dd>%s</dd>', 'Run a Connectivity Test to find out what\'s wrong. You may find that the HTTPS port is open.' );
+			print '</dl>';
+			print '<dl>';
+			printf ( '<dt>%s</dt>', '"Request OAuth permission" is not working' );
+			printf ( '<dd>%s</dd>', 'Please note that the Client ID and Client Secret fields are NOT for your username and password. They are for OAuth Credentials only.' );
+			print '</dl>';
+			print '<dl>';
+			printf ( '<dt>%s</dt>', 'Sometimes sending mail still fails' );
+			printf ( '<dd>%s</dd>', 'Your host may have poor connectivity to your email server. Open up the advanced configuration and double the Read Timeout setting.' );
+			print '</dl>';
+			printf ( '<h3>%s</h3>', _x ( 'Diagnostic Info', 'Page Title', 'postman-smtp' ) );
+			printf ( '<p style="margin:0 10px">%s</p>', __ ( 'Do the above tips fail to resolve your issue? Pease check the <a href="https://wordpress.org/plugins/postman-smtp/other_notes/">error messages</a> page and the <a href="https://wordpress.org/support/plugin/postman-smtp">support forum</a>.</br>If you write for help, please include the following diagnostic information:', 'postman-smtp' ) );
 			print '</br>';
-			printf ( '<textarea id="diagnostic-text" cols="80" rows="10">%s</textarea>', $diagnostics );
+			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="6">%s</textarea>', $diagnostics );
 			print '</div>';
 		}
 		
@@ -1391,8 +1408,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print '<div class="welcome-panel-column welcome-panel-last">';
 			printf ( '<h4>%s</h4>', _x ( 'Troubleshooting', 'Main Menu', 'postman-smtp' ) );
 			print '<ul>';
+			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::DIAGNOSTICS_SLUG ), __ ( 'Tips and Diagnostic Info', 'postman-smtp' ) );
 			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::PORT_TEST_SLUG ), _x ( 'Run a Connectivity Test', 'Main Menu', 'postman-smtp' ) );
-			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::DIAGNOSTICS_SLUG ), __ ( 'Generate Diagnostic Info', 'postman-smtp' ) );
 			printf ( '<li><a href="https://wordpress.org/plugins/postman-smtp/other_notes/" class="welcome-icon postman_support">%s</a></li>', _x ( 'Online Support', 'Main Menu', 'postman-smtp' ) );
 			print '</ul></div></div></div></div>';
 		}

@@ -165,11 +165,9 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 = Who do we thank for translations? =
 * French - [Etienne Provost](https://www.facebook.com/eprovost3)
 
-== Troubleshooting ==
+== Error Messages ==
 
-* If Postman sends mail inconsistently, your host may have poor connectivity to your mail server. Try doubling the Read Timeout.
-
-Here are some common error messages and what they mean. If you do not find your answer here, please [open a ticket](https://wordpress.org/support/plugin/postman-smtp).
+Here are some common SMTP error messages and what they mean.
 
 = Communication Error [334] =
 
@@ -214,8 +212,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.2 - 2015-02-24 =
+= 1.5.3 - 2015-02-25 =
 * Forgot to remove display_errors=On
+* Added a Tips and Diagnostics Info section to the menu
 
 = 1.5.1 - 2015-02-23 =
 * Bugs slipped through. In the Wizard, choosing port 465 was not hiding the authentication label. Worse, choosing port 587 was not showing the authentication buttons.

@@ -48,7 +48,7 @@ if (! class_exists ( 'PostmanSmtp' )) {
 			
 			// create am instance of the MessageHandler
 			$this->messageHandler = new PostmanMessageHandler ( $this->options, $this->authToken );
-
+			
 			// store an instance of the WpMailBinder
 			$this->wpMailBinder = PostmanWpMailBinder::getInstance ();
 			
@@ -131,21 +131,23 @@ if (! class_exists ( 'PostmanSmtp' )) {
 		 * (The current transport may come unavailable if the user deactivates the extension)
 		 */
 		private function validateTransports() {
-			$directory = PostmanTransportDirectory::getInstance ();
-			$selectedTransport = $this->options->getTransportType ();
-			$found = false;
-			foreach ( $directory->getTransports () as $transport ) {
-				$message = 'Available transport: ' . $transport->getName ();
-				if ($transport->getSlug () == $selectedTransport) {
-					$found = true;
-					$message .= ' [current]';
+			if (! $this->options->isNew ()) {
+				$directory = PostmanTransportDirectory::getInstance ();
+				$selectedTransport = $this->options->getTransportType ();
+				$found = false;
+				foreach ( $directory->getTransports () as $transport ) {
+					$message = 'Available transport: ' . $transport->getName ();
+					if ($transport->getSlug () == $selectedTransport) {
+						$found = true;
+						$message .= ' [current]';
+					}
+					$this->logger->debug ( $message );
 				}
-				$this->logger->debug ( $message );
-			}
-			if (! $found) {
-				$this->options->setTransportType ( PostmanSmtpTransport::SLUG );
-				$this->options->save ();
-				$this->messageHandler->addError ( __ ( 'Postman Transport reset to SMTP. Attention may be required.' ) );
+				if (! $found) {
+					$this->options->setTransportType ( PostmanSmtpTransport::SLUG );
+					$this->options->save ();
+					$this->messageHandler->addError ( __ ( 'Postman Transport reset to SMTP. Attention may be required.' ) );
+				}
 			}
 		}
 		
