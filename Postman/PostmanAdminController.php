@@ -30,6 +30,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		const EMAIL_TEST_SLUG = 'postman/email_test';
 		const PORT_TEST_SLUG = 'postman/port_test';
 		const PURGE_DATA_SLUG = 'postman/purge_data';
+		const DIAGNOSTICS_SLUG = 'postman/diagnostics';
 		
 		// The Postman Group is used for saving data, make sure it is globally unique
 		const SETTINGS_GROUP_NAME = 'postman_group';
@@ -44,8 +45,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 		const OAUTH_SECTION = 'postman_oauth_section';
 		const ADVANCED_OPTIONS = 'postman_advanced_options';
 		const ADVANCED_SECTION = 'postman_advanced_section';
-		const PORT_TEST_OPTIONS = 'postman_port_test_options';
-		const PORT_TEST_SECTION = 'postman_port_test_section';
 		
 		// slugs
 		const POSTMAN_TEST_SLUG = 'postman-test';
@@ -158,6 +157,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->registerAdminMenu ( 'addEmailTestSubmenu' );
 			$this->registerAdminMenu ( 'addPortTestSubmenu' );
 			$this->registerAdminMenu ( 'addPurgeDataSubmenu' );
+			$this->registerAdminMenu ( 'addDiagnosticsSubmenu' );
 			
 			// register action handlers
 			$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );
@@ -309,6 +309,21 @@ if (! class_exists ( "PostmanAdminController" )) {
 			wp_enqueue_style ( 'jquery_steps_style' );
 			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_script ( 'postman_test_email_wizard_script' );
+		}
+		
+		/**
+		 * Register the Diagnostics screen
+		 */
+		public function addDiagnosticsSubmenu() {
+			$page = add_submenu_page ( null, _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::DIAGNOSTICS_SLUG, array (
+					$this,
+					'outputDiagnosticsContent' 
+			) );
+			// When the plugin options page is loaded, also load the stylesheet
+			add_action ( 'admin_print_styles-' . $page, array (
+					$this,
+					'enqueueHomeScreenStylesheet' 
+			) );
 		}
 		
 		/**
@@ -548,7 +563,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'encryption_type_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::HOSTNAME, _x ( 'Outgoing Mail Server (SMTP)', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::HOSTNAME, _x ( 'SMTP Server Hostname', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'hostname_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
@@ -624,17 +639,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this,
 					'log_level_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
-			
-			// the Port Test section
-			add_settings_section ( PostmanAdminController::PORT_TEST_SECTION, _x ( 'Port Connection Test', 'Configuration Input Field', 'postman-smtp' ), array (
-					$this,
-					'printPortTestSectionInfo' 
-			), PostmanAdminController::PORT_TEST_OPTIONS );
-			
-			add_settings_field ( PostmanOptions::HOSTNAME, _x ( 'Outgoing Mail Server (SMTP)', 'Configuration Input Field', 'postman-smtp' ), array (
-					$this,
-					'port_test_hostname_callback' 
-			), PostmanAdminController::PORT_TEST_OPTIONS, PostmanAdminController::PORT_TEST_SECTION );
 			
 			// the Test Email section
 			register_setting ( 'email_group', PostmanAdminController::TEST_OPTIONS, array (
@@ -922,20 +926,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Port Test text
 		 */
 		public function printPortTestSectionInfo() {
-			print '<p>';
-			print __ ( 'This test determines which ports are open for Postman to use.', 'postman-smtp' );
-			print ' ';
-			/* translators: where %d is an amount of time, in seconds */
-			printf ( _n ( 'Each test is given %d second to complete.', 'Each test is given %d seconds to complete.', $this->options->getConnectionTimeout (), 'postman-smtp' ), $this->options->getConnectionTimeout () );
-			print '<br/>';
-			/* translators: where %d is an amount of time, in seconds */
-			printf ( __ ( 'The entire test will take up to %d seconds.', 'postman-smtp' ), ($this->options->getConnectionTimeout () * 3) );
-			print ' ';
-			print __ ( 'A <span style="color:red">Closed</span> port indicates either:', 'postman-smtp' );
-			print '<ol>';
-			printf ( '<li>%s</li>', __ ( 'Your host has placed a firewall between this site and the SMTP server or', 'postman-smtp' ) );
-			printf ( '<li>%s</li>', __ ( 'The SMTP server has no service running on that port', 'postman-smtp' ) );
-			printf ( '</ol></p><p><b>%s</b></p>', __ ( 'If the port you are trying to use is <span style="color:red">Closed</span>, Postman can not deliver mail. Contact your host to get the port opened.', 'postman-smtp' ) );
 		}
 		
 		/**
@@ -1221,49 +1211,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 				/* translators: where %s is the URL to the WordPress.org review and ratings page */
 				printf ( '%s</p>', sprintf ( __ ( 'Please considering leaving a <a href="%s">review of Postman SMTP</a> at WordPress.org to help spread the word<br/> about the new way to send email from WordPress! :D', 'postman-smtp' ), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp?filter=5' ) );
 			}
-			
-			if (! $this->options->isNew ()) {
-				$diagnostics = sprintf ( 'PHP v5.3: %s (%s)%s', ($phpVersionRequirement ? 'Yes' : 'No'), PHP_VERSION, PHP_EOL );
-				$diagnostics .= sprintf ( 'PHP SSL Extension: %s%s', ($sslRequirement ? 'Yes' : 'No'), PHP_EOL );
-				$diagnostics .= sprintf ( 'PHP spl_autoload_register: %s%s', ($splAutoloadRegisterRequirement ? 'Yes' : 'No'), PHP_EOL );
-				$diagnostics .= sprintf ( 'PHP ArrayObject: %s%s', ($arrayObjectRequirement ? 'Yes' : 'No'), PHP_EOL );
-				$diagnostics .= sprintf ( 'PHP display_errors: %s%s', $displayErrors, PHP_EOL );
-				$diagnostics .= sprintf ( 'PHP errorReporting: %s%s', $errorReporting, PHP_EOL );
-				$diagnostics .= sprintf ( 'WordPress Version: %s%s', get_bloginfo ( 'version' ), PHP_EOL );
-				$diagnostics .= sprintf ( 'WordPress WP_DEBUG: %s%s', WP_DEBUG, PHP_EOL );
-				$diagnostics .= sprintf ( 'WordPress WP_DEBUG_LOG: %s%s', WP_DEBUG_LOG, PHP_EOL );
-				$diagnostics .= sprintf ( 'WordPress WP_DEBUG_DISPLAY: %s%s', WP_DEBUG_DISPLAY, PHP_EOL );
-				$diagnostics .= ('WordPress Active Plugins');
-				// from http://stackoverflow.com/questions/20488264/how-do-i-get-activated-plugin-list-in-wordpress-plugin-development
-				$apl = get_option ( 'active_plugins' );
-				$plugins = get_plugins ();
-				$activated_plugins = array ();
-				foreach ( $apl as $p ) {
-					if (isset ( $plugins [$p] )) {
-						$diagnostics .= ' : ' . $plugins [$p] ['Name'];
-					}
-				}
-				$diagnostics .= (PHP_EOL);
-				$diagnostics .= sprintf ( 'Postman Transport: %s%s', $this->options->getTransportType (), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman Transport Configured: %s%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman Transport Ready: %s%s', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman Authorization Type: %s%s', $this->options->getAuthenticationType (), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman Encryption Type: %s%s', $this->options->getEncryptionType (), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman SMTP Host: %s%s', $this->options->getHostname (), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman SMTP Port: %s%s', $this->options->getPort (), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman Sender Matches user: %s%s', ($this->options->getSenderEmail () == $this->options->getUsername () ? 'Yes' : 'No'), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman Successful Deliveries: %s%s', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman Failed Deliveries: %s%s', PostmanStats::getInstance ()->getFailedDeliveries (), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman Bound: %s%s', (PostmanWpMailBinder::getInstance ()->isBound () ? 'Yes' : 'No'), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman Bind failure: %s%s', (PostmanWpMailBinder::getInstance ()->isUnboundDueToException () ? 'Yes' : 'No'), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman Available Transports: %s%s', sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () ), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman LogLevel: %s%s', $this->options->getLogLevel (), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman Connection Timeout: %d%s', $this->options->getConnectionTimeout (), PHP_EOL );
-				$diagnostics .= sprintf ( 'Postman Read Timeout: %s%s', $this->options->getReadTimeout (), PHP_EOL );
-				printf ( '<h4>%s</h4>', __ ( 'Are you having any issues with Postman?', 'postman-smtp' ) );
-				printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Here is some <a id="show-diagnostics" href="#">diagnostic info</a> that you can report to the author.', 'postman-smtp' ) ) );
-				printf ( '<textarea id="diagnostic-text" hidden="hidden" cols="80" rows="10">%s</textarea>', $diagnostics );
-			}
 		}
 		
 		/**
@@ -1312,21 +1259,103 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 */
 		public function outputPortTestContent() {
+			$ports = array (
+					array (
+							'port' => 25,
+							'message' => __ ( 'SMTP port; commonly blocked', 'Port Test', 'postman-smtp' ) 
+					),
+					array (
+							'port' => 443,
+							'message' => sprintf ( __ ( 'HTTPS port; can be used by the <a href="%s">Postman Gmail Extension</a>', 'Port Test', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-gmail-extension/' ) 
+					),
+					array (
+							'port' => 465,
+							'message' => __ ( 'SMTPS-SSL port;', 'Port Test', 'postman-smtp' ) 
+					),
+					array (
+							'port' => 587,
+							'message' => __ ( 'SMTPS-TLS port;', 'Port Test', 'postman-smtp' ) 
+					) 
+			);
 			print '<div class="wrap">';
 			$this->displayTopNavigation ();
+			printf ( '<h3>%s</h3>', _x ( 'Connectivity Test', 'Page Title', 'postman-smtp' ) );
+			print '<p>';
+			print __ ( 'This test determines which ports are open for Postman to use.', 'postman-smtp' );
+			print ' ';
+			/* translators: where %d is an amount of time, in seconds */
+			printf ( _n ( 'Each test is given %d second to complete.', 'Each test is given %d seconds to complete.', $this->options->getConnectionTimeout (), 'postman-smtp' ), $this->options->getConnectionTimeout () );
+			print '<br/>';
+			/* translators: where %d is an amount of time, in seconds */
+			printf ( __ ( 'The entire test will take up to %d seconds.', 'postman-smtp' ), ($this->options->getConnectionTimeout () * sizeof ( $ports )) );
+			print ' ';
+			print __ ( 'A <span style="color:red">Closed</span> port indicates either:', 'postman-smtp' );
+			print '<ol>';
+			printf ( '<li>%s</li>', __ ( 'Your host has placed a firewall between this site and the SMTP server or', 'postman-smtp' ) );
+			printf ( '<li>%s</li>', __ ( 'The SMTP server has no service running on that port', 'postman-smtp' ) );
+			printf ( '</ol></p><p><b>%s</b></p>', __ ( 'If the port you are trying to use is <span style="color:red">Closed</span>, Postman can not deliver mail. Contact your host to get the port opened.', 'postman-smtp' ) );
 			print '<form id="port_test_form_id" method="post">';
-			do_settings_sections ( PostmanAdminController::PORT_TEST_OPTIONS );
-			// This prints out all hidden setting fields
+			printf ( '<label for="hostname">%s</label>', _x ( 'SMTP Server Hostname', 'Configuration Input Field', 'postman-smtp' ) );
+			$this->port_test_hostname_callback ();
 			submit_button ( _x ( 'Begin Test', 'Button Label', 'postman-smtp' ), 'primary', 'begin-port-test', true );
 			print '</form>';
 			print '<table id="testing_table">';
 			$portName = _x ( 'Port %s', 'Port Test', 'postman-smtp' );
 			$portStatus = _x ( 'Unknown', 'Port Test Status', 'postman-smtp' );
-			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 25, sprintf ( $portName, 25 ), __ ( 'SMTP port; commonly blocked', 'Port Test', 'postman-smtp' ), $portStatus );
-			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 443, sprintf ( $portName, 443 ), sprintf ( __ ( 'HTTPS port; can be used by the <a href="%s">Postman Gmail Extension</a>', 'Port Test', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-gmail-extension/' ), $portStatus );
-			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 465, sprintf ( $portName, 465 ), __ ( 'SMTPS-SSL port;', 'Port Test', 'postman-smtp' ), $portStatus );
-			printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', 587, sprintf ( $portName, 587 ), __ ( 'SMTPS-TLS port;', 'Port Test', 'postman-smtp' ), $portStatus );
+			foreach ( $ports as $port ) {
+				printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', $port ['port'], sprintf ( $portName, $port ['port'] ), $port ['message'], $portStatus );
+			}
 			print '</table>';
+			print '</div>';
+		}
+		
+		/**
+		 */
+		public function outputDiagnosticsContent() {
+			print '<div class="wrap">';
+			$this->displayTopNavigation ();
+			printf ( '<h3>%s</h3>', _x ( 'Diagnostic Info', 'Page Title', 'postman-smtp' ) );
+			$diagnostics = sprintf ( 'PHP v5.3: %s (%s)%s', ($phpVersionRequirement ? 'Yes' : 'No'), PHP_VERSION, PHP_EOL );
+			$diagnostics .= sprintf ( 'PHP SSL Extension: %s%s', ($sslRequirement ? 'Yes' : 'No'), PHP_EOL );
+			$diagnostics .= sprintf ( 'PHP spl_autoload_register: %s%s', ($splAutoloadRegisterRequirement ? 'Yes' : 'No'), PHP_EOL );
+			$diagnostics .= sprintf ( 'PHP ArrayObject: %s%s', ($arrayObjectRequirement ? 'Yes' : 'No'), PHP_EOL );
+			$diagnostics .= sprintf ( 'PHP display_errors: %s%s', $displayErrors, PHP_EOL );
+			$diagnostics .= sprintf ( 'PHP errorReporting: %s%s', $errorReporting, PHP_EOL );
+			$diagnostics .= sprintf ( 'WordPress Version: %s%s', get_bloginfo ( 'version' ), PHP_EOL );
+			$diagnostics .= sprintf ( 'WordPress WP_DEBUG: %s%s', WP_DEBUG, PHP_EOL );
+			$diagnostics .= sprintf ( 'WordPress WP_DEBUG_LOG: %s%s', WP_DEBUG_LOG, PHP_EOL );
+			$diagnostics .= sprintf ( 'WordPress WP_DEBUG_DISPLAY: %s%s', WP_DEBUG_DISPLAY, PHP_EOL );
+			$diagnostics .= ('WordPress Active Plugins');
+			// from http://stackoverflow.com/questions/20488264/how-do-i-get-activated-plugin-list-in-wordpress-plugin-development
+			$apl = get_option ( 'active_plugins' );
+			$plugins = get_plugins ();
+			$activated_plugins = array ();
+			foreach ( $apl as $p ) {
+				if (isset ( $plugins [$p] )) {
+					$diagnostics .= ' : ' . $plugins [$p] ['Name'];
+				}
+			}
+			$diagnostics .= (PHP_EOL);
+			$diagnostics .= sprintf ( 'Postman Transport: %s%s', $this->options->getTransportType (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Transport Configured: %s%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Transport Ready: %s%s', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Authorization Type: %s%s', $this->options->getAuthenticationType (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Encryption Type: %s%s', $this->options->getEncryptionType (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman SMTP Host: %s%s', $this->options->getHostname (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman SMTP Port: %s%s', $this->options->getPort (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Sender Matches user: %s%s', ($this->options->getSenderEmail () == $this->options->getUsername () ? 'Yes' : 'No'), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Successful Deliveries: %s%s', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Failed Deliveries: %s%s', PostmanStats::getInstance ()->getFailedDeliveries (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Bound: %s%s', (PostmanWpMailBinder::getInstance ()->isBound () ? 'Yes' : 'No'), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Bind failure: %s%s', (PostmanWpMailBinder::getInstance ()->isUnboundDueToException () ? 'Yes' : 'No'), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Available Transports: %s%s', sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () ), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman LogLevel: %s%s', $this->options->getLogLevel (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Connection Timeout: %d%s', $this->options->getConnectionTimeout (), PHP_EOL );
+			$diagnostics .= sprintf ( 'Postman Read Timeout: %s%s', $this->options->getReadTimeout (), PHP_EOL );
+			printf ( '<p style="margin:0 10px">%s', __ ( 'Are you having any issues with Postman?', 'postman-smtp' ) );
+			printf ( ' %s</p>', __ ( 'Here is some information that you can report to the author.', 'postman-smtp' ) );
+			print '</br>';
+			printf ( '<textarea id="diagnostic-text" cols="80" rows="10">%s</textarea>', $diagnostics );
 			print '</div>';
 		}
 		
@@ -1351,18 +1380,19 @@ if (! class_exists ( "PostmanAdminController" )) {
 			} else {
 				printf ( '<li><div class="welcome-icon send_test_emaail">%s</div></li>', $this->oauthScribe->getRequestPermissionLinkText () );
 			}
+			if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
+				printf ( '<li><a href="%s" class="welcome-icon send_test_email">%s</a></li>', $this->getPageUrl ( self::EMAIL_TEST_SLUG ), _x ( 'Send a Test Email', 'Main Menu', 'postman-smtp' ) );
+			} else {
+				printf ( '<li><div class="welcome-icon send_test_email">%s</div></li>', _x ( 'Send a Test Email', 'Main Menu', 'postman-smtp' ) );
+			}
 			printf ( '<li><a href="%s" class="welcome-icon oauth-authorize">%s</a></li>', $this->getPageUrl ( self::PURGE_DATA_SLUG ), _x ( 'Delete plugin settings', 'Main Menu', 'postman-smtp' ) );
 			print '</ul>';
 			print '</div>';
 			print '<div class="welcome-panel-column welcome-panel-last">';
 			printf ( '<h4>%s</h4>', _x ( 'Troubleshooting', 'Main Menu', 'postman-smtp' ) );
 			print '<ul>';
-			if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
-				printf ( '<li><a href="%s" class="welcome-icon send_test_email">%s</a></li>', $this->getPageUrl ( self::EMAIL_TEST_SLUG ), _x ( 'Send a Test Email', 'Main Menu', 'postman-smtp' ) );
-			} else {
-				printf ( '<li><div class="welcome-icon send_test_email">%s</div></li>', _x ( 'Send a Test Email', 'Main Menu', 'postman-smtp' ) );
-			}
-			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::PORT_TEST_SLUG ), _x ( 'Run a Port Connection Test', 'Main Menu', 'postman-smtp' ) );
+			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::PORT_TEST_SLUG ), _x ( 'Run a Connectivity Test', 'Main Menu', 'postman-smtp' ) );
+			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::DIAGNOSTICS_SLUG ), __ ( 'Generate Diagnostic Info', 'postman-smtp' ) );
 			printf ( '<li><a href="https://wordpress.org/plugins/postman-smtp/other_notes/" class="welcome-icon postman_support">%s</a></li>', _x ( 'Online Support', 'Main Menu', 'postman-smtp' ) );
 			print '</ul></div></div></div></div>';
 		}
@@ -1376,8 +1406,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			// construct Wizard
 			print '<div class="wrap">';
+			
 			$this->displayTopNavigation ();
-			printf ( '<h3></h3>', _x ( 'Postman Setup Wizard', 'Page Title', 'postman-smtp' ) );
+			
+			printf ( '<h3>%s</h3>', _x ( 'Postman Setup Wizard', 'Page Title', 'postman-smtp' ) );
 			print '<form id="postman_wizard" method="post" action="options.php">';
 			printf ( '<input type="hidden" id="input_reply_to" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
 			printf ( '<input type="hidden" id="input_connection_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::CONNECTION_TIMEOUT, $this->options->getConnectionTimeout () );

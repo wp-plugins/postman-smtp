@@ -19,7 +19,10 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		 * @param unknown $options        	
 		 */
 		function __construct(PostmanOptions $options, PostmanOAuthToken $authToken) {
+			assert(isset($options));
+			assert(isset($authToken));
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			$this->logger->debug('Construct');
 			$this->options = $options;
 			$this->authToken = $authToken;
 			
@@ -114,9 +117,6 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		public function displayDebugDisplayIsEnabled() {
 			/* translators: where %s is the URL to the WordPress documentation for WP_DEBUG */
 			$this->displayWarningMessage ( sprintf ( __ ( 'Warning: Debug messages are being piped into the HTML output. This is a <span style="color:red"><b>serious security risk</b></span> and may hang Postman\'s remote AJAX calls. Disable <a href="%s">WP_DEBUG_DISPLAY</a>.', 'postman-smtp' ), 'http://codex.wordpress.org/WP_DEBUG#WP_DEBUG_LOG_and_WP_DEBUG_DISPLAY' ) );
-		}
-		public function displayCouldNotReplaceWpMail() {
-			$this->displayWarningMessage ( __ ( 'Postman is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.', 'postman-smtp' ) );
 		}
 		//
 		public function displaySuccessSessionMessage() {

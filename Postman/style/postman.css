@@ -8,8 +8,9 @@ form#postman_wizard legend, form#postman_test_email_wizard legend {
 	font-weight: bold;
 }
 
-form#postman_wizard label, form#postman_test_email_wizard label {
+form label {
 	font-weight: bold;
+	margin-right: 10px;
 }
 
 table#testing_table {

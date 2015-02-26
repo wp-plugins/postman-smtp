@@ -370,7 +370,7 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 					// eg. boundary="----=_NextPart_DC7E1BB5...
 					if (strpos ( $header, ':' ) === false) {
 						if (false !== stripos ( $header, 'boundary=' )) {
-							$this->parts = preg_split ( '/boundary=/i', trim ( $header ) );
+							$parts = preg_split ( '/boundary=/i', trim ( $header ) );
 							$this->boundary = trim ( str_replace ( array (
 									"'",
 									'"' 
