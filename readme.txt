@@ -1,4 +1,4 @@
-=== Postman SMTP ===
+=== Postman SMTP Mailer ===
 Contributors: jasonhendriks
 Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, yahoo mail, windows live, outlook.com, outgoing mail, send mail, wp_mail, wp mail, google apps
 Requires at least: 3.9
