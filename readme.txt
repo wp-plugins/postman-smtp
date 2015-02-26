@@ -30,7 +30,7 @@ Other plugins seek permission each time they connect, but Postman will deliver y
 * Supports International alphabets, HTML Mail and MultiPart/MIME
 * Supports  Plain/Login/CRAM-MD5/XOAUTH2 authentication (SASL)
 * Supports SSL/TLS security (SMTPS)
-* Upgrading is easy! Postman can import settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
+* Migrating is easy! Postman can import settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
 * Available translations: English, French
 
 If you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
