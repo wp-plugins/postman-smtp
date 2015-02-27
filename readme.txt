@@ -1,4 +1,4 @@
-=== Postman SMTP ===
+=== Postman SMTP Mailer ===
 Contributors: jasonhendriks
 Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, yahoo mail, windows live, outlook.com, outgoing mail, send mail, wp_mail, wp mail, google apps
 Requires at least: 3.9
@@ -11,7 +11,7 @@ Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, a next-g
 
 == Description ==
 
-As the big email services [increase their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and [block traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms, users face [connection issues](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), delays and vanishing messages. Most turn to the black magic of app-specific passwords, two-factor authentication, and CAPTCHA work-arounds.
+As the big email services [increase their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and [block traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms, users face [connection issues](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), delays and vanishing messages. Like passengers on the Titanic, most turn to the work-arounds offered by app-specific passwords, two-factor authentication, and disabling all the security they can.
 
 Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service [pre-approves Postman](http://blog.varonis.com/introduction-to-oauth/) to send messages on your behalf. No other work-arounds are needed.
 
