@@ -7,7 +7,7 @@ Stable tag: 1.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, a next-generation OAuth 2.0-capable SMTP Plugin for WordPress.
+Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, a next-generation OAuth 2.0-capable SMTP mailer for WordPress.
 
 
 
