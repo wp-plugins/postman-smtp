@@ -88,8 +88,6 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		 * Constructor
 		 *
 		 * @param PostmanOptionsInterface $options        	
-		 * @param PostmanOAuthTokenInterface $authorizationToken        	
-		 * @param PostmanConfigTextHelper $oauthScribe        	
 		 */
 		function __construct(PostmanOptionsInterface $options) {
 			parent::__construct ();
@@ -122,8 +120,6 @@ if (! class_exists ( 'PostmanImportConfigurationAjaxController' )) {
 		 * Constructor
 		 *
 		 * @param PostmanOptionsInterface $options        	
-		 * @param PostmanOAuthTokenInterface $authorizationToken        	
-		 * @param PostmanConfigTextHelper $oauthScribe        	
 		 */
 		function __construct(PostmanOptionsInterface $options) {
 			parent::__construct ();
