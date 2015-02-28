@@ -123,7 +123,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			new PostmanGetHostnameByEmailAjaxController ();
 			new PostmanGetPortsToTestViaAjax ();
 			new PostmanPortTestAjaxController ( $this->options );
-			new PostmanImportConfigurationAjaxController ( $this->options );
+			new PostmanImportConfigurationAjaxController ( $this->options, $this->importableConfiguration );
 			new PostmanSendTestEmailAjaxController ( $this->options, $this->authorizationToken, $this->oauthScribe );
 			
 			// register content handlers

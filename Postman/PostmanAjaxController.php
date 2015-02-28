@@ -116,14 +116,16 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 if (! class_exists ( 'PostmanImportConfigurationAjaxController' )) {
 	class PostmanImportConfigurationAjaxController extends PostmanAbstractAjaxHandler {
 		private $options;
+		private $importableConfiguration;
 		/**
 		 * Constructor
 		 *
 		 * @param PostmanOptionsInterface $options        	
 		 */
-		function __construct(PostmanOptionsInterface $options) {
+		function __construct(PostmanOptionsInterface $options, $importableConfiguration) {
 			parent::__construct ();
 			$this->options = $options;
+			$this->importableConfiguration = $importableConfiguration;
 			$this->registerAjaxHandler ( 'import_configuration', $this, 'getConfigurationFromExternalPluginViaAjax' );
 		}
 		
