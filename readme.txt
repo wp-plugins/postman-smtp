@@ -253,7 +253,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Added a dedicated screen for Diagnostics (so that I can add more intensive, slower-running checks like DNS)
 * Fixed port-testing race condition bug in Postman Setup Wizard when using Gmail API Extension
 * Fix for error "Fatal error: Cannot redeclare class PostmanOAuthTokenInterface" when using Gmail API Extension
-* Remove display_errors=On
+* I remove display_errors=On, Mr. Bonehead left it in the previous release by accident
 * French language updates
 
 = 1.5.1 - 2015-02-23 =
