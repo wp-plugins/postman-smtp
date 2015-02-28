@@ -13,6 +13,14 @@ jQuery(document).ready(
 								transitionEffect : "slideLeft",
 								stepsOrientation : "vertical",
 								autoFocus : true,
+								labels : {
+									current : steps_current_step,
+									pagination : steps_pagination,
+									finish : steps_finish,
+									next : steps_next,
+									previous : steps_previous,
+									loading : steps_loading
+								},
 								onStepChanging : function(event, currentIndex,
 										newIndex) {
 									return handleStepChange(event,

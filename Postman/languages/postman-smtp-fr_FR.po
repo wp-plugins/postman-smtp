@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-02-28 17:49:35+00:00\n"
-"PO-Revision-Date: 2015-02-28 13:15-0500\n"
+"POT-Creation-Date: 2015-02-28 18:16:52+00:00\n"
+"PO-Revision-Date: 2015-02-28 13:18-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -523,10 +523,12 @@ msgid "Delete All Data"
 msgstr "Supprimer toutes les données"
 
 #: Postman/PostmanAdminController.php:1117
+msgctxt "Port Test"
 msgid "SMTP port; commonly blocked"
 msgstr "Port SMTP; couramment bloqué"
 
 #: Postman/PostmanAdminController.php:1121
+msgctxt "Port Test"
 msgid ""
 "HTTPS port; can be used by the <a href=\"%s\">Postman Gmail Extension</a>"
 msgstr ""
@@ -534,10 +536,12 @@ msgstr ""
 "Gmail</a>"
 
 #: Postman/PostmanAdminController.php:1125
+msgctxt "Port Test"
 msgid "SMTPS-SSL port"
 msgstr "Port SMTPS-SSL"
 
 #: Postman/PostmanAdminController.php:1129
+msgctxt "Port Test"
 msgid "SMTPS-TLS port"
 msgstr "Port SMTPS-TLS"
 
@@ -1084,6 +1088,21 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "SMTP port; commonly blocked"
+#~ msgstr "Port SMTP; couramment bloqué"
+
+#~ msgid ""
+#~ "HTTPS port; can be used by the <a href=\"%s\">Postman Gmail Extension</a>"
+#~ msgstr ""
+#~ "Port HTTPS; peut être utilisé par le <a href=\"%s\">facteur d'extension "
+#~ "Gmail</a>"
+
+#~ msgid "SMTPS-SSL port"
+#~ msgstr "Port SMTPS-SSL"
+
+#~ msgid "SMTPS-TLS port"
+#~ msgstr "Port SMTPS-TLS"
 
 #~ msgid ""
 #~ "Pease check the <a href=\"https://wordpress.org/plugins/postman-smtp/"

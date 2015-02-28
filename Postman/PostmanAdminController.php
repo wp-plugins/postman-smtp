@@ -475,6 +475,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_check_timeout', PostmanSmtp::POSTMAN_TCP_CONNECTION_TIMEOUT . '' );
 			
+			wp_localize_script ( 'jquery_steps_script', 'steps_current_step', _x ( 'current step:', 'Wizard Label', 'postman-smtp' ) );
+			wp_localize_script ( 'jquery_steps_script', 'steps_pagination', _x ( 'Pagination', 'Wizard Label', 'postman-smtp' ) );
+			wp_localize_script ( 'jquery_steps_script', 'steps_finish', _x ( 'Finish', 'Wizard Label', 'postman-smtp' ) );
+			wp_localize_script ( 'jquery_steps_script', 'steps_next', _x ( 'Next', 'Wizard Label', 'postman-smtp' ) );
+			wp_localize_script ( 'jquery_steps_script', 'steps_previous', _x ( 'Previous', 'Wizard Label', 'postman-smtp' ) );
+			wp_localize_script ( 'jquery_steps_script', 'steps_loading', _x ( 'Loading ...', 'Wizard Label', 'postman-smtp' ) );
+			
 			// user input
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_email', '#input_' . PostmanOptions::SENDER_EMAIL );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_name', '#input_' . PostmanOptions::SENDER_NAME );
@@ -1118,6 +1125,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					),
 					array (
 							'port' => 443,
+							/* translators: where %s is the URL to the Postman Gmail Extensin homepage */
 							'message' => sprintf ( _x ( 'HTTPS port; can be used by the <a href="%s">Postman Gmail Extension</a>', 'Port Test', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-gmail-extension/' ) 
 					),
 					array (
