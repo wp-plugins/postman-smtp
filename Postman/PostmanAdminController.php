@@ -127,7 +127,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			new PostmanSendTestEmailAjaxController ( $this->options, $this->authorizationToken, $this->oauthScribe );
 			
 			// register content handlers
-			$viewController = new PostmanViewController ( $this->options, $this->authorizationToken, $this->oauthScribe, $this );
+			$viewController = new PostmanViewController ( $this->options, $this->authorizationToken, $this->oauthScribe, $this->importableConfiguration, $this );
 			
 			// register action handlers
 			$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );
@@ -188,7 +188,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			delete_option ( PostmanOptions::POSTMAN_OPTIONS );
 			delete_option ( PostmanOAuthToken::OPTIONS_NAME );
 			delete_option ( PostmanAdminController::TEST_OPTIONS );
-			$this->messageHandler->addMessage ( 'All plugin settings were removed.' );
+			$this->messageHandler->addMessage ( __ ( 'All plugin settings were removed.', 'postman-smtp' ) );
 			postmanRedirect ( POSTMAN_HOME_PAGE_RELATIVE_URL );
 		}
 		/**

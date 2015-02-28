@@ -5,6 +5,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		private $options;
 		private $authorizationToken;
 		private $oauthScribe;
+		private $importableConfiguration;
 		private $adminController;
 		const POSTMAN_MENU_SLUG = 'postman';
 		const CONFIGURATION_SLUG = 'postman/configuration';
@@ -25,10 +26,11 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 * @param PostmanOAuthTokenInterface $authorizationToken        	
 		 * @param PostmanConfigTextHelper $oauthScribe        	
 		 */
-		function __construct(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe, PostmanAdminController $adminController) {
+		function __construct(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe, $importableConfiguration, PostmanAdminController $adminController) {
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->oauthScribe = $oauthScribe;
+			$this->importableConfiguration = $importableConfiguration;
 			$this->adminController = $adminController;
 			$this->registerAdminMenu ( $this, 'generateDefaultContent' );
 			$this->registerAdminMenu ( $this, 'addSetupWizardSubmenu' );
