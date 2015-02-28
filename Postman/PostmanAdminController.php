@@ -1114,19 +1114,19 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$ports = array (
 					array (
 							'port' => 25,
-							'message' => __ ( 'SMTP port; commonly blocked', 'Port Test', 'postman-smtp' ) 
+							'message' => _x ( 'SMTP port; commonly blocked', 'Port Test', 'postman-smtp' ) 
 					),
 					array (
 							'port' => 443,
-							'message' => sprintf ( __ ( 'HTTPS port; can be used by the <a href="%s">Postman Gmail Extension</a>', 'Port Test', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-gmail-extension/' ) 
+							'message' => sprintf ( _x ( 'HTTPS port; can be used by the <a href="%s">Postman Gmail Extension</a>', 'Port Test', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-gmail-extension/' ) 
 					),
 					array (
 							'port' => 465,
-							'message' => __ ( 'SMTPS-SSL port', 'Port Test', 'postman-smtp' ) 
+							'message' => _x ( 'SMTPS-SSL port', 'Port Test', 'postman-smtp' ) 
 					),
 					array (
 							'port' => 587,
-							'message' => __ ( 'SMTPS-TLS port', 'Port Test', 'postman-smtp' ) 
+							'message' => _x ( 'SMTPS-TLS port', 'Port Test', 'postman-smtp' ) 
 					) 
 			);
 			print '<div class="wrap">';

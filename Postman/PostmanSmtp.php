@@ -115,7 +115,7 @@ if (! class_exists ( 'PostmanSmtp' )) {
 			) );
 			
 			// register Ajax handlers
-			new PostmanManageConfigurationAjaxHandler();
+			new PostmanManageConfigurationAjaxHandler ();
 		}
 		
 		/**
@@ -129,10 +129,11 @@ if (! class_exists ( 'PostmanSmtp' )) {
 		 * Loads the appropriate language file
 		 */
 		private function loadTextDomain() {
+			$textDomain = 'postman-smtp';
 			$langDir = basename ( dirname ( $this->postmanPhpFile ) ) . '/Postman/languages/';
-			$success = load_plugin_textdomain ( 'postman-smtp', false, $langDir );
+			$success = load_plugin_textdomain ( $textDomain, false, $langDir );
 			if (! $success && get_locale () != 'en_US') {
-				$this->logger->error ( 'Could not load text domain ' . $langDir . 'postman-smtp-' . get_locale () . '.po' );
+				$this->logger->error ( 'Could not load text domain ' . $langDir . $textDomain . '-' . get_locale () . '.po' );
 			}
 		}
 		

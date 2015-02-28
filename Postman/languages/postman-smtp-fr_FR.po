@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-02-28 16:59:05+00:00\n"
-"PO-Revision-Date: 2015-02-28 12:02-0500\n"
+"POT-Creation-Date: 2015-02-28 17:49:35+00:00\n"
+"PO-Revision-Date: 2015-02-28 13:15-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -96,11 +96,14 @@ msgid "Postman recommends %1$s with %2$s authentication on port %3$d."
 msgstr ""
 "Postman recommande %1$s avec l'authentification de %2$s sur le port %3$d."
 
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:270
+#. translators: where %s is the name of the transport (e.g. smtp)
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:271
 msgid ""
 "The selected transport '%s' is unavailable. The external plugin was probably "
 "deactivated."
 msgstr ""
+"Le transport sélectionné '%s' ne est pas disponible. Le plugin externe a été "
+"probablement désactivée."
 
 #: Postman/PostmanAdminController.php:100
 msgid "Settings saved."
@@ -118,7 +121,7 @@ msgstr "Réglages"
 #: Postman/PostmanAdminController.php:319
 #: Postman/PostmanAdminController.php:334
 #: Postman/PostmanAdminController.php:353
-#: Postman/PostmanAdminController.php:1232
+#: Postman/PostmanAdminController.php:1234
 msgctxt "Page Title"
 msgid "Postman Settings"
 msgstr "Réglages de Postman"
@@ -212,7 +215,7 @@ msgid "Sender Name"
 msgstr "Nom de l'expéditeur"
 
 #: Postman/PostmanAdminController.php:526
-#: Postman/PostmanAdminController.php:1293
+#: Postman/PostmanAdminController.php:1295
 msgctxt "Configuration Input Field"
 msgid "Sender Email Address"
 msgstr "Adresse de l'expéditeur"
@@ -223,20 +226,20 @@ msgid "Transport Settings"
 msgstr "Réglages de Transport"
 
 #: Postman/PostmanAdminController.php:537
-#: Postman/PostmanAdminController.php:1349
+#: Postman/PostmanAdminController.php:1351
 msgctxt "Configuration Input Field"
 msgid "Authentication"
 msgstr "Authentification"
 
 #: Postman/PostmanAdminController.php:542
-#: Postman/PostmanAdminController.php:1352
+#: Postman/PostmanAdminController.php:1354
 msgctxt "Configuration Input Field"
 msgid "Security"
 msgstr "Sécurité "
 
 #: Postman/PostmanAdminController.php:547
-#: Postman/PostmanAdminController.php:1149
-#: Postman/PostmanAdminController.php:1304
+#: Postman/PostmanAdminController.php:1151
+#: Postman/PostmanAdminController.php:1306
 msgctxt "Configuration Input Field"
 msgid "SMTP Server Hostname"
 msgstr "Nom d'Hôte du serveur SMTP"
@@ -253,13 +256,13 @@ msgid "Authentication Settings"
 msgstr "Réglages d'Authentification"
 
 #: Postman/PostmanAdminController.php:562
-#: Postman/PostmanAdminController.php:1355
+#: Postman/PostmanAdminController.php:1357
 msgctxt "Configuration Input Field"
 msgid "Username"
 msgstr "Nom d'Utilisateur"
 
 #: Postman/PostmanAdminController.php:567
-#: Postman/PostmanAdminController.php:1359
+#: Postman/PostmanAdminController.php:1361
 msgctxt "Configuration Input Field"
 msgid "Password"
 msgstr "Mot de Passe"
@@ -272,12 +275,12 @@ msgstr "Paramètres avancés"
 #: Postman/PostmanAdminController.php:604
 msgctxt "Configuration Input Field"
 msgid "TCP Connection Timeout (sec)"
-msgstr ""
+msgstr "Délai d'attente de connexion (sec)"
 
 #: Postman/PostmanAdminController.php:609
 msgctxt "Configuration Input Field"
 msgid "TCP Read Timeout (sec)"
-msgstr ""
+msgstr "Délai pour l'interrogation des données (sec)"
 
 #: Postman/PostmanAdminController.php:614
 msgctxt "Configuration Input Field"
@@ -295,7 +298,7 @@ msgid "Test Your Setup"
 msgstr "Tester votre configuration"
 
 #: Postman/PostmanAdminController.php:635
-#: Postman/PostmanAdminController.php:1403
+#: Postman/PostmanAdminController.php:1405
 msgctxt "Configuration Input Field"
 msgid "Recipient Email Address"
 msgstr "Adresse d'envoi"
@@ -468,8 +471,8 @@ msgid ""
 "Postman has delivered <span style=\"color:green\">%d</span> email for you!"
 msgid_plural ""
 "Postman has delivered <span style=\"color:green\">%d</span> emails for you!"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Postman a livré %d e-mail pour vous!"
+msgstr[1] "Postman a livré %d e-mails pour vous!"
 
 #. translators: where %s is the URL to the WordPress.org review and ratings
 #. page
@@ -478,6 +481,9 @@ msgid ""
 "Please considering leaving a <a href=\"%s\">review of Postman SMTP</a> to "
 "help<br/> spread the word about the new way to send email from WordPress! :D"
 msgstr ""
+"Se il vous plaît envisager de laisser <a href=\"%s\">une critique de Postman "
+"SMTP</a> pour aider à passer le mot à propos de <br/> la nouvelle façon "
+"d'envoyer des courriels à partir de WordPress! :D"
 
 #: Postman/PostmanAdminController.php:1055
 msgid "Status: Postman is not sending mail."
@@ -493,6 +499,8 @@ msgid ""
 "Let's get started! All users are strongly encouraged to <a href=\"%s\">run "
 "the Setup Wizard</a>."
 msgstr ""
+"Commençons! Tout les utilisateurs sont fortements encouragés à commencer <a "
+"href=\"%s\"mettre en marche le Setup Wizard</a>."
 
 #. translators: where %s is the URL of the Manual Configuration
 #: Postman/PostmanAdminController.php:1062
@@ -500,6 +508,9 @@ msgid ""
 "If you wish, Postman can <a href=\"%s\">import your SMTP configuration</a> "
 "from another plugin. You can run the Wizard later if you need to."
 msgstr ""
+"Si tel est votre désire, Postman peut <a href=\"%s\">importer vos réglages "
+"SMTP</a> d'une autre extension. Vous mettrez le Wizard en marche plus tard, "
+"si nécéssaire."
 
 #: Postman/PostmanAdminController.php:1089
 msgctxt "Configuration Section"
@@ -524,16 +535,16 @@ msgstr ""
 
 #: Postman/PostmanAdminController.php:1125
 msgid "SMTPS-SSL port"
-msgstr ""
+msgstr "Port SMTPS-SSL"
 
 #: Postman/PostmanAdminController.php:1129
 msgid "SMTPS-TLS port"
-msgstr ""
+msgstr "Port SMTPS-TLS"
 
 #: Postman/PostmanAdminController.php:1134
 msgctxt "Page Title"
 msgid "Connectivity Test"
-msgstr ""
+msgstr "Test de connectivité"
 
 #: Postman/PostmanAdminController.php:1136
 msgid "This test determines which ports are open for Postman to use."
@@ -548,28 +559,36 @@ msgstr[1] "Chaque test prends %d secondes à complêter."
 
 #: Postman/PostmanAdminController.php:1141
 msgid "A <span style=\"color:red\">Closed</span> port indicates:"
-msgstr ""
+msgstr "Un port <span style=\"color:red\">Fermé</span> peut vouloir dire ceci:"
 
 #: Postman/PostmanAdminController.php:1143
 msgid "Your host has placed a firewall between this site and the SMTP server"
-msgstr ""
+msgstr "L'Hôte à mis en place un Firewall entre ce site et le serveur SMTP"
 
-#: Postman/PostmanAdminController.php:1144
+#. translators: where %s is the URL to the PHP documentation on
+#. 'allow-url-fopen'
+#: Postman/PostmanAdminController.php:1145
 msgid ""
 "Your <a href=\"%s\">PHP configuration</a> is preventing outbound connections"
 msgstr ""
+"Votre <a href=\"%s\">configuration de PHP</a> empêche les connexions "
+"sortantes"
 
-#: Postman/PostmanAdminController.php:1145
+#. translators: where %s is the URL to an article on disabling external
+#. requests in WordPress
+#: Postman/PostmanAdminController.php:1147
 msgid ""
 "Your <a href=\"%s\">WordPress configuration</a> is preventing outbound "
 "connections"
 msgstr ""
+"Votre <a href=\"%s\">configuration de WordPress</a> empêche les connexions "
+"sortantes"
 
-#: Postman/PostmanAdminController.php:1146
+#: Postman/PostmanAdminController.php:1148
 msgid "The SMTP server has no service running on that port"
 msgstr "Le serveur SMTP ne fourni pas de service à ce port"
 
-#: Postman/PostmanAdminController.php:1147
+#: Postman/PostmanAdminController.php:1149
 msgid ""
 "If the port you are trying to use is <span style=\"color:red\">Closed</"
 "span>, Postman can not deliver mail. Contact your host to get the port "
@@ -579,110 +598,113 @@ msgstr ""
 "Postman ne pourra pas livrer le courrier. Contactez votre hôte afin d'ouvrir "
 "le port."
 
-#: Postman/PostmanAdminController.php:1151
+#: Postman/PostmanAdminController.php:1153
 msgctxt "Button Label"
 msgid "Begin Test"
 msgstr "Commencer le test"
 
-#: Postman/PostmanAdminController.php:1154
+#: Postman/PostmanAdminController.php:1156
 msgctxt "Port Test"
 msgid "Port %s"
 msgstr "Port %s"
 
-#: Postman/PostmanAdminController.php:1155
+#: Postman/PostmanAdminController.php:1157
 msgctxt "Port Test Status"
 msgid "Unknown"
 msgstr "Inconnu"
 
-#: Postman/PostmanAdminController.php:1177
+#: Postman/PostmanAdminController.php:1179
 msgctxt "Page Title"
 msgid "Troubleshooting"
-msgstr ""
+msgstr "Dépannage"
 
-#: Postman/PostmanAdminController.php:1219
+#: Postman/PostmanAdminController.php:1221
 msgid "Are you having issues with Postman?"
-msgstr ""
+msgstr "Rencontrez-vous des problèmes avec Postman?"
 
-#: Postman/PostmanAdminController.php:1220
+#. translators: where %1$s and %2$s are the URLs to the Troubleshooting and
+#. Support Forums on WordPress.org
+#: Postman/PostmanAdminController.php:1223
 msgid ""
-"Pease check the <a href=\"https://wordpress.org/plugins/postman-smtp/"
-"other_notes/\">troubleshooting and error messages</a> page and the <a href="
-"\"https://wordpress.org/support/plugin/postman-smtp\">support forum</a>.</"
-"br>If you write for help, please include the following diagnostic "
-"information:"
+"Pease check the <a href=\"%1$s\">troubleshooting and error messages</a> page "
+"and the <a href=\"%2$s\">support forum</a>.</br>If you write for help, "
+"please include the following diagnostic information:"
 msgstr ""
+"Consultez la page <a href=\"%1$s/\">des messages de dépannage et d'erreur</"
+"a> et le <a href=\"%2$s\">forum de support</a>. </br> Si vous écrivez à "
+"l'aide, se il vous plaît inclure les informations de diagnostic suivant:"
 
-#: Postman/PostmanAdminController.php:1222
+#: Postman/PostmanAdminController.php:1224
 msgctxt "Page Title"
 msgid "Diagnostic Information"
-msgstr ""
+msgstr "Informations de diagnostic"
 
-#: Postman/PostmanAdminController.php:1237
+#: Postman/PostmanAdminController.php:1239
 msgctxt "Main Menu"
 msgid "Get Started"
 msgstr "Commencez"
 
-#: Postman/PostmanAdminController.php:1238
+#: Postman/PostmanAdminController.php:1240
 msgctxt "Button Label"
 msgid "Start the Wizard"
 msgstr "Mettre en marche le Wizard"
 
-#: Postman/PostmanAdminController.php:1239
+#: Postman/PostmanAdminController.php:1241
 msgctxt "Main Menu"
 msgid "configure manually"
 msgstr "configurer manuellement"
 
-#: Postman/PostmanAdminController.php:1242
+#: Postman/PostmanAdminController.php:1244
 msgctxt "Main Menu"
 msgid "Actions"
 msgstr "Actions"
 
-#: Postman/PostmanAdminController.php:1250
 #: Postman/PostmanAdminController.php:1252
+#: Postman/PostmanAdminController.php:1254
 msgctxt "Main Menu"
 msgid "Send a Test Email"
 msgstr "Envoyer un message test"
 
-#: Postman/PostmanAdminController.php:1254
+#: Postman/PostmanAdminController.php:1256
 msgctxt "Main Menu"
 msgid "Delete plugin settings"
 msgstr "Supprimer les réglages de l'extension"
 
-#: Postman/PostmanAdminController.php:1258
+#: Postman/PostmanAdminController.php:1260
 msgctxt "Main Menu"
 msgid "Troubleshooting"
 msgstr "Dépannage"
 
-#: Postman/PostmanAdminController.php:1260
+#: Postman/PostmanAdminController.php:1262
 msgid "Tips and Diagnostic Info"
-msgstr ""
+msgstr "Conseils et diagnostic Infos"
 
-#: Postman/PostmanAdminController.php:1261
+#: Postman/PostmanAdminController.php:1263
 msgctxt "Main Menu"
 msgid "Run a Connectivity Test"
-msgstr ""
+msgstr "Faire un test de connexion de Port"
 
-#: Postman/PostmanAdminController.php:1262
+#: Postman/PostmanAdminController.php:1264
 msgctxt "Main Menu"
 msgid "Online Support"
 msgstr "Assistance en ligne"
 
-#: Postman/PostmanAdminController.php:1278
+#: Postman/PostmanAdminController.php:1280
 msgctxt "Page Title"
 msgid "Postman Setup Wizard"
 msgstr "Setup Wizard de Postman"
 
-#: Postman/PostmanAdminController.php:1288
+#: Postman/PostmanAdminController.php:1290
 msgctxt "Wizard Step Title"
 msgid "Sender Details"
 msgstr "Sender Détails"
 
-#: Postman/PostmanAdminController.php:1290
+#: Postman/PostmanAdminController.php:1292
 msgctxt "Wizard Step Title"
 msgid "Who is the mail coming from?"
 msgstr "Qui est le courrier en provenance?"
 
-#: Postman/PostmanAdminController.php:1291
+#: Postman/PostmanAdminController.php:1293
 msgid ""
 "Let's begin! Please enter the email address and name you'd like to send mail "
 "from."
@@ -690,7 +712,7 @@ msgstr ""
 "Commençons! Entrez l'adresse de messagerie et pseudo dont vous désiré "
 "envoyer des messages."
 
-#: Postman/PostmanAdminController.php:1292
+#: Postman/PostmanAdminController.php:1294
 msgid ""
 "Please note that to combat Spam, many email services will <em>not</em> let "
 "you send from an e-mail address other than your own."
@@ -699,39 +721,42 @@ msgstr ""
 "<em>ne permettrons pas</em>l'envoi d'un message provenant d'une autre "
 "adresse que la vôtre."
 
-#: Postman/PostmanAdminController.php:1295
+#: Postman/PostmanAdminController.php:1297
 msgctxt "Configuration Input Field"
 msgid "Sender Email Name"
 msgstr "Nom de l'Expéditeur"
 
-#: Postman/PostmanAdminController.php:1300
+#: Postman/PostmanAdminController.php:1302
 msgctxt "Wizard Step Title"
 msgid "SMTP Server Hostname"
 msgstr "Nom d'Hôte du serveur SMTP"
 
-#: Postman/PostmanAdminController.php:1302
+#: Postman/PostmanAdminController.php:1304
 msgctxt "Wizard Step Title"
 msgid "Who will relay the mail?"
 msgstr "Qui va relayer le courrier?"
 
-#: Postman/PostmanAdminController.php:1303
+#: Postman/PostmanAdminController.php:1305
 msgid ""
 "This is the Outgoing Mail Server, also known as a Mail Submission Agent "
 "(MSA), that Postman will use to deliver your mail. If possible, Postman will "
 "try to determine this hostname based on the e-mail address."
 msgstr ""
+"C'est le serveur, aussi connu comme une Courrier Submission Agent (CSA), qui "
+"Postman utilisé pour vous livrer votre courrier. Si possible, Postman "
+"tentera de déterminer ce nom d'hôte basé sur l'adresse e-mail."
 
-#: Postman/PostmanAdminController.php:1309
+#: Postman/PostmanAdminController.php:1311
 msgctxt "Wizard Step Title"
 msgid "Connectivity Test"
 msgstr "Test de connectivité"
 
-#: Postman/PostmanAdminController.php:1311
+#: Postman/PostmanAdminController.php:1313
 msgctxt "Wizard Step Title"
 msgid "How will the connection to the MSA be established?"
 msgstr "Comment la connexion au MSA sera créé?"
 
-#: Postman/PostmanAdminController.php:1312
+#: Postman/PostmanAdminController.php:1314
 msgid ""
 "The server hostname and port you can use is a combination of what your mail "
 "service provider offers, and what your WordPress host allows. Postman will "
@@ -742,66 +767,66 @@ msgstr ""
 "ce que votre hôte WordPress permet. Postman tentera de déterminer les "
 "options qui se offrent à vous."
 
-#: Postman/PostmanAdminController.php:1313
+#: Postman/PostmanAdminController.php:1315
 msgctxt "Configuration Input Field"
 msgid "Available routes"
 msgstr "Itinéraires disponibles"
 
-#: Postman/PostmanAdminController.php:1323
 #: Postman/PostmanAdminController.php:1325
+#: Postman/PostmanAdminController.php:1327
 msgctxt "Wizard Step Title"
 msgid "Authentication"
 msgstr "Authentification"
 
-#: Postman/PostmanAdminController.php:1348
+#: Postman/PostmanAdminController.php:1350
 msgid ""
 "Enter your credentials. Your username is most likely your email address."
 msgstr "Votre nom d'utilisateur est sans doutes votre adresse de messagerie."
 
-#: Postman/PostmanAdminController.php:1367
+#: Postman/PostmanAdminController.php:1369
 msgctxt "Wizard Step Title"
 msgid "Finish"
 msgstr "Fin"
 
-#: Postman/PostmanAdminController.php:1369
+#: Postman/PostmanAdminController.php:1371
 msgctxt "Wizard Step Title"
 msgid "You're Done!"
-msgstr ""
+msgstr "Vous avez fini!"
 
-#: Postman/PostmanAdminController.php:1371
+#: Postman/PostmanAdminController.php:1373
 msgid "Click Finish to save these settings, then:"
 msgstr "Cliquer sur Fin pour sauver ces réglages, ensuite:"
 
-#: Postman/PostmanAdminController.php:1373
+#: Postman/PostmanAdminController.php:1375
 msgid ""
 "Request permission from the Email Provider to allow Postman to send email and"
 msgstr ""
 "Demandez la permission  à votre service de messagerie de permettre à Postman "
 "d'envoyer du courrier puis"
 
-#: Postman/PostmanAdminController.php:1374
+#: Postman/PostmanAdminController.php:1376
 msgid "Send yourself a Test Email to make sure everything is working!"
 msgstr "Envoyez-vous un message test pour vérifier que tout fonctionne!"
 
-#: Postman/PostmanAdminController.php:1392
+#: Postman/PostmanAdminController.php:1394
 msgctxt "Page Title"
 msgid "Send a Test Email"
 msgstr "Envoyer un Email de Test"
 
-#: Postman/PostmanAdminController.php:1396
+#: Postman/PostmanAdminController.php:1398
 msgid "Choose the Recipient"
 msgstr "Choisir un récipiandaire"
 
-#: Postman/PostmanAdminController.php:1398
+#: Postman/PostmanAdminController.php:1400
 msgid "Who is this message going to?"
 msgstr "Qui est ce message pour?"
 
-#: Postman/PostmanAdminController.php:1399
+#: Postman/PostmanAdminController.php:1401
 msgid "This utility allows you to send an email message for testing."
 msgstr "Cette fonction vous permet d'envoyer un message en test."
 
 #. translators: where %d is an amount of time, in seconds
-#: Postman/PostmanAdminController.php:1402
+#: Postman/PostmanAdminController.php:1404
 msgid "If there is a problem, Postman will give up after %d second."
 msgid_plural "If there is a problem, Postman will give up after %d seconds."
 msgstr[0] ""
@@ -809,23 +834,23 @@ msgstr[0] ""
 msgstr[1] ""
 "S'il rencontre un problème, Postman abandonnera la tâche après %d secondes."
 
-#: Postman/PostmanAdminController.php:1408
+#: Postman/PostmanAdminController.php:1410
 msgid "Send The Message"
 msgstr "Envoyez le Message"
 
-#: Postman/PostmanAdminController.php:1411
+#: Postman/PostmanAdminController.php:1413
 msgid "Sending the message:"
 msgstr "Envoi du message:"
 
-#: Postman/PostmanAdminController.php:1412
+#: Postman/PostmanAdminController.php:1414
 msgid "In Outbox"
 msgstr "Dans la boîte d'envoi"
 
-#: Postman/PostmanAdminController.php:1415
+#: Postman/PostmanAdminController.php:1417
 msgid "Status Message"
 msgstr "Message d'état"
 
-#: Postman/PostmanAdminController.php:1418
+#: Postman/PostmanAdminController.php:1420
 msgid "SMTP Session Transcript"
 msgstr "Transcription de la session SMTP"
 
@@ -999,6 +1024,8 @@ msgid ""
 "Postman can't find any way to send mail on your system. Run a <a href=\"%s"
 "\">connectivity test</a>."
 msgstr ""
+"Postman ne peut pas trouver un moyen pour envoyer des messages sur votre "
+"système. Contactez votre hôte pour obtenir des ports ouverts."
 
 #. translators: where %s is the URL to the Postman Settings page
 #: Postman/PostmanMessageHandler.php:104
@@ -1057,6 +1084,18 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid ""
+#~ "Pease check the <a href=\"https://wordpress.org/plugins/postman-smtp/"
+#~ "other_notes/\">troubleshooting and error messages</a> page and the <a "
+#~ "href=\"https://wordpress.org/support/plugin/postman-smtp\">support forum</"
+#~ "a>.</br>If you write for help, please include the following diagnostic "
+#~ "information:"
+#~ msgstr ""
+#~ "Consultez la page <a href=\"%1$s/\">des messages de dépannage et "
+#~ "d'erreur</a> et le <a href=\"%2$s\">forum de support</a>. </br> Si vous "
+#~ "écrivez à l'aide, se il vous plaît inclure les informations de diagnostic "
+#~ "suivant.:"
 
 #~ msgctxt "Configuration Input Field"
 #~ msgid "Outgoing Mail Server (SMTP)"
