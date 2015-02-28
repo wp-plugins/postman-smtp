@@ -14,6 +14,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 	class PostmanWpMail {
 		private $exception;
 		private $transcript;
+		private $logger;
 		
 		/**
 		 * This methods creates an instance of PostmanSmtpEngine and sends an email.
@@ -29,12 +30,12 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @return boolean
 		 */
 		public function send(PostmanOptions $wpMailOptions, PostmanOAuthToken $wpMailAuthorizationToken, $to, $subject, $message, $headers = '', $attachments = array()) {
-			$logger = new PostmanLogger ( get_class ( $this ) );
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			// send the message
-			$logger->debug ( 'Sending mail' );
+			$this->logger->debug ( 'Sending mail' );
 			// interact with the SMTP Engine
 			try {
-				$this->validateTransports();
+				$this->validateTransports ();
 				$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken );
 				try {
 					$engine->allowSenderOverride ( ! $wpMailOptions->isSenderNameOverridePrevented () );
@@ -53,14 +54,14 @@ if (! class_exists ( "PostmanWpMail" )) {
 					return true;
 				} catch ( Exception $e ) {
 					$this->exception = $e;
-					$logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
+					$this->logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
 					PostmanStats::getInstance ()->incrementFailedDelivery ();
 					$this->transcript = $engine->getTranscript ();
 					return false;
 				}
 			} catch ( Exception $e ) {
 				$this->exception = $e;
-				$logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
+				$this->logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
 				PostmanStats::getInstance ()->incrementFailedDelivery ();
 				return false;
 			}
@@ -94,7 +95,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 				if (! $found) {
 					$this->options->setTransportType ( PostmanSmtpTransport::SLUG );
 					$this->options->save ();
-					$this->messageHandler->addError ( __ ( 'Postman Transport reset to SMTP. Attention may be required.' ) );
+					$this->logger->error ( 'Postman Transport reset to SMTP. Attention may be required.' );
 				}
 			}
 		}
