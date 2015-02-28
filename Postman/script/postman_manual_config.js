@@ -52,7 +52,7 @@ jQuery(document).ready(function() {
 
 	// user is "finished typing," do something
 	function doneTyping() {
-		if (jQuery(postman_input_auth_type).val() == postman_auth_oauth2) {
+		if (jQuery(postman_input_auth_type).val() == 'oauth2') {
 			reloadOauthSection();
 		}
 	}
@@ -78,10 +78,10 @@ function switchBetweenPasswordAndOAuth() {
 	} else {
 		show('section#smtp_config');
 		var $choice = jQuery('select#input_auth_type').val();
-		if ($choice == postman_auth_none) {
+		if ($choice == 'none') {
 			hide('section#password_auth_config');
 			hide('section#oauth_auth_config');
-		} else if ($choice != postman_auth_oauth2) {
+		} else if ($choice != 'oauth2') {
 			show('section#password_auth_config');
 			hide('section#oauth_auth_config');
 		} else {
@@ -125,8 +125,8 @@ function getConfiguration() {
 		jQuery(postman_input_basic_password).val('');
 		jQuery(postman_hostname_element_name).val('');
 		jQuery(postman_port_element_name).val('');
-		jQuery(postman_input_auth_type).val(postman_auth_none);
-		jQuery(postman_enc_for_password_el).val(postman_enc_none);
+		jQuery(postman_input_auth_type).val('none');
+		jQuery(postman_enc_for_password_el).val('none');
 		switchBetweenPasswordAndOAuth();
 	}
 }

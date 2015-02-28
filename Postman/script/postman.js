@@ -91,9 +91,6 @@ function handleConfigurationResponse(response) {
 		if (response.display_auth == 'oauth2') {
 			show('.wizard-auth-oauth2');
 			hide('.wizard-auth-basic');
-			// hide the auth type field for OAuth screen
-			if (response.referer == 'wizard')
-				hide(postman_enc_for_oauth2_el);
 			// allow oauth2 as an authentication choice
 			enable('#input_auth_oauth2');
 		} else if (response.display_auth == 'password') {

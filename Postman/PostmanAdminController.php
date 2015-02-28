@@ -475,9 +475,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_check_timeout', PostmanSmtp::POSTMAN_TCP_CONNECTION_TIMEOUT . '' );
 			
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_smtp_section_element_name', 'div#smtp_section' );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_oauth_section_element_name', 'div#oauth_section' );
-			
 			// user input
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_email', '#input_' . PostmanOptions::SENDER_EMAIL );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_name', '#input_' . PostmanOptions::SENDER_NAME );
@@ -486,15 +483,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			// the enc input
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_for_password_el', '#input_enc_type_password' );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_for_oauth2_el', '#input_enc_type_' . PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_none', PostmanOptions::ENCRYPTION_TYPE_NONE );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_ssl', PostmanOptions::ENCRYPTION_TYPE_SSL );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_tls', PostmanOptions::ENCRYPTION_TYPE_TLS );
 			// these are the ids for the <option>s in the encryption <select>
-			
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_option_ssl_id', '.input_enc_type_ssl' );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_option_tls_id', '.input_enc_type_tls' );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_enc_option_none_id', '.input_enc_type_none' );
 			
 			// the password inputs
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_basic_username', '#input_' . PostmanOptions::BASIC_AUTH_USERNAME );
@@ -503,15 +492,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// the auth input
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_redirect_url_el', '#input_oauth_redirect_url' );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_auth_type', '#input_' . PostmanOptions::AUTHENTICATION_TYPE );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_none', PostmanOptions::AUTHENTICATION_TYPE_NONE );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_plain', PostmanOptions::AUTHENTICATION_TYPE_PLAIN );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_oauth2', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 );
-			// these are the ids for the <option>s in the auth <select>
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_option_oauth2_id', '#input_auth_type_oauth2' );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_auth_option_none_id', '#input_auth_type_none' );
-			
-			// test email input
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_test_email', '#input_' . PostmanOptions::TEST_EMAIL );
 			
 			//
 			$sanitizer = new PostmanInputSanitizer ( $this->options );
@@ -1238,24 +1218,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$diagnostics .= sprintf ( 'Postman Connection Timeout: %d%s', $this->options->getConnectionTimeout (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Read Timeout: %s%s', $this->options->getReadTimeout (), PHP_EOL );
 			printf ( '<h4>%s</h4>', __ ( 'Are you having issues with Postman?', 'postman-smtp' ) );
-			print '<dl>';
-			printf ( '<dt>%s</dt>', __ ( 'The Wizard Can\'t find any Open Ports', 'postman-smtp' ) );
-			printf ( '<dd>%s</dd>', sprintf ( __ ( 'Run a <a href="%s">connectivity test</a> to find out what\'s wrong. You may find that the HTTPS port is open.', 'postman-smtp' ), $this->getPageUrl ( self::PORT_TEST_SLUG ) ) );
-			print '</dl>';
-			print '<dl>';
-			printf ( '<dt>%s</dt>', __ ( '"Request OAuth permission" is not working', 'postman-smtp' ) );
-			printf ( '<dd>%s</dd>', __ ( 'Please note that the Client ID and Client Secret fields are NOT for your username and password. They are for OAuth Credentials only.', 'postman-smtp' ) );
-			print '</dl>';
-			print '<dl>';
-			printf ( '<dt>%s</dt>', __ ( 'Sometimes emails disappear or end up as spam <em>and</em> I have a custom domain', 'postman-smtp' ) );
-			printf ( '<dd>%s</dd>', sprintf ( __ ( 'Make sure that your zone file has an <a href="%s">SPF record</a> specific to your email provider, for example <a href="%s">Google</a>.', 'postman-smtp' ), 'http://www.openspf.org/Introduction', 'https://support.google.com/a/answer/178723?hl=en' ) );
-			print '</dl>';
-			print '<dl>';
-			printf ( '<dt>%s</dt>', __ ( 'Sometimes sending mail fails', 'postman-smtp' ) );
-			printf ( '<dd>%s</dd>', __ ( 'Your host may have poor connectivity to your email server. Open up the advanced configuration and double the TCP Read Timeout setting.', 'postman-smtp' ) );
-			print '</dl>';
+			printf ( '<p style="margin:0 10px">%s</p>', __ ( 'Pease check the <a href="https://wordpress.org/plugins/postman-smtp/other_notes/">troubleshooting and error messages</a> page and the <a href="https://wordpress.org/support/plugin/postman-smtp">support forum</a>.</br>If you write for help, please include the following diagnostic information:', 'postman-smtp' ) );
+			
 			printf ( '<h3>%s</h3>', _x ( 'Diagnostic Information', 'Page Title', 'postman-smtp' ) );
-			printf ( '<p style="margin:0 10px">%s</p>', __ ( 'Do the above tips fail to resolve your issue? Pease check the <a href="https://wordpress.org/plugins/postman-smtp/other_notes/">error messages</a> page and the <a href="https://wordpress.org/support/plugin/postman-smtp">support forum</a>.</br>If you write for help, please include the following diagnostic information:', 'postman-smtp' ) );
 			print '</br>';
 			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="6">%s</textarea>', $diagnostics );
 			print '</div>';
