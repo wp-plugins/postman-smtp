@@ -231,7 +231,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.2 - 2015-02-29 =
+= 1.5.3 - 2015-02-29 =
 * Added a dedicated screen for Diagnostics (so that I can add more intensive, slower-running checks like DNS)
 * Fixed port-testing race condition bug in Postman Setup Wizard when using Gmail API Extension
 * Remove display_errors=On

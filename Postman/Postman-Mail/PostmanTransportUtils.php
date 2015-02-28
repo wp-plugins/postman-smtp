@@ -38,7 +38,8 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 			$transportType = PostmanOptions::getInstance ()->getTransportType ();
 			$transports = PostmanTransportDirectory::getInstance ()->getTransports ();
 			if (! isset ( $transports [$transportType] )) {
-				return new PostmanSmtpTransport();
+				// the dummy transport is usefor for specific error messages when no transport is loaded
+				return new PostmanDummyTransport ();
 			} else {
 				return $transports [$transportType];
 			}
