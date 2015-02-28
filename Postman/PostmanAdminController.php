@@ -97,7 +97,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($session->getAction () == PostmanInputSanitizer::VALIDATION_SUCCESS) {
 				$session->unsetAction ();
 				$this->registerInitFunction ( 'handleSuccessfulSave' );
-				$this->messageHandler->addMessage ( __ ( 'Settings saved.', 'postman-smtp' ) );
+				$this->messageHandler->addMessage ( _x ( 'Settings saved.', 'The plugin successfully saved new settings.', 'postman-smtp' ) );
 				return;
 			}
 			

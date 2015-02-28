@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
 "POT-Creation-Date: 2015-02-28 18:27:22+00:00\n"
-"PO-Revision-Date: 2015-02-28 13:47-0500\n"
+"PO-Revision-Date: 2015-02-28 13:52-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -719,7 +719,7 @@ msgstr "Conseils et diagnostic Infos"
 #: Postman/PostmanAdminController.php:1271
 msgctxt "Main Menu"
 msgid "Run a Connectivity Test"
-msgstr "Faire un test de connexion de Port"
+msgstr "Faire un test de connexion de port"
 
 #: Postman/PostmanAdminController.php:1272
 msgctxt "Main Menu"
@@ -1062,7 +1062,7 @@ msgid ""
 "\">connectivity test</a>."
 msgstr ""
 "Postman ne peut pas trouver un moyen pour envoyer des messages sur votre "
-"système. Contactez votre hôte pour obtenir des ports ouverts."
+"système. Faire un <a href=\"%s\">test de connexion de port</a>."
 
 #. translators: where %s is the URL to the Postman Settings page
 #: Postman/PostmanMessageHandler.php:104
