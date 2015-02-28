@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
 "POT-Creation-Date: 2015-02-28 18:27:22+00:00\n"
-"PO-Revision-Date: 2015-02-28 13:34-0500\n"
+"PO-Revision-Date: 2015-02-28 13:47-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -86,7 +86,7 @@ msgid ""
 "permission to use it."
 msgstr ""
 "Attention: Vous tentez de configurez un authentification OAuth 2.0, mais "
-"vous n'avez pas encore reçcu la permission de l'utilisez.\""
+"vous n'avez pas encore reçcu la permission de l'utilisez."
 
 #. translators: where %1$s is a description of the transport (eg. SMTPS-SSL),
 #. %2$s is a description of the authentication (eg. Password-CRAMMD5) and %3$d
@@ -532,7 +532,7 @@ msgid ""
 "the Setup Wizard</a>."
 msgstr ""
 "Commençons! Tout les utilisateurs sont fortements encouragés à commencer <a "
-"href=\"%s\"mettre en marche le Setup Wizard</a>."
+"href=\"%s\">mettre en marche le Setup Wizard</a>."
 
 #. translators: where %s is the URL of the Manual Configuration
 #: Postman/PostmanAdminController.php:1069
