@@ -51,3 +51,7 @@ input.input_plugin_radio {
 dt {
 	font-style: italic;
 }
+
+dt em {
+	font-style: normal;
+}

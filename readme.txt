@@ -213,9 +213,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.5.2 - 2015-02-25 =
-* Forgot to remove display_errors=On
 * If a Postman extension is suddenly removed, the SMTP transport is automatically re-installed
 * Added a Tips and Diagnostics Info section to the menu
+* Fixed port-testing race condition bug in Postman Setup Wizard when using Gmail API Extension
+* Remove display_errors=On
 
 = 1.5.1 - 2015-02-23 =
 * Bugs slipped through. In the Wizard, choosing port 465 was not hiding the authentication label. Worse, choosing port 587 was not showing the authentication buttons.

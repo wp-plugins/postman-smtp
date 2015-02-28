@@ -143,7 +143,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			// register Ajax handlers
 			if (is_admin ()) {
-				$c = new PostmanManageConfigurationAjaxHandler();
+				$c = new PostmanManageConfigurationAjaxHandler ();
 				$this->registerAjaxHandler ( 'test_port', $this, 'getAjaxPortStatus' );
 				$this->registerAjaxHandler ( 'check_email', $this, 'getAjaxHostnameByEmail' );
 				$this->registerAjaxHandler ( 'send_test_email', $this, 'sendTestEmailViaAjax' );
@@ -1078,10 +1078,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			if (PostmanState::getInstance ()->isTimeToReviewPostman ()) {
 				/* translators: where %d is the number of emails delivered */
-				printf ( '<p>%s', sprintf ( _n ( 'Postman has delivered <span style="color:green">%d</span> email for you!', 'Postman has delivered <span style="color:green">%d</span> emails for you!', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
+				printf ( '<p style="margin:10px 10px"><span>%s', sprintf ( _n ( 'Postman has delivered <span style="color:green">%d</span> email for you!', 'Postman has delivered <span style="color:green">%d</span> emails for you!', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
 				print ' ';
 				/* translators: where %s is the URL to the WordPress.org review and ratings page */
-				printf ( '%s</p>', sprintf ( __ ( 'Please considering leaving a <a href="%s">review of Postman SMTP</a> at WordPress.org to help spread the word<br/> about the new way to send email from WordPress! :D', 'postman-smtp' ), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp?filter=5' ) );
+				printf ( '%s</span></p>', sprintf ( __ ( 'Please considering leaving a <a href="%s">review of Postman SMTP</a> to help<br/> spread the word about the new way to send email from WordPress! :D', 'postman-smtp' ), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp?filter=5' ) );
 			}
 		}
 		
@@ -1197,7 +1197,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			print '<div class="wrap">';
 			$this->displayTopNavigation ();
-			printf ( '<h3>%s</h3>', _x ( 'Tips', 'Page Title', 'postman-smtp' ) );
+			printf ( '<h3>%s</h3>', _x ( 'Troubleshooting Tips', 'Page Title', 'postman-smtp' ) );
 			$diagnostics = sprintf ( 'PHP v5.3: %s (%s)%s', ($phpVersionRequirement ? 'Yes' : 'No'), PHP_VERSION, PHP_EOL );
 			$diagnostics .= sprintf ( 'PHP SSL Extension: %s%s', ($sslRequirement ? 'Yes' : 'No'), PHP_EOL );
 			$diagnostics .= sprintf ( 'PHP spl_autoload_register: %s%s', ($splAutoloadRegisterRequirement ? 'Yes' : 'No'), PHP_EOL );
@@ -1239,7 +1239,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$diagnostics .= sprintf ( 'Postman LogLevel: %s%s', $this->options->getLogLevel (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Connection Timeout: %d%s', $this->options->getConnectionTimeout (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Read Timeout: %s%s', $this->options->getReadTimeout (), PHP_EOL );
-			printf ( '<h4>%s</h4>', __ ( 'Are you having any issues with Postman?', 'postman-smtp' ) );
+			printf ( '<h4>%s</h4>', __ ( 'Are you having issues with Postman?', 'postman-smtp' ) );
 			print '<dl>';
 			printf ( '<dt>%s</dt>', __ ( 'The Wizard Can\'t find any Open Ports', 'postman-smtp' ) );
 			printf ( '<dd>%s</dd>', sprintf ( __ ( 'Run a <a href="%s">connectivity test</a> to find out what\'s wrong. You may find that the HTTPS port is open.', 'postman-smtp' ), $this->getPageUrl ( self::PORT_TEST_SLUG ) ) );
@@ -1249,10 +1249,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<dd>%s</dd>', __ ( 'Please note that the Client ID and Client Secret fields are NOT for your username and password. They are for OAuth Credentials only.', 'postman-smtp' ) );
 			print '</dl>';
 			print '<dl>';
-			printf ( '<dt>%s</dt>', __ ( 'Sometimes sending mail still fails', 'postman-smtp' ) );
+			printf ( '<dt>%s</dt>', __ ( 'Sometimes emails disappear or end up as spam <em>and</em> I have a custom domain', 'postman-smtp' ) );
+			printf ( '<dd>%s</dd>', sprintf ( __ ( 'Make sure that your zone file has an <a href="%s">SPF record</a> specific to your email provider, for example <a href="%s">Google</a>.', 'postman-smtp' ), 'http://www.openspf.org/Introduction', 'https://support.google.com/a/answer/178723?hl=en' ) );
+			print '</dl>';
+			print '<dl>';
+			printf ( '<dt>%s</dt>', __ ( 'Sometimes sending mail fails', 'postman-smtp' ) );
 			printf ( '<dd>%s</dd>', __ ( 'Your host may have poor connectivity to your email server. Open up the advanced configuration and double the TCP Read Timeout setting.', 'postman-smtp' ) );
 			print '</dl>';
-			printf ( '<h3>%s</h3>', _x ( 'Diagnostic Info', 'Page Title', 'postman-smtp' ) );
+			printf ( '<h3>%s</h3>', _x ( 'Diagnostic Information', 'Page Title', 'postman-smtp' ) );
 			printf ( '<p style="margin:0 10px">%s</p>', __ ( 'Do the above tips fail to resolve your issue? Pease check the <a href="https://wordpress.org/plugins/postman-smtp/other_notes/">error messages</a> page and the <a href="https://wordpress.org/support/plugin/postman-smtp">support forum</a>.</br>If you write for help, please include the following diagnostic information:', 'postman-smtp' ) );
 			print '</br>';
 			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="6">%s</textarea>', $diagnostics );
@@ -1334,7 +1338,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<h5>%s</h5>', _x ( 'SMTP Server Hostname', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'Who will relay the mail?', 'Wizard Step Title', 'postman-smtp' ) );
-			printf ( '<p>%s</p>', __ ( 'This is the server, also known as a Mail Submission Agent (MSA), that Postman will use to deliver your mail. If possible, Postman will try to determine this hostname based on the e-mail address.', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'This is the Outgoing Mail Server, also known as a Mail Submission Agent (MSA), that Postman will use to deliver your mail. If possible, Postman will try to determine this hostname based on the e-mail address.', 'postman-smtp' ) );
 			printf ( '<label for="hostname">%s</label>', _x ( 'SMTP Server Hostname', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->hostname_callback ();
 			print '</fieldset>';
@@ -1400,7 +1404,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// Wizard Step 5
 			printf ( '<h5>%s</h5>', _x ( 'Finish', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
-			printf ( '<legend>%s</legend>', _x ( 'Finish', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<legend>%s</legend>', _x ( 'You\'re Done!', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<section>';
 			printf ( '<p>%s</p>', __ ( 'Click Finish to save these settings, then:', 'postman-smtp' ) );
 			print '<ul style="margin-left: 20px">';
