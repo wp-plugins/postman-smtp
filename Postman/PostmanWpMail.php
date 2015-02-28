@@ -34,6 +34,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$logger->debug ( 'Sending mail' );
 			// interact with the SMTP Engine
 			try {
+				$this->validateTransports();
 				$engine = PostmanSmtpEngineFactory::getInstance ()->createSmtpEngine ( $wpMailOptions, $wpMailAuthorizationToken );
 				try {
 					$engine->allowSenderOverride ( ! $wpMailOptions->isSenderNameOverridePrevented () );
@@ -63,12 +64,39 @@ if (! class_exists ( "PostmanWpMail" )) {
 				PostmanStats::getInstance ()->incrementFailedDelivery ();
 				return false;
 			}
+			return false;
 		}
 		public function getException() {
 			return $this->exception;
 		}
 		public function getTranscript() {
 			return $this->transcript;
+		}
+		
+		/**
+		 * Make sure that the current transport is available
+		 * If it's not activate the default transport
+		 * (The current transport may come unavailable if the user deactivates the extension)
+		 */
+		private function validateTransports() {
+			if (! $this->options->isNew ()) {
+				$directory = PostmanTransportDirectory::getInstance ();
+				$selectedTransport = $this->options->getTransportType ();
+				$found = false;
+				foreach ( $directory->getTransports () as $transport ) {
+					$message = 'Available transport: ' . $transport->getName ();
+					if ($transport->getSlug () == $selectedTransport) {
+						$found = true;
+						$message .= ' [current]';
+					}
+					$this->logger->debug ( $message );
+				}
+				if (! $found) {
+					$this->options->setTransportType ( PostmanSmtpTransport::SLUG );
+					$this->options->save ();
+					$this->messageHandler->addError ( __ ( 'Postman Transport reset to SMTP. Attention may be required.' ) );
+				}
+			}
 		}
 	}
 }
