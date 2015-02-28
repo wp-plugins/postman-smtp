@@ -126,7 +126,7 @@ Otherwise, changing the sender address is not possible in OAuth 2.0 mode, and no
 Instead, consider setting the  **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
 
 = What is a Client ID? =
-To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several website, you will need a different Client ID for each one.
+To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several websites, you will need a different Client ID for each one.
 
 = How do I get a Google Client ID? =
 1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose 'Create Project', or use an existing project if you have one.

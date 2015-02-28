@@ -205,6 +205,7 @@ function getHostsToCheck(hostname) {
 			jQuery('table#wizard_port_test').append(html);
 			wizardPortTest(host, port, 'input#' + id, '#' + id_status);
 		}
+		// create an eventhandler for when the user changes the port
 		jQuery('input[name="wizard-port"]').click(function() {
 			var portCheck = {};
 			portSelection = jQuery('input[name="wizard-port"]:checked');
@@ -213,10 +214,8 @@ function getHostsToCheck(hostname) {
 			host.port_id = portSelection.attr('id');
 			portCheck[0] = host;
 			var data = {
-				'action' : 'get_redirect_url',
-				'referer' : 'wizard',
+				'action' : 'get_wizard_configuration_options',
 				'user_override' : true,
-				'hostname' : hostname,
 				'host_data' : portCheck
 			};
 			populateRedirectUrl(data);
@@ -276,9 +275,7 @@ function handleWizardPortTestResponse(el, elState, response, hostname) {
 		});
 
 		var data = {
-			'action' : 'get_redirect_url',
-			'referer' : 'wizard',
-			'hostname' : hostname,
+			'action' : 'get_wizard_configuration_options',
 			'host_data' : portCheck
 		};
 		populateRedirectUrl(data);

@@ -12,6 +12,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	require_once 'PostmanInputSanitizer.php';
 	require_once 'Postman-Connectors/PostmanImportableConfiguration.php';
 	require_once 'PostmanConfigTextHelper.php';
+	require_once 'PostmanManageConfigurationAjaxHandler.php';
 	
 	//
 	class PostmanAdminController {
@@ -142,12 +143,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			// register Ajax handlers
 			if (is_admin ()) {
-				$this->registerAjaxHandler ( 'test_port', 'getAjaxPortStatus' );
-				$this->registerAjaxHandler ( 'check_email', 'getAjaxHostnameByEmail' );
-				$this->registerAjaxHandler ( 'get_redirect_url', 'getAjaxRedirectUrl' );
-				$this->registerAjaxHandler ( 'send_test_email', 'sendTestEmailViaAjax' );
-				$this->registerAjaxHandler ( 'get_configuration', 'getConfigurationViaAjax' );
-				$this->registerAjaxHandler ( 'get_hosts_to_test', 'getPortsToTestViaAjax' );
+				$c = new PostmanManageConfigurationAjaxHandler();
+				$this->registerAjaxHandler ( 'test_port', $this, 'getAjaxPortStatus' );
+				$this->registerAjaxHandler ( 'check_email', $this, 'getAjaxHostnameByEmail' );
+				$this->registerAjaxHandler ( 'manual_config', $c, 'getManualConfigurationViaAjax' );
+				$this->registerAjaxHandler ( 'get_wizard_configuration_options', $c, 'getWizardConfigurationViaAjax' );
+				$this->registerAjaxHandler ( 'send_test_email', $this, 'sendTestEmailViaAjax' );
+				$this->registerAjaxHandler ( 'import_configuration', $this, 'getConfigurationFromExternalPluginViaAjax' );
+				$this->registerAjaxHandler ( 'get_hosts_to_test', $this, 'getPortsToTestViaAjax' );
 			}
 			
 			// register content handlers
@@ -169,11 +172,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * @param unknown $actionName        	
 		 * @param unknown $callbackName        	
 		 */
-		private function registerAjaxHandler($actionName, $callbackName) {
+		private function registerAjaxHandler($actionName, $class, $callbackName) {
 			$fullname = 'wp_ajax_' . $actionName;
 			// $this->logger->debug ( 'Registering ' . 'wp_ajax_' . $fullname . ' Ajax handler' );
 			add_action ( $fullname, array (
-					$this,
+					$class,
 					$callbackName 
 			) );
 		}
@@ -724,7 +727,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 			wp_send_json ( $response );
 		}
-		function getConfigurationViaAjax() {
+		/**
+		 * This function extracts configuration details form a competing SMTP plugin
+		 * and pushes them into the Postman configuration screen.
+		 */
+		function getConfigurationFromExternalPluginViaAjax() {
 			$plugin = $_POST ['plugin'];
 			$this->logger->debug ( 'Looking for config=' . $plugin );
 			foreach ( $this->importableConfiguration->getAvailableOptions () as $options ) {
@@ -768,6 +775,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		
 		/**
 		 * This Ajax function determines which hosts/ports to test in the Wizard Port Test
+		 *
+		 * Given a single outgoing smtp server hostname, return an array of host/port
+		 * combinations to run the connectivity test on
 		 */
 		function getPortsToTestViaAjax() {
 			$queryHostname = '';
@@ -781,133 +791,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			);
 			wp_send_json ( $response );
 		}
-		
-		/**
-		 * This Ajax function retrieves the OAuth redirectUrl and help text for based on the SMTP hostname supplied
-		 */
-		function getAjaxRedirectUrl() {
-			$queryHostname = '';
-			if (isset ( $_POST ['hostname'] )) {
-				$queryHostname = $_POST ['hostname'];
-			}
-			$queryAuthType = '';
-			if (isset ( $_POST ['auth_type'] )) {
-				$queryAuthType = $_POST ['auth_type'];
-			}
-			$queryTransportType = '';
-			if (isset ( $_POST ['transport'] )) {
-				$queryTransportType = $_POST ['transport'];
-			}
-			if (isset ( $_POST ['host_data'] )) {
-				$queryHostData = $_POST ['host_data'];
-			}
-			$userOverride = false;
-			if (isset ( $_POST ['user_override'] )) {
-				$userOverride = filter_var ( $_POST ['user_override'], FILTER_VALIDATE_BOOLEAN );
-			}
-			
-			$transport = PostmanTransportUtils::getTransport ( $queryTransportType );
-			if (! $transport) {
-				$transport = new PostmanDummyTransport ();
-			}
-			$this->logger->debug ( 'ajaxRedirectUrl transport:' . $queryTransportType );
-			$this->logger->debug ( 'ajaxRedirectUrl authType:' . $queryAuthType );
-			$this->logger->debug ( 'ajaxRedirectUrl hostname:' . $queryHostname );
-			
-			// don't care about what's in the database, i need a scribe based on the ajax parameter assuming this is OAUTH2
-			$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $queryHostname );
-			if (isset ( $_POST ['referer'] )) {
-				$this->logger->debug ( 'ajaxRedirectUrl referer:' . $_POST ['referer'] );
-				// this must be wizard or config from an oauth-related change
-				if ($_POST ['referer'] == 'manual_config') {
-					$avail [25] = true;
-					$avail [465] = true;
-					$avail [587] = true;
-				}
-				$authType = $queryAuthType;
-				$encType = null;
-				$port = null;
-				
-				$winningRecommendation = null;
-				if ($_POST ['referer'] != 'manual_config') {
-					// for each successful host/port combination
-					// ask a transport if they support it, and if they do at what priority is it
-					// configure for the highest priority you find
-					$recommendationPriority = - 1;
-					foreach ( $queryHostData as $id => $value ) {
-						$available = filter_var ( $value ['available'], FILTER_VALIDATE_BOOLEAN );
-						if ($available) {
-							$hostData ['host'] = $value ['host'];
-							$hostData ['port'] = $value ['port'];
-							$this->logger->debug ( 'Available host: ' . $hostData ['host'] . ':' . $hostData ['port'] . ' port_id ' . $value ['port_id'] );
-							$recommendation = PostmanTransportUtils::getConfigurationRecommendation ( $hostData );
-							$recommendation ['port_id'] = $value ['port_id'];
-							if ($recommendation && $recommendation ['priority'] > $recommendationPriority) {
-								$recommendationPriority = $recommendation ['priority'];
-								$winningRecommendation = $recommendation;
-							}
-						}
-					}
-				}
-				$response = array (
-						'redirect_url' => $scribe->getCallbackUrl (),
-						'callback_domain' => $scribe->getCallbackDomain (),
-						'help_text' => $scribe->getOAuthHelp (),
-						'client_id_label' => $scribe->getClientIdLabel (),
-						'client_secret_label' => $scribe->getClientSecretLabel (),
-						'redirect_url_label' => $scribe->getCallbackUrlLabel (),
-						'callback_domain_label' => $scribe->getCallbackDomainLabel (),
-						'referer' => $_POST ['referer'],
-						'user_override' => $userOverride,
-						'hide_auth' => true,
-						'hide_enc' => true 
-				);
-				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url:' . $scribe->getCallbackUrl () );
-				$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain:' . $scribe->getCallbackDomain () );
-				$this->logger->debug ( 'ajaxRedirectUrl answer help_text:' . $scribe->getOAuthHelp () );
-				$this->logger->debug ( 'ajaxRedirectUrl answer client_id_label:' . $scribe->getClientIdLabel () );
-				$this->logger->debug ( 'ajaxRedirectUrl answer client_secret_label:' . $scribe->getClientSecretLabel () );
-				$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url_label:' . $scribe->getCallbackUrlLabel () );
-				$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain_label:' . $scribe->getCallbackDomainLabel () );
-				if ($winningRecommendation) {
-					$response [PostmanOptions::TRANSPORT_TYPE] = $winningRecommendation ['transport'];
-					$response [PostmanOptions::AUTHENTICATION_TYPE] = $winningRecommendation ['auth'];
-					$response [PostmanOptions::ENCRYPTION_TYPE] = $winningRecommendation ['enc'];
-					$response [PostmanOptions::PORT] = $winningRecommendation ['port'];
-					$response ['port_id'] = $winningRecommendation ['port_id'];
-					$response ['display_auth'] = $winningRecommendation ['display_auth'];
-					$response ['message'] = $winningRecommendation ['message'];
-					if ($winningRecommendation ['auth'] != 'oauth2' && $winningRecommendation ['enc'] == 'tls') {
-						$response ['hide_auth'] = false;
-						$response ['hide_enc'] = false;
-					}
-					$this->logger->debug ( 'ajaxRedirectUrl answer transport_type:' . $response [PostmanOptions::TRANSPORT_TYPE] );
-					$this->logger->debug ( 'ajaxRedirectUrl answer auth_type:' . $response [PostmanOptions::AUTHENTICATION_TYPE] );
-					$this->logger->debug ( 'ajaxRedirectUrl answer enc_type:' . $response [PostmanOptions::ENCRYPTION_TYPE] );
-					$this->logger->debug ( 'ajaxRedirectUrl answer port:' . $response [PostmanOptions::PORT] );
-					$this->logger->debug ( 'ajaxRedirectUrl answer port_id:' . $response ['port_id'] );
-					$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $response ['display_auth'] );
-				} else {
-					// for manual config.. you need to separate wizard from manual this is a mess
-					if ($transport->isOAuthUsed ( $queryAuthType )) {
-						$response ['display_auth'] = 'oauth2';
-						$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $response ['display_auth'] );
-					}
-					/* translators: where %s is the URL to the Connectivity Test page */
-					$response ['message'] = sprintf ( __ ( 'Postman can\'t find any way to send mail on your system. Run a <a href="%s">connectivity test</a>.', 'postman-smtp' ), $this->getPageUrl ( self::PORT_TEST_SLUG ) );
-				}
-				$this->logger->debug ( 'ajaxRedirectUrl answer hide_auth:' . $response ['hide_auth'] );
-				$this->logger->debug ( 'ajaxRedirectUrl answer hide_enc:' . $response ['hide_enc'] );
-				$this->logger->debug ( 'ajaxRedirectUrl answer message:' . $response ['message'] );
-			} else {
-				$response = array (
-						'redirect_url' => $scribe->getCallbackUrl (),
-						'help_text' => $this->getOAuthHelp ( $hostname ) 
-				);
-			}
-			wp_send_json_success ( $response );
-		}
-		
 		/**
 		 * Print the Transport section info
 		 */
@@ -940,7 +823,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printOAuthSectionInfo() {
-			print $this->oauthScribe->getOAuthHelp ();
+			printf ( '<p id="wizard_oauth2_help">%s</p>', $this->oauthScribe->getOAuthHelp () );
 		}
 		
 		/**

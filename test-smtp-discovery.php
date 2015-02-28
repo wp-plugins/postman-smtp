@@ -22,6 +22,7 @@ function test() {
 	check ( 'test@mobileme.com' );
 	check ( 'timmy@hushmail.com' );
 	check ('test@ryerson.ca');
+	check ('art@artegennaro.com');
 }
 function check($email) {
 	$d = new SmtpDiscovery ();

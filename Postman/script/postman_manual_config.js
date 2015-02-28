@@ -56,18 +56,17 @@ jQuery(document).ready(function() {
 		}
 	}
 });
-function reloadOauthSection(hostname) {
+function reloadOauthSection() {
 	var hostname = jQuery(postman_hostname_element_name).val();
 	var transport = jQuery('select#input_transport_type').val();
 	var authtype = jQuery('select#input_auth_type').val();
 	var data = {
-			'action' : 'get_redirect_url',
-			'referer' : 'manual_config',
-			'auth_type' : authtype,
-			'hostname' : hostname,
-			'transport' : transport,
-		};
-		getRedirectUrl(data);
+		'action' : 'manual_config',
+		'auth_type' : authtype,
+		'hostname' : hostname,
+		'transport' : transport,
+	};
+	getRedirectUrl(data);
 }
 function switchBetweenPasswordAndOAuth() {
 	console.debug('showHide:authenticationType=' + $choice);
@@ -91,11 +90,15 @@ function switchBetweenPasswordAndOAuth() {
 	}
 }
 
+/**
+ * Handles population of the configuration based on
+ * the options set in a 3rd-party SMTP plugin
+ */
 function getConfiguration() {
 	var plugin = jQuery('input[name="input_plugin"]' + ':checked').val();
 	if (plugin != '') {
 		var data = {
-			'action' : 'get_configuration',
+			'action' : 'import_configuration',
 			'plugin' : plugin
 		};
 		jQuery.post(ajaxurl, data, function(response) {

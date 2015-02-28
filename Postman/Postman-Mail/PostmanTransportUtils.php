@@ -38,6 +38,8 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 			$transportType = PostmanOptions::getInstance ()->getTransportType ();
 			$transports = PostmanTransportDirectory::getInstance ()->getTransports ();
 			if (! isset ( $transports [$transportType] )) {
+				return new PostmanSmtpTransport();
+				// TODO do we need Dummy?
 				return new PostmanDummyTransport ();
 			} else {
 				return $transports [$transportType];
