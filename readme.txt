@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, yahoo mail, windows live, outlook.com, outgoing mail, send mail, wp_mail, wp mail, google apps
 Requires at least: 3.9
 Tested up to: 4.1.1
-Stable tag: 1.5.1
+Stable tag: 1.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -360,6 +360,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 1.5.3 =
+Minor bugfixes.
 
 = 1.5.2 =
 Fixed a critical bug.. display_errors is forced on as I forgot to remove some debug code

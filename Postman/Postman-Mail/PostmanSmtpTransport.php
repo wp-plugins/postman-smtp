@@ -135,7 +135,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			} else if ($this->isPermissionNeeded ( $options, $token )) {
 				/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label */
 				$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
-				$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanAdminController::getActionUrl ( PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG ), $scribe->getRequestPermissionLinkText () );
+				$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanViewController::getActionUrl ( PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG ), $scribe->getRequestPermissionLinkText () );
 				return $message;
 			}
 		}

@@ -47,10 +47,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 			) );
 		}
 		public static function getActionUrl($slug) {
-			return get_admin_url () . 'admin-post.php?action=' . $slug;
+			return PostmanAdminController::getActionUrl ( $slug );
 		}
 		public static function getPageUrl($slug) {
-			return get_admin_url () . 'options-general.php?page=' . $slug;
+			return PostmanAdminController::getPageUrl ( $slug );
 		}
 		/**
 		 *

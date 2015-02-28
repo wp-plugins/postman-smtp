@@ -18,6 +18,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 	//
 	class PostmanAdminController {
 		
+		public static function getActionUrl($slug) {
+			return get_admin_url () . 'admin-post.php?action=' . $slug;
+		}
+		public static function getPageUrl($slug) {
+			return get_admin_url () . 'options-general.php?page=' . $slug;
+		}
+		
 		// this is the slug used in the URL
 		const REQUEST_OAUTH2_GRANT_SLUG = 'postman/requestOauthGrant';
 		const PURGE_DATA_SLUG = 'postman/purge_data';
