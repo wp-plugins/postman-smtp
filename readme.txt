@@ -107,6 +107,10 @@ If you are willing to translate Postman into your language, [please let me know]
 
 == Frequently Asked Questions == 
 
+= What is OAuth 2.0? =
+
+A modern replacement for traditional SMTP password-based authentication.
+
 = How does OAuth 2.0 work? =
 
 Postman requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) and perform a service (handle Gmail, stay out of Google Docs) with no need for you to surrender your username and password credentials (master house key).
