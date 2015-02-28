@@ -12,7 +12,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	require_once 'PostmanInputSanitizer.php';
 	require_once 'Postman-Connectors/PostmanImportableConfiguration.php';
 	require_once 'PostmanConfigTextHelper.php';
-	require_once 'PostmanManageConfigurationAjaxHandler.php';
+	require_once 'PostmanConfigurationAjaxController.php';
 	
 	//
 	class PostmanAdminController {
@@ -146,8 +146,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$c = new PostmanManageConfigurationAjaxHandler();
 				$this->registerAjaxHandler ( 'test_port', $this, 'getAjaxPortStatus' );
 				$this->registerAjaxHandler ( 'check_email', $this, 'getAjaxHostnameByEmail' );
-				$this->registerAjaxHandler ( 'manual_config', $c, 'getManualConfigurationViaAjax' );
-				$this->registerAjaxHandler ( 'get_wizard_configuration_options', $c, 'getWizardConfigurationViaAjax' );
 				$this->registerAjaxHandler ( 'send_test_email', $this, 'sendTestEmailViaAjax' );
 				$this->registerAjaxHandler ( 'import_configuration', $this, 'getConfigurationFromExternalPluginViaAjax' );
 				$this->registerAjaxHandler ( 'get_hosts_to_test', $this, 'getPortsToTestViaAjax' );
@@ -1079,9 +1077,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 			
 			if (PostmanState::getInstance ()->isTimeToReviewPostman ()) {
-				printf ( '<h4>%s</h4>', __ ( 'Has Postman been working well for you?', 'postman-smtp' ) );
 				/* translators: where %d is the number of emails delivered */
-				printf ( '<p style="margin:0 10px">%s', sprintf ( _n ( 'Postman has delivered %d email for you!', 'Postman has delivered %d emails for you!', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
+				printf ( '<p>%s', sprintf ( _n ( 'Postman has delivered <span style="color:green">%d</span> email for you!', 'Postman has delivered <span style="color:green">%d</span> emails for you!', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
 				print ' ';
 				/* translators: where %s is the URL to the WordPress.org review and ratings page */
 				printf ( '%s</p>', sprintf ( __ ( 'Please considering leaving a <a href="%s">review of Postman SMTP</a> at WordPress.org to help spread the word<br/> about the new way to send email from WordPress! :D', 'postman-smtp' ), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp?filter=5' ) );

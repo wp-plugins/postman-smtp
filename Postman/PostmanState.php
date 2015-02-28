@@ -39,7 +39,7 @@ if (! class_exists ( "PostmanState" )) {
 			update_option ( self::SLUG, $this->options );
 		}
 		public function isTimeToReviewPostman() {
-			if (! empty ( $this->options [self::INSTALL_DATE] )) {
+			if (! empty ( $this->options [self::INSTALL_DATE] ) && ! $this->options->isNew ()) {
 				return $this->options [self::INSTALL_DATE] + PostmanSmtp::LONG_ENOUGH_SEC < time ();
 			}
 		}

@@ -4,6 +4,7 @@ jQuery(document).ready(function() {
 
 	// on first viewing, determine whether to show password or
 	// oauth section
+	reloadOauthSection();
 	switchBetweenPasswordAndOAuth();
 
 	// add an event on the plugin drop-down

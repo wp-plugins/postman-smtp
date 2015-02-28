@@ -39,7 +39,7 @@ If you are willing to translate Postman into your language, [please let me know]
 * WordPress 3.9 (or later)
 * PHP 5.3 (or later) with OpenSSL; or PHP 5.2 with SPL and OpenSSL 
 * Connectivity to a SMTP server with authentication credentials
-* Optional: a [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
+* Optional: a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
 
 == Installation ==
 
