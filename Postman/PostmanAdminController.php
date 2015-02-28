@@ -1141,7 +1141,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			print __ ( 'A <span style="color:red">Closed</span> port indicates:', 'postman-smtp' );
 			print '<ol>';
 			printf ( '<li>%s</li>', __ ( 'Your host has placed a firewall between this site and the SMTP server', 'postman-smtp' ) );
+			/* translators: where %s is the URL to the PHP documentation on 'allow-url-fopen' */
 			printf ( '<li>%s</li>', sprintf ( __ ( 'Your <a href="%s">PHP configuration</a> is preventing outbound connections', 'postman-smtp' ), 'http://php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen' ) );
+			/* translators: where %s is the URL to an article on disabling external requests in WordPress */
 			printf ( '<li>%s</li>', sprintf ( __ ( 'Your <a href="%s">WordPress configuration</a> is preventing outbound connections', 'postman-smtp' ), 'http://wp-mix.com/disable-external-url-requests/' ) );
 			printf ( '<li>%s</li>', __ ( 'The SMTP server has no service running on that port', 'postman-smtp' ) );
 			printf ( '</ol></p><p><b>%s</b></p>', __ ( 'If the port you are trying to use is <span style="color:red">Closed</span>, Postman can not deliver mail. Contact your host to get the port opened.', 'postman-smtp' ) );
@@ -1217,8 +1219,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$diagnostics .= sprintf ( 'Postman Connection Timeout: %d%s', $this->options->getConnectionTimeout (), PHP_EOL );
 			$diagnostics .= sprintf ( 'Postman Read Timeout: %s%s', $this->options->getReadTimeout (), PHP_EOL );
 			printf ( '<h4>%s</h4>', __ ( 'Are you having issues with Postman?', 'postman-smtp' ) );
-			printf ( '<p style="margin:0 10px">%s</p>', __ ( 'Pease check the <a href="https://wordpress.org/plugins/postman-smtp/other_notes/">troubleshooting and error messages</a> page and the <a href="https://wordpress.org/support/plugin/postman-smtp">support forum</a>.</br>If you write for help, please include the following diagnostic information:', 'postman-smtp' ) );
-			
+			/* translators: where %1$s and %2$s are the URLs to the Troubleshooting and Support Forums on WordPress.org */
+			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Pease check the <a href="%1$s">troubleshooting and error messages</a> page and the <a href="%2$s">support forum</a>.</br>If you write for help, please include the following diagnostic information:', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-smtp/other_notes/', 'https://wordpress.org/support/plugin/postman-smtp' ) );
 			printf ( '<h3>%s</h3>', _x ( 'Diagnostic Information', 'Page Title', 'postman-smtp' ) );
 			print '</br>';
 			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="6">%s</textarea>', $diagnostics );

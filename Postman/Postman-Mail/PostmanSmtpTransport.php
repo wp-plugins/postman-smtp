@@ -267,6 +267,7 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		public function getConfigurationRecommendation($hostData) {
 		}
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+			/* translators: where %s is the name of the transport (e.g. smtp) */
 			return sprintf ( __ ( 'The selected transport \'%s\' is unavailable. The external plugin was probably deactivated.', 'postman-smtp' ), $options->getTransportType () );
 		}
 	}

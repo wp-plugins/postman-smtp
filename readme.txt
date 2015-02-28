@@ -9,6 +9,8 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, a next-generation OAuth 2.0-capable SMTP Plugin for WordPress.
 
+
+
 == Description ==
 
 As the big email services [increase their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and [block traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms, users face [connection issues](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), delays and vanishing messages. Like passengers on the Titanic, most turn to the work-arounds offered by app-specific passwords, two-factor authentication, and disabling all the security they can.
@@ -40,6 +42,8 @@ If you are willing to translate Postman into your language, [please let me know]
 * PHP 5.3 (or later) with OpenSSL; or PHP 5.2 with SPL and OpenSSL 
 * Connectivity to a SMTP server with authentication credentials
 * Optional: a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
+
+
 
 == Installation ==
 
@@ -98,6 +102,8 @@ If you are willing to translate Postman into your language, [please let me know]
 1. Send yourself a test email. 
 
 > Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment with PHP 5.3.3 and Apache 2.2.15 with Gmail, Hotmail and Yahoo Mail (US).
+
+
 
 == Frequently Asked Questions == 
 
@@ -167,6 +173,8 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 = Who do we thank for translations? =
 * French - [Etienne Provost](https://www.facebook.com/eprovost3)
 
+
+
 == Troubleshooting ==
 
 = The Wizard Can\'t find any Open Ports =
@@ -184,6 +192,7 @@ You probably need to add a [SPF record](http://www.openspf.org/Introduction) to 
 = Sometimes sending mail fails =
 
 Your host may have poor connectivity to your email server. Open up the advanced configuration and double the TCP Read Timeout setting.
+
 
 
 == SMTP Error Messages ==
@@ -217,6 +226,8 @@ Your host has likely installed a firewall (REJECT packets) between you and the s
 
 You may be on a Virtual Private Server that is [playing havoc with your communications](https://wordpress.org/support/topic/oh-bother-xoauth2-authentication-mechanism-not-supported?replies=9). Jump ship.
 
+
+
 == Screenshots ==
 
 1. Postman configured and ready for mail
@@ -228,6 +239,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 1. The required Client ID and Client Secret
 1. Creating a new Application with Microsoft
 1. The required Client ID and Client Secret
+
+
 
 == Changelog ==
 
