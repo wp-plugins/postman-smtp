@@ -39,24 +39,18 @@ if (! class_exists ( "PostmanAdminController" )) {
 		// slugs
 		const POSTMAN_TEST_SLUG = 'postman-test';
 		
-		//
+		// logging
 		private $logger;
 		
-		// the Authorization Token
-		private $authorizationToken;
-		
-		// the message handler
-		private $messageHandler;
-		
-		//
-		private $oauthScribe;
-		
-		/**
-		 * Holds the values to be used in the fields callbacks
-		 */
+		// Holds the values to be used in the fields callbacks
 		private $basename;
 		private $options;
+		private $authorizationToken;
 		private $importableConfiguration;
+		
+		// helpers
+		private $messageHandler;
+		private $oauthScribe;
 		
 		/**
 		 * Start up
