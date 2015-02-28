@@ -250,6 +250,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Fixed port-testing race condition bug in Postman Setup Wizard when using Gmail API Extension
 * Fix for error "Fatal error: Cannot redeclare class PostmanOAuthTokenInterface" when using Gmail API Extension
 * Remove display_errors=On
+* French language updates
 
 = 1.5.1 - 2015-02-23 =
 * Bugs slipped through. In the Wizard, choosing port 465 was not hiding the authentication label. Worse, choosing port 587 was not showing the authentication buttons.

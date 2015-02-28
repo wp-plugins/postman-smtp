@@ -12,7 +12,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	require_once 'PostmanInputSanitizer.php';
 	require_once 'Postman-Connectors/PostmanImportableConfiguration.php';
 	require_once 'PostmanConfigTextHelper.php';
-	require_once 'PostmanConfigurationAjaxController.php';
+	require_once 'PostmanAjaxController.php';
 	
 	//
 	class PostmanAdminController {
@@ -142,14 +142,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 			
 			// register Ajax handlers
-			if (is_admin ()) {
-				$c = new PostmanManageConfigurationAjaxHandler ();
-				$this->registerAjaxHandler ( 'test_port', $this, 'getAjaxPortStatus' );
-				$this->registerAjaxHandler ( 'check_email', $this, 'getAjaxHostnameByEmail' );
-				$this->registerAjaxHandler ( 'send_test_email', $this, 'sendTestEmailViaAjax' );
-				$this->registerAjaxHandler ( 'import_configuration', $this, 'getConfigurationFromExternalPluginViaAjax' );
-				$this->registerAjaxHandler ( 'get_hosts_to_test', $this, 'getPortsToTestViaAjax' );
-			}
+			new PostmanManageConfigurationAjaxHandler ();
+			new PostmanGetHostnameByEmailAjaxController();
+			new PostmanGetPortsToTestViaAjax();
+			new PostmanPortTestAjaxController($this->options);
+			new PostmanImportConfigurationAjaxController($this->options);
+			new PostmanSendTestEmailAjaxController ( $this->options, $this->authorizationToken, $this->oauthScribe );
 			
 			// register content handlers
 			$this->registerAdminMenu ( 'generateDefaultContent' );
@@ -163,20 +161,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// register action handlers
 			$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );
 			$this->registerAdminPostAction ( self::REQUEST_OAUTH2_GRANT_SLUG, 'handleOAuthPermissionRequestAction' );
-		}
-		
-		/**
-		 *
-		 * @param unknown $actionName        	
-		 * @param unknown $callbackName        	
-		 */
-		private function registerAjaxHandler($actionName, $class, $callbackName) {
-			$fullname = 'wp_ajax_' . $actionName;
-			// $this->logger->debug ( 'Registering ' . 'wp_ajax_' . $fullname . ' Ajax handler' );
-			add_action ( $fullname, array (
-					$class,
-					$callbackName 
-			) );
 		}
 		
 		/**
@@ -651,131 +635,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), 'PURGE_DATA' );
 		}
 		
-		/**
-		 * This Ajax function retrieves whether a TCP port is open or not
-		 */
-		function getAjaxPortStatus() {
-			$hostname = $_POST ['hostname'];
-			$port = intval ( $_POST ['port'] );
-			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
-			$portTest = new PostmanPortTest ();
-			$success = $portTest->testSmtpPorts ( $hostname, $port, $this->options->getConnectionTimeout () );
-			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
-			$response = array (
-					'message' => $portTest->getErrorMessage (),
-					'success' => $success 
-			);
-			wp_send_json ( $response );
-		}
-		
-		/**
-		 * This Ajax sends a test email
-		 */
-		function sendTestEmailViaAjax() {
-			$email = $_POST ['email'];
-			$method = $_POST ['method'];
-			try {
-				$emailTester = new PostmanSendTestEmailController ();
-				$subject = _x ( 'WordPress Postman SMTP Test', 'Test Email Subject', 'postman-smtp' );
-				// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
-				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
-				$message = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) );
-				$startTime = microtime ( true ) * 1000;
-				$success = $emailTester->sendTestEmail ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName (), $subject, $message );
-				$endTime = microtime ( true ) * 1000;
-				if ($success) {
-					$statusMessage = sprintf ( __ ( 'Your message was delivered (%d ms) to the SMTP server! Congratulations :)', 'postman-smtp' ), ($endTime - $startTime) );
-				} else {
-					$statusMessage = $emailTester->getMessage ();
-				}
-				$this->logger->debug ( 'statusmessage: ' . $statusMessage );
-				$response = array (
-						'message' => $statusMessage,
-						'transcript' => $emailTester->getTranscript (),
-						'success' => $success 
-				);
-			} catch ( PostmanSendMailCommunicationError334 $e ) {
-				/* translators: where %s is the email service name (e.g. Gmail) */
-				$response = array (
-						'message' => sprintf ( __ ( 'Communication Error [334] - make sure the Sender Email belongs to the account which provided the %s OAuth 2.0 consent.', 'postman-smtp' ), $this->oauthScribe->getServiceName () ),
-						'transcript' => $emailTester->getTranscript (),
-						'success' => false 
-				);
-				$this->logger->error ( "SMTP session transcript follows:\n" . $emailTester->getTranscript () );
-			} catch ( PostmanSendMailInexplicableException $e ) {
-				$response = array (
-						'message' => __ ( 'The impossible is possible; sending through wp_mail() failed, but sending through internal engine succeeded.', 'postman-smtp' ),
-						'transcript' => $emailTester->getTranscript (),
-						'success' => false 
-				);
-				$this->logger->error ( "SMTP session transcript follows:\n" . $emailTester->getTranscript () );
-			}
-			wp_send_json ( $response );
-		}
-		/**
-		 * This function extracts configuration details form a competing SMTP plugin
-		 * and pushes them into the Postman configuration screen.
-		 */
-		function getConfigurationFromExternalPluginViaAjax() {
-			$plugin = $_POST ['plugin'];
-			$this->logger->debug ( 'Looking for config=' . $plugin );
-			foreach ( $this->importableConfiguration->getAvailableOptions () as $options ) {
-				if ($options->getPluginSlug () == $plugin) {
-					$this->logger->debug ( 'Sending configuration response' );
-					$response = array (
-							PostmanOptions::SENDER_EMAIL => $options->getSenderEmail (),
-							PostmanOptions::SENDER_NAME => $options->getSenderName (),
-							PostmanOptions::HOSTNAME => $options->getHostname (),
-							PostmanOptions::PORT => $options->getPort (),
-							PostmanOptions::AUTHENTICATION_TYPE => $options->getAuthenticationType (),
-							PostmanOptions::ENCRYPTION_TYPE => $options->getEncryptionType (),
-							PostmanOptions::BASIC_AUTH_USERNAME => $options->getUsername (),
-							PostmanOptions::BASIC_AUTH_PASSWORD => $options->getPassword (),
-							'success' => true 
-					);
-					break;
-				}
-			}
-			if (! isset ( $response )) {
-				$response = array (
-						'success' => false 
-				);
-			}
-			wp_send_json ( $response );
-		}
-		
-		/**
-		 * This Ajax function retrieves the smtp hostname for a give e-mail address
-		 */
-		function getAjaxHostnameByEmail() {
-			$email = $_POST ['email'];
-			$d = new SmtpDiscovery ();
-			$smtp = $d->getSmtpServer ( $email );
-			$this->logger->debug ( 'given email ' . $email . ', smtp server is ' . $smtp );
-			$response = array (
-					'hostname' => ! empty ( $smtp ) ? $smtp : '' 
-			);
-			wp_send_json ( $response );
-		}
-		
-		/**
-		 * This Ajax function determines which hosts/ports to test in the Wizard Port Test
-		 *
-		 * Given a single outgoing smtp server hostname, return an array of host/port
-		 * combinations to run the connectivity test on
-		 */
-		function getPortsToTestViaAjax() {
-			$queryHostname = '';
-			if (isset ( $_POST ['hostname'] )) {
-				$queryHostname = $_POST ['hostname'];
-			}
-			$hosts = PostmanTransportUtils::getHostsToTest ( $queryHostname );
-			$response = array (
-					'hosts' => $hosts,
-					'success' => true 
-			);
-			wp_send_json ( $response );
-		}
 		/**
 		 * Print the Transport section info
 		 */

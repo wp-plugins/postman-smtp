@@ -113,9 +113,6 @@ if (! class_exists ( 'PostmanSmtp' )) {
 					$this,
 					'version_shortcode' 
 			) );
-			
-			// register Ajax handlers
-			new PostmanManageConfigurationAjaxHandler ();
 		}
 		
 		/**
