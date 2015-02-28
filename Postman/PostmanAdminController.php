@@ -1175,7 +1175,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			print '<div class="wrap">';
 			$this->displayTopNavigation ();
-			printf ( '<h3>%s</h3>', _x ( 'Troubleshooting Tips', 'Page Title', 'postman-smtp' ) );
+			printf ( '<h3>%s</h3>', _x ( 'Troubleshooting', 'Page Title', 'postman-smtp' ) );
 			$diagnostics = sprintf ( 'PHP v5.3: %s (%s)%s', ($phpVersionRequirement ? 'Yes' : 'No'), PHP_VERSION, PHP_EOL );
 			$diagnostics .= sprintf ( 'PHP SSL Extension: %s%s', ($sslRequirement ? 'Yes' : 'No'), PHP_EOL );
 			$diagnostics .= sprintf ( 'PHP spl_autoload_register: %s%s', ($splAutoloadRegisterRequirement ? 'Yes' : 'No'), PHP_EOL );
