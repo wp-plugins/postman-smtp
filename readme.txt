@@ -18,7 +18,7 @@ Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail
 Other plugins seek permission each time they connect, but Postman will deliver your email every time without rejection.
 
 ###* What's New for v1.5 *
-*Postman is one month old and 1000 downloads strong! :D We're celebrating by [sending your Gmail through the HTTPS port](https://wordpress.org/plugins/postman-gmail-extension/)! Blocked port problems are a thing of the past.*
+*One month old! Postman now gets around blocked ports by [sending your Gmail over HTTPS](https://wordpress.org/plugins/postman-gmail-extension/)*
 
 = Features =
 * Send mail to any host just like the 'Big Five' SMTP plugins
@@ -103,7 +103,9 @@ If you are willing to translate Postman into your language, [please let me know]
 
 = How does OAuth 2.0 work? =
 
-Postman requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) and perform a service (handle Gmail, stay out of Google Docs) with no need for you to surrender your username and password credentials (master house key). Once you grant access, Postman can do its work.
+Postman requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) and perform a service (handle Gmail, stay out of Google Docs) with no need for you to surrender your username and password credentials (master house key).
+
+Once you grant access, Postman then overrides the WordPress wp_mail() function to provide an incredible stable mail sub-system.
 
 = Can't I just tell Google to allow less secure apps and keep using my old password? =
 
@@ -165,9 +167,26 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 = Who do we thank for translations? =
 * French - [Etienne Provost](https://www.facebook.com/eprovost3)
 
-== Error Messages ==
+== Troubleshooting ==
 
-Here are some common SMTP error messages and what they mean.
+= The Wizard Can\'t find any Open Ports =
+
+Run a <a href="%s">connectivity test</a> to find out what\'s wrong. You may find that the HTTPS port is open.
+
+= "Request OAuth permission" is not working =
+
+Please note that the Client ID and Client Secret fields are NOT for your username and password. They are for OAuth Credentials only.
+
+= Sometimes emails disappear or end up as spam <em>and</em> I have a custom domain =
+
+You probably need to add a [SPF record](http://www.openspf.org/Introduction) to your DNS zone file. THe SPF is specific to your email provider, for example [Google](https://support.google.com/a/answer/178723?hl=en)
+
+= Sometimes sending mail fails =
+
+Your host may have poor connectivity to your email server. Open up the advanced configuration and double the TCP Read Timeout setting.
+
+
+== SMTP Error Messages ==
 
 = Communication Error [334] =
 
@@ -212,9 +231,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.2 - 2015-02-25 =
-* If a Postman extension is suddenly removed, the SMTP transport is automatically re-installed
-* Added a Tips and Diagnostics Info section to the menu
+= 1.5.2 - 2015-02-29 =
+* Added a dedicated screen for Diagnostics (so that I can add more intensive, slower-running checks like DNS)
 * Fixed port-testing race condition bug in Postman Setup Wizard when using Gmail API Extension
 * Remove display_errors=On
 
