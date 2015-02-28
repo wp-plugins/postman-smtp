@@ -228,7 +228,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 				$this->logger->debug ( 'ajaxRedirectUrl answer message:' . $response ['message'] );
 			} else {
 				/* translators: where %s is the URL to the Connectivity Test page */
-				$response ['message'] = sprintf ( __ ( 'Postman can\'t find any way to send mail on your system. Run a <a href="%s">connectivity test</a>.', 'postman-smtp' ), PostmanAdminController::getPageUrl ( PostmanAdminController::PORT_TEST_SLUG ) );
+				$response ['message'] = sprintf ( __ ( 'Postman can\'t find any way to send mail on your system. Run a <a href="%s">connectivity test</a>.', 'postman-smtp' ), PostmanViewController::getPageUrl ( PostmanViewController::PORT_TEST_SLUG ) );
 			}
 			
 			wp_send_json_success ( $response );
@@ -274,6 +274,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 */
 		private function getConfigurationRecommendation($queryHostData) {
 			$recommendationPriority = - 1;
+			$winningRecommendation = null;
 			foreach ( $queryHostData as $id => $value ) {
 				$available = filter_var ( $value ['available'], FILTER_VALIDATE_BOOLEAN );
 				if ($available) {

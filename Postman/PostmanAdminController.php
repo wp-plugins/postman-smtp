@@ -508,7 +508,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<input type="radio" name="input_plugin" value="" checked="checked"/> No' );
 			$this->importableConfiguration->getAvailableOptions ();
 			foreach ( $this->importableConfiguration->getAvailableOptions () as $options ) {
-				printf ( '<input type="radio" name="input_plugin" class="input_plugin_radio" value="%s"/> <label> %s</label>', $options->getPluginSlug (), $options->getPluginName () );
+				printf ( '<input type="radio" name="input_plugin" class="input_plugin_radio" value="%s"/> %s', $options->getPluginSlug (), $options->getPluginName () );
 			}
 		}
 		
