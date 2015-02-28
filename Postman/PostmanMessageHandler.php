@@ -53,7 +53,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 					$message = PostmanTransportUtils::getCurrentTransport ()->getMisconfigurationMessage ( $this->scribe, $this->options, $this->authToken );
 					if ($message) {
 						$this->logger->debug ( 'Transport has a configuration error: ' . $message );
-						$this->addWarning ( $message );
+						$this->addError ( $message );
 					}
 				}
 			} else {
