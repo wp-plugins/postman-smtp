@@ -1078,6 +1078,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			
 			if (PostmanState::getInstance ()->isTimeToReviewPostman ()) {
 				/* translators: where %d is the number of emails delivered */
+				print '</br><hr width="70%"></br>';
 				printf ( '<p style="margin:10px 10px"><span>%s', sprintf ( _n ( 'Postman has delivered <span style="color:green">%d</span> email for you!', 'Postman has delivered <span style="color:green">%d</span> emails for you!', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
 				print ' ';
 				/* translators: where %s is the URL to the WordPress.org review and ratings page */
