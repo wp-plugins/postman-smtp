@@ -64,6 +64,9 @@ if (! class_exists ( 'PostmanSmtp' )) {
 			// register the SMTP transport
 			$this->registerTransport ();
 			
+			// load the text domain
+			$this->loadTextDomain ();
+			
 			// bind to wp_mail
 			$this->wpMailBinder->bind ();
 			
@@ -96,9 +99,6 @@ if (! class_exists ( 'PostmanSmtp' )) {
 		 */
 		public function init() {
 			$this->logger->debug ( 'Postman Smtp v' . POSTMAN_PLUGIN_VERSION . ' starting' );
-			
-			// load the text domain
-			$this->loadTextDomain ();
 			
 			// are we bound?
 			if ($this->wpMailBinder->isUnboundDueToException ()) {
