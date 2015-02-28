@@ -182,17 +182,17 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 
 == Troubleshooting ==
 
-= The Wizard Can\'t find any Open Ports =
+= The Wizard Can't find any Open Ports =
 
-Run a <a href="%s">connectivity test</a> to find out what\'s wrong. You may find that the HTTPS port is open.
+Run a connectivity test to find out what's wrong. You may find that the HTTPS port is open.
 
 = "Request OAuth permission" is not working =
 
 Please note that the Client ID and Client Secret fields are NOT for your username and password. They are for OAuth Credentials only.
 
-= Sometimes emails disappear or end up as spam <em>and</em> I have a custom domain =
+= I have a custom domain and sometimes emails disappear or end up as spam =
 
-You probably need to add a [SPF record](http://www.openspf.org/Introduction) to your DNS zone file. THe SPF is specific to your email provider, for example [Google](https://support.google.com/a/answer/178723?hl=en)
+You probably need to add a [SPF record](http://www.openspf.org/Introduction) to your DNS zone file. The SPF is specific to your email provider, for example [Google](https://support.google.com/a/answer/178723?hl=en)
 
 = Sometimes sending mail fails =
 
