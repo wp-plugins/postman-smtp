@@ -234,6 +234,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.5.3 - 2015-02-29 =
 * Added a dedicated screen for Diagnostics (so that I can add more intensive, slower-running checks like DNS)
 * Fixed port-testing race condition bug in Postman Setup Wizard when using Gmail API Extension
+* Fix for error "Fatal error: Cannot redeclare class PostmanOAuthTokenInterface" when using Gmail API Extension
 * Remove display_errors=On
 
 = 1.5.1 - 2015-02-23 =
