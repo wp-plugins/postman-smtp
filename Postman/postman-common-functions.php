@@ -18,15 +18,23 @@ if (! class_exists ( "PostmanLogger" )) {
 			$this->name = $name;
 			$this->logLevel = PostmanOptions::getInstance ()->getLogLevel ();
 		}
-		// TODO better logging http://www.smashingmagazine.com/2011/03/08/ten-things-every-wordpress-plugin-developer-should-know/
+		// better logging thanks to http://www.smashingmagazine.com/2011/03/08/ten-things-every-wordpress-plugin-developer-should-know/
 		function debug($text) {
-			if (self::DEBUG_INT >= $this->logLevel) {
-				error_log ( 'DEBUG ' . $this->name . ': ' . $text );
+			if (WP_DEBUG === true && self::DEBUG_INT >= $this->logLevel) {
+				if (is_array ( $text ) || is_object ( $text )) {
+					error_log ( 'DEBUG ' . $this->name . ': ' . print_r ( $text, true ) );
+				} else {
+					error_log ( 'DEBUG ' . $this->name . ': ' . $text );
+				}
 			}
 		}
 		function error($text) {
-			if (self::ERROR_INT >= $this->logLevel) {
-				error_log ( 'ERROR ' . $this->name . ': ' . $text );
+			if (WP_DEBUG === true && self::ERROR_INT >= $this->logLevel) {
+				if (is_array ( $text ) || is_object ( $text )) {
+					error_log ( 'ERROR' . $this->name . ': ' . print_r ( $text, true ) );
+				} else {
+					error_log ( 'ERROR ' . $this->name . ': ' . $text );
+				}
 			}
 		}
 	}

@@ -24,7 +24,8 @@ if (! class_exists ( 'PostmanAbstractAjaxHandler' )) {
 		protected function getRequestParameter($parameterName) {
 			if (isset ( $_POST [$parameterName] )) {
 				$value = $_POST [$parameterName];
-				$this->logger->debug ( sprintf ( 'found ajax parameter %s:%s', $parameterName, $value ) );
+				$this->logger->debug ( 'Found parameter name ' . $parameterName );
+				$this->logger->debug ( $value );
 				return $value;
 			}
 		}
@@ -75,7 +76,6 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 * This Ajax function retrieves the OAuth redirectUrl and help text for based on the SMTP hostname supplied
 		 */
 		function getWizardConfigurationViaAjax() {
-			$queryAuthType = $this->getAuthenticationTypeFromRequest ();
 			$queryHostData = $this->getHostDataFromRequest ();
 			$userOverride = filter_var ( $this->getUserOverrideFromRequest (), FILTER_VALIDATE_BOOLEAN );
 			
@@ -89,7 +89,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			if (isset ( $winningRecommendation )) {
 				// create an appropriate (theoretical) transport
 				$transport = PostmanTransportUtils::getTransport ( $winningRecommendation ['transport'] );
-				$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $winningRecommendation['hostname'] );
+				$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $winningRecommendation ['hostname'] );
 				$this->populateResponseFromScribe ( $scribe, $response, $userOverride );
 				$this->populateResponseFromTransport ( $winningRecommendation, $response );
 				$this->logger->debug ( 'ajaxRedirectUrl answer hide_auth:' . $response ['hide_auth'] );
@@ -130,12 +130,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		/**
 		 */
 		private function getHostDataFromRequest() {
-			$parameterName = 'host_data';
-			if (isset ( $_POST [$parameterName] )) {
-				$value = $_POST [$parameterName];
-				$this->logger->debug ( sprintf ( 'found ajax parameter %s', $parameterName ) );
-				return $value;
-			}
+			return $this->getRequestParameter ( 'host_data' );
 		}
 		
 		/**
