@@ -40,7 +40,6 @@ if (! class_exists ( "PostmanOptions" )) {
 		const CONNECTION_TIMEOUT = 'connection_timeout';
 		const READ_TIMEOUT = 'read_timeout';
 		const LOG_LEVEL = 'log_level';
-		const PRINT_ERRORS = 'print_errors';
 		
 		// options data
 		private $options;
@@ -68,66 +67,6 @@ if (! class_exists ( "PostmanOptions" )) {
 			return ! isset ( $this->options [PostmanOptions::VERSION] );
 		}
 		
-		//
-		public function isSendingEmailAllowed(PostmanOAuthToken $token) {
-			if ($this->isSmtpServerRequirementsNotMet ()) {
-				return false;
-			}
-			if ($this->isAuthTypeNone ()) {
-				return true;
-			} else if ($this->isAuthTypePassword ()) {
-				return ! $this->isPasswordCredentialsNeeded ();
-			} else if ($this->isAuthTypeOAuth2 ()) {
-				$accessToken = $token->getAccessToken ();
-				$refreshToken = $token->getRefreshToken ();
-				$senderEmail = $this->getSenderEmail ();
-				return ! empty ( $accessToken ) && ! empty ( $refreshToken ) && ! empty ( $senderEmail );
-			} else {
-				$authType = null;
-			}
-		}
-		public function isPermissionNeeded(PostmanOAuthToken $token) {
-			$authType = $this->getAuthenticationType ();
-			$hostname = $this->getHostname ();
-			$port = $this->getPort ();
-			$senderEmail = $this->getSenderEmail ();
-			$clientId = $this->getClientId ();
-			$clientSecret = $this->getClientSecret ();
-			if (! $this->isAuthTypeOAuth2 () || empty ( $clientId ) || empty ( $clientSecret )) {
-				return false;
-			} else {
-				$accessToken = $token->getAccessToken ();
-				$refreshToken = $token->getRefreshToken ();
-				if (empty ( $accessToken ) || empty ( $refreshToken )) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		}
-		public function isSmtpServerRequirementsNotMet() {
-			$hostname = $this->getHostname ();
-			$port = $this->getPort ();
-			return empty ( $hostname ) || empty ( $port );
-		}
-		public function isOAuthRequirementsNotMet($isOauthHost) {
-			$clientId = $this->getClientId ();
-			$clientSecret = $this->getClientSecret ();
-			$senderEmail = $this->getSenderEmail ();
-			$hostname = $this->getHostname ();
-			return $this->isAuthTypeOAuth2 () && (empty ( $clientId ) || empty ( $clientSecret ) || empty ( $senderEmail ) || ! $isOauthHost);
-		}
-		public function isPasswordCredentialsNeeded() {
-			$username = $this->getUsername ();
-			$password = $this->getPassword ();
-			return $this->isAuthTypePassword () && (empty ( $username ) || empty ( $password ));
-		}
-		public function isErrorPrintingEnabled() {
-			if (isset ( $this->options [PostmanOptions::PRINT_ERRORS] ))
-				return $this->options [PostmanOptions::PRINT_ERRORS];
-			else
-				return false;
-		}
 		public function getLogLevel() {
 			if (isset ( $this->options [PostmanOptions::LOG_LEVEL] ))
 				return $this->options [PostmanOptions::LOG_LEVEL];

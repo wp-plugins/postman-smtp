@@ -156,8 +156,12 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// When the plugin options page is loaded, also load the stylesheet
 			add_action ( 'admin_print_styles-' . $page, array (
 					$this,
-					'enqueueHomeScreenStylesheet' 
+					'enqueueDiagnosticsScreenStylesheet' 
 			) );
+		}
+		function enqueueDiagnosticsScreenStylesheet() {
+			wp_enqueue_style ( self::POSTMAN_STYLE );
+			wp_enqueue_script ( 'postman_diagnostics_script' );
 		}
 		
 		/**
@@ -233,6 +237,11 @@ if (! class_exists ( 'PostmanViewController' )) {
 					'jquery_validation',
 					self::POSTMAN_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
+			wp_register_script ( 'postman_diagnostics_script', plugins_url ( 'script/postman_diagnostics.js', __FILE__ ), array (
+					self::JQUERY_SCRIPT,
+					self::POSTMAN_SCRIPT 
+			), POSTMAN_PLUGIN_VERSION );
+			
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_testing', _x ( 'Checking...', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_open', _x ( 'Ok', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_closed', _x ( 'Closed', 'TCP Port Test Status', 'postman-smtp' ) );
@@ -414,64 +423,15 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 */
 		public function outputDiagnosticsContent() {
 			// test features
-			$sslRequirement = extension_loaded ( 'openssl' );
-			$splAutoloadRegisterRequirement = function_exists ( 'spl_autoload_register' );
-			$phpVersionRequirement = PHP_VERSION_ID >= 50300;
-			$arrayObjectRequirement = class_exists ( 'ArrayObject' );
-			$getmxrrRequirement = function_exists ( 'getmxrr' );
-			$displayErrors = ini_get ( 'display_errors' );
-			$errorReporting = ini_get ( 'error_reporting' );
-			
 			print '<div class="wrap">';
 			$this->displayTopNavigation ();
 			printf ( '<h3>%s</h3>', _x ( 'Troubleshooting', 'Page Title', 'postman-smtp' ) );
-			$diagnostics = sprintf ( 'PHP v5.3: %s (%s)%s', ($phpVersionRequirement ? 'Yes' : 'No'), PHP_VERSION, PHP_EOL );
-			$diagnostics .= sprintf ( 'PHP SSL Extension: %s%s', ($sslRequirement ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'PHP spl_autoload_register: %s%s', ($splAutoloadRegisterRequirement ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'PHP ArrayObject: %s%s', ($arrayObjectRequirement ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'PHP display_errors: %s%s', $displayErrors, PHP_EOL );
-			$diagnostics .= sprintf ( 'PHP errorReporting: %s%s', $errorReporting, PHP_EOL );
-			$diagnostics .= sprintf ( 'WordPress Version: %s%s', get_bloginfo ( 'version' ), PHP_EOL );
-			$diagnostics .= sprintf ( 'WordPress WP_DEBUG: %s%s', WP_DEBUG, PHP_EOL );
-			$diagnostics .= sprintf ( 'WordPress WP_DEBUG_LOG: %s%s', WP_DEBUG_LOG, PHP_EOL );
-			$diagnostics .= sprintf ( 'WordPress WP_DEBUG_DISPLAY: %s%s', WP_DEBUG_DISPLAY, PHP_EOL );
-			$diagnostics .= ('WordPress Active Plugins');
-			// from http://stackoverflow.com/questions/20488264/how-do-i-get-activated-plugin-list-in-wordpress-plugin-development
-			$apl = get_option ( 'active_plugins' );
-			$plugins = get_plugins ();
-			$activated_plugins = array ();
-			foreach ( $apl as $p ) {
-				if (isset ( $plugins [$p] )) {
-					$diagnostics .= ' : ' . $plugins [$p] ['Name'];
-				}
-			}
-			$transports = '';
-			foreach ( PostmanTransportDirectory::getInstance ()->getTransports () as $transport ) {
-				$transports .= ' : ' . $transport->getName ();
-			}
-			$diagnostics .= (PHP_EOL);
-			$diagnostics .= sprintf ( 'Postman Transport: %s%s', $this->options->getTransportType (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Transport Configured: %s%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Transport Ready: %s%s', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Authorization Type: %s%s', $this->options->getAuthenticationType (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Encryption Type: %s%s', $this->options->getEncryptionType (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman SMTP Host: %s%s', $this->options->getHostname (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman SMTP Port: %s%s', $this->options->getPort (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Sender Matches user: %s%s', ($this->options->getSenderEmail () == $this->options->getUsername () ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Successful Deliveries: %s%s', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Failed Deliveries: %s%s', PostmanStats::getInstance ()->getFailedDeliveries (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Bound: %s%s', (PostmanWpMailBinder::getInstance ()->isBound () ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Bind failure: %s%s', (PostmanWpMailBinder::getInstance ()->isUnboundDueToException () ? 'Yes' : 'No'), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Available Transports%s%s', $transports, PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman LogLevel: %s%s', $this->options->getLogLevel (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Connection Timeout: %d%s', $this->options->getConnectionTimeout (), PHP_EOL );
-			$diagnostics .= sprintf ( 'Postman Read Timeout: %s%s', $this->options->getReadTimeout (), PHP_EOL );
 			printf ( '<h4>%s</h4>', __ ( 'Are you having issues with Postman?', 'postman-smtp' ) );
 			/* translators: where %1$s and %2$s are the URLs to the Troubleshooting and Support Forums on WordPress.org */
 			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Pease check the <a href="%1$s">troubleshooting and error messages</a> page and the <a href="%2$s">support forum</a>.</br>If you write for help, please include the following diagnostic information:', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-smtp/other_notes/', 'https://wordpress.org/support/plugin/postman-smtp' ) );
 			printf ( '<h3>%s</h3>', _x ( 'Diagnostic Information', 'Page Title', 'postman-smtp' ) );
 			print '</br>';
-			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="6">%s</textarea>', $diagnostics );
+			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="6">%s</textarea>', _x ( 'Loading ...', 'Wizard Label', 'postman-smtp' ) );
 			print '</div>';
 		}
 		

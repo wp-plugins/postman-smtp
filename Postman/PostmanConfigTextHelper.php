@@ -1,6 +1,13 @@
 <?php
 if (! class_exists ( 'PostmanConfigTextHelperFactory' )) {
 	class PostmanConfigTextHelperFactory {
+		/**
+		 * This must support the concept of a hypothetical hostname, not the actual hostname
+		 *
+		 * @param PostmanTransport $transport        	
+		 * @param unknown $hostname        	
+		 * @return PostmanGoogleOAuthScribe|PostmanMicrosoftOAuthScribe|PostmanYahooOAuthScribe|PostmanNonOAuthScribe
+		 */
 		static function createScribe(PostmanTransport $transport, $hostname) {
 			if ($transport->isServiceProviderGoogle ( $hostname )) {
 				return new PostmanGoogleOAuthScribe ();
@@ -226,7 +233,7 @@ if (! class_exists ( 'PostmanNonOAuthScribe' )) {
 			return endsWith ( $this->hostname, 'yahoo.com' );
 		}
 		public function getOAuthHelp() {
-			$text = __ ( 'Enter an Outgoing Mail Server with OAuth2 capabilities.' , 'postman-smtp');
+			$text = __ ( 'Enter an Outgoing Mail Server with OAuth2 capabilities.', 'postman-smtp' );
 			return sprintf ( '<span style="color:red" class="normal">%s</span>', $text );
 		}
 		public function getCallbackUrl() {
