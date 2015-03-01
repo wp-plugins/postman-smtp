@@ -33,11 +33,14 @@ if (! class_exists ( 'PostmanGeneralMailAuthenticator' )) {
 				$config ['auth'] = $this->options->getAuthenticationType ();
 				$config ['username'] = $this->options->getUsername ();
 				$config ['password'] = $this->options->getPassword ();
-				$logger->debug ( sprintf ( 'Using auth %s with username %s and password %s ', $config ['auth'], $config ['username'], $mangledPassword = str_repeat ( '*', strlen ( $config ['password'] ) ) ) );
+				$logger->debug ( sprintf ( 'Using auth %s with username %s and password %s ', $config ['auth'], $config ['username'], PostmanGeneralMailAuthenticator::obfuscatePassword ( $config ['password'] ) ) );
 			} else {
 				$logger->debug ( 'Using no authentication' );
 			}
 			return $config;
+		}
+		public static function obfuscatePassword($password) {
+			return str_repeat ( '*', strlen ( $password ) );
 		}
 	}
 }
