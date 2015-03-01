@@ -249,14 +249,12 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.3a - 2015-03-01 =
-* Checks to make sure that the hostname used for SMTP/OAuth 2.0 is one that is supported
-* Better diagnostics - includes a port check on the currently configured host:port
-
-= 1.5.3 - 2015-02-28 =
+= 1.5.3 - 2015-03-01 =
 * Added a dedicated screen for Diagnostics (so that I can add more intensive, slower-running checks like DNS)
 * Fixed port-testing race condition bug in Postman Setup Wizard when using Gmail API Extension
 * Fix for error "Fatal error: Cannot redeclare class PostmanOAuthTokenInterface" when using Gmail API Extension
+* Checks to make sure that the hostname used for SMTP/OAuth 2.0 is one that is supported
+* Better diagnostics - includes a port check on the currently configured host:port
 * Removed display_errors=On, Mr. Space Cadet here left it in the previous release by accident
 * French language updates
 
