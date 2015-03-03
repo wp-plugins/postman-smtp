@@ -394,7 +394,11 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print ' ';
 			/* translators: where %d is an amount of time, in seconds */
 			printf ( _n ( 'Each test is given %d second to complete.', 'Each test is given %d seconds to complete.', $this->options->getConnectionTimeout (), 'postman-smtp' ), $this->options->getConnectionTimeout () );
-			print ' ';
+			print '<form id="port_test_form_id" method="post">';
+			printf ( '<label for="hostname">%s</label>', _x ( 'SMTP Server Hostname', 'Configuration Input Field', 'postman-smtp' ) );
+			$this->adminController->port_test_hostname_callback ();
+			submit_button ( _x ( 'Begin Test', 'Button Label', 'postman-smtp' ), 'primary', 'begin-port-test', true );
+			print '</form>';
 			print __ ( 'A <span style="color:red">Closed</span> port indicates:', 'postman-smtp' );
 			print '<ol>';
 			printf ( '<li>%s</li>', __ ( 'Your host has placed a firewall between this site and the SMTP server', 'postman-smtp' ) );
@@ -404,11 +408,6 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<li>%s</li>', sprintf ( __ ( 'Your <a href="%s">WordPress configuration</a> is preventing outbound connections', 'postman-smtp' ), 'http://wp-mix.com/disable-external-url-requests/' ) );
 			printf ( '<li>%s</li>', __ ( 'The SMTP server has no service running on that port', 'postman-smtp' ) );
 			printf ( '</ol></p><p><b>%s</b></p>', __ ( 'If the port you are trying to use is <span style="color:red">Closed</span>, Postman can not deliver mail. Contact your host to get the port opened.', 'postman-smtp' ) );
-			print '<form id="port_test_form_id" method="post">';
-			printf ( '<label for="hostname">%s</label>', _x ( 'SMTP Server Hostname', 'Configuration Input Field', 'postman-smtp' ) );
-			$this->adminController->port_test_hostname_callback ();
-			submit_button ( _x ( 'Begin Test', 'Button Label', 'postman-smtp' ), 'primary', 'begin-port-test', true );
-			print '</form>';
 			print '<table id="testing_table">';
 			$portName = _x ( 'Port %s', 'Port Test', 'postman-smtp' );
 			$portStatus = _x ( 'Unknown', 'Port Test Status', 'postman-smtp' );
@@ -431,7 +430,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Pease check the <a href="%1$s">troubleshooting and error messages</a> page and the <a href="%2$s">support forum</a>.</br>If you write for help, please include the following diagnostic information:', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-smtp/other_notes/', 'https://wordpress.org/support/plugin/postman-smtp' ) );
 			printf ( '<h3>%s</h3>', _x ( 'Diagnostic Information', 'Page Title', 'postman-smtp' ) );
 			print '</br>';
-			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="6">%s</textarea>', _x ( 'Loading ...', 'Wizard Label', 'postman-smtp' ) );
+			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="10">%s</textarea>', _x ( 'Loading ...', 'Wizard Label', 'postman-smtp' ) );
 			print '</div>';
 		}
 		

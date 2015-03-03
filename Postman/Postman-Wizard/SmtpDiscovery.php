@@ -2,7 +2,6 @@
 if (! class_exists ( 'SmtpDiscovery' )) {
 	
 	require_once "SmtpMappings.php";
-	require_once "SmtpMappings.php";
 
 	class SmtpDiscovery {
 		private $primaryMx;

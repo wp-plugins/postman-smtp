@@ -110,7 +110,7 @@ function getConfiguration() {
 				jQuery(postman_hostname_element_name).val(response.hostname);
 				jQuery(postman_port_element_name).val(response.port);
 				jQuery(postman_input_auth_type).val(response.auth_type);
-				jQuery(postman_enc_for_password_el).val(response.enc_type);
+				jQuery('#input_enc_type').val(response.enc_type);
 				jQuery(postman_input_basic_username).val(
 						response.basic_auth_username);
 				jQuery(postman_input_basic_password).val(
