@@ -21,6 +21,7 @@ Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail
 
 Other plugins seek permission each time they connect, but Postman will deliver your email every time without rejection.
 
+
 ###* What's New for v1.5 *
 *One month old! Postman now gets around blocked ports by [sending your Gmail over HTTPS](https://wordpress.org/plugins/postman-gmail-extension/)*
 
