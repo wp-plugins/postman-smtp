@@ -7,13 +7,15 @@ Stable tag: 1.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, a next-generation OAuth 2.0-capable SMTP mailer for WordPress.
+Gmail, Hotmail, and Yahoo Mail problems are solved with Postman, a next-generation OAuth 2.0-capable SMTP mailer for WordPress.
 
 
 
 == Description ==
 
-As the big email services [increase their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and [block traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms, users face [connection issues](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), delays and vanishing messages. Like passengers on the Titanic, most turn to the work-arounds offered by [app-specific passwords](https://support.google.com/mail/answer/1173270?hl=en), [two-factor authentication](https://support.google.com/accounts/answer/180744?hl=en), and [disabling all the security](https://support.google.com/accounts/answer/6010255) they can.
+Postman was created to directly address a shortcoming in every major SMTP plugin for WordPress: No OAuth 2.0 support.
+
+As the big email services [increase their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and [block traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms, users face [connection issues](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), delays and vanishing messages. Most turn to the work-arounds offered by [app-specific passwords](https://support.google.com/mail/answer/1173270?hl=en), [two-factor authentication](https://support.google.com/accounts/answer/180744?hl=en), and [disabling all the security](https://support.google.com/accounts/answer/6010255) they can.
 
 Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service [pre-approves Postman](http://blog.varonis.com/introduction-to-oauth/) to send messages on your behalf. No other work-arounds are needed.
 
@@ -32,7 +34,7 @@ Other plugins seek permission each time they connect, but Postman will deliver y
 * Supports International alphabets, HTML Mail and MultiPart/MIME
 * Supports  Plain/Login/CRAM-MD5/XOAUTH2 authentication (SASL)
 * Supports SSL/TLS security (SMTPS)
-* Migrating is easy! Postman can import settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
+* Migrating is easy! Postman can import settings from Easy WP SMTP, Configure SMTP, Cimy Swift SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
 * Available translations: English, French
 
 If you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
@@ -249,12 +251,17 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.3 - 2015-03-01 =
+= 1.5.3b - 2015-03-03  =
+* Added options to import settings form Configure SMTP and Cimy Swift SMTP
+
+= 1.5.3a - 2015-03-01 =
+* Better diagnostics - includes a port check on the currently configured host:port
+
+= 1.5.3 - 2015-02-28 =
 * Added a dedicated screen for Diagnostics (so that I can add more intensive, slower-running checks like DNS)
 * Fixed port-testing race condition bug in Postman Setup Wizard when using Gmail API Extension
 * Fix for error "Fatal error: Cannot redeclare class PostmanOAuthTokenInterface" when using Gmail API Extension
 * Checks to make sure that the hostname used for SMTP/OAuth 2.0 is one that is supported
-* Better diagnostics - includes a port check on the currently configured host:port
 * Removed display_errors=On, Mr. Space Cadet here left it in the previous release by accident
 * French language updates
 

@@ -66,7 +66,6 @@ if (! class_exists ( "PostmanOptions" )) {
 		public function isNew() {
 			return ! isset ( $this->options [PostmanOptions::VERSION] );
 		}
-		
 		public function getLogLevel() {
 			if (isset ( $this->options [PostmanOptions::LOG_LEVEL] ))
 				return $this->options [PostmanOptions::LOG_LEVEL];
