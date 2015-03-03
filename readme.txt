@@ -146,7 +146,6 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose 'Create Project', or use an existing project if you have one.
 1. If you have previously created a project, select it from the Projects page and you will arrive at the Project Dashboard. If you have just created a project, you are brought to the Project Dashboard automatically.
 1. If you have not filled out the consent screen for this project, do it now. In the left-hand hand navigation menu, select 'Consent Screen' from under 'APIs & auth'. Into 'email address' put your Gmail address and in 'product name' put 'Postman SMTP'. Choose 'Save'.
-1. Select 'API's' from under 'APIs & auth'. Set 'Gmail API' to 'ON'.
 1. Select 'Credentials' from under 'APIs & auth'. Choose 'Create a new Client ID'.
 1. For the 'Application Type' use 'Web application'.
 1. In 'Authorized Javascript origins' enter the 'Javascript Origins' shown on Postman's Settings page.
