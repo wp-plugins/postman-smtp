@@ -195,7 +195,9 @@ Please note that the Client ID and Client Secret fields are NOT for your usernam
 
 = I have a custom domain and sometimes emails disappear or end up as spam =
 
-You probably need to add an [SPF record](http://www.openspf.org/Introduction) to your DNS zone file. The SPF is specific to your email provider, for example [Google](https://support.google.com/a/answer/178723?hl=en).
+To avoid being flagged as spam, you need to prove your email isn't forged. On a custom domain, its up to YOU to set that up:
+* add an [SPF record](http://www.openspf.org/Introduction) to your DNS zone file. The SPF is specific to your email provider, for example [Google](https://support.google.com/a/answer/33786)
+* add a DKIM record to your DNS zone file and upload your Domain Key (a digital signature) to, for example [Google]((https://support.google.com/a/answer/174124?hl=en))
 
 = Sometimes sending mail fails =
 
