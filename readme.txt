@@ -196,6 +196,7 @@ Please note that the Client ID and Client Secret fields are NOT for your usernam
 = I have a custom domain and sometimes emails disappear or end up as spam =
 
 To avoid being flagged as spam, you need to prove your email isn't forged. On a custom domain, its up to YOU to set that up:
+
 * add an [SPF record](http://www.openspf.org/Introduction) to your DNS zone file. The SPF is specific to your email provider, for example [Google](https://support.google.com/a/answer/33786)
 * add a DKIM record to your DNS zone file and upload your Domain Key (a digital signature) to, for example [Google]((https://support.google.com/a/answer/174124?hl=en))
 
@@ -244,7 +245,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 1. Postman's Setup Wizard checking server connectivity
 1. Postman's full configuration screen
 1. Postman's Test Email utility - Oops! Wrong password
-1. Postman's Port Test utility
+1. Postman's Connectivity Test utility
 1. Creating a new Client ID with Google
 1. The required Client ID and Client Secret
 1. Creating a new Application with Microsoft
