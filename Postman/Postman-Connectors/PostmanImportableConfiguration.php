@@ -186,7 +186,7 @@ if (! class_exists ( 'PostmanConfigureSmtpOptions' )) {
 }
 
 if (! class_exists ( 'PostmanCimySwiftSmtpOptions' )) {
-	// ConfigureSmtp - 80,000
+	// Cimy Swift - 9,000
 	// a:8:{s:6:"server";s:14:"smtp.gmail.com";s:8:"username";s:5:"jason";s:8:"password";s:5:"jason";s:3:"ssl";s:3:"tls";s:11:"sender_name";s:5:"jason";s:11:"sender_mail";s:17:"jason@email.com";s:16:"overwrite_sender";s:16:"overwrite_always";s:4:"port";s:3:"587";}
 	class PostmanCimySwiftSmtpOptions extends PostmanAbstractPluginOptions {
 		const SLUG = 'cimy_swift_smtp';
@@ -254,7 +254,7 @@ if (! class_exists ( 'PostmanCimySwiftSmtpOptions' )) {
 	}
 }
 
-// Easy WP SMTP - 10,000
+// Easy WP SMTP - 40,000
 if (! class_exists ( 'PostmanEasyWpSmtpOptions' )) {
 	
 	/**
