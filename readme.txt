@@ -255,6 +255,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.5.3d - 2015-03-04  =
+* Fixed a bug where multiple error messages at once overwrite each other
+
 = 1.5.3c - 2015-03-04  =
 * Modified Easy WP SMTP importer to handle new base-64 encoded passwords
 * Fixed a bug in Sanitizer for cases where WordPress calls sanitize twice in a row - [known WP bug](https://core.trac.wordpress.org/ticket/21989)

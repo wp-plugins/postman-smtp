@@ -70,34 +70,9 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 				$this->logger->debug ( 'Queueing error messages for output' );
 				add_action ( 'admin_notices', Array (
 						$this,
-						'displayErrorSessionMessage' 
+						'displayMessage' 
 				) );
 			}
-			
-			if ($session->isSetWarningMessage ()) {
-				$this->logger->debug ( 'Queueing warning messages for output' );
-				add_action ( 'admin_notices', Array (
-						$this,
-						'displayWarningSessionMessage' 
-				) );
-			}
-			
-			if ($session->isSetSuccessMessage ()) {
-				$this->logger->debug ( 'Queueing success messages for output' );
-				add_action ( 'admin_notices', Array (
-						$this,
-						'displaySuccessSessionMessage' 
-				) );
-			}
-		}
-		function addError($message) {
-			PostmanSession::getInstance ()->setErrorMessage ( $message );
-		}
-		function addWarning($message) {
-			PostmanSession::getInstance ()->setWarningMessage ( $message );
-		}
-		function addMessage($message) {
-			PostmanSession::getInstance ()->setSuccessMessage ( $message );
 		}
 		public function displayConfigurationRequiredWarning() {
 			/* translators: where %s is the URL to the Postman Settings page */
@@ -107,34 +82,71 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			/* translators: where %s is the URL to the WordPress documentation for WP_DEBUG */
 			$this->displayWarningMessage ( sprintf ( __ ( 'Warning: Debug messages are being piped into the HTML output. This is a <span style="color:red"><b>serious security risk</b></span> and may hang Postman\'s remote AJAX calls. Disable <a href="%s">WP_DEBUG_DISPLAY</a>.', 'postman-smtp' ), 'http://codex.wordpress.org/WP_DEBUG#WP_DEBUG_LOG_and_WP_DEBUG_DISPLAY' ) );
 		}
-		//
-		public function displaySuccessSessionMessage() {
-			$message = PostmanSession::getInstance ()->getSuccessMessage ();
-			PostmanSession::getInstance ()->unsetSuccessMessage ();
-			$this->displaySuccessMessage ( $message, 'updated' );
+		/**
+		 *
+		 * @param unknown $message        	
+		 */
+		function addError($message) {
+			$this->storeMessage ( $message, 'error' );
 		}
-		public function displayErrorSessionMessage() {
-			$message = PostmanSession::getInstance ()->getErrorMessage ();
+		/**
+		 *
+		 * @param unknown $message        	
+		 */
+		function addWarning($message) {
+			$this->storeMessage ( $message, 'warning' );
+		}
+		/**
+		 *
+		 * @param unknown $message        	
+		 */
+		function addMessage($message) {
+			$this->storeMessage ( $message, 'notify' );
+		}
+		
+		/**
+		 * store messages for display later
+		 *
+		 * @param unknown $message        	
+		 * @param unknown $type        	
+		 */
+		function storeMessage($message, $type) {
+			$messageArray = array ();
+			$oldMessageArray = PostmanSession::getInstance ()->getErrorMessage ();
+			if (isset ( $oldMessageArray )) {
+				$messageArray = $oldMessageArray;
+			}
+			$m = array (
+					'type' => $type,
+					'message' => $message 
+			);
+			array_push ( $messageArray, $m );
+			PostmanSession::getInstance ()->setErrorMessage ( $messageArray );
+		}
+		
+		/**
+		 * Retrieve the messages and show them
+		 */
+		public function displayMessage() {
+			$messageArray = PostmanSession::getInstance ()->getErrorMessage ();
 			PostmanSession::getInstance ()->unsetErrorMessage ();
-			$this->displayErrorMessage ( $message, 'error' );
-		}
-		public function displayWarningSessionMessage() {
-			$message = PostmanSession::getInstance ()->getWarningMessage ();
-			PostmanSession::getInstance ()->unsetWarningMessage ();
-			$this->displayWarningMessage ( $message, 'update-nag' );
-		}
-		//
-		public function displaySuccessMessage($message) {
-			$this->displayMessage ( $message, 'updated' );
-		}
-		public function displayErrorMessage($message) {
-			$this->displayMessage ( $message, 'error' );
-		}
-		public function displayWarningMessage($message) {
-			$this->displayMessage ( $message, 'update-nag' );
-		}
-		private function displayMessage($message, $className) {
-			printf ( '<div class="%s"><p>%s</p></div>', $className, $message );
+			$this->logger->debug ( $messageArray );
+			foreach ( $messageArray as $m ) {
+				$type = $m ['type'];
+				switch ($type) {
+					case 'error' :
+						$className = 'error';
+						break;
+					case 'warning' :
+						$className = 'update-nag';
+						break;
+					default :
+						$className = 'updated';
+						break;
+				}
+				$message = $m ['message'];
+				printf ( '<div class="%s"><p>%s</p></div>', $className, $message );
+			}
 		}
 	}
 }
