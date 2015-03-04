@@ -4,6 +4,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 		private $logger;
 		private $options;
 		const VALIDATION_SUCCESS = 'validation_success';
+		const VALIDATION_FAILED = 'validation_failed';
 		public function __construct(PostmanOptions $options) {
 			assert ( isset ( $options ) );
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
@@ -60,23 +61,33 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 				}
 			}
 			
-			if ($success) {
-				PostmanSession::getInstance ()->setAction ( self::VALIDATION_SUCCESS );
-			}
-			
 			if ($new_input [PostmanOptions::CLIENT_ID] != $this->options->getClientId () || $new_input [PostmanOptions::CLIENT_SECRET] != $this->options->getClientSecret () || $new_input [PostmanOptions::HOSTNAME] != $this->options->getHostname ()) {
 				$this->logger->debug ( "Recognized new Client ID" );
 				// the user entered a new client id and we should destroy the stored auth token
 				delete_option ( PostmanOAuthToken::OPTIONS_NAME );
 			}
 			
-			// base-64 scramble password
-			if (! empty ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] )) {
-				$new_input [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] );
+			// WordPress calling Sanitize twice is a known issue
+			// https://core.trac.wordpress.org/ticket/21989
+			$action = PostmanSession::getInstance ()->getAction ();
+			if ($action != self::VALIDATION_SUCCESS && $action != self::VALIDATION_FAILED) {
+				if (! empty ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] )) {
+					// base-64 scramble password
+					$new_input [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] );
+					$this->logger->debug ( 'Encoding password as ' . $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] );
+				}
+			} else {
+				$this->logger->debug ( 'Wordpress called sanitize() twice, skipping the second password encode' );
 			}
 			
 			// add Postman plugin version number to database
 			$new_input [PostmanOptions::VERSION] = POSTMAN_PLUGIN_VERSION;
+			
+			if ($success) {
+				PostmanSession::getInstance ()->setAction ( self::VALIDATION_SUCCESS );
+			} else {
+				PostmanSession::getInstance ()->setAction ( self::VALIDATION_FAILED );
+			}
 			
 			return $new_input;
 		}
