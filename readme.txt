@@ -15,14 +15,14 @@ Gmail, Hotmail, and Yahoo Mail problems are solved with Postman, a next-generati
 
 Postman was created in 2015 to directly address a [shortcoming in every major SMTP plugin](https://wordpress.org/support/view/plugin-reviews/configure-smtp?filter=1) for WordPress: No OAuth 2.0 support.
 
-As the big email services [increase their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and [block traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms, users face [connection issues](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), delays and vanishing messages. Most turn to the work-arounds offered by [app-specific passwords](https://support.google.com/mail/answer/1173270?hl=en), [two-factor authentication](https://support.google.com/accounts/answer/180744?hl=en), and [disabling all the security](https://support.google.com/accounts/answer/6010255) they can.
+As the big email services [tighten their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) for traditional SMTP mechanisms, users face [connection issues](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), delays and vanishing messages. Most turn to the work-arounds offered by [app-specific passwords](https://support.google.com/mail/answer/1173270?hl=en), [two-factor authentication](https://support.google.com/accounts/answer/180744?hl=en), and [disabling all the security](https://support.google.com/accounts/answer/6010255) they can.
 
 Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service [pre-approves Postman](http://blog.varonis.com/introduction-to-oauth/) to send messages on your behalf. No other work-arounds are needed.
 
 Other plugins seek permission each time they connect, but Postman will deliver your email every time without rejection.
 
 ###* What's New for v1.5 *
-*One month old! Postman now gets around blocked ports by [sending your Gmail over HTTPS](https://wordpress.org/plugins/postman-gmail-extension/)*
+*Get around blocked ports by [sending your Gmail over HTTPS](https://wordpress.org/plugins/postman-gmail-extension/)*
 
 = Features =
 * Send mail to any host just like the 'Big Five' SMTP plugins
