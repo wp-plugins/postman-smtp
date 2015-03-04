@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, xoauth2, gmail, google apps, hotmail, yahoo mail, windows live, outlook.com, outgoing mail, send mail, wp_mail, wp mail, google apps
 Requires at least: 3.9
 Tested up to: 4.1.1
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -255,20 +255,12 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.3e - 2015-03-04  =
+= 1.5.4 - 2015-03-04  =
 * Added support for the 'wp_mail' filter - this allows plugins like email-log to work
-
-= 1.5.3d - 2015-03-04  =
 * Fixed a bug where multiple error messages at once overwrite each other
-
-= 1.5.3c - 2015-03-04  =
 * Modified Easy WP SMTP importer to handle new base-64 encoded passwords
 * Fixed a bug in Sanitizer for cases where WordPress calls sanitize twice in a row - [known WP bug](https://core.trac.wordpress.org/ticket/21989)
-
-= 1.5.3b - 2015-03-03  =
 * Added options to import settings form Configure SMTP and Cimy Swift SMTP
-
-= 1.5.3a - 2015-03-01 =
 * Better diagnostics - includes a port check on the currently configured host:port
 
 = 1.5.3 - 2015-02-28 =
