@@ -7,22 +7,20 @@ Stable tag: 1.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Gmail, Hotmail, and Yahoo Mail problems are solved with Postman, a next-generation OAuth 2.0-capable SMTP mailer for WordPress.
+Having Gmail, Hotmail, or Yahoo Mail problems? Solve them with Postman, a next-generation OAuth 2.0-capable SMTP mailer for WordPress.
 
 
 
 == Description ==
 
-Postman was created in 2015 to directly address a [shortcoming in every major SMTP plugin](https://wordpress.org/support/view/plugin-reviews/configure-smtp?filter=1) for WordPress: No OAuth 2.0 support.
-
-As the big email services [tighten their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) for traditional SMTP mechanisms, users face [connection issues](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), delays and vanishing messages. Most turn to the work-arounds offered by [app-specific passwords](https://support.google.com/mail/answer/1173270?hl=en), [two-factor authentication](https://support.google.com/accounts/answer/180744?hl=en), and [disabling all the security](https://support.google.com/accounts/answer/6010255) they can.
+As the big email services [increase their security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html) and [block traditional](https://support.google.com/accounts/answer/6010255) SMTP mechanisms, users face [connection issues](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), delays and vanishing messages. Like passengers on the Titanic, most turn to the work-arounds offered by app-specific passwords, two-factor authentication, and disabling all the security they can.
 
 Postman is the first and only SMTP plugin to implement OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication. During OAuth configuration, your email service [pre-approves Postman](http://blog.varonis.com/introduction-to-oauth/) to send messages on your behalf. No other work-arounds are needed.
 
 Other plugins seek permission each time they connect, but Postman will deliver your email every time without rejection.
 
 ###* What's New for v1.5 *
-*Get around blocked ports by [sending your Gmail over HTTPS](https://wordpress.org/plugins/postman-gmail-extension/)*
+*One month old! Postman now gets around blocked ports by [sending your Gmail over HTTPS](https://wordpress.org/plugins/postman-gmail-extension/)*
 
 = Features =
 * Send mail to any host just like the 'Big Five' SMTP plugins
@@ -34,8 +32,7 @@ Other plugins seek permission each time they connect, but Postman will deliver y
 * Supports International alphabets, HTML Mail and MultiPart/MIME
 * Supports  Plain/Login/CRAM-MD5/XOAUTH2 authentication (SASL)
 * Supports SSL/TLS security (SMTPS)
-* Migrating is easy! Import settings from Easy WP SMTP, Configure SMTP, Cimy Swift SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
-* Verified compatible with: Contact Form 7, Email Log
+* Migrating is easy! Postman can import settings from Easy WP SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
 * Available translations: English, French
 
 If you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
@@ -147,7 +144,6 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose 'Create Project', or use an existing project if you have one.
 1. If you have previously created a project, select it from the Projects page and you will arrive at the Project Dashboard. If you have just created a project, you are brought to the Project Dashboard automatically.
 1. If you have not filled out the consent screen for this project, do it now. In the left-hand hand navigation menu, select 'Consent Screen' from under 'APIs & auth'. Into 'email address' put your Gmail address and in 'product name' put 'Postman SMTP'. Choose 'Save'.
-1. Select 'API's' from under 'APIs & auth'. Set 'Gmail API' to 'ON'.
 1. Select 'Credentials' from under 'APIs & auth'. Choose 'Create a new Client ID'.
 1. For the 'Application Type' use 'Web application'.
 1. In 'Authorized Javascript origins' enter the 'Javascript Origins' shown on Postman's Settings page.
@@ -196,10 +192,7 @@ Please note that the Client ID and Client Secret fields are NOT for your usernam
 
 = I have a custom domain and sometimes emails disappear or end up as spam =
 
-To avoid being flagged as spam, you need to prove your email isn't forged. On a custom domain, its up to YOU to set that up:
-
-* add an [SPF record](http://www.openspf.org/Introduction) to your DNS zone file. The SPF is specific to your email provider, for example [Google](https://support.google.com/a/answer/33786)
-* add a DKIM record to your DNS zone file and upload your Domain Key (a digital signature) to, for example [Google]((https://support.google.com/a/answer/174124?hl=en))
+You probably need to add an [SPF record](http://www.openspf.org/Introduction) to your DNS zone file. The SPF is specific to your email provider, for example [Google](https://support.google.com/a/answer/178723?hl=en).
 
 = Sometimes sending mail fails =
 
@@ -246,7 +239,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 1. Postman's Setup Wizard checking server connectivity
 1. Postman's full configuration screen
 1. Postman's Test Email utility - Oops! Wrong password
-1. Postman's Connectivity Test utility
+1. Postman's Port Test utility
 1. Creating a new Client ID with Google
 1. The required Client ID and Client Secret
 1. Creating a new Application with Microsoft
@@ -256,28 +249,11 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.3e - 2015-03-04  =
-* Added support for the 'wp_mail' filter - this allows plugins like email-log to work
-
-= 1.5.3d - 2015-03-04  =
-* Fixed a bug where multiple error messages at once overwrite each other
-
-= 1.5.3c - 2015-03-04  =
-* Modified Easy WP SMTP importer to handle new base-64 encoded passwords
-* Fixed a bug in Sanitizer for cases where WordPress calls sanitize twice in a row - [known WP bug](https://core.trac.wordpress.org/ticket/21989)
-
-= 1.5.3b - 2015-03-03  =
-* Added options to import settings form Configure SMTP and Cimy Swift SMTP
-
-= 1.5.3a - 2015-03-01 =
-* Better diagnostics - includes a port check on the currently configured host:port
-
 = 1.5.3 - 2015-02-28 =
 * Added a dedicated screen for Diagnostics (so that I can add more intensive, slower-running checks like DNS)
 * Fixed port-testing race condition bug in Postman Setup Wizard when using Gmail API Extension
 * Fix for error "Fatal error: Cannot redeclare class PostmanOAuthTokenInterface" when using Gmail API Extension
-* Checks to make sure that the hostname used for SMTP/OAuth 2.0 is one that is supported
-* Removed display_errors=On, Mr. Space Cadet here left it in the previous release by accident
+* I remove display_errors=On, Mr. Bonehead left it in the previous release by accident
 * French language updates
 
 = 1.5.1 - 2015-02-23 =

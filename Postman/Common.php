@@ -1,6 +1,7 @@
 <?php
 if (! interface_exists ( 'PostmanTransport' )) {
 	interface PostmanTransport {
+		public function isSmtp();
 		public function isServiceProviderGoogle($hostname);
 		public function isServiceProviderMicrosoft($hostname);
 		public function isServiceProviderYahoo($hostname);
@@ -50,6 +51,12 @@ if (! interface_exists ( "PostmanOptionsInterface" )) {
 	interface PostmanOptionsInterface {
 		public function save();
 		public function isNew();
+		public function isSendingEmailAllowed(PostmanOAuthToken $token);
+		public function isPermissionNeeded(PostmanOAuthToken $token);
+		public function isSmtpServerRequirementsNotMet();
+		public function isOAuthRequirementsNotMet($isOauthHost);
+		public function isPasswordCredentialsNeeded();
+		public function isErrorPrintingEnabled();
 		public function getLogLevel();
 		public function getHostname();
 		public function getPort();

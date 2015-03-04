@@ -17,7 +17,7 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 		
 		/**
 		 * Return the Singleton instance
-		 *
+		 * 
 		 * @return Ambigous <NULL, PostmanWpMailBinder>
 		 */
 		public static function getInstance() {
@@ -72,41 +72,6 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 				 * @return bool Whether the email contents were sent successfully.
 				 */
 				function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
-					
-					/**
-					 * Filter the wp_mail() arguments.
-					 *
-					 * @since 1.5.4
-					 *       
-					 * @param array $args
-					 *        	A compacted array of wp_mail() arguments, including the "to" email,
-					 *        	subject, message, headers, and attachments values.
-					 */
-					$atts = apply_filters ( 'wp_mail', compact ( 'to', 'subject', 'message', 'headers', 'attachments' ) );
-					if (isset ( $atts ['to'] )) {
-						$to = $atts ['to'];
-					}
-					
-					if (isset ( $atts ['subject'] )) {
-						$subject = $atts ['subject'];
-					}
-					
-					if (isset ( $atts ['message'] )) {
-						$message = $atts ['message'];
-					}
-					
-					if (isset ( $atts ['headers'] )) {
-						$headers = $atts ['headers'];
-					}
-					
-					if (isset ( $atts ['attachments'] )) {
-						$attachments = $atts ['attachments'];
-					}
-					
-					if (! is_array ( $attachments )) {
-						$attachments = explode ( "\n", str_replace ( "\r\n", "\n", $attachments ) );
-					}
-					
 					// get the Options and AuthToken
 					$wp_mail_options = PostmanOptions::getInstance ();
 					$wp_mail_authToken = PostmanOAuthToken::getInstance ();

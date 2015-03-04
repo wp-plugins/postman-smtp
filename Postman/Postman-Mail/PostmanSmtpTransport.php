@@ -6,38 +6,8 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
 		const SLUG = 'smtp';
-		public function getSlug() {
-			return self::SLUG;
-		}
-		public function getName() {
-			return _x ( 'SMTP', 'Transport Name', 'postman-smtp' );
-		}
-		/**
-		 * what is this for .
-		 * .. @deprecated
-		 */
 		public function isSmtp() {
-		}
-		public function getVersion() {
-			return POSTMAN_PLUGIN_VERSION;
-		}
-		public function getHostname(PostmanOptionsInterface $options) {
-			return $options->getHostname ();
-		}
-		public function getHostPort(PostmanOptionsInterface $options) {
-			return $options->getPort ();
-		}
-		public function getAuthenticationType(PostmanOptionsInterface $options) {
-			return $options->getAuthenticationType ();
-		}
-		public function getSecurityType(PostmanOptionsInterface $options) {
-			return $options->getEncryptionType ();
-		}
-		public function getCredentialsId(PostmanOptionsInterface $options) {
-			return $options->getUsername ();
-		}
-		public function getCredentialsSecret(PostmanOptionsInterface $options) {
-			return $options->getPassword ();
+			return true;
 		}
 		public function isServiceProviderGoogle($hostname) {
 			return endsWith ( $hostname, 'gmail.com' );
@@ -53,6 +23,15 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		public function isTranscriptSupported() {
 			return true;
+		}
+		public function getSlug() {
+			return self::SLUG;
+		}
+		public function getName() {
+			return _x ( 'SMTP', 'Transport Name', 'postman-smtp' );
+		}
+		public function getVersion() {
+			return POSTMAN_PLUGIN_VERSION;
 		}
 		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			if ($options->getAuthenticationType () == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
@@ -96,7 +75,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			// 1. the transport is configured
 			$configured &= $this->isTransportConfigured ( $options );
 			
-			// 2. if authentication is enabled, check further rules to confirm configured
+			// 2. if authentication is enabled, that it is configured
 			if ($options->isAuthTypePassword ()) {
 				$configured &= $this->isPasswordAuthenticationConfigured ( $options );
 			} else if ($options->isAuthTypeOAuth2 ()) {
@@ -138,8 +117,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$clientSecret = $options->getClientSecret ();
 			$senderEmail = $options->getSenderEmail ();
 			$hostname = $options->getHostname ();
-			$supportedOAuthProvider = $this->isServiceProviderGoogle($hostname) || $this->isServiceProviderMicrosoft($hostname) || $this->isServiceProviderYahoo($hostname);
-			return $options->isAuthTypeOAuth2 () && ! (empty ( $clientId ) || empty ( $clientSecret ) || empty ( $senderEmail )) && $supportedOAuthProvider;
+			return $options->isAuthTypeOAuth2 () && ! (empty ( $clientId ) || empty ( $clientSecret ) || empty ( $senderEmail ));
 		}
 		private function isPermissionNeeded(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			$accessToken = $token->getAccessToken ();
@@ -153,7 +131,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				return __ ( 'Password authentication (Plain/Login/CRAMMD5) requires a username and password.', 'postman-smtp' );
 			} else if ($options->isAuthTypeOAuth2 () && ! $this->isOAuthAuthenticationConfigured ( $options )) {
 				/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label (e.g. Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, Client ID, and Client Secret.) */
-				return sprintf ( __ ( 'Warning: OAuth 2.0 authentication requires a supported OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, %1$s, and %2$s.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
+				return sprintf ( __ ( 'Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, %1$s, and %2$s.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
 			} else if ($this->isPermissionNeeded ( $options, $token )) {
 				/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label */
 				$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
@@ -250,11 +228,8 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
 		const SLUG = 'smtp';
-		/**
-		 * what is this for .
-		 * .. @deprecated
-		 */
 		public function isSmtp() {
+			return false;
 		}
 		public function isServiceProviderGoogle($hostname) {
 			return endsWith ( $hostname, 'gmail.com' );

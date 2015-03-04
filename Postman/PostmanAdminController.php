@@ -17,6 +17,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	
 	//
 	class PostmanAdminController {
+		
 		public static function getActionUrl($slug) {
 			return get_admin_url () . 'admin-post.php?action=' . $slug;
 		}
@@ -130,7 +131,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			new PostmanGetPortsToTestViaAjax ();
 			new PostmanPortTestAjaxController ( $this->options );
 			new PostmanImportConfigurationAjaxController ( $this->options, $this->importableConfiguration );
-			new PostmanGetDiagnosticsViaAjax ( $this->options, $this->authorizationToken );
 			new PostmanSendTestEmailAjaxController ( $this->options, $this->authorizationToken, $this->oauthScribe );
 			
 			// register content handlers
@@ -303,7 +303,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'hostname_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::PORT, _x ( 'SMTP Server Port', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::PORT, _x ( 'Port', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'port_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
@@ -619,6 +619,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<option value="%s" %s>Debug</option>', PostmanLogger::DEBUG_INT, PostmanLogger::DEBUG_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
 			printf ( '<option value="%s" %s>Errors</option>', PostmanLogger::ERROR_INT, PostmanLogger::ERROR_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
 			printf ( '</select>' );
+		}
+		
+		/**
+		 * Checkbox for Printing Errors
+		 */
+		public function print_errors_callback() {
+			printf ( '<input type="checkbox" id="input_print_errors" name="%1$s[%2$s]" %3$s />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PRINT_ERRORS, $this->options->isErrorPrintingEnabled () ? 'checked="checked"' : '' );
 		}
 		
 		/**
