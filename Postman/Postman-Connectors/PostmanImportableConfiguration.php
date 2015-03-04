@@ -305,8 +305,21 @@ if (! class_exists ( 'PostmanEasyWpSmtpOptions' )) {
 				return $this->options [self::SMTP_SETTINGS] [self::USERNAME];
 		}
 		public function getPassword() {
-			if (isset ( $this->options [self::SMTP_SETTINGS] [self::PASSWORD] ))
-				return $this->options [self::SMTP_SETTINGS] [self::PASSWORD];
+			if (isset ( $this->options [self::SMTP_SETTINGS] [self::PASSWORD] )) {
+				// wpecommerce screwed the pooch
+				$password = $this->options [self::SMTP_SETTINGS] [self::PASSWORD];
+				if (strlen ( $password ) % 4 != 0 || preg_match ( '/[^A-Za-z0-9]/', $password )) {
+					$decodedPw = base64_decode ( $password, true );
+					$reencodedPw = base64_encode ( $decodedPw );
+					if ($reencodedPw === $password) {
+						// encoded
+						return $decodedPw;
+					} else {
+						// not encoded
+						return $password;
+					}
+				}
+			}
 		}
 		public function getAuthenticationType() {
 			if (isset ( $this->options [self::SMTP_SETTINGS] [self::AUTHENTICATION_TYPE] )) {
