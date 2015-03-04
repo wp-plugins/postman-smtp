@@ -255,6 +255,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.5.3e - 2015-03-04  =
+* Added support for the 'wp_mail' filter - this allows plugins like email-log to work
+
 = 1.5.3d - 2015-03-04  =
 * Fixed a bug where multiple error messages at once overwrite each other
 
