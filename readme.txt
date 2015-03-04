@@ -255,6 +255,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.5.3c - 2015-03-04  =
+* Modified Easy WP SMTP importer to handle new base-64 encoded passwords
+* Fixed a bug in Sanitizer for cases where WordPress calls sanitize twice in a row - [known WP bug](https://core.trac.wordpress.org/ticket/21989)
+
 = 1.5.3b - 2015-03-03  =
 * Added options to import settings form Configure SMTP and Cimy Swift SMTP
 
