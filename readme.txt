@@ -19,7 +19,7 @@ The big email services are [tightening security](http://googleonlinesecurity.blo
 
 Unlike other plugins which seek permission each time they connect, your email service [pre-approves Postman](http://blog.varonis.com/introduction-to-oauth/) to send messages on your behalf, without the work-arounds, without rejection.
 
-[Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp?filter=5) to see what Postman has accomplished since January of this year.
+[Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished since January of this year.
 
 
 ###* What's New for v1.5 *
