@@ -113,7 +113,7 @@ If you are willing to translate Postman into your language, [please let me know]
 
 = What is OAuth 2.0? =
 
-A modern replacement for traditional SMTP password-based authentication.
+A modern replacement for traditional password-based authentication.
 
 = How does OAuth 2.0 work? =
 
