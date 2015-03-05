@@ -40,7 +40,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			if (isset ( $_GET ['page'] ) && substr ( $_GET ['page'], 0, 7 ) === 'postman') {
 				
 				if (WP_DEBUG_LOG && WP_DEBUG_DISPLAY) {
-					$this->addWarning(sprintf ( __ ( 'Warning: Debug messages are being piped into the HTML output. This is a <span style="color:red"><b>serious security risk</b></span> and may hang Postman\'s remote AJAX calls. Disable <a href="%s">WP_DEBUG_DISPLAY</a>.', 'postman-smtp' ), 'http://codex.wordpress.org/WP_DEBUG#WP_DEBUG_LOG_and_WP_DEBUG_DISPLAY' ));
+					$this->addWarning ( sprintf ( __ ( 'Warning: Debug messages are being piped into the HTML output. This is a <span style="color:red"><b>serious security risk</b></span> and may hang Postman\'s remote AJAX calls. Disable <a href="%s">WP_DEBUG_DISPLAY</a>.', 'postman-smtp' ), 'http://codex.wordpress.org/WP_DEBUG#WP_DEBUG_LOG_and_WP_DEBUG_DISPLAY' ) );
 				}
 				
 				if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
@@ -55,7 +55,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 				}
 			} else {
 				if (! PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
-					$this->addWarning(sprintf ( __ ( 'Warning: Postman is <em>not</em> intercepting mail requests. <a href="%s">Configure</a> the plugin.', 'postman-smtp' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL ));
+					$this->addWarning ( sprintf ( __ ( 'Warning: Postman is <em>not</em> intercepting mail requests. <a href="%s">Configure</a> the plugin.', 'postman-smtp' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL ) );
 				}
 			}
 			
@@ -96,18 +96,26 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		 * @param unknown $message        	
 		 * @param unknown $type        	
 		 */
-		function storeMessage($message, $type) {
+		private function storeMessage($message, $type) {
 			$messageArray = array ();
 			$oldMessageArray = PostmanSession::getInstance ()->getErrorMessage ();
 			if (isset ( $oldMessageArray )) {
 				$messageArray = $oldMessageArray;
 			}
-			$m = array (
-					'type' => $type,
-					'message' => $message 
-			);
-			array_push ( $messageArray, $m );
-			PostmanSession::getInstance ()->setErrorMessage ( $messageArray );
+			$weGotIt = false;
+			foreach ( $messageArray as $storedMessage ) {
+				if($storedMessage ['message'] === $message) {
+					$weGotIt = true;
+				}
+			}
+			if (! $weGotIt) {
+				$m = array (
+						'type' => $type,
+						'message' => $message 
+				);
+				array_push ( $messageArray, $m );
+				PostmanSession::getInstance ()->setErrorMessage ( $messageArray );
+			}
 		}
 		
 		/**
@@ -116,7 +124,6 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		public function displayMessage() {
 			$messageArray = PostmanSession::getInstance ()->getErrorMessage ();
 			PostmanSession::getInstance ()->unsetErrorMessage ();
-			$this->logger->debug ( $messageArray );
 			foreach ( $messageArray as $m ) {
 				$type = $m ['type'];
 				switch ($type) {

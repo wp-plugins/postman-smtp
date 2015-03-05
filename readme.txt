@@ -380,6 +380,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Upgrade Notice ==
 
+= 1.5.4 =
+My birthday release includes compatibility with email-log and other plugins that use the 'wp_mail' filter.
+
 = 1.5.3 =
 Minor bugfixes.
 
