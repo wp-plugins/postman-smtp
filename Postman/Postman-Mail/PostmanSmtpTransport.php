@@ -14,6 +14,8 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		/**
 		 * what is this for .
+		 *
+		 *
 		 * .. @deprecated
 		 */
 		public function isSmtp() {
@@ -34,10 +36,18 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			return $options->getEncryptionType ();
 		}
 		public function getCredentialsId(PostmanOptionsInterface $options) {
-			return $options->getUsername ();
+			if ($options->isAuthTypeOAuth2 ()) {
+				return $options->getClientId ();
+			} else {
+				return $options->getUsername ();
+			}
 		}
 		public function getCredentialsSecret(PostmanOptionsInterface $options) {
-			return $options->getPassword ();
+			if ($options->isAuthTypeOAuth2 ()) {
+				return $options->getClientSecret ();
+			} else {
+				return $options->getPassword ();
+			}
 		}
 		public function isServiceProviderGoogle($hostname) {
 			return endsWith ( $hostname, 'gmail.com' );
@@ -138,7 +148,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$clientSecret = $options->getClientSecret ();
 			$senderEmail = $options->getSenderEmail ();
 			$hostname = $options->getHostname ();
-			$supportedOAuthProvider = $this->isServiceProviderGoogle($hostname) || $this->isServiceProviderMicrosoft($hostname) || $this->isServiceProviderYahoo($hostname);
+			$supportedOAuthProvider = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
 			return $options->isAuthTypeOAuth2 () && ! (empty ( $clientId ) || empty ( $clientSecret ) || empty ( $senderEmail )) && $supportedOAuthProvider;
 		}
 		private function isPermissionNeeded(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
@@ -252,6 +262,8 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		const SLUG = 'smtp';
 		/**
 		 * what is this for .
+		 *
+		 *
 		 * .. @deprecated
 		 */
 		public function isSmtp() {
