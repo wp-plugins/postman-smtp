@@ -9,6 +9,9 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		const ERROR_MESSAGE = 'POSTMAN_ERROR_MESSAGE';
 		const WARNING_MESSAGE = 'POSTMAN_WARNING_MESSAGE';
 		const SUCCESS_MESSAGE = 'POSTMAN_SUCCESS_MESSAGE';
+		const ERROR_CLASS = 'error';
+		const WARNING_CLASS = 'update-nag';
+		const SUCCESS_CLASS = 'updated';
 		private $logger;
 		private $options;
 		private $authToken;
@@ -33,15 +36,11 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 					'init' 
 			) );
 		}
-		function init() {
+		public function init() {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
 			$this->scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
-			if (isset ( $_GET ['page'] ) && substr ( $_GET ['page'], 0, 7 ) === 'postman') {
-				
-				if (WP_DEBUG_LOG && WP_DEBUG_DISPLAY) {
-					$this->addWarning ( sprintf ( __ ( 'Warning: Debug messages are being piped into the HTML output. This is a <span style="color:red"><b>serious security risk</b></span> and may hang Postman\'s remote AJAX calls. Disable <a href="%s">WP_DEBUG_DISPLAY</a>.', 'postman-smtp' ), 'http://codex.wordpress.org/WP_DEBUG#WP_DEBUG_LOG_and_WP_DEBUG_DISPLAY' ) );
-				}
+			if (isset ( $_GET ['page'] ) && substr ( $_GET ['page'], 0, 7 ) == 'postman') {
 				
 				if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
 					// no configuration errors to show
@@ -55,7 +54,10 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 				}
 			} else {
 				if (! PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
-					$this->addWarning ( sprintf ( __ ( 'Warning: Postman is <em>not</em> intercepting mail requests. <a href="%s">Configure</a> the plugin.', 'postman-smtp' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL ) );
+					add_action ( 'admin_notices', Array (
+							$this,
+							'displayConfigurationRequiredWarning' 
+					) );
 				}
 			}
 			
@@ -64,7 +66,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 				$this->logger->debug ( 'Queueing error messages for output' );
 				add_action ( 'admin_notices', Array (
 						$this,
-						'displayMessage' 
+						'displayAllMessages' 
 				) );
 			}
 		}
@@ -72,21 +74,21 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		 *
 		 * @param unknown $message        	
 		 */
-		function addError($message) {
+		public function addError($message) {
 			$this->storeMessage ( $message, 'error' );
 		}
 		/**
 		 *
 		 * @param unknown $message        	
 		 */
-		function addWarning($message) {
+		public function addWarning($message) {
 			$this->storeMessage ( $message, 'warning' );
 		}
 		/**
 		 *
 		 * @param unknown $message        	
 		 */
-		function addMessage($message) {
+		public function addMessage($message) {
 			$this->storeMessage ( $message, 'notify' );
 		}
 		
@@ -104,7 +106,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			}
 			$weGotIt = false;
 			foreach ( $messageArray as $storedMessage ) {
-				if($storedMessage ['message'] === $message) {
+				if ($storedMessage ['message'] === $message) {
 					$weGotIt = true;
 				}
 			}
@@ -117,29 +119,46 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 				PostmanSession::getInstance ()->setErrorMessage ( $messageArray );
 			}
 		}
-		
+		/**
+		 * A callback function
+		 */
+		public function displayConfigurationRequiredWarning() {
+			/* translators: where %s is the URL to the Postman Settings page */
+			$message = sprintf ( __ ( 'Warning: Postman is <em>not</em> intercepting mail requests. <a href="%s">Configure</a> the plugin.', 'postman-smtp' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL );
+			$this->printMessage ( $message, self::WARNING_CLASS );
+		}
 		/**
 		 * Retrieve the messages and show them
 		 */
-		public function displayMessage() {
+		public function displayAllMessages() {
 			$messageArray = PostmanSession::getInstance ()->getErrorMessage ();
 			PostmanSession::getInstance ()->unsetErrorMessage ();
 			foreach ( $messageArray as $m ) {
 				$type = $m ['type'];
 				switch ($type) {
 					case 'error' :
-						$className = 'error';
+						$className = self::ERROR_CLASS;
 						break;
 					case 'warning' :
-						$className = 'update-nag';
+						$className = self::WARNING_CLASS;
 						break;
 					default :
-						$className = 'updated';
+						$className = self::SUCCESS_CLASS;
 						break;
 				}
 				$message = $m ['message'];
-				printf ( '<div class="%s"><p>%s</p></div>', $className, $message );
+				$this->printMessage ( $message, $className );
 			}
+		}
+		
+		/**
+		 * putput message
+		 *
+		 * @param unknown $message        	
+		 * @param unknown $className        	
+		 */
+		private function printMessage($message, $className) {
+			printf ( '<div class="%s"><p>%s</p></div>', $className, $message );
 		}
 	}
 }
