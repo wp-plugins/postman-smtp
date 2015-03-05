@@ -35,6 +35,7 @@ Other plugins seek permission each time they connect, but Postman will deliver y
 * Supports  Plain/Login/CRAM-MD5/XOAUTH2 authentication (SASL)
 * Supports SSL/TLS security (SMTPS)
 * Migrating is easy! Import settings from Easy WP SMTP, Configure SMTP, Cimy Swift SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
+* Verified compatible with: Contact Form 7, Gravity Forms, Email Log.
 * Available translations: English, French
 
 If you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
@@ -255,13 +256,11 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.4 - 2015-03-04  =
-* Added support for the 'wp_mail' filter - this allows plugins like email-log to work
-* Fixed a bug where multiple error messages at once overwrite each other
-* Modified Easy WP SMTP importer to handle new base-64 encoded passwords
-* Fixed a bug in Sanitizer for cases where WordPress calls sanitize twice in a row - [known WP bug](https://core.trac.wordpress.org/ticket/21989)
-* Added options to import settings form Configure SMTP and Cimy Swift SMTP
+= 1.5.4 - 2015-03-04 - the Birthday Release =
+* Added support for the 'wp_mail' filter - this adds compatibility to plugins like email-log
 * Better diagnostics - includes a port check on the currently configured host:port
+* Fixed a bug where multiple error messages at once overwrite each other
+* Fixed a bug in Sanitizer for cases where WordPress calls sanitize twice in a row - [known WP bug](https://core.trac.wordpress.org/ticket/21989)
 
 = 1.5.3 - 2015-02-28 =
 * Added a dedicated screen for Diagnostics (so that I can add more intensive, slower-running checks like DNS)
