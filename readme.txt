@@ -36,7 +36,7 @@ Unlike other plugins which seek permission each time they connect, your email se
 * Supports  Plain/Login/CRAM-MD5/XOAUTH2 authentication (SASL)
 * Supports SSL/TLS security (SMTPS)
 * Migrating is easy! Import settings from Easy WP SMTP, Configure SMTP, Cimy Swift SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
-* Verified compatible with: Contact Form 7, Gravity Forms, Email Log.
+* Verified compatible with: Contact Form 7, Gravity Forms, Email Log
 * Available translations: English, French
 
 If you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
