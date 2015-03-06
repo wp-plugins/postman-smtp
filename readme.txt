@@ -113,7 +113,7 @@ If you are willing to translate Postman into your language, [please let me know]
 
 = What is OAuth 2.0? =
 
-A modern replacement for traditional password-based authentication.
+A modern replacement for traditional password-based authentication. Postman supports the OAuth 2.0 implementations of all three major e-mail providers: Gmail, Hotmail and Yahoo Mail.
 
 = How does OAuth 2.0 work? =
 
