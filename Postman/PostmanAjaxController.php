@@ -109,6 +109,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->addToDiagnostics ( sprintf ( 'Postman Available Transports%s', $this->getTransports () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman LogLevel: %s', $this->options->getLogLevel () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman TCP Timeout (Connection|Read): %d|%d', $this->options->getConnectionTimeout (), $this->options->getReadTimeout () ) );
+			$this->addToDiagnostics ( sprintf ( 'HTTP User Agent: %s', $_SERVER ['HTTP_USER_AGENT'] ) );
 			$response = array (
 					'message' => $this->diagnostics 
 			);
