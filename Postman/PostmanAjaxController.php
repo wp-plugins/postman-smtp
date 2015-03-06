@@ -207,7 +207,7 @@ if (! class_exists ( 'PostmanImportConfigurationAjaxController' )) {
 		 *
 		 * @param PostmanOptionsInterface $options        	
 		 */
-		function __construct(PostmanOptionsInterface $options, $importableConfiguration) {
+		function __construct(PostmanOptionsInterface $options, PostmanImportableConfiguration $importableConfiguration) {
 			parent::__construct ();
 			$this->options = $options;
 			$this->importableConfiguration = $importableConfiguration;

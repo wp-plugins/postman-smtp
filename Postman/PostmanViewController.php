@@ -26,7 +26,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 * @param PostmanOAuthTokenInterface $authorizationToken        	
 		 * @param PostmanConfigTextHelper $oauthScribe        	
 		 */
-		function __construct(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe, $importableConfiguration, PostmanAdminController $adminController) {
+		function __construct(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe, PostmanImportableConfiguration $importableConfiguration, PostmanAdminController $adminController) {
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->oauthScribe = $oauthScribe;
@@ -280,6 +280,13 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// the auth input
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_redirect_url_el', '#input_oauth_redirect_url' );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_auth_type', '#input_' . PostmanOptions::AUTHENTICATION_TYPE );
+			
+			// wizard
+			$startPage = 1;
+			if ($this->options->isNew() && $this->importableConfiguration->isImportAvailable()) {
+				$startPage = 0;
+			}
+			wp_localize_script ( 'postman_wizard_script', 'wizard_start_step', $startPage );
 		}
 		
 		/**
@@ -493,11 +500,25 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE, $this->options->getTransportType () );
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
 			
+			// Wizard Step 0
+			printf ( '<h5>%s</h5>', _x ( 'Import Configuration', 'Wizard Step Title', 'postman-smtp' ) );
+			print '<fieldset>';
+			printf ( '<legend>%s</legend>', _x ( 'Import conifguration from another plugin?', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'If you had a working configuration with another Plugin, the Setup Wizard can begin with those settings.', 'postman-smtp' ) );
+			print '<table class="input_auth_type">';
+			printf ( '<tr><td><input type="radio" id="import_none" name="input_plugin" value="%s" checked="checked"/></td><td><label> %s</label></td></tr>', 'none', _x ( 'None', 'Plugin to Import Configuration from', 'postman-smtp' ) );
+			
+			foreach ( $this->importableConfiguration->getAvailableOptions () as $options ) {
+				printf ( '<tr><td><input type="radio" name="input_plugin" value="%s"/></td><td><label> %s</label></td></tr>', $options->getPluginSlug (), $options->getPluginName () );
+			}
+			print '</table>';
+			print '</fieldset>';
+			
 			// Wizard Step 1
 			printf ( '<h5>%s</h5>', _x ( 'Sender Details', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'Who is the mail coming from?', 'Wizard Step Title', 'postman-smtp' ) );
-			printf ( '<p>%s</p>', __ ( 'Let\'s begin! Please enter the email address and name you\'d like to send mail from.', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'Please enter the email address and name you\'d like to send mail from.', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'Please note that to combat Spam, many email services will <em>not</em> let you send from an e-mail address other than your own.', 'postman-smtp' ) );
 			printf ( '<label for="postman_options[sender_email]">%s</label>', _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->adminController->sender_email_callback ();

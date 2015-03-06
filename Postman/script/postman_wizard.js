@@ -9,7 +9,8 @@ jQuery(document).ready(
 								transitionEffect : "slideLeft",
 								stepsOrientation : "vertical",
 								autoFocus : true,
-								    labels : {
+								startIndex : wizard_start_step,
+								labels : {
 									current : steps_current_step,
 									pagination : steps_pagination,
 									finish : steps_finish,
@@ -94,11 +95,11 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		}
 	}
 
-	if (currentIndex === 0) {
+	if (currentIndex === 1) {
 		// page 1 : look-up the email
 		// address for the smtp server
 		checkEmail(jQuery(postman_input_sender_email).val());
-	} else if (currentIndex === 1) {
+	} else if (currentIndex === 2) {
 		// page 2 : check the port
 		portsChecked = 0;
 		portsToCheck = 0;
@@ -112,7 +113,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 
 		getHostsToCheck(jQuery(postman_hostname_element_name).val());
 
-	} else if (currentIndex === 2) {
+	} else if (currentIndex === 3) {
 
 		// user has clicked next but we haen't finished the check
 		if (portsChecked < portsToCheck) {
@@ -171,21 +172,21 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	// Suppress (skip) "Warning" step if
 	// the user is old enough and wants
 	// to the previous step.
-	if (currentIndex === 1) {
+	if (currentIndex === 2) {
 		jQuery(postman_hostname_element_name).focus();
 	}
-	if (currentIndex === 2) {
+	if (currentIndex === 3) {
 		if (portCheckBlocksUi) {
 			// this is the second place i disable the next button but Steps
 			// re-enables it after the screen slides
 			jQuery('li + li').addClass('disabled');
 		}
 	}
-	if (currentIndex === 3 && priorIndex === 4 && chosenPort == 25) {
+	if (currentIndex === 4 && priorIndex === 5 && chosenPort == 25) {
 		myself.steps("previous");
 		return;
 	}
-	if (currentIndex === 3 && chosenPort == 25) {
+	if (currentIndex === 4 && chosenPort == 25) {
 		myself.steps("next");
 	}
 

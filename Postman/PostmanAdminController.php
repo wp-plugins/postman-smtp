@@ -260,13 +260,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printTransportSectionInfo' 
 			), 'transport_options' );
 			
-			if ($this->options->isNew () && $this->importableConfiguration->isImportAvailable ()) {
-				add_settings_field ( 'import_configuration', _x ( 'Import from Plugin', 'Configuration Input Field', 'postman-smtp' ), array (
-						$this,
-						'import_configuration_callback' 
-				), 'transport_options', 'transport_section' );
-			}
-			
 			add_settings_field ( PostmanOptions::TRANSPORT_TYPE, _x ( 'Transport', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'transport_type_callback' 
@@ -506,17 +499,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<td><input type="radio" id="input_enc_ssl" name="postman_options[enc_type]" class="input_encryption_type" value="%s"/></td><td> <label class="input_enc_type_ssl"> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_SSL, _x ( 'SSL', 'Encryption Type', 'postman-smtp' ) );
 			printf ( '<td><input type="radio" id="input_enc_tls" name="postman_options[enc_type]" class="input_encryption_type" value="%s"/></td><td> <label> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_TLS, _x ( 'TLS', 'Encryption Type', 'postman-smtp' ) );
 			print '</tr></table>';
-		}
-		
-		/**
-		 * Import configuration from another plugin
-		 */
-		public function import_configuration_callback() {
-			printf ( '<input type="radio" name="input_plugin" value="" checked="checked"/> No' );
-			$this->importableConfiguration->getAvailableOptions ();
-			foreach ( $this->importableConfiguration->getAvailableOptions () as $options ) {
-				printf ( '<input type="radio" name="input_plugin" class="input_plugin_radio" value="%s"/> %s', $options->getPluginSlug (), $options->getPluginName () );
-			}
 		}
 		
 		/**
