@@ -142,6 +142,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		function enqueueEmailTestResources() {
 			wp_enqueue_style ( 'jquery_steps_style' );
 			wp_enqueue_style ( self::POSTMAN_STYLE );
+			wp_enqueue_style ( 'postman_send_test_email' );
 			wp_enqueue_script ( 'postman_test_email_wizard_script' );
 		}
 		
@@ -204,6 +205,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		public function initializeAdminPage() {
 			// register the stylesheet and javascript external resources
 			wp_register_style ( self::POSTMAN_STYLE, plugins_url ( 'style/postman.css', __FILE__ ), null, POSTMAN_PLUGIN_VERSION );
+			wp_register_style ( 'postman_send_test_email', plugins_url ( 'style/postman_send_test_email.css', __FILE__ ), self::POSTMAN_STYLE, POSTMAN_PLUGIN_VERSION );
 			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery.steps.css', __FILE__ ), self::POSTMAN_STYLE, '1.1.0' );
 			
 			wp_register_script ( self::POSTMAN_SCRIPT, plugins_url ( 'script/postman.js', __FILE__ ), array (
@@ -251,6 +253,13 @@ if (! class_exists ( 'PostmanViewController' )) {
 					'success' => _x ( 'Success', 'Email Test Status', 'postman-smtp' ),
 					'failed' => _x ( 'Failed', 'Email Test Status', 'postman-smtp' ) 
 			) );
+			$startPage = 1;
+			if ($this->options->isNew () && $this->importableConfiguration->isImportAvailable ()) {
+				$startPage = 0;
+			}
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_setup_wizard', array (
+					'start_page' => $startPage 
+			) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_wizard_wait', __ ( 'Please wait for the port test to finish', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_wizard_no_ports', __ ( 'No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.', 'postman-smtp' ) );
 			
@@ -280,13 +289,6 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// the auth input
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_redirect_url_el', '#input_oauth_redirect_url' );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_auth_type', '#input_' . PostmanOptions::AUTHENTICATION_TYPE );
-			
-			// wizard
-			$startPage = 1;
-			if ($this->options->isNew() && $this->importableConfiguration->isImportAvailable()) {
-				$startPage = 0;
-			}
-			wp_localize_script ( 'postman_wizard_script', 'wizard_start_step', $startPage );
 		}
 		
 		/**
@@ -320,10 +322,6 @@ if (! class_exists ( 'PostmanViewController' )) {
 					printf ( '<h3>%s</h3>', __ ( 'Thank-you for choosing Postman!', 'postman-smtp' ) );
 					/* translators: where %s is the URL of the Setup Wizard */
 					printf ( '<p><span>%s</span></p>', sprintf ( __ ( 'Let\'s get started! All users are strongly encouraged to <a href="%s">run the Setup Wizard</a>.', 'postman-smtp' ), $this->getPageUrl ( self::CONFIGURATION_WIZARD_SLUG ) ) );
-					if ($this->importableConfiguration->isImportAvailable ()) {
-						/* translators: where %s is the URL of the Manual Configuration */
-						printf ( '<p><span>%s</span></p>', sprintf ( __ ( 'If you wish, Postman can <a href="%s">import your SMTP configuration</a> from another plugin. You can run the Wizard later if you need to.', 'postman-smtp' ), $this->getPageUrl ( self::CONFIGURATION_SLUG ) ) );
-					}
 				}
 			}
 		}
@@ -639,12 +637,24 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<section>';
 			printf ( '<p><label>%s</label></p>', __ ( 'Status Message', 'postman-smtp' ) );
 			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="65" rows="2"></textarea>';
+			print '</section>';
+			print '</fieldset>';
+			
+			// Step 3
+			printf ( '<h5>%s</h5>', __ ( 'Session Transcript', 'postman-smtp' ) );
+			print '<fieldset>';
+			printf ( '<legend>%s</legend>', __ ( 'Examine the SMTP Session Transcript if you need to.', 'postman-smtp' ) );
+			printf ( '<p>%s', __ ( 'This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your password in encoded form.', 'postman-smtp' ) );
+			print '<section>';
 			if (PostmanTransportUtils::getCurrentTransport ()->isTranscriptSupported ()) {
 				printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );
-				print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="10"></textarea>';
+				print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="8"></textarea>';
+			} else {
+				printf ( '<p>No SMTP Session Transcript is available with the %s tarnsport', PostmanTransportUtils::getCurrentTransport ()->getName () );
 			}
 			print '</section>';
 			print '</fieldset>';
+			
 			print '</form>';
 		}
 	}
