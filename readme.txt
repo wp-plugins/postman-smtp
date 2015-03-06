@@ -144,7 +144,7 @@ Instead, consider setting the  **reply-to header** of the e-mail. This allows th
 = What is a Client ID? =
 To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several websites, you will need a different Client ID for each one.
 
-= How do I get a Google Client ID? =
+= How do I get a Google Client ID? (For Gmail users only!) =
 1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose 'Create Project', or use an existing project if you have one.
 1. If you have previously created a project, select it from the Projects page and you will arrive at the Project Dashboard. If you have just created a project, you are brought to the Project Dashboard automatically.
 1. If you have not filled out the consent screen for this project, do it now. In the left-hand hand navigation menu, select 'Consent Screen' from under 'APIs & auth'. Into 'email address' put your Gmail address and in 'product name' put 'Postman SMTP'. Choose 'Save'.
@@ -156,7 +156,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Choose 'Create Client ID'.
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
-= How do I get a Microsoft Client ID? =
+= How do I get a Microsoft Client ID? (For Hotmail/Live/Outlook.com users only!) =
 1. Go to [Microsoft account Developer Center](https://account.live.com/developers/applications/index) and select 'Create application'.
 1. In the 'Application name' field enter 'Postman SMTP'. Select 'I accept.'
 1. Select 'API Settings' from under 'Settings'.
@@ -164,7 +164,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Select 'App Settings' from under 'Settings'.
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
-= How do I get a Yahoo Client ID? =
+= How do I get a Yahoo Client ID? (For Yahoo Mail users only!) =
 1. Go to [Yahoo Developer Network](https://developer.apps.yahoo.com/projects) and select 'Create an App'.
 1. In the 'Application Name' field enter 'Postman SMTP'. For 'Application Type' choose 'Web-based'. In description write the name of your WordPress site.
 1. In 'Home Page URL', enter the 'Home Page URL' shown on Postman's Settings page.
