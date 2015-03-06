@@ -151,8 +151,8 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Select 'API's' from under 'APIs & auth'. Set 'Gmail API' to 'ON'.
 1. Select 'Credentials' from under 'APIs & auth'. Choose 'Create a new Client ID'.
 1. For the 'Application Type' use 'Web application'.
-1. In 'Authorized Javascript origins' enter the 'Javascript Origins' shown on Postman's Settings page.
-1. In 'Authorized Redirect URIs' enter the 'Redirect URI' shown on Postman's Settings page.
+1. In 'Authorized Javascript origins' enter the 'Javascript Origins' (either in the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
+1. In 'Authorized Redirect URIs' enter the 'Redirect URI' given by Postman (either in the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
 1. Choose 'Create Client ID'.
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
@@ -160,7 +160,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Go to [Microsoft account Developer Center](https://account.live.com/developers/applications/index) and select 'Create application'.
 1. In the 'Application name' field enter 'Postman SMTP'. Select 'I accept.'
 1. Select 'API Settings' from under 'Settings'.
-1. In 'Redirect URL', enter the redirect URI shown on Postman's Settings page. Select Save.
+1. In 'Redirect URL', enter the redirect URI given by Postman (either in the wizard, or the manual configuration page). Select Save.
 1. Select 'App Settings' from under 'Settings'.
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
@@ -169,7 +169,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. In the 'Application Name' field enter 'Postman SMTP'. For 'Application Type' choose 'Web-based'. In description write the name of your WordPress site.
 1. In 'Home Page URL', enter the 'Home Page URL' shown on Postman's Settings page.
 1. In 'Access Scopes' choose 'This app requires access to private user data.'
-1. In 'Callback Domain', enter the 'Callback Domain' shown on Postman's Settings page.
+1. In 'Callback Domain', enter the 'Callback Domain' given by Postman (either in the wizard, or the manual configuration page).
 1. Under 'Select APIs for private user data access' choose 'Mail Web Service'
 1. Under 'Mail Web Service' choose 'Read/Write'
 1. Click 'Create App'
