@@ -257,6 +257,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.5.4 - 2015-03-05 =
+* Added the Http User Agent string to the diagnostics
+
 = 1.5.4 - 2015-03-04 - the Birthday Release =
 * Added support for the 'wp_mail' filter - this adds compatibility with plugins like email-log
 * Better diagnostics - includes a port check on the currently configured host:port
