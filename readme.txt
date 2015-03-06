@@ -105,7 +105,7 @@ If you are willing to translate Postman into your language, [please let me know]
 1. Choose the Save Changes button.
 1. Send yourself a test email. 
 
-> Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment with PHP 5.3.3 and Apache 2.2.15 with Gmail, Hotmail and Yahoo Mail (US).
+> Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment with PHP 5.3.3 and Apache 2.2.15 with Gmail, Hotmail and Yahoo Mail (US). Additional testing is performed with [Mailtrap](http://mailtrap.io/)
 
 
 
@@ -113,7 +113,7 @@ If you are willing to translate Postman into your language, [please let me know]
 
 = What is OAuth 2.0? =
 
-A modern replacement for traditional password-based authentication.
+A modern replacement for traditional password-based authentication. Postman supports the OAuth 2.0 implementations of all three major e-mail providers: Gmail, Hotmail and Yahoo Mail.
 
 = How does OAuth 2.0 work? =
 
@@ -144,32 +144,32 @@ Instead, consider setting the  **reply-to header** of the e-mail. This allows th
 = What is a Client ID? =
 To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several websites, you will need a different Client ID for each one.
 
-= How do I get a Google Client ID? =
+= How do I get a Google Client ID? (For Gmail users only!) =
 1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose 'Create Project', or use an existing project if you have one.
 1. If you have previously created a project, select it from the Projects page and you will arrive at the Project Dashboard. If you have just created a project, you are brought to the Project Dashboard automatically.
 1. If you have not filled out the consent screen for this project, do it now. In the left-hand hand navigation menu, select 'Consent Screen' from under 'APIs & auth'. Into 'email address' put your Gmail address and in 'product name' put 'Postman SMTP'. Choose 'Save'.
 1. Select 'API's' from under 'APIs & auth'. Set 'Gmail API' to 'ON'.
 1. Select 'Credentials' from under 'APIs & auth'. Choose 'Create a new Client ID'.
 1. For the 'Application Type' use 'Web application'.
-1. In 'Authorized Javascript origins' enter the 'Javascript Origins' shown on Postman's Settings page.
-1. In 'Authorized Redirect URIs' enter the 'Redirect URI' shown on Postman's Settings page.
+1. In 'Authorized Javascript origins' enter the 'Javascript Origins' (either in the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
+1. In 'Authorized Redirect URIs' enter the 'Redirect URI' given by Postman (either in the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
 1. Choose 'Create Client ID'.
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
-= How do I get a Microsoft Client ID? =
+= How do I get a Microsoft Client ID? (For Hotmail/Live/Outlook.com users only!) =
 1. Go to [Microsoft account Developer Center](https://account.live.com/developers/applications/index) and select 'Create application'.
 1. In the 'Application name' field enter 'Postman SMTP'. Select 'I accept.'
 1. Select 'API Settings' from under 'Settings'.
-1. In 'Redirect URL', enter the redirect URI shown on Postman's Settings page. Select Save.
+1. In 'Redirect URL', enter the redirect URI given by Postman (either in the wizard, or the manual configuration page). Select Save.
 1. Select 'App Settings' from under 'Settings'.
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
-= How do I get a Yahoo Client ID? =
+= How do I get a Yahoo Client ID? (For Yahoo Mail users only!) =
 1. Go to [Yahoo Developer Network](https://developer.apps.yahoo.com/projects) and select 'Create an App'.
 1. In the 'Application Name' field enter 'Postman SMTP'. For 'Application Type' choose 'Web-based'. In description write the name of your WordPress site.
 1. In 'Home Page URL', enter the 'Home Page URL' shown on Postman's Settings page.
 1. In 'Access Scopes' choose 'This app requires access to private user data.'
-1. In 'Callback Domain', enter the 'Callback Domain' shown on Postman's Settings page.
+1. In 'Callback Domain', enter the 'Callback Domain' given by Postman (either in the wizard, or the manual configuration page).
 1. Under 'Select APIs for private user data access' choose 'Mail Web Service'
 1. Under 'Mail Web Service' choose 'Read/Write'
 1. Click 'Create App'

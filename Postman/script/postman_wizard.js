@@ -9,7 +9,7 @@ jQuery(document).ready(
 								transitionEffect : "slideLeft",
 								stepsOrientation : "vertical",
 								autoFocus : true,
-								startIndex : wizard_start_step,
+								startIndex : parseInt(postman_setup_wizard.start_page),
 								labels : {
 									current : steps_current_step,
 									pagination : steps_pagination,

@@ -83,7 +83,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 	if (currentIndex === 0) {
 		ready = 0;
 		// this disables the finish button during the screen slide
-		jQuery('li + li').addClass('disabled');
+		jQuery('li').addClass('disabled');
 		jQuery('#postman_test_message_status').html(
 				postman_email_test.not_started);
 		jQuery('#postman_test_message_status').css('color', '');
@@ -99,9 +99,9 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	if (currentIndex === 0) {
 	} else if (currentIndex === 1) {
-		// this is the second place i disable the finish button but Steps
+		// this is the second place I disable the finish button but Steps
 		// re-enables it after the screen slides
-		jQuery('li + li').addClass('disabled');
+		jQuery('li').addClass('disabled');
 		var data = {
 			'action' : 'send_test_email',
 			'email' : jQuery('#input_test_email').val(),
@@ -116,7 +116,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	}
 	function handleResponse(response) {
 		ready = 1;
-		jQuery('li + li').removeClass('disabled');
+		jQuery('li').removeClass('disabled');
 		if (response.success) {
 			jQuery('#postman_test_message_status').html(
 					postman_email_test.success);
