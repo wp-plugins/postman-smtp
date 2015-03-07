@@ -162,14 +162,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Create the function to output the contents of our Dashboard Widget.
 		 */
 		public function example_dashboard_widget_function() {
-			$goToSettings = sprintf ( __ ( 'Go the <a href="%s">Settings</a>.', 'postman-smtp' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL );
+			$goToSettings = sprintf ( __ ( '[<a href="%s">Settings</a>]', 'postman-smtp' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL );
 			if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
 				printf ( '<p><span style="color:green">%1$s</span> %2$s</p>', __ ( 'Postman is configured', 'postman-smtp' ), sprintf ( _n ( 'and has delivered <span style="color:green">%d</span> email.', 'and has delivered <span style="color:green">%d</span> emails.', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
 				$currentTransport = PostmanTransportUtils::getCurrentTransport ();
 				$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
 				printf ( '<p>%s %s</p>', $deliveryDetails, $goToSettings );
 			} else {
-				printf ( '<p><span style="color:red">%s</span> %s</p>', __ ( 'Postman is not sending mail.', 'postman-smtp' ), $goToSettings );
+				printf ( '<p><span style="color:red">%s</span> %s</p>', __ ( 'Postman is <em>not</em> handling email delivery.', 'postman-smtp' ), $goToSettings );
 			}
 		}
 		
