@@ -139,6 +139,38 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// register action handlers
 			$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );
 			$this->registerAdminPostAction ( self::REQUEST_OAUTH2_GRANT_SLUG, 'handleOAuthPermissionRequestAction' );
+			
+			add_action ( 'wp_dashboard_setup', array (
+					$this,
+					'example_add_dashboard_widgets' 
+			) );
+		}
+		
+		/**
+		 * Add a widget to the dashboard.
+		 *
+		 * This function is hooked into the 'wp_dashboard_setup' action below.
+		 */
+		public function example_add_dashboard_widgets() {
+			wp_add_dashboard_widget ( 'example_dashboard_widget', _x ( 'Postman SMTP', 'Postman Dashboard  Widget Title', 'postman-smtp' ), array (
+					$this,
+					'example_dashboard_widget_function' 
+			) ); // Display function.
+		}
+		
+		/**
+		 * Create the function to output the contents of our Dashboard Widget.
+		 */
+		public function example_dashboard_widget_function() {
+			$goToSettings = sprintf ( __ ( 'Go the <a href="%s">Settings</a>.', 'postman-smtp' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL );
+			if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
+				printf ( '<p><span style="color:green">%1$s</span> %2$s</p>', __ ( 'Postman is configured', 'postman-smtp' ), sprintf ( _n ( 'and has delivered <span style="color:green">%d</span> email.', 'and has delivered <span style="color:green">%d</span> emails.', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
+				$currentTransport = PostmanTransportUtils::getCurrentTransport ();
+				$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
+				printf ( '<p>%s %s</p>', $deliveryDetails, $goToSettings );
+			} else {
+				printf ( '<p><span style="color:red">%s</span> %s</p>', __ ( 'Postman is not sending mail.', 'postman-smtp' ), $goToSettings );
+			}
 		}
 		
 		/**

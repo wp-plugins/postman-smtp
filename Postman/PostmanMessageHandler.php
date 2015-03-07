@@ -25,7 +25,6 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 			assert ( isset ( $options ) );
 			assert ( isset ( $authToken ) );
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			$this->logger->debug ( 'Construct' );
 			$this->options = $options;
 			$this->authToken = $authToken;
 			

@@ -317,7 +317,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 					printf ( '%s</span></p>', sprintf ( __ ( 'Please considering leaving a <a href="%s">review of Postman SMTP</a> to help<br/> spread the word about the new way to send email from WordPress! :D', 'postman-smtp' ), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp?filter=5' ) );
 				}
 			} else {
-				printf ( '<p><span style="color:red; padding:2px 5px; font-size:1.1em">%s</span></p>', __ ( 'Status: Postman is not sending mail.', 'postman-smtp' ) );
+				printf ( '<p><span style="color:red; padding:2px 5px; font-size:1.1em">%s</span></p>', __ ( 'Postman is not sending mail.', 'postman-smtp' ) );
 				if ($this->options->isNew ()) {
 					printf ( '<h3>%s</h3>', __ ( 'Thank-you for choosing Postman!', 'postman-smtp' ) );
 					/* translators: where %s is the URL of the Setup Wizard */
