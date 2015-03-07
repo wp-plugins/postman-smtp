@@ -109,9 +109,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
 			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
-			// import from other plugins
-			$this->importableConfiguration = new PostmanImportableConfiguration ();
-			
 			// Adds "Settings" link to the plugin action page
 			add_filter ( 'plugin_action_links_' . $this->basename, array (
 					$this,
@@ -129,12 +126,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 			new PostmanGetHostnameByEmailAjaxController ();
 			new PostmanGetPortsToTestViaAjax ();
 			new PostmanPortTestAjaxController ( $this->options );
-			new PostmanImportConfigurationAjaxController ( $this->options, $this->importableConfiguration );
+			new PostmanImportConfigurationAjaxController ( $this->options);
 			new PostmanGetDiagnosticsViaAjax ( $this->options, $this->authorizationToken );
 			new PostmanSendTestEmailAjaxController ( $this->options, $this->authorizationToken, $this->oauthScribe );
 			
 			// register content handlers
-			$viewController = new PostmanViewController ( $this->options, $this->authorizationToken, $this->oauthScribe, $this->importableConfiguration, $this );
+			$viewController = new PostmanViewController ( $this->options, $this->authorizationToken, $this->oauthScribe, $this );
 			
 			// register action handlers
 			$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );

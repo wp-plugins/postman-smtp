@@ -1,10 +1,6 @@
 jQuery(document)
 		.ready(
 				function() {
-					// add an event on the plugin selection
-					jQuery('input[name="input_plugin"]').click(function() {
-						getConfiguration();
-					});
 
 					jQuery(postman_input_sender_email).focus();
 					jQuery("#postman_wizard")
@@ -75,6 +71,10 @@ jQuery(document)
 									}
 								}
 							});
+					// add an event on the plugin selection
+					jQuery('input[name="input_plugin"]').click(function() {
+						getConfiguration();
+					});
 				});
 function handleStepChange(event, currentIndex, newIndex, form) {
 	// Always allow going backward even if

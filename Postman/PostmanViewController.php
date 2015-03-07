@@ -26,11 +26,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 * @param PostmanOAuthTokenInterface $authorizationToken        	
 		 * @param PostmanConfigTextHelper $oauthScribe        	
 		 */
-		function __construct(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe, PostmanImportableConfiguration $importableConfiguration, PostmanAdminController $adminController) {
+		function __construct(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe, PostmanAdminController $adminController) {
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->oauthScribe = $oauthScribe;
-			$this->importableConfiguration = $importableConfiguration;
 			$this->adminController = $adminController;
 			$this->registerAdminMenu ( $this, 'generateDefaultContent' );
 			$this->registerAdminMenu ( $this, 'addSetupWizardSubmenu' );
@@ -101,6 +100,14 @@ if (! class_exists ( 'PostmanViewController' )) {
 			) );
 		}
 		function enqueueSetupWizardResources() {
+			$this->importableConfiguration = new PostmanImportableConfiguration();
+			$startPage = 1;
+			if ($this->importableConfiguration->isImportAvailable ()) {
+				$startPage = 0;
+			}
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_setup_wizard', array (
+					'start_page' => $startPage 
+			) );
 			wp_enqueue_style ( 'jquery_steps_style' );
 			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_script ( 'postman_wizard_script' );
@@ -252,13 +259,6 @@ if (! class_exists ( 'PostmanViewController' )) {
 					'sending' => _x ( 'Sending...', 'Email Test Status', 'postman-smtp' ),
 					'success' => _x ( 'Success', 'Email Test Status', 'postman-smtp' ),
 					'failed' => _x ( 'Failed', 'Email Test Status', 'postman-smtp' ) 
-			) );
-			$startPage = 1;
-			if ($this->options->isNew () && $this->importableConfiguration->isImportAvailable ()) {
-				$startPage = 0;
-			}
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_setup_wizard', array (
-					'start_page' => $startPage 
 			) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_wizard_wait', __ ( 'Please wait for the port test to finish', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_wizard_no_ports', __ ( 'No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.', 'postman-smtp' ) );
@@ -487,9 +487,17 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// construct Wizard
 			print '<div class="wrap">';
 			
-			$this->displayTopNavigation ();
+			screen_icon ();
+			printf ( '<h2>%s</h2>', _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ) );
+			print '<div id="welcome-panel" class="welcome-panel">';
+			print '<div class="welcome-panel-content">';
+			print '<div class="welcome-panel-column-container">';
+			print '<div class="welcome-panel-column welcome-panel-last">';
+			printf ( '<h4>%s</h4>', _x ( 'Postman Setup Wizard', 'Page Title', 'postman-smtp' ) );
+			print '</div>';
+			printf ( '<p style="text-align:right">< <a id="back_to_menu_link" href="%s">%s</a></p>', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Back To Main Menu', 'postman-smtp' ) );
+			print '</div></div></div>';
 			
-			printf ( '<h3>%s</h3>', _x ( 'Postman Setup Wizard', 'Page Title', 'postman-smtp' ) );
 			print '<form id="postman_wizard" method="post" action="options.php">';
 			printf ( '<input type="hidden" id="input_reply_to" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
 			printf ( '<input type="hidden" id="input_connection_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::CONNECTION_TIMEOUT, $this->options->getConnectionTimeout () );
@@ -501,10 +509,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// Wizard Step 0
 			printf ( '<h5>%s</h5>', _x ( 'Import Configuration', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
-			printf ( '<legend>%s</legend>', _x ( 'Import conifguration from another plugin?', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<legend>%s</legend>', _x ( 'Import configuration from another plugin?', 'Wizard Step Title', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'If you had a working configuration with another Plugin, the Setup Wizard can begin with those settings.', 'postman-smtp' ) );
 			print '<table class="input_auth_type">';
-			printf ( '<tr><td><input type="radio" id="import_none" name="input_plugin" value="%s" checked="checked"/></td><td><label> %s</label></td></tr>', 'none', _x ( 'None', 'Plugin to Import Configuration from', 'postman-smtp' ) );
+			printf ( '<tr><td><input type="radio" id="import_none" name="input_plugin" value="%s" checked="checked"></input></td><td><label> %s</label></td></tr>', 'none', _x ( 'None', 'Plugin to Import Configuration from', 'postman-smtp' ) );
 			
 			foreach ( $this->importableConfiguration->getAvailableOptions () as $options ) {
 				printf ( '<tr><td><input type="radio" name="input_plugin" value="%s"/></td><td><label> %s</label></td></tr>', $options->getPluginSlug (), $options->getPluginName () );
@@ -604,6 +612,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '</section>';
 			print '</fieldset>';
 			print '</form>';
+			print '</div>';
 		}
 		
 		/**
@@ -656,6 +665,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '</fieldset>';
 			
 			print '</form>';
+			print '</div>';
 		}
 	}
 }

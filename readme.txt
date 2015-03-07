@@ -17,7 +17,7 @@ Postman is an intelligent, next-generation SMTP plugin created to address a [sho
 
 The big email services are [tightening security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), causing [connection problems](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) and vanishing messages. Most users turn to work-arounds like [app-specific passwords](https://support.google.com/mail/answer/1173270?hl=en) and [disabling the security](https://support.google.com/accounts/answer/6010255) designed to protect them.
 
-By upgrading to OAuth 2.0, Postman provides you with a rock-solid email engine because your email service can [pre-approve Postman](http://blog.varonis.com/introduction-to-oauth/) to send messages on your behalf. Other plugins seek permission every time they connect.
+By upgrading to OAuth 2.0 instead, Postman provides you with a rock-solid email engine because your email service can [pre-approve Postman](http://blog.varonis.com/introduction-to-oauth/) to send messages on your behalf. Other plugins seek permission every time they connect.
 
 [Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished since January of this year.
 
@@ -105,7 +105,7 @@ If you are willing to translate Postman into your language, [please let me know]
 1. Choose the Save Changes button.
 1. Send yourself a test email. 
 
-> Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment with PHP 5.3.3 and Apache 2.2.15 with Gmail, Hotmail and Yahoo Mail (US). Additional testing is performed with [Mailtrap](http://mailtrap.io/)
+> Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment with PHP 5.3.3 and Apache 2.2.15 with Gmail, Hotmail and Yahoo Mail (US).
 
 
 
