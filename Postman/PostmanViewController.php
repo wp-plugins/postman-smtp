@@ -519,8 +519,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<table class="input_auth_type">';
 			printf ( '<tr><td><input type="radio" id="import_none" name="input_plugin" value="%s" checked="checked"></input></td><td><label> %s</label></td></tr>', 'none', _x ( 'None', 'Plugin to Import Configuration from', 'postman-smtp' ) );
 			
-			foreach ( $this->importableConfiguration->getAvailableOptions () as $options ) {
-				printf ( '<tr><td><input type="radio" name="input_plugin" value="%s"/></td><td><label> %s</label></td></tr>', $options->getPluginSlug (), $options->getPluginName () );
+			if ($this->importableConfiguration->isImportAvailable ()) {
+				foreach ( $this->importableConfiguration->getAvailableOptions () as $options ) {
+					printf ( '<tr><td><input type="radio" name="input_plugin" value="%s"/></td><td><label> %s</label></td></tr>', $options->getPluginSlug (), $options->getPluginName () );
+				}
 			}
 			print '</table>';
 			print '</fieldset>';
@@ -663,19 +665,17 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '</fieldset>';
 			
 			// Step 3
-			printf ( '<h5>%s</h5>', __ ( 'Session Transcript', 'postman-smtp' ) );
-			print '<fieldset>';
-			printf ( '<legend>%s</legend>', __ ( 'Examine the SMTP Session Transcript if you need to.', 'postman-smtp' ) );
-			printf ( '<p>%s', __ ( 'This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your password in encoded form.', 'postman-smtp' ) );
-			print '<section>';
 			if (PostmanTransportUtils::getCurrentTransport ()->isTranscriptSupported ()) {
+				printf ( '<h5>%s</h5>', __ ( 'Session Transcript', 'postman-smtp' ) );
+				print '<fieldset>';
+				printf ( '<legend>%s</legend>', __ ( 'Examine the SMTP Session Transcript if you need to.', 'postman-smtp' ) );
+				printf ( '<p>%s', __ ( 'This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your password in encoded form.', 'postman-smtp' ) );
+				print '<section>';
 				printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );
 				print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="8"></textarea>';
-			} else {
-				printf ( '<p>No SMTP Session Transcript is available with the %s tarnsport', PostmanTransportUtils::getCurrentTransport ()->getName () );
+				print '</section>';
+				print '</fieldset>';
 			}
-			print '</section>';
-			print '</fieldset>';
 			
 			print '</form>';
 			print '</div>';

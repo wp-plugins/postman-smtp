@@ -256,9 +256,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-
+= 1.5.4 - 2015-03-08 =
 * Added a Dashboard Widget to display Postman status
-* Moved other plugin configuration import to the Setup Wizard
+* Moved the SMTP transcript to it's own step in the Send Email Test because it didn't fit
+* Moved 3rd-party plugin import to the Setup Wizard
 
 = 1.5.4 - 2015-03-05 =
 * Added the Http User Agent string to the diagnostics
