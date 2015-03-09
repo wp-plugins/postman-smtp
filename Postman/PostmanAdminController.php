@@ -161,7 +161,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function example_dashboard_widget_function() {
 			$goToSettings = sprintf ( '[<a href="%s">%s</a>]', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Settings', 'Dashboard Widget Settings Link label', 'postman-smtp' ) );
 			if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
-				printf ( '<p class="wp-menu-image dashicons-before dashicons-email"> <span style="color:green">%1$s</span> %2$s</p>', __ ( 'Postman is configured', 'postman-smtp' ), sprintf ( _n ( 'and has delivered <span style="color:green">%d</span> email.', 'and has delivered <span style="color:green">%d</span> emails.', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
+				printf ( '<p class="wp-menu-image dashicons-before dashicons-email"> %s</p>', sprintf ( _n ( '<span style="color:green">Postman is configured</span> and has delivered <span style="color:green">%d</span> email.', '<span style="color:green">Postman is configured</span> and has delivered <span style="color:green">%d</span> emails.', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
 				$currentTransport = PostmanTransportUtils::getCurrentTransport ();
 				$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
 				printf ( '<p>%s %s</p>', $deliveryDetails, $goToSettings );
