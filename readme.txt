@@ -34,8 +34,7 @@ By upgrading to OAuth 2.0 instead, Postman provides you with a rock-solid email 
 * Integrated TCP Port Tester for troubleshooting connectivity issues
 * Supports International alphabets, HTML Mail and MultiPart/MIME
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
-* SMTPS Support: SSL/TLS security
-* Migrating is easy! Import settings from Easy WP SMTP, Configure SMTP, Cimy Swift SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
+* Security Support: SMTPS/STARTTLS with SSL and TLS
 * Verified compatible with: Contact Form 7, Gravity Forms, Email Log
 * Available translations: English, French
 
@@ -256,6 +255,11 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 
 == Changelog ==
+
+= 1.5.4 - 2015-03-08 =
+* Added a Dashboard Widget to display Postman status
+* Moved the SMTP transcript to it's own step in the Send Email Test because it didn't fit
+* Moved 3rd-party plugin import to the Setup Wizard
 
 = 1.5.4 - 2015-03-05 =
 * Added the Http User Agent string to the diagnostics

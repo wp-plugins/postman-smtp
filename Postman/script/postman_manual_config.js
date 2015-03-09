@@ -7,11 +7,6 @@ jQuery(document).ready(function() {
 	reloadOauthSection();
 	switchBetweenPasswordAndOAuth();
 
-	// add an event on the plugin drop-down
-	jQuery('input[name="input_plugin"]').click(function() {
-		getConfiguration();
-	});
-
 	// add an event on the transport input field
 	// when the user changes the transport, determine whether
 	// to show or hide the SMTP Settings
@@ -91,42 +86,3 @@ function switchBetweenPasswordAndOAuth() {
 	}
 }
 
-/**
- * Handles population of the configuration based on
- * the options set in a 3rd-party SMTP plugin
- */
-function getConfiguration() {
-	var plugin = jQuery('input[name="input_plugin"]' + ':checked').val();
-	if (plugin != '') {
-		var data = {
-			'action' : 'import_configuration',
-			'plugin' : plugin
-		};
-		jQuery.post(ajaxurl, data, function(response) {
-			if (response.success) {
-				jQuery('select#input_transport_type').val('smtp');
-				jQuery(postman_input_sender_email).val(response.sender_email);
-				jQuery(postman_input_sender_name).val(response.sender_name);
-				jQuery(postman_hostname_element_name).val(response.hostname);
-				jQuery(postman_port_element_name).val(response.port);
-				jQuery(postman_input_auth_type).val(response.auth_type);
-				jQuery('#input_enc_type').val(response.enc_type);
-				jQuery(postman_input_basic_username).val(
-						response.basic_auth_username);
-				jQuery(postman_input_basic_password).val(
-						response.basic_auth_password);
-				switchBetweenPasswordAndOAuth();
-			}
-		});
-	} else {
-		jQuery(postman_input_sender_email).val('');
-		jQuery(postman_input_sender_name).val('');
-		jQuery(postman_input_basic_username).val('');
-		jQuery(postman_input_basic_password).val('');
-		jQuery(postman_hostname_element_name).val('');
-		jQuery(postman_port_element_name).val('');
-		jQuery(postman_input_auth_type).val('none');
-		jQuery(postman_enc_for_password_el).val('none');
-		switchBetweenPasswordAndOAuth();
-	}
-}

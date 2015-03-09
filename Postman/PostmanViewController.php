@@ -26,11 +26,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 * @param PostmanOAuthTokenInterface $authorizationToken        	
 		 * @param PostmanConfigTextHelper $oauthScribe        	
 		 */
-		function __construct(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe, $importableConfiguration, PostmanAdminController $adminController) {
+		function __construct(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe, PostmanAdminController $adminController) {
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->oauthScribe = $oauthScribe;
-			$this->importableConfiguration = $importableConfiguration;
 			$this->adminController = $adminController;
 			$this->registerAdminMenu ( $this, 'generateDefaultContent' );
 			$this->registerAdminMenu ( $this, 'addSetupWizardSubmenu' );
@@ -101,6 +100,14 @@ if (! class_exists ( 'PostmanViewController' )) {
 			) );
 		}
 		function enqueueSetupWizardResources() {
+			$this->importableConfiguration = new PostmanImportableConfiguration ();
+			$startPage = 1;
+			if ($this->importableConfiguration->isImportAvailable ()) {
+				$startPage = 0;
+			}
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_setup_wizard', array (
+					'start_page' => $startPage 
+			) );
 			wp_enqueue_style ( 'jquery_steps_style' );
 			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_script ( 'postman_wizard_script' );
@@ -142,6 +149,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		function enqueueEmailTestResources() {
 			wp_enqueue_style ( 'jquery_steps_style' );
 			wp_enqueue_style ( self::POSTMAN_STYLE );
+			wp_enqueue_style ( 'postman_send_test_email' );
 			wp_enqueue_script ( 'postman_test_email_wizard_script' );
 		}
 		
@@ -204,6 +212,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		public function initializeAdminPage() {
 			// register the stylesheet and javascript external resources
 			wp_register_style ( self::POSTMAN_STYLE, plugins_url ( 'style/postman.css', __FILE__ ), null, POSTMAN_PLUGIN_VERSION );
+			wp_register_style ( 'postman_send_test_email', plugins_url ( 'style/postman_send_test_email.css', __FILE__ ), self::POSTMAN_STYLE, POSTMAN_PLUGIN_VERSION );
 			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery.steps.css', __FILE__ ), self::POSTMAN_STYLE, '1.1.0' );
 			
 			wp_register_script ( self::POSTMAN_SCRIPT, plugins_url ( 'script/postman.js', __FILE__ ), array (
@@ -308,24 +317,33 @@ if (! class_exists ( 'PostmanViewController' )) {
 					printf ( '%s</span></p>', sprintf ( __ ( 'Please considering leaving a <a href="%s">review of Postman SMTP</a> to help<br/> spread the word about the new way to send email from WordPress! :D', 'postman-smtp' ), 'https://wordpress.org/support/view/plugin-reviews/postman-smtp?filter=5' ) );
 				}
 			} else {
-				printf ( '<p><span style="color:red; padding:2px 5px; font-size:1.1em">%s</span></p>', __ ( 'Status: Postman is not sending mail.', 'postman-smtp' ) );
+				printf ( '<p><span style="color:red; padding:2px 5px; font-size:1.1em">%s</span></p>', __ ( 'Postman is not sending mail.', 'postman-smtp' ) );
 				if ($this->options->isNew ()) {
 					printf ( '<h3>%s</h3>', __ ( 'Thank-you for choosing Postman!', 'postman-smtp' ) );
 					/* translators: where %s is the URL of the Setup Wizard */
 					printf ( '<p><span>%s</span></p>', sprintf ( __ ( 'Let\'s get started! All users are strongly encouraged to <a href="%s">run the Setup Wizard</a>.', 'postman-smtp' ), $this->getPageUrl ( self::CONFIGURATION_WIZARD_SLUG ) ) );
-					if ($this->importableConfiguration->isImportAvailable ()) {
-						/* translators: where %s is the URL of the Manual Configuration */
-						printf ( '<p><span>%s</span></p>', sprintf ( __ ( 'If you wish, Postman can <a href="%s">import your SMTP configuration</a> from another plugin. You can run the Wizard later if you need to.', 'postman-smtp' ), $this->getPageUrl ( self::CONFIGURATION_SLUG ) ) );
-					}
 				}
 			}
+		}
+		private function outputChildPageHeader($title) {
+			printf ( '<h2>%s</h2>', _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ) );
+			print '<div id="welcome-panel" class="welcome-panel">';
+			print '<div class="welcome-panel-content">';
+			print '<div class="welcome-panel-column-container">';
+			print '<div class="welcome-panel-column welcome-panel-last">';
+			printf ( '<h4>%s</h4>', $title );
+			print '</div>';
+			printf ( '<p style="text-align:right;margin-top:25px">< <a id="back_to_menu_link" href="%s">%s</a></p>', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Back To Main Menu', 'Return to main menu link', 'postman-smtp' ) );
+			print '</div></div></div>';
 		}
 		
 		/**
 		 */
 		public function outputManualConfigurationContent() {
 			print '<div class="wrap">';
-			$this->displayTopNavigation ();
+			
+			$this->outputChildPageHeader ( _x ( 'Postman Configuration', 'Page Title', 'postman-smtp' ) );
+			
 			print '<form method="post" action="options.php">';
 			// This prints out all hidden setting fields
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
@@ -355,10 +373,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 */
 		public function outputPurgeDataContent() {
 			print '<div class="wrap">';
-			$this->displayTopNavigation ();
+			$this->outputChildPageHeader ( _x ( 'Delete plugin settings', 'Page Title', 'postman-smtp' ) );
 			print '<form method="POST" action="' . get_admin_url () . 'admin-post.php">';
 			printf ( '<input type="hidden" name="action" value="%s" />', PostmanAdminController::PURGE_DATA_SLUG );
-			do_settings_sections ( 'PURGE_DATA' );
+			printf ( '<p><span>%s</span></p><p><span>%s</span></p>', __ ( 'This will purge all of Postman\'s settings, including SMTP server info, username/password and OAuth Credentials.', 'postman-smtp' ), __ ( 'Are you sure?', 'postman-smtp' ) );
 			submit_button ( _x ( 'Delete All Data', 'Button Label', 'postman-smtp' ), 'delete', 'submit', true, 'style="background-color:red;color:white"' );
 			print '</form>';
 			print '</div>';
@@ -387,8 +405,9 @@ if (! class_exists ( 'PostmanViewController' )) {
 					) 
 			);
 			print '<div class="wrap">';
-			$this->displayTopNavigation ();
-			printf ( '<h3>%s</h3>', _x ( 'Connectivity Test', 'Page Title', 'postman-smtp' ) );
+			
+			$this->outputChildPageHeader ( _x ( 'Connectivity Test', 'Page Title', 'postman-smtp' ) );
+			
 			print '<p>';
 			print __ ( 'This test determines which ports are open for Postman to use.', 'postman-smtp' );
 			print ' ';
@@ -423,13 +442,13 @@ if (! class_exists ( 'PostmanViewController' )) {
 		public function outputDiagnosticsContent() {
 			// test features
 			print '<div class="wrap">';
-			$this->displayTopNavigation ();
-			printf ( '<h3>%s</h3>', _x ( 'Troubleshooting', 'Page Title', 'postman-smtp' ) );
+			
+			$this->outputChildPageHeader ( _x ( 'Tips and Diagnostic Info', 'Page Title', 'postman-smtp' ) );
+			
 			printf ( '<h4>%s</h4>', __ ( 'Are you having issues with Postman?', 'postman-smtp' ) );
 			/* translators: where %1$s and %2$s are the URLs to the Troubleshooting and Support Forums on WordPress.org */
 			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Pease check the <a href="%1$s">troubleshooting and error messages</a> page and the <a href="%2$s">support forum</a>.</br>If you write for help, please include the following diagnostic information:', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-smtp/other_notes/', 'https://wordpress.org/support/plugin/postman-smtp' ) );
-			printf ( '<h3>%s</h3>', _x ( 'Diagnostic Information', 'Page Title', 'postman-smtp' ) );
-			print '</br>';
+			printf ( '<h4>%s</h4>', _x ( 'Diagnostic Information', 'Page Title', 'postman-smtp' ) );
 			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="10">%s</textarea>', _x ( 'Loading ...', 'Wizard Label', 'postman-smtp' ) );
 			print '</div>';
 		}
@@ -482,9 +501,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// construct Wizard
 			print '<div class="wrap">';
 			
-			$this->displayTopNavigation ();
+			$this->outputChildPageHeader ( _x ( 'Postman Setup Wizard', 'Page Title', 'postman-smtp' ) );
 			
-			printf ( '<h3>%s</h3>', _x ( 'Postman Setup Wizard', 'Page Title', 'postman-smtp' ) );
 			print '<form id="postman_wizard" method="post" action="options.php">';
 			printf ( '<input type="hidden" id="input_reply_to" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
 			printf ( '<input type="hidden" id="input_connection_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::CONNECTION_TIMEOUT, $this->options->getConnectionTimeout () );
@@ -493,11 +511,27 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE, $this->options->getTransportType () );
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
 			
+			// Wizard Step 0
+			printf ( '<h5>%s</h5>', _x ( 'Import Configuration', 'Wizard Step Title', 'postman-smtp' ) );
+			print '<fieldset>';
+			printf ( '<legend>%s</legend>', _x ( 'Import configuration from another plugin?', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'If you had a working configuration with another Plugin, the Setup Wizard can begin with those settings.', 'postman-smtp' ) );
+			print '<table class="input_auth_type">';
+			printf ( '<tr><td><input type="radio" id="import_none" name="input_plugin" value="%s" checked="checked"></input></td><td><label> %s</label></td></tr>', 'none', _x ( 'None', 'Plugin to Import Configuration from', 'postman-smtp' ) );
+			
+			if ($this->importableConfiguration->isImportAvailable ()) {
+				foreach ( $this->importableConfiguration->getAvailableOptions () as $options ) {
+					printf ( '<tr><td><input type="radio" name="input_plugin" value="%s"/></td><td><label> %s</label></td></tr>', $options->getPluginSlug (), $options->getPluginName () );
+				}
+			}
+			print '</table>';
+			print '</fieldset>';
+			
 			// Wizard Step 1
 			printf ( '<h5>%s</h5>', _x ( 'Sender Details', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'Who is the mail coming from?', 'Wizard Step Title', 'postman-smtp' ) );
-			printf ( '<p>%s</p>', __ ( 'Let\'s begin! Please enter the email address and name you\'d like to send mail from.', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'Please enter the email address and name you\'d like to send mail from.', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'Please note that to combat Spam, many email services will <em>not</em> let you send from an e-mail address other than your own.', 'postman-smtp' ) );
 			printf ( '<label for="postman_options[sender_email]">%s</label>', _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->adminController->sender_email_callback ();
@@ -508,7 +542,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// Wizard Step 2
 			printf ( '<h5>%s</h5>', _x ( 'SMTP Server Hostname', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
-			printf ( '<legend>%s</legend>', _x ( 'Who will relay the mail?', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<legend>%s</legend>', _x ( 'Which host will relay the mail?', 'Wizard Step Title', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'This is the Outgoing Mail Server, also known as a Mail Submission Agent (MSA), that Postman will use to deliver your mail. If possible, Postman will try to determine this hostname based on the e-mail address.', 'postman-smtp' ) );
 			printf ( '<label for="hostname">%s</label>', _x ( 'SMTP Server Hostname', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->adminController->hostname_callback ();
@@ -531,7 +565,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// Wizard Step 4
 			printf ( '<h5>%s</h5>', _x ( 'Authentication', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
-			printf ( '<legend>%s</legend>', _x ( 'Authentication', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<legend>%s</legend>', _x ( 'How will you prove your identity to the MSA?', 'Wizard Step Title', 'postman-smtp' ) );
 			
 			print '<section class="wizard-auth-oauth2">';
 			print '<p id="wizard_oauth2_help"></p>';
@@ -585,15 +619,16 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '</section>';
 			print '</fieldset>';
 			print '</form>';
+			print '</div>';
 		}
 		
 		/**
 		 */
 		public function outputTestEmailWizardContent() {
 			print '<div class="wrap">';
-			$this->displayTopNavigation ();
 			
-			printf ( '<h3>%s</h3>', _x ( 'Send a Test Email', 'Page Title', 'postman-smtp' ) );
+			$this->outputChildPageHeader ( _x ( 'Send a Test Email', 'Page Title', 'postman-smtp' ) );
+			
 			printf ( '<form id="postman_test_email_wizard" method="post" action="%s">', POSTMAN_HOME_PAGE_ABSOLUTE_URL );
 			
 			// Step 1
@@ -618,13 +653,24 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<section>';
 			printf ( '<p><label>%s</label></p>', __ ( 'Status Message', 'postman-smtp' ) );
 			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="65" rows="2"></textarea>';
-			if (PostmanTransportUtils::getCurrentTransport ()->isTranscriptSupported ()) {
-				printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );
-				print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="10"></textarea>';
-			}
 			print '</section>';
 			print '</fieldset>';
+			
+			// Step 3
+			if (PostmanTransportUtils::getCurrentTransport ()->isTranscriptSupported ()) {
+				printf ( '<h5>%s</h5>', __ ( 'Session Transcript', 'postman-smtp' ) );
+				print '<fieldset>';
+				printf ( '<legend>%s</legend>', __ ( 'Examine the SMTP Session Transcript if you need to.', 'postman-smtp' ) );
+				printf ( '<p>%s', __ ( 'This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your password in encoded form.', 'postman-smtp' ) );
+				print '<section>';
+				printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );
+				print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="8"></textarea>';
+				print '</section>';
+				print '</fieldset>';
+			}
+			
 			print '</form>';
+			print '</div>';
 		}
 	}
 }

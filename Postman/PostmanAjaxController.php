@@ -201,16 +201,14 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 if (! class_exists ( 'PostmanImportConfigurationAjaxController' )) {
 	class PostmanImportConfigurationAjaxController extends PostmanAbstractAjaxHandler {
 		private $options;
-		private $importableConfiguration;
 		/**
 		 * Constructor
 		 *
 		 * @param PostmanOptionsInterface $options        	
 		 */
-		function __construct(PostmanOptionsInterface $options, $importableConfiguration) {
+		function __construct(PostmanOptionsInterface $options) {
 			parent::__construct ();
 			$this->options = $options;
-			$this->importableConfiguration = $importableConfiguration;
 			$this->registerAjaxHandler ( 'import_configuration', $this, 'getConfigurationFromExternalPluginViaAjax' );
 		}
 		
@@ -219,9 +217,10 @@ if (! class_exists ( 'PostmanImportConfigurationAjaxController' )) {
 		 * and pushes them into the Postman configuration screen.
 		 */
 		function getConfigurationFromExternalPluginViaAjax() {
+			$importableConfiguration = new PostmanImportableConfiguration ();
 			$plugin = $this->getRequestParameter ( 'plugin' );
 			$this->logger->debug ( 'Looking for config=' . $plugin );
-			foreach ( $this->importableConfiguration->getAvailableOptions () as $this->options ) {
+			foreach ( $importableConfiguration->getAvailableOptions () as $this->options ) {
 				if ($this->options->getPluginSlug () == $plugin) {
 					$this->logger->debug ( 'Sending configuration response' );
 					$response = array (
