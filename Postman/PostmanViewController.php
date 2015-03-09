@@ -100,7 +100,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			) );
 		}
 		function enqueueSetupWizardResources() {
-			$this->importableConfiguration = new PostmanImportableConfiguration();
+			$this->importableConfiguration = new PostmanImportableConfiguration ();
 			$startPage = 1;
 			if ($this->importableConfiguration->isImportAvailable ()) {
 				$startPage = 0;
@@ -325,12 +325,25 @@ if (! class_exists ( 'PostmanViewController' )) {
 				}
 			}
 		}
+		private function outputChildPageHeader($title) {
+			printf ( '<h2>%s</h2>', _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ) );
+			print '<div id="welcome-panel" class="welcome-panel">';
+			print '<div class="welcome-panel-content">';
+			print '<div class="welcome-panel-column-container">';
+			print '<div class="welcome-panel-column welcome-panel-last">';
+			printf ( '<h4>%s</h4>', $title );
+			print '</div>';
+			printf ( '<p style="text-align:right;margin-top:25px">< <a id="back_to_menu_link" href="%s">%s</a></p>', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Back To Main Menu', 'postman-smtp' ) );
+			print '</div></div></div>';
+		}
 		
 		/**
 		 */
 		public function outputManualConfigurationContent() {
 			print '<div class="wrap">';
-			$this->displayTopNavigation ();
+			
+			$this->outputChildPageHeader ( _x ( 'Postman Configuration', 'Page Title', 'postman-smtp' ) );
+			
 			print '<form method="post" action="options.php">';
 			// This prints out all hidden setting fields
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
@@ -360,10 +373,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 */
 		public function outputPurgeDataContent() {
 			print '<div class="wrap">';
-			$this->displayTopNavigation ();
+			$this->outputChildPageHeader ( _x ( 'Delete plugin settings', 'Page Title', 'postman-smtp' ) );
 			print '<form method="POST" action="' . get_admin_url () . 'admin-post.php">';
 			printf ( '<input type="hidden" name="action" value="%s" />', PostmanAdminController::PURGE_DATA_SLUG );
-			do_settings_sections ( 'PURGE_DATA' );
+			printf ( '<p><span>%s</span></p><p><span>%s</span></p>', __ ( 'This will purge all of Postman\'s settings, including SMTP server info, username/password and OAuth Credentials.', 'postman-smtp' ), __ ( 'Are you sure?', 'postman-smtp' ) );
 			submit_button ( _x ( 'Delete All Data', 'Button Label', 'postman-smtp' ), 'delete', 'submit', true, 'style="background-color:red;color:white"' );
 			print '</form>';
 			print '</div>';
@@ -392,8 +405,9 @@ if (! class_exists ( 'PostmanViewController' )) {
 					) 
 			);
 			print '<div class="wrap">';
-			$this->displayTopNavigation ();
-			printf ( '<h3>%s</h3>', _x ( 'Connectivity Test', 'Page Title', 'postman-smtp' ) );
+			
+			$this->outputChildPageHeader ( _x ( 'Connectivity Test', 'Page Title', 'postman-smtp' ) );
+			
 			print '<p>';
 			print __ ( 'This test determines which ports are open for Postman to use.', 'postman-smtp' );
 			print ' ';
@@ -428,13 +442,13 @@ if (! class_exists ( 'PostmanViewController' )) {
 		public function outputDiagnosticsContent() {
 			// test features
 			print '<div class="wrap">';
-			$this->displayTopNavigation ();
-			printf ( '<h3>%s</h3>', _x ( 'Troubleshooting', 'Page Title', 'postman-smtp' ) );
+			
+			$this->outputChildPageHeader ( _x ( 'Tips and Diagnostic Info', 'Page Title', 'postman-smtp' ) );
+			
 			printf ( '<h4>%s</h4>', __ ( 'Are you having issues with Postman?', 'postman-smtp' ) );
 			/* translators: where %1$s and %2$s are the URLs to the Troubleshooting and Support Forums on WordPress.org */
 			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Pease check the <a href="%1$s">troubleshooting and error messages</a> page and the <a href="%2$s">support forum</a>.</br>If you write for help, please include the following diagnostic information:', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-smtp/other_notes/', 'https://wordpress.org/support/plugin/postman-smtp' ) );
-			printf ( '<h3>%s</h3>', _x ( 'Diagnostic Information', 'Page Title', 'postman-smtp' ) );
-			print '</br>';
+			printf ( '<h4>%s</h4>', _x ( 'Diagnostic Information', 'Page Title', 'postman-smtp' ) );
 			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="10">%s</textarea>', _x ( 'Loading ...', 'Wizard Label', 'postman-smtp' ) );
 			print '</div>';
 		}
@@ -487,16 +501,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// construct Wizard
 			print '<div class="wrap">';
 			
-			screen_icon ();
-			printf ( '<h2>%s</h2>', _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ) );
-			print '<div id="welcome-panel" class="welcome-panel">';
-			print '<div class="welcome-panel-content">';
-			print '<div class="welcome-panel-column-container">';
-			print '<div class="welcome-panel-column welcome-panel-last">';
-			printf ( '<h4>%s</h4>', _x ( 'Postman Setup Wizard', 'Page Title', 'postman-smtp' ) );
-			print '</div>';
-			printf ( '<p style="text-align:right">< <a id="back_to_menu_link" href="%s">%s</a></p>', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Back To Main Menu', 'postman-smtp' ) );
-			print '</div></div></div>';
+			$this->outputChildPageHeader ( _x ( 'Postman Setup Wizard', 'Page Title', 'postman-smtp' ) );
 			
 			print '<form id="postman_wizard" method="post" action="options.php">';
 			printf ( '<input type="hidden" id="input_reply_to" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
@@ -619,9 +624,17 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 */
 		public function outputTestEmailWizardContent() {
 			print '<div class="wrap">';
-			$this->displayTopNavigation ();
 			
-			printf ( '<h3>%s</h3>', _x ( 'Send a Test Email', 'Page Title', 'postman-smtp' ) );
+			printf ( '<h2>%s</h2>', _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ) );
+			print '<div id="welcome-panel" class="welcome-panel">';
+			print '<div class="welcome-panel-content">';
+			print '<div class="welcome-panel-column-container">';
+			print '<div class="welcome-panel-column welcome-panel-last">';
+			printf ( '<h4>%s</h4>', _x ( 'Send a Test Email', 'Page Title', 'postman-smtp' ) );
+			print '</div>';
+			printf ( '<p style="text-align:right;margin-top:25px">< <a id="back_to_menu_link" href="%s">%s</a></p>', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Back To Main Menu', 'postman-smtp' ) );
+			print '</div></div></div>';
+			
 			printf ( '<form id="postman_test_email_wizard" method="post" action="%s">', POSTMAN_HOME_PAGE_ABSOLUTE_URL );
 			
 			// Step 1
