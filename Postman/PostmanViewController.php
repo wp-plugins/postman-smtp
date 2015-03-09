@@ -333,7 +333,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<div class="welcome-panel-column welcome-panel-last">';
 			printf ( '<h4>%s</h4>', $title );
 			print '</div>';
-			printf ( '<p style="text-align:right;margin-top:25px">< <a id="back_to_menu_link" href="%s">%s</a></p>', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Back To Main Menu', 'postman-smtp' ) );
+			printf ( '<p style="text-align:right;margin-top:25px">< <a id="back_to_menu_link" href="%s">%s</a></p>', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Back To Main Menu', 'Return to main menu link', 'postman-smtp' ) );
 			print '</div></div></div>';
 		}
 		
@@ -627,15 +627,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		public function outputTestEmailWizardContent() {
 			print '<div class="wrap">';
 			
-			printf ( '<h2>%s</h2>', _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ) );
-			print '<div id="welcome-panel" class="welcome-panel">';
-			print '<div class="welcome-panel-content">';
-			print '<div class="welcome-panel-column-container">';
-			print '<div class="welcome-panel-column welcome-panel-last">';
-			printf ( '<h4>%s</h4>', _x ( 'Send a Test Email', 'Page Title', 'postman-smtp' ) );
-			print '</div>';
-			printf ( '<p style="text-align:right;margin-top:25px">< <a id="back_to_menu_link" href="%s">%s</a></p>', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Back To Main Menu', 'postman-smtp' ) );
-			print '</div></div></div>';
+			$this->outputChildPageHeader ( _x ( 'Send a Test Email', 'Page Title', 'postman-smtp' ) );
 			
 			printf ( '<form id="postman_test_email_wizard" method="post" action="%s">', POSTMAN_HOME_PAGE_ABSOLUTE_URL );
 			
