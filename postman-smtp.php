@@ -13,7 +13,6 @@
  */
 
 // ideas for future versions of the plugin
-// -- move plugin import stuffs to wizard so we can validate these settings
 // -- add WPMU functionality
 // -- add timeout setting for connectivity test
 // -- if a test message succeeds, capture the domain of the primary mx, smtp server hostname and port, auth type, encryption type into a database (with the user's permission)
