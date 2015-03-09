@@ -123,7 +123,9 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		 */
 		public function displayConfigurationRequiredWarning() {
 			/* translators: where %s is the URL to the Postman Settings page */
-			$message = sprintf ( __ ( 'Postman is <em>not</em> handling email delivery. <a href="%s">Configure</a> the plugin.', 'postman-smtp' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL );
+			$message = sprintf ( __ ( 'Postman is <em>not</em> handling email delivery.', 'postman-smtp' ) );
+			$message .= ' ';
+			$message .= sprintf ( __ ( '<a href="%s">Configure</a> the plugin.', 'postman-smtp' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL );
 			$this->printMessage ( $message, self::WARNING_CLASS );
 		}
 		/**

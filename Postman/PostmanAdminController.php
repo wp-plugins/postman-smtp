@@ -126,7 +126,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			new PostmanGetHostnameByEmailAjaxController ();
 			new PostmanGetPortsToTestViaAjax ();
 			new PostmanPortTestAjaxController ( $this->options );
-			new PostmanImportConfigurationAjaxController ( $this->options);
+			new PostmanImportConfigurationAjaxController ( $this->options );
 			new PostmanGetDiagnosticsViaAjax ( $this->options, $this->authorizationToken );
 			new PostmanSendTestEmailAjaxController ( $this->options, $this->authorizationToken, $this->oauthScribe );
 			
@@ -159,7 +159,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Create the function to output the contents of our Dashboard Widget.
 		 */
 		public function example_dashboard_widget_function() {
-			$goToSettings = sprintf ( __ ( '[<a href="%s">Settings</a>]', 'postman-smtp' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL );
+			$goToSettings = sprintf ( '[<a href="%s">%s</a>]', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Settings', 'Dashboard Widget Settings Link label', 'postman-smtp' ) );
 			if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
 				printf ( '<p class="wp-menu-image dashicons-before dashicons-email"> <span style="color:green">%1$s</span> %2$s</p>', __ ( 'Postman is configured', 'postman-smtp' ), sprintf ( _n ( 'and has delivered <span style="color:green">%d</span> email.', 'and has delivered <span style="color:green">%d</span> emails.', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
 				$currentTransport = PostmanTransportUtils::getCurrentTransport ();
