@@ -153,7 +153,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. In 'Authorized Javascript origins' enter the 'Javascript Origins' (either in the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
 1. In 'Authorized Redirect URIs' enter the 'Redirect URI' given by Postman (either in the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
 1. Choose 'Create Client ID'.
-1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
+1. Enter the Client ID and Client Secret displayed here into Postman's settings page [screenshot](https://ps.w.org/postman-smtp/assets/screenshot-7.png?rev=1108485).
 
 = How do I get a Microsoft Client ID? (For Hotmail/Live/Outlook.com users only!) =
 1. Go to [Microsoft account Developer Center](https://account.live.com/developers/applications/index) and select 'Create application'.
