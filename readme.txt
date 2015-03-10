@@ -267,7 +267,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Added the Http User Agent string to the diagnostics
 
 = 1.5.4 - 2015-03-04 - the Birthday Release =
-* Added support for the 'wp_mail' filter - this adds compatibility with plugins like email-log
+* Added support for the [wp_mail](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail) filter - this adds compatibility with plugins like email-log
 * Better diagnostics - includes a port check on the currently configured host:port
 * Fixed a bug where multiple error messages at once overwrite each other
 * Fixed a bug in Sanitizer for cases where WordPress calls sanitize twice in a row - [known WP bug](https://core.trac.wordpress.org/ticket/21989)
