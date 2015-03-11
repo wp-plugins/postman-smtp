@@ -109,6 +109,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
 			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
+			// import from other plugins
+			$this->importableConfiguration = new PostmanImportableConfiguration ();
+			
 			// Adds "Settings" link to the plugin action page
 			add_filter ( 'plugin_action_links_' . $this->basename, array (
 					$this,
@@ -126,48 +129,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			new PostmanGetHostnameByEmailAjaxController ();
 			new PostmanGetPortsToTestViaAjax ();
 			new PostmanPortTestAjaxController ( $this->options );
-			new PostmanImportConfigurationAjaxController ( $this->options );
+			new PostmanImportConfigurationAjaxController ( $this->options, $this->importableConfiguration );
 			new PostmanGetDiagnosticsViaAjax ( $this->options, $this->authorizationToken );
 			new PostmanSendTestEmailAjaxController ( $this->options, $this->authorizationToken, $this->oauthScribe );
 			
 			// register content handlers
-			$viewController = new PostmanViewController ( $this->options, $this->authorizationToken, $this->oauthScribe, $this );
+			$viewController = new PostmanViewController ( $this->options, $this->authorizationToken, $this->oauthScribe, $this->importableConfiguration, $this );
 			
 			// register action handlers
 			$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );
 			$this->registerAdminPostAction ( self::REQUEST_OAUTH2_GRANT_SLUG, 'handleOAuthPermissionRequestAction' );
-			
-			add_action ( 'wp_dashboard_setup', array (
-					$this,
-					'example_add_dashboard_widgets' 
-			) );
-		}
-		
-		/**
-		 * Add a widget to the dashboard.
-		 *
-		 * This function is hooked into the 'wp_dashboard_setup' action below.
-		 */
-		public function example_add_dashboard_widgets() {
-			wp_add_dashboard_widget ( 'example_dashboard_widget', _x ( 'Postman SMTP', 'Postman Dashboard  Widget Title', 'postman-smtp' ), array (
-					$this,
-					'example_dashboard_widget_function' 
-			) ); // Display function.
-		}
-		
-		/**
-		 * Create the function to output the contents of our Dashboard Widget.
-		 */
-		public function example_dashboard_widget_function() {
-			$goToSettings = sprintf ( '[<a href="%s">%s</a>]', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Settings', 'Dashboard Widget Settings Link label', 'postman-smtp' ) );
-			if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
-				printf ( '<p class="wp-menu-image dashicons-before dashicons-email"> %s</p>', sprintf ( _n ( '<span style="color:green">Postman is configured</span> and has delivered <span style="color:green">%d</span> email.', '<span style="color:green">Postman is configured</span> and has delivered <span style="color:green">%d</span> emails.', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
-				$currentTransport = PostmanTransportUtils::getCurrentTransport ();
-				$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
-				printf ( '<p>%s %s</p>', $deliveryDetails, $goToSettings );
-			} else {
-				printf ( '<p><span style="color:red">%s</span> %s</p>', __ ( 'Postman is <em>not</em> handling email delivery.', 'postman-smtp' ), $goToSettings );
-			}
 		}
 		
 		/**
@@ -288,6 +259,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this,
 					'printTransportSectionInfo' 
 			), 'transport_options' );
+			
+			if ($this->options->isNew () && $this->importableConfiguration->isImportAvailable ()) {
+				add_settings_field ( 'import_configuration', _x ( 'Import from Plugin', 'Configuration Input Field', 'postman-smtp' ), array (
+						$this,
+						'import_configuration_callback' 
+				), 'transport_options', 'transport_section' );
+			}
 			
 			add_settings_field ( PostmanOptions::TRANSPORT_TYPE, _x ( 'Transport', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
@@ -528,6 +506,17 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<td><input type="radio" id="input_enc_ssl" name="postman_options[enc_type]" class="input_encryption_type" value="%s"/></td><td> <label class="input_enc_type_ssl"> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_SSL, _x ( 'SSL', 'Encryption Type', 'postman-smtp' ) );
 			printf ( '<td><input type="radio" id="input_enc_tls" name="postman_options[enc_type]" class="input_encryption_type" value="%s"/></td><td> <label> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_TLS, _x ( 'TLS', 'Encryption Type', 'postman-smtp' ) );
 			print '</tr></table>';
+		}
+		
+		/**
+		 * Import configuration from another plugin
+		 */
+		public function import_configuration_callback() {
+			printf ( '<input type="radio" name="input_plugin" value="" checked="checked"/> No' );
+			$this->importableConfiguration->getAvailableOptions ();
+			foreach ( $this->importableConfiguration->getAvailableOptions () as $options ) {
+				printf ( '<input type="radio" name="input_plugin" class="input_plugin_radio" value="%s"/> %s', $options->getPluginSlug (), $options->getPluginName () );
+			}
 		}
 		
 		/**

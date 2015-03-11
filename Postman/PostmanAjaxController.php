@@ -91,10 +91,11 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			return 'undefined';
 		}
 		public function getDiagnostics() {
-			$this->addToDiagnostics ( sprintf ( 'PHP Version: %s %s', PHP_OS, PHP_VERSION ) );
-			$this->addToDiagnostics ( sprintf ( 'PHP OpenSSL support: %s', (extension_loaded ( 'openssl' ) ? 'Yes' : 'No') ) );
+			$this->addToDiagnostics ( sprintf ( 'PHP Version: %s', PHP_VERSION ) );
+			$this->addToDiagnostics ( sprintf ( 'PHP SSL Extension: %s', (extension_loaded ( 'openssl' ) ? 'Yes' : 'No') ) );
 			$this->addToDiagnostics ( sprintf ( 'PHP spl_autoload_register support: %s', (function_exists ( 'spl_autoload_register' ) ? 'Yes' : 'No') ) );
-			$this->addToDiagnostics ( sprintf ( 'PHP iconv support: %s', (function_exists ( 'iconv' ) ? 'Yes' : 'No') ) );
+			$this->addToDiagnostics ( sprintf ( 'PHP getmxrr support: %s', (function_exists ( 'getmxrr' ) ? 'Yes' : 'No') ) );
+			$this->addToDiagnostics ( sprintf ( 'PHP ArrayObject support: %s', (class_exists ( 'ArrayObject' ) ? 'Yes' : 'No') ) );
 			$this->addToDiagnostics ( sprintf ( 'PHP error: (display_errors|errorReporting): %s|%s', ini_get ( 'display_errors' ), ini_get ( 'error_reporting' ) ) );
 			$this->addToDiagnostics ( sprintf ( 'WordPress Version: %s', get_bloginfo ( 'version' ) ) );
 			$this->addToDiagnostics ( sprintf ( 'WordPress Debug (WP_DEBUG|WP_DEBUG_LOG|WP_DEBUG_DISPLAY): %s|%s|%s', WP_DEBUG, WP_DEBUG_LOG, WP_DEBUG_DISPLAY ) );
@@ -200,14 +201,16 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 if (! class_exists ( 'PostmanImportConfigurationAjaxController' )) {
 	class PostmanImportConfigurationAjaxController extends PostmanAbstractAjaxHandler {
 		private $options;
+		private $importableConfiguration;
 		/**
 		 * Constructor
 		 *
 		 * @param PostmanOptionsInterface $options        	
 		 */
-		function __construct(PostmanOptionsInterface $options) {
+		function __construct(PostmanOptionsInterface $options, $importableConfiguration) {
 			parent::__construct ();
 			$this->options = $options;
+			$this->importableConfiguration = $importableConfiguration;
 			$this->registerAjaxHandler ( 'import_configuration', $this, 'getConfigurationFromExternalPluginViaAjax' );
 		}
 		
@@ -216,10 +219,9 @@ if (! class_exists ( 'PostmanImportConfigurationAjaxController' )) {
 		 * and pushes them into the Postman configuration screen.
 		 */
 		function getConfigurationFromExternalPluginViaAjax() {
-			$importableConfiguration = new PostmanImportableConfiguration ();
 			$plugin = $this->getRequestParameter ( 'plugin' );
 			$this->logger->debug ( 'Looking for config=' . $plugin );
-			foreach ( $importableConfiguration->getAvailableOptions () as $this->options ) {
+			foreach ( $this->importableConfiguration->getAvailableOptions () as $this->options ) {
 				if ($this->options->getPluginSlug () == $plugin) {
 					$this->logger->debug ( 'Sending configuration response' );
 					$response = array (

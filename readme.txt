@@ -13,11 +13,11 @@ Gmail, Hotmail, and Yahoo Mail problems are solved with Postman, the first and o
 
 == Description ==
 
-Postman is an intelligent, next-generation SMTP plugin created to address a [shortcoming](https://wordpress.org/support/view/plugin-reviews/configure-smtp?filter=1) in every major SMTP plugin for WordPress: no [OAuth 2.0](https://wordpress.org/plugins/postman-smtp/faq/) - Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication.
+Postman is an intelligent, next-generation SMTP plugin created to address a [shortcoming in every major SMTP plugin](https://wordpress.org/support/view/plugin-reviews/configure-smtp?filter=1) for WordPress: no OAuth 2.0; Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication.
 
-Google has said if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)."
+The big email services are [tightening security](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html), causing [connection problems](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) and vanishing messages. Most users turn to work-arounds like [app-specific passwords](https://support.google.com/mail/answer/1173270?hl=en) and [disabling the security](https://support.google.com/accounts/answer/6010255) designed to protect them.
 
-Stop fighting password-authentication issues, lost emails, and passwords stored in your database where anyone can see them. By upgrading to OAuth 2.0, you get a rock-solid email engine because Postman will be [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send messages on your behalf, without rejection, and without the work-arounds.
+By upgrading to OAuth 2.0 instead, Postman provides you with a rock-solid email engine because your email service can [pre-approve Postman](http://blog.varonis.com/introduction-to-oauth/) to send messages on your behalf. Other plugins seek permission every time they connect.
 
 [Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished since January of this year.
 
@@ -34,7 +34,8 @@ Stop fighting password-authentication issues, lost emails, and passwords stored 
 * Integrated TCP Port Tester for troubleshooting connectivity issues
 * Supports International alphabets, HTML Mail and MultiPart/MIME
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
-* Security Support: SMTPS/STARTTLS with SSL and TLS
+* SMTPS Support: SSL/TLS security
+* Migrating is easy! Import settings from Easy WP SMTP, Configure SMTP, Cimy Swift SMTP, WP Mail Bank, WP Mail SMTP, WP SMTP
 * Verified compatible with: Contact Form 7, Gravity Forms, Email Log
 * Available translations: English, French
 
@@ -42,7 +43,7 @@ If you are willing to translate Postman into your language, [please let me know]
 
 = Requirements =
 * WordPress 3.9 (or later)
-* PHP 5.2 with SPL, iconv and OpenSSL
+* PHP 5.3 (or later) with OpenSSL; or PHP 5.2 with SPL and OpenSSL 
 * Connectivity to a SMTP server with authentication credentials
 * Optional: a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
 
@@ -136,8 +137,6 @@ There are many reasons why OAuth 2.0 is better than any password-based mechanism
 = How can I get my email to show up with a different From: address? =
 Google supports custom domains with the paid services Google Apps for [Work](https://www.google.com/work/apps/business/products/gmail/)/[Government](https://www.google.com/work/apps/government/products.html#gmail) and the free services Google Apps for [Education](https://www.google.com/work/apps/education/products.html#gmail)/[Non-Profits](https://www.google.com/nonprofits/products/)/[Free Edition](https://support.google.com/a/answer/2855120?hl=en).
 
-Similarliy Hotmail supports custom domains through an [Office 365 subscription](https://products.office.com/en-us/business/compare-office-365-for-business-plans?legRedir=true&CorrelationId=7245e847-0e33-4edd-9b38-f89f92ebb39e) and Yahoo through their [Yahoo Business Email](https://smallbusiness.yahoo.com/email) plan.
-
 Otherwise, changing the sender address is not possible in OAuth 2.0 mode, and not recommended in Password (Plain, Login or CRAM-MD5) mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a Spam blacklist.
 
 Instead, consider setting the  **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
@@ -155,7 +154,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. In 'Authorized Javascript origins' enter the 'Javascript Origins' (either in the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
 1. In 'Authorized Redirect URIs' enter the 'Redirect URI' given by Postman (either in the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
 1. Choose 'Create Client ID'.
-1. Enter the Client ID and Client Secret displayed here into Postman's settings page [screenshot](https://ps.w.org/postman-smtp/assets/screenshot-7.png?rev=1108485).
+1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
 = How do I get a Microsoft Client ID? (For Hotmail/Live/Outlook.com users only!) =
 1. Go to [Microsoft account Developer Center](https://account.live.com/developers/applications/index) and select 'Create application'.
@@ -258,18 +257,11 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-* Added check for iconv library
-
-= 1.5.4 - 2015-03-08 =
-* Added a Dashboard Widget to display Postman status
-* Moved the SMTP transcript to it's own step in the Send Email Test because it didn't fit
-* Moved 3rd-party plugin import to the Setup Wizard
-
 = 1.5.4 - 2015-03-05 =
 * Added the Http User Agent string to the diagnostics
 
 = 1.5.4 - 2015-03-04 - the Birthday Release =
-* Added support for the [wp_mail](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail) filter - this adds compatibility with plugins like email-log
+* Added support for the 'wp_mail' filter - this adds compatibility with plugins like email-log
 * Better diagnostics - includes a port check on the currently configured host:port
 * Fixed a bug where multiple error messages at once overwrite each other
 * Fixed a bug in Sanitizer for cases where WordPress calls sanitize twice in a row - [known WP bug](https://core.trac.wordpress.org/ticket/21989)
@@ -306,6 +298,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Found an environment where calls to error_log were being displayed in the HTML even after display_errors was disabled. Therefore, disabled error_log calls by default. The log may be re-enabled in Advanced Settings
 * The Bad, Postman! screen was messing with the Port Test Ajax call when fsockopen generated an error and debug level is set to E_ALL in php.ini. Therefore added a switch in the configuration "Show Error Screen" that is off by default. When it is off, Port Test works perfect but errors generate a WSOD. When it is on, errors are displayed in the "Bad, Postman!" screen but Port Test fails.
 * I heard that some hosts, like WPEngine, do not allow writing to the Http Session. Well that's balls. I've modified the code to write to the database instead.
+* Postman is now tied with WP Mail Bank for 5-star reviews, but with 50x fewer downloads, and one of their 5-stars is from the authors themselves! :-D
 
 = 1.3.4 - 2015-02-11 =
 * 500 downloads and six 5-star ratings in only three weeks! Cool! 8-)
