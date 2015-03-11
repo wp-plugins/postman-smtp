@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email, mail, wp_mail, mailer, phpmailer, smtps, oauth, oauth2, gmail, google apps, hotmail, yahoo mail, windows live, outlook.com, outgoing mail, send mail, wp mail
 Requires at least: 3.9
 Tested up to: 4.1.1
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -258,14 +258,12 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-* Added check for iconv library
-
-= 1.5.4 - 2015-03-08 =
+= 1.5.5 - 2015-03-11 =
 * Added a Dashboard Widget to display Postman status
+* Added diagnostics check for iconv library
 * Moved the SMTP transcript to it's own step in the Send Email Test because it didn't fit
 * Moved 3rd-party plugin import to the Setup Wizard
-
-= 1.5.4 - 2015-03-05 =
+* Stop writing to error log if we can't find a language file
 * Added the Http User Agent string to the diagnostics
 
 = 1.5.4 - 2015-03-04 - the Birthday Release =
@@ -389,6 +387,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 1.5.5 =
+Added Dashboard status widget. Minor bugfixes.
 
 = 1.5.4 =
 My birthday release includes compatibility with email-log and other plugins that use the 'wp_mail' filter.
