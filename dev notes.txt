@@ -5,6 +5,12 @@ Visitor Pattern
 http://butunclebob.com/ArticleS.UncleBob.IuseVisitor
 
 
+WordPress MU
+------------
+http://codex.wordpress.org/Create_A_Network
+http://stackoverflow.com/questions/13960514/how-to-adapt-my-plugin-to-multisite/
+
+
 Wordpress
 ---------
 
