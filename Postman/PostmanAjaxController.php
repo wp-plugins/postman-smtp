@@ -91,11 +91,10 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			return 'undefined';
 		}
 		public function getDiagnostics() {
-			$this->addToDiagnostics ( sprintf ( 'PHP Version: %s', PHP_VERSION ) );
-			$this->addToDiagnostics ( sprintf ( 'PHP SSL Extension: %s', (extension_loaded ( 'openssl' ) ? 'Yes' : 'No') ) );
+			$this->addToDiagnostics ( sprintf ( 'PHP Version: %s %s', PHP_OS, PHP_VERSION ) );
+			$this->addToDiagnostics ( sprintf ( 'PHP OpenSSL support: %s', (extension_loaded ( 'openssl' ) ? 'Yes' : 'No') ) );
 			$this->addToDiagnostics ( sprintf ( 'PHP spl_autoload_register support: %s', (function_exists ( 'spl_autoload_register' ) ? 'Yes' : 'No') ) );
-			$this->addToDiagnostics ( sprintf ( 'PHP getmxrr support: %s', (function_exists ( 'getmxrr' ) ? 'Yes' : 'No') ) );
-			$this->addToDiagnostics ( sprintf ( 'PHP ArrayObject support: %s', (class_exists ( 'ArrayObject' ) ? 'Yes' : 'No') ) );
+			$this->addToDiagnostics ( sprintf ( 'PHP iconv support: %s', (function_exists ( 'iconv' ) ? 'Yes' : 'No') ) );
 			$this->addToDiagnostics ( sprintf ( 'PHP error: (display_errors|errorReporting): %s|%s', ini_get ( 'display_errors' ), ini_get ( 'error_reporting' ) ) );
 			$this->addToDiagnostics ( sprintf ( 'WordPress Version: %s', get_bloginfo ( 'version' ) ) );
 			$this->addToDiagnostics ( sprintf ( 'WordPress Debug (WP_DEBUG|WP_DEBUG_LOG|WP_DEBUG_DISPLAY): %s|%s|%s', WP_DEBUG, WP_DEBUG_LOG, WP_DEBUG_DISPLAY ) );
