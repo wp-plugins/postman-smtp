@@ -263,7 +263,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Added diagnostics check for iconv library
 * Moved the SMTP transcript to it's own step in the Send Email Test because it didn't fit
 * Moved 3rd-party plugin import to the Setup Wizard
-* Stop writing to error log if we can't find a language file
+* Stopped writing to error log if a language file can't be found
 * Added the Http User Agent string to the diagnostics
 
 = 1.5.4 - 2015-03-04 - the Birthday Release =
