@@ -13,24 +13,24 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
 /**
- * @see Zend_Validate_Abstract
+ * @see Postman_Zend_Validate_Abstract
  */
 require_once 'Zend/Validate/Abstract.php';
 
 /**
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Validate_Digits extends Zend_Validate_Abstract
+class Postman_Zend_Validate_Digits extends Postman_Zend_Validate_Abstract
 {
     const NOT_DIGITS   = 'notDigits';
     const STRING_EMPTY = 'digitsStringEmpty';
@@ -39,7 +39,7 @@ class Zend_Validate_Digits extends Zend_Validate_Abstract
     /**
      * Digits filter used for validation
      *
-     * @var Zend_Filter_Digits
+     * @var Postman_Zend_Filter_Digits
      */
     protected static $_filter = null;
 
@@ -55,7 +55,7 @@ class Zend_Validate_Digits extends Zend_Validate_Abstract
     );
 
     /**
-     * Defined by Zend_Validate_Interface
+     * Defined by Postman_Zend_Validate_Interface
      *
      * Returns true if and only if $value only contains digit characters
      *
@@ -78,7 +78,7 @@ class Zend_Validate_Digits extends Zend_Validate_Abstract
 
         if (null === self::$_filter) {
             require_once 'Zend/Filter/Digits.php';
-            self::$_filter = new Zend_Filter_Digits();
+            self::$_filter = new Postman_Zend_Filter_Digits();
         }
 
         if ($this->_value !== self::$_filter->filter($this->_value)) {

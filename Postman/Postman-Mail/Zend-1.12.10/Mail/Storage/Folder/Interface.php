@@ -13,7 +13,7 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Storage
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
@@ -23,18 +23,18 @@
 
 /**
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Storage
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface Zend_Mail_Storage_Folder_Interface
+interface Postman_Zend_Mail_Storage_Folder_Interface
 {
     /**
      * get root folder or given folder
      *
      * @param string $rootFolder get folder structure for given folder, else root
-     * @return Zend_Mail_Storage_Folder root or wanted folder
+     * @return Postman_Zend_Mail_Storage_Folder root or wanted folder
      */
     public function getFolders($rootFolder = null);
 
@@ -43,18 +43,18 @@ interface Zend_Mail_Storage_Folder_Interface
      *
      * folder must be selectable!
      *
-     * @param Zend_Mail_Storage_Folder|string $globalName global name of folder or instance for subfolder
+     * @param Postman_Zend_Mail_Storage_Folder|string $globalName global name of folder or instance for subfolder
      * @return null
-     * @throws Zend_Mail_Storage_Exception
+     * @throws Postman_Zend_Mail_Storage_Exception
      */
     public function selectFolder($globalName);
 
 
     /**
-     * get Zend_Mail_Storage_Folder instance for current folder
+     * get Postman_Zend_Mail_Storage_Folder instance for current folder
      *
-     * @return Zend_Mail_Storage_Folder instance of current folder
-     * @throws Zend_Mail_Storage_Exception
+     * @return Postman_Zend_Mail_Storage_Folder instance of current folder
+     * @throws Postman_Zend_Mail_Storage_Exception
      */
     public function getCurrentFolder();
 }

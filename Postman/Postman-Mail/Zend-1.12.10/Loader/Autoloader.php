@@ -13,29 +13,29 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Loader
+ * @package    Postman_Zend_Loader
  * @subpackage Autoloader
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @version    $Id$
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-/** Zend_Loader */
+/** Postman_Zend_Loader */
 require_once 'Zend/Loader.php';
 
 /**
  * Autoloader stack and namespace autoloader
  *
- * @uses       Zend_Loader_Autoloader
- * @package    Zend_Loader
+ * @uses       Postman_Zend_Loader_Autoloader
+ * @package    Postman_Zend_Loader
  * @subpackage Autoloader
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Loader_Autoloader
+class Postman_Zend_Loader_Autoloader
 {
     /**
-     * @var Zend_Loader_Autoloader Singleton instance
+     * @var Postman_Zend_Loader_Autoloader Singleton instance
      */
     protected static $_instance;
 
@@ -47,7 +47,7 @@ class Zend_Loader_Autoloader
     /**
      * @var array Default autoloader callback
      */
-    protected $_defaultAutoloader = array('Zend_Loader', 'loadClass');
+    protected $_defaultAutoloader = array('Postman_Zend_Loader', 'loadClass');
 
     /**
      * @var bool Whether or not to act as a fallback autoloader
@@ -63,7 +63,7 @@ class Zend_Loader_Autoloader
      * @var array Supported namespaces 'Zend' and 'ZendX' by default.
      */
     protected $_namespaces = array(
-        'Zend_'  => true,
+        'Postman_Zend_'  => true,
         'ZendX_' => true,
     );
 
@@ -85,7 +85,7 @@ class Zend_Loader_Autoloader
     /**
      * Retrieve singleton instance
      *
-     * @return Zend_Loader_Autoloader
+     * @return Postman_Zend_Loader_Autoloader
      */
     public static function getInstance()
     {
@@ -116,7 +116,7 @@ class Zend_Loader_Autoloader
         $self = self::getInstance();
 
         foreach ($self->getClassAutoloaders($class) as $autoloader) {
-            if ($autoloader instanceof Zend_Loader_Autoloader_Interface) {
+            if ($autoloader instanceof Postman_Zend_Loader_Autoloader_Interface) {
                 if ($autoloader->autoload($class)) {
                     return true;
                 }
@@ -143,7 +143,7 @@ class Zend_Loader_Autoloader
     public function setDefaultAutoloader($callback)
     {
         if (!is_callable($callback)) {
-            throw new Zend_Loader_Exception('Invalid callback specified for default autoloader');
+            throw new Postman_Zend_Loader_Exception('Invalid callback specified for default autoloader');
         }
 
         $this->_defaultAutoloader = $callback;
@@ -163,8 +163,8 @@ class Zend_Loader_Autoloader
     /**
      * Set several autoloader callbacks at once
      *
-     * @param  array $autoloaders Array of PHP callbacks (or Zend_Loader_Autoloader_Interface implementations) to act as autoloaders
-     * @return Zend_Loader_Autoloader
+     * @param  array $autoloaders Array of PHP callbacks (or Postman_Zend_Loader_Autoloader_Interface implementations) to act as autoloaders
+     * @return Postman_Zend_Loader_Autoloader
      */
     public function setAutoloaders(array $autoloaders)
     {
@@ -201,14 +201,14 @@ class Zend_Loader_Autoloader
      * Register a namespace to autoload
      *
      * @param  string|array $namespace
-     * @return Zend_Loader_Autoloader
+     * @return Postman_Zend_Loader_Autoloader
      */
     public function registerNamespace($namespace)
     {
         if (is_string($namespace)) {
             $namespace = (array) $namespace;
         } elseif (!is_array($namespace)) {
-            throw new Zend_Loader_Exception('Invalid namespace provided');
+            throw new Postman_Zend_Loader_Exception('Invalid namespace provided');
         }
 
         foreach ($namespace as $ns) {
@@ -223,14 +223,14 @@ class Zend_Loader_Autoloader
      * Unload a registered autoload namespace
      *
      * @param  string|array $namespace
-     * @return Zend_Loader_Autoloader
+     * @return Postman_Zend_Loader_Autoloader
      */
     public function unregisterNamespace($namespace)
     {
         if (is_string($namespace)) {
             $namespace = (array) $namespace;
         } elseif (!is_array($namespace)) {
-            throw new Zend_Loader_Exception('Invalid namespace provided');
+            throw new Postman_Zend_Loader_Exception('Invalid namespace provided');
         }
 
         foreach ($namespace as $ns) {
@@ -256,7 +256,7 @@ class Zend_Loader_Autoloader
         $path = $spec;
         if (is_array($spec)) {
             if (!isset($spec['path'])) {
-                throw new Zend_Loader_Exception('No path specified for ZF');
+                throw new Postman_Zend_Loader_Exception('No path specified for ZF');
             }
             $path = $spec['path'];
             if (isset($spec['version'])) {
@@ -281,7 +281,7 @@ class Zend_Loader_Autoloader
      * Get or set the value of the "suppress not found warnings" flag
      *
      * @param  null|bool $flag
-     * @return bool|Zend_Loader_Autoloader Returns boolean if no argument is passed, object instance otherwise
+     * @return bool|Postman_Zend_Loader_Autoloader Returns boolean if no argument is passed, object instance otherwise
      */
     public function suppressNotFoundWarnings($flag = null)
     {
@@ -296,7 +296,7 @@ class Zend_Loader_Autoloader
      * Indicate whether or not this autoloader should be a fallback autoloader
      *
      * @param  bool $flag
-     * @return Zend_Loader_Autoloader
+     * @return Postman_Zend_Loader_Autoloader
      */
     public function setFallbackAutoloader($flag)
     {
@@ -371,9 +371,9 @@ class Zend_Loader_Autoloader
     /**
      * Add an autoloader to the beginning of the stack
      *
-     * @param  object|array|string $callback PHP callback or Zend_Loader_Autoloader_Interface implementation
+     * @param  object|array|string $callback PHP callback or Postman_Zend_Loader_Autoloader_Interface implementation
      * @param  string|array $namespace Specific namespace(s) under which to register callback
-     * @return Zend_Loader_Autoloader
+     * @return Postman_Zend_Loader_Autoloader
      */
     public function unshiftAutoloader($callback, $namespace = '')
     {
@@ -394,9 +394,9 @@ class Zend_Loader_Autoloader
     /**
      * Append an autoloader to the autoloader stack
      *
-     * @param  object|array|string $callback PHP callback or Zend_Loader_Autoloader_Interface implementation
+     * @param  object|array|string $callback PHP callback or Postman_Zend_Loader_Autoloader_Interface implementation
      * @param  string|array $namespace Specific namespace(s) under which to register callback
-     * @return Zend_Loader_Autoloader
+     * @return Postman_Zend_Loader_Autoloader
      */
     public function pushAutoloader($callback, $namespace = '')
     {
@@ -417,9 +417,9 @@ class Zend_Loader_Autoloader
     /**
      * Remove an autoloader from the autoloader stack
      *
-     * @param  object|array|string $callback PHP callback or Zend_Loader_Autoloader_Interface implementation
+     * @param  object|array|string $callback PHP callback or Postman_Zend_Loader_Autoloader_Interface implementation
      * @param  null|string|array $namespace Specific namespace(s) from which to remove autoloader
-     * @return Zend_Loader_Autoloader
+     * @return Postman_Zend_Loader_Autoloader
      */
     public function removeAutoloader($callback, $namespace = null)
     {
@@ -479,7 +479,7 @@ class Zend_Loader_Autoloader
                 call_user_func($callback, $class);
             }
             return $class;
-        } catch (Zend_Exception $e) {
+        } catch (Postman_Zend_Exception $e) {
             return false;
         }
     }
@@ -489,7 +489,7 @@ class Zend_Loader_Autoloader
      *
      * @param  array $autoloaders
      * @param  string $namespace
-     * @return Zend_Loader_Autoloader
+     * @return Postman_Zend_Loader_Autoloader
      */
     protected function _setNamespaceAutoloaders(array $autoloaders, $namespace = '')
     {
@@ -515,7 +515,7 @@ class Zend_Loader_Autoloader
 
         $availableVersions = $this->_getAvailableVersions($path, $version);
         if (empty($availableVersions)) {
-            throw new Zend_Loader_Exception('No valid ZF installations discovered');
+            throw new Postman_Zend_Loader_Exception('No valid ZF installations discovered');
         }
 
         $matchedVersion = array_pop($availableVersions);
@@ -527,7 +527,7 @@ class Zend_Loader_Autoloader
      *
      * @param  string $version
      * @return string "latest", "major", "minor", or "specific"
-     * @throws Zend_Loader_Exception if version string contains too many dots
+     * @throws Postman_Zend_Loader_Exception if version string contains too many dots
      */
     protected function _getVersionType($version)
     {
@@ -544,7 +544,7 @@ class Zend_Loader_Autoloader
             return 'minor';
         }
         if (3 < $count) {
-            throw new Zend_Loader_Exception('Invalid version string provided');
+            throw new Postman_Zend_Loader_Exception('Invalid version string provided');
         }
         return 'specific';
     }
@@ -559,7 +559,7 @@ class Zend_Loader_Autoloader
     protected function _getAvailableVersions($path, $version)
     {
         if (!is_dir($path)) {
-            throw new Zend_Loader_Exception('Invalid ZF path provided');
+            throw new Postman_Zend_Loader_Exception('Invalid ZF path provided');
         }
 
         $path       = rtrim($path, '/');

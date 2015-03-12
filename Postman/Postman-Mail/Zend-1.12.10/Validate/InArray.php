@@ -13,24 +13,24 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
 /**
- * @see Zend_Validate_Abstract
+ * @see Postman_Zend_Validate_Abstract
  */
 require_once 'Zend/Validate/Abstract.php';
 
 /**
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Validate_InArray extends Zend_Validate_Abstract
+class Postman_Zend_Validate_InArray extends Postman_Zend_Validate_Abstract
 {
     const NOT_IN_ARRAY = 'notInArray';
 
@@ -65,16 +65,16 @@ class Zend_Validate_InArray extends Zend_Validate_Abstract
     /**
      * Sets validator options
      *
-     * @param array|Zend_Config $options Validator options
-     * @throws Zend_Validate_Exception
+     * @param array|Postman_Zend_Config $options Validator options
+     * @throws Postman_Zend_Validate_Exception
      */
     public function __construct($options)
     {
-        if ($options instanceof Zend_Config) {
+        if ($options instanceof Postman_Zend_Config) {
             $options = $options->toArray();
         } else if (!is_array($options)) {
             require_once 'Zend/Validate/Exception.php';
-            throw new Zend_Validate_Exception('Array expected as parameter');
+            throw new Postman_Zend_Validate_Exception('Array expected as parameter');
         } else {
             $count = func_num_args();
             $temp  = array();
@@ -117,7 +117,7 @@ class Zend_Validate_InArray extends Zend_Validate_Abstract
      * Sets the haystack option
      *
      * @param  mixed $haystack
-     * @return Zend_Validate_InArray Provides a fluent interface
+     * @return Postman_Zend_Validate_InArray Provides a fluent interface
      */
     public function setHaystack(array $haystack)
     {
@@ -139,7 +139,7 @@ class Zend_Validate_InArray extends Zend_Validate_Abstract
      * Sets the strict option
      *
      * @param  boolean $strict
-     * @return Zend_Validate_InArray Provides a fluent interface
+     * @return Postman_Zend_Validate_InArray Provides a fluent interface
      */
     public function setStrict($strict)
     {
@@ -161,7 +161,7 @@ class Zend_Validate_InArray extends Zend_Validate_Abstract
      * Sets the recursive option
      *
      * @param  boolean $recursive
-     * @return Zend_Validate_InArray Provides a fluent interface
+     * @return Postman_Zend_Validate_InArray Provides a fluent interface
      */
     public function setRecursive($recursive)
     {
@@ -170,7 +170,7 @@ class Zend_Validate_InArray extends Zend_Validate_Abstract
     }
 
     /**
-     * Defined by Zend_Validate_Interface
+     * Defined by Postman_Zend_Validate_Interface
      *
      * Returns true if and only if $value is contained in the haystack option. If the strict
      * option is true, then the type of $value is also checked.

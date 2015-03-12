@@ -661,7 +661,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 				printf ( '<h5>%s</h5>', __ ( 'Session Transcript', 'postman-smtp' ) );
 				print '<fieldset>';
 				printf ( '<legend>%s</legend>', __ ( 'Examine the SMTP Session Transcript if you need to.', 'postman-smtp' ) );
-				printf ( '<p>%s', __ ( 'This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your password in encoded form.', 'postman-smtp' ) );
+				printf ( '<p>%s', __ ( 'This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your shared secret (password) in encoded form.', 'postman-smtp' ) );
 				print '<section>';
 				printf ( '<p><label for="postman_test_message_transcript">%s</label></p>', __ ( 'SMTP Session Transcript', 'postman-smtp' ) );
 				print '<textarea readonly="readonly" id="postman_test_message_transcript" cols="65" rows="8"></textarea>';

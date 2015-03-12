@@ -13,24 +13,24 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
 /**
- * @see Zend_Validate_Interface
+ * @see Postman_Zend_Validate_Interface
  */
 // require_once 'Zend/Validate/Interface.php';
 
 /**
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
+abstract class Postman_Zend_Validate_Abstract implements Postman_Zend_Validate_Interface
 {
     /**
      * The value to be validated
@@ -77,13 +77,13 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
 
     /**
      * Translation object
-     * @var Zend_Translate
+     * @var Postman_Zend_Translate
      */
     protected $_translator;
 
     /**
      * Default translation object for all validate objects
-     * @var Zend_Translate
+     * @var Postman_Zend_Translate
      */
     protected static $_defaultTranslator;
 
@@ -135,8 +135,8 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
      *
      * @param  string $messageString
      * @param  string $messageKey     OPTIONAL
-     * @return Zend_Validate_Abstract Provides a fluent interface
-     * @throws Zend_Validate_Exception
+     * @return Postman_Zend_Validate_Abstract Provides a fluent interface
+     * @throws Postman_Zend_Validate_Exception
      */
     public function setMessage($messageString, $messageKey = null)
     {
@@ -150,7 +150,7 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
 
         if (!isset($this->_messageTemplates[$messageKey])) {
 //             require_once 'Zend/Validate/Exception.php';
-            throw new Zend_Validate_Exception("No message template exists for key '$messageKey'");
+            throw new Postman_Zend_Validate_Exception("No message template exists for key '$messageKey'");
         }
 
         $this->_messageTemplates[$messageKey] = $messageString;
@@ -162,7 +162,7 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
      * and the array values are the message template strings.
      *
      * @param  array $messages
-     * @return Zend_Validate_Abstract
+     * @return Postman_Zend_Validate_Abstract
      */
     public function setMessages(array $messages)
     {
@@ -178,7 +178,7 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
      *
      * @param  string $property
      * @return mixed
-     * @throws Zend_Validate_Exception
+     * @throws Postman_Zend_Validate_Exception
      */
     public function __get($property)
     {
@@ -189,10 +189,10 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
             return $this->{$this->_messageVariables[$property]};
         }
         /**
-         * @see Zend_Validate_Exception
+         * @see Postman_Zend_Validate_Exception
          */
 //         require_once 'Zend/Validate/Exception.php';
-        throw new Zend_Validate_Exception("No property exists by the name '$property'");
+        throw new Postman_Zend_Validate_Exception("No property exists by the name '$property'");
     }
 
     /**
@@ -322,7 +322,7 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
      * Set flag indicating whether or not value should be obfuscated in messages
      *
      * @param  bool $flag
-     * @return Zend_Validate_Abstract
+     * @return Postman_Zend_Validate_Abstract
      */
     public function setObscureValue($flag)
     {
@@ -344,19 +344,19 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
     /**
      * Set translation object
      *
-     * @param  Zend_Translate|Zend_Translate_Adapter|null $translator
-     * @throws Zend_Validate_Exception
-     * @return Zend_Validate_Abstract
+     * @param  Postman_Zend_Translate|Postman_Zend_Translate_Adapter|null $translator
+     * @throws Postman_Zend_Validate_Exception
+     * @return Postman_Zend_Validate_Abstract
      */
     public function setTranslator($translator = null)
     {
-        if ((null === $translator) || ($translator instanceof Zend_Translate_Adapter)) {
+        if ((null === $translator) || ($translator instanceof Postman_Zend_Translate_Adapter)) {
             $this->_translator = $translator;
-        } elseif ($translator instanceof Zend_Translate) {
+        } elseif ($translator instanceof Postman_Zend_Translate) {
             $this->_translator = $translator->getAdapter();
         } else {
 //             require_once 'Zend/Validate/Exception.php';
-            throw new Zend_Validate_Exception('Invalid translator specified');
+            throw new Postman_Zend_Validate_Exception('Invalid translator specified');
         }
         return $this;
     }
@@ -364,7 +364,7 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
     /**
      * Return translation object
      *
-     * @return Zend_Translate_Adapter|null
+     * @return Postman_Zend_Translate_Adapter|null
      */
     public function getTranslator()
     {
@@ -392,35 +392,35 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
     /**
      * Set default translation object for all validate objects
      *
-     * @param  Zend_Translate|Zend_Translate_Adapter|null $translator
-     * @throws Zend_Validate_Exception
+     * @param  Postman_Zend_Translate|Postman_Zend_Translate_Adapter|null $translator
+     * @throws Postman_Zend_Validate_Exception
      */
     public static function setDefaultTranslator($translator = null)
     {
-        if ((null === $translator) || ($translator instanceof Zend_Translate_Adapter)) {
+        if ((null === $translator) || ($translator instanceof Postman_Zend_Translate_Adapter)) {
             self::$_defaultTranslator = $translator;
-        } elseif ($translator instanceof Zend_Translate) {
+        } elseif ($translator instanceof Postman_Zend_Translate) {
             self::$_defaultTranslator = $translator->getAdapter();
         } else {
 //             require_once 'Zend/Validate/Exception.php';
-            throw new Zend_Validate_Exception('Invalid translator specified');
+            throw new Postman_Zend_Validate_Exception('Invalid translator specified');
         }
     }
 
     /**
      * Get default translation object for all validate objects
      *
-     * @return Zend_Translate_Adapter|null
+     * @return Postman_Zend_Translate_Adapter|null
      */
     public static function getDefaultTranslator()
     {
         if (null === self::$_defaultTranslator) {
 //             require_once 'Zend/Registry.php';
-            if (Zend_Registry::isRegistered('Zend_Translate')) {
-                $translator = Zend_Registry::get('Zend_Translate');
-                if ($translator instanceof Zend_Translate_Adapter) {
+            if (Postman_Zend_Registry::isRegistered('Postman_Zend_Translate')) {
+                $translator = Postman_Zend_Registry::get('Postman_Zend_Translate');
+                if ($translator instanceof Postman_Zend_Translate_Adapter) {
                     return $translator;
-                } elseif ($translator instanceof Zend_Translate) {
+                } elseif ($translator instanceof Postman_Zend_Translate) {
                     return $translator->getAdapter();
                 }
             }
@@ -443,7 +443,7 @@ abstract class Zend_Validate_Abstract implements Zend_Validate_Interface
      * Indicate whether or not translation should be disabled
      *
      * @param  bool $flag
-     * @return Zend_Validate_Abstract
+     * @return Postman_Zend_Validate_Abstract
      */
     public function setDisableTranslator($flag)
     {

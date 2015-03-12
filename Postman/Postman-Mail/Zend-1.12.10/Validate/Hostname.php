@@ -13,19 +13,19 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
 /**
- * @see Zend_Validate_Abstract
+ * @see Postman_Zend_Validate_Abstract
  */
 // require_once 'Zend/Validate/Abstract.php';
 
 /**
- * @see Zend_Validate_Ip
+ * @see Postman_Zend_Validate_Ip
  */
 // require_once 'Zend/Validate/Ip.php';
 
@@ -40,11 +40,11 @@
  * to allow users to test entering UTF-8 characters in a form.
  *
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Validate_Hostname extends Zend_Validate_Abstract
+class Postman_Zend_Validate_Hostname extends Postman_Zend_Validate_Abstract
 {
     const CANNOT_DECODE_PUNYCODE  = 'hostnameCannotDecodePunycode';
     const INVALID                 = 'hostnameInvalid';
@@ -1191,7 +1191,7 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
      */
     public function __construct($options = array())
     {
-        if ($options instanceof Zend_Config) {
+        if ($options instanceof Postman_Zend_Config) {
             $options = $options->toArray();
         } else if (!is_array($options)) {
             $options = func_get_args();
@@ -1229,7 +1229,7 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
      * Sets the options for this validator
      *
      * @param array $options
-     * @return Zend_Validate_Hostname
+     * @return Postman_Zend_Validate_Hostname
      */
     public function setOptions($options)
     {
@@ -1255,7 +1255,7 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
     /**
      * Returns the set ip validator
      *
-     * @return Zend_Validate_Ip
+     * @return Postman_Zend_Validate_Ip
      */
     public function getIpValidator()
     {
@@ -1263,13 +1263,13 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
     }
 
     /**
-     * @param Zend_Validate_Ip $ipValidator OPTIONAL
-     * @return Zend_Validate_Hostname
+     * @param Postman_Zend_Validate_Ip $ipValidator OPTIONAL
+     * @return Postman_Zend_Validate_Hostname
      */
-    public function setIpValidator(Zend_Validate_Ip $ipValidator = null)
+    public function setIpValidator(Postman_Zend_Validate_Ip $ipValidator = null)
     {
         if ($ipValidator === null) {
-            $ipValidator = new Zend_Validate_Ip();
+            $ipValidator = new Postman_Zend_Validate_Ip();
         }
 
         $this->_options['ip'] = $ipValidator;
@@ -1290,7 +1290,7 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
      * Sets the allow option
      *
      * @param  integer $allow
-     * @return Zend_Validate_Hostname Provides a fluent interface
+     * @return Postman_Zend_Validate_Hostname Provides a fluent interface
      */
     public function setAllow($allow)
     {
@@ -1347,12 +1347,12 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
     }
 
     /**
-     * Defined by Zend_Validate_Interface
+     * Defined by Postman_Zend_Validate_Interface
      *
      * Returns true if and only if the $value is a valid hostname with respect to the current allow option
      *
      * @param  string $value
-     * @throws Zend_Validate_Exception if a fatal error occurs for validation process
+     * @throws Postman_Zend_Validate_Exception if a fatal error occurs for validation process
      * @return boolean
      */
     public function isValid($value)
@@ -1444,7 +1444,7 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
                     /**
                      * Match against IDN hostnames
                      * Note: Keep label regex short to avoid issues with long patterns when matching IDN hostnames
-                     * @see Zend_Validate_Hostname_Interface
+                     * @see Postman_Zend_Validate_Hostname_Interface
                      */
                     $regexChars = array(0 => '/^[a-z0-9\x2d]{1,63}$/i');
                     if ($this->_options['idn'] &&  isset($this->_validIdns[strtoupper($this->_tld)])) {

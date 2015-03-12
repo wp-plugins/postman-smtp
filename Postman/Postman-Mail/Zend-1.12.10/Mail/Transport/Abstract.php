@@ -13,7 +13,7 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Transport
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
@@ -22,7 +22,7 @@
 
 
 /**
- * @see Zend_Mime
+ * @see Postman_Zend_Mime
  */
 // require_once 'Zend/Mime.php';
 
@@ -32,12 +32,12 @@
  * ways of transport
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Transport
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-abstract class Zend_Mail_Transport_Abstract
+abstract class Postman_Zend_Mail_Transport_Abstract
 {
     /**
      * Mail body
@@ -75,8 +75,8 @@ abstract class Zend_Mail_Transport_Abstract
     protected $_isMultipart = false;
 
     /**
-     * Zend_Mail object
-     * @var false|Zend_Mail
+     * Postman_Zend_Mail object
+     * @var false|Postman_Zend_Mail
      * @access protected
      */
     protected $_mail = false;
@@ -119,7 +119,7 @@ abstract class Zend_Mail_Transport_Abstract
      *
      * If a boundary is given, a multipart header is generated with a
      * Content-Type of either multipart/alternative or multipart/mixed depending
-     * on the mail parts present in the {@link $_mail Zend_Mail object} present.
+     * on the mail parts present in the {@link $_mail Postman_Zend_Mail object} present.
      *
      * @param string $boundary
      * @return array
@@ -131,11 +131,11 @@ abstract class Zend_Mail_Transport_Abstract
             $type = $this->_mail->getType();
             if (!$type) {
                 if ($this->_mail->hasAttachments) {
-                    $type = Zend_Mime::MULTIPART_MIXED;
+                    $type = Postman_Zend_Mime::MULTIPART_MIXED;
                 } elseif ($this->_mail->getBodyText() && $this->_mail->getBodyHtml()) {
-                    $type = Zend_Mime::MULTIPART_ALTERNATIVE;
+                    $type = Postman_Zend_Mime::MULTIPART_ALTERNATIVE;
                 } else {
-                    $type = Zend_Mime::MULTIPART_MIXED;
+                    $type = Postman_Zend_Mime::MULTIPART_MIXED;
                 }
             }
 
@@ -175,17 +175,17 @@ abstract class Zend_Mail_Transport_Abstract
      * @param mixed $headers
      * @access protected
      * @return void
-     * @throws Zend_Mail_Transport_Exception if any header lines exceed 998
+     * @throws Postman_Zend_Mail_Transport_Exception if any header lines exceed 998
      * characters
      */
     protected function _prepareHeaders($headers)
     {
         if (!$this->_mail) {
             /**
-             * @see Zend_Mail_Transport_Exception
+             * @see Postman_Zend_Mail_Transport_Exception
              */
             require_once 'Zend/Mail/Transport/Exception.php';
-            throw new Zend_Mail_Transport_Exception('Missing Zend_Mail object in _mail property');
+            throw new Postman_Zend_Mail_Transport_Exception('Missing Postman_Zend_Mail object in _mail property');
         }
 
         $this->header = '';
@@ -211,10 +211,10 @@ abstract class Zend_Mail_Transport_Abstract
         }
         if (!$sane) {
             /**
-             * @see Zend_Mail_Transport_Exception
+             * @see Postman_Zend_Mail_Transport_Exception
              */
             require_once 'Zend/Mail/Transport/Exception.php';
-            throw new Zend_Mail_Exception('At least one mail header line is too long');
+            throw new Postman_Zend_Mail_Exception('At least one mail header line is too long');
         }
     }
 
@@ -222,10 +222,10 @@ abstract class Zend_Mail_Transport_Abstract
      * Generate MIME compliant message from the current configuration
      *
      * If both a text and HTML body are present, generates a
-     * multipart/alternative Zend_Mime_Part containing the headers and contents
+     * multipart/alternative Postman_Zend_Mime_Part containing the headers and contents
      * of each. Otherwise, uses whichever of the text or HTML parts present.
      *
-     * The content part is then prepended to the list of Zend_Mime_Parts for
+     * The content part is then prepended to the list of Postman_Zend_Mime_Parts for
      * this message.
      *
      * @return void
@@ -236,7 +236,7 @@ abstract class Zend_Mail_Transport_Abstract
             && ($html = $this->_mail->getBodyHtml()))
         {
             // Generate unique boundary for multipart/alternative
-            $mime = new Zend_Mime(null);
+            $mime = new Postman_Zend_Mime(null);
             $boundaryLine = $mime->boundaryLine($this->EOL);
             $boundaryEnd  = $mime->mimeEnd($this->EOL);
 
@@ -255,8 +255,8 @@ abstract class Zend_Mail_Transport_Abstract
                   . $this->EOL
                   . $boundaryEnd;
 
-            $mp           = new Zend_Mime_Part($body);
-            $mp->type     = Zend_Mime::MULTIPART_ALTERNATIVE;
+            $mp           = new Postman_Zend_Mime_Part($body);
+            $mp->type     = Postman_Zend_Mime::MULTIPART_ALTERNATIVE;
             $mp->boundary = $mime->boundary();
 
             $this->_isMultipart = true;
@@ -278,17 +278,17 @@ abstract class Zend_Mail_Transport_Abstract
 
         if (!$body) {
             /**
-             * @see Zend_Mail_Transport_Exception
+             * @see Postman_Zend_Mail_Transport_Exception
              */
             require_once 'Zend/Mail/Transport/Exception.php';
-            throw new Zend_Mail_Transport_Exception('No body specified');
+            throw new Postman_Zend_Mail_Transport_Exception('No body specified');
         }
 
         // Get headers
         $this->_headers = $this->_mail->getHeaders();
         $headers = $body->getHeadersArray($this->EOL);
         foreach ($headers as $header) {
-            // Headers in Zend_Mime_Part are kept as arrays with two elements, a
+            // Headers in Postman_Zend_Mime_Part are kept as arrays with two elements, a
             // key and a value
             $this->_headers[$header[0]] = array($header[1]);
         }
@@ -297,12 +297,12 @@ abstract class Zend_Mail_Transport_Abstract
     /**
      * Send a mail using this transport
      *
-     * @param  Zend_Mail $mail
+     * @param  Postman_Zend_Mail $mail
      * @access public
      * @return void
-     * @throws Zend_Mail_Transport_Exception if mail is empty
+     * @throws Postman_Zend_Mail_Transport_Exception if mail is empty
      */
-    public function send(Zend_Mail $mail)
+    public function send(Postman_Zend_Mail $mail)
     {
         $this->_isMultipart = false;
         $this->_mail        = $mail;
@@ -317,15 +317,15 @@ abstract class Zend_Mail_Transport_Abstract
         $boundary = null;
         if ($count < 1) {
             /**
-             * @see Zend_Mail_Transport_Exception
+             * @see Postman_Zend_Mail_Transport_Exception
              */
             require_once 'Zend/Mail/Transport/Exception.php';
-            throw new Zend_Mail_Transport_Exception('Empty mail cannot be sent');
+            throw new Postman_Zend_Mail_Transport_Exception('Empty mail cannot be sent');
         }
 
         if ($count > 1) {
             // Multipart message; create new MIME object and boundary
-            $mime     = new Zend_Mime($this->_mail->getMimeBoundary());
+            $mime     = new Postman_Zend_Mime($this->_mail->getMimeBoundary());
             $boundary = $mime->boundary();
         } elseif ($this->_isMultipart) {
             // multipart/alternative -- grab boundary
@@ -337,9 +337,9 @@ abstract class Zend_Mail_Transport_Abstract
         $this->_prepareHeaders($this->_getHeaders($boundary));
 
         // Create message body
-        // This is done so that the same Zend_Mail object can be used in
+        // This is done so that the same Postman_Zend_Mail object can be used in
         // multiple transports
-        $message = new Zend_Mime_Message();
+        $message = new Postman_Zend_Mime_Message();
         $message->setParts($this->_parts);
         $message->setMime($mime);
         $this->body = $message->generateMessage($this->EOL);

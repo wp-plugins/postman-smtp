@@ -16,6 +16,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		 * what is this for .
 		 *
 		 *
+		 *
 		 * .. @deprecated
 		 */
 		public function isSmtp() {
@@ -72,7 +73,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			}
 		}
 		public function createZendMailTransport($hostname, $config) {
-			return new Zend_Mail_Transport_Smtp ( $hostname, $config );
+			return new Postman_Zend_Mail_Transport_Smtp ( $hostname, $config );
 		}
 		public function getDeliveryDetails(PostmanOptionsInterface $options) {
 			$deliveryDetails ['transport_name'] = $this->getTransportDescription ( $options->getEncryptionType () );
@@ -264,6 +265,7 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		 * what is this for .
 		 *
 		 *
+		 *
 		 * .. @deprecated
 		 */
 		public function isSmtp() {
@@ -309,5 +311,3 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		}
 	}
 }
-
-

@@ -13,29 +13,29 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
 /**
- * @see Zend_Validate_Abstract
+ * @see Postman_Zend_Validate_Abstract
  */
 require_once 'Zend/Validate/Abstract.php';
 
 /**
- * @see Zend_Validate_Hostname
+ * @see Postman_Zend_Validate_Hostname
  */
 require_once 'Zend/Validate/Hostname.php';
 
 /**
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
+class Postman_Zend_Validate_EmailAddress extends Postman_Zend_Validate_Abstract
 {
     const INVALID            = 'emailAddressInvalid';
     const INVALID_FORMAT     = 'emailAddressInvalidFormat';
@@ -119,7 +119,7 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
         'mx'       => false,
         'deep'     => false,
         'domain'   => true,
-        'allow'    => Zend_Validate_Hostname::ALLOW_DNS,
+        'allow'    => Postman_Zend_Validate_Hostname::ALLOW_DNS,
         'hostname' => null
     );
 
@@ -127,16 +127,16 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
      * Instantiates hostname validator for local use
      *
      * The following option keys are supported:
-     * 'hostname' => A hostname validator, see Zend_Validate_Hostname
-     * 'allow'    => Options for the hostname validator, see Zend_Validate_Hostname::ALLOW_*
+     * 'hostname' => A hostname validator, see Postman_Zend_Validate_Hostname
+     * 'allow'    => Options for the hostname validator, see Postman_Zend_Validate_Hostname::ALLOW_*
      * 'mx'       => If MX check should be enabled, boolean
      * 'deep'     => If a deep MX check should be done, boolean
      *
-     * @param array|string|Zend_Config $options OPTIONAL
+     * @param array|string|Postman_Zend_Config $options OPTIONAL
      */
     public function __construct($options = array())
     {
-        if ($options instanceof Zend_Config) {
+        if ($options instanceof Postman_Zend_Config) {
             $options = $options->toArray();
         } else if (!is_array($options)) {
             $options = func_get_args();
@@ -170,7 +170,7 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
      * Set options for the email validator
      *
      * @param array $options
-     * @return Zend_Validate_EmailAddress Provides a fluent inteface
+     * @return Postman_Zend_Validate_EmailAddress Provides a fluent inteface
      */
     public function setOptions(array $options = array())
     {
@@ -209,8 +209,8 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
      *
      * @param  string $messageString
      * @param  string $messageKey     OPTIONAL
-     * @return Zend_Validate_Abstract Provides a fluent interface
-     * @throws Zend_Validate_Exception
+     * @return Postman_Zend_Validate_Abstract Provides a fluent interface
+     * @throws Postman_Zend_Validate_Exception
      */
     public function setMessage($messageString, $messageKey = null)
     {
@@ -231,7 +231,7 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
     /**
      * Returns the set hostname validator
      *
-     * @return Zend_Validate_Hostname
+     * @return Postman_Zend_Validate_Hostname
      */
     public function getHostnameValidator()
     {
@@ -239,14 +239,14 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
     }
 
     /**
-     * @param Zend_Validate_Hostname $hostnameValidator OPTIONAL
+     * @param Postman_Zend_Validate_Hostname $hostnameValidator OPTIONAL
      * @param int                    $allow             OPTIONAL
      * @return $this
      */
-    public function setHostnameValidator(Zend_Validate_Hostname $hostnameValidator = null, $allow = Zend_Validate_Hostname::ALLOW_DNS)
+    public function setHostnameValidator(Postman_Zend_Validate_Hostname $hostnameValidator = null, $allow = Postman_Zend_Validate_Hostname::ALLOW_DNS)
     {
         if (!$hostnameValidator) {
-            $hostnameValidator = new Zend_Validate_Hostname($allow);
+            $hostnameValidator = new Postman_Zend_Validate_Hostname($allow);
         }
 
         $this->_options['hostname'] = $hostnameValidator;
@@ -282,14 +282,14 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
      * This only applies when DNS hostnames are validated
      *
      * @param boolean $mx Set allowed to true to validate for MX records, and false to not validate them
-     * @throws Zend_Validate_Exception
-     * @return Zend_Validate_EmailAddress Provides a fluent inteface
+     * @throws Postman_Zend_Validate_Exception
+     * @return Postman_Zend_Validate_EmailAddress Provides a fluent inteface
      */
     public function setValidateMx($mx)
     {
         if ((bool) $mx && !$this->validateMxSupported()) {
             require_once 'Zend/Validate/Exception.php';
-            throw new Zend_Validate_Exception('MX checking not available on this system');
+            throw new Postman_Zend_Validate_Exception('MX checking not available on this system');
         }
 
         $this->_options['mx'] = (bool) $mx;
@@ -310,7 +310,7 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
      * Set whether we check MX record should be a deep validation
      *
      * @param boolean $deep Set deep to true to perform a deep validation process for MX records
-     * @return Zend_Validate_EmailAddress Provides a fluent inteface
+     * @return Postman_Zend_Validate_EmailAddress Provides a fluent inteface
      */
     public function setDeepMxCheck($deep)
     {
@@ -333,7 +333,7 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
      * or only the local part of the email address
      *
      * @param boolean $domain
-     * @return Zend_Validate_EmailAddress Provides a fluent inteface
+     * @return Postman_Zend_Validate_EmailAddress Provides a fluent inteface
      */
     public function setDomainCheck($domain = true)
     {
@@ -519,7 +519,7 @@ class Zend_Validate_EmailAddress extends Zend_Validate_Abstract
     }
 
     /**
-     * Defined by Zend_Validate_Interface
+     * Defined by Postman_Zend_Validate_Interface
      *
      * Returns true if and only if $value is a valid email address
      * according to RFC2822

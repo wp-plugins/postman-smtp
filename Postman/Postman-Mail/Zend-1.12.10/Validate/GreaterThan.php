@@ -13,24 +13,24 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
 /**
- * @see Zend_Validate_Abstract
+ * @see Postman_Zend_Validate_Abstract
  */
 require_once 'Zend/Validate/Abstract.php';
 
 /**
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Validate_GreaterThan extends Zend_Validate_Abstract
+class Postman_Zend_Validate_GreaterThan extends Postman_Zend_Validate_Abstract
 {
 
     const NOT_GREATER = 'notGreaterThan';
@@ -59,12 +59,12 @@ class Zend_Validate_GreaterThan extends Zend_Validate_Abstract
     /**
      * Sets validator options
      *
-     * @param  mixed|Zend_Config $min
-     * @throws Zend_Validate_Exception
+     * @param  mixed|Postman_Zend_Config $min
+     * @throws Postman_Zend_Validate_Exception
      */
     public function __construct($min)
     {
-        if ($min instanceof Zend_Config) {
+        if ($min instanceof Postman_Zend_Config) {
             $min = $min->toArray();
         }
 
@@ -73,7 +73,7 @@ class Zend_Validate_GreaterThan extends Zend_Validate_Abstract
                 $min = $min['min'];
             } else {
                 require_once 'Zend/Validate/Exception.php';
-                throw new Zend_Validate_Exception("Missing option 'min'");
+                throw new Postman_Zend_Validate_Exception("Missing option 'min'");
             }
         }
 
@@ -94,7 +94,7 @@ class Zend_Validate_GreaterThan extends Zend_Validate_Abstract
      * Sets the min option
      *
      * @param  mixed $min
-     * @return Zend_Validate_GreaterThan Provides a fluent interface
+     * @return Postman_Zend_Validate_GreaterThan Provides a fluent interface
      */
     public function setMin($min)
     {
@@ -103,7 +103,7 @@ class Zend_Validate_GreaterThan extends Zend_Validate_Abstract
     }
 
     /**
-     * Defined by Zend_Validate_Interface
+     * Defined by Postman_Zend_Validate_Interface
      *
      * Returns true if and only if $value is greater than min option
      *

@@ -13,24 +13,24 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mime
+ * @package    Postman_Zend_Mime
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
 /**
- * @see Zend_Mime
+ * @see Postman_Zend_Mime
  */
 require_once 'Zend/Mime.php';
 
 /**
  * @category   Zend
- * @package    Zend_Mime
+ * @package    Postman_Zend_Mime
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Mime_Decode
+class Postman_Zend_Mime_Decode
 {
     /**
      * Explode MIME multipart string into seperate parts
@@ -40,7 +40,7 @@ class Zend_Mime_Decode
      * @param  string $body     raw body of message
      * @param  string $boundary boundary as found in content-type
      * @return array parts with content of each part, empty if no parts found
-     * @throws Zend_Exception
+     * @throws Postman_Zend_Exception
      */
     public static function splitMime($body, $boundary)
     {
@@ -69,7 +69,7 @@ class Zend_Mime_Decode
         // no more parts, find end boundary
         $p = strpos($body, '--' . $boundary . '--', $start);
         if ($p === false) {
-            throw new Zend_Exception('Not a valid Mime Message: End Missing');
+            throw new Postman_Zend_Exception('Not a valid Mime Message: End Missing');
         }
 
         // the remaining part also needs to be parsed:
@@ -84,12 +84,12 @@ class Zend_Mime_Decode
      *
      * @param  string $message  raw message content
      * @param  string $boundary boundary as found in content-type
-     * @param  string $EOL      EOL string; defaults to {@link Zend_Mime::LINEEND}
+     * @param  string $EOL      EOL string; defaults to {@link Postman_Zend_Mime::LINEEND}
      * @return array|null parts as array('header' => array(name => value), 'body' => content), null if no parts found
-     * @throws Zend_Exception
+     * @throws Postman_Zend_Exception
      */
     public static function splitMessageStruct(
-        $message, $boundary, $EOL = Zend_Mime::LINEEND
+        $message, $boundary, $EOL = Postman_Zend_Mime::LINEEND
     )
     {
         $parts = self::splitMime($message, $boundary);
@@ -117,11 +117,11 @@ class Zend_Mime_Decode
      * @param  string $message raw message with header and optional content
      * @param  array  $headers output param, array with headers as array(name => value)
      * @param  string $body    output param, content of message
-     * @param  string $EOL     EOL string; defaults to {@link Zend_Mime::LINEEND}
+     * @param  string $EOL     EOL string; defaults to {@link Postman_Zend_Mime::LINEEND}
      * @return null
      */
     public static function splitMessage(
-        $message, &$headers, &$body, $EOL = Zend_Mime::LINEEND
+        $message, &$headers, &$body, $EOL = Postman_Zend_Mime::LINEEND
     )
     {
         // check for valid header at first line
@@ -211,7 +211,7 @@ class Zend_Mime_Decode
      * @param  string     $field
      * @param  string     $wantedPart the wanted part, else an array with all parts is returned
      * @param  int|string $firstName  key name for the first part
-     * @throws Zend_Exception
+     * @throws Postman_Zend_Exception
      * @return string|array wanted part or all parts as array($firstName => firstPart, partname => value)
      */
     public static function splitHeaderField(
@@ -230,7 +230,7 @@ class Zend_Mime_Decode
 
         $field = $firstName . '=' . $field;
         if (!preg_match_all('%([^=\s]+)\s*=\s*("[^"]+"|[^;]+)(;\s*|$)%', $field, $matches)) {
-            throw new Zend_Exception('not a valid header field');
+            throw new Postman_Zend_Exception('not a valid header field');
         }
 
         if ($wantedPart) {

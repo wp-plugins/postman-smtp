@@ -99,8 +99,8 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 			
 			// create the Message
 			$charset = $this->getCharset ();
-			$this->logger->debug ( 'Building Zend_Mail with charset=' . $charset );
-			$mail = new Zend_Mail ( $charset );
+			$this->logger->debug ( 'Building Postman_Zend_Mail with charset=' . $charset );
+			$mail = new Postman_Zend_Mail ( $charset );
 			
 			// add the Postman signature
 			$mail->addHeader ( 'X-Mailer', 'Postman SMTP v' . POSTMAN_PLUGIN_VERSION . ' for WordPress' );
@@ -213,9 +213,9 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		
 		/**
 		 *
-		 * @param Zend_Mail $mail        	
+		 * @param Postman_Zend_Mail $mail        	
 		 */
-		private function addFrom(Zend_Mail $mail) {
+		private function addFrom(Postman_Zend_Mail $mail) {
 			
 			// by default, sender is what Postman set
 			$sender = PostmanEmailAddress::copy ( $this->sender );
@@ -390,7 +390,7 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		 *
 		 * @param unknown $name        	
 		 * @param unknown $value        	
-		 * @param Zend_Mail $mail        	
+		 * @param Postman_Zend_Mail $mail        	
 		 */
 		private function processHeader($name, $content) {
 			$name = trim ( $name );
@@ -475,9 +475,9 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		/**
 		 * Add attachments to the message
 		 *
-		 * @param Zend_Mail $mail        	
+		 * @param Postman_Zend_Mail $mail        	
 		 */
-		private function addAttachmentsToMail(Zend_Mail $mail) {
+		private function addAttachmentsToMail(Postman_Zend_Mail $mail) {
 			$attachments = $this->attachments;
 			if (! is_array ( $attachments )) {
 				// WordPress may a single filename or a newline-delimited string list of multiple filenames
@@ -489,10 +489,10 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 			foreach ( $attArray as $file ) {
 				if (! empty ( $file )) {
 					$this->logger->debug ( "Adding attachment: " . $file );
-					$at = new Zend_Mime_Part ( file_get_contents ( $file ) );
+					$at = new Postman_Zend_Mime_Part ( file_get_contents ( $file ) );
 					// $at->type = 'image/gif';
-					$at->disposition = Zend_Mime::DISPOSITION_INLINE;
-					$at->encoding = Zend_Mime::ENCODING_BASE64;
+					$at->disposition = Postman_Zend_Mime::DISPOSITION_INLINE;
+					$at->encoding = Postman_Zend_Mime::ENCODING_BASE64;
 					$at->filename = basename ( $file );
 					$mail->addAttachment ( $at );
 				}
@@ -553,5 +553,22 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		public function getTranscript() {
 			return $this->transcript;
 		}
+	}
+}
+
+/**
+ * I renamed the Zend classes, but unfortunately these five class names remain or I break
+ * compatibility with the Postman Gmail API extension :-(
+ */
+if (! class_exists ( 'Zend_Mail_Transport_Smtp' )) {
+	abstract class Zend_Mail_Transport_Abstract extends Postman_Zend_Mail_Transport_Abstract {
+	}
+	class Zend_Mail_Protocol_Smtp extends Postman_Zend_Mail_Protocol_Smtp {
+	}
+	abstract class Zend_Mail_Protocol_Abstract extends Postman_Zend_Mail_Protocol_Abstract {
+	}
+	class Zend_Mime extends Postman_Zend_Mime {
+	}
+	class Zend_Mail_Transport_Exception extends Postman_Zend_Mail_Transport_Exception {
 	}
 }
