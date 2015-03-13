@@ -73,7 +73,7 @@ if (! class_exists ( 'PostmanSmtp' )) {
 			if (is_admin ()) {
 				// fire up the AdminController
 				$basename = plugin_basename ( $this->postmanPhpFile );
-				$adminController = new PostmanAdminController ( $basename, $this->options, $this->authToken, $this->messageHandler );
+				$adminController = new PostmanAdminController ( $basename, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
 			}
 			
 			// handle plugin activation/deactivation
