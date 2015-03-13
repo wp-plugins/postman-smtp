@@ -13,7 +13,7 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mime
+ * @package    Postman_Zend_Mime
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
@@ -23,11 +23,11 @@
  * Support class for MultiPart Mime Messages
  *
  * @category   Zend
- * @package    Zend_Mime
+ * @package    Postman_Zend_Mime
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Mime
+class Postman_Zend_Mime
 {
     const TYPE_OCTETSTREAM         = 'application/octet-stream';
     const TYPE_TEXT                = 'text/plain';
@@ -615,7 +615,7 @@ class Zend_Mime
      *
      * @param string $str
      * @param string $encoding
-     * @param string $EOL Line end; defaults to {@link Zend_Mime::LINEEND}
+     * @param string $EOL Line end; defaults to {@link Postman_Zend_Mime::LINEEND}
      * @return string
      */
     public static function encode($str, $encoding, $EOL = self::LINEEND)

@@ -13,7 +13,7 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Transport
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
@@ -22,17 +22,17 @@
 
 
 /**
- * @see Zend_Mime
+ * @see Postman_Zend_Mime
  */
 // require_once 'Zend/Mime.php';
 
 /**
- * @see Zend_Mail_Protocol_Smtp
+ * @see Postman_Zend_Mail_Protocol_Smtp
  */
 // require_once 'Zend/Mail/Protocol/Smtp.php';
 
 /**
- * @see Zend_Mail_Transport_Abstract
+ * @see Postman_Zend_Mail_Transport_Abstract
  */
 // require_once 'Zend/Mail/Transport/Abstract.php';
 
@@ -40,15 +40,15 @@
 /**
  * SMTP connection object
  *
- * Loads an instance of Zend_Mail_Protocol_Smtp and forwards smtp transactions
+ * Loads an instance of Postman_Zend_Mail_Protocol_Smtp and forwards smtp transactions
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Transport
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Mail_Transport_Smtp extends Zend_Mail_Transport_Abstract
+class Postman_Zend_Mail_Transport_Smtp extends Postman_Zend_Mail_Transport_Abstract
 {
     /**
      * EOL character string used by transport
@@ -98,9 +98,9 @@ class Zend_Mail_Transport_Smtp extends Zend_Mail_Transport_Abstract
 
 
     /**
-     * Instance of Zend_Mail_Protocol_Smtp
+     * Instance of Postman_Zend_Mail_Protocol_Smtp
      *
-     * @var Zend_Mail_Protocol_Smtp
+     * @var Postman_Zend_Mail_Protocol_Smtp
      */
     protected $_connection;
 
@@ -139,10 +139,10 @@ class Zend_Mail_Transport_Smtp extends Zend_Mail_Transport_Abstract
      */
     public function __destruct()
     {
-        if ($this->_connection instanceof Zend_Mail_Protocol_Smtp) {
+        if ($this->_connection instanceof Postman_Zend_Mail_Protocol_Smtp) {
             try {
                 $this->_connection->quit();
-            } catch (Zend_Mail_Protocol_Exception $e) {
+            } catch (Postman_Zend_Mail_Protocol_Exception $e) {
                 // ignore
             }
             $this->_connection->disconnect();
@@ -153,11 +153,11 @@ class Zend_Mail_Transport_Smtp extends Zend_Mail_Transport_Abstract
     /**
      * Sets the connection protocol instance
      *
-     * @param Zend_Mail_Protocol_Abstract $client
+     * @param Postman_Zend_Mail_Protocol_Abstract $client
      *
      * @return void
      */
-    public function setConnection(Zend_Mail_Protocol_Abstract $connection)
+    public function setConnection(Postman_Zend_Mail_Protocol_Abstract $connection)
     {
         $this->_connection = $connection;
     }
@@ -166,7 +166,7 @@ class Zend_Mail_Transport_Smtp extends Zend_Mail_Transport_Abstract
     /**
      * Gets the connection protocol instance
      *
-     * @return Zend_Mail_Protocol|null
+     * @return Postman_Zend_Mail_Protocol|null
      */
     public function getConnection()
     {
@@ -185,15 +185,15 @@ class Zend_Mail_Transport_Smtp extends Zend_Mail_Transport_Abstract
     public function _sendMail()
     {
         // If sending multiple messages per session use existing adapter
-        if (!($this->_connection instanceof Zend_Mail_Protocol_Smtp)) {
+        if (!($this->_connection instanceof Postman_Zend_Mail_Protocol_Smtp)) {
             // Check if authentication is required and determine required class
-            $connectionClass = 'Zend_Mail_Protocol_Smtp';
+            $connectionClass = 'Postman_Zend_Mail_Protocol_Smtp';
             if ($this->_auth) {
                 $connectionClass .= '_Auth_' . ucwords($this->_auth);
             }
             if (!class_exists($connectionClass)) {
 //                 require_once 'Zend/Loader.php';
-//                 Zend_Loader::loadClass($connectionClass);
+//                 Postman_Zend_Loader::loadClass($connectionClass);
             }
             $this->setConnection(new $connectionClass($this->_host, $this->_port, $this->_config));
             $this->_connection->connect();
@@ -212,7 +212,7 @@ class Zend_Mail_Transport_Smtp extends Zend_Mail_Transport_Abstract
         }
 
         // Issue DATA command to client
-        $this->_connection->data($this->header . Zend_Mime::LINEEND . $this->body);
+        $this->_connection->data($this->header . Postman_Zend_Mime::LINEEND . $this->body);
     }
 
     /**
@@ -223,16 +223,16 @@ class Zend_Mail_Transport_Smtp extends Zend_Mail_Transport_Abstract
      * @access  protected
      * @param   array $headers
      * @return  void
-     * @throws  Zend_Transport_Exception
+     * @throws  Postman_Zend_Transport_Exception
      */
     protected function _prepareHeaders($headers)
     {
         if (!$this->_mail) {
             /**
-             * @see Zend_Mail_Transport_Exception
+             * @see Postman_Zend_Mail_Transport_Exception
              */
 //             require_once 'Zend/Mail/Transport/Exception.php';
-            throw new Zend_Mail_Transport_Exception('_prepareHeaders requires a registered Zend_Mail object');
+            throw new Postman_Zend_Mail_Transport_Exception('_prepareHeaders requires a registered Postman_Zend_Mail object');
         }
 
         unset($headers['Bcc']);

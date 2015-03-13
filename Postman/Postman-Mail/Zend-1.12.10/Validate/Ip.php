@@ -13,24 +13,24 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
 /**
- * @see Zend_Validate_Abstract
+ * @see Postman_Zend_Validate_Abstract
  */
 // require_once 'Zend/Validate/Abstract.php';
 
 /**
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Validate_Ip extends Zend_Validate_Abstract
+class Postman_Zend_Validate_Ip extends Postman_Zend_Validate_Abstract
 {
     const INVALID        = 'ipInvalid';
     const NOT_IP_ADDRESS = 'notIpAddress';
@@ -60,7 +60,7 @@ class Zend_Validate_Ip extends Zend_Validate_Abstract
      */
     public function __construct($options = array())
     {
-        if ($options instanceof Zend_Config) {
+        if ($options instanceof Postman_Zend_Config) {
             $options = $options->toArray();
         } else if (!is_array($options)) {
             $options = func_get_args();
@@ -90,8 +90,8 @@ class Zend_Validate_Ip extends Zend_Validate_Abstract
      * Sets the options for this validator
      *
      * @param array $options
-     * @throws Zend_Validate_Exception
-     * @return Zend_Validate_Ip
+     * @throws Postman_Zend_Validate_Exception
+     * @return Postman_Zend_Validate_Ip
      */
     public function setOptions($options)
     {
@@ -105,14 +105,14 @@ class Zend_Validate_Ip extends Zend_Validate_Abstract
 
         if (!$this->_options['allowipv4'] && !$this->_options['allowipv6']) {
             require_once 'Zend/Validate/Exception.php';
-            throw new Zend_Validate_Exception('Nothing to validate. Check your options');
+            throw new Postman_Zend_Validate_Exception('Nothing to validate. Check your options');
         }
 
         return $this;
     }
 
     /**
-     * Defined by Zend_Validate_Interface
+     * Defined by Postman_Zend_Validate_Interface
      *
      * Returns true if and only if $value is a valid IP address
      *

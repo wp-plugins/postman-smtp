@@ -13,7 +13,7 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
@@ -21,22 +21,22 @@
 
 
 /**
- * Zend_Mail_Part
+ * Postman_Zend_Mail_Part
  */
 require_once 'Zend/Mail/Part.php';
 
 /**
- * Zend_Mail_Message_Interface
+ * Postman_Zend_Mail_Message_Interface
  */
 require_once 'Zend/Mail/Message/Interface.php';
 
 /**
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Mail_Message extends Zend_Mail_Part implements Zend_Mail_Message_Interface
+class Postman_Zend_Mail_Message extends Postman_Zend_Mail_Part implements Postman_Zend_Mail_Message_Interface
 {
     /**
      * flags for this message
@@ -47,12 +47,12 @@ class Zend_Mail_Message extends Zend_Mail_Part implements Zend_Mail_Message_Inte
     /**
      * Public constructor
      *
-     * In addition to the parameters of Zend_Mail_Part::__construct() this constructor supports:
+     * In addition to the parameters of Postman_Zend_Mail_Part::__construct() this constructor supports:
      * - file  filename or file handle of a file with raw message content
-     * - flags array with flags for message, keys are ignored, use constants defined in Zend_Mail_Storage
+     * - flags array with flags for message, keys are ignored, use constants defined in Postman_Zend_Mail_Storage
      *
      * @param  string $rawMessage  full message with or without headers
-     * @throws Zend_Mail_Exception
+     * @throws Postman_Zend_Mail_Exception
      */
     public function __construct(array $params)
     {
@@ -61,10 +61,10 @@ class Zend_Mail_Message extends Zend_Mail_Part implements Zend_Mail_Message_Inte
                 $params['raw'] = @file_get_contents($params['file']);
                 if ($params['raw'] === false) {
                     /**
-                     * @see Zend_Mail_Exception
+                     * @see Postman_Zend_Mail_Exception
                      */
                     require_once 'Zend/Mail/Exception.php';
-                    throw new Zend_Mail_Exception('could not open file');
+                    throw new Postman_Zend_Mail_Exception('could not open file');
                 }
             } else {
                 $params['raw'] = stream_get_contents($params['file']);
@@ -92,7 +92,7 @@ class Zend_Mail_Message extends Zend_Mail_Part implements Zend_Mail_Message_Inte
     /**
      * check if flag is set
      *
-     * @param mixed $flag a flag name, use constants defined in Zend_Mail_Storage
+     * @param mixed $flag a flag name, use constants defined in Postman_Zend_Mail_Storage
      * @return bool true if set, otherwise false
      */
     public function hasFlag($flag)

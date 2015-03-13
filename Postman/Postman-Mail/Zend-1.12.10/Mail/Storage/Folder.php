@@ -13,7 +13,7 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Storage
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
@@ -23,15 +23,15 @@
 
 /**
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Storage
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Mail_Storage_Folder implements RecursiveIterator
+class Postman_Zend_Mail_Storage_Folder implements RecursiveIterator
 {
     /**
-     * subfolders of folder array(localName => Zend_Mail_Storage_Folder folder)
+     * subfolders of folder array(localName => Postman_Zend_Mail_Storage_Folder folder)
      * @var array
      */
     protected $_folders;
@@ -60,7 +60,7 @@ class Zend_Mail_Storage_Folder implements RecursiveIterator
      * @param string $localName  name of folder in current subdirectory
      * @param string $globalName absolute name of folder
      * @param bool   $selectable if true folder holds messages, if false it's just a parent for subfolders
-     * @param array  $folders    init with given instances of Zend_Mail_Storage_Folder as subfolders
+     * @param array  $folders    init with given instances of Postman_Zend_Mail_Storage_Folder as subfolders
      */
     public function __construct($localName, $globalName = '', $selectable = true, array $folders = array())
     {
@@ -78,13 +78,13 @@ class Zend_Mail_Storage_Folder implements RecursiveIterator
     public function hasChildren()
     {
         $current = $this->current();
-        return $current && $current instanceof Zend_Mail_Storage_Folder && !$current->isLeaf();
+        return $current && $current instanceof Postman_Zend_Mail_Storage_Folder && !$current->isLeaf();
     }
 
     /**
      * implements RecursiveIterator::getChildren()
      *
-     * @return Zend_Mail_Storage_Folder same as self::current()
+     * @return Postman_Zend_Mail_Storage_Folder same as self::current()
      */
     public function getChildren()
     {
@@ -124,7 +124,7 @@ class Zend_Mail_Storage_Folder implements RecursiveIterator
     /**
      * implements Iterator::current()
      *
-     * @return Zend_Mail_Storage_Folder current folder
+     * @return Postman_Zend_Mail_Storage_Folder current folder
      */
     public function current()
     {
@@ -145,17 +145,17 @@ class Zend_Mail_Storage_Folder implements RecursiveIterator
      * get subfolder named $name
      *
      * @param  string $name wanted subfolder
-     * @return Zend_Mail_Storage_Folder folder named $folder
-     * @throws Zend_Mail_Storage_Exception
+     * @return Postman_Zend_Mail_Storage_Folder folder named $folder
+     * @throws Postman_Zend_Mail_Storage_Exception
      */
     public function __get($name)
     {
         if (!isset($this->_folders[$name])) {
             /**
-             * @see Zend_Mail_Storage_Exception
+             * @see Postman_Zend_Mail_Storage_Exception
              */
             require_once 'Zend/Mail/Storage/Exception.php';
-            throw new Zend_Mail_Storage_Exception("no subfolder named $name");
+            throw new Postman_Zend_Mail_Storage_Exception("no subfolder named $name");
         }
 
         return $this->_folders[$name];
@@ -165,10 +165,10 @@ class Zend_Mail_Storage_Folder implements RecursiveIterator
      * add or replace subfolder named $name
      *
      * @param string $name local name of subfolder
-     * @param Zend_Mail_Storage_Folder $folder instance for new subfolder
+     * @param Postman_Zend_Mail_Storage_Folder $folder instance for new subfolder
      * @return null
      */
-    public function __set($name, Zend_Mail_Storage_Folder $folder)
+    public function __set($name, Postman_Zend_Mail_Storage_Folder $folder)
     {
         $this->_folders[$name] = $folder;
     }

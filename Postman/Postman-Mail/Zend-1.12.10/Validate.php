@@ -13,24 +13,24 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
 /**
- * @see Zend_Validate_Interface
+ * @see Postman_Zend_Validate_Interface
  */
 // require_once 'Zend/Validate/Interface.php';
 
 /**
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Validate implements Zend_Validate_Interface
+class Postman_Zend_Validate implements Postman_Zend_Validate_Interface
 {
     /**
      * Validator chain
@@ -67,11 +67,11 @@ class Zend_Validate implements Zend_Validate_Interface
      * If $breakChainOnFailure is true, then if the validator fails, the next validator in the chain,
      * if one exists, will not be executed.
      *
-     * @param  Zend_Validate_Interface $validator
+     * @param  Postman_Zend_Validate_Interface $validator
      * @param  boolean                 $breakChainOnFailure
-     * @return Zend_Validate Provides a fluent interface
+     * @return Postman_Zend_Validate Provides a fluent interface
      */
-    public function addValidator(Zend_Validate_Interface $validator, $breakChainOnFailure = false)
+    public function addValidator(Postman_Zend_Validate_Interface $validator, $breakChainOnFailure = false)
     {
         $this->_validators[] = array(
             'instance' => $validator,
@@ -110,7 +110,7 @@ class Zend_Validate implements Zend_Validate_Interface
     }
 
     /**
-     * Defined by Zend_Validate_Interface
+     * Defined by Postman_Zend_Validate_Interface
      *
      * Returns array of validation failure messages
      *
@@ -122,7 +122,7 @@ class Zend_Validate implements Zend_Validate_Interface
     }
 
     /**
-     * Defined by Zend_Validate_Interface
+     * Defined by Postman_Zend_Validate_Interface
      *
      * Returns array of validation failure message codes
      *
@@ -190,11 +190,11 @@ class Zend_Validate implements Zend_Validate_Interface
      * @param  array    $args          OPTIONAL
      * @param  mixed    $namespaces    OPTIONAL
      * @return boolean
-     * @throws Zend_Validate_Exception
+     * @throws Postman_Zend_Validate_Exception
      */
     public static function is($value, $classBaseName, array $args = array(), $namespaces = array())
     {
-        $namespaces = array_merge((array) $namespaces, self::$_defaultNamespaces, array('Zend_Validate'));
+        $namespaces = array_merge((array) $namespaces, self::$_defaultNamespaces, array('Postman_Zend_Validate'));
         $className  = ucfirst($classBaseName);
         try {
             if (!class_exists($className, false)) {
@@ -202,8 +202,8 @@ class Zend_Validate implements Zend_Validate_Interface
                 foreach($namespaces as $namespace) {
                     $class = $namespace . '_' . $className;
                     $file  = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-                    if (Zend_Loader::isReadable($file)) {
-                        Zend_Loader::loadClass($class);
+                    if (Postman_Zend_Loader::isReadable($file)) {
+                        Postman_Zend_Loader::loadClass($class);
                         $className = $class;
                         break;
                     }
@@ -211,7 +211,7 @@ class Zend_Validate implements Zend_Validate_Interface
             }
 
             $class = new ReflectionClass($className);
-            if ($class->implementsInterface('Zend_Validate_Interface')) {
+            if ($class->implementsInterface('Postman_Zend_Validate_Interface')) {
                 if ($class->hasMethod('__construct')) {
                     $keys    = array_keys($args);
                     $numeric = false;
@@ -233,7 +233,7 @@ class Zend_Validate implements Zend_Validate_Interface
 
                 return $object->isValid($value);
             }
-        } catch (Zend_Validate_Exception $ze) {
+        } catch (Postman_Zend_Validate_Exception $ze) {
             // if there is an exception while validating throw it
             throw $ze;
         } catch (Exception $e) {
@@ -241,7 +241,7 @@ class Zend_Validate implements Zend_Validate_Interface
         }
 
         require_once 'Zend/Validate/Exception.php';
-        throw new Zend_Validate_Exception("Validate class not found from basename '$classBaseName'");
+        throw new Postman_Zend_Validate_Exception("Validate class not found from basename '$classBaseName'");
     }
 
     /**
@@ -252,7 +252,7 @@ class Zend_Validate implements Zend_Validate_Interface
     public static function getMessageLength()
     {
         require_once 'Zend/Validate/Abstract.php';
-        return Zend_Validate_Abstract::getMessageLength();
+        return Postman_Zend_Validate_Abstract::getMessageLength();
     }
 
     /**
@@ -263,28 +263,28 @@ class Zend_Validate implements Zend_Validate_Interface
     public static function setMessageLength($length = -1)
     {
         require_once 'Zend/Validate/Abstract.php';
-        Zend_Validate_Abstract::setMessageLength($length);
+        Postman_Zend_Validate_Abstract::setMessageLength($length);
     }
 
     /**
      * Returns the default translation object
      *
-     * @return Zend_Translate_Adapter|null
+     * @return Postman_Zend_Translate_Adapter|null
      */
     public static function getDefaultTranslator($translator = null)
     {
         require_once 'Zend/Validate/Abstract.php';
-        return Zend_Validate_Abstract::getDefaultTranslator();
+        return Postman_Zend_Validate_Abstract::getDefaultTranslator();
     }
 
     /**
      * Sets a default translation object for all validation objects
      *
-     * @param Zend_Translate|Zend_Translate_Adapter|null $translator
+     * @param Postman_Zend_Translate|Postman_Zend_Translate_Adapter|null $translator
      */
     public static function setDefaultTranslator($translator = null)
     {
         require_once 'Zend/Validate/Abstract.php';
-        Zend_Validate_Abstract::setDefaultTranslator($translator);
+        Postman_Zend_Validate_Abstract::setDefaultTranslator($translator);
     }
 }

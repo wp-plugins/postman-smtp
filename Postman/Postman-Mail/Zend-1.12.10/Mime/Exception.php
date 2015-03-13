@@ -13,24 +13,24 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mime
+ * @package    Postman_Zend_Mime
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
 /**
- * Zend_Exception
+ * Postman_Zend_Exception
  */
 require_once 'Zend/Exception.php';
 
 /**
  * @category   Zend
- * @package    Zend_Mime
+ * @package    Postman_Zend_Mime
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Mime_Exception extends Zend_Exception
+class Postman_Zend_Mime_Exception extends Postman_Zend_Exception
 {
 }
 

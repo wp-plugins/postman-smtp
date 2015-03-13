@@ -14,7 +14,7 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Protocol
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
@@ -23,31 +23,31 @@
 
 
 /**
- * @see Zend_Validate
+ * @see Postman_Zend_Validate
  */
 // require_once 'Zend/Validate.php';
 
 
 /**
- * @see Zend_Validate_Hostname
+ * @see Postman_Zend_Validate_Hostname
  */
 // require_once 'Zend/Validate/Hostname.php';
 
 
 /**
- * Zend_Mail_Protocol_Abstract
+ * Postman_Zend_Mail_Protocol_Abstract
  *
  * Provides low-level methods for concrete adapters to communicate with a remote mail server and track requests and responses.
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Protocol
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  * @todo Implement proxy settings
  */
-abstract class Zend_Mail_Protocol_Abstract
+abstract class Postman_Zend_Mail_Protocol_Abstract
 {
     /**
      * Mail default EOL string
@@ -82,8 +82,8 @@ abstract class Zend_Mail_Protocol_Abstract
 
 
     /**
-     * Instance of Zend_Validate to check hostnames
-     * @var Zend_Validate
+     * Instance of Postman_Zend_Validate to check hostnames
+     * @var Postman_Zend_Validate
      */
     protected $_validHost;
 
@@ -129,20 +129,20 @@ abstract class Zend_Mail_Protocol_Abstract
      *
      * @param  string  $host OPTIONAL Hostname of remote connection (default: 127.0.0.1)
      * @param  integer $port OPTIONAL Port number (default: null)
-     * @throws Zend_Mail_Protocol_Exception
+     * @throws Postman_Zend_Mail_Protocol_Exception
      * @return void
      */
     public function __construct($host = '127.0.0.1', $port = null)
     {
-        $this->_validHost = new Zend_Validate();
-        $this->_validHost->addValidator(new Zend_Validate_Hostname(Zend_Validate_Hostname::ALLOW_ALL));
+        $this->_validHost = new Postman_Zend_Validate();
+        $this->_validHost->addValidator(new Postman_Zend_Validate_Hostname(Postman_Zend_Validate_Hostname::ALLOW_ALL));
 
         if (!$this->_validHost->isValid($host)) {
             /**
-             * @see Zend_Mail_Protocol_Exception
+             * @see Postman_Zend_Mail_Protocol_Exception
              */
 //             require_once 'Zend/Mail/Protocol/Exception.php';
-            throw new Zend_Mail_Protocol_Exception(join(', ', $this->_validHost->getMessages()));
+            throw new Postman_Zend_Mail_Protocol_Exception(join(', ', $this->_validHost->getMessages()));
         }
 
         $this->_host = $host;
@@ -255,7 +255,7 @@ abstract class Zend_Mail_Protocol_Abstract
      * An example $remote string may be 'tcp://mail.example.com:25' or 'ssh://hostname.com:2222'
      *
      * @param  string $remote Remote
-     * @throws Zend_Mail_Protocol_Exception
+     * @throws Postman_Zend_Mail_Protocol_Exception
      * @return boolean
      */
     protected function _connect($remote)
@@ -271,18 +271,18 @@ abstract class Zend_Mail_Protocol_Abstract
                 $errorStr = 'Could not open socket';
             }
             /**
-             * @see Zend_Mail_Protocol_Exception
+             * @see Postman_Zend_Mail_Protocol_Exception
              */
 //             require_once 'Zend/Mail/Protocol/Exception.php';
-            throw new Zend_Mail_Protocol_Exception($errorStr);
+            throw new Postman_Zend_Mail_Protocol_Exception($errorStr);
         }
 
         if (($result = $this->_setStreamTimeout(self::TIMEOUT_CONNECTION)) === false) {
             /**
-             * @see Zend_Mail_Protocol_Exception
+             * @see Postman_Zend_Mail_Protocol_Exception
              */
 //             require_once 'Zend/Mail/Protocol/Exception.php';
-            throw new Zend_Mail_Protocol_Exception('Could not set stream timeout');
+            throw new Postman_Zend_Mail_Protocol_Exception('Could not set stream timeout');
         }
 
         return $result;
@@ -306,17 +306,17 @@ abstract class Zend_Mail_Protocol_Abstract
      * Send the given request followed by a LINEEND to the server.
      *
      * @param  string $request
-     * @throws Zend_Mail_Protocol_Exception
+     * @throws Postman_Zend_Mail_Protocol_Exception
      * @return integer|boolean Number of bytes written to remote host
      */
     protected function _send($request)
     {
         if (!is_resource($this->_socket)) {
             /**
-             * @see Zend_Mail_Protocol_Exception
+             * @see Postman_Zend_Mail_Protocol_Exception
              */
 //             require_once 'Zend/Mail/Protocol/Exception.php';
-            throw new Zend_Mail_Protocol_Exception('No connection has been established to ' . $this->_host);
+            throw new Postman_Zend_Mail_Protocol_Exception('No connection has been established to ' . $this->_host);
         }
 
         $this->_request = $request;
@@ -328,10 +328,10 @@ abstract class Zend_Mail_Protocol_Abstract
 
         if ($result === false) {
             /**
-             * @see Zend_Mail_Protocol_Exception
+             * @see Postman_Zend_Mail_Protocol_Exception
              */
 //             require_once 'Zend/Mail/Protocol/Exception.php';
-            throw new Zend_Mail_Protocol_Exception('Could not send request to ' . $this->_host);
+            throw new Postman_Zend_Mail_Protocol_Exception('Could not send request to ' . $this->_host);
         }
 
         return $result;
@@ -342,17 +342,17 @@ abstract class Zend_Mail_Protocol_Abstract
      * Get a line from the stream.
      *
      * @var    integer $timeout Per-request timeout value if applicable
-     * @throws Zend_Mail_Protocol_Exception
+     * @throws Postman_Zend_Mail_Protocol_Exception
      * @return string
      */
     protected function _receive($timeout = null)
     {
         if (!is_resource($this->_socket)) {
             /**
-             * @see Zend_Mail_Protocol_Exception
+             * @see Postman_Zend_Mail_Protocol_Exception
              */
 //             require_once 'Zend/Mail/Protocol/Exception.php';
-            throw new Zend_Mail_Protocol_Exception('No connection has been established to ' . $this->_host);
+            throw new Postman_Zend_Mail_Protocol_Exception('No connection has been established to ' . $this->_host);
         }
 
         // Adapters may wish to supply per-commend timeouts according to appropriate RFC
@@ -371,18 +371,18 @@ abstract class Zend_Mail_Protocol_Abstract
 
         if (!empty($info['timed_out'])) {
             /**
-             * @see Zend_Mail_Protocol_Exception
+             * @see Postman_Zend_Mail_Protocol_Exception
              */
 //             require_once 'Zend/Mail/Protocol/Exception.php';
-            throw new Zend_Mail_Protocol_Exception($this->_host . ' has timed out');
+            throw new Postman_Zend_Mail_Protocol_Exception($this->_host . ' has timed out');
         }
 
         if ($reponse === false) {
             /**
-             * @see Zend_Mail_Protocol_Exception
+             * @see Postman_Zend_Mail_Protocol_Exception
              */
 //             require_once 'Zend/Mail/Protocol/Exception.php';
-            throw new Zend_Mail_Protocol_Exception('Could not read from ' . $this->_host);
+            throw new Postman_Zend_Mail_Protocol_Exception('Could not read from ' . $this->_host);
         }
 
         return $reponse;
@@ -393,10 +393,10 @@ abstract class Zend_Mail_Protocol_Abstract
      * Parse server response for successful codes
      *
      * Read the response from the stream and check for expected return code.
-     * Throws a Zend_Mail_Protocol_Exception if an unexpected code is returned.
+     * Throws a Postman_Zend_Mail_Protocol_Exception if an unexpected code is returned.
      *
      * @param  string|array $code One or more codes that indicate a successful response
-     * @throws Zend_Mail_Protocol_Exception
+     * @throws Postman_Zend_Mail_Protocol_Exception
      * @return string Last line of response string
      */
     protected function _expect($code, $timeout = null)
@@ -429,10 +429,10 @@ abstract class Zend_Mail_Protocol_Abstract
 
         if ($errMsg !== '') {
             /**
-             * @see Zend_Mail_Protocol_Exception
+             * @see Postman_Zend_Mail_Protocol_Exception
              */
 //             require_once 'Zend/Mail/Protocol/Exception.php';
-            throw new Zend_Mail_Protocol_Exception($errMsg, $cmd);
+            throw new Postman_Zend_Mail_Protocol_Exception($errMsg, $cmd);
         }
 
         return $msg;

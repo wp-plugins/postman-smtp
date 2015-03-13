@@ -13,24 +13,24 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
 /**
- * @see Zend_Validate_Abstract
+ * @see Postman_Zend_Validate_Abstract
  */
 require_once 'Zend/Validate/Abstract.php';
 
 /**
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Validate_Callback extends Zend_Validate_Abstract
+class Postman_Zend_Validate_Callback extends Postman_Zend_Validate_Abstract
 {
     /**
      * Invalid callback
@@ -70,7 +70,7 @@ class Zend_Validate_Callback extends Zend_Validate_Abstract
      * Sets validator options
      *
      * @param  mixed $callback
-     * @throws Zend_Validate_Exception
+     * @throws Postman_Zend_Validate_Exception
      */
     public function __construct($callback = null)
     {
@@ -87,7 +87,7 @@ class Zend_Validate_Callback extends Zend_Validate_Abstract
 
         if (null === ($initializedCallack = $this->getCallback())) {
             require_once 'Zend/Validate/Exception.php';
-            throw new Zend_Validate_Exception('No callback registered');
+            throw new Postman_Zend_Validate_Exception('No callback registered');
         }
     }
 
@@ -105,14 +105,14 @@ class Zend_Validate_Callback extends Zend_Validate_Abstract
      * Sets the callback
      *
      * @param  string|array $callback
-     * @throws Zend_Validate_Exception
-     * @return Zend_Validate_Callback Provides a fluent interface
+     * @throws Postman_Zend_Validate_Exception
+     * @return Postman_Zend_Validate_Callback Provides a fluent interface
      */
     public function setCallback($callback)
     {
         if (!is_callable($callback)) {
             require_once 'Zend/Validate/Exception.php';
-            throw new Zend_Validate_Exception('Invalid callback given');
+            throw new Postman_Zend_Validate_Exception('Invalid callback given');
         }
         $this->_callback = $callback;
         return $this;
@@ -132,7 +132,7 @@ class Zend_Validate_Callback extends Zend_Validate_Abstract
      * Sets options for the callback
      *
      * @param  mixed $options
-     * @return Zend_Validate_Callback Provides a fluent interface
+     * @return Postman_Zend_Validate_Callback Provides a fluent interface
      */
     public function setOptions($options)
     {
@@ -141,7 +141,7 @@ class Zend_Validate_Callback extends Zend_Validate_Abstract
     }
 
     /**
-     * Defined by Zend_Validate_Interface
+     * Defined by Postman_Zend_Validate_Interface
      *
      * Returns true if and only if the set callback returns
      * for the provided $value

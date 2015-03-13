@@ -13,29 +13,29 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
 /**
- * @see Zend_Validate_Abstract
+ * @see Postman_Zend_Validate_Abstract
  */
 require_once 'Zend/Validate/Abstract.php';
 
 /**
- * @see Zend_Locale_Format
+ * @see Postman_Zend_Locale_Format
  */
 require_once 'Zend/Locale/Format.php';
 
 /**
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Validate_Int extends Zend_Validate_Abstract
+class Postman_Zend_Validate_Int extends Postman_Zend_Validate_Abstract
 {
     const INVALID = 'intInvalid';
     const NOT_INT = 'notInt';
@@ -53,11 +53,11 @@ class Zend_Validate_Int extends Zend_Validate_Abstract
     /**
      * Constructor for the integer validator
      *
-     * @param string|Zend_Config|Zend_Locale $locale
+     * @param string|Postman_Zend_Config|Postman_Zend_Locale $locale
      */
     public function __construct($locale = null)
     {
-        if ($locale instanceof Zend_Config) {
+        if ($locale instanceof Postman_Zend_Config) {
             $locale = $locale->toArray();
         }
 
@@ -71,8 +71,8 @@ class Zend_Validate_Int extends Zend_Validate_Abstract
 
         if (empty($locale)) {
             require_once 'Zend/Registry.php';
-            if (Zend_Registry::isRegistered('Zend_Locale')) {
-                $locale = Zend_Registry::get('Zend_Locale');
+            if (Postman_Zend_Registry::isRegistered('Postman_Zend_Locale')) {
+                $locale = Postman_Zend_Registry::get('Postman_Zend_Locale');
             }
         }
 
@@ -92,18 +92,18 @@ class Zend_Validate_Int extends Zend_Validate_Abstract
     /**
      * Sets the locale to use
      *
-     * @param string|Zend_Locale $locale
+     * @param string|Postman_Zend_Locale $locale
      * @return $this
      */
     public function setLocale($locale = null)
     {
         require_once 'Zend/Locale.php';
-        $this->_locale = Zend_Locale::findLocale($locale);
+        $this->_locale = Postman_Zend_Locale::findLocale($locale);
         return $this;
     }
 
     /**
-     * Defined by Zend_Validate_Interface
+     * Defined by Postman_Zend_Validate_Interface
      *
      * Returns true if and only if $value is a valid integer
      *
@@ -134,11 +134,11 @@ class Zend_Validate_Int extends Zend_Validate_Abstract
 
         } else {
             try {
-                if (!Zend_Locale_Format::isInteger($value, array('locale' => $this->_locale))) {
+                if (!Postman_Zend_Locale_Format::isInteger($value, array('locale' => $this->_locale))) {
                     $this->_error(self::NOT_INT);
                     return false;
                 }
-            } catch (Zend_Locale_Exception $e) {
+            } catch (Postman_Zend_Locale_Exception $e) {
                 $this->_error(self::NOT_INT);
                 return false;
             }

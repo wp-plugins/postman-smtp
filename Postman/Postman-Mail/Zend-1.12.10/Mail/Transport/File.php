@@ -13,7 +13,7 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Transport
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
@@ -21,7 +21,7 @@
  */
 
 /**
- * @see Zend_Mail_Transport_Abstract
+ * @see Postman_Zend_Mail_Transport_Abstract
  */
 require_once 'Zend/Mail/Transport/Abstract.php';
 
@@ -32,12 +32,12 @@ require_once 'Zend/Mail/Transport/Abstract.php';
  * Class for saving outgoing emails in filesystem
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Transport
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Mail_Transport_File extends Zend_Mail_Transport_Abstract
+class Postman_Zend_Mail_Transport_File extends Postman_Zend_Mail_Transport_Abstract
 {
     /**
      * Target directory for saving sent email messages
@@ -56,12 +56,12 @@ class Zend_Mail_Transport_File extends Zend_Mail_Transport_Abstract
     /**
      * Constructor
      *
-     * @param  array|Zend_Config $options OPTIONAL (Default: null)
+     * @param  array|Postman_Zend_Config $options OPTIONAL (Default: null)
      * @return void
      */
     public function __construct($options = null)
     {
-        if ($options instanceof Zend_Config) {
+        if ($options instanceof Postman_Zend_Config) {
             $options = $options->toArray();
         } elseif (!is_array($options)) {
             $options = array();
@@ -98,8 +98,8 @@ class Zend_Mail_Transport_File extends Zend_Mail_Transport_Abstract
      * Saves e-mail message to a file
      *
      * @return void
-     * @throws Zend_Mail_Transport_Exception on not writable target directory
-     * @throws Zend_Mail_Transport_Exception on file_put_contents() failure
+     * @throws Postman_Zend_Mail_Transport_Exception on not writable target directory
+     * @throws Postman_Zend_Mail_Transport_Exception on file_put_contents() failure
      */
     protected function _sendMail()
     {
@@ -107,7 +107,7 @@ class Zend_Mail_Transport_File extends Zend_Mail_Transport_Abstract
 
         if (!is_writable(dirname($file))) {
             require_once 'Zend/Mail/Transport/Exception.php';
-            throw new Zend_Mail_Transport_Exception(sprintf(
+            throw new Postman_Zend_Mail_Transport_Exception(sprintf(
                 'Target directory "%s" does not exist or is not writable',
                 dirname($file)
             ));
@@ -117,14 +117,14 @@ class Zend_Mail_Transport_File extends Zend_Mail_Transport_Abstract
 
         if (!file_put_contents($file, $email)) {
             require_once 'Zend/Mail/Transport/Exception.php';
-            throw new Zend_Mail_Transport_Exception('Unable to send mail');
+            throw new Postman_Zend_Mail_Transport_Exception('Unable to send mail');
         }
     }
 
     /**
      * Default callback for generating filenames
      *
-     * @param Zend_Mail_Transport_File File transport instance
+     * @param Postman_Zend_Mail_Transport_File File transport instance
      * @return string
      */
     public function defaultCallback($transport)

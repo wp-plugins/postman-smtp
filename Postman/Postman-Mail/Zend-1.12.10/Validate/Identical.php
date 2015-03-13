@@ -13,22 +13,22 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
  */
 
-/** @see Zend_Validate_Abstract */
+/** @see Postman_Zend_Validate_Abstract */
 require_once 'Zend/Validate/Abstract.php';
 
 /**
  * @category   Zend
- * @package    Zend_Validate
+ * @package    Postman_Zend_Validate
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Validate_Identical extends Zend_Validate_Abstract
+class Postman_Zend_Validate_Identical extends Postman_Zend_Validate_Abstract
 {
     /**
      * Error codes
@@ -68,7 +68,7 @@ class Zend_Validate_Identical extends Zend_Validate_Abstract
      */
     public function __construct($token = null)
     {
-        if ($token instanceof Zend_Config) {
+        if ($token instanceof Postman_Zend_Config) {
             $token = $token->toArray();
         }
 
@@ -97,7 +97,7 @@ class Zend_Validate_Identical extends Zend_Validate_Abstract
      * Set token against which to compare
      *
      * @param  mixed $token
-     * @return Zend_Validate_Identical
+     * @return Postman_Zend_Validate_Identical
      */
     public function setToken($token)
     {
@@ -119,7 +119,7 @@ class Zend_Validate_Identical extends Zend_Validate_Abstract
     /**
      * Sets the strict parameter
      *
-     * @param Zend_Validate_Identical
+     * @param Postman_Zend_Validate_Identical
      * @return $this
      */
     public function setStrict($strict)
@@ -129,7 +129,7 @@ class Zend_Validate_Identical extends Zend_Validate_Abstract
     }
 
     /**
-     * Defined by Zend_Validate_Interface
+     * Defined by Postman_Zend_Validate_Interface
      *
      * Returns true if and only if a token has been set and the provided value
      * matches that token.

@@ -13,7 +13,7 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Transport
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
@@ -22,7 +22,7 @@
 
 
 /**
- * @see Zend_Mail_Transport_Abstract
+ * @see Postman_Zend_Mail_Transport_Abstract
  */
 // require_once 'Zend/Mail/Transport/Abstract.php';
 
@@ -31,12 +31,12 @@
  * Class for sending eMails via the PHP internal mail() function
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Transport
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Mail_Transport_Sendmail extends Zend_Mail_Transport_Abstract
+class Postman_Zend_Mail_Transport_Sendmail extends Postman_Zend_Mail_Transport_Abstract
 {
     /**
      * Subject
@@ -69,12 +69,12 @@ class Zend_Mail_Transport_Sendmail extends Zend_Mail_Transport_Abstract
     /**
      * Constructor.
      *
-     * @param  string|array|Zend_Config $parameters OPTIONAL (Default: null)
+     * @param  string|array|Postman_Zend_Config $parameters OPTIONAL (Default: null)
      * @return void
      */
     public function __construct($parameters = null)
     {
-        if ($parameters instanceof Zend_Config) {
+        if ($parameters instanceof Postman_Zend_Config) {
             $parameters = $parameters->toArray();
         }
 
@@ -91,9 +91,9 @@ class Zend_Mail_Transport_Sendmail extends Zend_Mail_Transport_Abstract
      *
      * @access public
      * @return void
-     * @throws Zend_Mail_Transport_Exception if parameters is set
+     * @throws Postman_Zend_Mail_Transport_Exception if parameters is set
      *         but not a string
-     * @throws Zend_Mail_Transport_Exception on mail() failure
+     * @throws Postman_Zend_Mail_Transport_Exception on mail() failure
      */
     public function _sendMail()
     {
@@ -108,13 +108,13 @@ class Zend_Mail_Transport_Sendmail extends Zend_Mail_Transport_Abstract
         } else {
             if(!is_string($this->parameters)) {
                 /**
-                 * @see Zend_Mail_Transport_Exception
+                 * @see Postman_Zend_Mail_Transport_Exception
                  *
                  * Exception is thrown here because
                  * $parameters is a public property
                  */
 //                 require_once 'Zend/Mail/Transport/Exception.php';
-                throw new Zend_Mail_Transport_Exception(
+                throw new Postman_Zend_Mail_Transport_Exception(
                     'Parameters were set but are not a string'
                 );
             }
@@ -131,10 +131,10 @@ class Zend_Mail_Transport_Sendmail extends Zend_Mail_Transport_Abstract
 
         if ($this->_errstr !== null || !$result) {
             /**
-             * @see Zend_Mail_Transport_Exception
+             * @see Postman_Zend_Mail_Transport_Exception
              */
 //             require_once 'Zend/Mail/Transport/Exception.php';
-            throw new Zend_Mail_Transport_Exception('Unable to send mail. ' . $this->_errstr);
+            throw new Postman_Zend_Mail_Transport_Exception('Unable to send mail. ' . $this->_errstr);
         }
     }
 
@@ -149,16 +149,16 @@ class Zend_Mail_Transport_Sendmail extends Zend_Mail_Transport_Abstract
      * @access  protected
      * @param   array $headers
      * @return  void
-     * @throws  Zend_Mail_Transport_Exception
+     * @throws  Postman_Zend_Mail_Transport_Exception
      */
     protected function _prepareHeaders($headers)
     {
         if (!$this->_mail) {
             /**
-             * @see Zend_Mail_Transport_Exception
+             * @see Postman_Zend_Mail_Transport_Exception
              */
 //             require_once 'Zend/Mail/Transport/Exception.php';
-            throw new Zend_Mail_Transport_Exception('_prepareHeaders requires a registered Zend_Mail object');
+            throw new Postman_Zend_Mail_Transport_Exception('_prepareHeaders requires a registered Postman_Zend_Mail object');
         }
 
         // mail() uses its $to parameter to set the To: header, and the $subject
@@ -167,19 +167,19 @@ class Zend_Mail_Transport_Sendmail extends Zend_Mail_Transport_Abstract
             // If the current recipients list is empty, throw an error
             if (empty($this->recipients)) {
                 /**
-                 * @see Zend_Mail_Transport_Exception
+                 * @see Postman_Zend_Mail_Transport_Exception
                  */
 //                 require_once 'Zend/Mail/Transport/Exception.php';
-                throw new Zend_Mail_Transport_Exception('Missing To addresses');
+                throw new Postman_Zend_Mail_Transport_Exception('Missing To addresses');
             }
         } else {
             // All others, simply grab the recipients and unset the To: header
             if (!isset($headers['To'])) {
                 /**
-                 * @see Zend_Mail_Transport_Exception
+                 * @see Postman_Zend_Mail_Transport_Exception
                  */
 //                 require_once 'Zend/Mail/Transport/Exception.php';
-                throw new Zend_Mail_Transport_Exception('Missing To header');
+                throw new Postman_Zend_Mail_Transport_Exception('Missing To header');
             }
 
             unset($headers['To']['append']);

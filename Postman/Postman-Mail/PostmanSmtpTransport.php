@@ -16,6 +16,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		 * what is this for .
 		 *
 		 *
+		 *
 		 * .. @deprecated
 		 */
 		public function isSmtp() {
@@ -72,7 +73,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			}
 		}
 		public function createZendMailTransport($hostname, $config) {
-			return new Zend_Mail_Transport_Smtp ( $hostname, $config );
+			return new Postman_Zend_Mail_Transport_Smtp ( $hostname, $config );
 		}
 		public function getDeliveryDetails(PostmanOptionsInterface $options) {
 			$deliveryDetails ['transport_name'] = $this->getTransportDescription ( $options->getEncryptionType () );
@@ -163,7 +164,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				return __ ( 'Password authentication (Plain/Login/CRAMMD5) requires a username and password.', 'postman-smtp' );
 			} else if ($options->isAuthTypeOAuth2 () && ! $this->isOAuthAuthenticationConfigured ( $options )) {
 				/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label (e.g. Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, Client ID, and Client Secret.) */
-				return sprintf ( __ ( 'Warning: OAuth 2.0 authentication requires a supported OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, %1$s, and %2$s.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
+				return sprintf ( __ ( 'OAuth 2.0 authentication requires a supported OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, %1$s, and %2$s.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
 			} else if ($this->isPermissionNeeded ( $options, $token )) {
 				/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label */
 				$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
@@ -264,6 +265,7 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		 * what is this for .
 		 *
 		 *
+		 *
 		 * .. @deprecated
 		 */
 		public function isSmtp() {
@@ -309,5 +311,3 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		}
 	}
 }
-
-

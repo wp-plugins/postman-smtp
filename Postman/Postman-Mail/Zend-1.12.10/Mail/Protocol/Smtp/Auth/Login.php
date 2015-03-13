@@ -13,7 +13,7 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Protocol
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
@@ -22,7 +22,7 @@
 
 
 /**
- * @see Zend_Mail_Protocol_Smtp
+ * @see Postman_Zend_Mail_Protocol_Smtp
  */
 // require_once 'Zend/Mail/Protocol/Smtp.php';
 
@@ -31,12 +31,12 @@
  * Performs LOGIN authentication
  *
  * @category   Zend
- * @package    Zend_Mail
+ * @package    Postman_Zend_Mail
  * @subpackage Protocol
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Mail_Protocol_Smtp_Auth_Login extends Zend_Mail_Protocol_Smtp
+class Postman_Zend_Mail_Protocol_Smtp_Auth_Login extends Postman_Zend_Mail_Protocol_Smtp
 {
     /**
      * LOGIN username
