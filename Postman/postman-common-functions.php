@@ -102,6 +102,34 @@ if (! function_exists ( 'stripUrlPath' )) {
 	}
 }
 
+if (! function_exists ( 'postmanObfuscateEmail' )) {
+	function postmanObfuscateEmail($email) {
+		$start = 2;
+		$end = strpos ( $email, '@' );
+		if ($end == false) {
+			// if it's not an email..
+			$start = 4;
+			$end = strlen ( $email ) - 4;
+		} else {
+			$end -= 2;
+		}
+		$result = '';
+		for($c = 0; $c < strlen ( $email ); $c ++) {
+			if ($c >= $start && $c < $end) {
+				$result .= '*';
+			} else {
+				$result .= $email [$c];
+			}
+		}
+		return $result;
+	}
+}
+
+if (! function_exists ( 'postmanObfuscatePassword' )) {
+	function postmanObfuscatePassword($password) {
+		return str_repeat ( '*', strlen ( $password ) );
+	}
+}
 if (! class_exists ( 'ParseUrlException' )) {
 	class ParseUrlException extends Exception {
 	}

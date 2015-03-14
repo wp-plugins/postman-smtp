@@ -100,7 +100,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->addToDiagnostics ( sprintf ( 'WordPress Debug (WP_DEBUG|WP_DEBUG_LOG|WP_DEBUG_DISPLAY): %s|%s|%s', WP_DEBUG, WP_DEBUG_LOG, WP_DEBUG_DISPLAY ) );
 			$this->addToDiagnostics ( $this->getActivePlugins () );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', POSTMAN_PLUGIN_VERSION ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Sender: %s', ($this->options->getSenderEmail ()) ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Sender: %s', (postmanObfuscateEmail ( $this->options->getSenderEmail () )) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI: %s', PostmanTransportUtils::getDeliveryUri ( PostmanTransportUtils::getCurrentTransport () ) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport Status (configured|ready|connected): %s|%s|%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', $this->testConnectivity () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Deliveries (Success|Fail): %d|%d', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PostmanStats::getInstance ()->getFailedDeliveries () ) );

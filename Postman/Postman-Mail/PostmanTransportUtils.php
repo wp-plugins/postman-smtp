@@ -25,15 +25,12 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 				$transportName = $transport->getSlug ();
 				$auth = $transport->getAuthenticationType ( $options );
 				$security = $transport->getSecurityType ( $options );
-				$user = $transport->getCredentialsId ( $options );
-				$pass = self::obfuscatePassword ( $transport->getCredentialsSecret ( $options ) );
+				$user = postmanObfuscateEmail ( $transport->getCredentialsId ( $options ) );
+				$pass = postmanObfuscatePassword ( $transport->getCredentialsSecret ( $options ) );
 				$host = $transport->getHostname ( $options );
 				$port = $transport->getHostPort ( $options );
 				return sprintf ( '%s:%s:%s://%s:%s@%s:%s', $transportName, $security, $auth, $user, $pass, $host, $port );
 			}
-		}
-		private static function obfuscatePassword($password) {
-			return str_repeat ( '*', strlen ( $password ) );
 		}
 		/**
 		 * Determine if a specific transport is registered in the directory.
