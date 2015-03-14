@@ -111,7 +111,11 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 		jQuery('#postman_test_message_status').css('color', 'blue');
 		jQuery.post(ajaxurl, data, function(response) {
 			handleResponse(response);
-		});
+		}).fail(
+				function() {
+					alert("The server returned an unexpected, invalid result: "
+							+ response);
+				});
 
 	}
 	function handleResponse(response) {
