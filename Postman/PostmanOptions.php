@@ -70,7 +70,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::LOG_LEVEL] ))
 				return $this->options [PostmanOptions::LOG_LEVEL];
 			else
-				return PostmanLogger::OFF_INT;
+				return PostmanLogger::ERROR_INT;
 		}
 		//
 		public function getHostname() {
