@@ -104,7 +104,7 @@ If you are willing to translate Postman into your language, [please let me know]
 1. Choose the Save Changes button.
 1. Send yourself a test email. 
 
-> Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment with PHP 5.3.3 and Apache 2.2.15 with Gmail, Hotmail and Yahoo Mail (US).
+> Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment with PHP 5.3.3 and Apache 2.2.15 with Gmail, Hotmail and Yahoo Mail (US). Postman is tested with [mailtrap.io](http://mailtrap.io)
 
 
 
@@ -261,29 +261,30 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.5.6 =
-* [Ticket] renamed Zend framework classes to prevent errors with other plugins using the Zend framework
+* [[Ticket](https://wordpress.org/support/topic/conflict-when-used-in-conjunction-with-advanced-access-manager-by-vasyl-martyn?replies=9)] renamed Zend framework classes to prevent errors with other plugins using the Zend framework
 * Translated into Italian, thank-you Andrea Greco
+* Obfuscated e-mail address in Diagnostic Info
 
 = 1.5.5 - 2015-03-11 =
 * Added a Dashboard Widget to display Postman status
-* [Ticket] Added diagnostics check for iconv library
+* [[Ticket](https://wordpress.org/support/topic/sending-test-email-hangs?replies=9)] Added diagnostics check for iconv library
 * Moved the SMTP transcript to it's own step in the Send Email Test
 * Moved 3rd-party plugin import to the Setup Wizard
-* [Ticket] Stopped writing to error log if a language file can't be found
+* [[Ticket](https://wordpress.org/support/topic/language-file-errors-in-debug-log?replies=3)|[Ticket](https://wordpress.org/support/topic/cant-activate-plugin-37?replies=6)] Stopped writing to error log if a language file can't be found
 * Added the Http User Agent string to the diagnostics
 
 = 1.5.4 - 2015-03-04 - the Birthday Release =
-* [Ticket] Added support for the [wp_mail](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail) filter - this adds compatibility with plugins like email-log
+* [[Ticket](https://wordpress.org/support/topic/status-postman-is-not-sending-mail?replies=42)] Added support for the [wp_mail](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail) filter - this adds compatibility with plugins like email-log
 * Better diagnostics - includes a port check on the currently configured host:port
 * Fixed a bug where multiple error messages at once overwrite each other
-* [Ticket] Fixed a bug in Sanitizer for cases where WordPress calls sanitize twice in a row - [known WP bug](https://core.trac.wordpress.org/ticket/21989)
+* [[Ticket](https://wordpress.org/support/topic/incorrect-authentication-data-error-220?replies=9)] Fixed a bug in Sanitizer for cases where WordPress calls sanitize twice in a row - [known WP bug](https://core.trac.wordpress.org/ticket/21989)
 
 = 1.5.3 - 2015-02-28 =
 * Added a dedicated screen for Diagnostics (so that I can add more intensive, slower-running checks like DNS)
 * Fixed port-testing race condition bug in Postman Setup Wizard when using Gmail API Extension
-* [Ticket] Fix for error "Fatal error: Cannot redeclare class PostmanOAuthTokenInterface" when using Gmail API Extension
+* Fix for error "Fatal error: Cannot redeclare class PostmanOAuthTokenInterface" when using Gmail API Extension
 * Checks to make sure that the hostname used for SMTP/OAuth 2.0 is one that is supported
-* [Ticket] Removed display_errors=On, Mr. Space Cadet here left it in the previous release by accident
+* Removed display_errors=On, Mr. Space Cadet here left it in the previous release by accident
 * French language updates
 
 = 1.5.1 - 2015-02-23 =
@@ -291,8 +292,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * In the wizard, if no ports are available for use, the error message was not being displayed.
 
 = 1.5 - 2015-02-22 =
-* [Ticket] Added support for modular transports. The first external transport is the Postman Gmail Extension, which uses the Gmail API to send mail out on the HTTPS port, a convenient way around traditional TCP port blocks for Gmail users
-* [Ticket] Made my debug logging "less agressive" so that broken systems (those that pipe warning messages to STDOUT regardless of the WordPress WP_DEBUG_DISPLAY setting or PHP's display_errors settings) will no longer experience the Port Test hanging during a check
+* [[Ticket](https://wordpress.org/support/topic/oh-bother-connection-refused?replies=12)] Added support for modular transports. The first external transport is the Postman Gmail Extension, which uses the Gmail API to send mail out on the HTTPS port, a convenient way around traditional TCP port blocks for Gmail users
+* [[Ticket]] Made my debug logging "less agressive" so that broken systems (those that pipe warning messages to STDOUT regardless of the WordPress WP_DEBUG_DISPLAY setting or PHP's display_errors settings) will no longer experience the Port Test hanging during a check
 * Fixed a bug in the Setup Wizard where it would not use OAuth 2.0 on port 587
 * Fixed a bug where Postman refused to send mail with Password authentication and no encryption (who does that??)
 
@@ -305,26 +306,26 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.4 - 2015-02-15 =
 * Happy Valentine's Day! Sending Yahoo email now supported with OAuth 2.0 authentication! If the Wizard detects that a Yahoo server has been entered, it automatically configures OAuth 2.0 
 * First time users may choose to import settings from any of the Big Four WordPress SMTP plugins (five if you count Easy SMTP Mail, a clone of WP Mail SMTP): Easy WP SMTP, WP Mail Bank, WP Mail SMTP and WP SMTP
-* [Ticket] Suppressed warning messages generated by calls to fsockopen - they were causing the remote Ajax queries to hang
+* [[Ticket]] Suppressed warning messages generated by calls to fsockopen - they were causing the remote Ajax queries to hang
 * The wizard was resetting some settings by accident, namely Connection Timeout, Read Timeout and Reply-To
-* [Ticket] Found an environment where calls to error_log were being displayed in the HTML even after display_errors was disabled. Therefore, disabled error_log calls by default. The log may be re-enabled in Advanced Settings
+* [[Ticket]] Found an environment where calls to error_log were being displayed in the HTML even after display_errors was disabled. Therefore, disabled error_log calls by default. The log may be re-enabled in Advanced Settings
 * The Bad, Postman! screen was messing with the Port Test Ajax call when fsockopen generated an error and debug level is set to E_ALL in php.ini. Therefore added a switch in the configuration "Show Error Screen" that is off by default. When it is off, Port Test works perfect but errors generate a WSOD. When it is on, errors are displayed in the "Bad, Postman!" screen but Port Test fails.
 * I heard that some hosts, like WPEngine, do not allow writing to the Http Session. Well that's balls. I've modified the code to write to the database instead.
 
 = 1.3.4 - 2015-02-11 =
 * 500 downloads and six 5-star ratings in only three weeks! Cool! 8-)
 * Replaced the Google OAuth API with pure PHP code. No more unexpected Google API errors.
-* [Ticket] Enabled overriding of the timeouts in the configuration screen. If Postman is intermittently sending mail, doubling the TCP Read Timeout may help
+* [[Ticket]] Enabled overriding of the timeouts in the configuration screen. If Postman is intermittently sending mail, doubling the TCP Read Timeout may help
 * Added the SMTP session transcript output when a test message fails to send.
-* [Ticket] Fixed the error: Class 'Zend_Mail_Protocol_Smtp_Auth_Plain' not found in /Postman/Postman-Mail/Zend-1.12.10/Mail/Transport/Smtp.php on line 198
+* [[Ticket]] Fixed the error: Class 'Zend_Mail_Protocol_Smtp_Auth_Plain' not found in /Postman/Postman-Mail/Zend-1.12.10/Mail/Transport/Smtp.php on line 198
 * Passwords in the database are now Base64-encoded so casual viewing of the database won't reveal them
 * Fixed a couple minor database upgrade bugs: for new users who use Password Authentication, and for old users that don't have an expiry token stored
 * Added a version shortcode, mostly for promotion of Postman on my own websites
 * Serveal minor tweaks to the user interface, including focus, style, validation, and enabling/disabling inputs where applicable
 
 = 1.3.2 - 2015-02-10 =
-* [Ticket] Fixed the error: PHP Fatal error:  Call to private PostmanAuthorizationToken::__construct() This occurs when upgrading from a pre-v1.0 version of Postman (when PostmanAuthorizationToken had a public constructor) to v1.0 or higher
-* [Ticket] Fixed the error PHP Fatal error: Class 'Google_IO_Stream' not found in /Postman/Postman-Auth/google-api-php-client-1.1.2/src/Google/Client.php on line 600 by including Google/IO/Stream.php
+* [[Ticket]] Fixed the error: PHP Fatal error:  Call to private PostmanAuthorizationToken::__construct() This occurs when upgrading from a pre-v1.0 version of Postman (when PostmanAuthorizationToken had a public constructor) to v1.0 or higher
+* [[Ticket]] Fixed the error PHP Fatal error: Class 'Google_IO_Stream' not found in /Postman/Postman-Auth/google-api-php-client-1.1.2/src/Google/Client.php on line 600 by including Google/IO/Stream.php
 * Postman now has a modest fatal error screen, rather than a dreaded white screen of death
 
 = 1.3 - 2015-02-09 =
@@ -346,32 +347,32 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Fixed a bug I introduced in 1.1. Thanks to user derrey for catching this one. Zend_Mail crashes when attempting to throw an exception when the 'from' standard header was added as a header : "Zend_Mail_Exception code=0 message=Cannot set standard header from addHeader()"
 
 = 1.1 - 2015-02-03 =
-* [Ticket] Added support for international characters (the WordPress default is UTF-8) which can be specified with headers or the [wp_mail_charset](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail_charset) filter
+* [[Ticket]] Added support for international characters (the WordPress default is UTF-8) which can be specified with headers or the [wp_mail_charset](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail_charset) filter
 * Added support for multi-part content type which can be specified with headers or the [wp_mail_content_type](http://codex.wordpress.org/Plugin_API/Filter_Reference/wp_mail_content_type) filter
 
 = 1.0 - 2015-02-02 =
 * Overhaul of the UI - A navigation pane is shown at the top of each page and each major function has been separated into its own screen
 * Postman now supports sending with basic auth and no auth just like the other SMTP plugins
 * Added a Port Test function so users can have peace of mind whether the plugin is failing (never!) or whether the host has firewalled them 
-* [Ticket] Now supports email headers, such as a text/html content-type
+* [[Ticket]] Now supports email headers, such as a text/html content-type
 * Now supports email attachments
 * Added a warning if the user has configured OAuth but not requested permission from Google
 * Added a warning if the user is using Google with Basic auth (or worse) and a suggestion to enable OAuth 2.0
 * Recording of successful/failure tally
 
 = 0.2.7 - 2015-01-29 =
-* [Ticket] Fixed error: "Undefined variable: authorizationToken" was preventing mail delivery outside of the admin screen.
+* [[Ticket]] Fixed error: "Undefined variable: authorizationToken" was preventing mail delivery outside of the admin screen.
 * Fixed warning message that Postman couldn't bind to wp_mail immediately after Activation
 * Added prerequisite checks to make sure the PHP environment can handle Postman
 * Moved the screenshots and icons out of /trunk and into /assets
 
 = 0.2.6 - 2015-01-28 =
-* [Ticket] Fixed "Configure and Authorize the plugin" missing the link address. Thanks to user kaorw for catching ths one.
-* [Ticket] Fixed "Fatal error: Call to undefined function str_getcsv()". Thanks to user kaorw for catching ths one. This function is not available before PHP 5.3. Fixed by replacing str_getdsv() with custom implementation.
-* [Ticket] Fixed "Warning: Missing argument 2 for update_option()". Thanks to user kaorw for catching ths one. Fixed by calling delete_option instead of update_option().
+* [[Ticket]] Fixed "Configure and Authorize the plugin" missing the link address. Thanks to user kaorw for catching ths one.
+* [[Ticket]] Fixed "Fatal error: Call to undefined function str_getcsv()". Thanks to user kaorw for catching ths one. This function is not available before PHP 5.3. Fixed by replacing str_getdsv() with custom implementation.
+* [[Ticket]] Fixed "Warning: Missing argument 2 for update_option()". Thanks to user kaorw for catching ths one. Fixed by calling delete_option instead of update_option().
 
 = 0.2.5 - 2015-01-27 =
-* [Ticket] Removed the namespace for users with older version of PHP
+* [[Ticket]] Removed the namespace for users with older version of PHP
 * Changed the Postman Redirect URI (now includes a trailing ?page=postman) - this means Client ID's from 0.2.4 or earlier MUST be updated with the new Redirect URI or re-created from scratch.
 
 = 0.2.4 - 2015-01-25 =
@@ -379,7 +380,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Better error handling/debugging with php logging and assertions.
 
 = 0.2.1 - 2015-01-23 =
-* [Ticket] Fixed an environment-specific error that prevented Postman reloading the setting screen after sending a test email
+* [[Ticket]] Fixed an environment-specific error that prevented Postman reloading the setting screen after sending a test email
 
 = 0.2 - 2015-01-20 =
 * wp_mail() accepts multiple recipients (array and string)
