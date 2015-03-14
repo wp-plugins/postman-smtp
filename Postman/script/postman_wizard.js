@@ -266,6 +266,11 @@ function wizardPortTest(hostname, port, input, state) {
 	};
 	jQuery.post(ajaxurl, data, function(response) {
 		handleWizardPortTestResponse(el, elState, response, hostname);
+	}).fail(
+		function() {
+			portsChecked++;
+			elState.html(postman_port_test_closed);
+			afterPortsChecked();
 	});
 }
 function handleWizardPortTestResponse(el, elState, response, hostname) {
@@ -277,6 +282,10 @@ function handleWizardPortTestResponse(el, elState, response, hostname) {
 	} else {
 		elState.html(postman_port_test_closed);
 	}
+	afterPortsChecked();
+}
+
+function afterPortsChecked() {
 	if (portsChecked >= portsToCheck) {
 		if (totalAvail != 0) {
 			jQuery('li + li').removeClass('disabled');
@@ -298,7 +307,6 @@ function handleWizardPortTestResponse(el, elState, response, hostname) {
 		};
 		populateRedirectUrl(data);
 	}
-
 }
 
 /**

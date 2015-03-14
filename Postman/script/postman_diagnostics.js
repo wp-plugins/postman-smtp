@@ -12,5 +12,7 @@ function getDiagnosticData() {
 		if (response.success) {
 			jQuery('#diagnostic-text').val(response.data.message);
 		}
+	}).fail(function() {
+		alert('The server encountered a problem handling this task.');
 	});
 }

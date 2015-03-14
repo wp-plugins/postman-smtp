@@ -45,5 +45,13 @@ function portTest(tdValue, port, button) {
 		if (totalPortsTested >= portsToBeTested) {
 			enable(button);
 		}
-	});
+	}).fail(
+		function() {
+			totalPortsTested += 1;
+			testEl.html('<span style="color:red">' + postman_port_test_closed
+					+ '</span> (' + postman_email_test.failed + ")");
+			if (totalPortsTested >= portsToBeTested) {
+				enable(button);
+			}
+	});;
 }

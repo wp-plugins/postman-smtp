@@ -109,12 +109,24 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 		};
 		jQuery('#postman_test_message_status').html(postman_email_test.sending);
 		jQuery('#postman_test_message_status').css('color', 'blue');
-		jQuery.post(ajaxurl, data, function(response) {
+		// http://stackoverflow.com/questions/21987318/catch-handle-502-bad-gateway-error
+		jQuery.ajax({
+			statusCode: {
+				502: function() {
+					alert('The server returned "HTTP Error 502 Bad gateway". Contact your hosting provider to resolve the error.');
+				}
+			},
+			method : "POST",
+			url : ajaxurl,
+			data : data
+		}).done(function(response) {
 			handleResponse(response);
 		}).fail(
-				function() {
-					alert("The server returned an unexpected, invalid result: "
-							+ response);
+				function(response) {
+					alert("The server returned an unexpected and invalid result: " + JSON.stringify(response, null, 4));
+					jQuery('#postman_test_message_status').html(
+							postman_email_test.failed);
+					jQuery('#postman_test_message_status').css('color', 'red');
 				});
 
 	}
