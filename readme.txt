@@ -57,43 +57,7 @@ If you are willing to translate Postman into your language, [please let me know]
 1. In the WordPress 'Settings' menu select 'Postman SMTP'.
 1. Choose 'Start the Wizard' and follow the instructions.
 
-= To manually configure OAuth 2.0 Authentication for Gmail =
-
-1. Choose configure manually
-1. In 'Authentication' choose 'OAuth2 2.0'
-1. In 'Sender Email Address' enter your Gmail email address. This MUST be the same address you login to Google with.
-1. In 'Outgoing Mail Server (SMTP)' enter 'smtp.gmail.com'. In 'Port' enter '465'. In 'Encryption' choose 'SSL'.
-1. Go to [Google Developer's Console](https://console.developers.google.com/) and create a Client ID for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
-1. Copy your generated 'Client ID' and 'Client Secret' into the plugin's Settings page.
-1. Choose the Save Changes button.
-1. Choose the 'Request Permission from Google' link and follow the instructions.
-1. Send yourself a test email. 
-
-= To manually configure OAuth 2.0 Authentication for Hotmail =
-
-1. Choose configure manually
-1. In 'Authentication' choose 'OAuth2 2.0'
-1. In 'Sender Email Address' enter your Hotmail email address. This MUST be the same address you login to Hotmail with.
-1. In 'Outgoing Mail Server (SMTP)' enter 'smtp.live.com'. In 'Port' enter '587'. In 'Encryption' choose 'TLS'.
-1. Go to [Microsoft Developer Center](https://account.live.com/developers/applications/create) and create an application for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
-1. Copy your generated 'Client ID' and 'Client secret' into the plugin's Settings page.
-1. Choose the Save Changes button.
-1. Choose the 'Request Permission from Microsoft' link and follow the instructions.
-1. Send yourself a test email. 
-
-= To manually configure OAuth 2.0 Authentication for Yahoo =
-
-1. Choose configure manually
-1. In 'Authentication' choose 'OAuth2 2.0'
-1. In 'Sender Email Address' enter your Yahoo Mail email address. This MUST be the same address you login to Yahoo with.
-1. In 'Outgoing Mail Server (SMTP)' enter your Yahoo SMTP server. In 'Port' enter '465'. In 'Encryption' choose 'SSL'.
-1. Go to [Yahoo Developer Network](https://developer.apps.yahoo.com/projects) and create an application for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
-1. Copy your generated 'Consumer Key' and 'Consumer Secret' into the plugin's Settings page.
-1. Choose the Save Changes button.
-1. Choose the 'Request Permission from Yahoo' link and follow the instructions.
-1. Send yourself a test email. 
-
-= To manually configure Password Authentication for any SMTP provider =
+= To manually configure Password Authentication (Advanced users only) =
 
 1. Choose configure manually
 1. In 'Authentication' choose 'Plain', unless your provider has told you different.
@@ -102,6 +66,18 @@ If you are willing to translate Postman into your language, [please let me know]
 1. If you chose Plain, Login or CRAM-MD5 as your authentication method then: Choose 'SSL' for encryption if your port is 465, or 'TLS' if your port is 587.
 1. Enter your username (probably your email address) and password in the Basic Auth Settings section.
 1. Choose the Save Changes button.
+1. Send yourself a test email. 
+
+= To manually configure OAuth 2.0 Authentication (Advanced users only) =
+
+1. Choose configure manually
+1. In 'Authentication' choose 'OAuth2 2.0'
+1. In 'Sender Email Address' enter your account's email address. This MUST be the same address you login to webmail with.
+1. In 'Outgoing Mail Server (SMTP)' enter the SMTP Server's hostname and port.
+1. Postman will tell you how to open the Client ID maintenance webpage of your host. Create a Client ID for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
+1. Copy your generated Client ID and Client secret into the plugin's Settings page.
+1. Choose the Save Changes button.
+1. Choose the 'Request OAuth2 Permission' link and follow the instructions.
 1. Send yourself a test email. 
 
 > Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment with PHP 5.3.3 and Apache 2.2.15 with Gmail, Hotmail and Yahoo Mail (US). Postman is tested with [mailtrap.io](http://mailtrap.io)
