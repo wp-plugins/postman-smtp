@@ -4,15 +4,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-03-12 21:45:36+00:00\n"
-"PO-Revision-Date: 2015-03-13 09:00-0500\n"
+"POT-Creation-Date: 2015-03-14 17:58:38+00:00\n"
+"PO-Revision-Date: 2015-03-14 14:21-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.5\n"
+"X-Generator: Poedit 1.7.4\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:13
@@ -23,7 +23,7 @@ msgstr "SMTP"
 #. translators: where %1$s is the transport type, %2$s is the host, and %3$s is
 #. the Authentication Type (e.g. Postman will send mail via smtp.gmail.com:465
 #. using OAuth 2.0 authentication.)
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:82
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:83
 msgid "Postman will send mail via %1$s to %2$s using %3$s authentication."
 msgstr ""
 "Postman va envoyer le courrier par %1$s à %2$s en utilisant "
@@ -31,35 +31,35 @@ msgstr ""
 
 #. translators: where %1$s is the Transport type (e.g. SMTP or SMTPS) and %2$s
 #. is the encryption type (e.g. SSL or TLS)
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:88
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:89
 msgctxt "Transport Name"
 msgid "SMTPS"
 msgstr "SMTPS"
 
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:94
-#: Postman/PostmanAdminController.php:502
-#: Postman/PostmanAdminController.php:510
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:95
+#: Postman/PostmanAdminController.php:521
+#: Postman/PostmanAdminController.php:529
 msgctxt "Authentication Type"
 msgid "OAuth 2.0"
 msgstr "OAuth 2.0"
 
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:96
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:97
 msgctxt "Authentication Type"
 msgid "no"
 msgstr "non"
 
 #. translators: where %s is the Authentication Type (e.g. plain, login or
 #. crammd5)
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:99
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:100
 msgctxt "Authentication Type"
 msgid "Password (%s)"
 msgstr "Mot de Passe (%s)"
 
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:161
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:162
 msgid "Outgoing Mail Server (SMTP) and Port can not be empty."
 msgstr "Serveur de courrier sortant (SMTP) et Port ne peut être vide."
 
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:163
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:164
 msgid ""
 "Password authentication (Plain/Login/CRAMMD5) requires a username and "
 "password."
@@ -70,17 +70,17 @@ msgstr ""
 #. translators: %1$s is the Client ID label, and %2$s is the Client Secret
 #. label (e.g. Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable
 #. Outgoing Mail Server, Sender Email Address, Client ID, and Client Secret.)
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:166
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:167
 msgid ""
-"Warning: OAuth 2.0 authentication requires a supported OAuth 2.0-capable "
-"Outgoing Mail Server, Sender Email Address, %1$s, and %2$s."
+"OAuth 2.0 authentication requires a supported OAuth 2.0-capable Outgoing "
+"Mail Server, Sender Email Address, %1$s, and %2$s."
 msgstr ""
 "Attention: L'authentification OAuth 2.0 requiert un serveur d'envoi valide "
 "avec OAuth 2.0, un adresse d'expédition, un %1$s, et un %2$s."
 
 #. translators: %1$s is the Client ID label, and %2$s is the Client Secret
 #. label
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:169
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:170
 msgid ""
 "You have configured OAuth 2.0 authentication, but have not received "
 "permission to use it."
@@ -91,13 +91,13 @@ msgstr ""
 #. translators: where %1$s is a description of the transport (eg. SMTPS-SSL),
 #. %2$s is a description of the authentication (eg. Password-CRAMMD5) and %3$d
 #. is the TCP port (eg. 465)
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:248
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:249
 msgid "Postman recommends %1$s with %2$s authentication on port %3$d."
 msgstr ""
 "Postman recommande %1$s avec l'authentification de %2$s sur le port %3$d."
 
 #. translators: where %s is the name of the transport (e.g. smtp)
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:308
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:310
 msgid ""
 "The selected transport '%s' is unavailable. The external plugin was probably "
 "deactivated."
@@ -105,22 +105,34 @@ msgstr ""
 "Le transport sélectionné '%s' ne est pas disponible. Le plugin externe a été "
 "probablement désactivée."
 
-#: Postman/PostmanAdminController.php:83
+#: Postman/PostmanAdminController.php:86
 msgctxt "The plugin successfully saved new settings."
 msgid "Settings saved."
 msgstr "Options enregistrées."
 
-#: Postman/PostmanAdminController.php:152
+#: Postman/PostmanAdminController.php:165
 msgctxt "Postman Dashboard  Widget Title"
 msgid "Postman SMTP"
 msgstr "Postman SMTP"
 
-#: Postman/PostmanAdminController.php:162
+#: Postman/PostmanAdminController.php:175
 msgctxt "Dashboard Widget Settings Link label"
 msgid "Settings"
 msgstr "Réglages"
 
-#: Postman/PostmanAdminController.php:164
+#: Postman/PostmanAdminController.php:177
+msgid "Postman is missing a required PHP library."
+msgstr "Postman manque une bibliothèque PHP requise."
+
+#: Postman/PostmanAdminController.php:179 Postman/PostmanSmtp.php:105
+msgid ""
+"Postman is properly configured, but another plugin has taken over the mail "
+"service. Deactivate the other plugin."
+msgstr ""
+"Postman à été configuré correctement, mais une autre extension a pris le "
+"contrôle de la messagerie. Désactivez l'autre extension."
+
+#: Postman/PostmanAdminController.php:182
 msgid ""
 "<span style=\"color:green\">Postman is configured</span> and has delivered "
 "<span style=\"color:green\">%d</span> email."
@@ -135,27 +147,27 @@ msgstr[1] ""
 "style=\"color:green\">%d</span> e-mails."
 
 #. translators: where %s is the URL to the Postman Settings page
-#: Postman/PostmanAdminController.php:169
-#: Postman/PostmanMessageHandler.php:126
+#: Postman/PostmanAdminController.php:187
+#: Postman/PostmanMessageHandler.php:126 Postman/PostmanViewController.php:320
 msgid "Postman is <em>not</em> handling email delivery."
 msgstr "Postman <em>n'intercepte pas</em> les demandes de courrier."
 
-#: Postman/PostmanAdminController.php:208
+#: Postman/PostmanAdminController.php:227
 msgctxt "Plugin Action Links"
 msgid "Settings"
 msgstr "Réglages"
 
-#: Postman/PostmanAdminController.php:227
+#: Postman/PostmanAdminController.php:246
 msgid "All plugin settings were removed."
 msgstr "Tous les paramètres des plugins ont été enlevés."
 
-#: Postman/PostmanAdminController.php:248
+#: Postman/PostmanAdminController.php:267
 msgid "Your email provider did not grant Postman permission. Try again."
 msgstr ""
 "Votre fournisseur de messagerie n'a pas accordé la permission à Postman. "
 "Réessayez. "
 
-#: Postman/PostmanAdminController.php:251
+#: Postman/PostmanAdminController.php:270
 msgid ""
 "The grant code from Google had no accompanying state and may be a forgery"
 msgstr ""
@@ -163,124 +175,124 @@ msgstr ""
 "être un faux"
 
 #. translators: %s is the error message
-#: Postman/PostmanAdminController.php:255
+#: Postman/PostmanAdminController.php:274
 msgid ""
 "Error authenticating with this Client ID - please create a new one. [%s]"
 msgstr ""
 "Erreur authentification avec cet ID client - s'l vous plaît, en créer un "
 "nouveau. [%s]"
 
-#: Postman/PostmanAdminController.php:287
+#: Postman/PostmanAdminController.php:306
 msgctxt "Configuration Section"
 msgid "General Settings"
 msgstr "Réglages généraux "
 
-#: Postman/PostmanAdminController.php:292
+#: Postman/PostmanAdminController.php:311
 msgctxt "Configuration Input Field"
 msgid "Transport"
 msgstr "Transport"
 
-#: Postman/PostmanAdminController.php:297
+#: Postman/PostmanAdminController.php:316
 msgctxt "Configuration Input Field"
 msgid "Sender Name"
 msgstr "Nom de l'expéditeur"
 
-#: Postman/PostmanAdminController.php:302
+#: Postman/PostmanAdminController.php:321
 #: Postman/PostmanViewController.php:536
 msgctxt "Configuration Input Field"
 msgid "Sender Email Address"
 msgstr "Adresse de l'expéditeur"
 
-#: Postman/PostmanAdminController.php:308
+#: Postman/PostmanAdminController.php:327
 msgctxt "Configuration Section"
 msgid "Transport Settings"
 msgstr "Réglages de Transport"
 
-#: Postman/PostmanAdminController.php:313
+#: Postman/PostmanAdminController.php:332
 #: Postman/PostmanViewController.php:592
 msgctxt "Configuration Input Field"
 msgid "Authentication"
 msgstr "Authentification"
 
-#: Postman/PostmanAdminController.php:318
+#: Postman/PostmanAdminController.php:337
 #: Postman/PostmanViewController.php:595
 msgctxt "Configuration Input Field"
 msgid "Security"
 msgstr "Sécurité "
 
-#: Postman/PostmanAdminController.php:323
+#: Postman/PostmanAdminController.php:342
 #: Postman/PostmanViewController.php:417 Postman/PostmanViewController.php:547
 msgctxt "Configuration Input Field"
 msgid "SMTP Server Hostname"
 msgstr "Nom d'Hôte du serveur SMTP"
 
-#: Postman/PostmanAdminController.php:328
+#: Postman/PostmanAdminController.php:347
 msgctxt "Configuration Input Field"
 msgid "SMTP Server Port"
 msgstr "Port du serveur SMTP"
 
-#: Postman/PostmanAdminController.php:333
-#: Postman/PostmanAdminController.php:349
+#: Postman/PostmanAdminController.php:352
+#: Postman/PostmanAdminController.php:368
 msgctxt "Configuration Section"
 msgid "Authentication Settings"
 msgstr "Réglages d'Authentification"
 
-#: Postman/PostmanAdminController.php:338
+#: Postman/PostmanAdminController.php:357
 #: Postman/PostmanViewController.php:598
 msgctxt "Configuration Input Field"
 msgid "Username"
 msgstr "Nom d'Utilisateur"
 
-#: Postman/PostmanAdminController.php:343
+#: Postman/PostmanAdminController.php:362
 #: Postman/PostmanViewController.php:602
 msgctxt "Configuration Input Field"
 msgid "Password"
 msgstr "Mot de Passe"
 
-#: Postman/PostmanAdminController.php:375
+#: Postman/PostmanAdminController.php:394
 msgctxt "Configuration Section"
 msgid "Advanced Settings"
 msgstr "Paramètres avancés"
 
-#: Postman/PostmanAdminController.php:380
+#: Postman/PostmanAdminController.php:399
 msgctxt "Configuration Input Field"
 msgid "TCP Connection Timeout (sec)"
 msgstr "Délai d'attente de connexion (sec)"
 
-#: Postman/PostmanAdminController.php:385
+#: Postman/PostmanAdminController.php:404
 msgctxt "Configuration Input Field"
 msgid "TCP Read Timeout (sec)"
 msgstr "Délai pour l'interrogation des données (sec)"
 
-#: Postman/PostmanAdminController.php:390
+#: Postman/PostmanAdminController.php:409
 msgctxt "Configuration Input Field"
 msgid "Reply-To Email Address"
 msgstr "L'adresse de courriel"
 
-#: Postman/PostmanAdminController.php:395
+#: Postman/PostmanAdminController.php:414
 msgctxt "Configuration Input Field"
 msgid "Log Level"
 msgstr "Niveau du journal"
 
-#: Postman/PostmanAdminController.php:406
+#: Postman/PostmanAdminController.php:425
 msgctxt "Configuration Section"
 msgid "Test Your Setup"
 msgstr "Tester votre configuration"
 
-#: Postman/PostmanAdminController.php:411
+#: Postman/PostmanAdminController.php:430
 #: Postman/PostmanViewController.php:642
 msgctxt "Configuration Input Field"
 msgid "Recipient Email Address"
 msgstr "Adresse d'envoi"
 
-#: Postman/PostmanAdminController.php:417
+#: Postman/PostmanAdminController.php:436
 msgctxt "Configuration Section"
 msgid "Delete plugin settings"
 msgstr "Supprimer les réglages de l'Extension"
 
 #. translators: These two phrases represent the cases for 1) a single transport
 #. installed and 2) mulitple transports installed
-#: Postman/PostmanAdminController.php:429
+#: Postman/PostmanAdminController.php:448
 msgid "Enter the sender's name and email address:"
 msgid_plural ""
 "Select the transport and enter the sender's name and email address:"
@@ -289,20 +301,20 @@ msgstr[1] ""
 "Sélectionnez le transport et entrez le nom et l'adresse électronique de "
 "l'expéditeur:"
 
-#: Postman/PostmanAdminController.php:435
+#: Postman/PostmanAdminController.php:454
 msgid ""
 "Select the authentication method and enter the SMTP server hostname and port:"
 msgstr ""
 "Sélectionnez la méthode d'authentification et entrez le nom du serveur SMTP "
 "et le port:"
 
-#: Postman/PostmanAdminController.php:448
+#: Postman/PostmanAdminController.php:467
 msgid "Enter the username (email address) and password you use to send email"
 msgstr ""
 "Entrer le nom d'utilisateur (adresse de messagerie) et mot de passe que vous "
 "utilisez pour envoyer du courrier électronique."
 
-#: Postman/PostmanAdminController.php:463
+#: Postman/PostmanAdminController.php:482
 msgid ""
 "You will receive an email from Postman with the subject \"WordPress Postman "
 "SMTP Test.\""
@@ -310,7 +322,7 @@ msgstr ""
 "Vous recevrez un message de Postman avec l'objet suivant  \"WordPress "
 "Postman SMTP Test.\""
 
-#: Postman/PostmanAdminController.php:470
+#: Postman/PostmanAdminController.php:489
 #: Postman/PostmanViewController.php:379
 msgid ""
 "This will purge all of Postman's settings, including SMTP server info, "
@@ -320,12 +332,12 @@ msgstr ""
 "informations du serveur SMTP, nom d'utilisateur/mot de passe et "
 "l'accréditation OAuth."
 
-#: Postman/PostmanAdminController.php:470
+#: Postman/PostmanAdminController.php:489
 #: Postman/PostmanViewController.php:379
 msgid "Are you sure?"
 msgstr "En êtes-vous sûre?"
 
-#: Postman/PostmanAdminController.php:477
+#: Postman/PostmanAdminController.php:496
 msgid ""
 "Increase the read timeout if your host is intermittenly failing to send "
 "mail. Be careful, this also correlates to how long your user must wait if "
@@ -335,52 +347,52 @@ msgstr ""
 "répétitions. Attention, cette action est en corrélation avec le temps "
 "d'attente que subira l'usager si votre serveur de courrier est injoignable."
 
-#: Postman/PostmanAdminController.php:498
-#: Postman/PostmanAdminController.php:508
+#: Postman/PostmanAdminController.php:517
+#: Postman/PostmanAdminController.php:527
 msgctxt "Authentication Type"
 msgid "None"
 msgstr "Aucun"
 
-#: Postman/PostmanAdminController.php:499
-#: Postman/PostmanAdminController.php:509
+#: Postman/PostmanAdminController.php:518
+#: Postman/PostmanAdminController.php:528
 msgctxt "Authentication Type"
 msgid "Plain"
 msgstr "Vide"
 
-#: Postman/PostmanAdminController.php:500
+#: Postman/PostmanAdminController.php:519
 msgctxt "Authentication Type"
 msgid "Login"
 msgstr "Login"
 
-#: Postman/PostmanAdminController.php:501
+#: Postman/PostmanAdminController.php:520
 msgctxt "Authentication Type"
 msgid "CRAMMD5"
 msgstr "CRAMMD5"
 
-#: Postman/PostmanAdminController.php:519
-#: Postman/PostmanAdminController.php:527
+#: Postman/PostmanAdminController.php:538
+#: Postman/PostmanAdminController.php:546
 msgctxt "Encryption Type"
 msgid "None"
 msgstr "Aucun"
 
-#: Postman/PostmanAdminController.php:520
-#: Postman/PostmanAdminController.php:528
+#: Postman/PostmanAdminController.php:539
+#: Postman/PostmanAdminController.php:547
 msgctxt "Encryption Type"
 msgid "SSL"
 msgstr "SSL"
 
-#: Postman/PostmanAdminController.php:521
-#: Postman/PostmanAdminController.php:529
+#: Postman/PostmanAdminController.php:540
+#: Postman/PostmanAdminController.php:548
 msgctxt "Encryption Type"
 msgid "TLS"
 msgstr "TLS"
 
-#: Postman/PostmanAdminController.php:578
+#: Postman/PostmanAdminController.php:597
 msgid "Error computing your domain root - please enter it manually"
 msgstr "Erreur de compilation de votre serveur souche - entrez le manuellement"
 
 #. translators: where %s is the URL to the Connectivity Test page
-#: Postman/PostmanAjaxController.php:314
+#: Postman/PostmanAjaxController.php:317
 msgid ""
 "Postman can't find any way to send mail on your system. Run a <a href=\"%s"
 "\">connectivity test</a>."
@@ -388,24 +400,24 @@ msgstr ""
 "Postman ne peut pas trouver un moyen pour envoyer des messages sur votre "
 "système. Faire un <a href=\"%s\">test de connexion de port</a>."
 
-#: Postman/PostmanAjaxController.php:462
+#: Postman/PostmanAjaxController.php:465
 msgctxt "Test Email Subject"
 msgid "WordPress Postman SMTP Test"
 msgstr "Test SMTP de WordPress Postman"
 
 #. translators: where %s is the Postman plugin version number (e.g. 1.4)
-#: Postman/PostmanAjaxController.php:465
+#: Postman/PostmanAjaxController.php:468
 msgctxt "Test Email Tagline"
 msgid "Sent by Postman v%s"
 msgstr "Envoyé par Postman v%s"
 
-#: Postman/PostmanAjaxController.php:470
+#: Postman/PostmanAjaxController.php:473
 msgid ""
 "Your message was delivered (%d ms) to the SMTP server! Congratulations :)"
 msgstr "Votre message à été livrer (%d ms) au serveur SMTP! Félicitations :)"
 
 #. translators: where %s is the email service name (e.g. Gmail)
-#: Postman/PostmanAjaxController.php:483
+#: Postman/PostmanAjaxController.php:486
 msgid ""
 "Communication Error [334] - make sure the Sender Email belongs to the "
 "account which provided the %s OAuth 2.0 consent."
@@ -413,7 +425,7 @@ msgstr ""
 "Erreur de communications  [334]  - Assurez-vous que l'adresse d'envoi "
 "appartient au compte qui a fourni le consentement %s de OAuth 2.0."
 
-#: Postman/PostmanAjaxController.php:490
+#: Postman/PostmanAjaxController.php:493
 msgid ""
 "The impossible is possible; sending through wp_mail() failed, but sending "
 "through internal engine succeeded."
@@ -589,13 +601,13 @@ msgstr "Demander l'autorisation de OAuth."
 msgid "<a href=\"%s\">Configure</a> the plugin."
 msgstr "<a href=\"%s\">Configurez</a> le plugin"
 
-#: Postman/PostmanSmtp.php:105
+#: Postman/PostmanPreRequisitesCheck.php:30
 msgid ""
-"Postman is properly configured, but another plugin has taken over the mail "
-"service. Deactivate the other plugin."
+"Your PHP installation is missing the <b>%1$s</b> library. Please install <b>"
+"%1$s</b> before continuing."
 msgstr ""
-"Postman à été configuré correctement, mais une autre extension a pris le "
-"contrôle de la messagerie. Désactivez l'autre extension."
+"Votre installation de PHP est absent de la <b>%1$s</b> bibliothèque. S'il "
+"vous plaît installer <b>%1$s</b> avant de continuer."
 
 #: Postman/PostmanViewController.php:72 Postman/PostmanViewController.php:92
 #: Postman/PostmanViewController.php:120 Postman/PostmanViewController.php:139
@@ -729,10 +741,6 @@ msgstr ""
 "Se il vous plaît envisager de laisser <a href=\"%s\">une critique de Postman "
 "SMTP</a> pour aider à passer le mot à propos de <br/> la nouvelle façon "
 "d'envoyer des courriels à partir de WordPress! :D"
-
-#: Postman/PostmanViewController.php:320
-msgid "Postman is not sending mail."
-msgstr "Postman n'envoie pas de courrier"
 
 #: Postman/PostmanViewController.php:322
 msgid "Thank-you for choosing Postman!"
@@ -881,8 +889,8 @@ msgstr "Rencontrez-vous des problèmes avec Postman?"
 #. Support Forums on WordPress.org
 #: Postman/PostmanViewController.php:450
 msgid ""
-"Pease check the <a href=\"%1$s\">troubleshooting and error messages</a> page "
-"and the <a href=\"%2$s\">support forum</a>.</br>If you write for help, "
+"Please check the <a href=\"%1$s\">troubleshooting and error messages</a> "
+"page and the <a href=\"%2$s\">support forum</a>.</br>If you write for help, "
 "please include the following diagnostic information:"
 msgstr ""
 "Consultez la page <a href=\"%1$s/\">des messages de dépannage et d'erreur</"
@@ -1141,7 +1149,7 @@ msgstr "Examinez la session SMTP Transcription si vous devez."
 msgid ""
 "This is the conversation between Postman and your SMTP server. It can be "
 "useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may "
-"contain your password in encoded form."
+"contain your shared secret (password) in encoded form."
 msgstr ""
 "C'est la conversation entre Postman et votre serveur SMTP. Il peut être "
 "utile pour diagnostiquer les problèmes. <b>NE PAS</b> poster en ligne, il "
@@ -1179,6 +1187,35 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid ""
+#~ "Warning: OAuth 2.0 authentication requires a supported OAuth 2.0-capable "
+#~ "Outgoing Mail Server, Sender Email Address, %1$s, and %2$s."
+#~ msgstr ""
+#~ "Attention: L'authentification OAuth 2.0 requiert un serveur d'envoi "
+#~ "valide avec OAuth 2.0, un adresse d'expédition, un %1$s, et un %2$s."
+
+#~ msgid "Postman is not sending mail."
+#~ msgstr "Postman n'envoie pas de courrier"
+
+#~ msgid ""
+#~ "Pease check the <a href=\"%1$s\">troubleshooting and error messages</a> "
+#~ "page and the <a href=\"%2$s\">support forum</a>.</br>If you write for "
+#~ "help, please include the following diagnostic information:"
+#~ msgstr ""
+#~ "Consultez la page <a href=\"%1$s/\">des messages de dépannage et "
+#~ "d'erreur</a> et le <a href=\"%2$s\">forum de support</a>. </br> Si vous "
+#~ "écrivez à l'aide, se il vous plaît inclure les informations de diagnostic "
+#~ "suivant:"
+
+#~ msgid ""
+#~ "This is the conversation between Postman and your SMTP server. It can be "
+#~ "useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may "
+#~ "contain your password in encoded form."
+#~ msgstr ""
+#~ "C'est la conversation entre Postman et votre serveur SMTP. Il peut être "
+#~ "utile pour diagnostiquer les problèmes. <b>NE PAS</b> poster en ligne, il "
+#~ "peut contenir votre mot de passe sous forme codée."
 
 #~ msgctxt "postman-smtp"
 #~ msgid "Back To Main Menu"
