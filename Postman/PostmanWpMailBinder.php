@@ -2,6 +2,8 @@
 require_once 'PostmanWpMail.php';
 require_once 'PostmanMessageHandler.php';
 require_once 'PostmanOptions.php';
+require_once 'PostmanPreRequisitesCheck.php';
+
 if (! class_exists ( "PostmanWpMailBinder" )) {
 	class PostmanWpMailBinder {
 		private $logger;
@@ -37,7 +39,7 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 			if (! $this->bound) {
 				$binderOptions = PostmanOptions::getInstance ();
 				$binderAuthorizationToken = PostmanOAuthToken::getInstance ();
-				if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $binderOptions, $binderAuthorizationToken )) {
+				if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $binderOptions, $binderAuthorizationToken ) && PostmanPreRequisitesCheck::isReady ()) {
 					$this->replacePluggableFunctionWpMail ();
 				}
 			}

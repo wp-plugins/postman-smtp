@@ -238,6 +238,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 1.5.6 =
 * [[Ticket](https://wordpress.org/support/topic/conflict-when-used-in-conjunction-with-advanced-access-manager-by-vasyl-martyn?replies=9)] renamed Zend framework classes to prevent errors with other plugins using the Zend framework
+* Add PHP library pre-requisite checks to Binder, Dashboard widget, Admin screen and Admin screen error messages.
 * Translated into Italian, thank-you Andrea Greco
 * Obfuscated e-mail address in Diagnostic Info
 

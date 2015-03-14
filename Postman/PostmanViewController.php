@@ -298,7 +298,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// Set class property
 			print '<div class="wrap">';
 			$this->displayTopNavigation ();
-			if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
+			if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken ) && PostmanPreRequisitesCheck::isReady ()) {
 				printf ( '<p><span style="color:green;padding:2px 5px; font-size:1.2em">%s</span></p>', __ ( 'Postman is configured.', 'postman-smtp' ) );
 				$currentTransport = PostmanTransportUtils::getCurrentTransport ();
 				$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );

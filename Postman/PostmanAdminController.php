@@ -14,6 +14,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	require_once 'PostmanConfigTextHelper.php';
 	require_once 'PostmanAjaxController.php';
 	require_once 'PostmanViewController.php';
+	require_once 'PostmanPreRequisitesCheck.php';
 	
 	//
 	class PostmanAdminController {
@@ -143,6 +144,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this,
 					'example_add_dashboard_widgets' 
 			) );
+			
+			if (isset ( $_REQUEST ['page'] ) && substr ( $_REQUEST ['page'], 0, 7 ) == 'postman') {
+				$this->checkPreRequisites ();
+			}
+		}
+		private function checkPreRequisites() {
+			$errors = PostmanPreRequisitesCheck::getPreRequisiteErrors ();
+			foreach ( $errors as $error ) {
+				$this->messageHandler->addError ( $error );
+			}
 		}
 		
 		/**
@@ -161,10 +172,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Create the function to output the contents of our Dashboard Widget.
 		 */
 		public function example_dashboard_widget_function() {
-			if ($this->wpMailBinder->isUnboundDueToException ()) {
+			$goToSettings = sprintf ( '[<a href="%s">%s</a>]', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Settings', 'Dashboard Widget Settings Link label', 'postman-smtp' ) );
+			if (! PostmanPreRequisitesCheck::isReady ()) {
+				printf ( '<p><span style="color:red">%s</span> %s</p>', __ ( 'Postman is missing a required PHP library.', 'postman-smtp' ), $goToSettings );
+			} else if ($this->wpMailBinder->isUnboundDueToException ()) {
 				printf ( '<p><span style="color:red">%s</span></p>', __ ( 'Postman is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.', 'postman-smtp' ) );
 			} else {
-				$goToSettings = sprintf ( '[<a href="%s">%s</a>]', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Settings', 'Dashboard Widget Settings Link label', 'postman-smtp' ) );
 				if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
 					printf ( '<p class="wp-menu-image dashicons-before dashicons-email"> %s</p>', sprintf ( _n ( '<span style="color:green">Postman is configured</span> and has delivered <span style="color:green">%d</span> email.', '<span style="color:green">Postman is configured</span> and has delivered <span style="color:green">%d</span> emails.', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
 					$currentTransport = PostmanTransportUtils::getCurrentTransport ();
