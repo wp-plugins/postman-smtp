@@ -57,7 +57,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			return endsWith ( $hostname, 'live.com' );
 		}
 		public function isServiceProviderYahoo($hostname) {
-			return endsWith ( $hostname, 'yahoo.com' );
+			return strpos( $hostname, 'yahoo' );
 		}
 		public function isOAuthUsed($authType) {
 			return $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;

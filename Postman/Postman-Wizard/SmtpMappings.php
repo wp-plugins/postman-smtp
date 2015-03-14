@@ -9,16 +9,17 @@ if (! class_exists ( 'SmtpMapping' )) {
 				'yahoo.co.uk' => 'smtp.mail.yahoo.co.uk',
 				'yahoo.com.au' => 'smtp.mail.yahoo.com.au',
 				'yahoo.com' => 'smtp.mail.yahoo.com',
-				'icloud.com' => 'imap.mail.me.com',
-				'mail.com' => 'smtp.mail.com'
+				'icloud.com' => 'smtp.mail.me.com',
+				'mail.com' => 'smtp.mail.com' 
 		);
 		// if an email's mx is in this domain array, it is a known smtp server (dns lookup)
 		// useful for custom domains that map to a mail service
 		private $mx = array (
 				'google.com' => 'smtp.gmail.com',
-				'icloud.com' => 'imap.mail.me.com', 
+				'icloud.com' => 'smtp.mail.me.com',
 				'hotmail.com' => 'smtp.live.com',
-				'hushmail.com' => 'smtp.hushmail.com'
+				'hushmail.com' => 'smtp.hushmail.com',
+				'secureserver.net' => 'smtp.secureserver.net'
 		);
 		public function getSmtpFromEmail($email) {
 			$hostname = substr ( strrchr ( $email, "@" ), 1 );

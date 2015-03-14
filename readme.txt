@@ -241,6 +241,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Add PHP library pre-requisite checks to Binder, Dashboard widget, Admin screen and Admin screen error messages.
 * Translated into Italian, thank-you Andrea Greco
 * Obfuscated e-mail address in Diagnostic Info
+* Fixed Wizard's SMTP host guess for Apple addresses (icloud.com, me.com, mac.com)
 
 = 1.5.5 - 2015-03-11 =
 * Added a Dashboard Widget to display Postman status

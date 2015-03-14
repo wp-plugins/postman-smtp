@@ -4,6 +4,8 @@ require_once 'Postman/Postman-Wizard/SmtpDiscovery.php';
 function test() {
 	check ( 'test@hendriks.ca' );
 	check ( 'test@hotmail.com' );
+	check ( 'test@live.com' );
+	check ( 'test@outlook.com' );
 	check ( 'test@office365.com' );
 	check ( 'test@gmail.com' );
 	check ( 'test@yahoo.com.co' );
@@ -19,10 +21,11 @@ function test() {
 	check ( 'test@apple.com' );
 	check ( 'test@icloud.com' );
 	check ( 'test@me.com' );
-	check ( 'test@mobileme.com' );
+	check ( 'test@mac.com' );
 	check ( 'timmy@hushmail.com' );
 	check ('test@ryerson.ca');
 	check ('art@artegennaro.com');
+	check ( 'test@sendgrid.com' );
 }
 function check($email) {
 	$d = new SmtpDiscovery ();
