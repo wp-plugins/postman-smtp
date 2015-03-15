@@ -80,7 +80,7 @@ If you are willing to translate Postman into your language, [please let me know]
 1. Choose the 'Request OAuth2 Permission' link and follow the instructions.
 1. Send yourself a test email. 
 
-> Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment with PHP 5.3.3 and Apache 2.2.15 with Gmail, Hotmail and Yahoo Mail (US). Postman is tested with [mailtrap.io](http://mailtrap.io)
+> Postman is developed on OS X with PHP 5.5.14 and Apache 2.4.9. Postman is tested in a [Red Hat OpenShift](http://www.openshift.com/) environment with PHP 5.3.3 and Apache 2.2.15 with Gmail, Hotmail and Yahoo Mail (US). Postman is tested with [mailtrap.io](http://mailtrap.io).
 
 
 
