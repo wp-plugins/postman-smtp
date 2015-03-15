@@ -15,7 +15,7 @@ Gmail, Hotmail, and Yahoo Mail problems are solved with Postman, the first and o
 
 Postman is an intelligent, next-generation SMTP mailer created to address a [shortcoming](https://wordpress.org/support/view/plugin-reviews/configure-smtp?filter=1) in every SMTP mailer for WordPress: [no OAuth 2.0](http://blog.varonis.com/giving-away-your-passwords/) - Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication.
 
-In 2014, Google announced if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)." For Google Apps users, OAuth 2.0 is a requirement, not a nice-to-have.
+In 2014, Google announced if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)." For Google Apps users, OAuth 2.0 is a [requirement](http://plugins.svn.wordpress.org/postman-smtp/assets/Screen%20Shot%202015-02-21%20at%208.52.13%20PM.png), not a nice-to-have.
 
 Stop fighting SMTP authentication failures, **lost emails**, and password secrecy concerns. Postman delivers the most reliable email engine because it will be [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
@@ -98,7 +98,7 @@ Once you grant access, Postman then overrides the WordPress wp_mail() function t
 
 = Can't I just tell Google to allow less secure apps and keep using my old password? =
 
-Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but this option is not available if you're using *Google Apps* to manage a domain.
+Google does have a setting to [allow less secure apps](https://support.google.com/accounts/answer/6010255) but this option is [not available](http://plugins.svn.wordpress.org/postman-smtp/assets/Screen%20Shot%202015-02-21%20at%208.52.13%20PM.png) if you're using *Google Apps* to manage a domain.
 
 There are many reasons why OAuth 2.0 is better than any password-based mechanism:
 
