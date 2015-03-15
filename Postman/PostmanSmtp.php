@@ -3,9 +3,9 @@
 // setup the main entry point
 if (! class_exists ( 'PostmanSmtp' )) {
 	
+	require_once 'postman-common-wp-functions.php';
 	require_once 'Common.php';
 	require_once 'Postman-Mail/PostmanSmtpTransport.php';
-	
 	require_once 'PostmanOAuthToken.php';
 	require_once 'PostmanConfigTextHelper.php';
 	require_once 'PostmanOptions.php';
@@ -36,10 +36,10 @@ if (! class_exists ( 'PostmanSmtp' )) {
 		 */
 		public function __construct($postmanPhpFile) {
 			
-			// calculate the basename
+			// store the root filename
 			$this->postmanPhpFile = $postmanPhpFile;
 			
-			// start the logger
+			// create an instance of the logger
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			
 			// store instances of the Options and OAuthToken
@@ -61,29 +61,29 @@ if (! class_exists ( 'PostmanSmtp' )) {
 		 * These functions have to be called before the WordPress pluggables are loaded
 		 */
 		private function preInit() {
-			// register the SMTP transport
-			$this->registerTransport ();
-			
 			// load the text domain
 			$this->loadTextDomain ();
+			
+			// register the SMTP transport
+			$this->registerTransport ();
 			
 			// bind to wp_mail
 			$this->wpMailBinder->bind ();
 			
 			if (is_admin ()) {
-				// fire up the AdminController
+				// fire up the AdminController, and only for those with admin access
 				$basename = plugin_basename ( $this->postmanPhpFile );
 				$adminController = new PostmanAdminController ( $basename, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
 			}
 			
-			// handle plugin activation/deactivation
+			// register activation handler on the activation event
 			$upgrader = new PostmanActivationHandler ();
 			register_activation_hook ( $this->postmanPhpFile, array (
 					$upgrader,
 					'activatePostman' 
 			) );
 			
-			// call the initialization on the standard WordPress plugins_loaded hook
+			// register initialization handler on the plugins_loaded event
 			add_action ( 'plugins_loaded', array (
 					$this,
 					'init' 
@@ -107,8 +107,7 @@ if (! class_exists ( 'PostmanSmtp' )) {
 				$this->logger->debug ( ' Not binding, plugin is not configured.' );
 			}
 			
-			// add the version shortcode
-			// register WordPress hooks
+			// register the shortcode handler on the add_shortcode event
 			add_shortcode ( 'postman-version', array (
 					$this,
 					'version_shortcode' 

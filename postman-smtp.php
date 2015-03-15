@@ -22,13 +22,6 @@
 // define constants
 define ( 'POSTMAN_PLUGIN_VERSION', '1.5.7' );
 
-// load the common functions
-require_once 'Postman/postman-common-wp-functions.php';
-
-// create a Logger
-require_once 'Postman/Common.php';
-$logger = new PostmanLogger ( 'postman-smtp.php' );
-
 // start Postman
 require_once 'Postman/PostmanSmtp.php';
 $kevinCostner = new PostmanSmtp ( __FILE__ );
