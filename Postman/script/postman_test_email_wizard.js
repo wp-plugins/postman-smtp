@@ -8,6 +8,7 @@ jQuery(document).ready(
 					.steps(
 							{
 								forceMoveForward : true,
+								showFinishButtonAlways : true,
 								bodyTag : "fieldset",
 								headerTag : "h5",
 								transitionEffect : "slideLeft",
@@ -30,6 +31,7 @@ jQuery(document).ready(
 								},
 								onInit : function() {
 									jQuery('#input_test_email').focus();
+									jQuery('li + li').addClass('disabled');
 								},
 								onStepChanged : function(event, currentIndex,
 										priorIndex) {
@@ -110,24 +112,30 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 		jQuery('#postman_test_message_status').html(postman_email_test.sending);
 		jQuery('#postman_test_message_status').css('color', 'blue');
 		// http://stackoverflow.com/questions/21987318/catch-handle-502-bad-gateway-error
-		jQuery.ajax({
-			statusCode: {
-				502: function() {
-					alert('The server returned "HTTP Error 502 Bad gateway". Contact your hosting provider to resolve the error.');
-				}
-			},
-			method : "POST",
-			url : ajaxurl,
-			data : data
-		}).done(function(response) {
-			handleResponse(response);
-		}).fail(
-				function(response) {
-					alert("The server returned an unexpected and invalid result: " + JSON.stringify(response, null, 4));
-					jQuery('#postman_test_message_status').html(
-							postman_email_test.failed);
-					jQuery('#postman_test_message_status').css('color', 'red');
-				});
+		jQuery
+				.ajax(
+						{
+							statusCode : {
+								502 : function() {
+									alert('The server returned "HTTP Error 502 Bad gateway". Contact your hosting provider to resolve the error.');
+								}
+							},
+							method : "POST",
+							url : ajaxurl,
+							data : data
+						})
+				.done(function(response) {
+					handleResponse(response);
+				})
+				.fail(
+						function(response) {
+							alert("The server returned an unexpected and invalid result: "
+									+ JSON.stringify(response, null, 4));
+							jQuery('#postman_test_message_status').html(
+									postman_email_test.failed);
+							jQuery('#postman_test_message_status').css('color',
+									'red');
+						});
 
 	}
 	function handleResponse(response) {
