@@ -376,8 +376,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Upgrade Notice ==
 
-= 1.5.6 =
-Italian translation, and fixes for increased stability.
+= 1.5.7 =
+Multipart/Alternative email support, Italian translation, and fixes for increased stability.
 
 = 1.5.5 =
 Added Dashboard status widget. Minor bugfixes.
