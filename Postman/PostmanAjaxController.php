@@ -57,7 +57,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->diagnostics .= sprintf ( '%s%s', $message, PHP_EOL );
 		}
 		private function getActivePlugins() {
-			$activePlugins = ('WordPress Active Plugins');
+			$activePlugins = ('Active Plugins');
 			// from http://stackoverflow.com/questions/20488264/how-do-i-get-activated-plugin-list-in-wordpress-plugin-development
 			$apl = get_option ( 'active_plugins' );
 			$plugins = get_plugins ();
@@ -93,13 +93,11 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			return 'undefined';
 		}
 		public function getDiagnostics() {
-			$this->addToDiagnostics ( sprintf ( 'PHP Version: %s %s', PHP_OS, PHP_VERSION ) );
-			$this->addToDiagnostics ( sprintf ( 'PHP OpenSSL support: %s', (PostmanPreRequisitesCheck::checkOpenSsl () ? 'Yes' : 'No') ) );
-			$this->addToDiagnostics ( sprintf ( 'PHP spl_autoload_register support: %s', (PostmanPreRequisitesCheck::checkSpl () ? 'Yes' : 'No') ) );
-			$this->addToDiagnostics ( sprintf ( 'PHP iconv support: %s', (PostmanPreRequisitesCheck::checkIconv () ? 'Yes' : 'No') ) );
-			$this->addToDiagnostics ( sprintf ( 'PHP error: (display_errors|errorReporting): %s|%s', ini_get ( 'display_errors' ), ini_get ( 'error_reporting' ) ) );
-			$this->addToDiagnostics ( sprintf ( 'WordPress Version: %s', get_bloginfo ( 'version' ) ) );
-			$this->addToDiagnostics ( sprintf ( 'WordPress Debug (WP_DEBUG|WP_DEBUG_LOG|WP_DEBUG_DISPLAY): %s|%s|%s', WP_DEBUG, WP_DEBUG_LOG, WP_DEBUG_DISPLAY ) );
+			$this->addToDiagnostics ( sprintf ( 'OS: %s', php_uname () ) );
+			$this->addToDiagnostics ( sprintf ( 'Platform: PHP %s %s / WordPress %s', PHP_OS, PHP_VERSION, get_bloginfo ( 'version' ) ) );
+			$this->addToDiagnostics ( sprintf ( 'OpenSSL support: %s', (PostmanPreRequisitesCheck::checkOpenSsl () ? 'Yes' : 'No') ) );
+			$this->addToDiagnostics ( sprintf ( 'spl_autoload_register support: %s', (PostmanPreRequisitesCheck::checkSpl () ? 'Yes' : 'No') ) );
+			$this->addToDiagnostics ( sprintf ( 'iconv support: %s', (PostmanPreRequisitesCheck::checkIconv () ? 'Yes' : 'No') ) );
 			$this->addToDiagnostics ( $this->getActivePlugins () );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', POSTMAN_PLUGIN_VERSION ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Sender: %s', (postmanObfuscateEmail ( $this->options->getSenderEmail () )) ) );
@@ -501,7 +499,7 @@ Content-Transfer-Encoding: 8bit
 									<td>
 										<div
 											style="max-width: 600px; height: 400px; margin: 0 auto; overflow: hidden;background-image:url(\'http://plugins.svn.wordpress.org/postman-smtp/assets/email/poofytoo.png\');background-repeat: no-repeat;">
-											<div style="margin:50px 0 0 300px; width:300px; font-size:2em;">Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は</div>' . sprintf ( '<div style="text-align:right;font-size: 1.4em; color:black;margin:150px 0 0 200px;">%s<br/><span style="font-size: 0.8em"><a style="color:#3f73b9" href="https://wordpress.org/plugins/postman-smtp/">https://wordpress.org/plugins/postman-smtp/</a></span></div>', sprintf ( __ ( 'Sent by <em>Postman</em> v%s', 'Test Email Tagline', 'postman-smtp'), POSTMAN_PLUGIN_VERSION ) ) . '</div>
+											<div style="margin:50px 0 0 300px; width:300px; font-size:2em;">Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は</div>' . sprintf ( '<div style="text-align:right;font-size: 1.4em; color:black;margin:150px 0 0 200px;">%s<br/><span style="font-size: 0.8em"><a style="color:#3f73b9" href="https://wordpress.org/plugins/postman-smtp/">https://wordpress.org/plugins/postman-smtp/</a></span></div>', sprintf ( __ ( 'Sent by <em>Postman</em> v%s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) ) . '</div>
 									</td>
 								</tr>
 							</tbody>
