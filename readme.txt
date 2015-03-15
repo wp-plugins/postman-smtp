@@ -13,7 +13,7 @@ Gmail, Hotmail, and Yahoo Mail problems are solved with Postman, the first and o
 
 == Description ==
 
-Postman is an intelligent, next-generation SMTP plugin created to address a [shortcoming](https://wordpress.org/support/view/plugin-reviews/configure-smtp?filter=1) in every SMTP mailer for WordPress: [no OAuth 2.0](http://blog.varonis.com/giving-away-your-passwords/) - Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication.
+Postman is an intelligent, next-generation SMTP mailer created to address a [shortcoming](https://wordpress.org/support/view/plugin-reviews/configure-smtp?filter=1) in every SMTP mailer for WordPress: [no OAuth 2.0](http://blog.varonis.com/giving-away-your-passwords/) - Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication.
 
 In 2014, Google announced if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)." For Google Apps users, OAuth 2.0 is a requirement, not a nice-to-have.
 
