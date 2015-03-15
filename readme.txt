@@ -94,7 +94,7 @@ A modern replacement for traditional password-based authentication. Postman supp
 
 Postman requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) and perform a service (handle Gmail, stay out of Google Docs) with no need for you to surrender your username and password credentials (master house key).
 
-Once you grant access, Postman then overrides the WordPress wp_mail() function to provide an incredible stable mail sub-system.
+Once you grant access, Postman then overrides the WordPress wp_mail() function to provide an incredibly stable mail sub-system.
 
 = Can't I just tell Google to allow less secure apps and keep using my old password? =
 
