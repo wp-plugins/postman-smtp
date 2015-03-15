@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-03-14 17:58:38+00:00\n"
-"PO-Revision-Date: 2015-03-14 16:12-0500\n"
+"POT-Creation-Date: 2015-03-15 00:35:42+00:00\n"
+"PO-Revision-Date: 2015-03-14 20:36-0500\n"
 "Last-Translator: Andrea Greco <andreag.email@gmail.com>\n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -391,7 +391,7 @@ msgstr ""
 "manualmente"
 
 #. translators: where %s is the URL to the Connectivity Test page
-#: Postman/PostmanAjaxController.php:317
+#: Postman/PostmanAjaxController.php:316
 msgid ""
 "Postman can't find any way to send mail on your system. Run a <a href=\"%s"
 "\">connectivity test</a>."
@@ -399,18 +399,23 @@ msgstr ""
 "Postman non riesce a trovare un modo per inviare la posta sul proprio "
 "sistema. Eseguire un <a href=\"%s\">test di connettività</a>."
 
-#: Postman/PostmanAjaxController.php:465
+#: Postman/PostmanAjaxController.php:464
 msgctxt "Test Email Subject"
 msgid "WordPress Postman SMTP Test"
 msgstr "WordPress Postman SMTP Test"
 
 #. translators: where %s is the Postman plugin version number (e.g. 1.4)
-#: Postman/PostmanAjaxController.php:468
+#: Postman/PostmanAjaxController.php:467
 msgctxt "Test Email Tagline"
 msgid "Sent by Postman v%s"
 msgstr "Inviato da Postman v%s"
 
-#: Postman/PostmanAjaxController.php:473
+#. translators: where %s is the Postman plugin version number (e.g. 1.5.7)
+#: Postman/PostmanAjaxController.php:504
+msgid "Sent by <em>Postman</em> v%s"
+msgstr "Inviato da <em>Postman</em> v%s"
+
+#: Postman/PostmanAjaxController.php:521
 msgid ""
 "Your message was delivered (%d ms) to the SMTP server! Congratulations :)"
 msgstr ""
@@ -418,7 +423,7 @@ msgstr ""
 "Congratulazioni :)"
 
 #. translators: where %s is the email service name (e.g. Gmail)
-#: Postman/PostmanAjaxController.php:486
+#: Postman/PostmanAjaxController.php:534
 msgid ""
 "Communication Error [334] - make sure the Sender Email belongs to the "
 "account which provided the %s OAuth 2.0 consent."
@@ -426,7 +431,7 @@ msgstr ""
 "Errore di comunicazione [334] - assicurarsi che il Mittente Email appartenga "
 "allo stesso profilo per il quale e' concesso il consenso %s OAuth 2.0."
 
-#: Postman/PostmanAjaxController.php:493
+#: Postman/PostmanAjaxController.php:541
 msgid ""
 "The impossible is possible; sending through wp_mail() failed, but sending "
 "through internal engine succeeded."
