@@ -26,12 +26,12 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 				$messageHandler->addError ( $this->message );
 			}
 		}
-		public function sendTestEmail(PostmanOptions $options, PostmanOAuthToken $authorizationToken, $recipient, $serviceName, $subject, $message) {
+		public function sendTestEmail(PostmanOptions $options, PostmanOAuthToken $authorizationToken, $recipient, $serviceName, $subject, $message, $headers = array ()) {
 			assert ( ! empty ( $options ) );
 			assert ( ! empty ( $authorizationToken ) );
 			assert ( ! empty ( $recipient ) );
 			
-			$headers = array ();
+			
 			// $headers = array (
 			// 'Content-Type: text/html;'
 			// );

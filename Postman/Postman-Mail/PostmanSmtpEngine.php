@@ -109,10 +109,9 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 			$contentType = $this->getContentType ();
 			if (false !== stripos ( $contentType, 'multipart' ) && ! empty ( $this->boundary )) {
 				// Lines in email are terminated by CRLF ("\r\n") according to RFC2821
-				$mail->addHeader ( sprintf ( "Content-Type: %s;\r\n\t boundary=\"%s\"", $contentType, $this->boundary ) );
-			} else {
-				$mail->addHeader ( 'Content-Type', $contentType );
+				$contentType = sprintf ( "%s;\r\n\t boundary=\"%s\"", $contentType, $this->boundary );
 			}
+			$mail->addHeader ( 'Content-Type', $contentType );
 			$this->logger->debug ( 'Adding content-type ' . $contentType );
 			
 			// add the sender
@@ -170,19 +169,43 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 			}
 			
 			// add the message content as either text or html
-			switch (strtolower ( $contentType )) {
-				case 'text/plain' :
-					$this->logger->debug ( 'Adding body as text' );
-					$mail->setBodyText ( $this->body );
-					break;
-				case 'text/html' :
-					$this->logger->debug ( 'Adding body as html' );
-					$mail->setBodyHtml ( $this->body );
-					break;
-				default :
-					$this->logger->error ( 'Unknown content-type: ' . $contentType );
-					$mail->setBodyText ( $this->body );
-					break;
+			if (substr ( $contentType, 0, 10 ) === 'text/plain') {
+				$this->logger->debug ( 'Adding body as text' );
+				$mail->setBodyText ( $this->body );
+			} else if (substr ( $contentType, 0, 9 ) === 'text/html') {
+				$this->logger->debug ( 'Adding body as html' );
+				$mail->setBodyHtml ( $this->body );
+			} else if (substr ( $contentType, 0, 21 ) === 'multipart/alternative') {
+				$this->logger->debug ( 'Adding body as multipart/alternative' );
+				$arr = explode ( PHP_EOL, $this->body );
+				$textBody = '';
+				$htmlBody = '';
+				$mode = '';
+				foreach ( $arr as $s ) {
+					if (substr ( $s, 0, 25 ) === "Content-Type: text/plain;") {
+						$mode = 'foundText';
+					} else if (substr ( $s, 0, 24 ) === "Content-Type: text/html;") {
+						$mode = 'foundHtml';
+					} else if ($mode == 'textReading') {
+						$textBody .= $s;
+					} else if ($mode == 'htmlReading') {
+						$htmlBody .= $s;
+					} else if ($mode == 'foundText') {
+						if ($s == '') {
+							$mode = 'textReading';
+						}
+					} else if ($mode == 'foundHtml') {
+						if ($s == '') {
+							$mode = 'htmlReading';
+						}
+					}
+				}
+				$mail->setBodyHtml ( $htmlBody );
+				$mail->setBodyText ( $textBody );
+			} else {
+				$this->logger->error ( 'Unknown content-type: ' . $contentType );
+				$mail->setBodyText ( $this->body );
+				break;
 			}
 			
 			// add attachments

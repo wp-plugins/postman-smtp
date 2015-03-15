@@ -1,8 +1,7 @@
 <?php
 if (! class_exists ( 'PostmanAbstractAjaxHandler' )) {
 	
-	require_once('PostmanPreRequisitesCheck.php');
-	
+	require_once ('PostmanPreRequisitesCheck.php');
 	abstract class PostmanAbstractAjaxHandler {
 		protected $logger;
 		function __construct() {
@@ -465,9 +464,58 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 				$subject = _x ( 'WordPress Postman SMTP Test', 'Test Email Subject', 'postman-smtp' );
 				// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
 				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
-				$message = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) );
+				$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) );
+				/* translators: where %s is the Postman plugin version number (e.g. 1.5.7) */
+				$message2 = '
+Content-Type: text/plain; charset = "UTF-8"
+Content-Transfer-Encoding: 8bit
+
+' . $message1 . '
+
+Content-Type: text/html; charset = "UTF-8"
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css" media="all">
+.wporg-notification .im {
+	color: #888;
+} /* undo a GMail-inserted style */
+</style>
+</head>
+<body class="wporg-notification">
+	<div
+		style="background: #e8f6fe; font-family: &amp; quot; Helvetica Neue&amp;quot; , Helvetica ,Arial,sans-serif; font-size: 14px; color: #666; text-align: center; margin: 0; padding: 0">
+
+		<table border="0" cellspacing="0" cellpadding="0" bgcolor="#e8f6fe"
+			style="background: #e8f6fe; width: 100%;">
+			<tbody>
+				<tr>
+					<td>
+						<table border="0" cellspacing="0" cellpadding="0" align="center"
+							style="padding: 0px; width: 100%;"">
+							<tbody>
+								<tr>
+									<td>
+										<div
+											style="max-width: 600px; height: 400px; margin: 0 auto; overflow: hidden;background-image:url(\'http://plugins.svn.wordpress.org/postman-smtp/assets/email/poofytoo.png\');background-repeat: no-repeat;">
+											<div style="margin:50px 0 0 300px; width:300px; font-size:2em;">Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は</div>' . sprintf ( '<div style="text-align:right;font-size: 1.4em; color:black;margin:150px 0 0 200px;">%s<br/><span style="font-size: 0.8em"><a style="color:#3f73b9" href="https://wordpress.org/plugins/postman-smtp/">https://wordpress.org/plugins/postman-smtp/</a></span></div>', sprintf ( __ ( 'Sent by <em>Postman</em> v%s'), POSTMAN_PLUGIN_VERSION ) ) . '</div>
+									</td>
+								</tr>
+							</tbody>
+						</table> <br><span style="font-size:0.9em;color:#94c0dc;">Image source: <a style="color:#94c0dc" href="http://poofytoo.com">poofytoo.com</a> - Used with permission</span></td>
+				</tr>
+			</tbody>
+		</table>
+</body>
+
+</html>
+				';
+				$header = 'Content-Type: multipart/alternative;';
 				$startTime = microtime ( true ) * 1000;
-				$success = $emailTester->sendTestEmail ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName (), $subject, $message );
+				$success = $emailTester->sendTestEmail ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName (), $subject, $message2, $header );
 				$endTime = microtime ( true ) * 1000;
 				if ($success) {
 					$statusMessage = sprintf ( __ ( 'Your message was delivered (%d ms) to the SMTP server! Congratulations :)', 'postman-smtp' ), ($endTime - $startTime) );

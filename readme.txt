@@ -32,7 +32,7 @@ Stop fighting password-authentication issues, lost emails, and safe password sto
 * Fire-and-forget: delivery continues even if your password changes
 * The extension for [blocked SMTP ports](https://wordpress.org/plugins/postman-gmail-extension/) sends mail over HTTPS
 * Integrated TCP Port Tester for troubleshooting connectivity issues
-* Supports International alphabets, HTML Mail and MultiPart/MIME
+* Supports International alphabets, HTML Mail and MultiPart/Alternative
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Security Support: SMTPS/STARTTLS with SSL and TLS
 * Verified compatible with: Contact Form 7, Gravity Forms, Email Log
@@ -240,6 +240,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.5.7 - 2015-03-14 =
 * [[Ticket](https://wordpress.org/support/topic/conflict-when-used-in-conjunction-with-advanced-access-manager-by-vasyl-martyn?replies=9)] renamed Zend framework classes to prevent errors with other plugins using the Zend framework
 * [[Ticket](https://wordpress.org/support/topic/test-email-hangs?replies=5)] Added ajax error checks, especially for Error 502 : Bad Gateway (from WPEngine.com) when sending test e-mail
+* Multipart/Alternative was horribly broken, clearly no-one was using it. It's working now, and Postman's new Test Message is Multipart/Alternative. Thanks to Victor Hung of [poofytoo](http://poofytoo.com) for the use of his cartoon.
 * Add PHP library pre-requisite checks to Binder, Dashboard widget, Admin screen and Admin screen error messages.
 * Translated into Italian, thank-you Andrea Greco
 * Obfuscated e-mail address in Diagnostic Info
