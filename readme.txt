@@ -50,7 +50,7 @@ If you are willing to translate Postman into your language, [please let me know]
 
 == Installation ==
 
-> Please be aware that if your host provides an internal mail server for you to use (e.g. GoDaddy), there is a good chance they have closed the standard SMTP ports. Use Postman's Connectivity Test utility to determine if your host has a firewal in place and if they do, consider the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-extension/) to send your Gmail over the Secure Web port (HTTPS).
+> If you are trying to install on GoDaddy, or another host that blocks the standard mail ports, your only option may be the [Postman Gmail API extension](https://wordpress.org/plugins/postman-gmail-extension/). If you are trying to install on WPEngine, you may run into [Error 502 Bad Gateway](https://wordpress.org/support/topic/test-email-hangs?replies=7).
 
 = Easy install and setup! (Recommended for all users) =
 1. Install and activate the plugin through the 'Plugins' menu in WordPress.
