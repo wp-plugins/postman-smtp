@@ -17,7 +17,7 @@ Postman is an intelligent, next-generation SMTP plugin created to address a [sho
 
 In 2014, Google announced if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)."
 
-Stop fighting password-authentication issues, lost emails, and safe password storage concerns. With OAuth 2.0 you get a reliable email engine because Postman will be [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send messages on your behalf, without rejection, and without the work-arounds.
+Stop fighting authentication issues, **lost emails**, and password secrecy concerns. With OAuth 2.0 you get a reliable email engine because Postman will be [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send messages on your behalf, without rejection, and without the work-arounds.
 
 [Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished since January of this year.
 
