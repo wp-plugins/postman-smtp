@@ -17,7 +17,7 @@ Postman is an intelligent, next-generation SMTP mailer created to address a [sho
 
 In 2014, Google announced if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)." For Google Apps users, OAuth 2.0 is a [requirement](http://plugins.svn.wordpress.org/postman-smtp/assets/Screen%20Shot%202015-02-21%20at%208.52.13%20PM.png), not a nice-to-have.
 
-Stop fighting SMTP authentication failures, **lost emails**, and password secrecy concerns. Postman delivers the most reliable email engine because it will be [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
+Stop fighting SMTP authentication failures, **lost emails**, and password secrecy concerns. Postman delivers the most reliable email engine because your email service will [pre-approve](http://blog.varonis.com/introduction-to-oauth/) it to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
 [Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished since January of this year.
 
