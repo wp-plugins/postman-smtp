@@ -157,7 +157,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					if ($state ['required']) {
 						$this->messageHandler->addError ( $message );
 					} else {
-						$this->messageHandler->addWarning ( $message );
+						// $this->messageHandler->addWarning ( $message );
 					}
 				}
 			}
