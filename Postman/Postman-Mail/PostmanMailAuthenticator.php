@@ -55,8 +55,10 @@ if (! class_exists ( 'PostmanOAuth2MailAuthenticator' )) {
 		public function filterSender(PostmanEmailAddress $sender) {
 			// yahoo will refuse to authenticate without this
 			// gmail and hotmail will re-write it
-			$this->logger->debug ( sprintf ( 'Overriding e-mail address from %s to %s', $sender->getEmail (), $this->options->getSenderEmail () ) );
-			$sender->setEmail ( $this->options->getSenderEmail () );
+			if ($sender->getEmail () != $this->options->getSenderEmail ()) {
+				$this->logger->debug ( sprintf ( 'Overriding e-mail address from %s to %s', $sender->getEmail (), $this->options->getSenderEmail () ) );
+				$sender->setEmail ( $this->options->getSenderEmail () );
+			}
 		}
 		private function getEncryptionType() {
 			return $this->options->getEncryptionType ();
