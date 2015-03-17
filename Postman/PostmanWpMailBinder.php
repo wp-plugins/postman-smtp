@@ -39,7 +39,17 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 			if (! $this->bound) {
 				$binderOptions = PostmanOptions::getInstance ();
 				$binderAuthorizationToken = PostmanOAuthToken::getInstance ();
-				if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $binderOptions, $binderAuthorizationToken ) && PostmanPreRequisitesCheck::isReady ()) {
+				$ready = true;
+				if (! PostmanTransportUtils::isPostmanReadyToSendEmail ( $binderOptions, $binderAuthorizationToken )) {
+					$this->logger->debug ( 'Transport is not configured and ready' );
+					$ready = false;
+				}
+				if (! PostmanPreRequisitesCheck::isReady ()) {
+					$this->logger->error ( 'Pre-Requisite check failed' );
+					$ready = false;
+				}
+				if ($ready) {
+					$this->logger->debug ( 'Binding to wp_mail()' );
 					$this->replacePluggableFunctionWpMail ();
 				}
 			}

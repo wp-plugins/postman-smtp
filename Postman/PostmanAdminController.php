@@ -150,9 +150,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 		}
 		private function checkPreRequisites() {
-			$errors = PostmanPreRequisitesCheck::getPreRequisiteErrors ();
-			foreach ( $errors as $error ) {
-				$this->messageHandler->addError ( $error );
+			$states = PostmanPreRequisitesCheck::getState ();
+			foreach ( $states as $state ) {
+				if (! $state ['ready']) {
+					$message = sprintf ( __ ( 'This PHP installation needs <b>%1$s</b>.' ), $state ['name'] );
+					if ($state ['required']) {
+						$this->messageHandler->addError ( $message );
+					} else {
+						$this->messageHandler->addWarning ( $message );
+					}
+				}
 			}
 		}
 		

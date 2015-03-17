@@ -10,24 +10,50 @@ if (! class_exists ( 'PostmanPreRequisitesCheck' )) {
 		public static function checkOpenSsl() {
 			return extension_loaded ( 'openssl' );
 		}
+		public static function checkAllowUrlFopen() {
+			return filter_var ( ini_get ( 'allow_url_fopen' ), FILTER_VALIDATE_BOOLEAN );
+		}
+		/**
+		 * Return an array of state:
+		 * [n][name=>x,ready=>true|false,required=true|false]
+		 */
+		public static function getState() {
+			$state = array ();
+			array_push ( $state, array (
+					'name' => 'iconv',
+					'ready' => self::checkIconv (),
+					'required' => true 
+			) );
+			array_push ( $state, array (
+					'name' => 'spl_autoload',
+					'ready' => self::checkSpl (),
+					'required' => true 
+			) );
+			array_push ( $state, array (
+					'name' => 'openssl',
+					'ready' => self::checkOpenSsl (),
+					'required' => false 
+			) );
+			array_push ( $state, array (
+					'name' => 'allow_url_fopen',
+					'ready' => self::checkAllowUrlFopen (),
+					'required' => false 
+			) );
+			return $state;
+		}
+		/**
+		 *
+		 * @return boolean
+		 */
 		public static function isReady() {
-			return self::checkIconv () && self::checkSpl () && self::checkOpenSsl ();
-		}
-		public static function getPreRequisiteErrors() {
-			$errors = array ();
-			if (! self::checkIconv ()) {
-				array_push ( $errors, self::printPreReqMessage ( 'iconv' ) );
+			$states = self::getState ();
+			foreach ( $states as $state ) {
+				if ($state ['ready'] == false && $state ['required'] == true) {
+					return false;
+				}
 			}
-			if (! self::checkSpl ()) {
-				array_push ( $errors, self::printPreReqMessage ( 'spl' ) );
-			}
-			if (! self::checkOpenSsl ()) {
-				array_push ( $errors, self::printPreReqMessage ( 'openssl' ) );
-			}
-			return $errors;
-		}
-		private static function printPreReqMessage($thing) {
-			return sprintf ( __ ( 'Your PHP installation is missing the <b>%1$s</b> library. Please install <b>%1$s</b> before continuing.' ), $thing );
+			
+			return true;
 		}
 	}
 }

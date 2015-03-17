@@ -103,8 +103,6 @@ if (! class_exists ( 'PostmanSmtp' )) {
 			// are we bound?
 			if ($this->wpMailBinder->isUnboundDueToException ()) {
 				$this->messageHandler->addError ( __ ( 'Postman is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.', 'postman-smtp' ) );
-			} else if (! PostmanWpMailBinder::getInstance ()->isBound ()) {
-				$this->logger->debug ( ' Not binding, plugin is not configured.' );
 			}
 			
 			// register the shortcode handler on the add_shortcode event

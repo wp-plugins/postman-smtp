@@ -57,7 +57,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->diagnostics .= sprintf ( '%s%s', $message, PHP_EOL );
 		}
 		private function getActivePlugins() {
-			$activePlugins = ('Active Plugins');
+			$activePlugins = ('WordPress Plugins');
 			// from http://stackoverflow.com/questions/20488264/how-do-i-get-activated-plugin-list-in-wordpress-plugin-development
 			$apl = get_option ( 'active_plugins' );
 			$plugins = get_plugins ();
@@ -66,6 +66,14 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 				if (isset ( $plugins [$p] )) {
 					$activePlugins .= ' : ' . $plugins [$p] ['Name'];
 				}
+			}
+			return $activePlugins;
+		}
+		private function getPhpDependencies() {
+			$activePlugins = ('PHP Dependencies');
+			$apl = PostmanPreRequisitesCheck::getState ();
+			foreach ( $apl as $p ) {
+				$activePlugins .= ' : ' . $p ['name'] . '=' . ($p ['ready'] ? 'Yes' : 'No');
 			}
 			return $activePlugins;
 		}
@@ -95,9 +103,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		public function getDiagnostics() {
 			$this->addToDiagnostics ( sprintf ( 'OS: %s', php_uname () ) );
 			$this->addToDiagnostics ( sprintf ( 'Platform: PHP %s %s / WordPress %s', PHP_OS, PHP_VERSION, get_bloginfo ( 'version' ) ) );
-			$this->addToDiagnostics ( sprintf ( 'OpenSSL support: %s', (PostmanPreRequisitesCheck::checkOpenSsl () ? 'Yes' : 'No') ) );
-			$this->addToDiagnostics ( sprintf ( 'spl_autoload_register support: %s', (PostmanPreRequisitesCheck::checkSpl () ? 'Yes' : 'No') ) );
-			$this->addToDiagnostics ( sprintf ( 'iconv support: %s', (PostmanPreRequisitesCheck::checkIconv () ? 'Yes' : 'No') ) );
+			$this->addToDiagnostics ( $this->getPhpDependencies () );
 			$this->addToDiagnostics ( $this->getActivePlugins () );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', POSTMAN_PLUGIN_VERSION ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Sender: %s', (postmanObfuscateEmail ( $this->options->getSenderEmail () )) ) );
