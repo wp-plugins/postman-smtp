@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email, mail, wp_mail, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail
 Requires at least: 3.9
 Tested up to: 4.1.1
-Stable tag: 1.5.7
+Stable tag: 1.5.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -237,6 +237,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.5.8 - 2015-03-16 =
+[[Ticket](https://wordpress.org/support/topic/openssl-error-after-upgrading?replies=2#post-6699480)] Postman will not shut down if it can't find OpenSSL. It will just display a warning to the user.
+
 = 1.5.7 - 2015-03-14 =
 * [[Ticket](https://wordpress.org/support/topic/conflict-when-used-in-conjunction-with-advanced-access-manager-by-vasyl-martyn?replies=9)] renamed Zend framework classes to prevent errors with other plugins using the Zend framework
 * [[Ticket](https://wordpress.org/support/topic/test-email-hangs?replies=5)] Added ajax error checks, especially for Error 502 : Bad Gateway (from WPEngine.com) when sending test e-mail
@@ -375,6 +378,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 1.5.8 =
+Postman will proceed even without OpenSSL installed, but with a warning to the user.
 
 = 1.5.7 =
 Multipart/Alternative email support, Italian translation, and fixes for increased stability.
