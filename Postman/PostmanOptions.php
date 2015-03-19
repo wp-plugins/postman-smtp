@@ -18,6 +18,10 @@ if (! class_exists ( "PostmanOptions" )) {
 		const SENDER_EMAIL = 'sender_email';
 		const SENDER_NAME = 'sender_name';
 		const REPLY_TO = 'reply_to';
+		const FORCED_TO_RECIPIENTS = 'forced_to';
+		const FORCED_CC_RECIPIENTS = 'forced_cc';
+		const FORCED_BCC_RECIPIENTS = 'forced_bcc';
+		const ADDITIONAL_HEADERS = 'headers';
 		const TEST_EMAIL = 'test_email';
 		const HOSTNAME = 'hostname';
 		const PORT = 'port';

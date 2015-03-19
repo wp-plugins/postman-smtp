@@ -418,22 +418,22 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'reply_to_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( PostmanOptions::TO_HEADER, _x ( 'To Address(es)', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::FORCED_TO_RECIPIENTS, _x ( 'To Address(es)', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'to_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( PostmanOptions::CC_HEADER, _x ( 'Carbon Copy (cc) Address(es)', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::FORCED_CC_RECIPIENTS, _x ( 'Carbon Copy (cc) Address(es)', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'cc_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( PostmanOptions::BCC_HEADER, _x ( 'Blind Carbon Copy (bcc) Address(es)', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::FORCED_BCC_RECIPIENTS, _x ( 'Blind Carbon Copy (bcc) Address(es)', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'bcc_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
-			add_settings_field ( PostmanOptions::EXTRA_HEADER, _x ( 'Additional Headers', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::ADDITIONAL_HEADERS, _x ( 'Additional Headers', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'headers_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
