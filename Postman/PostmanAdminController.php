@@ -96,7 +96,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					return;
 				} else {
 					// the user must have clicked cancel... abort the grant token check
-					$this->logger->debug ( 'Found NO authorization grant code -- user must probably cancelled' );
+					$this->logger->debug ( 'Found NO authorization grant code -- user probably cancelled' );
 					$session->unsetOauthInProgress ();
 				}
 			}
@@ -153,7 +153,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$states = PostmanPreRequisitesCheck::getState ();
 			foreach ( $states as $state ) {
 				if (! $state ['ready']) {
-					$message = sprintf ( __ ( 'This PHP installation needs <b>%1$s</b>.' ), $state ['name'] );
+					$message = sprintf ( __ ( 'This PHP installation requires the <b>%1$s</b> library.' ), $state ['name'] );
 					if ($state ['required']) {
 						$this->messageHandler->addError ( $message );
 					} else {
@@ -418,6 +418,26 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'reply_to_callback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
+			add_settings_field ( PostmanOptions::TO_HEADER, _x ( 'To Address(es)', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'to_callback' 
+			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			
+			add_settings_field ( PostmanOptions::CC_HEADER, _x ( 'Carbon Copy (cc) Address(es)', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'cc_callback' 
+			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			
+			add_settings_field ( PostmanOptions::BCC_HEADER, _x ( 'Blind Carbon Copy (bcc) Address(es)', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'bcc_callback' 
+			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			
+			add_settings_field ( PostmanOptions::EXTRA_HEADER, _x ( 'Additional Headers', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'headers_callback' 
+			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			
 			add_settings_field ( PostmanOptions::LOG_LEVEL, _x ( 'Log Level', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'log_level_callback' 
@@ -645,6 +665,34 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function reply_to_callback() {
 			printf ( '<input type="text" id="input_reply_to" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
+		}
+		
+		/**
+		 * Get the settings option array and print one of its values
+		 */
+		public function to_callback() {
+			printf ( '<input type="text" id="input_to" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_TO_RECIPIENTS, null !== $this->options->getForcedToRecipients () ? esc_attr ( $this->options->getForcedToRecipients () ) : '' );
+		}
+		
+		/**
+		 * Get the settings option array and print one of its values
+		 */
+		public function cc_callback() {
+			printf ( '<input type="text" id="input_cc" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_CC_RECIPIENTS, null !== $this->options->getForcedCcRecipients () ? esc_attr ( $this->options->getForcedCcRecipients () ) : '' );
+		}
+		
+		/**
+		 * Get the settings option array and print one of its values
+		 */
+		public function bcc_callback() {
+			printf ( '<input type="text" id="input_bcc" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_BCC_RECIPIENTS, null !== $this->options->getForcedBccRecipients () ? esc_attr ( $this->options->getForcedBccRecipients () ) : '' );
+		}
+		
+		/**
+		 * Get the settings option array and print one of its values
+		 */
+		public function headers_callback() {
+			printf ( '<textarea id="input_headers" name="%s[%s]" >%s</textarea>', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::ADDITIONAL_HEADERS, null !== $this->options->getAdditionalHeaders () ? esc_attr ( $this->options->getAdditionalHeaders () ) : '' );
 		}
 		
 		/**
