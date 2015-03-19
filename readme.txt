@@ -1,6 +1,6 @@
 === Postman SMTP Mailer ===
 Contributors: jasonhendriks
-Tags: smtp, email, mail, wp_mail, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail
+Tags: smtp, smtps, email, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.1.1
 Stable tag: 1.5.8
