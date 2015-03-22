@@ -446,6 +446,7 @@ abstract class Postman_Zend_Mail_Protocol_Abstract
      */
     protected function _setStreamTimeout($timeout)
     {
-       return stream_set_timeout($this->_socket, $timeout);
+    	// @jason: added @ to hide PHP warnings if the host has disabled stream_set_timeout
+       return @stream_set_timeout($this->_socket, $timeout);
     }
 }
