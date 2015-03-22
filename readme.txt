@@ -13,11 +13,11 @@ Gmail, Hotmail, and Yahoo Mail problems are solved with Postman, the first and o
 
 == Description ==
 
-Postman is an intelligent, next-generation SMTP mailer created to address a [shortcoming](https://wordpress.org/support/view/plugin-reviews/configure-smtp?filter=1) in every SMTP mailer for WordPress: [no OAuth 2.0](http://blog.varonis.com/giving-away-your-passwords/) - Gmail, Hotmail and Yahoo Mail's preferred mechanism for authentication.
+Postman is an intelligent, next-generation SMTP mailer addressing a [shortcoming](https://wordpress.org/support/view/plugin-reviews/configure-smtp?filter=1) in every SMTP mailer for WordPress: [no OAuth 2.0](http://foorious.com/webdev/auth/oauth2/) - Yahoo Mail, Hotmail and Gmail's preferred mechanism for authentication.
 
 In 2014, Google announced if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)." For Google Apps users, OAuth 2.0 is a [requirement](http://plugins.svn.wordpress.org/postman-smtp/assets/Screen%20Shot%202015-02-21%20at%208.52.13%20PM.png), not a nice-to-have.
 
-Stop fighting SMTP authentication failures, **lost emails**, and password secrecy concerns. Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
+Stop fighting SMTP [authentication failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), **lost emails**, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
 [Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished since January of this year.
 
@@ -92,7 +92,7 @@ A modern replacement for traditional password-based authentication. Postman supp
 
 = How does OAuth 2.0 work? =
 
-Postman requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) and perform a service (handle Gmail, stay out of Google Docs) with no need for you to surrender your username and password credentials (master house key).
+Postman requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) and perform a specific service (handle Gmail, stay out of Google Docs) with no need for you to surrender your username and password credentials (master house key).
 
 Once you grant access, Postman then overrides the WordPress wp_mail() function to provide an incredibly stable mail sub-system.
 
@@ -107,7 +107,7 @@ There are many reasons why OAuth 2.0 is better than any password-based mechanism
 * You have tighter control over the data Postman has access to. For Google users it can never access your Calendar or Docs or YouTube; for Yahoo users it can never access your Flickr
 * If your WordPress site gets hacked, you can revoke Postman's email access without impacting any other application or website that has access to your account
 
-> **NEVER give out your Gmail, Microsoft or Yahoo password** to a 3rd-party or 3rd-party program that you don't fully trust.
+> **[NEVER give out your Gmail, Microsoft or Yahoo password](http://blog.varonis.com/giving-away-your-passwords/)** to a 3rd-party or 3rd-party program that you don't fully trust.
 
 = How can I get my email to show up with a different From: address? =
 Google supports custom domains with the paid services Google Apps for [Work](https://www.google.com/work/apps/business/products/gmail/)/[Government](https://www.google.com/work/apps/government/products.html#gmail) and the free services Google Apps for [Education](https://www.google.com/work/apps/education/products.html#gmail)/[Non-Profits](https://www.google.com/nonprofits/products/)/[Free Edition](https://support.google.com/a/answer/2855120?hl=en).
@@ -128,8 +128,8 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Select 'API's' from under 'APIs & auth'. Set 'Gmail API' to 'ON'.
 1. Select 'Credentials' from under 'APIs & auth'. Choose 'Create a new Client ID'.
 1. For the 'Application Type' use 'Web application'.
-1. In 'Authorized Javascript origins' enter the 'Javascript Origins' (either in the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
-1. In 'Authorized Redirect URIs' enter the 'Redirect URI' given by Postman (either in the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
+1. In 'Authorized Javascript origins' enter the 'Javascript Origins' given by Postman (either from the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or from the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
+1. In 'Authorized Redirect URIs' enter the 'Redirect URI' given by Postman (either from the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or from the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
 1. Choose 'Create Client ID'.
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page [screenshot](https://ps.w.org/postman-smtp/assets/screenshot-7.png?rev=1108485).
 
@@ -137,7 +137,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Go to [Microsoft account Developer Center](https://account.live.com/developers/applications/index) and select 'Create application'.
 1. In the 'Application name' field enter 'Postman SMTP'. Select 'I accept.'
 1. Select 'API Settings' from under 'Settings'.
-1. In 'Redirect URL', enter the redirect URI given by Postman (either in the wizard, or the manual configuration page). Select Save.
+1. In 'Redirect URL', enter the redirect URI given by Postman (either from the wizard, or from the manual configuration page). Select Save.
 1. Select 'App Settings' from under 'Settings'.
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
@@ -146,7 +146,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. In the 'Application Name' field enter 'Postman SMTP'. For 'Application Type' choose 'Web-based'. In description write the name of your WordPress site.
 1. In 'Home Page URL', enter the 'Home Page URL' shown on Postman's Settings page.
 1. In 'Access Scopes' choose 'This app requires access to private user data.'
-1. In 'Callback Domain', enter the 'Callback Domain' given by Postman (either in the wizard, or the manual configuration page).
+1. In 'Callback Domain', enter the 'Callback Domain' given by Postman (either from the wizard, or from the manual configuration page).
 1. Under 'Select APIs for private user data access' choose 'Mail Web Service'
 1. Under 'Mail Web Service' choose 'Read/Write'
 1. Click 'Create App'
