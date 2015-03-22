@@ -238,7 +238,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.5.9 - 2015-03-22 =
-[[Ticket](https://wordpress.org/support/topic/problem-with-responding?replies=7#post-6723830) Hide PHP warnings from `stream_set_timeout()` in case the host has disabled this function. 
+[[Ticket](https://wordpress.org/support/topic/problem-with-responding?replies=7#post-6723830)] Hide PHP warnings from `stream_set_timeout()` in case the host has disabled this function. 
 
 = 1.5.8 - 2015-03-16 =
 [[Ticket](https://wordpress.org/support/topic/openssl-error-after-upgrading?replies=2#post-6699480)] Postman will not shut down if it can't find OpenSSL. It will just display a warning to the user.
