@@ -237,7 +237,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.9 - 2015-03-22 =
+= 1.5.9 =
+[[Ticket](https://wordpress.org/support/topic/invalid-redirect-uri?replies=7)] The Setup Wizard will check for IP addresses in the site URL and warn the user when they are about to configure OAuth 2.0 that this will fail.
+
+= 1.5.9b1 - 2015-03-22 =
 [[Ticket](https://wordpress.org/support/topic/problem-with-responding?replies=7#post-6723830)] Hide PHP warnings from `stream_set_timeout()` in case the host has disabled this function. 
 
 = 1.5.8 - 2015-03-16 =

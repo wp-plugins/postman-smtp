@@ -1,3 +1,4 @@
+var redirectUrlWarning = false;
 if (!console)
 	console = {
 		log : function() {
@@ -16,12 +17,12 @@ function enable(identifier) {
 function hide(identifier) {
 	var el = jQuery(identifier);
 	console.debug('hiding ' + identifier);
-	el.hide();
+	el.hide("fast");
 }
 function show(identifier) {
 	var el = jQuery(identifier);
 	console.debug('showing ' + identifier);
-	el.show();
+	el.show("fast");
 }
 function writeable(identifier) {
 	var el = jQuery(identifier);
@@ -51,6 +52,7 @@ function handleConfigurationResponse(response) {
 		jQuery('#callback_domain').html(response.callback_domain_label);
 	}
 	if (response.referer == 'wizard') {
+		redirectUrlWarning = response.dotNotationUrl;
 		jQuery('#input_transport_type').val(response.transport_type);
 		jQuery('#input_auth_type').val(response.auth_type);
 		jQuery('#input_auth_' + response.auth_type).prop('checked', true);

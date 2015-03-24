@@ -124,7 +124,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 
 	} else if (currentIndex === 3) {
 
-		// user has clicked next but we haen't finished the check
+		// user has clicked next but we haven't finished the check
 		if (portsChecked < portsToCheck) {
 			alert(postman_wizard_wait);
 			return false;
@@ -189,6 +189,11 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 			// this is the second place i disable the next button but Steps
 			// re-enables it after the screen slides
 			jQuery('li + li').addClass('disabled');
+		}
+	}
+	if(currentIndex === 4) {
+		if(redirectUrlWarning) {
+			alert(postman_wizard_bad_redirect_url);
 		}
 	}
 	if (currentIndex === 4 && priorIndex === 5 && chosenPort == 25) {

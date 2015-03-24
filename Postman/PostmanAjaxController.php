@@ -388,6 +388,16 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 * @param unknown $userOverride        	
 		 */
 		private function populateResponseFromScribe($scribe, &$response, $userOverride) {
+			// checks to see if the host is an IP address and sticks the result in the response
+			// IP addresses are not allowed in the Redirect URL
+			$urlParts = parse_url ( $scribe->getCallbackUrl () );
+			$response ['dotNotationUrl'] = false;
+			if (isset ( $urlParts ['host'] )) {
+				// from http://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
+				if (preg_match ( '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9‌​]{2}|2[0-4][0-9]|25[0-5])$/', $urlParts ['host'] )) {
+					$response ['dotNotationUrl'] = true;
+				}
+			}
 			$response ['redirect_url'] = $scribe->getCallbackUrl ();
 			$response ['callback_domain'] = $scribe->getCallbackDomain ();
 			$response ['help_text'] = $scribe->getOAuthHelp ();
@@ -399,6 +409,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			$response ['hide_auth'] = true;
 			$response ['hide_enc'] = true;
 			$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url:' . $scribe->getCallbackUrl () );
+			$this->logger->debug ( 'ajaxRedirectUrl answer dotNotationUrl:' . $response ['dotNotationUrl'] );
 			$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain:' . $scribe->getCallbackDomain () );
 			$this->logger->debug ( 'ajaxRedirectUrl answer help_text:' . $scribe->getOAuthHelp () );
 			$this->logger->debug ( 'ajaxRedirectUrl answer client_id_label:' . $scribe->getClientIdLabel () );
