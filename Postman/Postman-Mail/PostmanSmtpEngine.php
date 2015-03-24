@@ -102,8 +102,11 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 			$this->logger->debug ( 'Building Postman_Zend_Mail with charset=' . $charset );
 			$mail = new Postman_Zend_Mail ( $charset );
 			
-			// add the Postman signature
-			$mail->addHeader ( 'X-Mailer', 'Postman SMTP v' . POSTMAN_PLUGIN_VERSION . ' for WordPress' );
+			// add the headers
+			foreach ( ( array ) $this->headers as $name => $content ) {
+				$this->logger->debug ( 'Adding header ' . $name . '=' . $content );
+				$mail->addHeader ( $name, $content );
+			}
 			
 			// add the content type
 			$contentType = $this->getContentType ();
@@ -117,11 +120,8 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 			// add the sender
 			$this->addFrom ( $mail );
 			
-			// add the headers
-			foreach ( ( array ) $this->headers as $name => $content ) {
-				$this->logger->debug ( 'Adding header ' . $name . '=' . $content );
-				$mail->addHeader ( $name, $content );
-			}
+			// add the Postman signature - adding it last overwrites anything the user added
+			$mail->addHeader ( 'X-Mailer', sprintf ( 'Postman SMTP %s for WordPress (%s)', POSTMAN_PLUGIN_VERSION, 'https://wordpress.org/plugins/postman-smtp/' ) );
 			
 			// add the to recipients
 			foreach ( ( array ) $this->toRecipients as $recipient ) {
@@ -339,18 +339,36 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 			$this->contentType = apply_filters ( 'wp_mail_content_type', $this->contentType );
 			return $this->contentType;
 		}
+		/**
+		 *
+		 * @param unknown $recipients
+		 *        	Array or comma-separated list of email addresses to send message.
+		 * @throws Exception
+		 */
 		public function addTo($to) {
 			if (! isset ( $this->toRecipients )) {
 				$this->toRecipients = array ();
 			}
 			$this->addRecipients ( $this->toRecipients, $to );
 		}
+		/**
+		 *
+		 * @param unknown $recipients
+		 *        	Array or comma-separated list of email addresses to send message.
+		 * @throws Exception
+		 */
 		public function addCc($cc) {
 			if (! isset ( $this->ccRecipients )) {
 				$this->ccRecipients = array ();
 			}
 			$this->addRecipients ( $this->ccRecipients, $cc );
 		}
+		/**
+		 *
+		 * @param unknown $recipients
+		 *        	Array or comma-separated list of email addresses to send message.
+		 * @throws Exception
+		 */
 		public function addBcc($bcc) {
 			if (! isset ( $this->bccRecipients )) {
 				$this->bccRecipients = array ();

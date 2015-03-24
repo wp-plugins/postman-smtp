@@ -129,7 +129,9 @@ if (! class_exists ( 'PostmanViewController' )) {
 		}
 		function enqueueConfigurationResources() {
 			wp_enqueue_style ( self::POSTMAN_STYLE );
+			wp_enqueue_style ( 'jquery_ui_style' );
 			wp_enqueue_script ( 'postman_manual_config_script' );
+			wp_enqueue_script ( 'jquery-ui-tabs' );
 		}
 		
 		/**
@@ -212,6 +214,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		public function initializeAdminPage() {
 			// register the stylesheet and javascript external resources
 			wp_register_style ( self::POSTMAN_STYLE, plugins_url ( 'style/postman.css', __FILE__ ), null, POSTMAN_PLUGIN_VERSION );
+			wp_register_style ( 'jquery_ui_style', plugins_url ( 'style/jquery-ui.css', __FILE__ ), self::POSTMAN_STYLE, POSTMAN_PLUGIN_VERSION );
 			wp_register_style ( 'postman_send_test_email', plugins_url ( 'style/postman_send_test_email.css', __FILE__ ), self::POSTMAN_STYLE, POSTMAN_PLUGIN_VERSION );
 			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery.steps.css', __FILE__ ), self::POSTMAN_STYLE, '1.1.0' );
 			
@@ -262,6 +265,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_wizard_wait', __ ( 'Please wait for the port test to finish', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_wizard_no_ports', __ ( 'No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.', 'postman-smtp' ) );
+			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_bad_redirect_url', __ ( 'You are about to configure OAuth 2.0 with an IP address in the URL which will fail. Either assign a real domain name to your site or add a fake one in your local machine\'s host file.', 'postman-smtp' ) );
 			
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_check_timeout', PostmanSmtp::POSTMAN_TCP_CONNECTION_TIMEOUT . '' );
 			
@@ -342,30 +346,43 @@ if (! class_exists ( 'PostmanViewController' )) {
 		public function outputManualConfigurationContent() {
 			print '<div class="wrap">';
 			
-			$this->outputChildPageHeader ( _x ( 'Postman Configuration', 'Page Title', 'postman-smtp' ) );
-			
+			$this->outputChildPageHeader ( _x ( 'Manual Configuration', 'Page Title', 'postman-smtp' ) );
+			print '<div id="config_tabs"><ul>';
+			print sprintf ( '<li><a href="#account_config">%s</a></li>', _x ( 'Account', 'Manual Configuration Tab Label', 'postman-smtp' ) );
+			print sprintf ( '<li><a href="#message_config">%s</a></li>', _x ( 'Message', 'Manual Configuration Tab Label', 'postman-smtp' ) );
+			print sprintf ( '<li><a href="#advanced_options_config">%s</a></li>', _x ( 'Advanced', 'Manual Configuration Tab Label', 'postman-smtp' ) );
+			print '</ul>';
 			print '<form method="post" action="options.php">';
 			// This prints out all hidden setting fields
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
-			print '<section id="transport_config">';
-			do_settings_sections ( 'transport_options' );
-			print '</section>';
-			print '<section id="smtp_config">';
+			print '<section id="account_config">';
+			if (sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () ) > 1) {
+				do_settings_sections ( 'transport_options' );
+			} else {
+				printf ( '<input type="hidden" name="%1$s[%2$s]" value="%3$s"/>', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE, PostmanSmtpTransport::SLUG );
+			}
+			print '<div id="smtp_config">';
 			do_settings_sections ( PostmanAdminController::SMTP_OPTIONS );
-			print '</section>';
-			$authType = $this->options->getAuthenticationType ();
-			print '<section id="password_auth_config">';
+			print '</div>';
+			print '<div id="password_settings">';
 			do_settings_sections ( PostmanAdminController::BASIC_AUTH_OPTIONS );
-			print ('</section>') ;
-			print '<section id="oauth_auth_config">';
+			print '</div>';
+			print '<div id="oauth_settings">';
 			do_settings_sections ( PostmanAdminController::OAUTH_OPTIONS );
-			print ('</section>') ;
-			printf ( '<p id="advanced_options_config" class="fineprint"><span><a href="#">%s</a></span></p>', _x ( 'Show Advanced Settings', 'Configuration Section', 'postman-smtp' ) );
+			print '</div>';
+			print '</section>';
+			print '<section id="message_config">';
+			do_settings_sections ( PostmanAdminController::MESSAGE_SENDER_OPTIONS );
+			do_settings_sections ( PostmanAdminController::MESSAGE_OPTIONS );
+			do_settings_sections ( PostmanAdminController::MESSAGE_HEADERS_OPTIONS );
+			print '</section>';
 			print '<section id="advanced_options_config">';
+			do_settings_sections ( PostmanAdminController::NETWORK_OPTIONS );
 			do_settings_sections ( PostmanAdminController::ADVANCED_OPTIONS );
-			print ('</section>') ;
+			print '</section>';
 			submit_button ();
 			print '</form>';
+			print '</div>';
 			print '</div>';
 		}
 		

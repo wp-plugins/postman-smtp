@@ -76,6 +76,22 @@ if (! class_exists ( "PostmanOptions" )) {
 			else
 				return PostmanLogger::ERROR_INT;
 		}
+		public function getForcedToRecipients() {
+			if (isset ( $this->options [self::FORCED_TO_RECIPIENTS] ))
+				return $this->options [self::FORCED_TO_RECIPIENTS];
+		}
+		public function getForcedCcRecipients() {
+			if (isset ( $this->options [self::FORCED_CC_RECIPIENTS] ))
+				return $this->options [self::FORCED_CC_RECIPIENTS];
+		}
+		public function getForcedBccRecipients() {
+			if (isset ( $this->options [self::FORCED_BCC_RECIPIENTS] ))
+				return $this->options [self::FORCED_BCC_RECIPIENTS];
+		}
+		public function getAdditionalHeaders() {
+			if(isset($this->options[self::ADDITIONAL_HEADERS]))
+				return $this->options[self::ADDITIONAL_HEADERS];
+		}
 		//
 		public function getHostname() {
 			if (isset ( $this->options [PostmanOptions::HOSTNAME] ))

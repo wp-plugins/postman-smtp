@@ -40,6 +40,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		const BASIC_AUTH_SECTION = 'postman_basic_auth_section';
 		const OAUTH_OPTIONS = 'postman_oauth_options';
 		const OAUTH_SECTION = 'postman_oauth_section';
+		const MESSAGE_SENDER_OPTIONS = 'postman_message_sender_options';
+		const MESSAGE_SENDER_SECTION = 'postman_message_sender_section';
+		const MESSAGE_OPTIONS = 'postman_message_options';
+		const MESSAGE_SECTION = 'postman_message_section';
+		const MESSAGE_HEADERS_OPTIONS = 'postman_message_headers_options';
+		const MESSAGE_HEADERS_SECTION = 'postman_message_headers_section';
+		const NETWORK_OPTIONS = 'postman_network_options';
+		const NETWORK_SECTION = 'postman_network_section';
 		const ADVANCED_OPTIONS = 'postman_advanced_options';
 		const ADVANCED_SECTION = 'postman_advanced_section';
 		
@@ -310,7 +318,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 			
 			// Sanitize
-			add_settings_section ( 'transport_section', _x ( 'General Settings', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( 'transport_section', _x ( 'Transport', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printTransportSectionInfo' 
 			), 'transport_options' );
@@ -318,16 +326,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 			add_settings_field ( PostmanOptions::TRANSPORT_TYPE, _x ( 'Transport', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'transport_type_callback' 
-			), 'transport_options', 'transport_section' );
-			
-			add_settings_field ( PostmanOptions::SENDER_NAME, _x ( 'Sender Name', 'Configuration Input Field', 'postman-smtp' ), array (
-					$this,
-					'sender_name_callback' 
-			), 'transport_options', 'transport_section' );
-			
-			add_settings_field ( PostmanOptions::SENDER_EMAIL, _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
-					$this,
-					'sender_email_callback' 
 			), 'transport_options', 'transport_section' );
 			
 			// Sanitize
@@ -356,7 +354,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'port_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, _x ( 'Authentication Settings', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, _x ( 'Authentication', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printBasicAuthSectionInfo' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS );
@@ -372,7 +370,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
 			
 			// the OAuth section
-			add_settings_section ( PostmanAdminController::OAUTH_SECTION, _x ( 'Authentication Settings', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::OAUTH_SECTION, _x ( 'Authentication', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printOAuthSectionInfo' 
 			), PostmanAdminController::OAUTH_OPTIONS );
@@ -397,46 +395,80 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'oauth_client_secret_callback' 
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
-			// the Advanced section
-			add_settings_section ( PostmanAdminController::ADVANCED_SECTION, _x ( 'Advanced Settings', 'Configuration Section', 'postman-smtp' ), array (
+			// the Message section
+			add_settings_section ( PostmanAdminController::MESSAGE_SENDER_SECTION, _x ( 'Sender Address', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
-					'printAdvancedSectionInfo' 
-			), PostmanAdminController::ADVANCED_OPTIONS );
+					'printMessageSenderSectionInfo' 
+			), PostmanAdminController::MESSAGE_SENDER_OPTIONS );
 			
-			add_settings_field ( 'connection_timeout', _x ( 'TCP Connection Timeout (sec)', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::SENDER_NAME, _x ( 'Sender Name', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
-					'connection_timeout_callback' 
-			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+					'sender_name_callback' 
+			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
 			
-			add_settings_field ( 'read_timeout', _x ( 'TCP Read Timeout (sec)', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::SENDER_EMAIL, _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
-					'read_timeout_callback' 
-			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+					'sender_email_callback' 
+			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
 			
 			add_settings_field ( PostmanOptions::REPLY_TO, _x ( 'Reply-To Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'reply_to_callback' 
-			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
 			
-			add_settings_field ( PostmanOptions::FORCED_TO_RECIPIENTS, _x ( 'To Address(es)', 'Configuration Input Field', 'postman-smtp' ), array (
+			// the Message section
+			add_settings_section ( PostmanAdminController::MESSAGE_SECTION, _x ( 'Special Addresses', 'Configuration Section', 'postman-smtp' ), array (
+					$this,
+					'printMessageSectionInfo' 
+			), PostmanAdminController::MESSAGE_OPTIONS );
+			
+			add_settings_field ( PostmanOptions::FORCED_TO_RECIPIENTS, _x ( 'To Recipients', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'to_callback' 
-			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			), PostmanAdminController::MESSAGE_OPTIONS, PostmanAdminController::MESSAGE_SECTION );
 			
-			add_settings_field ( PostmanOptions::FORCED_CC_RECIPIENTS, _x ( 'Carbon Copy (cc) Address(es)', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::FORCED_CC_RECIPIENTS, _x ( 'Carbon Copy Recipients', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'cc_callback' 
-			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			), PostmanAdminController::MESSAGE_OPTIONS, PostmanAdminController::MESSAGE_SECTION );
 			
-			add_settings_field ( PostmanOptions::FORCED_BCC_RECIPIENTS, _x ( 'Blind Carbon Copy (bcc) Address(es)', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::FORCED_BCC_RECIPIENTS, _x ( 'Blind Carbon Copy Recipients', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'bcc_callback' 
-			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			), PostmanAdminController::MESSAGE_OPTIONS, PostmanAdminController::MESSAGE_SECTION );
 			
-			add_settings_field ( PostmanOptions::ADDITIONAL_HEADERS, _x ( 'Additional Headers', 'Configuration Input Field', 'postman-smtp' ), array (
+			// the Message section
+			add_settings_section ( PostmanAdminController::MESSAGE_HEADERS_SECTION, _x ( 'Special Headers', 'Configuration Section', 'postman-smtp' ), array (
+					$this,
+					'printAdditionalHeadersSectionInfo' 
+			), PostmanAdminController::MESSAGE_HEADERS_OPTIONS );
+			
+			add_settings_field ( PostmanOptions::ADDITIONAL_HEADERS, _x ( 'Custom Headers', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'headers_callback' 
-			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			), PostmanAdminController::MESSAGE_HEADERS_OPTIONS, PostmanAdminController::MESSAGE_HEADERS_SECTION );
+			
+			// the Advanced section
+			add_settings_section ( PostmanAdminController::NETWORK_SECTION, _x ( 'Network Settings', 'Configuration Section', 'postman-smtp' ), array (
+					$this,
+					'printNetworkSectionInfo' 
+			), PostmanAdminController::NETWORK_OPTIONS );
+			
+			add_settings_field ( 'connection_timeout', _x ( 'TCP Connection Timeout (sec)', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'connection_timeout_callback' 
+			), PostmanAdminController::NETWORK_OPTIONS, PostmanAdminController::NETWORK_SECTION );
+			
+			add_settings_field ( 'read_timeout', _x ( 'TCP Read Timeout (sec)', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'read_timeout_callback' 
+			), PostmanAdminController::NETWORK_OPTIONS, PostmanAdminController::NETWORK_SECTION );
+			
+			// the Advanced section
+			add_settings_section ( PostmanAdminController::ADVANCED_SECTION, _x ( 'Miscellaneous Settings', 'Configuration Section', 'postman-smtp' ), array (
+					$this,
+					'printAdvancedSectionInfo' 
+			), PostmanAdminController::ADVANCED_OPTIONS );
 			
 			add_settings_field ( PostmanOptions::LOG_LEVEL, _x ( 'Log Level', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
@@ -472,7 +504,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function printTransportSectionInfo() {
 			$totalTransportsAvailable = sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () );
 			/* translators: These two phrases represent the cases for 1) a single transport installed and 2) mulitple transports installed */
-			print _n ( 'Enter the sender\'s name and email address:', 'Select the transport and enter the sender\'s name and email address:', $totalTransportsAvailable, 'postman-smtp' );
+			print _n ( 'The default transport is SMTP.', 'One or more extension(s) has installed additional transports:', $totalTransportsAvailable, 'postman-smtp' );
 		}
 		/**
 		 * Print the Section text
@@ -519,8 +551,34 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 * Print the Section text
 		 */
+		public function printMessageSenderSectionInfo() {
+			print __ ( 'The message sender shows up as the <b>From:</b> address.', 'postman-smtp' );
+		}
+		
+		/**
+		 * Print the Section text
+		 */
+		public function printMessageSectionInfo() {
+			print __ ( 'Recipient addresses specified here are in addition to the recipients specified in the message itself. You may separate multiple <b>to</b>/<b>bb</b>/<b>bcc</b> addresses with commas.', 'postman-smtp' );
+		}
+		
+		/**
+		 * Print the Section text
+		 */
+		public function printNetworkSectionInfo() {
+			print __ ( 'Increase the timeouts if your host is intermittenly failing to send mail. Be careful, this also correlates to how long your user must wait if your mail server is unreachable.', 'postman-smtp' );
+		}
+		/**
+		 * Print the Section text
+		 */
 		public function printAdvancedSectionInfo() {
-			print __ ( 'Increase the read timeout if your host is intermittenly failing to send mail. Be careful, this also correlates to how long your user must wait if your mail server is unreachable.', 'postman-smtp' );
+			print __ ( 'Log Level specifies the amount of detail output to the WordPress/PHP logfile.', 'postman-smtp' );
+		}
+		/**
+		 * Print the Section text
+		 */
+		public function printAdditionalHeadersSectionInfo() {
+			print __ ( 'Add custom X headers, one header per line (e.g. <code>X-MC-Tags=wordpress-site-A</code>). Custom headers can negatively affect your Spam score. Use them only if you know what you are doing.', 'postman-smtp' );
 		}
 		
 		/**
@@ -664,35 +722,35 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function reply_to_callback() {
-			printf ( '<input type="text" id="input_reply_to" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
+			printf ( '<input type="text" id="input_reply_to" name="%s[%s]" value="%s" size="40" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, null !== $this->options->getReplyTo () ? esc_attr ( $this->options->getReplyTo () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function to_callback() {
-			printf ( '<input type="text" id="input_to" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_TO_RECIPIENTS, null !== $this->options->getForcedToRecipients () ? esc_attr ( $this->options->getForcedToRecipients () ) : '' );
+			printf ( '<input type="text" id="input_to" name="%s[%s]" value="%s" size="60" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_TO_RECIPIENTS, null !== $this->options->getForcedToRecipients () ? esc_attr ( $this->options->getForcedToRecipients () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function cc_callback() {
-			printf ( '<input type="text" id="input_cc" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_CC_RECIPIENTS, null !== $this->options->getForcedCcRecipients () ? esc_attr ( $this->options->getForcedCcRecipients () ) : '' );
+			printf ( '<input type="text" id="input_cc" name="%s[%s]" value="%s" size="60" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_CC_RECIPIENTS, null !== $this->options->getForcedCcRecipients () ? esc_attr ( $this->options->getForcedCcRecipients () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function bcc_callback() {
-			printf ( '<input type="text" id="input_bcc" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_BCC_RECIPIENTS, null !== $this->options->getForcedBccRecipients () ? esc_attr ( $this->options->getForcedBccRecipients () ) : '' );
+			printf ( '<input type="text" id="input_bcc" name="%s[%s]" value="%s" size="60" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_BCC_RECIPIENTS, null !== $this->options->getForcedBccRecipients () ? esc_attr ( $this->options->getForcedBccRecipients () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function headers_callback() {
-			printf ( '<textarea id="input_headers" name="%s[%s]" >%s</textarea>', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::ADDITIONAL_HEADERS, null !== $this->options->getAdditionalHeaders () ? esc_attr ( $this->options->getAdditionalHeaders () ) : '' );
+			printf ( '<textarea id="input_headers" name="%s[%s]" cols="60" rows="5" >%s</textarea>', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::ADDITIONAL_HEADERS, null !== $this->options->getAdditionalHeaders () ? esc_attr ( $this->options->getAdditionalHeaders () ) : '' );
 		}
 		
 		/**

@@ -1,6 +1,7 @@
 jQuery(document).ready(function() {
-	// hide the advanced options settings
-	hide('section#advanced_options_config');
+
+	// tabs
+	jQuery("#config_tabs").tabs();
 
 	// on first viewing, determine whether to show password or
 	// oauth section
@@ -22,13 +23,6 @@ jQuery(document).ready(function() {
 	jQuery('select#input_auth_type').change(function() {
 		switchBetweenPasswordAndOAuth();
 		doneTyping();
-	});
-
-	// add an event on the advanced options link
-	jQuery('#advanced_options_config a').click(function() {
-		show('section#advanced_options_config');
-		hide('#advanced_options_config a');
-		return false;
 	});
 
 	// setup before functions
@@ -67,22 +61,21 @@ function reloadOauthSection() {
 function switchBetweenPasswordAndOAuth() {
 	console.debug('showHide:authenticationType=' + $choice);
 	if (jQuery('select#input_transport_type').val() == 'gmail_api') {
-		hide('section#smtp_config');
-		hide('section#password_auth_config');
-		show('section#oauth_auth_config');
+		hide('div#smtp_config');
+		hide('div#password_settings');
+		show('div#oauth_settings');
 	} else {
-		show('section#smtp_config');
+		show('div#smtp_config');
 		var $choice = jQuery('select#input_auth_type').val();
 		if ($choice == 'none') {
-			hide('section#password_auth_config');
-			hide('section#oauth_auth_config');
+			hide('div#password_settings');
+			hide('div#oauth_settings');
 		} else if ($choice != 'oauth2') {
-			show('section#password_auth_config');
-			hide('section#oauth_auth_config');
+			show('div#password_settings');
+			hide('div#oauth_settings');
 		} else {
-			hide('section#password_auth_config');
-			show('section#oauth_auth_config');
+			hide('div#password_settings');
+			show('div#oauth_settings');
 		}
 	}
 }
-
