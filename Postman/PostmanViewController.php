@@ -359,7 +359,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			if (sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () ) > 1) {
 				do_settings_sections ( 'transport_options' );
 			} else {
-				printf ( '<input type="hidden" name="%1$s[%2$s]" value="%3$s"/>', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE, PostmanSmtpTransport::SLUG );
+				printf ( '<input id="input_%2$s" type="hidden" name="%1$s[%2$s]" value="%3$s"/>', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE, PostmanSmtpTransport::SLUG );
 			}
 			print '<div id="smtp_config">';
 			do_settings_sections ( PostmanAdminController::SMTP_OPTIONS );

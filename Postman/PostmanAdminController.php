@@ -2,7 +2,6 @@
 if (! class_exists ( "PostmanAdminController" )) {
 	
 	require_once "PostmanSendTestEmail.php";
-	require_once "Postman-Mail/PostmanSmtpEngine.php";
 	require_once 'PostmanOptions.php';
 	require_once 'PostmanState.php';
 	require_once 'PostmanStats.php';
@@ -578,7 +577,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printAdditionalHeadersSectionInfo() {
-			print __ ( 'Add custom X headers, one header per line (e.g. <code>X-MC-Tags=wordpress-site-A</code>). Custom headers can negatively affect your Spam score. Use them only if you know what you are doing.', 'postman-smtp' );
+			print __ ( 'Add custom X headers, one header per line (e.g. <code>X-MC-Tags: wordpress-site-A</code>). Custom headers can negatively affect your Spam score. Use them only if you know what you are doing.', 'postman-smtp' );
 		}
 		
 		/**

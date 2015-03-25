@@ -22,9 +22,6 @@ Stop fighting SMTP [authentication failures](http://googleappsdeveloper.blogspot
 [Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished since January of this year.
 
 
-###* What's New for v1.5 *
-*Get around blocked ports by [sending your Gmail over HTTPS](https://wordpress.org/plugins/postman-gmail-extension/)*
-
 = Features =
 * Send mail to any host just like the 'Big Five' SMTP plugins
 * Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0
@@ -33,6 +30,7 @@ Stop fighting SMTP [authentication failures](http://googleappsdeveloper.blogspot
 * The extension for [blocked SMTP ports](https://wordpress.org/plugins/postman-gmail-extension/) sends mail over HTTPS
 * Integrated TCP Port Tester for troubleshooting connectivity issues
 * Supports International alphabets, HTML Mail and MultiPart/Alternative
+* Supports Mailchimp [custom headers](http://help.mandrill.com/entries/21688056-Using-SMTP-Headers-to-customize-your-messages) and forced recipients (cc, bcc, to)
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Security Support: SMTPS/STARTTLS with SSL and TLS
 * Verified compatible with: Contact Form 7, Gravity Forms, Email Log
@@ -215,6 +213,10 @@ This is the only OAuth2-specific error you will see. By design it tells you *not
 
 Your host has likely installed a firewall (REJECT packets) between you and the server. Ask them to open the ports.
 
+= 503 Bad sequence of commands =
+
+You configured TLS security when you should have selected no security.
+
 = XOAUTH2 authentication mechanism not supported =
 
 You may be on a Virtual Private Server that is [playing havoc with your communications](https://wordpress.org/support/topic/oh-bother-xoauth2-authentication-mechanism-not-supported?replies=9). Jump ship.
@@ -238,13 +240,15 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.5.9 =
-[[Ticket](https://wordpress.org/support/topic/invalid-redirect-uri?replies=7)] The Setup Wizard will check for IP addresses in the site URL and warn the user when they are about to configure OAuth 2.0 that this will fail.
+* [[Ticket](https://wordpress.org/support/topic/invalid-redirect-uri?replies=7)] The Setup Wizard will check for IP addresses in the site URL and warn the user when they are about to configure OAuth 2.0 that this will fail.
+* Added functionality to add to, cc, and bcc recipients to every message
+* Added functionality to add custom X-headers to every message
 
 = 1.5.9b1 - 2015-03-22 =
-[[Ticket](https://wordpress.org/support/topic/problem-with-responding?replies=7#post-6723830)] Hide PHP warnings from `stream_set_timeout()` in case the host has disabled this function. 
+* [[Ticket](https://wordpress.org/support/topic/problem-with-responding?replies=7#post-6723830)] Hide PHP warnings from `stream_set_timeout()` in case the host has disabled this function. 
 
 = 1.5.8 - 2015-03-16 =
-[[Ticket](https://wordpress.org/support/topic/openssl-error-after-upgrading?replies=2#post-6699480)] Postman will not shut down if it can't find OpenSSL. It will just display a warning to the user.
+* [[Ticket](https://wordpress.org/support/topic/openssl-error-after-upgrading?replies=2#post-6699480)] Postman will not shut down if it can't find OpenSSL. It will just display a warning to the user.
 
 = 1.5.7 - 2015-03-14 =
 * [[Ticket](https://wordpress.org/support/topic/conflict-when-used-in-conjunction-with-advanced-access-manager-by-vasyl-martyn?replies=9)] renamed Zend framework classes to prevent errors with other plugins using the Zend framework

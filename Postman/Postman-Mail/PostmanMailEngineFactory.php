@@ -1,19 +1,20 @@
 <?php
 require_once 'PostmanMailAuthenticator.php';
+require_once 'PostmanMailEngine.php';
 
 /**
  *
  * @author jasonhendriks
  *        
  */
-class PostmanSmtpEngineFactory {
+class PostmanMailEngineFactory {
 	private $logger;
 	
 	// singleton instance
 	public static function getInstance() {
 		static $inst = null;
 		if ($inst === null) {
-			$inst = new PostmanSmtpEngineFactory ();
+			$inst = new PostmanMailEngineFactory ();
 		}
 		return $inst;
 	}
@@ -27,14 +28,14 @@ class PostmanSmtpEngineFactory {
 	 * @param PostmanOAuthToken $authorizationToken        	
 	 * @return PostmanSmtpEngine
 	 */
-	public function createSmtpEngine(PostmanOptions $options, PostmanOAuthToken $authorizationToken) {
+	public function createMailEngine(PostmanOptions $options, PostmanOAuthToken $authorizationToken) {
 		$transport = PostmanTransportUtils::getCurrentTransport ();
 		assert ( isset ( $transport ) );
 		$authenticator = $transport->createPostmanMailAuthenticator ( $options, $authorizationToken );
 		if ($options->isAuthTypeOAuth2 ()) {
 			$this->ensureAuthtokenIsUpdated ( $transport, $options, $authorizationToken );
 		}
-		$engine = new PostmanSmtpEngine ( $authenticator, $transport );
+		$engine = new PostmanMailEngine ( $authenticator, $transport );
 		return $engine;
 	}
 	

@@ -1,5 +1,5 @@
 <?php
-if (! class_exists ( "PostmanSmtpEngine" )) {
+if (! class_exists ( "PostmanMessage" )) {
 	
 	require_once 'PostmanEmailAddress.php';
 	
@@ -38,15 +38,13 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 	 * @author jasonhendriks
 	 *        
 	 */
-	class PostmanSmtpEngine {
+	class PostmanMessage {
 		const EOL = "\r\n";
 		
 		// logger for all concrete classes - populate with setLogger($logger)
 		protected $logger;
 		
 		// set by the caller
-		private $hostname;
-		private $port;
 		private $sender;
 		private $replyTo;
 		private $toRecipients;
@@ -65,180 +63,25 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		private $isTextHtml;
 		private $contentType;
 		private $charset;
-		private $overrideSender;
-		
-		// the result
-		private $transcript;
 		
 		//
-		private $transport;
-		private $authenticator;
+		private $boundary;
 		
 		/**
 		 *
 		 * @param unknown $senderEmail        	
 		 * @param unknown $accessToken        	
 		 */
-		function __construct(PostmanMailAuthenticator $authenticator, PostmanTransport $transport) {
-			assert ( isset ( $authenticator ) );
-			assert ( isset ( $transport ) );
-			$this->setLogger ( new PostmanLogger ( get_class ( $this ) ) );
-			$this->authenticator = $authenticator;
-			$this->transport = $transport;
-		}
-		
-		/**
-		 * (non-PHPdoc)
-		 *
-		 * @see PostmanSmtpEngine::send()
-		 */
-		public function send() {
-			
-			// pre-processing
-			$this->processHeaders ();
-			
-			// create the Message
-			$charset = $this->getCharset ();
-			$this->logger->debug ( 'Building Postman_Zend_Mail with charset=' . $charset );
-			$mail = new Postman_Zend_Mail ( $charset );
-			
-			// add the headers
-			foreach ( ( array ) $this->headers as $name => $content ) {
-				$this->logger->debug ( 'Adding header ' . $name . '=' . $content );
-				$mail->addHeader ( $name, $content );
-			}
-			
-			// add the content type
-			$contentType = $this->getContentType ();
-			if (false !== stripos ( $contentType, 'multipart' ) && ! empty ( $this->boundary )) {
-				// Lines in email are terminated by CRLF ("\r\n") according to RFC2821
-				$contentType = sprintf ( "%s;\r\n\t boundary=\"%s\"", $contentType, $this->boundary );
-			}
-			$mail->addHeader ( 'Content-Type', $contentType );
-			$this->logger->debug ( 'Adding content-type ' . $contentType );
-			
-			// add the sender
-			$this->addFrom ( $mail );
-			
-			// add the Postman signature - adding it last overwrites anything the user added
-			$mail->addHeader ( 'X-Mailer', sprintf ( 'Postman SMTP %s for WordPress (%s)', POSTMAN_PLUGIN_VERSION, 'https://wordpress.org/plugins/postman-smtp/' ) );
-			
-			// add the to recipients
-			foreach ( ( array ) $this->toRecipients as $recipient ) {
-				$recipient->log ( $this->logger, 'To' );
-				$mail->addTo ( $recipient->getEmail (), $recipient->getName () );
-			}
-			
-			// add the cc recipients
-			foreach ( ( array ) $this->ccRecipients as $recipient ) {
-				$recipient->log ( $this->logger, 'Cc' );
-				$mail->addCc ( $recipient->getEmail (), $recipient->getName () );
-			}
-			
-			// add the to recipients
-			foreach ( ( array ) $this->bccRecipients as $recipient ) {
-				$recipient->log ( $this->logger, 'Bcc' );
-				$mail->addBcc ( $recipient->getEmail (), $recipient->getName () );
-			}
-			
-			// add the reply-to
-			if (! empty ( $this->replyTo )) {
-				$replyTo = new PostmanEmailAddress ( $this->replyTo );
-				$mail->setReplyTo ( $replyTo->getEmail (), $replyTo->getName () );
-			}
-			
-			// add the return-path
-			if (! empty ( $this->returnPath )) {
-				$returnPath = new PostmanEmailAddress ( $this->returnPath );
-				$mail->setReturnPath ( $returnPath->getEmail () );
-			}
-			
-			// add the date
-			if (! empty ( $this->date )) {
-				$mail->setDate ( $this->date );
-			}
-			
-			// add the messageId
-			if (! empty ( $this->messageId )) {
-				$mail->setMessageId ( $this->messageId );
-			}
-			
-			// add the subject
-			if (isset ( $this->subject )) {
-				$mail->setSubject ( $this->subject );
-			}
-			
-			// add the message content as either text or html
-			if (substr ( $contentType, 0, 10 ) === 'text/plain') {
-				$this->logger->debug ( 'Adding body as text' );
-				$mail->setBodyText ( $this->body );
-			} else if (substr ( $contentType, 0, 9 ) === 'text/html') {
-				$this->logger->debug ( 'Adding body as html' );
-				$mail->setBodyHtml ( $this->body );
-			} else if (substr ( $contentType, 0, 21 ) === 'multipart/alternative') {
-				$this->logger->debug ( 'Adding body as multipart/alternative' );
-				$arr = explode ( PHP_EOL, $this->body );
-				$textBody = '';
-				$htmlBody = '';
-				$mode = '';
-				foreach ( $arr as $s ) {
-					if (substr ( $s, 0, 25 ) === "Content-Type: text/plain;") {
-						$mode = 'foundText';
-					} else if (substr ( $s, 0, 24 ) === "Content-Type: text/html;") {
-						$mode = 'foundHtml';
-					} else if ($mode == 'textReading') {
-						$textBody .= $s;
-					} else if ($mode == 'htmlReading') {
-						$htmlBody .= $s;
-					} else if ($mode == 'foundText') {
-						if ($s == '') {
-							$mode = 'textReading';
-						}
-					} else if ($mode == 'foundHtml') {
-						if ($s == '') {
-							$mode = 'htmlReading';
-						}
-					}
-				}
-				$mail->setBodyHtml ( $htmlBody );
-				$mail->setBodyText ( $textBody );
-			} else {
-				$this->logger->error ( 'Unknown content-type: ' . $contentType );
-				$mail->setBodyText ( $this->body );
-				break;
-			}
-			
-			// add attachments
-			$this->addAttachmentsToMail ( $mail );
-			
-			// get the transport configuration
-			$config = $this->authenticator->createConfig ();
-			assert ( ! empty ( $config ) );
-			
-			// create the SMTP transport
-			$zendTransport = $this->transport->createZendMailTransport ( $this->hostname, $config );
-			assert ( ! empty ( $zendTransport ) );
-			
-			// send the message
-			$this->logger->debug ( "Sending mail" );
-			try {
-				$mail->send ( $zendTransport );
-				if ($zendTransport->getConnection ())
-					$this->transcript = $zendTransport->getConnection ()->getLog ();
-			} catch ( Exception $e ) {
-				$c = $zendTransport->getConnection ();
-				if (isset ( $c )) {
-					$this->transcript = $zendTransport->getConnection ()->getLog ();
-				}
-				throw $e;
-			}
+		function __construct() {
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			$this->headers = array ();
 		}
 		
 		/**
 		 *
 		 * @param Postman_Zend_Mail $mail        	
 		 */
-		private function addFrom(Postman_Zend_Mail $mail) {
+		public function addFrom(Postman_Zend_Mail $mail, PostmanMailAuthenticator $authenticator) {
 			
 			// by default, sender is what Postman set
 			$sender = PostmanEmailAddress::copy ( $this->sender );
@@ -278,7 +121,7 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 			$sender->setName ( apply_filters ( 'wp_mail_from_name', $sender->getName () ) );
 			
 			// but the MailAuthenticator has the final say
-			$this->authenticator->filterSender ( $sender );
+			$authenticator->filterSender ( $sender );
 			
 			// now log it and push it into the message
 			assert ( isset ( $sender ) );
@@ -300,7 +143,7 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		 *
 		 * @return string
 		 */
-		protected function getCharset() {
+		public function getCharset() {
 			// If we don't have a charset from the input headers
 			if (empty ( $this->charset ))
 				$this->charset = get_bloginfo ( 'charset' );
@@ -323,7 +166,7 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		 *
 		 * @return string
 		 */
-		protected function getContentType() {
+		public function getContentType() {
 			// Set Content-Type and charset
 			// If we don't have a content-type from the input headers
 			if (! isset ( $this->contentType ))
@@ -384,8 +227,10 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		private function addRecipients(&$recipientList, $recipients) {
 			$recipients = PostmanEmailAddress::convertToArray ( $recipients );
 			foreach ( $recipients as $recipient ) {
-				$this->logger->debug ( 'User Added recipient: ' . $recipient );
-				array_push ( $recipientList, new PostmanEmailAddress ( $recipient ) );
+				if (! empty ( $recipient )) {
+					$this->logger->debug ( sprintf ( 'User Added recipient: "%s"', $recipient ) );
+					array_push ( $recipientList, new PostmanEmailAddress ( $recipient ) );
+				}
 			}
 		}
 		
@@ -395,9 +240,7 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		 * @todo http://framework.zend.com/manual/1.12/en/zend.mail.additional-headers.html
 		 *      
 		 */
-		private function processHeaders() {
-			$headers = $this->headers;
-			$this->headers = array ();
+		public function addHeaders($headers) {
 			if (! is_array ( $headers )) {
 				// WordPress may send a string where "each header line (beginning with From:, Cc:, etc.) is delimited with a newline ("\r\n") (advanced)"
 				// this converts that string to an array
@@ -416,6 +259,9 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 									"'",
 									'"' 
 							), '', $parts [1] ) );
+							$this->logger->debug ( sprintf ( 'processing special boundary header %s', $this->getBoundary () ) );
+						} else {
+							$this->logger->debug ( sprintf ( 'ignoring broken header %s', $header ) );
 						}
 						continue;
 					}
@@ -498,7 +344,10 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 				default :
 					// Add it to our grand headers array
 					$this->logProcessHeader ( 'other', $name, $content );
-					$this->headers [$name] = $content;
+					array_push ( $this->headers, array (
+							'name' => $name,
+							'content' => $content 
+					) );
 					break;
 			}
 		}
@@ -518,7 +367,7 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		 *
 		 * @param Postman_Zend_Mail $mail        	
 		 */
-		private function addAttachmentsToMail(Postman_Zend_Mail $mail) {
+		public function addAttachmentsToMail(Postman_Zend_Mail $mail) {
 			$attachments = $this->attachments;
 			if (! is_array ( $attachments )) {
 				// WordPress may a single filename or a newline-delimited string list of multiple filenames
@@ -538,18 +387,6 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 					$mail->addAttachment ( $at );
 				}
 			}
-		}
-		
-		/**
-		 * If this is not set, the FROM header and WordPress FROM hooks are ignored
-		 */
-		public function allowSenderOverride($allow) {
-			$this->overrideSenderAllowed = $allow;
-		}
-		
-		// public accessors
-		public function setHeaders($headers) {
-			$this->headers = $headers;
 		}
 		function setBody($body) {
 			$this->body = $body;
@@ -575,41 +412,40 @@ if (! class_exists ( "PostmanSmtpEngine" )) {
 		function setDate($date) {
 			$this->date = $date;
 		}
-		function setHostname($hostname) {
-			$this->hostname = $hostname;
-		}
-		function setPort($port) {
-			$this->port = $port;
-		}
 		
-		// set the internal logger (defined in the abstract class)
-		protected function setLogger($logger) {
-			$this->logger = $logger;
+		// return the headers
+		public function getHeaders() {
+			return $this->headers;
 		}
-		// set the internal logger (defined in the abstract class)
-		protected function getLogger() {
-			return $this->logger;
+		public function getBoundary() {
+			return $this->boundary;
 		}
-		// return the SMTP session transcript
-		public function getTranscript() {
-			return $this->transcript;
+		public function getToRecipients() {
+			return $this->toRecipients;
 		}
-	}
-}
-
-/**
- * I renamed the Zend classes, but unfortunately these five class names remain or I break
- * compatibility with the Postman Gmail API extension :-(
- */
-if (! class_exists ( 'Zend_Mail_Transport_Smtp' )) {
-	abstract class Zend_Mail_Transport_Abstract extends Postman_Zend_Mail_Transport_Abstract {
-	}
-	class Zend_Mail_Protocol_Smtp extends Postman_Zend_Mail_Protocol_Smtp {
-	}
-	abstract class Zend_Mail_Protocol_Abstract extends Postman_Zend_Mail_Protocol_Abstract {
-	}
-	class Zend_Mime extends Postman_Zend_Mime {
-	}
-	class Zend_Mail_Transport_Exception extends Postman_Zend_Mail_Transport_Exception {
+		public function getCcRecipients() {
+			return $this->ccRecipients;
+		}
+		public function getBccRecipients() {
+			return $this->bccRecipients;
+		}
+		public function getReplyTo() {
+			return $this->replyTo;
+		}
+		public function getReturnPath() {
+			return $this->returnPath;
+		}
+		public function getDate() {
+			return $this->date;
+		}
+		public function getMessageId() {
+			return $this->messageId;
+		}
+		public function getSubject() {
+			return $this->subject;
+		}
+		public function getBody() {
+			return $this->body;
+		}
 	}
 }

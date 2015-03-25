@@ -2,6 +2,12 @@
 if (! class_exists ( 'PostmanAbstractAjaxHandler' )) {
 	
 	require_once ('PostmanPreRequisitesCheck.php');
+	require_once ('Postman-Mail/PostmanMessage.php');
+
+	/**
+	 * 
+	 * @author jasonhendriks
+	 */
 	abstract class PostmanAbstractAjaxHandler {
 		protected $logger;
 		function __construct() {
@@ -479,7 +485,7 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 				$subject = _x ( 'WordPress Postman SMTP Test', 'Test Email Subject', 'postman-smtp' );
 				// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
 				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
-				$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanSmtpEngine::EOL, PostmanSmtpEngine::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) );
+				$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanMessage::EOL, PostmanMessage::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) );
 				/* translators: where %s is the Postman plugin version number (e.g. 1.5.7) */
 				$message2 = '
 Content-Type: text/plain; charset = "UTF-8"

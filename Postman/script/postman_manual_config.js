@@ -48,7 +48,7 @@ jQuery(document).ready(function() {
 });
 function reloadOauthSection() {
 	var hostname = jQuery(postman_hostname_element_name).val();
-	var transport = jQuery('select#input_transport_type').val();
+	var transport = jQuery('#input_transport_type').val();
 	var authtype = jQuery('select#input_auth_type').val();
 	var data = {
 		'action' : 'manual_config',
