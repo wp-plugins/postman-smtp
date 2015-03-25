@@ -91,8 +91,8 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			// add the sender
 			$message->addFrom ( $mail, $this->authenticator );
 			
-			// add the Postman signature - adding it last overwrites anything the user added
-			$mail->addHeader ( 'X-Mailer', sprintf ( 'Postman SMTP %s for WordPress (%s)', POSTMAN_PLUGIN_VERSION, 'https://wordpress.org/plugins/postman-smtp/' ) );
+			// add the Postman signature - append it to whatever the user may have set
+			$mail->addHeader ( 'X-Mailer', sprintf ( 'Postman SMTP %s for WordPress (%s)', POSTMAN_PLUGIN_VERSION, 'https://wordpress.org/plugins/postman-smtp/' ), true );
 			
 			// add the to recipients
 			foreach ( ( array ) $message->getToRecipients () as $recipient ) {
