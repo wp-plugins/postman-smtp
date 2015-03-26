@@ -41,6 +41,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		const BASIC_AUTH_USERNAME = 'basic_auth_username';
 		const BASIC_AUTH_PASSWORD = 'basic_auth_password';
 		const PREVENT_SENDER_NAME_OVERRIDE = 'prevent_sender_name_override';
+		const PREVENT_SENDER_EMAIL_OVERRIDE = 'prevent_sender_email_override';
 		const CONNECTION_TIMEOUT = 'connection_timeout';
 		const READ_TIMEOUT = 'read_timeout';
 		const LOG_LEVEL = 'log_level';
@@ -89,8 +90,8 @@ if (! class_exists ( "PostmanOptions" )) {
 				return $this->options [self::FORCED_BCC_RECIPIENTS];
 		}
 		public function getAdditionalHeaders() {
-			if(isset($this->options[self::ADDITIONAL_HEADERS]))
-				return $this->options[self::ADDITIONAL_HEADERS];
+			if (isset ( $this->options [self::ADDITIONAL_HEADERS] ))
+				return $this->options [self::ADDITIONAL_HEADERS];
 		}
 		//
 		public function getHostname() {
@@ -156,6 +157,10 @@ if (! class_exists ( "PostmanOptions" )) {
 		public function isSenderNameOverridePrevented() {
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] ))
 				return $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE];
+		}
+		public function isSenderEmailOverridePrevented() {
+			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE] ))
+				return $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE];
 		}
 		public function setSenderNameOverridePrevented($prevent) {
 			$this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] = $prevent;

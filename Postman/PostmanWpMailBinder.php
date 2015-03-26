@@ -31,9 +31,10 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 		}
 		
 		/**
-		 * Replaced wp_mail() after making sure
+		 * Replace wp_mail() after making sure:
 		 * 1) the plugin has not already bound to wp_mail and
 		 * 2) the plugin is properly configured.
+		 * 2) the plugin's prerequisites are met.
 		 */
 		function bind() {
 			if (! $this->bound) {
@@ -45,7 +46,7 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 					$ready = false;
 				}
 				if (! PostmanPreRequisitesCheck::isReady ()) {
-					$this->logger->error ( 'Pre-Requisite check failed' );
+					$this->logger->error ( 'Prerequisite check failed' );
 					$ready = false;
 				}
 				if ($ready) {

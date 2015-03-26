@@ -45,6 +45,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			$this->sanitizeString ( 'Password', PostmanOptions::BASIC_AUTH_PASSWORD, $input, $new_input );
 			$this->sanitizeEmail ( 'Reply-To', PostmanOptions::REPLY_TO, $input, $new_input );
 			$this->sanitizeString ( 'Sender Name Override', PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, $input, $new_input );
+			$this->sanitizeString ( 'Sender Email Override', PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE, $input, $new_input );
 			$this->sanitizeEmail ( 'Forced To Recipients', PostmanOptions::FORCED_TO_RECIPIENTS, $input, $new_input );
 			$this->sanitizeEmail ( 'Forced CC Recipients', PostmanOptions::FORCED_CC_RECIPIENTS, $input, $new_input );
 			$this->sanitizeEmail ( 'Forced BCC Recipients', PostmanOptions::FORCED_BCC_RECIPIENTS, $input, $new_input );

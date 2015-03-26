@@ -395,7 +395,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
 			// the Message section
-			add_settings_section ( PostmanAdminController::MESSAGE_SENDER_SECTION, _x ( 'Sender Address', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::MESSAGE_SENDER_SECTION, _x ( 'Sender', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printMessageSenderSectionInfo' 
 			), PostmanAdminController::MESSAGE_SENDER_OPTIONS );
@@ -405,39 +405,49 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'sender_name_callback' 
 			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
 			
+			add_settings_field ( PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, '', array (
+					$this,
+					'prevent_sender_name_override_callback' 
+			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
+			
 			add_settings_field ( PostmanOptions::SENDER_EMAIL, _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'sender_email_callback' 
 			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
 			
-			add_settings_field ( PostmanOptions::REPLY_TO, _x ( 'Reply-To Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE, '', array (
 					$this,
-					'reply_to_callback' 
+					'prevent_sender_email_override_callback' 
 			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
 			
 			// the Message section
-			add_settings_section ( PostmanAdminController::MESSAGE_SECTION, _x ( 'Special Addresses', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::MESSAGE_SECTION, _x ( 'Additional Addresses', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printMessageSectionInfo' 
 			), PostmanAdminController::MESSAGE_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::FORCED_TO_RECIPIENTS, _x ( 'To Recipients', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::REPLY_TO, _x ( 'Reply-To', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'reply_to_callback' 
+			), PostmanAdminController::MESSAGE_OPTIONS, PostmanAdminController::MESSAGE_SECTION );
+			
+			add_settings_field ( PostmanOptions::FORCED_TO_RECIPIENTS, _x ( 'To Recipient(s)', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'to_callback' 
 			), PostmanAdminController::MESSAGE_OPTIONS, PostmanAdminController::MESSAGE_SECTION );
 			
-			add_settings_field ( PostmanOptions::FORCED_CC_RECIPIENTS, _x ( 'Carbon Copy Recipients', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::FORCED_CC_RECIPIENTS, _x ( 'Carbon Copy Recipient(s)', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'cc_callback' 
 			), PostmanAdminController::MESSAGE_OPTIONS, PostmanAdminController::MESSAGE_SECTION );
 			
-			add_settings_field ( PostmanOptions::FORCED_BCC_RECIPIENTS, _x ( 'Blind Carbon Copy Recipients', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::FORCED_BCC_RECIPIENTS, _x ( 'Blind Carbon Copy Recipient(s)', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'bcc_callback' 
 			), PostmanAdminController::MESSAGE_OPTIONS, PostmanAdminController::MESSAGE_SECTION );
 			
 			// the Message section
-			add_settings_section ( PostmanAdminController::MESSAGE_HEADERS_SECTION, _x ( 'Special Headers', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::MESSAGE_HEADERS_SECTION, _x ( 'Additional Headers', 'Configuration Section', 'postman-smtp' ), array (
 					$this,
 					'printAdditionalHeadersSectionInfo' 
 			), PostmanAdminController::MESSAGE_HEADERS_OPTIONS );
@@ -551,33 +561,33 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printMessageSenderSectionInfo() {
-			print __ ( 'The message sender shows up as the <b>From:</b> address.', 'postman-smtp' );
+			print __ ( 'The message sender is used as the <b>From:</b> address.', 'postman-smtp' );
 		}
 		
 		/**
 		 * Print the Section text
 		 */
 		public function printMessageSectionInfo() {
-			print __ ( 'Recipient addresses specified here are in addition to the recipients specified in the message itself. You may separate multiple <b>to</b>/<b>bb</b>/<b>bcc</b> addresses with commas.', 'postman-smtp' );
+			print __ ( 'The Reply-To overrides the Sender when the recipient composes a reply. Separate multiple <b>to</b>/<b>cc</b>/<b>bcc</b> recipients with commas.', 'postman-smtp' );
 		}
 		
 		/**
 		 * Print the Section text
 		 */
 		public function printNetworkSectionInfo() {
-			print __ ( 'Increase the timeouts if your host is intermittenly failing to send mail. Be careful, this also correlates to how long your user must wait if your mail server is unreachable.', 'postman-smtp' );
+			print __ ( 'Increase the timeouts if your host is intermittenly failing to send mail. Be careful, this also correlates to how long your user must wait if the mail server is unreachable.', 'postman-smtp' );
 		}
 		/**
 		 * Print the Section text
 		 */
 		public function printAdvancedSectionInfo() {
-			print __ ( 'Log Level specifies the amount of detail output to the WordPress/PHP logfile.', 'postman-smtp' );
+			print __ ( 'Log Level specifies the amount of detail output to the WordPress and PHP logfiles.', 'postman-smtp' );
 		}
 		/**
 		 * Print the Section text
 		 */
 		public function printAdditionalHeadersSectionInfo() {
-			print __ ( 'Add custom X headers, one header per line (e.g. <code>X-MC-Tags: wordpress-site-A</code>). Custom headers can negatively affect your Spam score. Use them only if you know what you are doing.', 'postman-smtp' );
+			print __ ( 'Specify custom headers (e.g. <code>X-MC-Tags: wordpress-site-A</code>), one per line. Use custom headers with caution as they can negatively affect your Spam score.', 'postman-smtp' );
 		}
 		
 		/**
@@ -662,10 +672,23 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		
 		/**
+		 */
+		public function prevent_sender_name_override_callback() {
+			printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', null !== $this->options->isSenderNameOverridePrevented () ? 'checked="checked"' : '', __ ( 'Prevent the Sender Name from being overridden', 'postman-smtp' ) );
+		}
+		
+		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function sender_email_callback() {
 			printf ( '<input type="text" id="input_sender_email" name="postman_options[sender_email]" value="%s" size="40" class="required"/>', null !== $this->options->getSenderEmail () ? esc_attr ( $this->options->getSenderEmail () ) : '' );
+		}
+		
+		/**
+		 * Get the settings option array and print one of its values
+		 */
+		public function prevent_sender_email_override_callback() {
+			printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', null !== $this->options->isSenderEmailOverridePrevented () ? 'checked="checked"' : '', __ ( 'Prevent the Sender Email Address from being overridden', 'postman-smtp' ) );
 		}
 		
 		/**
@@ -775,12 +798,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function read_timeout_callback() {
 			printf ( '<input type="text" id="input_read_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::READ_TIMEOUT, $this->options->getReadTimeout () );
-		}
-		
-		/**
-		 */
-		public function prevent_sender_name_override_callback() {
-			printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s />', null !== $this->options->isSenderNameOverridePrevented () ? 'checked="checked"' : '' );
 		}
 		
 		/**
