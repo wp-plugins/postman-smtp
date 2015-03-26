@@ -389,6 +389,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Upgrade Notice ==
 
+= 1.5.9 =
+Set additional recipients, additional headers, prevent sender override and minor bugfixes.
+
 = 1.5.8 =
 Postman will proceed even without OpenSSL installed, but with a warning to the user.
 
