@@ -675,8 +675,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function prevent_sender_name_override_callback() {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
-			$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
-			if (! $authenticator->isSenderNameOverridePrevented ()) {
+			$transportConfigured = $transport->isConfigured($this->options, $this->authorizationToken);
+			if($transportConfigured) {
+				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
+			}
+			if (!$transportConfigured || ! $authenticator->isSenderNameOverridePrevented ()) {
 				printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', null !== $this->options->isSenderNameOverridePrevented () ? 'checked="checked"' : '', __ ( 'Prevent the Sender Name from being overridden', 'postman-smtp' ) );
 			} else {
 				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_name_override" checked="checked"/> %s', __ ( 'Prevent the Sender Name from being overridden', 'postman-smtp' ) );
@@ -698,8 +701,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function prevent_sender_email_override_callback() {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
-			$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
-			if (! $authenticator->isSenderEmailOverridePrevented ()) {
+			$transportConfigured = $transport->isConfigured($this->options, $this->authorizationToken);
+			if($transportConfigured) {
+				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
+			}
+			if (!$transportConfigured || ! $authenticator->isSenderEmailOverridePrevented ()) {
 				printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', null !== $this->options->isSenderEmailOverridePrevented () ? 'checked="checked"' : '', __ ( 'Prevent the Sender Email Address from being overridden', 'postman-smtp' ) );
 			} else {
 				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_email_override" checked="checked"/> %s', __ ( 'Prevent the Sender Email Address from being overridden', 'postman-smtp' ) );
