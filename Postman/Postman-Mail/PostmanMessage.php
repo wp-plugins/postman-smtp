@@ -57,7 +57,8 @@ if (! class_exists ( "PostmanMessage" )) {
 		private $returnPath;
 		private $date;
 		private $messageId;
-		private $overrideSenderAllowed;
+		private $preventSenderNameOverride;
+		private $preventSenderEmailOverride;
 		
 		// determined by the send() method
 		private $isTextHtml;
@@ -120,22 +121,25 @@ if (! class_exists ( "PostmanMessage" )) {
 			// and other plugins can override the name via a filter
 			$sender->setName ( apply_filters ( 'wp_mail_from_name', $sender->getName () ) );
 			
-			// but the MailAuthenticator has the final say
-			$authenticator->filterSender ( $sender );
+			// but the MailAuthenticator and user have the final say
+			if ($authenticator->isSenderEmailOverridePrevented() || $this->isSenderEmailOverridePrevented ()) {
+				$sender->setEmail ( $this->sender->getEmail () );
+			}
+			if ($authenticator->isSenderNameOverridePrevented() || $this->isSenderNameOverridePrevented ()) {
+				$sender->setName ( $this->sender->getName () );
+			}
 			
 			// now log it and push it into the message
-			assert ( isset ( $sender ) );
-			if (isset ( $sender )) {
-				$senderEmail = $sender->getEmail ();
-				$senderName = $sender->getName ();
-				assert ( ! empty ( $senderEmail ) );
-				$sender->log ( $this->logger, 'From' );
-				if (! empty ( $senderName )) {
-					$mail->setFrom ( $senderEmail, $senderName );
-				} else {
-					$mail->setFrom ( $senderEmail );
-				}
+			$senderEmail = $sender->getEmail ();
+			$senderName = $sender->getName ();
+			assert ( ! empty ( $senderEmail ) );
+			if (! empty ( $senderName )) {
+				$mail->setFrom ( $senderEmail, $senderName );
+			} else {
+				$mail->setFrom ( $senderEmail );
 			}
+			
+			return $sender;
 		}
 		
 		/**
@@ -411,6 +415,20 @@ if (! class_exists ( "PostmanMessage" )) {
 		}
 		function setDate($date) {
 			$this->date = $date;
+		}
+		
+		// sender override
+		public function isSenderNameOverridePrevented() {
+			return $this->preventSenderNameOverride;
+		}
+		public function setPreventSenderNameOverride($preventSenderNameOverride) {
+			$this->preventSenderNameOverride = $preventSenderNameOverride;
+		}
+		public function isSenderEmailOverridePrevented() {
+			return $this->preventSenderEmailOverride;
+		}
+		public function setPreventSenderEmailOverride($preventSenderEmailOverride) {
+			$this->preventSenderEmailOverride = $preventSenderEmailOverride;
 		}
 		
 		// return the headers

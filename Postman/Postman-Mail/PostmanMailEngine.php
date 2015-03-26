@@ -73,10 +73,13 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$this->logger->debug ( 'Building Postman_Zend_Mail with charset=' . $charset );
 			$mail = new Postman_Zend_Mail ( $charset );
 			
+			// add the Postman signature - append it to whatever the user may have set
+			$mail->addHeader ( 'X-Mailer', sprintf ( 'Postman SMTP %s for WordPress (%s)', POSTMAN_PLUGIN_VERSION, 'https://wordpress.org/plugins/postman-smtp/' ), true );
+			
 			// add the headers
 			foreach ( ( array ) $message->getHeaders () as $header ) {
 				$this->logger->debug ( sprintf ( 'Adding user header %s=%s', $header ['name'], $header ['content'] ) );
-				$mail->addHeader ( $header ['name'], $header ['content'] );
+				$mail->addHeader ( $header ['name'], $header ['content'], true );
 			}
 			
 			// add the content type
@@ -89,11 +92,9 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$this->logger->debug ( 'Adding content-type ' . $contentType );
 			
 			// add the sender
-			$message->addFrom ( $mail, $this->authenticator );
-			
-			// add the Postman signature - append it to whatever the user may have set
-			$mail->addHeader ( 'X-Mailer', sprintf ( 'Postman SMTP %s for WordPress (%s)', POSTMAN_PLUGIN_VERSION, 'https://wordpress.org/plugins/postman-smtp/' ), true );
-			
+			$sender = $message->addFrom ( $mail, $this->authenticator );
+			$sender->log ( $this->logger, 'From' );
+				
 			// add the to recipients
 			foreach ( ( array ) $message->getToRecipients () as $recipient ) {
 				$recipient->log ( $this->logger, 'To' );

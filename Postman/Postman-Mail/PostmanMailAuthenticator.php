@@ -1,8 +1,9 @@
 <?php
 if (! interface_exists ( 'PostmanMailAuthenticator' )) {
 	interface PostmanMailAuthenticator {
-		function filterSender(PostmanEmailAddress $sender);
 		function createConfig();
+		function isSenderNameOverridePrevented();
+		function isSenderEmailOverridePrevented();
 	}
 }
 
@@ -14,8 +15,11 @@ if (! class_exists ( 'PostmanGeneralMailAuthenticator' )) {
 			$this->options = $options;
 			$this->authToken = $authToken;
 		}
-		public function filterSender(PostmanEmailAddress $sender) {
-			// no-op
+		public function isSenderNameOverridePrevented() {
+			return false;
+		}
+		public function isSenderEmailOverridePrevented() {
+			return false;
 		}
 		public function createConfig() {
 			$logger = new PostmanLogger ( get_class ( $this ) );
@@ -52,13 +56,11 @@ if (! class_exists ( 'PostmanOAuth2MailAuthenticator' )) {
 			$this->authToken = $authToken;
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
-		public function filterSender(PostmanEmailAddress $sender) {
-			// yahoo will refuse to authenticate without this
-			// gmail and hotmail will re-write it
-			if ($sender->getEmail () != $this->options->getSenderEmail ()) {
-				$this->logger->debug ( sprintf ( 'Overriding e-mail address from %s to %s', $sender->getEmail (), $this->options->getSenderEmail () ) );
-				$sender->setEmail ( $this->options->getSenderEmail () );
-			}
+		public function isSenderNameOverridePrevented() {
+			return false;
+		}
+		public function isSenderEmailOverridePrevented() {
+			return true;
 		}
 		private function getEncryptionType() {
 			return $this->options->getEncryptionType ();

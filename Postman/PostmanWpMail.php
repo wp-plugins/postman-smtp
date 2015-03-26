@@ -48,7 +48,9 @@ if (! class_exists ( "PostmanWpMail" )) {
 					$message->addBcc ( $wpMailOptions->getForcedBccRecipients () );
 					$message->setAttachments ( $attachments );
 					$message->setSender ( $wpMailOptions->getSenderEmail (), $wpMailOptions->getSenderName () );
-					
+					$message->setPreventSenderEmailOverride($wpMailOptions->isSenderEmailOverridePrevented());
+					$message->setPreventSenderNameOverride($wpMailOptions->isSenderNameOverridePrevented());
+						
 					// set the reply-to address if it hasn't been set already in the user's headers
 					$optionsReplyTo = $wpMailOptions->getReplyTo ();
 					$messageReplyTo = $message->getReplyTo ();
