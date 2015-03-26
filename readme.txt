@@ -13,11 +13,11 @@ Gmail, Hotmail, and Yahoo Mail problems are solved with Postman, the first and o
 
 == Description ==
 
-Postman is an intelligent, next-generation SMTP mailer addressing a [shortcoming](https://wordpress.org/support/view/plugin-reviews/configure-smtp?filter=1) in every SMTP mailer for WordPress: [no OAuth 2.0](http://foorious.com/webdev/auth/oauth2/) - Yahoo Mail, Hotmail and Gmail's preferred mechanism for authentication.
+Postman is an intelligent, next-generation SMTP mailer that brings reliable email delivery to WordPress. Postman is unique because it supports both traditional username/password authentication, and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/) - Yahoo Mail, Hotmail and Gmail's preferred mechanism for authentication.
 
 In 2014, Google announced if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)." For Google Apps users, OAuth 2.0 is a [requirement](http://plugins.svn.wordpress.org/postman-smtp/assets/Screen%20Shot%202015-02-21%20at%208.52.13%20PM.png), not a nice-to-have.
 
-Stop fighting SMTP [authentication failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), **lost emails**, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
+Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), lost emails, emails landing as spam, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
 [Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished since January of this year.
 
