@@ -225,15 +225,16 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Screenshots ==
 
-1. Postman configured and ready for mail
-1. Postman's Setup Wizard checking server connectivity
-1. Postman's full configuration screen
-1. Postman's Test Email utility - Oops! Wrong password
-1. Postman's Connectivity Test utility
-1. Creating a new Client ID with Google
-1. The required Client ID and Client Secret
-1. Creating a new Application with Microsoft
-1. The required Client ID and Client Secret
+1. Dashboard widget showing status at a glance
+1. Main Settings screen
+1. Setup Wizard (step 1) screen
+1. Manual Configuration - Account Settings: Password Authentication
+1. Manual Configuration - Account Settings: OAuth 2.0 Authentication
+1. Manual Configuration - Message Settings
+1. Manual Configuration - Advanced Settings
+1. Test Email utility screen - Oops! Wrong password
+1. Connectivity Test utility screen
+1. Diagnostic Information screen
 
 
 
