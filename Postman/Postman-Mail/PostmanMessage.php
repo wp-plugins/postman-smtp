@@ -385,7 +385,7 @@ if (! class_exists ( "PostmanMessage" )) {
 					$this->logger->debug ( "Adding attachment: " . $file );
 					$at = new Postman_Zend_Mime_Part ( file_get_contents ( $file ) );
 					// $at->type = 'image/gif';
-					$at->disposition = Postman_Zend_Mime::DISPOSITION_INLINE;
+					$at->disposition = Postman_Zend_Mime::DISPOSITION_ATTACHMENT;
 					$at->encoding = Postman_Zend_Mime::ENCODING_BASE64;
 					$at->filename = basename ( $file );
 					$mail->addAttachment ( $at );

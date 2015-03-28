@@ -257,6 +257,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_testing', _x ( 'Checking...', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_open', _x ( 'Ok', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_closed', _x ( 'Closed', 'TCP Port Test Status', 'postman-smtp' ) );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_yes', _x ( 'Yes', 'TCP Port Test Status', 'postman-smtp' ) );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_no', _x ( 'No', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_email_test', array (
 					'not_started' => _x ( 'In Outbox', 'Email Test Status', 'postman-smtp' ),
 					'sending' => _x ( 'Sending...', 'Email Test Status', 'postman-smtp' ),
@@ -427,14 +429,30 @@ if (! class_exists ( 'PostmanViewController' )) {
 			
 			print '<p>';
 			print __ ( 'This test determines which ports are open for Postman to use.', 'postman-smtp' );
-			print ' ';
 			/* translators: where %d is an amount of time, in seconds */
-			printf ( _n ( 'Each test is given %d second to complete.', 'Each test is given %d seconds to complete.', $this->options->getConnectionTimeout (), 'postman-smtp' ), $this->options->getConnectionTimeout () );
 			print '<form id="port_test_form_id" method="post">';
 			printf ( '<label for="hostname">%s</label>', _x ( 'SMTP Server Hostname', 'Configuration Input Field', 'postman-smtp' ) );
 			$this->adminController->port_test_hostname_callback ();
 			submit_button ( _x ( 'Begin Test', 'Button Label', 'postman-smtp' ), 'primary', 'begin-port-test', true );
 			print '</form>';
+			print '<table id="testing_table">';
+			$portName = _x ( 'Port %s', 'Port Test', 'postman-smtp' );
+			$portStatus = _x ( 'Unknown', 'Port Test Status', 'postman-smtp' );
+			print '<tr><th>Test</th><th>Port 25</th><th>Port 443</th><th>Port 465</th><th>Port 587</th></tr>';
+			print '<tr><th>TCP Port Status</th><th id="port-test-port-25">-</th><th id="port-test-port-443">-</th><th id="port-test-port-465">-</th><th id="port-test-port-587">-</th></tr>';
+			print '<tr><th>SMTP Availability</th><th id="smtp_test_port_25">-</th><th id="smtp_test_port_443">-</th><th id="smtp_test_port_465">-</th><th id="smtp_test_port_587">-</th></tr>';
+			print '<tr><th>SMTPS (SSL/TLS) Availability</th><th id="smtps_test_port_25">-</th><th id="smtps_test_port_443">-</th><th id="smtps_test_port_465">-</th><th id="smtps_test_port_587">-</th></tr>';
+			print '<tr><th>STARTTLS</th><th>-</th><th>-</th><th>-</th><th>-</th></tr>';
+			print '<tr><th>Auth: None</th><th>-</th><th>-</th><th>-</th><th>-</th></tr>';
+			print '<tr><th>Auth: Login</th><th>-</th><th>-</th><th>-</th><th>-</th></tr>';
+			print '<tr><th>Auth: Plain</th><th>-</th><th>-</th><th>-</th><th>-</th></tr>';
+			print '<tr><th>Auth: CRAM-MD5</th><th>-</th><th>-</th><th>-</th><th>-</th></tr>';
+			print '<tr><th>Auth: XOAUTH2</th><th>-</th><th>-</th><th>-</th><th>-</th></tr>';
+			// foreach ( $ports as $port ) {
+			// printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', $port ['port'], sprintf ( $portName, $port ['port'] ), $port ['message'], $portStatus );
+			// }
+			print '</table>';
+			print '<br/>';
 			print __ ( 'A <span style="color:red">Closed</span> port indicates:', 'postman-smtp' );
 			print '<ol>';
 			printf ( '<li>%s</li>', __ ( 'Your host has placed a firewall between this site and the SMTP server', 'postman-smtp' ) );
@@ -444,13 +462,6 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<li>%s</li>', sprintf ( __ ( 'Your <a href="%s">WordPress configuration</a> is preventing outbound connections', 'postman-smtp' ), 'http://wp-mix.com/disable-external-url-requests/' ) );
 			printf ( '<li>%s</li>', __ ( 'The SMTP server has no service running on that port', 'postman-smtp' ) );
 			printf ( '</ol></p><p><b>%s</b></p>', __ ( 'If the port you are trying to use is <span style="color:red">Closed</span>, Postman can not deliver mail. Contact your host to get the port opened.', 'postman-smtp' ) );
-			print '<table id="testing_table">';
-			$portName = _x ( 'Port %s', 'Port Test', 'postman-smtp' );
-			$portStatus = _x ( 'Unknown', 'Port Test Status', 'postman-smtp' );
-			foreach ( $ports as $port ) {
-				printf ( '<tr><td class="port">%2$s</td><td>%3$s</td><td id="port-test-port-%1$d">%4$s</td>', $port ['port'], sprintf ( $portName, $port ['port'] ), $port ['message'], $portStatus );
-			}
-			print '</table>';
 			print '</div>';
 		}
 		

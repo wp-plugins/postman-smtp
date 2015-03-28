@@ -26,32 +26,94 @@ function portTest(tdValue, port, button) {
 	var testEl = jQuery(tdValue);
 	testEl.html(postman_port_test_testing);
 	var data = {
+		'action' : 'port_quiz_test',
+		'hostname' : jQuery(postman_hostname_element_name).val(),
+		'port' : port
+	};
+	jQuery.post(
+			ajaxurl,
+			data,
+			function(response) {
+				if (response.success) {
+					testEl.html('<span style="color:green">'
+							+ postman_port_test_open + '</span>');
+					// start the next test
+					portTest2(port);
+				} else {
+					testEl.html('<span style="color:red">'
+							+ postman_port_test_closed + '</span>');
+					totalPortsTested += 1;
+				}
+				if (totalPortsTested >= portsToBeTested) {
+					enable(button);
+				}
+			}).fail(
+			function() {
+				totalPortsTested += 1;
+				testEl.html('<span style="color:red">'
+						+ postman_port_test_closed + '</span> ('
+						+ postman_email_test.failed + ")");
+				if (totalPortsTested >= portsToBeTested) {
+					enable(button);
+				}
+			});
+	;
+}
+function portTest2(port) {
+	portsToBeTested += 1;
+	var testEl = jQuery('#smtp_test_port_' + port);
+	testEl.html(postman_port_test_testing);
+	var data = {
 		'action' : 'test_port',
 		'hostname' : jQuery(postman_hostname_element_name).val(),
 		'port' : port
-	// We pass php values differently!
 	};
-	// We can also pass the url value separately from ajaxurl for front end AJAX
-	// implementations
-	jQuery.post(ajaxurl, data, function(response) {
-		totalPortsTested += 1;
-		if (response.success) {
-			testEl.html('<span style="color:green">' + postman_port_test_open
-					+ '</span>');
-		} else {
-			testEl.html('<span style="color:red">' + postman_port_test_closed
-					+ '</span> (' + response.message + ")");
-		}
-		if (totalPortsTested >= portsToBeTested) {
-			enable(button);
-		}
-	}).fail(
-		function() {
-			totalPortsTested += 1;
-			testEl.html('<span style="color:red">' + postman_port_test_closed
-					+ '</span> (' + postman_email_test.failed + ")");
-			if (totalPortsTested >= portsToBeTested) {
-				enable(button);
-			}
-	});;
+	jQuery.post(
+			ajaxurl,
+			data,
+			function(response) {
+				totalPortsTested += 1;
+				if (response.success) {
+					testEl.html('<span style="color:green">' + postman_yes
+							+ '</span>');
+					// start the next test
+				} else {
+					testEl.html('<span style="color:red">' + postman_no
+							+ '</span>');
+					// start the next test
+					portTest3(port);
+				}
+			}).fail(function() {
+		testEl.html('<span style="color:red">' + postman_no + '</span>');
+	});
+	;
+	totalPortsTested += 1;
+}
+function portTest3(port) {
+	portsToBeTested += 1;
+	var testEl = jQuery('#smtps_test_port_' + port);
+	testEl.html(postman_port_test_testing);
+	var data = {
+		'action' : 'test_smtps',
+		'hostname' : jQuery(postman_hostname_element_name).val(),
+		'port' : port
+	};
+	jQuery.post(
+			ajaxurl,
+			data,
+			function(response) {
+				totalPortsTested += 1;
+				if (response.success) {
+					testEl.html('<span style="color:green">' + postman_yes
+							+ '</span>');
+					// start the next test
+				} else {
+					testEl.html('<span style="color:red">' + postman_no
+							+ '</span>');
+				}
+			}).fail(function() {
+		testEl.html('<span style="color:red">' + postman_no + '</span>');
+	});
+	;
+	totalPortsTested += 1;
 }

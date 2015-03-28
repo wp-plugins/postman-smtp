@@ -88,6 +88,7 @@ if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
 			return true;
 		}
 		public function getCallbackUrl() {
+			// see https://codex.wordpress.org/Function_Reference/admin_url#Related
 			return admin_url ( 'options-general.php' ) . '?page=postman';
 		}
 		public function getClientIdLabel() {

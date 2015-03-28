@@ -3,9 +3,9 @@ if (! class_exists ( 'PostmanAbstractAjaxHandler' )) {
 	
 	require_once ('PostmanPreRequisitesCheck.php');
 	require_once ('Postman-Mail/PostmanMessage.php');
-
+	
 	/**
-	 * 
+	 *
 	 * @author jasonhendriks
 	 */
 	abstract class PostmanAbstractAjaxHandler {
@@ -96,8 +96,8 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		private function testConnectivity() {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
 			if ($transport->isConfigured ( $this->options, $this->authorizationToken ) && method_exists ( $transport, 'getHostname' ) && method_exists ( $transport, 'getHostPort' )) {
-				$portTest = new PostmanPortTest ();
-				$result = $portTest->testSmtpPorts ( $transport->getHostname ( $this->options ), $transport->getHostPort ( $this->options ) );
+				$portTest = new PostmanPortTest ( $transport->getHostname ( $this->options ), $transport->getHostPort ( $this->options ) );
+				$result = $portTest->testSmtpPorts ( $this->options->getConnectionTimeout () );
 				if ($result) {
 					return 'Yes';
 				} else {
@@ -188,18 +188,53 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		function __construct(PostmanOptionsInterface $options) {
 			parent::__construct ();
 			$this->options = $options;
-			$this->registerAjaxHandler ( 'test_port', $this, 'getAjaxPortStatus' );
+			$this->registerAjaxHandler ( 'port_quiz_test', $this, 'runPortQuizTest' );
+			$this->registerAjaxHandler ( 'test_port', $this, 'runSmtpTest' );
+			$this->registerAjaxHandler ( 'test_smtps', $this, 'runSmtpsTest' );
 		}
 		
 		/**
 		 * This Ajax function retrieves whether a TCP port is open or not
 		 */
-		function getAjaxPortStatus() {
+		function runPortQuizTest() {
 			$hostname = $this->getRequestParameter ( 'hostname' );
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
 			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
-			$portTest = new PostmanPortTest ();
-			$success = $portTest->testSmtpPorts ( $hostname, $port, $this->options->getConnectionTimeout () );
+			$portTest = new PostmanPortTest ( $hostname, $port );
+			$success = $portTest->testPortQuiz ( $this->options->getConnectionTimeout () );
+			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
+			$response = array (
+					'message' => $portTest->getErrorMessage (),
+					'success' => $success 
+			);
+			wp_send_json ( $response );
+		}
+		
+		/**
+		 * This Ajax function retrieves whether a TCP port is open or not
+		 */
+		function runSmtpTest() {
+			$hostname = $this->getRequestParameter ( 'hostname' );
+			$port = intval ( $this->getRequestParameter ( 'port' ) );
+			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
+			$portTest = new PostmanPortTest ( $hostname, $port );
+			$success = $portTest->testSmtpPorts ( $this->options->getConnectionTimeout () );
+			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
+			$response = array (
+					'message' => $portTest->getErrorMessage (),
+					'success' => $success 
+			);
+			wp_send_json ( $response );
+		}
+		/**
+		 * This Ajax function retrieves whether a TCP port is open or not
+		 */
+		function runSmtpsTest() {
+			$hostname = $this->getRequestParameter ( 'hostname' );
+			$port = intval ( $this->getRequestParameter ( 'port' ) );
+			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
+			$portTest = new PostmanPortTest ( $hostname, $port );
+			$success = $portTest->testSmtpsPorts ( $this->options->getConnectionTimeout () );
 			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
 			$response = array (
 					'message' => $portTest->getErrorMessage (),

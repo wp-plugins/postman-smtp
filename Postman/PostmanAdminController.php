@@ -654,7 +654,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function port_test_hostname_callback() {
-			printf ( '<input type="text" id="input_hostname" name="postman_options[hostname]" value="portquiz.net" size="40" class="required"/>' );
+			printf ( '<input type="text" id="input_hostname" name="postman_options[hostname]" value="smtp.gmail.com" size="40" class="required"/>' );
 		}
 		
 		/**
