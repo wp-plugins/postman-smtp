@@ -265,7 +265,7 @@ function wizardPortTest(hostname, port, input, state) {
 	el.prop('checked', true);
 	portsToCheck++;
 	var data = {
-		'action' : 'test_port',
+		'action' : 'wizard_port_test',
 		'hostname' : hostname,
 		'port' : port
 	};

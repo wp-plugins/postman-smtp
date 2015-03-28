@@ -33,7 +33,7 @@ if (! class_exists ( 'PostmanAbstractAjaxHandler' )) {
 		 */
 		protected function getRequestParameter($parameterName) {
 			if (isset ( $_POST [$parameterName] )) {
-				$value = trim ( $_POST [$parameterName] );
+				$value = $_POST [$parameterName];
 				$this->logger->debug ( 'Found parameter name ' . $parameterName );
 				$this->logger->debug ( $value );
 				return $value;
@@ -188,16 +188,21 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		function __construct(PostmanOptionsInterface $options) {
 			parent::__construct ();
 			$this->options = $options;
+			$this->registerAjaxHandler ( 'wizard_port_test', $this, 'runPortQuizTest' );
 			$this->registerAjaxHandler ( 'port_quiz_test', $this, 'runPortQuizTest' );
 			$this->registerAjaxHandler ( 'test_port', $this, 'runSmtpTest' );
 			$this->registerAjaxHandler ( 'test_smtps', $this, 'runSmtpsTest' );
+		}
+		
+		function wizardConnectivityTest() {
+			$this->runSmtpTest();
 		}
 		
 		/**
 		 * This Ajax function retrieves whether a TCP port is open or not
 		 */
 		function runPortQuizTest() {
-			$hostname = $this->getRequestParameter ( 'hostname' );
+			$hostname = trim ( $this->getRequestParameter ( 'hostname' ) );
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
 			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ( $hostname, $port );
@@ -214,7 +219,7 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		 * This Ajax function retrieves whether a TCP port is open or not
 		 */
 		function runSmtpTest() {
-			$hostname = $this->getRequestParameter ( 'hostname' );
+			$hostname = trim ( $this->getRequestParameter ( 'hostname' ) );
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
 			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ( $hostname, $port );
@@ -225,7 +230,7 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		 * This Ajax function retrieves whether a TCP port is open or not
 		 */
 		function runSmtpsTest() {
-			$hostname = $this->getRequestParameter ( 'hostname' );
+			$hostname = trim ( $this->getRequestParameter ( 'hostname' ) );
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
 			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ( $hostname, $port );
