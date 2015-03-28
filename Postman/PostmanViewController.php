@@ -430,8 +430,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print sprintf ( '<tr><th rowspan="5">%s</th><th>%s</th><td id="auth_none_test_port_25">-</td><td id="auth_none_test_port_443">-</td><td id="auth_none_test_port_465">-</td><td id="auth_none_test_port_587">-</td></tr>', __ ( 'Auth', 'Connectivity Test Table', 'postman-smtp' ), __ ( 'None', 'Connectivity Test Table', 'postman-smtp' ) );
 			print sprintf ( '<tr><th>%s</th><td id="auth_login_test_port_25">-</td><td id="auth_login_test_port_443">-</td><td id="auth_login_test_port_465">-</td><td id="auth_login_test_port_587">-</td></tr>', __ ( 'Login', 'Connectivity Test Table', 'postman-smtp' ) );
 			print sprintf ( '<tr><th>%s</th><td id="auth_plain_test_port_25">-</td><td id="auth_plain_test_port_443">-</td><td id="auth_plain_test_port_465">-</td><td id="auth_plain_test_port_587">-</td></tr>', __ ( 'Plain', 'Connectivity Test Table', 'postman-smtp' ) );
-			print sprintf ( '<tr><th>%s</th><td id="auth_crammd5_test_port_25">-</td><td id="auth_crammd5_test_port_443">-</td><td id="auth_crammd5_test_port_465">-</td><td id="auth_crammd5_test_port_587">-</td></tr>', __ ( 'Test', 'CRAM-MD5', 'postman-smtp' ) );
-			print sprintf ( '<tr><th>%s</th><td id="auth_xoauth_test_port_25">-</td><td id="auth_xoauth_test_port_443">-</td><td id="auth_xoauth_test_port_465">-</td><td id="auth_xoauth_test_port_587">-</td></tr>', __ ( 'Test', 'XOAUTH', 'postman-smtp' ) );
+			print sprintf ( '<tr><th>%s</th><td id="auth_crammd5_test_port_25">-</td><td id="auth_crammd5_test_port_443">-</td><td id="auth_crammd5_test_port_465">-</td><td id="auth_crammd5_test_port_587">-</td></tr>', __ ( 'CRAM-MD5', 'Connectivity Test Table', 'postman-smtp' ) );
+			print sprintf ( '<tr><th>%s</th><td id="auth_xoauth_test_port_25">-</td><td id="auth_xoauth_test_port_443">-</td><td id="auth_xoauth_test_port_465">-</td><td id="auth_xoauth_test_port_587">-</td></tr>', __ ( 'XOAUTH', 'Connectivity Test Table', 'postman-smtp' ) );
 			print '</table>';
 			print '<section id="conclusion" style="display:none">';
 			print sprintf ( '<h3>%s:</h3>', __ ( 'Conclusion', 'postman-smtp' ) );
