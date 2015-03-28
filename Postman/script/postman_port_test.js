@@ -7,7 +7,7 @@ jQuery(document).ready(function() {
 			return false;
 		}
 		$el.attr('disabled', 'disabled');
-		var $elTestingTable = jQuery('#testing_table');
+		var $elTestingTable = jQuery('#connectivity_test_table');
 		$elTestingTable.show();
 
 		totalPortsTested = 0;
@@ -22,98 +22,189 @@ jQuery(document).ready(function() {
 	});
 });
 function portTest(tdValue, port, button) {
+	resetView(port);
+	show('#conclusion');
 	portsToBeTested += 1;
 	var testEl = jQuery(tdValue);
-	testEl.html(postman_port_test_testing);
+	testEl.html('<span style="color:blue">' + postman_port_test_testing
+			+ '</span>');
+	var hostname = jQuery(postman_hostname_element_name).val();
 	var data = {
 		'action' : 'port_quiz_test',
-		'hostname' : jQuery(postman_hostname_element_name).val(),
+		'hostname' : hostname,
 		'port' : port
 	};
-	jQuery.post(
-			ajaxurl,
-			data,
-			function(response) {
-				if (response.success) {
-					testEl.html('<span style="color:green">'
-							+ postman_port_test_open + '</span>');
-					// start the next test
-					portTest2(port);
-				} else {
-					testEl.html('<span style="color:red">'
-							+ postman_port_test_closed + '</span>');
-					totalPortsTested += 1;
-				}
-				if (totalPortsTested >= portsToBeTested) {
-					enable(button);
-				}
-			}).fail(
-			function() {
-				totalPortsTested += 1;
-				testEl.html('<span style="color:red">'
-						+ postman_port_test_closed + '</span> ('
-						+ postman_email_test.failed + ")");
-				if (totalPortsTested >= portsToBeTested) {
-					enable(button);
-				}
-			});
-	;
+	jQuery
+			.post(
+					ajaxurl,
+					data,
+					function(response) {
+						if (response.success) {
+							testEl.html('<span style="color:green">'
+									+ postman_port_test_open + '</span>');
+							// start the next test
+						} else {
+							testEl.html('<span style="color:red">'
+									+ postman_port_test_closed + '</span>');
+							show('#blocked-port-help');
+						}
+						if (port != 443) {
+							portTest2(hostname, port, button, response.success);
+						} else {
+							totalPortsTested += 1;
+							enableButtonCheck(button);
+							if (response.success) {
+								addConclusion('Port 443 can be used to send Gmail with the <a href="https://wordpress.org/plugins/postman-gmail-extension/">Postman Gmail Extension</a>');
+							} else {
+								addConclusion('Port 443 is blocked. Contact your host for a solution, such as opening the port');
+							}
+						}
+					}).fail(
+					function() {
+						totalPortsTested += 1;
+						testEl.html('<span style="color:red">'
+								+ postman_port_test_closed + '</span> ('
+								+ postman_email_test.failed + ")");
+						enableButtonCheck(button);
+					});
 }
-function portTest2(port) {
-	portsToBeTested += 1;
+function portTest2(hostname, port, button, open) {
 	var testEl = jQuery('#smtp_test_port_' + port);
-	testEl.html(postman_port_test_testing);
+	testEl.html('<span style="color:blue">' + postman_port_test_testing
+			+ '</span>');
 	var data = {
 		'action' : 'test_port',
-		'hostname' : jQuery(postman_hostname_element_name).val(),
+		'hostname' : hostname,
 		'port' : port
 	};
 	jQuery.post(
 			ajaxurl,
 			data,
 			function(response) {
-				totalPortsTested += 1;
 				if (response.success) {
-					testEl.html('<span style="color:green">' + postman_yes
-							+ '</span>');
-					// start the next test
+					totalPortsTested += 1;
+					testEl.html('<span style="color:green">SMTP</span>');
+					inspectResponse(response, port);
+					addConclusion('Port ' + port + ' can be used for SMTP to '
+							+ hostname);
 				} else {
-					testEl.html('<span style="color:red">' + postman_no
-							+ '</span>');
-					// start the next test
-					portTest3(port);
+					// start the SMTPS test
+					portTest3(hostname, port, button, open);
 				}
+				enableButtonCheck(button);
 			}).fail(function() {
+		totalPortsTested += 1;
 		testEl.html('<span style="color:red">' + postman_no + '</span>');
+		enableButtonCheck(button);
 	});
-	;
-	totalPortsTested += 1;
 }
-function portTest3(port) {
-	portsToBeTested += 1;
-	var testEl = jQuery('#smtps_test_port_' + port);
-	testEl.html(postman_port_test_testing);
+function portTest3(hostname, port, button, open) {
+	var testEl = jQuery('#smtp_test_port_' + port);
+	testEl.html('<span style="color:blue">' + postman_port_test_testing
+			+ '</span>');
 	var data = {
 		'action' : 'test_smtps',
-		'hostname' : jQuery(postman_hostname_element_name).val(),
+		'hostname' : hostname,
 		'port' : port
 	};
-	jQuery.post(
-			ajaxurl,
-			data,
-			function(response) {
-				totalPortsTested += 1;
-				if (response.success) {
-					testEl.html('<span style="color:green">' + postman_yes
-							+ '</span>');
-					// start the next test
-				} else {
-					testEl.html('<span style="color:red">' + postman_no
-							+ '</span>');
-				}
-			}).fail(function() {
-		testEl.html('<span style="color:red">' + postman_no + '</span>');
-	});
-	;
-	totalPortsTested += 1;
+	jQuery
+			.post(
+					ajaxurl,
+					data,
+					function(response) {
+						if (response.success) {
+							testEl
+									.html('<span style="color:green">SMTPS</span>');
+							inspectResponse(response, port);
+							addConclusion('Port ' + port
+									+ ' can be used for SMTP to ' + hostname);
+						} else {
+							testEl.html('<span style="color:red">' + postman_no
+									+ '</span>');
+							if (open) {
+								addConclusion('Port ' + port
+										+ ' can\'t send mail with ' + hostname
+										+ '. Try a different SMTP server.');
+							} else {
+								addConclusion('Port '
+										+ port
+										+ ' is blocked. Contact your host for a solution, such as using their local SMTP server or opening the port.');
+							}
+						}
+						totalPortsTested += 1;
+						enableButtonCheck(button);
+					}).fail(
+					function() {
+						totalPortsTested += 1;
+						testEl.html('<span style="color:red">' + postman_no
+								+ '</span>');
+						enableButtonCheck(button);
+					});
+}
+function enableButtonCheck(button) {
+	if (totalPortsTested >= portsToBeTested) {
+		enable(button);
+	}
+}
+function inspectResponse(response, port) {
+	var testEl = jQuery('#starttls_test_port_' + port);
+	if (response.start_tls) {
+		testEl.html('<span style="color:green">' + postman_yes + '</span>');
+	} else {
+		testEl.html('<span>' + postman_no + '</span>');
+	}
+	var testEl = jQuery('#auth_none_test_port_' + port);
+	if (response.auth_none) {
+		testEl.html('<span style="color:green">' + postman_yes + '</span>');
+	} else {
+		testEl.html('<span>' + postman_no + '</span>');
+	}
+	var testEl = jQuery('#auth_plain_test_port_' + port);
+	if (response.auth_plain) {
+		testEl.html('<span style="color:green">' + postman_yes + '</span>');
+	} else {
+		testEl.html('<span>' + postman_no + '</span>');
+	}
+	var testEl = jQuery('#auth_login_test_port_' + port);
+	if (response.auth_login) {
+		testEl.html('<span style="color:green">' + postman_yes + '</span>');
+	} else {
+		testEl.html('<span>' + postman_no + '</span>');
+	}
+	var testEl = jQuery('#auth_crammd5_test_port_' + port);
+	if (response.auth_crammd5) {
+		testEl.html('<span style="color:green">' + postman_yes + '</span>');
+	} else {
+		testEl.html('<span>' + postman_no + '</span>');
+	}
+	var testEl = jQuery('#auth_xoauth_test_port_' + port);
+	if (response.auth_xoauth) {
+		testEl.html('<span style="color:green">' + postman_yes + '</span>');
+	} else {
+		testEl.html('<span>' + postman_no + '</span>');
+	}
+}
+function resetView(port) {
+	var testEl = jQuery('#port-test-port-' + port);
+	testEl.html('-');
+	var testEl = jQuery('#smtp_test_port_' + port);
+	testEl.html('-');
+	var testEl = jQuery('#smtps_test_port_' + port);
+	testEl.html('-');
+	var testEl = jQuery('#starttls_test_port_' + port);
+	testEl.html('-');
+	var testEl = jQuery('#auth_none_test_port_' + port);
+	testEl.html('-');
+	var testEl = jQuery('#auth_plain_test_port_' + port);
+	testEl.html('-');
+	var testEl = jQuery('#auth_login_test_port_' + port);
+	testEl.html('-');
+	var testEl = jQuery('#auth_crammd5_test_port_' + port);
+	testEl.html('-');
+	var testEl = jQuery('#auth_xoauth_test_port_' + port);
+	testEl.html('-');
+	jQuery('ol.conclusion').html('');
+}
+function addConclusion(message) {
+	jQuery('ol.conclusion').append('<li>' + message + '</li>');
 }

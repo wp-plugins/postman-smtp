@@ -17,6 +17,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		 *
 		 *
 		 *
+		 *
 		 * .. @deprecated
 		 */
 		public function isSmtp() {
@@ -57,7 +58,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			return endsWith ( $hostname, 'live.com' );
 		}
 		public function isServiceProviderYahoo($hostname) {
-			return strpos( $hostname, 'yahoo' );
+			return strpos ( $hostname, 'yahoo' );
 		}
 		public function isOAuthUsed($authType) {
 			return $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
@@ -84,9 +85,12 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		private function getTransportDescription($encType) {
 			$deliveryDetails = $this->getName ();
-			if ($encType != PostmanOptions::ENCRYPTION_TYPE_NONE) {
+			if ($encType == PostmanOptions::ENCRYPTION_TYPE_SSL) {
 				/* translators: where %1$s is the Transport type (e.g. SMTP or SMTPS) and %2$s is the encryption type (e.g. SSL or TLS) */
-				$deliveryDetails = sprintf ( '%1$s-%2$s', _x ( 'SMTPS', 'Transport Name', 'postman-smtp' ), strtoupper ( $encType ) );
+				$deliveryDetails = sprintf ( '%1$s', _x ( 'SMTPS', 'Transport Name', 'postman-smtp' ) );
+			} else if ($encType == PostmanOptions::ENCRYPTION_TYPE_TLS) {
+				/* translators: where %1$s is the Transport type (e.g. SMTP or SMTPS) and %2$s is the encryption type (e.g. SSL or TLS) */
+				$deliveryDetails = sprintf ( '%1$s', _x ( 'SMTP-STARTTLS', 'Transport Name', 'postman-smtp' ) );
 			}
 			return $deliveryDetails;
 		}
@@ -263,6 +267,7 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		const SLUG = 'smtp';
 		/**
 		 * what is this for .
+		 *
 		 *
 		 *
 		 *

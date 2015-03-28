@@ -5,6 +5,13 @@ if (! class_exists ( "PostmanPortTest" )) {
 		private $logger;
 		private $hostname;
 		private $port;
+		public $startTls;
+		public $authLogin;
+		public $authPlain;
+		public $authCrammd5;
+		public $authXoauth;
+		public $authAnonymous;
+		const DEBUG = false;
 		
 		/**
 		 */
@@ -19,9 +26,9 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 * @param number $timeout        	
 		 * @return boolean
 		 */
-		public function testPortQuiz($timeout = 5) {
+		public function testPortQuiz($timeout = 10) {
 			// first test if the port is open
-			$stream = @stream_socket_client ( sprintf ( 'portquiz.net:%s', $this->port ), $errno, $errstr, 5 );
+			$stream = @stream_socket_client ( sprintf ( 'portquiz.net:%s', $this->port ), $errno, $errstr, $timeout );
 			$this->debug ( 'connect to portquiz.net: ' . ($stream ? 'yes' : 'no') );
 			if (! $stream) {
 				return false;
@@ -35,9 +42,9 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 *
 		 * @param string $hostname        	
 		 */
-		public function testSmtpPorts($timeout = 5) {
+		public function testSmtpPorts($connectTimeout = 10, $readTimeout = 10) {
 			$connectionString = "%s:%s";
-			$this->talkToMailServer ( $connectionString, $timeout );
+			return $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
 		}
 		
 		/**
@@ -45,9 +52,9 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 *
 		 * @param string $hostname        	
 		 */
-		public function testSmtpsPorts($timeout = 5) {
+		public function testSmtpsPorts($connectTimeout = 10, $readTimeout = 10) {
 			$connectionString = "ssl://%s:%s";
-			$this->talkToMailServer ( $connectionString, $timeout );
+			return $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
 		}
 		
 		/**
@@ -55,11 +62,12 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 *
 		 * @param string $hostname        	
 		 */
-		private function talkToMailServer($connectionString, $timeout = 5) {
+		private function talkToMailServer($connectionString, $connectTimeout = 10, $readTimeout = 10) {
 			if ($this->port == 443) {
 				return false;
 			}
-			$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $timeout );
+			$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
+			@stream_set_timeout ( $stream, $readTimeout );
 			$serverName = $_SERVER ['SERVER_NAME'];
 			if (empty ( $serverName )) {
 				$serverName = $_SERVER ['HTTP_HOST'];
@@ -80,6 +88,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 						$this->readSmtpResponse ( $stream );
 						$starttlsSuccess = @stream_socket_enable_crypto ( $stream, true, STREAM_CRYPTO_METHOD_TLS_CLIENT );
 						if ($starttlsSuccess) {
+							$this->startTls = true;
 							$this->debug ( 'starttls started' );
 							$this->sendSmtpCommand ( $stream, 'EHLO ' . $serverName );
 							$done = $this->readSmtpResponse ( $stream );
@@ -87,20 +96,29 @@ if (! class_exists ( "PostmanPortTest" )) {
 							$this->debug ( 'starttls failed' );
 						}
 					}
+					fclose ( $stream );
+					$this->debug ( 'return true' );
+					return true;
+				} else {
+					fclose ( $stream );
+					$this->debug ( 'return false' );
+					return false;
 				}
-				fclose ( $stream );
-				return true;
 			}
 		}
 		private function sendSmtpCommand($stream, $message) {
-			// $this->debug ( 'tx: ' . $message );
+			if (self::DEBUG) {
+				$this->debug ( 'tx: ' . $message );
+			}
 			fputs ( $stream, $message . "\r\n" );
 		}
 		private function readSmtpResponse($stream) {
 			$result = "";
 			while ( ($line = fgets ( $stream )) !== false ) {
-				// $this->debug ( 'rx: ' . $line );
-				if (preg_match ( '/^250-AUTH/', $line )) {
+				if (self::DEBUG) {
+					$this->debug ( 'rx: ' . $line );
+				}
+				if (preg_match ( '/^250.AUTH/', $line )) {
 					// $this->debug ( '250-AUTH' );
 					if (preg_match ( '/\\sLOGIN\\s/', $line )) {
 						$this->authLogin = true;
@@ -109,6 +127,10 @@ if (! class_exists ( "PostmanPortTest" )) {
 					if (preg_match ( '/\\sPLAIN\\s/', $line )) {
 						$this->authPlain = true;
 						$this->debug ( 'authPlain' );
+					}
+					if (preg_match ( '/\\sCRAM-MD5\\s/', $line )) {
+						$this->authCrammd5 = true;
+						$this->debug ( 'authCrammd5' );
 					}
 					if (preg_match ( '/\\sXOAUTH.\\s/', $line )) {
 						$this->authXoauth = true;
@@ -131,7 +153,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 					return $result;
 				}
 			}
-			$this->debug ( 'FAIL!!' );
+			return "fail";
 		}
 		public function getErrorMessage() {
 			return $this->errstr;

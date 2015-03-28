@@ -630,8 +630,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$encType = $this->options->getEncryptionType ();
 			print '<select id="input_enc_type" class="input_encryption_type" name="postman_options[enc_type]">';
 			printf ( '<option class="input_enc_type_none" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_NONE, $encType == PostmanOptions::ENCRYPTION_TYPE_NONE ? 'selected="selected"' : '', _x ( 'None', 'Encryption Type', 'postman-smtp' ) );
-			printf ( '<option class="input_enc_type_ssl" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_SSL, $encType == PostmanOptions::ENCRYPTION_TYPE_SSL ? 'selected="selected"' : '', _x ( 'SSL', 'Encryption Type', 'postman-smtp' ) );
-			printf ( '<option class="input_enc_type_tls" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_TLS, $encType == PostmanOptions::ENCRYPTION_TYPE_TLS ? 'selected="selected"' : '', _x ( 'TLS', 'Encryption Type', 'postman-smtp' ) );
+			printf ( '<option class="input_enc_type_ssl" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_SSL, $encType == PostmanOptions::ENCRYPTION_TYPE_SSL ? 'selected="selected"' : '', _x ( 'SSL (SMTPS)', 'Encryption Type', 'postman-smtp' ) );
+			printf ( '<option class="input_enc_type_tls" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_TLS, $encType == PostmanOptions::ENCRYPTION_TYPE_TLS ? 'selected="selected"' : '', _x ( 'TLS (StartTLS)', 'Encryption Type', 'postman-smtp' ) );
 			print '</select>';
 		}
 		public function encryption_type_radio_callback() {

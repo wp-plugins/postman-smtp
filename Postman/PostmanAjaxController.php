@@ -33,7 +33,7 @@ if (! class_exists ( 'PostmanAbstractAjaxHandler' )) {
 		 */
 		protected function getRequestParameter($parameterName) {
 			if (isset ( $_POST [$parameterName] )) {
-				$value = $_POST [$parameterName];
+				$value = trim ( $_POST [$parameterName] );
 				$this->logger->debug ( 'Found parameter name ' . $parameterName );
 				$this->logger->debug ( $value );
 				return $value;
@@ -201,7 +201,7 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
 			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ( $hostname, $port );
-			$success = $portTest->testPortQuiz ( $this->options->getConnectionTimeout () );
+			$success = $portTest->testPortQuiz ();
 			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
 			$response = array (
 					'message' => $portTest->getErrorMessage (),
@@ -218,13 +218,8 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
 			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ( $hostname, $port );
-			$success = $portTest->testSmtpPorts ( $this->options->getConnectionTimeout () );
-			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
-			$response = array (
-					'message' => $portTest->getErrorMessage (),
-					'success' => $success 
-			);
-			wp_send_json ( $response );
+			$success = $portTest->testSmtpPorts ();
+			$this->buildResponse ( $hostname, $port, $portTest, $success );
 		}
 		/**
 		 * This Ajax function retrieves whether a TCP port is open or not
@@ -234,12 +229,29 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
 			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ( $hostname, $port );
-			$success = $portTest->testSmtpsPorts ( $this->options->getConnectionTimeout () );
+			$success = $portTest->testSmtpsPorts ();
+			$this->buildResponse ( $hostname, $port, $portTest, $success );
+		}
+		
+		/**
+		 *
+		 * @param unknown $hostname        	
+		 * @param unknown $port        	
+		 * @param unknown $success        	
+		 */
+		private function buildResponse($hostname, $port, $portTest, $success) {
 			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
 			$response = array (
 					'message' => $portTest->getErrorMessage (),
+					'start_tls' => $portTest->startTls,
+					'auth_plain' => $portTest->authPlain,
+					'auth_login' => $portTest->authLogin,
+					'auth_crammd5' => $portTest->authCrammd5,
+					'auth_xoauth' => $portTest->authXoauth,
 					'success' => $success 
 			);
+			$this->logger->debug ( 'Ajax response:' );
+			$this->logger->debug ( $response );
 			wp_send_json ( $response );
 		}
 	}
