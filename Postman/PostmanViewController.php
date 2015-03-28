@@ -221,6 +221,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			wp_register_script ( self::POSTMAN_SCRIPT, plugins_url ( 'script/postman.js', __FILE__ ), array (
 					self::JQUERY_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
+			wp_register_script ( 'sprintf', plugins_url ( 'script/sprintf.min.js', __FILE__ ), null, '1.0.2' );
 			wp_register_script ( 'jquery_steps_script', plugins_url ( 'script/jquery.steps.min.js', __FILE__ ), array (
 					self::JQUERY_SCRIPT 
 			), '1.1.0' );
@@ -247,7 +248,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			wp_register_script ( 'postman_port_test_script', plugins_url ( 'script/postman_port_test.js', __FILE__ ), array (
 					self::JQUERY_SCRIPT,
 					'jquery_validation',
-					self::POSTMAN_SCRIPT 
+					self::POSTMAN_SCRIPT,
+					'sprintf' 
 			), POSTMAN_PLUGIN_VERSION );
 			wp_register_script ( 'postman_diagnostics_script', plugins_url ( 'script/postman_diagnostics.js', __FILE__ ), array (
 					self::JQUERY_SCRIPT,
@@ -259,17 +261,22 @@ if (! class_exists ( 'PostmanViewController' )) {
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_closed', _x ( 'Closed', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_yes', _x ( 'Yes', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_no', _x ( 'No', 'TCP Port Test Status', 'postman-smtp' ) );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port', _x ( 'Port', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_email_test', array (
 					'not_started' => _x ( 'In Outbox', 'Email Test Status', 'postman-smtp' ),
 					'sending' => _x ( 'Sending...', 'Email Test Status', 'postman-smtp' ),
 					'success' => _x ( 'Success', 'Email Test Status', 'postman-smtp' ),
 					'failed' => _x ( 'Failed', 'Email Test Status', 'postman-smtp' ) 
 			) );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_wizard_wait', __ ( 'Please wait for the port test to finish', 'postman-smtp' ) );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_wizard_no_ports', __ ( 'No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.', 'postman-smtp' ) );
-			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_bad_redirect_url', __ ( 'You are about to configure OAuth 2.0 with an IP address in the URL which will fail. Either assign a real domain name to your site or add a fake one in your local machine\'s host file.', 'postman-smtp' ) );
+			wp_localize_script ( 'postman_port_test_script', 'postman_port_blocked', __ ( 'Port %d is blocked. Contact your host for a solution, such as using their local SMTP server or opening the port.', 'postman-smtp' ) );
+			wp_localize_script ( 'postman_port_test_script', 'postman_try_dif_smtp', __ ( 'Port %d can\'t send mail with %s. Try a different SMTP server.', 'postman-smtp' ) );
+			wp_localize_script ( 'postman_port_test_script', 'postman_smtp_success', __ ( 'Port %d can be used for SMTP to %s.', 'postman-smtp' ) );
+			wp_localize_script ( 'postman_port_test_script', 'postman_443_open', sprintf ( __ ( 'Port 443 can be used to send Gmail with the <a href="%s">Postman Gmail Extension</a>.', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-gmail-extension/' ) );
+			wp_localize_script ( 'postman_port_test_script', 'postman_443_closed', __ ( 'Port 443 is blocked. Contact your host for a solution, such as opening the port.', 'postman-smtp' ) );
 			
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_check_timeout', PostmanSmtp::POSTMAN_TCP_CONNECTION_TIMEOUT . '' );
+			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_wait', __ ( 'Please wait for the port test to finish', 'postman-smtp' ) );
+			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_no_ports', __ ( 'No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.', 'postman-smtp' ) );
+			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_bad_redirect_url', __ ( 'You are about to configure OAuth 2.0 with an IP address in the URL which will fail. Either assign a real domain name to your site or add a fake one in your local machine\'s host file.', 'postman-smtp' ) );
 			
 			wp_localize_script ( 'jquery_steps_script', 'steps_current_step', _x ( 'current step:', 'Wizard Label', 'postman-smtp' ) );
 			wp_localize_script ( 'jquery_steps_script', 'steps_pagination', _x ( 'Pagination', 'Wizard Label', 'postman-smtp' ) );
@@ -430,7 +437,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<tr><th>XOAUTH</th><td id="auth_xoauth_test_port_25">-</td><td id="auth_xoauth_test_port_443">-</td><td id="auth_xoauth_test_port_465">-</td><td id="auth_xoauth_test_port_587">-</td></tr>';
 			print '</table>';
 			print '<section id="conclusion" style="display:none">';
-			print '<h4>Conclusion:</h4>';
+			print '<h3>Conclusion:</h3>';
 			print '<ol class="conclusion">';
 			print '</ol>';
 			print '</section>';
