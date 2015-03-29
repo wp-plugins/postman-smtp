@@ -1,7 +1,7 @@
 <?php
 if (! class_exists ( 'PostmanOAuthToken.php' )) {
 	
-	require_once ('Common.php');
+	require_once ('Postman-Common.php');
 	class PostmanOAuthToken implements PostmanOAuthTokenInterface {
 		const OPTIONS_NAME = 'postman_auth_token';
 		//

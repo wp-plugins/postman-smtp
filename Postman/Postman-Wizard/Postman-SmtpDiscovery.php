@@ -1,7 +1,7 @@
 <?php
 if (! class_exists ( 'SmtpDiscovery' )) {
 	
-	require_once "SmtpMappings.php";
+	require_once "Postman-SmtpMappings.php";
 
 	class SmtpDiscovery {
 		private $primaryMx;
