@@ -201,14 +201,11 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		
 		/**
+		 * First choose the auth method, in this order: XOAUTH (4000), CRAM-MD5 (3000), PLAIN (2000), LOGIN (1000)
+		 * Second, choose the port, in this order: 587/STARTLS (300), 465/SMTPS (200), 25/SMTP (100), 443/GMAIL (150)
+		 * 
 		 * SMTP supports sending with these combinations in this order of preferences:
-		 *
-		 * 100 oauth on port 465 to smtp.gmail.com|smtp.live.com|yahoo.com
-		 * 80 password/tls on port 587 to smtp.gmail.com|smtp.live.com|yahoo.com
-		 * 60 password/ssl on port 465 to everybody
-		 * 40 password/tls on port 587 to everybody
-		 * 20 no auth on port 25 to everybody
-		 *
+		 * 
 		 * @param unknown $hostData        	
 		 */
 		public function getConfigurationRecommendation($hostData) {

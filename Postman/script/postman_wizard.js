@@ -191,8 +191,8 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 			jQuery('li + li').addClass('disabled');
 		}
 	}
-	if(currentIndex === 4) {
-		if(redirectUrlWarning) {
+	if (currentIndex === 4) {
+		if (redirectUrlWarning) {
 			alert(postman_wizard_bad_redirect_url);
 		}
 	}
@@ -205,6 +205,12 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	}
 
 }
+
+/**
+ * Asks the server for a List of sockets to perform port checks upon.
+ * 
+ * @param hostname
+ */
 function getHostsToCheck(hostname) {
 	var data = {
 		'action' : 'get_hosts_to_test',
@@ -226,6 +232,7 @@ function getHostsToCheck(hostname) {
 					+ '\' class="required" style="margin-top: 0px" /></td>';
 			html += '<td id="' + id_status + '"></td></tr>';
 			jQuery('table#wizard_port_test').append(html);
+			// PERFORM THE ACTUAL PORT TEST
 			wizardPortTest(host, port, 'input#' + id, '#' + id_status);
 		}
 		// create an eventhandler for when the user changes the port
@@ -256,6 +263,15 @@ function checkEmail(email) {
 		}
 	});
 }
+/**
+ * Called for each socket to be tested. An Ajax post performs the test, the
+ * response is
+ * 
+ * @param hostname
+ * @param port
+ * @param input
+ * @param state
+ */
 function wizardPortTest(hostname, port, input, state) {
 	var el = jQuery(input);
 	var elState = jQuery(state);
@@ -269,27 +285,29 @@ function wizardPortTest(hostname, port, input, state) {
 		'hostname' : hostname,
 		'port' : port
 	};
+	// POST THE AJAX CALL
 	jQuery.post(ajaxurl, data, function(response) {
-		handleWizardPortTestResponse(el, elState, response, hostname);
-	}).fail(
-		function() {
-			portsChecked++;
+		portsChecked++;
+		if (response.success) {
+			elState.html(postman_port_test_open);
+			el.removeAttr('disabled');
+			totalAvail++;
+		} else {
 			elState.html(postman_port_test_closed);
-			afterPortsChecked();
+		}
+		afterPortsChecked();
+	}).fail(function() {
+		portsChecked++;
+		elState.html(postman_port_test_closed);
+		afterPortsChecked();
 	});
 }
-function handleWizardPortTestResponse(el, elState, response, hostname) {
-	portsChecked++;
-	if (response.success) {
-		elState.html(postman_port_test_open);
-		el.removeAttr('disabled');
-		totalAvail++;
-	} else {
-		elState.html(postman_port_test_closed);
-	}
-	afterPortsChecked();
-}
 
+/**
+ * This functions runs after ALL the ports have been checked. It's chief
+ * function is to push the results of the port test back to the server to get a
+ * suggested configuration.
+ */
 function afterPortsChecked() {
 	if (portsChecked >= portsToCheck) {
 		if (totalAvail != 0) {
