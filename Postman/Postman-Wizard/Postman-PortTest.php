@@ -5,12 +5,14 @@ if (! class_exists ( "PostmanPortTest" )) {
 		private $logger;
 		private $hostname;
 		private $port;
+		public $protocol;
 		public $startTls;
 		public $authLogin;
 		public $authPlain;
 		public $authCrammd5;
 		public $authXoauth;
 		public $authAnonymous;
+		public $trySmtps;
 		const DEBUG = false;
 		
 		/**
@@ -27,7 +29,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 * @return boolean
 		 */
 		public function testPortQuiz($timeout = 10) {
-			// first test if the port is open
+			// test if the port is open
 			$stream = @stream_socket_client ( sprintf ( 'portquiz.net:%s', $this->port ), $errno, $errstr, $timeout );
 			$this->debug ( 'connect to portquiz.net: ' . ($stream ? 'yes' : 'no') );
 			if (! $stream) {
@@ -42,9 +44,43 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 *
 		 * @param string $hostname        	
 		 */
+		public function testHttpPorts($connectTimeout = 10, $readTimeout = 10) {
+			$connectionString = "ssl://www.googleapis.com:443";
+			$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
+			@stream_set_timeout ( $stream, $readTimeout );
+			$serverName = $_SERVER ['SERVER_NAME'];
+			if (empty ( $serverName )) {
+				$serverName = $_SERVER ['HTTP_HOST'];
+			}
+			if (! $stream) {
+				return false;
+			} else {
+				// see http://php.net/manual/en/transports.inet.php#113244
+				$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
+				$matches = array();
+				$line = fgets ( $stream );
+				if(preg_match('/^HTTP.*\\s/U', $line, $matches)) {
+					$this->protocol = $matches [0];
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		/**
+		 * Given a hostname, test if it has open ports
+		 *
+		 * @param string $hostname        	
+		 */
 		public function testSmtpPorts($connectTimeout = 10, $readTimeout = 10) {
 			$connectionString = "%s:%s";
-			return $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
+			$success = $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
+			if ($success) {
+				$this->protocol = 'SMTP';
+			} else {
+				$this->trySmtps = true;
+			}
+			return $success;
 		}
 		
 		/**
@@ -54,7 +90,11 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 */
 		public function testSmtpsPorts($connectTimeout = 10, $readTimeout = 10) {
 			$connectionString = "ssl://%s:%s";
-			return $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
+			$success = $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
+			if ($success) {
+				$this->protocol = 'SMTPS';
+			}
+			return $success;
 		}
 		
 		/**
@@ -63,9 +103,6 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 * @param string $hostname        	
 		 */
 		private function talkToMailServer($connectionString, $connectTimeout = 10, $readTimeout = 10) {
-			if ($this->port == 443) {
-				return false;
-			}
 			$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
 			@stream_set_timeout ( $stream, $readTimeout );
 			$serverName = $_SERVER ['SERVER_NAME'];

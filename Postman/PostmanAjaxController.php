@@ -203,14 +203,10 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		function runPortQuizTest() {
 			$hostname = trim ( $this->getRequestParameter ( 'hostname' ) );
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
-			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
+			$this->logger->debug ( 'testing TCP port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ( $hostname, $port );
 			$success = $portTest->testPortQuiz ();
-			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
-			$response = array (
-					'message' => $portTest->getErrorMessage () 
-			);
-			wp_send_json_success ( $response );
+			$this->buildResponse ( $hostname, $port, $portTest, $success );
 		}
 		
 		/**
@@ -219,9 +215,13 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		function runSmtpTest() {
 			$hostname = trim ( $this->getRequestParameter ( 'hostname' ) );
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
-			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
+			$this->logger->debug ( 'testing HTTP/SMTP port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ( $hostname, $port );
-			$success = $portTest->testSmtpPorts ();
+			if ($port != 443) {
+				$success = $portTest->testSmtpPorts ();
+			} else {
+				$success = $portTest->testHttpPorts ();
+			}
 			$this->buildResponse ( $hostname, $port, $portTest, $success );
 		}
 		/**
@@ -230,7 +230,7 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		function runSmtpsTest() {
 			$hostname = trim ( $this->getRequestParameter ( 'hostname' ) );
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
-			$this->logger->debug ( 'testing port: hostname ' . $hostname . ' port ' . $port );
+			$this->logger->debug ( 'testing SMTPS port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ( $hostname, $port );
 			$success = $portTest->testSmtpsPorts ();
 			$this->buildResponse ( $hostname, $port, $portTest, $success );
@@ -245,12 +245,17 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		private function buildResponse($hostname, $port, $portTest, $success) {
 			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
 			$response = array (
+					'hostname' => $hostname,
+					'hostname' => $port,
+					'protocol' => $portTest->protocol,
 					'message' => $portTest->getErrorMessage (),
 					'start_tls' => $portTest->startTls,
 					'auth_plain' => $portTest->authPlain,
 					'auth_login' => $portTest->authLogin,
 					'auth_crammd5' => $portTest->authCrammd5,
-					'auth_xoauth' => $portTest->authXoauth 
+					'auth_xoauth' => $portTest->authXoauth,
+					'try_smtps' => $portTest->trySmtps,
+					'success' => $success
 			);
 			$this->logger->debug ( 'Ajax response:' );
 			$this->logger->debug ( $response );

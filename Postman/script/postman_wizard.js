@@ -1,81 +1,82 @@
-jQuery(document)
-		.ready(
-				function() {
 
+/**
+ * Functions to run on document load
+ */
+jQuery(document).ready(function() {
+	jQuery(postman_input_sender_email).focus();
+	initializeJQuerySteps();
+	// add an event on the plugin selection
+	jQuery('input[name="input_plugin"]').click(function() {
+		getConfiguration();
+	});
+});
+
+/**
+ * Initialize the Steps wizard
+ */
+function initializeJQuerySteps() {
+	jQuery("#postman_wizard").steps(
+			{
+				bodyTag : "fieldset",
+				headerTag : "h5",
+				transitionEffect : "slideLeft",
+				stepsOrientation : "vertical",
+				autoFocus : true,
+				startIndex : parseInt(postman_setup_wizard.start_page),
+				labels : {
+					current : steps_current_step,
+					pagination : steps_pagination,
+					finish : steps_finish,
+					next : steps_next,
+					previous : steps_previous,
+					loading : steps_loading
+				},
+				onStepChanging : function(event, currentIndex, newIndex) {
+					return handleStepChange(event, currentIndex, newIndex,
+							jQuery(this));
+
+				},
+				onInit : function() {
 					jQuery(postman_input_sender_email).focus();
-					jQuery("#postman_wizard")
-							.steps(
-									{
-										bodyTag : "fieldset",
-										headerTag : "h5",
-										transitionEffect : "slideLeft",
-										stepsOrientation : "vertical",
-										autoFocus : true,
-										startIndex : parseInt(postman_setup_wizard.start_page),
-										labels : {
-											current : steps_current_step,
-											pagination : steps_pagination,
-											finish : steps_finish,
-											next : steps_next,
-											previous : steps_previous,
-											loading : steps_loading
-										},
-										onStepChanging : function(event,
-												currentIndex, newIndex) {
-											return handleStepChange(event,
-													currentIndex, newIndex,
-													jQuery(this));
+				},
+				onStepChanged : function(event, currentIndex, priorIndex) {
+					return postHandleStepChange(event, currentIndex,
+							priorIndex, jQuery(this));
+				},
+				onFinishing : function(event, currentIndex) {
+					var form = jQuery(this);
 
-										},
-										onInit : function() {
-											jQuery(postman_input_sender_email)
-													.focus();
-										},
-										onStepChanged : function(event,
-												currentIndex, priorIndex) {
-											return postHandleStepChange(event,
-													currentIndex, priorIndex,
-													jQuery(this));
-										},
-										onFinishing : function(event,
-												currentIndex) {
-											var form = jQuery(this);
+					// Disable validation on fields that
+					// are disabled.
+					// At this point it's recommended to
+					// do an overall check (mean
+					// ignoring
+					// only disabled fields)
+					// form.validate().settings.ignore =
+					// ":disabled";
 
-											// Disable validation on fields that
-											// are disabled.
-											// At this point it's recommended to
-											// do an overall check (mean
-											// ignoring
-											// only disabled fields)
-											// form.validate().settings.ignore =
-											// ":disabled";
+					// Start validation; Prevent form
+					// submission if false
+					return form.valid();
+				},
+				onFinished : function(event, currentIndex) {
+					var form = jQuery(this);
 
-											// Start validation; Prevent form
-											// submission if false
-											return form.valid();
-										},
-										onFinished : function(event,
-												currentIndex) {
-											var form = jQuery(this);
+					// Submit form input
+					form.submit();
+				}
+			}).validate({
+		errorPlacement : function(error, element) {
+			element.before(error);
+		},
+		rules : {
+			confirm : {
+				equalTo : "#password"
+			}
+		}
+	});
+}
 
-											// Submit form input
-											form.submit();
-										}
-									}).validate({
-								errorPlacement : function(error, element) {
-									element.before(error);
-								},
-								rules : {
-									confirm : {
-										equalTo : "#password"
-									}
-								}
-							});
-					// add an event on the plugin selection
-					jQuery('input[name="input_plugin"]').click(function() {
-						getConfiguration();
-					});
-				});
 function handleStepChange(event, currentIndex, newIndex, form) {
 	// Always allow going backward even if
 	// the current step contains invalid fields!
@@ -141,40 +142,13 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		var hostname = jQuery(postman_hostname_element_name).val();
 		var authType = jQuery(postman_input_auth_type).val()
 
-		// on the Auth type drop-down, add events to enable/disable user/pass
-		jQuery('input:radio[name="postman_options[auth_type]"]').click(
-				function() {
-					handleEncryptionTypeInputClick();
-				});
-
 	}
 
 	return true;
 }
-function handleEncryptionTypeInputClick() {
-	var $val = jQuery('input:radio[name="postman_options[auth_type]"]:checked')
-			.val();
-	if ($val == 'none') {
-		disable(postman_input_basic_username);
-		disable(postman_input_basic_password);
-		hide('.input_encryption_type');
-		jQuery('#input_enc_none').prop('checked', true);
-	} else {
-		enable(postman_input_basic_username);
-		enable(postman_input_basic_password);
-		show('.input_encryption_type');
-		jQuery('#input_enc_tls').prop('checked', true);
-	}
-}
 
 function populateRedirectUrl(hostname) {
 	getRedirectUrl(hostname, postman_redirect_url_el, '#wizard_oauth2_help');
-}
-function setAuthType($authType) {
-	jQuery(postman_input_auth_type).val($authType);
-}
-function setEncryptionType($encType) {
-	jQuery('select#input_enc_type').val($encType);
 }
 function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	var chosenPort = jQuery('#input_port').val();

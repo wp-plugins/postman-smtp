@@ -47,17 +47,7 @@ function portTest(tdValue, port, button) {
 							+ postman_port_test_closed + '</span>');
 					show('#blocked-port-help');
 				}
-				if (port != 443) {
-					portTest2(hostname, port, button, response.success);
-				} else {
-					totalPortsTested += 1;
-					enableButtonCheck(button);
-					if (response.success) {
-						addConclusion(postman_443_open);
-					} else {
-						addConclusion(postman_443_closed);
-					}
-				}
+				portTest2(hostname, port, button, response.success);
 			}).fail(
 			function() {
 				totalPortsTested += 1;
@@ -76,22 +66,38 @@ function portTest2(hostname, port, button, open) {
 		'hostname' : hostname,
 		'port' : port
 	};
-	jQuery.post(ajaxurl, data, function(response) {
-		if (response.success) {
-			totalPortsTested += 1;
-			testEl.html('<span style="color:green">SMTP</span>');
-			inspectResponse(response.data, port);
-			addConclusion(sprintf(postman_smtp_success, port, hostname));
-		} else {
-			// start the SMTPS test
-			portTest3(hostname, port, button, open);
-		}
-		enableButtonCheck(button);
-	}).fail(function() {
-		totalPortsTested += 1;
-		testEl.html('<span style="color:red">' + postman_no + '</span>');
-		enableButtonCheck(button);
-	});
+	jQuery
+			.post(
+					ajaxurl,
+					data,
+					function(response) {
+						if (response.success) {
+							totalPortsTested += 1;
+							testEl.html('<span style="color:green">'
+									+ response.data.protocol + '</span>');
+							inspectResponse(response.data, port);
+							addConclusion(sprintf(postman_smtp_success, port,
+									hostname));
+							if (port == 443) {
+								addConclusion(postman_443_open);
+							}
+						} else {
+							if (response.data.try_smtps) {
+								// start the SMTPS test
+								portTest3(hostname, port, button, open);
+							}
+							if (port == 443) {
+								addConclusion(postman_443_closed);
+							}
+						}
+						enableButtonCheck(button);
+					}).fail(
+					function() {
+						totalPortsTested += 1;
+						testEl.html('<span style="color:red">' + postman_no
+								+ '</span>');
+						enableButtonCheck(button);
+					});
 }
 function portTest3(hostname, port, button, open) {
 	var testEl = jQuery('#smtp_test_port_' + port);
@@ -102,26 +108,37 @@ function portTest3(hostname, port, button, open) {
 		'hostname' : hostname,
 		'port' : port
 	};
-	jQuery.post(ajaxurl, data, function(response) {
-		if (response.success) {
-			testEl.html('<span style="color:green">SMTPS</span>');
-			inspectResponse(response.data, port);
-			addConclusion(sprintf(postman_smtp_success, port, hostname));
-		} else {
-			testEl.html('<span style="color:red">' + postman_no + '</span>');
-			if (open) {
-				addConclusion(sprintf(postman_try_dif_smtp, port, hostname));
-			} else {
-				addConclusion(sprintf(postman_port_blocked, port));
-			}
-		}
-		totalPortsTested += 1;
-		enableButtonCheck(button);
-	}).fail(function() {
-		totalPortsTested += 1;
-		testEl.html('<span style="color:red">' + postman_no + '</span>');
-		enableButtonCheck(button);
-	});
+	jQuery
+			.post(
+					ajaxurl,
+					data,
+					function(response) {
+						if (response.success) {
+							testEl.html('<span style="color:green">'
+									+ response.data.protocol + '</span>');
+							inspectResponse(response.data, port);
+							addConclusion(sprintf(postman_smtp_success, port,
+									hostname));
+						} else {
+							testEl.html('<span style="color:red">' + postman_no
+									+ '</span>');
+							if (open) {
+								addConclusion(sprintf(postman_try_dif_smtp,
+										port, hostname));
+							} else {
+								addConclusion(sprintf(postman_port_blocked,
+										port));
+							}
+						}
+						totalPortsTested += 1;
+						enableButtonCheck(button);
+					}).fail(
+					function() {
+						totalPortsTested += 1;
+						testEl.html('<span style="color:red">' + postman_no
+								+ '</span>');
+						enableButtonCheck(button);
+					});
 }
 function enableButtonCheck(button) {
 	if (totalPortsTested >= portsToBeTested) {
