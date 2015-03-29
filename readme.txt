@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, smtps, email, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.1.1
-Stable tag: 1.5.10b1
+Stable tag: 1.5.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -241,6 +241,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.5.10 - 2015-03-29 =
+* Fix for Fatal error: Cannot redeclare class PEAR_Common in C:\PHP5\PEAR\PEAR\Common.php - similar to [this error](https://wordpress.org/support/topic/plugin-wp-minify-cant-activate-plugin-fatal-error?replies=6) in WP Minify
+
 = 1.5.9 - 2015-03-26 =
 * Added JQuery tabbed UI for manual configuration screen
 * Added functionality to add to, cc, and bcc recipients to every message
@@ -390,6 +393,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 1.5.10 =
+Fix for rare bug in Windows installations.
 
 = 1.5.9 =
 Set additional recipients, additional headers, prevent sender override and minor bugfixes.
