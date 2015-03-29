@@ -80,7 +80,7 @@ function portTest2(hostname, port, button, open) {
 		if (response.success) {
 			totalPortsTested += 1;
 			testEl.html('<span style="color:green">SMTP</span>');
-			inspectResponse(response, port);
+			inspectResponse(response.data, port);
 			addConclusion(sprintf(postman_smtp_success, port, hostname));
 		} else {
 			// start the SMTPS test
@@ -105,7 +105,7 @@ function portTest3(hostname, port, button, open) {
 	jQuery.post(ajaxurl, data, function(response) {
 		if (response.success) {
 			testEl.html('<span style="color:green">SMTPS</span>');
-			inspectResponse(response, port);
+			inspectResponse(response.data, port);
 			addConclusion(sprintf(postman_smtp_success, port, hostname));
 		} else {
 			testEl.html('<span style="color:red">' + postman_no + '</span>');

@@ -78,19 +78,19 @@ if (! class_exists ( "PostmanPortTest" )) {
 				// see http://php.net/manual/en/transports.inet.php#113244
 				// see http://php.net/stream_socket_enable_crypto
 				$done = $this->readSmtpResponse ( $stream );
-				if ($done == "smtp") {
-					$this->sendSmtpCommand ( $stream, 'EHLO ' . $serverName );
+				if ($done == 'smtp') {
+					$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
 					$done = $this->readSmtpResponse ( $stream );
-					if ($done == "auth") {
+					if ($done == 'auth') {
 						// no-op
-					} else if ($done == "starttls") {
+					} else if ($done == 'starttls') {
 						$this->sendSmtpCommand ( $stream, 'STARTTLS' );
 						$this->readSmtpResponse ( $stream );
 						$starttlsSuccess = @stream_socket_enable_crypto ( $stream, true, STREAM_CRYPTO_METHOD_TLS_CLIENT );
 						if ($starttlsSuccess) {
 							$this->startTls = true;
 							$this->debug ( 'starttls started' );
-							$this->sendSmtpCommand ( $stream, 'EHLO ' . $serverName );
+							$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
 							$done = $this->readSmtpResponse ( $stream );
 						} else {
 							$this->debug ( 'starttls failed' );
@@ -113,7 +113,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 			fputs ( $stream, $message . "\r\n" );
 		}
 		private function readSmtpResponse($stream) {
-			$result = "";
+			$result = '';
 			while ( ($line = fgets ( $stream )) !== false ) {
 				if (self::DEBUG) {
 					$this->debug ( 'rx: ' . $line );
@@ -141,11 +141,11 @@ if (! class_exists ( "PostmanPortTest" )) {
 						$this->debug ( 'authAnonymous' );
 					}
 					// done
-					$result = "auth";
+					$result = 'auth';
 				} elseif (preg_match ( '/STARTTLS/', $line )) {
-					$result = "starttls";
+					$result = 'starttls';
 				} elseif (preg_match ( '/^220\\s/', $line )) {
-					$result = "smtp";
+					$result = 'smtp';
 				}
 				if (preg_match ( '/^\d\d\d\\s/', $line )) {
 					// always exist on last server response line

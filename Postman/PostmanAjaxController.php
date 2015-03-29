@@ -193,9 +193,8 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 			$this->registerAjaxHandler ( 'test_port', $this, 'runSmtpTest' );
 			$this->registerAjaxHandler ( 'test_smtps', $this, 'runSmtpsTest' );
 		}
-		
 		function wizardConnectivityTest() {
-			$this->runSmtpTest();
+			$this->runSmtpTest ();
 		}
 		
 		/**
@@ -209,10 +208,9 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 			$success = $portTest->testPortQuiz ();
 			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
 			$response = array (
-					'message' => $portTest->getErrorMessage (),
-					'success' => $success 
+					'message' => $portTest->getErrorMessage () 
 			);
-			wp_send_json ( $response );
+			wp_send_json_success ( $response );
 		}
 		
 		/**
@@ -252,12 +250,15 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 					'auth_plain' => $portTest->authPlain,
 					'auth_login' => $portTest->authLogin,
 					'auth_crammd5' => $portTest->authCrammd5,
-					'auth_xoauth' => $portTest->authXoauth,
-					'success' => $success 
+					'auth_xoauth' => $portTest->authXoauth 
 			);
 			$this->logger->debug ( 'Ajax response:' );
 			$this->logger->debug ( $response );
-			wp_send_json ( $response );
+			if ($success) {
+				wp_send_json_success ( $response );
+			} else {
+				wp_send_json_error ( $response );
+			}
 		}
 	}
 }
