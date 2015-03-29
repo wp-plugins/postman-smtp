@@ -45,7 +45,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 * @param string $hostname        	
 		 */
 		public function testHttpPorts($connectTimeout = 10, $readTimeout = 10) {
-			$connectionString = "ssl://www.googleapis.com:443";
+			$connectionString = "ssl://%s:%s";
 			$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
 			@stream_set_timeout ( $stream, $readTimeout );
 			$serverName = $_SERVER ['SERVER_NAME'];

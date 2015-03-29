@@ -66,38 +66,42 @@ function portTest2(hostname, port, button, open) {
 		'hostname' : hostname,
 		'port' : port
 	};
-	jQuery
-			.post(
-					ajaxurl,
-					data,
-					function(response) {
-						if (response.success) {
-							totalPortsTested += 1;
-							testEl.html('<span style="color:green">'
-									+ response.data.protocol + '</span>');
-							inspectResponse(response.data, port);
-							addConclusion(sprintf(postman_smtp_success, port,
-									hostname));
-							if (port == 443) {
-								addConclusion(postman_443_open);
-							}
-						} else {
-							if (response.data.try_smtps) {
-								// start the SMTPS test
-								portTest3(hostname, port, button, open);
-							}
-							if (port == 443) {
-								addConclusion(postman_443_closed);
-							}
-						}
-						enableButtonCheck(button);
-					}).fail(
-					function() {
-						totalPortsTested += 1;
+	if (port == 443) {
+		data.hostname = 'www.googleapis.com';
+	}
+	jQuery.post(
+			ajaxurl,
+			data,
+			function(response) {
+				if (response.success) {
+					totalPortsTested += 1;
+					testEl.html('<span style="color:green">'
+							+ response.data.protocol + '</span>');
+					inspectResponse(response.data, port);
+					if (port == 443) {
+						addConclusion(postman_443_open);
+					} else {
+						addConclusion(sprintf(postman_smtp_success, port,
+								hostname));
+					}
+				} else {
+					if (response.data.try_smtps) {
+						// start the SMTPS test
+						portTest3(hostname, port, button, open);
+					}
+					if (port == 443) {
 						testEl.html('<span style="color:red">' + postman_no
 								+ '</span>');
-						enableButtonCheck(button);
-					});
+						totalPortsTested += 1;
+						addConclusion(postman_443_closed);
+					}
+				}
+				enableButtonCheck(button);
+			}).fail(function() {
+		totalPortsTested += 1;
+		testEl.html('<span style="color:red">' + postman_no + '</span>');
+		enableButtonCheck(button);
+	});
 }
 function portTest3(hostname, port, button, open) {
 	var testEl = jQuery('#smtp_test_port_' + port);
@@ -203,6 +207,7 @@ function resetView(port) {
 	var testEl = jQuery('#auth_xoauth_test_port_' + port);
 	testEl.html('-');
 	jQuery('ol.conclusion').html('');
+	hide('#blocked-port-help');
 }
 function addConclusion(message) {
 	jQuery('ol.conclusion').append('<li>' + message + '</li>');
