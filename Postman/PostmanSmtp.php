@@ -4,7 +4,7 @@
 if (! class_exists ( 'PostmanSmtp' )) {
 	
 	require_once 'postman-common-wp-functions.php';
-	require_once 'Common.php';
+	require_once 'Postman-Common.php';
 	require_once 'Postman-Mail/PostmanSmtpTransport.php';
 	require_once 'PostmanOAuthToken.php';
 	require_once 'PostmanConfigTextHelper.php';

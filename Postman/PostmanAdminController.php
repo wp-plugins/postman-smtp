@@ -6,8 +6,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 	require_once 'PostmanState.php';
 	require_once 'PostmanStats.php';
 	require_once 'PostmanOAuthToken.php';
-	require_once 'Postman-Wizard/PortTest.php';
-	require_once 'Postman-Wizard/SmtpDiscovery.php';
+	require_once 'Postman-Wizard/Postman-PortTest.php';
+	require_once 'Postman-Wizard/Postman-SmtpDiscovery.php';
 	require_once 'PostmanInputSanitizer.php';
 	require_once 'Postman-Connectors/PostmanImportableConfiguration.php';
 	require_once 'PostmanConfigTextHelper.php';
