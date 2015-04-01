@@ -1,4 +1,4 @@
-
+connectivtyTestResults = {};
 /**
  * Functions to run on document load
  */
@@ -147,9 +147,6 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 	return true;
 }
 
-function populateRedirectUrl(hostname) {
-	getRedirectUrl(hostname, postman_redirect_url_el, '#wizard_oauth2_help');
-}
 function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	var chosenPort = jQuery('#input_port').val();
 	// Suppress (skip) "Warning" step if
@@ -193,6 +190,7 @@ function getHostsToCheck(hostname) {
 	jQuery.post(ajaxurl, data, function(response) {
 		jQuery('table#wizard_port_test').html('');
 		jQuery('#wizard_recommendation').html('');
+		connectivtyTestResults = {};
 		for ( var x in response.hosts) {
 			var html = '';
 			var host = response.hosts[x].host;
@@ -201,15 +199,13 @@ function getHostsToCheck(hostname) {
 			var id = 'port-' + x;
 			var id_status = id + '_status';
 			html += '<tr><td><span>' + host + ':' + port + "</span></td>";
-			html += '<td><input type="radio" id="' + id
-					+ '" name="wizard-port" value=\'' + value
-					+ '\' class="required" style="margin-top: 0px" /></td>';
 			html += '<td id="' + id_status + '"></td></tr>';
 			jQuery('table#wizard_port_test').append(html);
 			// PERFORM THE ACTUAL PORT TEST
 			wizardPortTest(host, port, 'input#' + id, '#' + id_status);
 		}
 		// create an eventhandler for when the user changes the port
+		/*
 		jQuery('input[name="wizard-port"]').click(function() {
 			var portCheck = {};
 			portSelection = jQuery('input[name="wizard-port"]:checked');
@@ -219,22 +215,11 @@ function getHostsToCheck(hostname) {
 			portCheck[0] = host;
 			var data = {
 				'action' : 'get_wizard_configuration_options',
-				'user_override' : true,
 				'host_data' : portCheck
 			};
-			populateRedirectUrl(data);
+			handleConfigInstructions(data);
 		});
-	});
-}
-function checkEmail(email) {
-	var data = {
-		'action' : 'check_email',
-		'email' : email
-	};
-	jQuery.post(ajaxurl, data, function(response) {
-		if (response.hostname != '') {
-			jQuery(postman_hostname_element_name).val(response.hostname);
-		}
+		*/
 	});
 }
 /**
@@ -262,17 +247,18 @@ function wizardPortTest(hostname, port, input, state) {
 	// POST THE AJAX CALL
 	jQuery.post(ajaxurl, data, function(response) {
 		portsChecked++;
+		connectivtyTestResults[port] = response.data;
 		if (response.success) {
-			elState.html(postman_port_test_open);
+			elState.html(postman_port_test_done);
 			el.removeAttr('disabled');
 			totalAvail++;
 		} else {
-			elState.html(postman_port_test_closed);
+			elState.html(postman_port_test_done);
 		}
 		afterPortsChecked();
 	}).fail(function() {
 		portsChecked++;
-		elState.html(postman_port_test_closed);
+		elState.html(postman_port_test_done);
 		afterPortsChecked();
 	});
 }
@@ -288,24 +274,99 @@ function afterPortsChecked() {
 			jQuery('li + li').removeClass('disabled');
 			portCheckBlocksUi = false;
 		}
-		var rows = jQuery('table#wizard_port_test tr');
-		var portCheck = {};
-		rows.each(function(index) {
-			portSelection = jQuery('input', this);
-			var host = JSON.parse(portSelection.val());
-			host.available = portSelection.attr('disabled') != 'disabled';
-			host.port_id = portSelection.attr('id');
-			portCheck[index] = host;
-		});
-
 		var data = {
 			'action' : 'get_wizard_configuration_options',
-			'host_data' : portCheck
+			'host_data' : connectivtyTestResults
 		};
-		populateRedirectUrl(data);
+		handleConfigInstructions(data);
 	}
 }
 
+function handleConfigInstructions(data) {
+	jQuery.post(ajaxurl, data, function(response) {
+		if (response.success) {
+			handleConfigurationResponse(response);
+		}
+	});
+}
+function handleConfigurationResponse(response) {
+	response = response.data;
+	if (response.configuration.display_auth == 'oauth2') {
+		show('p#wizard_oauth2_help');
+		jQuery('p#wizard_oauth2_help').html(response.configuration.help_text);
+		jQuery(postman_redirect_url_el).val(response.configuration.redirect_url);
+		jQuery('#input_oauth_callback_domain').val(response.configuration.callback_domain);
+		jQuery('#client_id').html(response.client_id_label);
+		jQuery('#client_secret').html(response.client_secret_label);
+		jQuery('#redirect_url').html(response.redirect_url_label);
+		jQuery('#callback_domain').html(response.callback_domain_label);
+	}
+	redirectUrlWarning = response.configuration.dotNotationUrl;
+	jQuery('#input_transport_type').val(response.configuration.transport_type);
+	jQuery('#input_auth_type').val(response.configuration.auth_type);
+	jQuery('#input_auth_' + response.configuration.auth_type).prop('checked', true);
+	jQuery(postman_enc_for_password_el).val(response.configuration.enc_type);
+	jQuery('#input_enc_type').val(response.configuration.enc_type);
+	jQuery('#input_enc_' + response.configuration.enc_type).prop('checked', true);
+	if (response.configuration.port) {
+		enable('#input_port');
+		jQuery('#input_port').val(response.configuration.port);
+	} else {
+		disable('#input_port');
+	}
+	jQuery('#' + response.port_id).prop('checked', true);
+	if (!response.user_override) {
+		if (response.configuration.transport_type) {
+			$message = '<span style="color:green">' + response.configuration.message
+					+ '</span>';
+		} else {
+			$message = '<span style="color:red">' + response.configuration.message
+					+ '</span>';
+		}
+		jQuery('#wizard_recommendation').append($message);
+	}
+	if (response.hide_auth) {
+		hide('.input_auth_type');
+	} else {
+		show('.input_auth_type');
+	}
+	if (response.hide_enc) {
+		hide('.input_encryption_type');
+		enable('#input_enc_ssl');
+	} else {
+		show('.input_encryption_type');
+		disable('#input_enc_ssl');
+	}
+	// disable the fields we don't use so validation
+	// will work
+	if (response.configuration.display_auth == 'oauth2') {
+		show('.wizard-auth-oauth2');
+		hide('.wizard-auth-basic');
+		// allow oauth2 as an authentication choice
+		enable('#input_auth_oauth2');
+	} else if (response.configuration.display_auth == 'password') {
+		hide('.wizard-auth-oauth2');
+		show('.wizard-auth-basic');
+		enable(postman_input_basic_username);
+		enable(postman_input_basic_password);
+		disable('#input_auth_oauth2');
+	} else {
+		hide('.wizard-auth-oauth2');
+		hide('.wizard-auth-basic');
+		enable('#input_auth_oauth2');
+	}
+}
+function checkEmail(email) {
+	var data = {
+		'action' : 'check_email',
+		'email' : email
+	};
+	jQuery.post(ajaxurl, data, function(response) {
+		if (response.hostname != '') {
+			jQuery(postman_hostname_element_name).val(response.hostname);
+		}
+	});
+}
 /**
  * Handles population of the configuration based on the options set in a
  * 3rd-party SMTP plugin

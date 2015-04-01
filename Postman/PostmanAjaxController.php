@@ -108,19 +108,20 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		}
 		public function getDiagnostics() {
 			$this->addToDiagnostics ( sprintf ( 'OS: %s', php_uname () ) );
+			$this->addToDiagnostics ( sprintf ( 'HTTP User Agent: %s', $_SERVER ['HTTP_USER_AGENT'] ) );
 			$this->addToDiagnostics ( sprintf ( 'Platform: PHP %s %s / WordPress %s', PHP_OS, PHP_VERSION, get_bloginfo ( 'version' ) ) );
 			$this->addToDiagnostics ( $this->getPhpDependencies () );
 			$this->addToDiagnostics ( $this->getActivePlugins () );
+			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', get_current_theme () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', POSTMAN_PLUGIN_VERSION ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Sender: %s', (postmanObfuscateEmail ( $this->options->getSenderEmail () )) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI: %s', PostmanTransportUtils::getDeliveryUri ( PostmanTransportUtils::getCurrentTransport () ) ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Transport Status (configured|ready|connected): %s|%s|%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', $this->testConnectivity () ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Transport Status (Configured|Ready|Connected): %s|%s|%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', $this->testConnectivity () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Deliveries (Success|Fail): %d|%d', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PostmanStats::getInstance ()->getFailedDeliveries () ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Bind (success|failure): %s|%s', (PostmanWpMailBinder::getInstance ()->isBound () ? 'Yes' : 'No'), (PostmanWpMailBinder::getInstance ()->isUnboundDueToException () ? 'Yes' : 'No') ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Bind (Success|Fail): %s|%s', (PostmanWpMailBinder::getInstance ()->isBound () ? 'Yes' : 'No'), (PostmanWpMailBinder::getInstance ()->isUnboundDueToException () ? 'Yes' : 'No') ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Available Transports%s', $this->getTransports () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman LogLevel: %s', $this->options->getLogLevel () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman TCP Timeout (Connection|Read): %d|%d', $this->options->getConnectionTimeout (), $this->options->getReadTimeout () ) );
-			$this->addToDiagnostics ( sprintf ( 'HTTP User Agent: %s', $_SERVER ['HTTP_USER_AGENT'] ) );
 			$response = array (
 					'message' => $this->diagnostics 
 			);
@@ -188,11 +189,15 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		function __construct(PostmanOptionsInterface $options) {
 			parent::__construct ();
 			$this->options = $options;
-			$this->registerAjaxHandler ( 'wizard_port_test', $this, 'runPortQuizTest' );
+			$this->registerAjaxHandler ( 'wizard_port_test', $this, 'runSmtpTest' );
 			$this->registerAjaxHandler ( 'port_quiz_test', $this, 'runPortQuizTest' );
 			$this->registerAjaxHandler ( 'test_port', $this, 'runSmtpTest' );
 			$this->registerAjaxHandler ( 'test_smtps', $this, 'runSmtpsTest' );
 		}
+		
+		/**
+		 * This is the connectivity test that is started from the Setup Wizard
+		 */
 		function wizardConnectivityTest() {
 			$this->runSmtpTest ();
 		}
@@ -246,7 +251,7 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
 			$response = array (
 					'hostname' => $hostname,
-					'hostname' => $port,
+					'port' => $port,
 					'protocol' => $portTest->protocol,
 					'message' => $portTest->getErrorMessage (),
 					'start_tls' => $portTest->startTls,
@@ -255,7 +260,7 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 					'auth_crammd5' => $portTest->authCrammd5,
 					'auth_xoauth' => $portTest->authXoauth,
 					'try_smtps' => $portTest->trySmtps,
-					'success' => $success
+					'success' => $success 
 			);
 			$this->logger->debug ( 'Ajax response:' );
 			$this->logger->debug ( $response );
@@ -346,7 +351,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			// create the response
 			$response = array ();
 			$response ['referer'] = 'manual_config';
-			$this->populateResponseFromScribe ( $scribe, $response, false );
+			$this->populateResponseFromScribe ( $scribe, $response );
 			
 			// set the display_auth to oauth2 if the transport needs it
 			if ($transport->isOAuthUsed ( $queryAuthType )) {
@@ -361,32 +366,121 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 */
 		function getWizardConfigurationViaAjax() {
 			$queryHostData = $this->getHostDataFromRequest ();
-			$userOverride = filter_var ( $this->getUserOverrideFromRequest (), FILTER_VALIDATE_BOOLEAN );
 			
 			// determine a configuration recommendation
 			$winningRecommendation = $this->getConfigurationRecommendation ( $queryHostData );
+			$this->logger->debug ( $winningRecommendation );
+			
+			// create user override menu
+			$overrideMenu = array ();
+			foreach ( $queryHostData as $id => $value ) {
+				$userOverride = false;
+				if ($userOverride == true) {
+					// use the user's host/port selection instead of the winning recommendation
+					$overrideItem ['selected'] = ($winningRecommendation ['port'] == $value ['port'] && $winningRecommendation ['hostname'] == $value ['hostname']);
+				} else {
+					$overrideItem ['selected'] = ($winningRecommendation ['port'] == $value ['port'] && $winningRecommendation ['hostname'] == $value ['hostname']);
+				}
+				$overrideItem ['description'] = sprintf ( '%s:%s', $value ['hostname'], $value ['port'] );
+				$overrideAuthItem = array ();
+				if ($value ['auth_crammd5'] || $value ['auth_login'] || $value ['auth_plain']) {
+					$overrideAuthItem ['password'] = __ ( 'Password' );
+				}
+				if ($value ['auth_xoauth']) {
+					$overrideAuthItem ['oauth2'] = __ ( 'OAuth 2.0' );
+				}
+				$overrideItem ['auth_items'] = $overrideAuthItem;
+				$overrideMenu [$value ['port']] = $overrideItem;
+			}
 			
 			// create the reponse
 			$response = array ();
+			$configuration = array ();
 			$response ['referer'] = 'wizard';
 			
 			if (isset ( $winningRecommendation )) {
 				// create an appropriate (theoretical) transport
 				$transport = PostmanTransportUtils::getTransport ( $winningRecommendation ['transport'] );
 				$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $winningRecommendation ['hostname'] );
-				$this->populateResponseFromScribe ( $scribe, $response, $userOverride );
-				$this->populateResponseFromTransport ( $winningRecommendation, $response );
-				$this->logger->debug ( 'ajaxRedirectUrl answer hide_auth:' . $response ['hide_auth'] );
-				$this->logger->debug ( 'ajaxRedirectUrl answer hide_enc:' . $response ['hide_enc'] );
-				$this->logger->debug ( 'ajaxRedirectUrl answer message:' . $response ['message'] );
+				$this->populateResponseFromScribe ( $scribe, $configuration );
+				$this->populateResponseFromTransport ( $winningRecommendation, $configuration );
 			} else {
 				/* translators: where %s is the URL to the Connectivity Test page */
 				$response ['message'] = sprintf ( __ ( 'Postman can\'t find any way to send mail on your system. Run a <a href="%s">connectivity test</a>.', 'postman-smtp' ), PostmanViewController::getPageUrl ( PostmanViewController::PORT_TEST_SLUG ) );
 			}
 			
+			$response ['overrideMenu'] = $overrideMenu;
+			$response ['configuration'] = $configuration;
+			$this->logger->debug ( $response );
 			wp_send_json_success ( $response );
 		}
 		
+		/**
+		 * // for each successful host/port combination
+		 * // ask a transport if they support it, and if they do at what priority is it
+		 * // configure for the highest priority you find
+		 *
+		 * @param unknown $queryHostData        	
+		 * @return unknown
+		 */
+		private function getConfigurationRecommendation($queryHostData) {
+			$recommendationPriority = - 1;
+			$winningRecommendation = null;
+			foreach ( $queryHostData as $id => $value ) {
+				$available = filter_var ( $value ['success'], FILTER_VALIDATE_BOOLEAN );
+				if ($available) {
+					$this->logger->debug ( sprintf ( 'Asking for judgement on %s:%s', $value ['hostname'], $value ['port'] ) );
+					$recommendation = PostmanTransportUtils::getConfigurationBid ( $value );
+					if ($recommendation && $recommendation ['priority'] > $recommendationPriority) {
+						$recommendationPriority = $recommendation ['priority'];
+						$winningRecommendation = $recommendation;
+					}
+				}
+			}
+			return $winningRecommendation;
+		}
+		
+		/**
+		 *
+		 * @param unknown $scribe        	
+		 * @param unknown $response        	
+		 * @param unknown $userOverride        	
+		 */
+		private function populateResponseFromScribe($scribe, &$response) {
+			// checks to see if the host is an IP address and sticks the result in the response
+			// IP addresses are not allowed in the Redirect URL
+			$urlParts = parse_url ( $scribe->getCallbackUrl () );
+			$response ['dotNotationUrl'] = false;
+			if (isset ( $urlParts ['host'] )) {
+				// from http://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
+				if (preg_match ( '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9‌​]{2}|2[0-4][0-9]|25[0-5])$/', $urlParts ['host'] )) {
+					$response ['dotNotationUrl'] = true;
+				}
+			}
+			$response ['redirect_url'] = $scribe->getCallbackUrl ();
+			$response ['callback_domain'] = $scribe->getCallbackDomain ();
+			$response ['help_text'] = $scribe->getOAuthHelp ();
+			$response ['client_id_label'] = $scribe->getClientIdLabel ();
+			$response ['client_secret_label'] = $scribe->getClientSecretLabel ();
+			$response ['redirect_url_label'] = $scribe->getCallbackUrlLabel ();
+			$response ['callback_domain_label'] = $scribe->getCallbackDomainLabel ();
+		}
+		
+		/**
+		 *
+		 * @param unknown $winningRecommendation        	
+		 * @param unknown $response        	
+		 */
+		private function populateResponseFromTransport($winningRecommendation, &$response) {
+			$response [PostmanOptions::TRANSPORT_TYPE] = $winningRecommendation ['transport'];
+			$response [PostmanOptions::AUTHENTICATION_TYPE] = $winningRecommendation ['auth'];
+			$response [PostmanOptions::ENCRYPTION_TYPE] = $winningRecommendation ['enc'];
+			$response [PostmanOptions::PORT] = $winningRecommendation ['port'];
+			$response [PostmanOptions::HOSTNAME] = $winningRecommendation ['hostname'];
+			$response ['display_auth'] = $winningRecommendation ['display_auth'];
+			$response ['message'] = $winningRecommendation ['message'];
+		}
+
 		/**
 		 */
 		private function getTransportTypeFromRequest() {
@@ -407,106 +501,8 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		
 		/**
 		 */
-		private function getUserOverrideFromRequest() {
-			return $this->getRequestParameter ( 'user_override' );
-		}
-		
-		/**
-		 */
 		private function getHostDataFromRequest() {
 			return $this->getRequestParameter ( 'host_data' );
-		}
-		
-		/**
-		 * // for each successful host/port combination
-		 * // ask a transport if they support it, and if they do at what priority is it
-		 * // configure for the highest priority you find
-		 *
-		 * @param unknown $queryHostData        	
-		 * @return unknown
-		 */
-		private function getConfigurationRecommendation($queryHostData) {
-			$recommendationPriority = - 1;
-			$winningRecommendation = null;
-			foreach ( $queryHostData as $id => $value ) {
-				$available = filter_var ( $value ['available'], FILTER_VALIDATE_BOOLEAN );
-				if ($available) {
-					$hostData ['host'] = $value ['host'];
-					$hostData ['port'] = $value ['port'];
-					$this->logger->debug ( 'Available host: ' . $hostData ['host'] . ':' . $hostData ['port'] . ' port_id ' . $value ['port_id'] );
-					$recommendation = PostmanTransportUtils::getConfigurationRecommendation ( $hostData );
-					$recommendation ['port_id'] = $value ['port_id'];
-					if ($recommendation && $recommendation ['priority'] > $recommendationPriority) {
-						$recommendationPriority = $recommendation ['priority'];
-						$winningRecommendation = $recommendation;
-					}
-				}
-			}
-			return $winningRecommendation;
-		}
-		
-		/**
-		 *
-		 * @param unknown $scribe        	
-		 * @param unknown $response        	
-		 * @param unknown $userOverride        	
-		 */
-		private function populateResponseFromScribe($scribe, &$response, $userOverride) {
-			// checks to see if the host is an IP address and sticks the result in the response
-			// IP addresses are not allowed in the Redirect URL
-			$urlParts = parse_url ( $scribe->getCallbackUrl () );
-			$response ['dotNotationUrl'] = false;
-			if (isset ( $urlParts ['host'] )) {
-				// from http://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
-				if (preg_match ( '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9‌​]{2}|2[0-4][0-9]|25[0-5])$/', $urlParts ['host'] )) {
-					$response ['dotNotationUrl'] = true;
-				}
-			}
-			$response ['redirect_url'] = $scribe->getCallbackUrl ();
-			$response ['callback_domain'] = $scribe->getCallbackDomain ();
-			$response ['help_text'] = $scribe->getOAuthHelp ();
-			$response ['client_id_label'] = $scribe->getClientIdLabel ();
-			$response ['client_secret_label'] = $scribe->getClientSecretLabel ();
-			$response ['redirect_url_label'] = $scribe->getCallbackUrlLabel ();
-			$response ['callback_domain_label'] = $scribe->getCallbackDomainLabel ();
-			$response ['user_override'] = $userOverride;
-			$response ['hide_auth'] = true;
-			$response ['hide_enc'] = true;
-			$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url:' . $scribe->getCallbackUrl () );
-			$this->logger->debug ( 'ajaxRedirectUrl answer dotNotationUrl:' . $response ['dotNotationUrl'] );
-			$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain:' . $scribe->getCallbackDomain () );
-			$this->logger->debug ( 'ajaxRedirectUrl answer help_text:' . $scribe->getOAuthHelp () );
-			$this->logger->debug ( 'ajaxRedirectUrl answer client_id_label:' . $scribe->getClientIdLabel () );
-			$this->logger->debug ( 'ajaxRedirectUrl answer client_secret_label:' . $scribe->getClientSecretLabel () );
-			$this->logger->debug ( 'ajaxRedirectUrl answer redirect_url_label:' . $scribe->getCallbackUrlLabel () );
-			$this->logger->debug ( 'ajaxRedirectUrl answer callback_domain_label:' . $scribe->getCallbackDomainLabel () );
-		}
-		
-		/**
-		 *
-		 * @param unknown $winningRecommendation        	
-		 * @param unknown $response        	
-		 */
-		private function populateResponseFromTransport($winningRecommendation, &$response) {
-			$response [PostmanOptions::TRANSPORT_TYPE] = $winningRecommendation ['transport'];
-			$response [PostmanOptions::AUTHENTICATION_TYPE] = $winningRecommendation ['auth'];
-			$response [PostmanOptions::ENCRYPTION_TYPE] = $winningRecommendation ['enc'];
-			$response [PostmanOptions::PORT] = $winningRecommendation ['port'];
-			$response [PostmanOptions::HOSTNAME] = $winningRecommendation ['hostname'];
-			$response ['port_id'] = $winningRecommendation ['port_id'];
-			$response ['display_auth'] = $winningRecommendation ['display_auth'];
-			$response ['message'] = $winningRecommendation ['message'];
-			if ($winningRecommendation ['auth'] != 'oauth2' && $winningRecommendation ['enc'] == 'tls') {
-				$response ['hide_auth'] = false;
-				$response ['hide_enc'] = false;
-			}
-			$this->logger->debug ( 'ajaxRedirectUrl answer transport_type:' . $response [PostmanOptions::TRANSPORT_TYPE] );
-			$this->logger->debug ( 'ajaxRedirectUrl answer auth_type:' . $response [PostmanOptions::AUTHENTICATION_TYPE] );
-			$this->logger->debug ( 'ajaxRedirectUrl answer enc_type:' . $response [PostmanOptions::ENCRYPTION_TYPE] );
-			$this->logger->debug ( 'ajaxRedirectUrl answer port:' . $response [PostmanOptions::PORT] );
-			$this->logger->debug ( 'ajaxRedirectUrl answer hostname:' . $response [PostmanOptions::HOSTNAME] );
-			$this->logger->debug ( 'ajaxRedirectUrl answer port_id:' . $response ['port_id'] );
-			$this->logger->debug ( 'ajaxRedirectUrl answer display_auth:' . $response ['display_auth'] );
 		}
 	}
 }

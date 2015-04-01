@@ -57,9 +57,9 @@ if (! class_exists ( "PostmanPortTest" )) {
 			} else {
 				// see http://php.net/manual/en/transports.inet.php#113244
 				$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
-				$matches = array();
+				$matches = array ();
 				$line = fgets ( $stream );
-				if(preg_match('/^HTTP.*\\s/U', $line, $matches)) {
+				if (preg_match ( '/^HTTP.*\\s/U', $line, $matches )) {
 					$this->protocol = $matches [0];
 					return true;
 				} else {
@@ -73,6 +73,14 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 * @param string $hostname        	
 		 */
 		public function testSmtpPorts($connectTimeout = 10, $readTimeout = 10) {
+			if ($this->port == 26) {
+				$this->debug('Executing test code for port 26');
+				$this->protocol = 'SMTP';
+				$this->authCrammd5 = 'true';
+				$this->authPlain = 'true';
+				$this->authXoauth = 'true';
+				return true;
+			}
 			$connectionString = "%s:%s";
 			$success = $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
 			if ($success) {

@@ -113,12 +113,34 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 		 *
 		 * @param unknown $hostData        	
 		 */
-		public static function getConfigurationRecommendation($hostData) {
+		public static function getConfigurationBid($connectivityTestResults, $userAuthPreference = 'password') {
+			$hostData ['host'] = $connectivityTestResults ['hostname'];
+			$hostData ['port'] = $connectivityTestResults ['port'];
+			$hostData ['protocol'] = $connectivityTestResults ['protocol'];
+			$hostData ['start_tls'] = $connectivityTestResults ['start_tls'];
+
+			// write all the auth data
+			$hostData ['auth_xoauth'] = $connectivityTestResults ['auth_xoauth'];
+			$hostData ['auth_plain'] = $connectivityTestResults ['auth_plain'];
+			$hostData ['auth_login'] = $connectivityTestResults ['auth_login'];
+			$hostData ['auth_crammd5'] = $connectivityTestResults ['auth_crammd5'];
+			// filter for user preference (remove select auth data)
+			if ($userAuthPreference == 'oauth2') {
+				$hostData ['auth_plain'] = null;
+				$hostData ['auth_login'] = null;
+				$hostData ['auth_crammd5'] = null;
+			}
+			if ($userAuthPreference == 'password') {
+				$hostData ['auth_xoauth'] = null;
+			}
+
+			//
 			$directory = PostmanTransportDirectory::getInstance ();
 			$priority = - 1;
 			$winningRecommendation = null;
 			$logger = new PostmanLogger ( 'PostmanTransportUtils' );
 			foreach ( $directory->getTransports () as $transport ) {
+				$logger->debug ( sprintf ( 'Asking transport %s to bid on: %s:%s', $transport->getName (), $hostData ['host'], $hostData ['port'] ) );
 				$recommendation = $transport->getConfigurationRecommendation ( $hostData );
 				if ($recommendation) {
 					$logger->debug ( sprintf ( 'Got a recommendation: [%d] %s', $recommendation ['priority'], $recommendation ['message'] ) );

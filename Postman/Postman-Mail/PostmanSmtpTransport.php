@@ -18,6 +18,11 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		 *
 		 *
 		 *
+		 *
+		 *
+		 *
+		 *
+		 *
 		 * .. @deprecated
 		 */
 		public function isSmtp() {
@@ -186,7 +191,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$hosts = array (
 					array (
 							'host' => $hostname,
-							'port' => '25' 
+							'port' => '26' 
 					),
 					array (
 							'host' => $hostname,
@@ -203,53 +208,63 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		/**
 		 * First choose the auth method, in this order: XOAUTH (4000), CRAM-MD5 (3000), PLAIN (2000), LOGIN (1000)
 		 * Second, choose the port, in this order: 587/STARTLS (300), 465/SMTPS (200), 25/SMTP (100), 443/GMAIL (150)
-		 * 
+		 *
 		 * SMTP supports sending with these combinations in this order of preferences:
-		 * 
+		 *
 		 * @param unknown $hostData        	
 		 */
 		public function getConfigurationRecommendation($hostData) {
 			$port = $hostData ['port'];
 			$hostname = $hostData ['host'];
 			$oauthPotential = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
-			if ($oauthPotential && $port == 465) {
-				$recommendation ['priority'] = 100;
-				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
-				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
-				$recommendation ['display_auth'] = 'oauth2';
-			} else if ($oauthPotential && $port == 587) {
-				$recommendation ['priority'] = 80;
-				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+			$score = 0;
+			$recommendation = array ();
+			$recommendation ['transport'] = PostmanSmtpTransport::SLUG;
+			// increment score for auth type
+			if ($hostData ['start_tls']) {
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
-				$recommendation ['display_auth'] = 'oauth2';
-			} else if ($port == 465) {
-				$recommendation ['priority'] = 60;
-				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
+				$score += 3000;
+			} elseif ($hostData ['protocol'] == 'SMTPS') {
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
-				$recommendation ['display_auth'] = 'password';
-			} else if ($port == 587) {
-				$recommendation ['priority'] = 40;
-				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
-				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
-				$recommendation ['display_auth'] = 'password';
-			} else if ($port == 25) {
-				$recommendation ['priority'] = 20;
-				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_NONE;
+				$score += 2000;
+			} elseif ($hostData ['protocol'] == 'SMTP') {
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
+				$score += 1000;
+			}
+			if ($hostData ['auth_xoauth']) {
+				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+				$recommendation ['display_auth'] = 'oauth2';
+				$score += 500;
+			} elseif ($hostData ['auth_crammd5']) {
+				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5;
+				$recommendation ['display_auth'] = 'password';
+				$score += 400;
+			} elseif ($hostData ['auth_plain']) {
+				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
+				$recommendation ['display_auth'] = 'password';
+				$score += 300;
+			} elseif ($hostData ['auth_login']) {
+				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
+				$recommendation ['display_auth'] = 'password';
+				$score += 200;
+			} else {
+				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_NONE;
 				$recommendation ['display_auth'] = 'none';
+				$score += 100;
 			}
-			if (isset ( $recommendation )) {
-				$recommendation ['success'] = true;
-				$transportDescription = $this->getTransportDescription ( $recommendation ['enc'] );
-				$encType = strtoupper ( $recommendation ['enc'] );
-				$authDesc = $this->getAuthenticationDescription ( $recommendation ['auth'] );
-				$recommendation ['port'] = $port;
-				$recommendation ['hostname'] = $hostname;
-				$recommendation ['transport'] = self::SLUG;
-				/* translators: where %1$s is a description of the transport (eg. SMTPS-SSL), %2$s is a description of the authentication (eg. Password-CRAMMD5) and %3$d is the TCP port (eg. 465) */
-				$recommendation ['message'] = sprintf ( __ ( 'Postman recommends %1$s with %2$s authentication on port %3$d.', 'postman-smtp' ), $transportDescription, $authDesc, $port );
-				return $recommendation;
-			}
+
+			// fill-in the rest of the recommendation
+			$recommendation ['priority'] = $score;
+			$recommendation ['port'] = $port;
+			$recommendation ['hostname'] = $hostname;
+			$recommendation ['transport'] = self::SLUG;
+
+			// create the recommendation message for the user
+			$transportDescription = $this->getTransportDescription ( $recommendation ['enc'] );
+			$authDesc = $this->getAuthenticationDescription ( $recommendation ['auth'] );
+			/* translators: where %1$s is a description of the transport (eg. SMTPS-SSL), %2$s is a description of the authentication (eg. Password-CRAMMD5) and %3$d is the TCP port (eg. 465) */
+			$recommendation ['message'] = sprintf ( __ ( 'Postman recommends %1$s with %2$s authentication on port %3$d.', 'postman-smtp' ), $transportDescription, $authDesc, $port );
+			return $recommendation;
 		}
 	}
 }
@@ -264,10 +279,6 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		const SLUG = 'smtp';
 		/**
 		 * what is this for .
-		 *
-		 *
-		 *
-		 *
 		 * .. @deprecated
 		 */
 		public function isSmtp() {
