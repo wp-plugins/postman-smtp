@@ -5,6 +5,7 @@ function test() {
 	check ( 'test@andrethierry.com', 'relay-hosting.secureserver.net' );
 	check ( 'test@apple.com' );
 	check ( 'test@artegennaro.com', 'relay-hosting.secureserver.net' );
+	check ( 'test@dunsire.com', 'smtp.office365.com' );
 	check ( 'test@gmail.com', 'smtp.gmail.com' );
 	check ( 'test@hendriksandcregg.com' );
 	check ( 'test@hendriks.ca', 'smtp.gmail.com' );
