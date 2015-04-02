@@ -1,4 +1,6 @@
 connectivtyTestResults = {};
+portTestInProgress = false;
+
 /**
  * Functions to run on document load
  */
@@ -85,11 +87,6 @@ function initializeJQuerySteps() {
 			}).validate({
 		errorPlacement : function(error, element) {
 			element.before(error);
-		},
-		rules : {
-			confirm : {
-				equalTo : "#password"
-			}
 		}
 	});
 }
@@ -98,7 +95,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 	// Always allow going backward even if
 	// the current step contains invalid fields!
 	if (currentIndex > newIndex) {
-		if (portsChecked < portsToCheck) {
+		if (portTestInProgress) {
 			alert(postman_wizard_wait);
 			return false;
 		}
@@ -119,11 +116,9 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 
 	// Start validation; Prevent going
 	// forward if false
-	if (currentIndex != 2) {
-		valid = form.valid();
-		if (!valid) {
-			return false;
-		}
+	valid = form.valid();
+	if (!valid) {
+		return false;
 	}
 
 	if (currentIndex === 1) {
@@ -135,9 +130,6 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		portsChecked = 0;
 		portsToCheck = 0;
 		totalAvail = 0;
-		// allow the user to choose any
-		// port
-		portCheckBlocksUi = true;
 		// this should be the only place i disable the next button but Steps
 		// enables it after the screen slides
 		jQuery('li + li').addClass('disabled');
@@ -147,7 +139,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 	} else if (currentIndex === 3) {
 
 		// user has clicked next but we haven't finished the check
-		if (portsChecked < portsToCheck) {
+		if (portTestInProgress) {
 			alert(postman_wizard_wait);
 			return false;
 		}
@@ -204,6 +196,12 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
  * @param hostname
  */
 function getHostsToCheck(hostname) {
+	jQuery('table#wizard_port_test').html('');
+	jQuery('#wizard_recommendation').html('');
+	hide('#user_override');
+	connectivtyTestResults = {};
+	portCheckBlocksUi = true;
+	portTestInProgress = true;
 	var data = {
 		'action' : 'get_hosts_to_test',
 		'hostname' : hostname
@@ -220,10 +218,6 @@ function getHostsToCheck(hostname) {
  * @param response
  */
 function handleHostsToCheckResponse(response) {
-	jQuery('table#wizard_port_test').html('');
-	jQuery('#wizard_recommendation').html('');
-	hide('#user_override');
-	connectivtyTestResults = {};
 	for ( var x in response.hosts) {
 		var hostname = response.hosts[x].host;
 		var port = response.hosts[x].port
@@ -322,6 +316,7 @@ function userOverrideMenu() {
 
 function postTheConfigurationRequest(data) {
 	jQuery.post(ajaxurl, data, function(response) {
+		portTestInProgress = false;
 		var $message = '';
 		if (response.success) {
 			$message = '<span style="color:green">'
@@ -338,7 +333,7 @@ function postTheConfigurationRequest(data) {
 			jQuery('li').removeClass('disabled');
 			jQuery('li + li').addClass('disabled');
 		}
-		if(!response.data.configuration.user_override) {
+		if (!response.data.configuration.user_override) {
 			jQuery('#wizard_recommendation').append($message);
 		}
 	});
@@ -356,7 +351,7 @@ function handleConfigurationResponse(response) {
 		jQuery('#redirect_url').html(response.redirect_url_label);
 		jQuery('#callback_domain').html(response.callback_domain_label);
 	}
-	redirectUrlWarning = response.configuration.dotNotationUrl;
+	redirectUrlWarning = response.configuration.dot_notation_url;
 	jQuery('#input_transport_type').val(response.configuration.transport_type);
 	jQuery('#input_auth_type').val(response.configuration.auth_type);
 	jQuery('#input_enc_type').val(response.configuration.enc_type);
