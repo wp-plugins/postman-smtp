@@ -398,6 +398,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Upgrade Notice ==
 
+= 1.6 =
+Heavy-duty connectivity tester and setup wizard.
+
 = 1.5.10 =
 Fix for rare bug in Windows installations.
 
