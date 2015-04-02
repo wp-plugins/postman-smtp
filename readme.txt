@@ -41,7 +41,7 @@ If you are willing to translate Postman into your language, [please let me know]
 = Requirements =
 * WordPress 3.9 (or later)
 * PHP 5.2 with SPL and iconv
-* ✝ Connectivity to a SMTP server with authentication credentials
+* ✝ SMTP delivery requires connectivity to and authentication credentials with a 3rd-party server email service provider
 * ✝✝ Custom domains require a correct SPF record for Spam-free delivery
 * Optional: a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
 
@@ -241,6 +241,11 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.6.0 = 
+* Added commercial-grade Connectivty Test and Setup Wizard. The new wizard interrogates the server for capabilities and intelligently suggests the best settings for the user, simultaneously preventing from incorrect settings from being entered. Steve Jobs would be proud.
+* Fixed Wizard's SMTP hostname guess for GoDaddy addresses
+* Fixed Wizard's SMTP hostname guess for Outlook 365 addresses
+
 = 1.5.10 - 2015-03-29 =
 * Fix for Fatal error: Cannot redeclare class PEAR_Common in C:\PHP5\PEAR\PEAR\Common.php - similar to [this error](https://wordpress.org/support/topic/plugin-wp-minify-cant-activate-plugin-fatal-error?replies=6) in WP Minify
 
@@ -262,7 +267,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Add PHP library pre-requisite checks to Binder, Dashboard widget, Admin screen and Admin screen error messages.
 * Translated into Italian, thank-you Andrea Greco
 * Obfuscated e-mail address in Diagnostic Info
-* Fixed Wizard's SMTP host guess for Apple addresses (icloud.com, me.com, mac.com)
+* Fixed Wizard's SMTP hostname guess for Apple addresses (icloud.com, me.com, mac.com)
 
 = 1.5.5 - 2015-03-11 =
 * Added a Dashboard Widget to display Postman status
@@ -284,7 +289,6 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Fix for error "Fatal error: Cannot redeclare class PostmanOAuthTokenInterface" when using Gmail API Extension
 * Checks to make sure that the hostname used for SMTP/OAuth 2.0 is one that is supported
 * Removed display_errors=On, Mr. Space Cadet here left it in the previous release by accident
-* French language updates
 
 = 1.5.1 - 2015-02-23 =
 * Bugs slipped through. In the Wizard, choosing port 465 was not hiding the authentication label. Worse, choosing port 587 was not showing the authentication buttons.

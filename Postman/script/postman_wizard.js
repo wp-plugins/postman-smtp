@@ -205,48 +205,60 @@ function getHostsToCheck(hostname) {
 		'hostname' : hostname
 	};
 	jQuery.post(ajaxurl, data, function(response) {
-		jQuery('table#wizard_port_test').html('');
-		jQuery('#wizard_recommendation').html('');
-		hide('#user_override');
-		connectivtyTestResults = {};
-		for ( var x in response.hosts) {
-			var host = response.hosts[x].host;
-			var port = response.hosts[x].port
-			wizardPortTest(host, port);
-		}
+		handleHostsToCheckResponse(response);
 	});
 }
+
 /**
- * Called for each socket to be tested. An Ajax post performs the test, the
- * response is
+ * Handles the response from the server of the list of sockets to check.
+ * 
+ * @param hostname
+ * @param response
+ */
+function handleHostsToCheckResponse(response) {
+	jQuery('table#wizard_port_test').html('');
+	jQuery('#wizard_recommendation').html('');
+	hide('#user_override');
+	connectivtyTestResults = {};
+	for ( var x in response.hosts) {
+		var hostname = response.hosts[x].host;
+		var port = response.hosts[x].port
+		portsToCheck++;
+		updateStatus(postman_test_in_progress + portsToCheck);
+		var data = {
+			'action' : 'wizard_port_test',
+			'hostname' : hostname,
+			'port' : port
+		};
+		postThePortTest(hostname, port, data);
+	}
+}
+
+/**
+ * Asks the server to run a connectivity test on the given port
  * 
  * @param hostname
  * @param port
- * @param input
- * @param state
+ * @param data
  */
-function wizardPortTest(hostname, port) {
-	portsToCheck++;
-	updateStatus(postman_test_in_progress + portsToCheck);
-	var data = {
-		'action' : 'wizard_port_test',
-		'hostname' : hostname,
-		'port' : port
-	};
-	// POST THE AJAX CALL
-	postTheCall(hostname, port, data);
-}
-
-function postTheCall(hostname, port, data) {
+function postThePortTest(hostname, port, data) {
 	jQuery.post(ajaxurl, data, function(response) {
-		handlePostTheCallResponse(hostname, port, data, response);
+		handlePortTestResponse(hostname, port, data, response);
 	}).fail(function() {
 		portsChecked++;
 		afterPortsChecked();
 	});
 }
 
-function handlePostTheCallResponse(hostname, port, data, response) {
+/**
+ * Handles the result of the port test
+ * 
+ * @param hostname
+ * @param port
+ * @param data
+ * @param response
+ */
+function handlePortTestResponse(hostname, port, data, response) {
 	if (!response.data.try_smtps) {
 		portsChecked++;
 		updateStatus(postman_test_in_progress + (portsToCheck - portsChecked));
@@ -257,8 +269,9 @@ function handlePostTheCallResponse(hostname, port, data, response) {
 		}
 		afterPortsChecked();
 	} else {
+		// SMTP failed, try again on the SMTPS port
 		data['action'] = 'wizard_port_test_smtps';
-		postTheCall(hostname, port, data);
+		postThePortTest(hostname, port, data);
 	}
 }
 
@@ -286,7 +299,7 @@ function afterPortsChecked() {
 			'action' : 'get_wizard_configuration_options',
 			'host_data' : connectivtyTestResults
 		};
-		configurationRequest(data);
+		postTheConfigurationRequest(data);
 		updateStatus(postman_test_in_progress + postman_port_test_done);
 	}
 }
@@ -300,20 +313,33 @@ function userOverrideMenu() {
 		'user_auth_override' : jQuery('select#user_auth_override').val(),
 		'host_data' : connectivtyTestResults
 	};
-	configurationRequest(data);
+	postTheConfigurationRequest(data);
 }
 
-function configurationRequest(data) {
+function postTheConfigurationRequest(data) {
 	jQuery.post(ajaxurl, data, function(response) {
+		var $message = '';
 		if (response.success) {
-			handleConfigurationResponse(response);
+			$message = '<span style="color:green">'
+					+ response.data.configuration.message + '</span>';
+			handleConfigurationResponse(response.data);
+			enable('select#user_socket_override');
+			enable('select#user_auth_override');
+			// enable both next/back buttons
+			jQuery('li').removeClass('disabled');
+		} else {
+			$message = '<span style="color:red">'
+					+ response.data.configuration.message + '</span>';
+			// enable the back button only
+			jQuery('li').removeClass('disabled');
+			jQuery('li + li').addClass('disabled');
 		}
-		enable('select#user_socket_override');
-		enable('select#user_auth_override');
+		if(!response.data.configuration.user_override) {
+			jQuery('#wizard_recommendation').append($message);
+		}
 	});
 }
 function handleConfigurationResponse(response) {
-	response = response.data;
 	if (response.configuration.display_auth == 'oauth2') {
 		show('p#wizard_oauth2_help');
 		jQuery('p#wizard_oauth2_help').html(response.configuration.help_text);
@@ -359,17 +385,6 @@ function handleConfigurationResponse(response) {
 
 	}
 
-	//
-	if (jQuery('#wizard_recommendation').html() == '') {
-		if (response.configuration.transport_type) {
-			$message = '<span style="color:green">'
-					+ response.configuration.message + '</span>';
-		} else {
-			$message = '<span style="color:red">'
-					+ response.configuration.message + '</span>';
-		}
-		jQuery('#wizard_recommendation').append($message);
-	}
 	show('#user_override');
 	// hide the fields we don't use so validation
 	// will work
