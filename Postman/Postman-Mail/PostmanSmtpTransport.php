@@ -209,7 +209,8 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function getConfigurationRecommendation($hostData) {
 			$port = $hostData ['port'];
 			$hostname = $hostData ['host'];
-			$oauthPotential = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
+			// because some servers, like smtp.broadband.rogers.com, report XOAUTH2 but have no OAuth2 front-end
+			$supportedOAuth2Provider = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
 			$score = 0;
 			$recommendation = array ();
 			// increment score for auth type
@@ -223,7 +224,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
 				$score += 1000;
 			}
-			if ($hostData ['auth_xoauth']) {
+			if ($hostData ['auth_xoauth'] && $supportedOAuth2Provider) {
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 				$recommendation ['display_auth'] = 'oauth2';
 				$score += 500;

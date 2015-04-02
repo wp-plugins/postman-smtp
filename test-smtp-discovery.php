@@ -5,6 +5,8 @@ function test() {
 	check ( 'test@andrethierry.com', 'relay-hosting.secureserver.net' );
 	check ( 'test@apple.com' );
 	check ( 'test@artegennaro.com', 'relay-hosting.secureserver.net' );
+	check ( 'test@btclick.com', 'smtp.office365.com' );
+	check ( 'test@btconnect.com', 'smtp.office365.com' );
 	check ( 'test@dunsire.com', 'smtp.office365.com' );
 	check ( 'test@gmail.com', 'smtp.gmail.com' );
 	check ( 'test@hendriksandcregg.com' );
@@ -21,6 +23,7 @@ function test() {
 	check ( 'test@outlook.com', 'smtp.live.com' );
 	check ( 'test@rocketmail.com', 'plus.smtp.mail.yahoo.com' );
 	check ( 'test@ronwilsoninsurance.com', 'smtp.office365.com' );
+	check ( 'test@rogers.com', 'smtp.broadband.rogers.com' );
 	check ( 'test@ryerson.ca' );
 	check ( 'test@sdlkfjsdl.com' );
 	check ( 'test@sdlkfjsdl.co.uk' );
