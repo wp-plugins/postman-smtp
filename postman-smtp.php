@@ -22,6 +22,6 @@
 define ( 'POSTMAN_PLUGIN_VERSION', '1.6.0b1' );
 
 // start Postman
-require_once 'Postman/PostmanSmtp.php';
-$kevinCostner = new PostmanSmtp ( __FILE__ );
+require_once 'Postman/Postman.php';
+$kevinCostner = new Postman ( __FILE__ );
 

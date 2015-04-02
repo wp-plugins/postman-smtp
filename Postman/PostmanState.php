@@ -40,7 +40,7 @@ if (! class_exists ( "PostmanState" )) {
 		}
 		public function isTimeToReviewPostman() {
 			if (! empty ( $this->options [self::INSTALL_DATE] )) {
-				return $this->options [self::INSTALL_DATE] + PostmanSmtp::LONG_ENOUGH_SEC < time ();
+				return $this->options [self::INSTALL_DATE] + Postman::LONG_ENOUGH_SEC < time ();
 			}
 		}
 	}

@@ -146,13 +146,13 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (! empty ( $this->options [self::CONNECTION_TIMEOUT] ))
 				return $this->options [self::CONNECTION_TIMEOUT];
 			else
-				return PostmanSmtp::POSTMAN_TCP_CONNECTION_TIMEOUT;
+				return Postman::POSTMAN_TCP_CONNECTION_TIMEOUT;
 		}
 		public function getReadTimeout() {
 			if (! empty ( $this->options [self::READ_TIMEOUT] ))
 				return $this->options [self::READ_TIMEOUT];
 			else
-				return PostmanSmtp::POSTMAN_TCP_READ_TIMEOUT;
+				return Postman::POSTMAN_TCP_READ_TIMEOUT;
 		}
 		public function isSenderNameOverridePrevented() {
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] ))

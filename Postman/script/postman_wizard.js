@@ -98,6 +98,10 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 	// Always allow going backward even if
 	// the current step contains invalid fields!
 	if (currentIndex > newIndex) {
+		if (portsChecked < portsToCheck) {
+			alert(postman_wizard_wait);
+			return false;
+		}
 		return true;
 	}
 
