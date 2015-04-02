@@ -33,7 +33,8 @@ if (! class_exists ( 'SmtpMapping' )) {
 				'yahoo.es' => 'smtp.correo.yahoo.es',
 				'yahoo.fr' => 'smtp.mail.yahoo.fr',
 				'yahoo.ie' => 'smtp.mail.yahoo.co.uk',
-				'yahoo.it' => 'smtp.mail.yahoo.it' 
+				'yahoo.it' => 'smtp.mail.yahoo.it',
+				'zoho.com' => 'smtp.zoho.com'
 		);
 		// if an email's mx is in this domain array, it is a known smtp server (dns lookup)
 		// useful for custom domains that map to a mail service

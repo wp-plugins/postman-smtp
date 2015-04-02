@@ -59,6 +59,7 @@ function test() {
 	check ( 'test@yahoo.no', 'smtp.mail.yahoo.com' );
 	check ( 'test@yahoo.pl', 'smtp.mail.yahoo.com' );
 	check ( 'test@yahoo.se', 'smtp.mail.yahoo.com' );
+	check ( 'test@zoho.com', 'smtp.zoho.com' );
 }
 function check($email, $expectedSmtp = null) {
 	$d = new SmtpDiscovery ();
