@@ -46,14 +46,14 @@ if (! class_exists ( 'PostmanSmtp' )) {
 			$this->options = PostmanOptions::getInstance ();
 			$this->authToken = PostmanOAuthToken::getInstance ();
 			
-			// create am instance of the MessageHandler
+			// create an instance of the MessageHandler
 			$this->messageHandler = new PostmanMessageHandler ( $this->options, $this->authToken );
 			
 			// store an instance of the WpMailBinder
 			$this->wpMailBinder = PostmanWpMailBinder::getInstance ();
 			
 			// These are operations that have to happen NOW, before the init() hook
-			// and even before WordPress loads its interna pluggable functions
+			// and even before WordPress loads its internal pluggable functions
 			$this->preInit ();
 		}
 		

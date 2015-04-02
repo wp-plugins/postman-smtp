@@ -12,6 +12,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 		public $authCrammd5;
 		public $authXoauth;
 		public $authAnonymous;
+		public $authNone;
 		public $trySmtps;
 		const DEBUG = false;
 		
@@ -74,17 +75,18 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 */
 		public function testSmtpPorts($connectTimeout = 10, $readTimeout = 10) {
 			if ($this->port == 26) {
-				$this->debug('Executing test code for port 26');
+				$this->debug ( 'Executing test code for port 26' );
 				$this->protocol = 'SMTP';
-				$this->authCrammd5 = 'true';
-				$this->authPlain = 'true';
-				$this->authXoauth = 'true';
+				$this->authNone = 'true';
 				return true;
 			}
 			$connectionString = "%s:%s";
 			$success = $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
 			if ($success) {
 				$this->protocol = 'SMTP';
+				if (! ($this->authAnonymous || $this->authCrammd5 || $this->authLogin || $this->authPlain || $this->authXoauth)) {
+					$this->authNone = true;
+				}
 			} else {
 				$this->trySmtps = true;
 			}
@@ -100,6 +102,9 @@ if (! class_exists ( "PostmanPortTest" )) {
 			$connectionString = "ssl://%s:%s";
 			$success = $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
 			if ($success) {
+				if (! ($this->authAnonymous || $this->authCrammd5 || $this->authLogin || $this->authPlain || $this->authXoauth)) {
+					$this->authNone = true;
+				}
 				$this->protocol = 'SMTPS';
 			}
 			return $success;

@@ -26,7 +26,7 @@ function portTest(tdValue, port, button) {
 	show('#conclusion');
 	portsToBeTested += 1;
 	var testEl = jQuery(tdValue);
-	testEl.html('<span style="color:blue">' + postman_port_test_testing
+	testEl.html('<span style="color:blue">' + postman_test_in_progress
 			+ '</span>');
 	var hostname = jQuery(postman_hostname_element_name).val();
 	var data = {
@@ -59,7 +59,7 @@ function portTest(tdValue, port, button) {
 }
 function portTest2(hostname, port, button, open) {
 	var testEl = jQuery('#smtp_test_port_' + port);
-	testEl.html('<span style="color:blue">' + postman_port_test_testing
+	testEl.html('<span style="color:blue">' + postman_test_in_progress
 			+ '</span>');
 	var data = {
 		'action' : 'test_port',
@@ -105,7 +105,7 @@ function portTest2(hostname, port, button, open) {
 }
 function portTest3(hostname, port, button, open) {
 	var testEl = jQuery('#smtp_test_port_' + port);
-	testEl.html('<span style="color:blue">' + postman_port_test_testing
+	testEl.html('<span style="color:blue">' + postman_test_in_progress
 			+ '</span>');
 	var data = {
 		'action' : 'test_smtps',

@@ -256,10 +256,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 					self::POSTMAN_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
 			
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_testing', _x ( 'Checking..', 'TCP Port Test Status', 'postman-smtp' ) );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_test_in_progress', _x ( 'Checking.. ', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_open', _x ( 'Open', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_closed', _x ( 'Closed', 'TCP Port Test Status', 'postman-smtp' ) );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_done', _x ( 'Checking.. Done.', 'TCP Port Test Status', 'postman-smtp' ) );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_done', _x ( 'Done.', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_yes', _x ( 'Yes', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_no', _x ( 'No', 'TCP Port Test Status', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port', _x ( 'Port', 'TCP Port Test Status', 'postman-smtp' ) );
@@ -523,7 +523,6 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<input type="hidden" id="input_connection_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::CONNECTION_TIMEOUT, $this->options->getConnectionTimeout () );
 			printf ( '<input type="hidden" id="input_read_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::READ_TIMEOUT, $this->options->getReadTimeout () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::LOG_LEVEL, $this->options->getLogLevel () );
-			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE, $this->options->getTransportType () );
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
 			
 			// Wizard Step 0
@@ -547,7 +546,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'Who is the mail coming from?', 'Wizard Step Title', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'Please enter the email address and name you\'d like to send mail from.', 'postman-smtp' ) );
-			printf ( '<p>%s</p>', __ ( 'Please note that to combat Spam, many email services will <em>not</em> let you send from an e-mail address other than your own.', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'Please note that to combat Spam, many email services will <em>not</em> let you send from an e-mail address other than the one you authenticate with in step 5.', 'postman-smtp' ) );
 			printf ( '<label for="postman_options[sender_email]">%s</label>', _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->adminController->sender_email_callback ();
 			printf ( '<label for="postman_options[sender_name]">%s</label>', _x ( 'Sender Email Name', 'Configuration Input Field', 'postman-smtp' ) );
@@ -567,14 +566,14 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<h5>%s</h5>', _x ( 'Connectivity Test', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'How will the connection to the MSA be established?', 'Wizard Step Title', 'postman-smtp' ) );
-			printf ( '<p>%s</p>', __ ( 'The server hostname and port you can use is a combination of what your mail service provider offers, and what your WordPress host allows. Postman will attempt to determine which options are available to you.', 'postman-smtp' ) );
-			printf ( '<label for="hostname">%s</label>', _x ( 'Potential routes', 'Configuration Input Field', 'postman-smtp' ) );
-			print $this->adminController->port_callback ( array (
-					'style' => 'style="display:none"' 
-			) );
-			print '<table id="wizard_port_test">';
-			print '</table>';
-			print '<br/><p id="wizard_recommendation"></p>';
+			printf ( '<p>%s</p>', __ ( 'Your connection to the SMTP server depends on what your email service provider offers, and what your WordPress host allows. Postman will attempt to determine which options are available to you.', 'postman-smtp' ) );
+			printf ( '<p>%s<span id="port_test_status">%s</span></p>', __ ( 'Conectivity Test: ' ), __ ( 'Ready' ) );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PORT );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::ENCRYPTION_TYPE );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::AUTHENTICATION_TYPE );
+			print '<p id="wizard_recommendation"></p>';
+			print '<p id="user_override" style="display:none"><span>Configuration will proceed on port <select id="user_socket_override"></select> using <select id="user_auth_override"></select> authentication.</span></p>';
 			print '</fieldset>';
 			
 			// Wizard Step 4

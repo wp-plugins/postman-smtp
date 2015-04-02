@@ -190,6 +190,7 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 			parent::__construct ();
 			$this->options = $options;
 			$this->registerAjaxHandler ( 'wizard_port_test', $this, 'runSmtpTest' );
+			$this->registerAjaxHandler ( 'wizard_port_test_smtps', $this, 'runSmtpsTest' );
 			$this->registerAjaxHandler ( 'port_quiz_test', $this, 'runPortQuizTest' );
 			$this->registerAjaxHandler ( 'test_port', $this, 'runSmtpTest' );
 			$this->registerAjaxHandler ( 'test_smtps', $this, 'runSmtpsTest' );
@@ -220,11 +221,12 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		function runSmtpTest() {
 			$hostname = trim ( $this->getRequestParameter ( 'hostname' ) );
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
-			$this->logger->debug ( 'testing HTTP/SMTP port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ( $hostname, $port );
 			if ($port != 443) {
+				$this->logger->debug ( 'testing SMTP port: hostname ' . $hostname . ' port ' . $port );
 				$success = $portTest->testSmtpPorts ();
 			} else {
+				$this->logger->debug ( 'testing HTTPS port: hostname ' . $hostname . ' port ' . $port );
 				$success = $portTest->testHttpPorts ();
 			}
 			$this->buildResponse ( $hostname, $port, $portTest, $success );
@@ -247,7 +249,7 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		 * @param unknown $port        	
 		 * @param unknown $success        	
 		 */
-		private function buildResponse($hostname, $port, $portTest, $success) {
+		private function buildResponse($hostname, $port, PostmanPortTest $portTest, $success) {
 			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
 			$response = array (
 					'hostname' => $hostname,
@@ -259,6 +261,7 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 					'auth_login' => $portTest->authLogin,
 					'auth_crammd5' => $portTest->authCrammd5,
 					'auth_xoauth' => $portTest->authXoauth,
+					'auth_none' => $portTest->authNone,
 					'try_smtps' => $portTest->trySmtps,
 					'success' => $success 
 			);
@@ -366,32 +369,18 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 */
 		function getWizardConfigurationViaAjax() {
 			$queryHostData = $this->getHostDataFromRequest ();
+			$userPortOverride = $this->getUserPortOverride ();
+			$userAuthOverride = $this->getUserAuthOverride ();
 			
 			// determine a configuration recommendation
-			$winningRecommendation = $this->getConfigurationRecommendation ( $queryHostData );
+			$winningRecommendation = $this->getConfigurationRecommendation ( $queryHostData, $userPortOverride, $userAuthOverride );
+			$this->logger->debug ( 'winning recommendation:' );
 			$this->logger->debug ( $winningRecommendation );
 			
 			// create user override menu
-			$overrideMenu = array ();
-			foreach ( $queryHostData as $id => $value ) {
-				$userOverride = false;
-				if ($userOverride == true) {
-					// use the user's host/port selection instead of the winning recommendation
-					$overrideItem ['selected'] = ($winningRecommendation ['port'] == $value ['port'] && $winningRecommendation ['hostname'] == $value ['hostname']);
-				} else {
-					$overrideItem ['selected'] = ($winningRecommendation ['port'] == $value ['port'] && $winningRecommendation ['hostname'] == $value ['hostname']);
-				}
-				$overrideItem ['description'] = sprintf ( '%s:%s', $value ['hostname'], $value ['port'] );
-				$overrideAuthItem = array ();
-				if ($value ['auth_crammd5'] || $value ['auth_login'] || $value ['auth_plain']) {
-					$overrideAuthItem ['password'] = __ ( 'Password' );
-				}
-				if ($value ['auth_xoauth']) {
-					$overrideAuthItem ['oauth2'] = __ ( 'OAuth 2.0' );
-				}
-				$overrideItem ['auth_items'] = $overrideAuthItem;
-				$overrideMenu [$value ['port']] = $overrideItem;
-			}
+			$overrideMenu = $this->createOverrideMenu ( $queryHostData, $winningRecommendation );
+			$this->logger->debug ( 'override menu:' );
+			$this->logger->debug ( $overrideMenu );
 			
 			// create the reponse
 			$response = array ();
@@ -408,11 +397,78 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 				/* translators: where %s is the URL to the Connectivity Test page */
 				$response ['message'] = sprintf ( __ ( 'Postman can\'t find any way to send mail on your system. Run a <a href="%s">connectivity test</a>.', 'postman-smtp' ), PostmanViewController::getPageUrl ( PostmanViewController::PORT_TEST_SLUG ) );
 			}
+			$this->logger->debug ( 'configuration:' );
+			$this->logger->debug ( $configuration );
 			
-			$response ['overrideMenu'] = $overrideMenu;
+			$response ['override_menu'] = $overrideMenu;
 			$response ['configuration'] = $configuration;
-			$this->logger->debug ( $response );
 			wp_send_json_success ( $response );
+		}
+		
+		/**
+		 *
+		 * @param unknown $queryHostData        	
+		 * @return multitype:
+		 */
+		private function createOverrideMenu($queryHostData, $winningRecommendation) {
+			$overrideMenu = array ();
+			foreach ( $queryHostData as $id => $value ) {
+				if (filter_var ( $value ['success'], FILTER_VALIDATE_BOOLEAN )) {
+					$overrideItem = array();
+					$overrideItem ['value'] = sprintf ( '%s_%s', $value ['hostname'], $value ['port'] );
+					$selected = ($winningRecommendation ['id'] == $overrideItem ['value']);
+					$overrideItem ['selected'] = $selected;
+					$hostnameToDisplay = $value ['hostname'];
+					$overrideItem ['description'] = sprintf ( '%s:%s', $hostnameToDisplay, $value ['port'] );
+					$overrideAuthItem = array ();
+					$passwordMode = false;
+					$oauth2Mode = false;
+					$noAuthMode = false;
+					if (isset ( $userAuthOverride )) {
+						if ($userAuthOverride == 'password') {
+							$passwordMode = true;
+						} elseif ($userAuthOverride == 'oauth2') {
+							$oauth2Mode = true;
+						} else {
+							$noAuthMode = true;
+						}
+					} else {
+						if ($winningRecommendation ['display_auth'] == 'password') {
+							$passwordMode = true;
+						} elseif ($winningRecommendation ['display_auth'] == 'oauth2') {
+							$oauth2Mode = true;
+						} else {
+							$noAuthMode = true;
+						}
+					}
+					if ($selected) {
+						if ($value ['auth_crammd5'] || $value ['auth_login'] || $value ['auth_plain']) {
+							array_push ( $overrideAuthItem, array (
+									'selected' => $passwordMode,
+									'name' => __ ( 'Password' ),
+									'value' => 'password' 
+							) );
+						}
+						if ($value ['auth_xoauth'] || $winningRecommendation['auth'] == 'oauth2') {
+							array_push ( $overrideAuthItem, array (
+									'selected' => $oauth2Mode,
+									'name' => __ ( 'OAuth 2.0' ),
+									'value' => 'oauth2' 
+							) );
+						}
+						if ($value ['auth_none']) {
+							array_push ( $overrideAuthItem, array (
+									'selected' => $noAuthMode,
+									'name' => __ ( 'No' ),
+									'value' => 'none' 
+							) );
+						}
+						$overrideItem ['auth_items'] = $overrideAuthItem;
+					}
+					array_push ( $overrideMenu, $overrideItem );
+				}
+			}
+			return $overrideMenu;
 		}
 		
 		/**
@@ -423,15 +479,23 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 * @param unknown $queryHostData        	
 		 * @return unknown
 		 */
-		private function getConfigurationRecommendation($queryHostData) {
+		private function getConfigurationRecommendation($queryHostData, $userSocketOverride, $userAuthOverride) {
 			$recommendationPriority = - 1;
 			$winningRecommendation = null;
 			foreach ( $queryHostData as $id => $value ) {
 				$available = filter_var ( $value ['success'], FILTER_VALIDATE_BOOLEAN );
 				if ($available) {
 					$this->logger->debug ( sprintf ( 'Asking for judgement on %s:%s', $value ['hostname'], $value ['port'] ) );
-					$recommendation = PostmanTransportUtils::getConfigurationBid ( $value );
-					if ($recommendation && $recommendation ['priority'] > $recommendationPriority) {
+					$recommendation = PostmanTransportUtils::getConfigurationBid ( $value, $userAuthOverride );
+					$recommendationId = sprintf ( '%s_%s', $value ['hostname'], $value ['port'] );
+					$recommendation ['id'] = $recommendationId;
+					$this->logger->debug ( sprintf ( 'Got a recommendation: [%d] %s', $recommendation ['priority'], $recommendationId ) );
+					if (isset ( $userSocketOverride )) {
+						if ($recommendationId == $userSocketOverride) {
+							$winningRecommendation = $recommendation;
+							$this->logger->debug ( sprintf ( 'User chosen socket %s is the winner', $recommendationId ) );
+						}
+					} elseif ($recommendation && $recommendation ['priority'] > $recommendationPriority) {
 						$recommendationPriority = $recommendation ['priority'];
 						$winningRecommendation = $recommendation;
 					}
@@ -474,13 +538,15 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		private function populateResponseFromTransport($winningRecommendation, &$response) {
 			$response [PostmanOptions::TRANSPORT_TYPE] = $winningRecommendation ['transport'];
 			$response [PostmanOptions::AUTHENTICATION_TYPE] = $winningRecommendation ['auth'];
-			$response [PostmanOptions::ENCRYPTION_TYPE] = $winningRecommendation ['enc'];
+			if (isset ( $winningRecommendation ['enc'] )) {
+				$response [PostmanOptions::ENCRYPTION_TYPE] = $winningRecommendation ['enc'];
+			}
 			$response [PostmanOptions::PORT] = $winningRecommendation ['port'];
 			$response [PostmanOptions::HOSTNAME] = $winningRecommendation ['hostname'];
 			$response ['display_auth'] = $winningRecommendation ['display_auth'];
 			$response ['message'] = $winningRecommendation ['message'];
 		}
-
+		
 		/**
 		 */
 		private function getTransportTypeFromRequest() {
@@ -503,6 +569,18 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 */
 		private function getHostDataFromRequest() {
 			return $this->getRequestParameter ( 'host_data' );
+		}
+		
+		/**
+		 */
+		private function getUserPortOverride() {
+			return $this->getRequestParameter ( 'user_port_override' );
+		}
+		
+		/**
+		 */
+		private function getUserAuthOverride() {
+			return $this->getRequestParameter ( 'user_auth_override' );
 		}
 	}
 }
@@ -541,6 +619,7 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
 				$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanMessage::EOL, PostmanMessage::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) );
 				/* translators: where %s is the Postman plugin version number (e.g. 1.5.7) */
+				
 				$message2 = '
 Content-Type: text/plain; charset = "UTF-8"
 Content-Transfer-Encoding: 8bit
