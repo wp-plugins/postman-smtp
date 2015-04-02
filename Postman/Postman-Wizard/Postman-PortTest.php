@@ -29,6 +29,23 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 * @param number $timeout        	
 		 * @return boolean
 		 */
+		public function genericConnectionTest($timeout = 10) {
+			// test if the port is open
+			$socket = sprintf ( '%s:%s', $this->hostname, $this->port );
+			$stream = @stream_socket_client ( $socket, $errno, $errstr, $timeout );
+			$this->debug ( 'connect to %s: %s', $socket, ($stream ? 'yes' : 'no') );
+			if (! $stream) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		
+		/**
+		 *
+		 * @param number $timeout        	
+		 * @return boolean
+		 */
 		public function testPortQuiz($timeout = 10) {
 			// test if the port is open
 			$stream = @stream_socket_client ( sprintf ( 'portquiz.net:%s', $this->port ), $errno, $errstr, $timeout );

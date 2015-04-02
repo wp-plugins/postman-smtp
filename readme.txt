@@ -17,7 +17,7 @@ Postman is an intelligent, next-generation SMTP mailer that brings reliable emai
 
 In 2014, Google announced if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)." For Google Apps users, OAuth 2.0 is a [requirement](http://plugins.svn.wordpress.org/postman-smtp/assets/Screen%20Shot%202015-02-21%20at%208.52.13%20PM.png), not a nice-to-have.
 
-Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) ✝, lost emails, emails landing as Spam ✝✝, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
+Postman's commercial-grade setup wizard makes configuring SMTP a breeze. Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) ✝, lost emails, emails landing as Spam ✝✝, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
 [Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished since January of this year.
 
@@ -25,10 +25,10 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 = Features =
 * Send mail to any host just like the 'Big Five' SMTP plugins
 * Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0
-* Easy-to-use Setup Wizard makes configuration a breeze
+* Easy-to-use, but powerful Setup Wizard for perfect configuration
 * Fire-and-forget: delivery continues even if your password changes
 * The extension for [blocked SMTP ports](https://wordpress.org/plugins/postman-gmail-extension/) sends mail over HTTPS
-* Integrated TCP Port Tester for troubleshooting connectivity issues
+* Heavy-duty Connectivity Tester for troubleshooting server issues
 * Supports International alphabets, HTML Mail and MultiPart/Alternative
 * Supports [Mandrill](http://mandrill.com) custom headers and forced recipients (cc, bcc, to)
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication

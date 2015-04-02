@@ -245,7 +245,20 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				$score += 100;
 			}
 			
+			// if there was a way to send mail!
 			if ($score > 0) {
+
+				// tiny weighting to prejudice the port selection
+				if ($port == 587) {
+					$score += 4;
+				} elseif ($port == 465) {
+					$score += 3;
+				} elseif ($port == 25) {
+					$score += 2;
+				} else {
+					$score += 1;
+				}
+				
 				// fill-in the rest of the recommendation
 				$recommendation ['transport'] = PostmanSmtpTransport::SLUG;
 				$recommendation ['priority'] = $score;
@@ -274,6 +287,8 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		const SLUG = 'smtp';
 		/**
 		 * what is this for .
+		 *
+		 *
 		 *
 		 *
 		 *

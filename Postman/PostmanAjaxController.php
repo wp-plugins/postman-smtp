@@ -99,7 +99,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
 			if ($transport->isConfigured ( $this->options, $this->authorizationToken ) && method_exists ( $transport, 'getHostname' ) && method_exists ( $transport, 'getHostPort' )) {
 				$portTest = new PostmanPortTest ( $transport->getHostname ( $this->options ), $transport->getHostPort ( $this->options ) );
-				$result = $portTest->testSmtpPorts ( $this->options->getConnectionTimeout () );
+				$result = $portTest->genericConnectionTest ( $this->options->getConnectionTimeout () );
 				if ($result) {
 					return 'Yes';
 				} else {
@@ -114,7 +114,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->addToDiagnostics ( sprintf ( 'Platform: PHP %s %s / WordPress %s', PHP_OS, PHP_VERSION, get_bloginfo ( 'version' ) ) );
 			$this->addToDiagnostics ( $this->getPhpDependencies () );
 			$this->addToDiagnostics ( $this->getActivePlugins () );
-			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', get_current_theme () ) );
+			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', wp_get_theme () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', POSTMAN_PLUGIN_VERSION ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Sender: %s', (postmanObfuscateEmail ( $this->options->getSenderEmail () )) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI: %s', PostmanTransportUtils::getDeliveryUri ( PostmanTransportUtils::getCurrentTransport () ) ) );
