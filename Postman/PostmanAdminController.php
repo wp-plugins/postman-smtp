@@ -27,6 +27,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		// this is the slug used in the URL
 		const REQUEST_OAUTH2_GRANT_SLUG = 'postman/requestOauthGrant';
 		const PURGE_DATA_SLUG = 'postman/purge_data';
+		const DEFAULT_PORT_TEST_SMTP_HOSTNAME = 'smtp.gmail.com';
 		
 		// The Postman Group is used for saving data, make sure it is globally unique
 		const SETTINGS_GROUP_NAME = 'postman_group';
@@ -654,7 +655,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function port_test_hostname_callback() {
-			printf ( '<input type="text" id="input_hostname" name="postman_options[hostname]" value="smtp.gmail.com" size="40" class="required"/>' );
+			$hostname = $this->options->getHostname ();
+			if (empty ( $hostname )) {
+				$hostname = self::DEFAULT_PORT_TEST_SMTP_HOSTNAME;
+			}
+			printf ( '<input type="text" id="input_hostname" name="postman_options[hostname]" value="%s" size="40" class="required"/>', $hostname );
 		}
 		
 		/**
@@ -675,11 +680,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function prevent_sender_name_override_callback() {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
-			$transportConfigured = $transport->isConfigured($this->options, $this->authorizationToken);
-			if($transportConfigured) {
+			$transportConfigured = $transport->isConfigured ( $this->options, $this->authorizationToken );
+			if ($transportConfigured) {
 				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
 			}
-			if (!$transportConfigured || ! $authenticator->isSenderNameOverridePrevented ()) {
+			if (! $transportConfigured || ! $authenticator->isSenderNameOverridePrevented ()) {
 				printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', null !== $this->options->isSenderNameOverridePrevented () ? 'checked="checked"' : '', __ ( 'Prevent the Sender Name from being overridden', 'postman-smtp' ) );
 			} else {
 				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_name_override" checked="checked"/> %s', __ ( 'Prevent the Sender Name from being overridden', 'postman-smtp' ) );
@@ -701,11 +706,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function prevent_sender_email_override_callback() {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
-			$transportConfigured = $transport->isConfigured($this->options, $this->authorizationToken);
-			if($transportConfigured) {
+			$transportConfigured = $transport->isConfigured ( $this->options, $this->authorizationToken );
+			if ($transportConfigured) {
 				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
 			}
-			if (!$transportConfigured || ! $authenticator->isSenderEmailOverridePrevented ()) {
+			if (! $transportConfigured || ! $authenticator->isSenderEmailOverridePrevented ()) {
 				printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', null !== $this->options->isSenderEmailOverridePrevented () ? 'checked="checked"' : '', __ ( 'Prevent the Sender Email Address from being overridden', 'postman-smtp' ) );
 			} else {
 				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_email_override" checked="checked"/> %s', __ ( 'Prevent the Sender Email Address from being overridden', 'postman-smtp' ) );
