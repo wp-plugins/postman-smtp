@@ -216,13 +216,13 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			// increment score for auth type
 			if ($hostData ['start_tls']) {
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
-				$score += 3000;
+				$score += 30000;
 			} elseif ($hostData ['protocol'] == 'SMTPS') {
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
-				$score += 2000;
+				$score += 20000;
 			} elseif ($hostData ['protocol'] == 'SMTP') {
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
-				$score += 1000;
+				$score += 10000;
 			}
 			if ($hostData ['auth_xoauth'] && $supportedOAuth2Provider) {
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
