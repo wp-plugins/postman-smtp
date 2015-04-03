@@ -222,7 +222,7 @@ function handleHostsToCheckResponse(response) {
 		var hostname = response.hosts[x].host;
 		var port = response.hosts[x].port
 		portsToCheck++;
-		updateStatus(postman_test_in_progress + portsToCheck);
+		updateStatus(postman_test_in_progress + " " + portsToCheck);
 		var data = {
 			'action' : 'wizard_port_test',
 			'hostname' : hostname,
@@ -259,7 +259,7 @@ function postThePortTest(hostname, port, data) {
 function handlePortTestResponse(hostname, port, data, response) {
 	if (!response.data.try_smtps) {
 		portsChecked++;
-		updateStatus(postman_test_in_progress + (portsToCheck - portsChecked));
+		updateStatus(postman_test_in_progress + " " + (portsToCheck - portsChecked));
 		connectivtyTestResults[hostname + '_' + port] = response.data;
 		if (response.success) {
 			// a totalAvail > 0 is our signal to go to the next step
@@ -298,7 +298,7 @@ function afterPortsChecked() {
 			'host_data' : connectivtyTestResults
 		};
 		postTheConfigurationRequest(data);
-		updateStatus(postman_test_in_progress + postman_port_test_done);
+		updateStatus(postman_test_in_progress + " " + postman_port_test_done);
 	}
 }
 

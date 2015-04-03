@@ -127,7 +127,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 						if ($value ['auth_crammd5'] || $value ['auth_login'] || $value ['auth_plain']) {
 							array_push ( $overrideAuthItem, array (
 									'selected' => $passwordMode,
-									'name' => __ ( 'Password' ),
+									'name' => _x ( 'Password', 'Authentication Type', 'postman-smtp' ),
 									'value' => 'password' 
 							) );
 						}
