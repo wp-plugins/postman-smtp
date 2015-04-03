@@ -66,10 +66,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 			$connectionString = "ssl://%s:%s";
 			$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
 			@stream_set_timeout ( $stream, $readTimeout );
-			$serverName = $_SERVER ['SERVER_NAME'];
-			if (empty ( $serverName )) {
-				$serverName = $_SERVER ['HTTP_HOST'];
-			}
+			$serverName = postmanGetServerName();
 			if (! $stream) {
 				return false;
 			} else {

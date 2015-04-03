@@ -111,7 +111,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		public function getDiagnostics() {
 			$this->addToDiagnostics ( sprintf ( 'OS: %s', php_uname () ) );
 			$this->addToDiagnostics ( sprintf ( 'HTTP User Agent: %s', $_SERVER ['HTTP_USER_AGENT'] ) );
-			$this->addToDiagnostics ( sprintf ( 'Platform: PHP %s %s / WordPress %s', PHP_OS, PHP_VERSION, get_bloginfo ( 'version' ) ) );
+			$this->addToDiagnostics ( sprintf ( 'Platform: PHP %s %s / WordPress %s %s', PHP_OS, PHP_VERSION, get_bloginfo ( 'version' ), get_locale () ) );
 			$this->addToDiagnostics ( $this->getPhpDependencies () );
 			$this->addToDiagnostics ( $this->getActivePlugins () );
 			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', wp_get_theme () ) );
@@ -356,7 +356,11 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 			$method = $this->getRequestParameter ( 'method' );
 			try {
 				$emailTester = new PostmanSendTestEmailController ();
-				$subject = _x ( 'WordPress Postman SMTP Test', 'Test Email Subject', 'postman-smtp' );
+				$serverName = postmanGetServerName ();
+				if (empty ( $serverName )) {
+					$serverName = 'WordPress';
+				}
+				$subject = sprintf ( _x ( 'Postman SMTP Test (%s)', 'Test Email Subject', 'postman-smtp' ), $serverName );
 				// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
 				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
 				$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanMessage::EOL, PostmanMessage::EOL, sprintf ( _x ( 'Sent by Postman %s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) );
