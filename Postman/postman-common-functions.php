@@ -73,13 +73,23 @@ if (! function_exists ( 'str_getcsv' )) {
 	}
 }
 
+// from http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php
+if (! function_exists ( 'startsWith' )) {
+	function startsWith($haystack, $needle) {
+		$length = strlen ( $needle );
+		return (substr ( $haystack, 0, $length ) === $needle);
+	}
+}
+
+// from http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php
 if (! function_exists ( 'endsWith' )) {
-	function endsWith($string, $test) {
-		$strlen = strlen ( $string );
-		$testlen = strlen ( $test );
-		if ($testlen > $strlen)
-			return false;
-		return substr_compare ( $string, $test, $strlen - $testlen, $testlen ) === 0;
+	function endsWith($haystack, $needle) {
+		$length = strlen ( $needle );
+		if ($length == 0) {
+			return true;
+		}
+		
+		return (substr ( $haystack, - $length ) === $needle);
 	}
 }
 
