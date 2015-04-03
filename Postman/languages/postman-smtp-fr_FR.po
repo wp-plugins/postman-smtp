@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
 "POT-Creation-Date: 2015-04-03 14:18:00+00:00\n"
-"PO-Revision-Date: 2015-04-03 10:21-0500\n"
+"PO-Revision-Date: 2015-04-03 10:27-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -763,7 +763,7 @@ msgstr "Port"
 #: Postman/PostmanViewController.php:270
 msgctxt "Email Test Status"
 msgid "In Outbox"
-msgstr "Dans la  boîte d'envoi"
+msgstr "Dans la boîte d'envoi"
 
 #: Postman/PostmanViewController.php:271
 msgctxt "Email Test Status"
@@ -1274,7 +1274,7 @@ msgstr "Envoyez-vous un message test pour vérifier que tout fonctionne!"
 #: Postman/PostmanViewController.php:645
 msgctxt "Page Title"
 msgid "Send a Test Email"
-msgstr "Envoyer un Email de Test"
+msgstr "Envoyer un message test"
 
 #: Postman/PostmanViewController.php:650
 msgid "Choose the Recipient"
