@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-03 16:58:52+00:00\n"
-"PO-Revision-Date: 2015-04-03 13:36-0500\n"
+"POT-Creation-Date: 2015-04-03 17:38:03+00:00\n"
+"PO-Revision-Date: 2015-04-03 13:41-0500\n"
 "Last-Translator: Andrea Greco <andreag.email@gmail.com>\n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -25,6 +25,7 @@ msgstr ""
 "sistema. Eseguire un <a href=\"%s\">test di connettività</a>."
 
 #: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:130
+msgctxt "Authentication Type"
 msgid "Password"
 msgstr "Password"
 
@@ -378,14 +379,6 @@ msgstr ""
 "Inserire il nome utente (indirizzo e-mail) e la password utilizzati per "
 "l'invio di posta elettronica"
 
-#: Postman/PostmanAdminController.php:551
-msgid ""
-"You will receive an email from Postman with the subject \"WordPress Postman "
-"SMTP Test.\""
-msgstr ""
-"Riceverai una e-mail da Postman con il soggetto \"WordPress Postman SMTP "
-"Test.\""
-
 #: Postman/PostmanAdminController.php:558
 #: Postman/PostmanViewController.php:424
 msgid ""
@@ -724,8 +717,8 @@ msgstr "Impostazioni Postman"
 
 #: Postman/PostmanViewController.php:273
 msgctxt "TCP Port Test Status"
-msgid "Checking.. "
-msgstr "Verificando.. "
+msgid "Checking.."
+msgstr "Verificando.."
 
 #: Postman/PostmanViewController.php:274
 msgctxt "TCP Port Test Status"
@@ -909,9 +902,12 @@ msgstr[1] ""
 #. page
 #: Postman/PostmanViewController.php:349
 msgid ""
-"Please considering leaving a <a href=\"%s\">review of Postman SMTP</a> to "
-"help spread the word about the new way to send email from WordPress! :D"
+"Please consider leaving a <a href=\"%s\">review of Postman SMTP</a> to help "
+"spread the word about the new way to send email from WordPress! :D"
 msgstr ""
+"Si prega di considerare di lasciare un <a href=\"%s\">commento di Postman "
+"SMTP</a> per aiutare <br/> diffondere la parola circa il nuovo modo per "
+"inviare e-mail da WordPress! : D"
 
 #: Postman/PostmanViewController.php:354
 msgid "Thank-you for choosing Postman!"
@@ -1350,6 +1346,20 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "Password"
+#~ msgstr "Password"
+
+#~ msgid ""
+#~ "You will receive an email from Postman with the subject \"WordPress "
+#~ "Postman SMTP Test.\""
+#~ msgstr ""
+#~ "Riceverai una e-mail da Postman con il soggetto \"WordPress Postman SMTP "
+#~ "Test.\""
+
+#~ msgctxt "TCP Port Test Status"
+#~ msgid "Checking.. "
+#~ msgstr "Verificando.. "
 
 #~ msgid "Postman recommends %1$s with %2$s authentication on port %3$d."
 #~ msgstr "Postman raccomanda %1$s con l'autenticazione %2$s sulla porta %3$d."

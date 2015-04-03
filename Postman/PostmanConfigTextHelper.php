@@ -92,27 +92,35 @@ if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
 			return admin_url ( 'options-general.php' ) . '?page=postman';
 		}
 		public function getClientIdLabel() {
+			/* Translators: This description is specific to Google */
 			return _x ( 'Client ID', 'Name of the OAuth 2.0 Client ID', 'postman-smtp' );
 		}
 		public function getClientSecretLabel() {
+			/* Translators: This description is specific to Google */
 			return _x ( 'Client Secret', 'Name of the OAuth 2.0 Client Secret', 'postman-smtp' );
 		}
 		public function getCallbackUrlLabel() {
+			/* Translators: This description is specific to Google */
 			return _x ( 'Redirect URI', 'Name of the Application Callback URI', 'postman-smtp' );
 		}
 		public function getCallbackDomainLabel() {
+			/* Translators: This description is specific to Google */
 			return _x ( 'Javascript Origins', 'Name of the Application Callback Domain', 'postman-smtp' );
 		}
 		public function getOwnerName() {
+			/* Translators: This description is specific to Google */
 			return _x ( 'Google', 'Name of the email service owner', 'postman-smtp' );
 		}
 		public function getServiceName() {
+			/* Translators: This description is specific to Google */
 			return _x ( 'Gmail', 'Name of the email service', 'postman-smtp' );
 		}
 		public function getApplicationDescription() {
+			/* Translators: This description is specific to Google */
 			return _x ( 'a Client ID for web application', 'Description of the email service OAuth 2.0 Application', 'postman-smtp' );
 		}
 		public function getApplicationPortalName() {
+			/* Translators: This description is specific to Google */
 			return _x ( 'Google Developer Console', 'Name of the email service portal', 'postman-smtp' );
 		}
 		public function getApplicationPortalUrl() {
@@ -138,27 +146,35 @@ if (! class_exists ( 'PostmanMicrosoftOAuthScribe' )) {
 			return admin_url ( 'options-general.php' );
 		}
 		public function getClientIdLabel() {
+			/* Translators: This description is specific to Microsoft */
 			return _x ( 'Client ID', 'Name of the OAuth 2.0 Client ID', 'postman-smtp' );
 		}
 		public function getClientSecretLabel() {
+			/* Translators: This description is specific to Microsoft */
 			return _x ( 'Client secret', 'Name of the OAuth 2.0 Client Secret', 'postman-smtp' );
 		}
 		public function getCallbackUrlLabel() {
+			/* Translators: This description is specific to Microsoft */
 			return _x ( 'Redirect URL', 'Name of the Application Callback URI', 'postman-smtp' );
 		}
 		public function getCallbackDomainLabel() {
+			/* Translators: This description is specific to Microsoft */
 			return _x ( 'Root Domain', 'Name of the Application Callback Domain', 'postman-smtp' );
 		}
 		public function getOwnerName() {
+			/* Translators: This description is specific to Microsoft */
 			return _x ( 'Microsoft', 'Name of the email service owner', 'postman-smtp' );
 		}
 		public function getServiceName() {
+			/* Translators: This description is specific to Microsoft */
 			return _x ( 'Outlook.com', 'Name of the email service', 'postman-smtp' );
 		}
 		public function getApplicationDescription() {
+			/* Translators: This description is specific to Microsoft */
 			return _x ( 'an Application', 'Description of the email service OAuth 2.0 Application', 'postman-smtp' );
 		}
 		public function getApplicationPortalName() {
+			/* Translators: This description is specific to Microsoft */
 			return _x ( 'Microsoft Developer Center', 'Name of the email service portal', 'postman-smtp' );
 		}
 		public function getApplicationPortalUrl() {
@@ -184,27 +200,35 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 			return admin_url ( 'options-general.php' ) . '?page=postman';
 		}
 		public function getClientIdLabel() {
+			/* Translators: This description is specific to Yahoo */
 			return _x ( 'Consumer Key', 'Name of the OAuth 2.0 Client ID', 'postman-smtp' );
 		}
 		public function getClientSecretLabel() {
+			/* Translators: This description is specific to Yahoo */
 			return _x ( 'Consumer Secret', 'Name of the OAuth 2.0 Client Secret', 'postman-smtp' );
 		}
 		public function getCallbackUrlLabel() {
+			/* Translators: This description is specific to Yahoo */
 			return _x ( 'Home Page URL', 'Name of the Application Callback URI', 'postman-smtp' );
 		}
 		public function getCallbackDomainLabel() {
+			/* Translators: This description is specific to Yahoo */
 			return _x ( 'Callback Domain', 'Name of the Application Callback Domain', 'postman-smtp' );
 		}
 		public function getOwnerName() {
+			/* Translators: This description is specific to Yahoo */
 			return _x ( 'Yahoo', 'Name of the email service owner', 'postman-smtp' );
 		}
 		public function getServiceName() {
+			/* Translators: This description is specific to Yahoo */
 			return _x ( 'Yahoo Mail', 'Name of the email service', 'postman-smtp' );
 		}
 		public function getApplicationDescription() {
+			/* Translators: This description is specific to Yahoo */
 			return _x ( 'an Application', 'Description of the email service OAuth 2.0 Application', 'postman-smtp' );
 		}
 		public function getApplicationPortalName() {
+			/* Translators: This description is specific to Yahoo */
 			return _x ( 'Yahoo Developer Network', 'Name of the email service portal', 'postman-smtp' );
 		}
 		public function getApplicationPortalUrl() {

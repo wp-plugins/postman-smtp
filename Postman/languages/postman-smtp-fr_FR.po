@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-03 16:58:52+00:00\n"
-"PO-Revision-Date: 2015-04-03 13:07-0500\n"
+"POT-Creation-Date: 2015-04-03 17:38:03+00:00\n"
+"PO-Revision-Date: 2015-04-03 13:40-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -25,6 +25,7 @@ msgstr ""
 "système. Faire un <a href=\"%s\">test de connexion de port</a>."
 
 #: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:130
+msgctxt "Authentication Type"
 msgid "Password"
 msgstr "Password"
 
@@ -380,14 +381,6 @@ msgstr ""
 "Entrer le nom d'utilisateur (adresse de messagerie) et mot de passe que vous "
 "utilisez pour envoyer du courrier électronique."
 
-#: Postman/PostmanAdminController.php:551
-msgid ""
-"You will receive an email from Postman with the subject \"WordPress Postman "
-"SMTP Test.\""
-msgstr ""
-"Vous recevrez un message de Postman avec l'objet suivant  \"WordPress "
-"Postman SMTP Test.\""
-
 #: Postman/PostmanAdminController.php:558
 #: Postman/PostmanViewController.php:424
 msgid ""
@@ -626,7 +619,7 @@ msgstr "Console de développement Google"
 #: Postman/PostmanConfigTextHelper.php:144
 msgctxt "Name of the OAuth 2.0 Client Secret"
 msgid "Client secret"
-msgstr "Secret de client"
+msgstr "Secret du client"
 
 #: Postman/PostmanConfigTextHelper.php:147
 msgctxt "Name of the Application Callback URI"
@@ -723,8 +716,8 @@ msgstr "Réglages de Postman"
 
 #: Postman/PostmanViewController.php:273
 msgctxt "TCP Port Test Status"
-msgid "Checking.. "
-msgstr "Vérification.. "
+msgid "Checking.."
+msgstr "Vérification.."
 
 #: Postman/PostmanViewController.php:274
 msgctxt "TCP Port Test Status"
@@ -908,8 +901,8 @@ msgstr[1] ""
 #. page
 #: Postman/PostmanViewController.php:349
 msgid ""
-"Please considering leaving a <a href=\"%s\">review of Postman SMTP</a> to "
-"help spread the word about the new way to send email from WordPress! :D"
+"Please consider leaving a <a href=\"%s\">review of Postman SMTP</a> to help "
+"spread the word about the new way to send email from WordPress! :D"
 msgstr ""
 "Se il vous plaît envisager de laisser <a href=\"%s\">une critique de Postman "
 "SMTP</a> pour aider à passer le mot à propos de la nouvelle façon d'envoyer "
@@ -1349,6 +1342,28 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "Password"
+#~ msgstr "Password"
+
+#~ msgid ""
+#~ "You will receive an email from Postman with the subject \"WordPress "
+#~ "Postman SMTP Test.\""
+#~ msgstr ""
+#~ "Vous recevrez un message de Postman avec l'objet suivant  \"WordPress "
+#~ "Postman SMTP Test.\""
+
+#~ msgctxt "TCP Port Test Status"
+#~ msgid "Checking.. "
+#~ msgstr "Vérification.. "
+
+#~ msgid ""
+#~ "Please considering leaving a <a href=\"%s\">review of Postman SMTP</a> to "
+#~ "help spread the word about the new way to send email from WordPress! :D"
+#~ msgstr ""
+#~ "Se il vous plaît envisager de laisser <a href=\"%s\">une critique de "
+#~ "Postman SMTP</a> pour aider à passer le mot à propos de la nouvelle façon "
+#~ "d'envoyer des courriels à partir de WordPress! :D"
 
 #~ msgctxt "Test Email Subject"
 #~ msgid "WordPress Postman SMTP Test"

@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Postman SMTP package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Postman SMTP 1.6.0b1\n"
+"Project-Id-Version: Postman SMTP 1.5.11b1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-03 16:58:52+00:00\n"
+"POT-Creation-Date: 2015-04-03 17:38:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,6 +20,7 @@ msgid ""
 msgstr ""
 
 #: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:130
+msgctxt "Authentication Type"
 msgid "Password"
 msgstr ""
 
@@ -348,12 +349,6 @@ msgstr ""
 msgid "Enter the username (email address) and password you use to send email"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:551
-msgid ""
-"You will receive an email from Postman with the subject \"WordPress Postman "
-"SMTP Test.\""
-msgstr ""
-
 #: Postman/PostmanAdminController.php:558
 #: Postman/PostmanViewController.php:424
 msgid ""
@@ -665,7 +660,7 @@ msgstr ""
 
 #: Postman/PostmanViewController.php:273
 msgctxt "TCP Port Test Status"
-msgid "Checking.. "
+msgid "Checking.."
 msgstr ""
 
 #: Postman/PostmanViewController.php:274
@@ -828,8 +823,8 @@ msgstr[1] ""
 #. page
 #: Postman/PostmanViewController.php:349
 msgid ""
-"Please considering leaving a <a href=\"%s\">review of Postman SMTP</a> to "
-"help spread the word about the new way to send email from WordPress! :D"
+"Please consider leaving a <a href=\"%s\">review of Postman SMTP</a> to help "
+"spread the word about the new way to send email from WordPress! :D"
 msgstr ""
 
 #: Postman/PostmanViewController.php:354
