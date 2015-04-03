@@ -17,23 +17,23 @@ Postman is an intelligent, next-generation SMTP mailer that brings reliable emai
 
 In 2014, Google announced if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)." For Google Apps users, OAuth 2.0 is a [requirement](http://plugins.svn.wordpress.org/postman-smtp/assets/Screen%20Shot%202015-02-21%20at%208.52.13%20PM.png), not a nice-to-have.
 
-Postman's commercial-grade setup wizard makes configuring SMTP a breeze. Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) ✝, lost emails, emails landing as Spam ✝✝, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
+Postman's commercial-grade setup wizard makes configuring SMTP a breeze. Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) ✝, lost emails ✝✝, emails landing as Spam ✝✝, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) ¹ to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
 [Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished since January of this year.
 
 
 = Features =
 * Send mail to any host just like the 'Big Five' SMTP plugins
-* Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0
-* Easy-to-use, but powerful Setup Wizard for perfect configuration
-* Fire-and-forget: delivery continues even if your password changes
-* The extension for [blocked SMTP ports](https://wordpress.org/plugins/postman-gmail-extension/) sends mail over HTTPS
-* Heavy-duty Connectivity Tester for troubleshooting server issues
+* Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0 ¹
+* Easy-to-use, powerful Setup Wizard for perfect configuration
+* Fire-and-forget: delivery continues even if your password changes ¹
+* Send email over HTTPS if the standard SMTP ports are blocked ²
+* Commercial-grade Connectivity Tester for troubleshooting server issues
 * Supports International alphabets, HTML Mail and MultiPart/Alternative
 * Supports [Mandrill](http://mandrill.com) custom headers and forced recipients (cc, bcc, to)
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Security Support: SMTPS/STARTTLS with SSL and TLS
-* Verified compatible with: [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), Email Log
+* Verified compatible with: [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), [Visual Forms Builder]((https://wordpress.org/plugins/visual-form-builder/), Email Log
 * Available translations: English, French, Italian
 
 If you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
@@ -41,9 +41,10 @@ If you are willing to translate Postman into your language, [please let me know]
 = Requirements =
 * WordPress 3.9 (or later)
 * PHP 5.2 with SPL and iconv
-* ✝ SMTP delivery requires connectivity to and authentication credentials with a 3rd-party server email service provider
-* ✝✝ Custom domains require a correct SPF record for Spam-free delivery
-* Optional: a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
+* ✝ SMTP delivery requires connectivity to and authentication credentials with a 3rd-party email service provider
+* ✝✝ Custom domains require a valid SPF record for Blackhole-free and Spam-free delivery
+* ¹ Optional: a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
+* ² Optional: the [Postman Gmail API Extension](https://wordpress.org/plugins/postman-gmail-extension/) sends email over HTTPS
 
 
 
@@ -242,7 +243,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.6.0 = 
-* Added commercial-grade Connectivty Test and Setup Wizard. The new wizard interrogates the server for capabilities and intelligently suggests the best settings for the user, simultaneously preventing from incorrect settings from being entered. Steve Jobs would be proud.
+* Commercial-grade improvements to Connectivty Test and Setup Wizard. The new wizard interrogates the server for capabilities and intelligently suggests the best settings for the user, simultaneously preventing from incorrect settings from being entered. Steve Jobs would be proud.
 * Fixed Wizard's SMTP hostname guess for GoDaddy addresses
 * Fixed Wizard's SMTP hostname guess for Outlook 365 addresses
 

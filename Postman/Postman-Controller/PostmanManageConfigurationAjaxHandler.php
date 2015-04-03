@@ -134,7 +134,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 						if ($value ['auth_xoauth'] || $winningRecommendation ['auth'] == 'oauth2') {
 							array_push ( $overrideAuthItem, array (
 									'selected' => $oauth2Mode,
-									'name' => __ ( 'OAuth 2.0' ),
+									'name' => _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' ),
 									'value' => 'oauth2' 
 							) );
 						}

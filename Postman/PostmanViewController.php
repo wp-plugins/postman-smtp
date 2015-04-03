@@ -272,9 +272,13 @@ if (! class_exists ( 'PostmanViewController' )) {
 					'success' => _x ( 'Success', 'Email Test Status', 'postman-smtp' ),
 					'failed' => _x ( 'Failed', 'Email Test Status', 'postman-smtp' ) 
 			) );
+			/* translators: where %d is a port number */
 			wp_localize_script ( 'postman_port_test_script', 'postman_port_blocked', __ ( 'Port %d is blocked. Contact your host for a solution, such as using their local SMTP server or opening the port.', 'postman-smtp' ) );
+			/* translators: where %d is a port number and %s is a hostname */
 			wp_localize_script ( 'postman_port_test_script', 'postman_try_dif_smtp', __ ( 'Port %d can\'t send mail with %s. Try a different SMTP server.', 'postman-smtp' ) );
+			/* translators: where %d is a port number and %s is a hostname */
 			wp_localize_script ( 'postman_port_test_script', 'postman_smtp_success', __ ( 'Port %d can be used for SMTP to %s.', 'postman-smtp' ) );
+			/* translators: where %s is the URL for the Postman Gmail Extension */
 			wp_localize_script ( 'postman_port_test_script', 'postman_443_open', sprintf ( __ ( 'Port 443 can be used to send Gmail with the <a href="%s">Postman Gmail Extension</a>.', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-gmail-extension/' ) );
 			wp_localize_script ( 'postman_port_test_script', 'postman_443_closed', __ ( 'Port 443 is blocked. Contact your host for a solution, such as opening the port.', 'postman-smtp' ) );
 			
@@ -428,14 +432,14 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '</form>';
 			print '<table id="connectivity_test_table">';
 			print sprintf ( '<tr><th colspan="2" class="test">%s</th><th class="port_25">%s</th><th class="port_443">%s</th><th class="port_465">%s</th><th class="port_587">%s</th></tr>', _x ( 'Test', 'Connectivity Test Table', 'postman-smtp' ), sprintf ( _x ( 'Port %s', 'Port Test', 'postman-smtp' ), 25 ), sprintf ( _x ( 'Port %s', 'Port Test', 'postman-smtp' ), 443 ), sprintf ( _x ( 'Port %s', 'Port Test', 'postman-smtp' ), 465 ), sprintf ( _x ( 'Port %s', 'Port Test', 'postman-smtp' ), 587 ) );
-			print sprintf ( '<tr><th colspan="2">%s</th><td id="port-test-port-25">-</td><td id="port-test-port-443">-</td><td id="port-test-port-465">-</td><td id="port-test-port-587">-</td></tr>', __ ( 'Outbound to Internet', 'Connectivity Test Table', 'postman-smtp' ) );
-			print sprintf ( '<tr><th colspan="2">%s</th><td id="smtp_test_port_25">-</td><td id="smtp_test_port_443">-</td><td id="smtp_test_port_465">-</td><td id="smtp_test_port_587">-</td></tr>', __ ( 'Server Availabile', 'Connectivity Test Table', 'postman-smtp' ) );
-			print sprintf ( '<tr><th colspan="2">%s</th><td id="starttls_test_port_25">-</td><td id="starttls_test_port_443">-</td><td id="starttls_test_port_465">-</td><td id="starttls_test_port_587">-</td></tr>', __ ( 'STARTTLS', 'Connectivity Test Table', 'postman-smtp' ) );
-			print sprintf ( '<tr><th rowspan="5">%s</th><th>%s</th><td id="auth_none_test_port_25">-</td><td id="auth_none_test_port_443">-</td><td id="auth_none_test_port_465">-</td><td id="auth_none_test_port_587">-</td></tr>', __ ( 'Auth', 'Connectivity Test Table', 'postman-smtp' ), __ ( 'None', 'Connectivity Test Table', 'postman-smtp' ) );
-			print sprintf ( '<tr><th>%s</th><td id="auth_login_test_port_25">-</td><td id="auth_login_test_port_443">-</td><td id="auth_login_test_port_465">-</td><td id="auth_login_test_port_587">-</td></tr>', __ ( 'Login', 'Connectivity Test Table', 'postman-smtp' ) );
-			print sprintf ( '<tr><th>%s</th><td id="auth_plain_test_port_25">-</td><td id="auth_plain_test_port_443">-</td><td id="auth_plain_test_port_465">-</td><td id="auth_plain_test_port_587">-</td></tr>', __ ( 'Plain', 'Connectivity Test Table', 'postman-smtp' ) );
-			print sprintf ( '<tr><th>%s</th><td id="auth_crammd5_test_port_25">-</td><td id="auth_crammd5_test_port_443">-</td><td id="auth_crammd5_test_port_465">-</td><td id="auth_crammd5_test_port_587">-</td></tr>', __ ( 'CRAM-MD5', 'Connectivity Test Table', 'postman-smtp' ) );
-			print sprintf ( '<tr><th>%s</th><td id="auth_xoauth_test_port_25">-</td><td id="auth_xoauth_test_port_443">-</td><td id="auth_xoauth_test_port_465">-</td><td id="auth_xoauth_test_port_587">-</td></tr>', __ ( 'XOAUTH', 'Connectivity Test Table', 'postman-smtp' ) );
+			print sprintf ( '<tr><th colspan="2">%s</th><td id="port-test-port-25">-</td><td id="port-test-port-443">-</td><td id="port-test-port-465">-</td><td id="port-test-port-587">-</td></tr>', _x ( 'Outbound to Internet', 'Connectivity Test Table', 'postman-smtp' ) );
+			print sprintf ( '<tr><th colspan="2">%s</th><td id="smtp_test_port_25">-</td><td id="smtp_test_port_443">-</td><td id="smtp_test_port_465">-</td><td id="smtp_test_port_587">-</td></tr>', _x ( 'Server Availabile', 'Connectivity Test Table', 'postman-smtp' ) );
+			print sprintf ( '<tr><th colspan="2">%s</th><td id="starttls_test_port_25">-</td><td id="starttls_test_port_443">-</td><td id="starttls_test_port_465">-</td><td id="starttls_test_port_587">-</td></tr>', _x ( 'STARTTLS', 'Connectivity Test Table', 'postman-smtp' ) );
+			print sprintf ( '<tr><th rowspan="5">%s</th><th>%s</th><td id="auth_none_test_port_25">-</td><td id="auth_none_test_port_443">-</td><td id="auth_none_test_port_465">-</td><td id="auth_none_test_port_587">-</td></tr>', _x ( 'Auth', 'Connectivity Test Table', 'postman-smtp' ), __ ( 'None', 'Connectivity Test Table', 'postman-smtp' ) );
+			print sprintf ( '<tr><th>%s</th><td id="auth_login_test_port_25">-</td><td id="auth_login_test_port_443">-</td><td id="auth_login_test_port_465">-</td><td id="auth_login_test_port_587">-</td></tr>', _x ( 'Login', 'Authentication Type', 'postman-smtp' ) );
+			print sprintf ( '<tr><th>%s</th><td id="auth_plain_test_port_25">-</td><td id="auth_plain_test_port_443">-</td><td id="auth_plain_test_port_465">-</td><td id="auth_plain_test_port_587">-</td></tr>', _x ( 'Plain', 'Authentication Type', 'postman-smtp' ) );
+			print sprintf ( '<tr><th>%s</th><td id="auth_crammd5_test_port_25">-</td><td id="auth_crammd5_test_port_443">-</td><td id="auth_crammd5_test_port_465">-</td><td id="auth_crammd5_test_port_587">-</td></tr>', _x ( 'CRAM-MD5', 'Authentication Type', 'postman-smtp' ) );
+			print sprintf ( '<tr><th>%s</th><td id="auth_xoauth_test_port_25">-</td><td id="auth_xoauth_test_port_443">-</td><td id="auth_xoauth_test_port_465">-</td><td id="auth_xoauth_test_port_587">-</td></tr>', _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' ) );
 			print '</table>';
 			print '<section id="conclusion" style="display:none">';
 			print sprintf ( '<h3>%s:</h3>', __ ( 'Conclusion', 'postman-smtp' ) );
