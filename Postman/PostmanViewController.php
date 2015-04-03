@@ -19,6 +19,9 @@ if (! class_exists ( 'PostmanViewController' )) {
 		const JQUERY_SCRIPT = 'jquery';
 		const POSTMAN_SCRIPT = 'postman_script';
 		
+		//
+		const BACK_ARROW_SYMBOL = '&#11013;';
+		
 		/**
 		 * Constructor
 		 *
@@ -347,7 +350,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<div class="welcome-panel-column welcome-panel-last">';
 			printf ( '<h4>%s</h4>', $title );
 			print '</div>';
-			printf ( '<p style="text-align:right;margin-top:25px">< <a id="back_to_menu_link" href="%s">%s</a></p>', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Back To Main Menu', 'Return to main menu link', 'postman-smtp' ) );
+			printf ( '<p style="text-align:right;margin-top:25px">%s <a id="back_to_menu_link" href="%s">%s</a></p>', self::BACK_ARROW_SYMBOL, POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Back To Main Menu', 'Return to main menu link', 'postman-smtp' ) );
 			print '</div></div></div>';
 		}
 		
