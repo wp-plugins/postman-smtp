@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-03 17:38:03+00:00\n"
-"PO-Revision-Date: 2015-04-03 13:40-0500\n"
+"POT-Creation-Date: 2015-04-03 17:46:10+00:00\n"
+"PO-Revision-Date: 2015-04-03 13:46-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -572,131 +572,155 @@ msgctxt "Command to initiate OAuth authentication"
 msgid "Request permission from %s"
 msgstr "Demandez la permission à %s"
 
-#: Postman/PostmanConfigTextHelper.php:95
-#: Postman/PostmanConfigTextHelper.php:141
-#: Postman/PostmanConfigTextHelper.php:244
+#. Translators: This description is specific to Google
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:96
+#: Postman/PostmanConfigTextHelper.php:150
+#: Postman/PostmanConfigTextHelper.php:268
 msgctxt "Name of the OAuth 2.0 Client ID"
 msgid "Client ID"
 msgstr "ID du client"
 
-#: Postman/PostmanConfigTextHelper.php:98
-#: Postman/PostmanConfigTextHelper.php:247
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:100
+#: Postman/PostmanConfigTextHelper.php:271
 msgctxt "Name of the OAuth 2.0 Client Secret"
 msgid "Client Secret"
 msgstr "Secret du client"
 
-#: Postman/PostmanConfigTextHelper.php:101
-#: Postman/PostmanConfigTextHelper.php:250
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:104
+#: Postman/PostmanConfigTextHelper.php:274
 msgctxt "Name of the Application Callback URI"
 msgid "Redirect URI"
 msgstr "Rediriger URI"
 
-#: Postman/PostmanConfigTextHelper.php:104
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:108
 msgctxt "Name of the Application Callback Domain"
 msgid "Javascript Origins"
 msgstr "Origines du Javascript"
 
-#: Postman/PostmanConfigTextHelper.php:107
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:112
 msgctxt "Name of the email service owner"
 msgid "Google"
 msgstr "Google"
 
-#: Postman/PostmanConfigTextHelper.php:110
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:116
 msgctxt "Name of the email service"
 msgid "Gmail"
 msgstr "Gmail"
 
-#: Postman/PostmanConfigTextHelper.php:113
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:120
 msgctxt "Description of the email service OAuth 2.0 Application"
 msgid "a Client ID for web application"
 msgstr "un ID de client pour une application web."
 
-#: Postman/PostmanConfigTextHelper.php:116
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:124
 msgctxt "Name of the email service portal"
 msgid "Google Developer Console"
 msgstr "Console de développement Google"
 
-#: Postman/PostmanConfigTextHelper.php:144
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:154
 msgctxt "Name of the OAuth 2.0 Client Secret"
 msgid "Client secret"
 msgstr "Secret du client"
 
-#: Postman/PostmanConfigTextHelper.php:147
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:158
 msgctxt "Name of the Application Callback URI"
 msgid "Redirect URL"
 msgstr "Rediriger l'URL"
 
-#: Postman/PostmanConfigTextHelper.php:150
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:162
 msgctxt "Name of the Application Callback Domain"
 msgid "Root Domain"
 msgstr "Domaine Souche"
 
-#: Postman/PostmanConfigTextHelper.php:153
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:166
 msgctxt "Name of the email service owner"
 msgid "Microsoft"
 msgstr "Microsoft"
 
-#: Postman/PostmanConfigTextHelper.php:156
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:170
 msgctxt "Name of the email service"
 msgid "Outlook.com"
 msgstr "Outlook.com"
 
-#: Postman/PostmanConfigTextHelper.php:159
-#: Postman/PostmanConfigTextHelper.php:205
+#. Translators: This description is specific to Microsoft
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:174
+#: Postman/PostmanConfigTextHelper.php:228
 msgctxt "Description of the email service OAuth 2.0 Application"
 msgid "an Application"
 msgstr "un programme"
 
-#: Postman/PostmanConfigTextHelper.php:162
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:178
 msgctxt "Name of the email service portal"
 msgid "Microsoft Developer Center"
 msgstr "Centre de Développement Microsoft"
 
-#: Postman/PostmanConfigTextHelper.php:187
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:204
 msgctxt "Name of the OAuth 2.0 Client ID"
 msgid "Consumer Key"
 msgstr "Clé-Client"
 
-#: Postman/PostmanConfigTextHelper.php:190
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:208
 msgctxt "Name of the OAuth 2.0 Client Secret"
 msgid "Consumer Secret"
 msgstr "Secret Client"
 
-#: Postman/PostmanConfigTextHelper.php:193
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:212
 msgctxt "Name of the Application Callback URI"
 msgid "Home Page URL"
 msgstr "URL de la Page d'Acceuil"
 
-#: Postman/PostmanConfigTextHelper.php:196
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:216
 msgctxt "Name of the Application Callback Domain"
 msgid "Callback Domain"
 msgstr "Domaine de retour d'appel"
 
-#: Postman/PostmanConfigTextHelper.php:199
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:220
 msgctxt "Name of the email service owner"
 msgid "Yahoo"
 msgstr "Yahoo"
 
-#: Postman/PostmanConfigTextHelper.php:202
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:224
 msgctxt "Name of the email service"
 msgid "Yahoo Mail"
 msgstr "Yahoo Mail"
 
-#: Postman/PostmanConfigTextHelper.php:208
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:232
 msgctxt "Name of the email service portal"
 msgid "Yahoo Developer Network"
 msgstr "Réseau de Développement de Yahoo"
 
-#: Postman/PostmanConfigTextHelper.php:237
+#: Postman/PostmanConfigTextHelper.php:261
 msgid "Enter an Outgoing Mail Server with OAuth2 capabilities."
 msgstr "Adhérer à un serveur d'envoi avec des compatibilitées OAuth 2.0."
 
-#: Postman/PostmanConfigTextHelper.php:253
+#: Postman/PostmanConfigTextHelper.php:277
 msgctxt "Name of the Application Callback Domain"
 msgid "Website Domain"
 msgstr "Nom de domaine web"
 
-#: Postman/PostmanConfigTextHelper.php:277
+#: Postman/PostmanConfigTextHelper.php:301
 msgctxt "Command to initiate OAuth authentication"
 msgid "Request OAuth Permission"
 msgstr "Demander l'autorisation de OAuth."

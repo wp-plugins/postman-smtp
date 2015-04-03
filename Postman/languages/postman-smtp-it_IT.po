@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-03 17:38:03+00:00\n"
-"PO-Revision-Date: 2015-04-03 13:41-0500\n"
+"POT-Creation-Date: 2015-04-03 17:46:10+00:00\n"
+"PO-Revision-Date: 2015-04-03 13:47-0500\n"
 "Last-Translator: Andrea Greco <andreag.email@gmail.com>\n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -573,131 +573,155 @@ msgctxt "Command to initiate OAuth authentication"
 msgid "Request permission from %s"
 msgstr "Richiesta permesso di"
 
-#: Postman/PostmanConfigTextHelper.php:95
-#: Postman/PostmanConfigTextHelper.php:141
-#: Postman/PostmanConfigTextHelper.php:244
+#. Translators: This description is specific to Google
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:96
+#: Postman/PostmanConfigTextHelper.php:150
+#: Postman/PostmanConfigTextHelper.php:268
 msgctxt "Name of the OAuth 2.0 Client ID"
 msgid "Client ID"
 msgstr "Client ID"
 
-#: Postman/PostmanConfigTextHelper.php:98
-#: Postman/PostmanConfigTextHelper.php:247
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:100
+#: Postman/PostmanConfigTextHelper.php:271
 msgctxt "Name of the OAuth 2.0 Client Secret"
 msgid "Client Secret"
 msgstr "Client Secret"
 
-#: Postman/PostmanConfigTextHelper.php:101
-#: Postman/PostmanConfigTextHelper.php:250
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:104
+#: Postman/PostmanConfigTextHelper.php:274
 msgctxt "Name of the Application Callback URI"
 msgid "Redirect URI"
 msgstr "URI reindirizzamento"
 
-#: Postman/PostmanConfigTextHelper.php:104
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:108
 msgctxt "Name of the Application Callback Domain"
 msgid "Javascript Origins"
 msgstr "Javascript Origins"
 
-#: Postman/PostmanConfigTextHelper.php:107
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:112
 msgctxt "Name of the email service owner"
 msgid "Google"
 msgstr "Google"
 
-#: Postman/PostmanConfigTextHelper.php:110
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:116
 msgctxt "Name of the email service"
 msgid "Gmail"
 msgstr "Gmail"
 
-#: Postman/PostmanConfigTextHelper.php:113
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:120
 msgctxt "Description of the email service OAuth 2.0 Application"
 msgid "a Client ID for web application"
 msgstr "un ID client per applicazioni web"
 
-#: Postman/PostmanConfigTextHelper.php:116
+#. Translators: This description is specific to Google
+#: Postman/PostmanConfigTextHelper.php:124
 msgctxt "Name of the email service portal"
 msgid "Google Developer Console"
 msgstr "Google Developer Console"
 
-#: Postman/PostmanConfigTextHelper.php:144
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:154
 msgctxt "Name of the OAuth 2.0 Client Secret"
 msgid "Client secret"
 msgstr "Client secret"
 
-#: Postman/PostmanConfigTextHelper.php:147
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:158
 msgctxt "Name of the Application Callback URI"
 msgid "Redirect URL"
 msgstr "URL di reindirizzamento"
 
-#: Postman/PostmanConfigTextHelper.php:150
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:162
 msgctxt "Name of the Application Callback Domain"
 msgid "Root Domain"
 msgstr "Root di dominio"
 
-#: Postman/PostmanConfigTextHelper.php:153
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:166
 msgctxt "Name of the email service owner"
 msgid "Microsoft"
 msgstr "Microsoft"
 
-#: Postman/PostmanConfigTextHelper.php:156
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:170
 msgctxt "Name of the email service"
 msgid "Outlook.com"
 msgstr "Outlook.com"
 
-#: Postman/PostmanConfigTextHelper.php:159
-#: Postman/PostmanConfigTextHelper.php:205
+#. Translators: This description is specific to Microsoft
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:174
+#: Postman/PostmanConfigTextHelper.php:228
 msgctxt "Description of the email service OAuth 2.0 Application"
 msgid "an Application"
 msgstr "una Applicazione"
 
-#: Postman/PostmanConfigTextHelper.php:162
+#. Translators: This description is specific to Microsoft
+#: Postman/PostmanConfigTextHelper.php:178
 msgctxt "Name of the email service portal"
 msgid "Microsoft Developer Center"
 msgstr "Microsoft Developer Center"
 
-#: Postman/PostmanConfigTextHelper.php:187
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:204
 msgctxt "Name of the OAuth 2.0 Client ID"
 msgid "Consumer Key"
 msgstr "Consumer Key"
 
-#: Postman/PostmanConfigTextHelper.php:190
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:208
 msgctxt "Name of the OAuth 2.0 Client Secret"
 msgid "Consumer Secret"
 msgstr "Consumer Secret"
 
-#: Postman/PostmanConfigTextHelper.php:193
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:212
 msgctxt "Name of the Application Callback URI"
 msgid "Home Page URL"
 msgstr "Indirizzo URL Home Page"
 
-#: Postman/PostmanConfigTextHelper.php:196
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:216
 msgctxt "Name of the Application Callback Domain"
 msgid "Callback Domain"
 msgstr "Callback Domain"
 
-#: Postman/PostmanConfigTextHelper.php:199
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:220
 msgctxt "Name of the email service owner"
 msgid "Yahoo"
 msgstr "Yahoo"
 
-#: Postman/PostmanConfigTextHelper.php:202
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:224
 msgctxt "Name of the email service"
 msgid "Yahoo Mail"
 msgstr "Yahoo Mail"
 
-#: Postman/PostmanConfigTextHelper.php:208
+#. Translators: This description is specific to Yahoo
+#: Postman/PostmanConfigTextHelper.php:232
 msgctxt "Name of the email service portal"
 msgid "Yahoo Developer Network"
 msgstr "Yahoo Developer Network"
 
-#: Postman/PostmanConfigTextHelper.php:237
+#: Postman/PostmanConfigTextHelper.php:261
 msgid "Enter an Outgoing Mail Server with OAuth2 capabilities."
 msgstr "Inserisci un server di posta in uscita con funzionalità OAuth2."
 
-#: Postman/PostmanConfigTextHelper.php:253
+#: Postman/PostmanConfigTextHelper.php:277
 msgctxt "Name of the Application Callback Domain"
 msgid "Website Domain"
 msgstr "Nome di dominio website"
 
-#: Postman/PostmanConfigTextHelper.php:277
+#: Postman/PostmanConfigTextHelper.php:301
 msgctxt "Command to initiate OAuth authentication"
 msgid "Request OAuth Permission"
 msgstr "Richiesta autorizzazione OAuth"
@@ -1346,507 +1370,3 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
-
-#~ msgid "Password"
-#~ msgstr "Password"
-
-#~ msgid ""
-#~ "You will receive an email from Postman with the subject \"WordPress "
-#~ "Postman SMTP Test.\""
-#~ msgstr ""
-#~ "Riceverai una e-mail da Postman con il soggetto \"WordPress Postman SMTP "
-#~ "Test.\""
-
-#~ msgctxt "TCP Port Test Status"
-#~ msgid "Checking.. "
-#~ msgstr "Verificando.. "
-
-#~ msgid "Postman recommends %1$s with %2$s authentication on port %3$d."
-#~ msgstr "Postman raccomanda %1$s con l'autenticazione %2$s sulla porta %3$d."
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Transport"
-#~ msgstr "Trasporto"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Transport Settings"
-#~ msgstr "Impostazioni di trasporto"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Authentication"
-#~ msgstr "Autenticazione"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Sender"
-#~ msgstr "Mittente"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Additional Addresses"
-#~ msgstr "Indirizzi Aggiuntivi"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Additional Headers"
-#~ msgstr "Intestazioni Aggiuntive"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Network Settings"
-#~ msgstr "Impostazioni di rete"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Miscellaneous Settings"
-#~ msgstr "Impostazioni varie"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Test Your Setup"
-#~ msgstr "Verifica La Tua Configurazione"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Delete plugin settings"
-#~ msgstr "Elimina impostazioni del plugin"
-
-#~ msgctxt "Authentication Type"
-#~ msgid "CRAMMD5"
-#~ msgstr "CRAMMD5"
-
-#~ msgctxt "Test Email Subject"
-#~ msgid "WordPress Postman SMTP Test"
-#~ msgstr "WordPress Postman SMTP Test"
-
-#~ msgctxt "Test Email Tagline"
-#~ msgid "Sent by Postman v%s"
-#~ msgstr "Inviato da Postman v%s"
-
-#~ msgid "Sent by <em>Postman</em> v%s"
-#~ msgstr "Inviato da <em>Postman</em> v%s"
-
-#~ msgctxt "TCP Port Test Status"
-#~ msgid "Checking..."
-#~ msgstr "Verificando..."
-
-#~ msgctxt "TCP Port Test Status"
-#~ msgid "Ok"
-#~ msgstr "Ok"
-
-#~ msgid ""
-#~ "Please considering leaving a <a href=\"%s\">review of Postman SMTP</a> to "
-#~ "help<br/> spread the word about the new way to send email from "
-#~ "WordPress! :D"
-#~ msgstr ""
-#~ "Si prega di considerare di lasciare un <a href=\"%s\">commento di Postman "
-#~ "SMTP</a> per aiutare <br/> diffondere la parola circa il nuovo modo per "
-#~ "inviare e-mail da WordPress! : D"
-
-#~ msgctxt "Port Test"
-#~ msgid "SMTP port; commonly blocked"
-#~ msgstr "Porta SMTP; comunemente bloccato"
-
-#~ msgctxt "Port Test"
-#~ msgid ""
-#~ "HTTPS port; can be used by the <a href=\"%s\">Postman Gmail Extension</a>"
-#~ msgstr ""
-#~ "HTTPS porta; può essere utilizzato dal <a href=\"%s\">Postman Gmail "
-#~ "Extension</a>"
-
-#~ msgctxt "Port Test"
-#~ msgid "SMTPS-SSL port"
-#~ msgstr "SMTPS-SSL porta"
-
-#~ msgctxt "Port Test"
-#~ msgid "SMTPS-TLS port"
-#~ msgstr "SMTPS-TLS porta"
-
-#~ msgid "This test determines which ports are open for Postman to use."
-#~ msgstr ""
-#~ "Questo test determina quali porte sono aperte a Postman per l' utilizzo."
-
-#~ msgid "Each test is given %d second to complete."
-#~ msgid_plural "Each test is given %d seconds to complete."
-#~ msgstr[0] "Ad ogni test sono concessi %d secondo per il completamento."
-#~ msgstr[1] "Ad ogni test sono concessi %d secondi per il completamento."
-
-#~ msgid "A <span style=\"color:red\">Closed</span> port indicates:"
-#~ msgstr "Una porta <span style=\"color:red\">Chiusa</span> indica:"
-
-#~ msgid ""
-#~ "Your host has placed a firewall between this site and the SMTP server"
-#~ msgstr ""
-#~ "Il tuo host ha inserito un firewall tra il sito e il server SMTP oppure"
-
-#~ msgid "The SMTP server has no service running on that port"
-#~ msgstr "Il server SMTP non ha servizio in esecuzione su quella porta"
-
-#~ msgid ""
-#~ "If the port you are trying to use is <span style=\"color:red\">Closed</"
-#~ "span>, Postman can not deliver mail. Contact your host to get the port "
-#~ "opened."
-#~ msgstr ""
-#~ "Se la porta si sta tentando di utilizzare è <span style=\"color:red"
-#~ "\">Chiusa</span>, Postman non può consegnare la posta. Contattare l' host "
-#~ "per richiederne l' apertura."
-
-#~ msgctxt "Port Test Status"
-#~ msgid "Unknown"
-#~ msgstr "Sconosciuto"
-
-#~ msgctxt "Main Menu"
-#~ msgid "Send a Test Email"
-#~ msgstr "Invia una mail di prova"
-
-#~ msgid "Tips and Diagnostic Info"
-#~ msgstr "Consigli e informazioni di diagnostica"
-
-#~ msgid ""
-#~ "Please note that to combat Spam, many email services will <em>not</em> "
-#~ "let you send from an e-mail address other than your own."
-#~ msgstr ""
-#~ "Si prega di notare che per combattere lo spam, molti servizi di posta "
-#~ "elettronica <em>non</em> consentono l’ invio da un indirizzo e-mail "
-#~ "diverso dal proprio."
-
-#~ msgid ""
-#~ "The server hostname and port you can use is a combination of what your "
-#~ "mail service provider offers, and what your WordPress host allows. "
-#~ "Postman will attempt to determine which options are available to you."
-#~ msgstr ""
-#~ "Il nome host del server e la porta si può usare è una combinazione di ciò "
-#~ "che le vostre offerte fornitore di servizi di posta, e che cosa il vostro "
-#~ "ospite WordPress permette. Postman tenterà di determinare quali opzioni "
-#~ "sono a vostra disposizione."
-
-#~ msgctxt "Configuration Input Field"
-#~ msgid "Available routes"
-#~ msgstr "percorsi disponibili"
-
-#~ msgid "In Outbox"
-#~ msgstr "In uscita"
-
-#~ msgid ""
-#~ "Log Level specifies the amount of detail output to the WordPress and PHP "
-#~ "logfiles."
-#~ msgstr ""
-#~ "Livello di log specifica la quantità di uscita dettaglio per i WordPress "
-#~ "e file di log di PHP."
-
-#~ msgid "This PHP installation needs <b>%1$s</b>."
-#~ msgstr "Questa esigenza di installazione PHP <b>%1$s</b>."
-
-#~ msgctxt "Configuration Section"
-#~ msgid "General Settings"
-#~ msgstr "Impostazioni generali"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Authentication Settings"
-#~ msgstr "Impostazioni di autenticazione"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Advanced Settings"
-#~ msgstr "Impostazioni Avanzate"
-
-#~ msgctxt "Configuration Input Field"
-#~ msgid "Reply-To Email Address"
-#~ msgstr "Rispondi all' email"
-
-#~ msgid "Enter the sender's name and email address:"
-#~ msgid_plural ""
-#~ "Select the transport and enter the sender's name and email address:"
-#~ msgstr[0] "Inserisci nome e indirizzo email del mittente:"
-#~ msgstr[1] ""
-#~ "Seleziona il tipo di trasporto e inserisci nome e indirizzo email del "
-#~ "mittente:"
-
-#~ msgid ""
-#~ "Increase the read timeout if your host is intermittenly failing to send "
-#~ "mail. Be careful, this also correlates to how long your user must wait if "
-#~ "your mail server is unreachable."
-#~ msgstr ""
-#~ "Aumentare il timeout di lettura se il tuo host riesce ad inviare i "
-#~ "messaggi solo in maniera intermittènte. Attenzione, questo è correlato "
-#~ "anche a quanto tempo il tuo utente deve attendere se il server di posta "
-#~ "non è raggiungibile."
-
-#~ msgid ""
-#~ "Please note: <em>When composing email, other WordPress plugins or themes "
-#~ "may override the sender name only.</em>"
-#~ msgstr ""
-#~ "Si prega di notare: <em> Durante la composizione di una e-mail, altri "
-#~ "plugin WordPress o temi possono modificare unicamente il nome del "
-#~ "mittente </em>"
-
-#~ msgid ""
-#~ "Please note: <em>When composing email, other WordPress plugins or themes "
-#~ "may override the sender name and email address causing rejection with "
-#~ "some email services, such as Yahoo Mail. If you experience problems, try "
-#~ "leaving the sender email address empty in these plugins or themes.</em>"
-#~ msgstr ""
-#~ "Si prega di notare: <em>Durante la composizione di una e-mail, altri "
-#~ "plugin WordPress o temi possono modificare il nome del mittente e "
-#~ "l'indirizzo e-mail causando un rifiuto del messaggio con alcuni servizi "
-#~ "di posta elettronica, come Yahoo Mail. In caso di problemi, provare a "
-#~ "lasciare l'indirizzo email del mittente vuoto in questi plugin o temi. </"
-#~ "em>"
-
-#~ msgctxt "Page Title"
-#~ msgid "Postman Configuration"
-#~ msgstr "Configurazione Postman"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "Show Advanced Settings"
-#~ msgstr "Mostra impostazioni avanzate"
-
-#~ msgid ""
-#~ "Your PHP installation is missing the <b>%1$s</b> library. Please install "
-#~ "<b>%1$s</b> before continuing."
-#~ msgstr ""
-#~ "La vostra installazione di PHP manca la biblioteca <b>%1$s</b>. Si prega "
-#~ "di installare <b>%1$s</b> prima di continuare."
-
-#~ msgid ""
-#~ "Warning: OAuth 2.0 authentication requires a supported OAuth 2.0-capable "
-#~ "Outgoing Mail Server, Sender Email Address, %1$s, and %2$s."
-#~ msgstr ""
-#~ "L’ autenticazione OAuth 2.0 richiede un server cha abbia la funzione per "
-#~ "la posta in uscita OAuth 2.0 abilitata, Indirizzo e-mail del mittente, "
-#~ "%1$s, e %2$s."
-
-#~ msgid "Postman is not sending mail."
-#~ msgstr "Postman non invia la posta."
-
-#~ msgid ""
-#~ "Pease check the <a href=\"%1$s\">troubleshooting and error messages</a> "
-#~ "page and the <a href=\"%2$s\">support forum</a>.</br>If you write for "
-#~ "help, please include the following diagnostic information:"
-#~ msgstr ""
-#~ "Controllare la pagina di <a href=\"%1$s\">risoluzione dei problemi e "
-#~ "messaggi di errore</a> e il <a href=\"%2$s\">forum di supporto</a>. </"
-#~ "br>Se si scrive per un aiuto, si prega di includere le seguenti "
-#~ "informazioni di diagnostica:"
-
-#~ msgid ""
-#~ "This is the conversation between Postman and your SMTP server. It can be "
-#~ "useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may "
-#~ "contain your password in encoded form."
-#~ msgstr ""
-#~ "Questa è la conversazione tra postino e il server SMTP. Può essere utile "
-#~ "per la diagnosi dei problemi. <b>NON</b> pubblicarlo on-line, si può "
-#~ "contenere la password in forma codificata."
-
-#~ msgid "Settings saved."
-#~ msgstr "Impostazioni salvate"
-
-#~ msgctxt "Configuration Input Field"
-#~ msgid "Import from Plugin"
-#~ msgstr "Importa da Plugin"
-
-#~ msgctxt "Configuration Section"
-#~ msgid "SMTP Settings"
-#~ msgstr "Setting SMTP"
-
-#~ msgctxt "Configuration Input Field"
-#~ msgid "Outgoing Mail Server (SMTP)"
-#~ msgstr "Server posta in uscita (SMTP)"
-
-#~ msgctxt "Configuration Input Field"
-#~ msgid "Port"
-#~ msgstr "Porta"
-
-#~ msgctxt "Configuration Input Field"
-#~ msgid "Connection Timeout (sec)"
-#~ msgstr "Connessione interrotta senza successo, tempo scaduto"
-
-#~ msgctxt "Configuration Input Field"
-#~ msgid "Read Timeout (sec)"
-#~ msgstr "Lettura interrotta senza successo, tempo scaduto"
-
-#~ msgctxt "Configuration Input Field"
-#~ msgid "Show Error Page"
-#~ msgstr "Mostra Pagina Errore"
-
-#~ msgctxt "Configuration Input Field"
-#~ msgid "Port Connection Test"
-#~ msgstr "Test Connessione Porta"
-
-#~ msgid "Select the transport and enter the sender's name and email address:"
-#~ msgstr ""
-#~ "Seleziona il tipo di trasporto e inserisci nome e indirizzo email del "
-#~ "mittente:"
-
-#~ msgid "Enter your settings below:"
-#~ msgstr "Inserisci di seguito le tue impostazioni:"
-
-#~ msgid ""
-#~ "Select the Authentication Type and enter the SMTP server hostname and "
-#~ "port:"
-#~ msgstr ""
-#~ "Selezionare il tipo di autenticazione e immettere il nome host e la porta "
-#~ "del server SMTP:"
-
-#~ msgid "The entire test will take up to %d seconds."
-#~ msgstr "L' intero test richiederà fino a %d secondi."
-
-#~ msgid "A <span style=\"color:red\">Closed</span> port indicates either:"
-#~ msgstr "Una porta<span style=\"color:red\">Chiusa</span> indica:"
-
-#~ msgid ""
-#~ "Your host has placed a firewall between this site and the SMTP server or"
-#~ msgstr ""
-#~ "Il tuo host ha inserito un firewall tra il sito e il server SMTP oppure"
-
-#~ msgctxt "Transport Type"
-#~ msgid "SMTP"
-#~ msgstr "SMTP"
-
-#~ msgctxt "Transport Type"
-#~ msgid "Gmail API"
-#~ msgstr "Gmail API"
-
-#~ msgid "Postman will send mail via %1$s using %2$s authentication."
-#~ msgstr "Postman invierà la posta via %1$s utilizzando %2$s autenticazione."
-
-#~ msgid "Status: Postman is not sending mail."
-#~ msgstr "Status: Postman non invia la posta."
-
-#~ msgid ""
-#~ "Let's get started! All users are strongly encouraged to start by <a href="
-#~ "\"%s\">running the Setup Wizard</a>."
-#~ msgstr ""
-#~ "Cominciamo! Tutti gli utenti sono fortemente incoraggiati a iniziare <a "
-#~ "href=\"%s\">eseguendo l' installazione guidata.</a>."
-
-#~ msgid ""
-#~ "However, if you wish, Postman can <a href=\"%s\">import your SMTP "
-#~ "configuration</a> from another plugin. You can run the Wizard later if "
-#~ "you need to."
-#~ msgstr ""
-#~ "Tuttavia, se lo si desideri, puoi <a href=\"%s\">importare una "
-#~ "configurazione SMTP</a> da un altro plugin. È possibile eseguire la "
-#~ "procedura guidata in seguito, se necessario."
-
-#~ msgid ""
-#~ "Your system seems to be missing one or more pre-requisites - something "
-#~ "may fail:"
-#~ msgstr ""
-#~ "Il sistema sembra mancare uno o più prerequisiti - qualcosa potrebbe non "
-#~ "riuscire:"
-
-#~ msgid "No (%s)"
-#~ msgstr "No (%s)"
-
-#~ msgid "Yes"
-#~ msgstr "Si"
-
-#~ msgctxt "Main Menu"
-#~ msgid "Run a Port Connection Test"
-#~ msgstr "Eseguire un test di connessione Porta"
-
-#~ msgctxt "Wizard Step Title"
-#~ msgid "Sender Address Details"
-#~ msgstr "Dettagli Indirizzo Mittente"
-
-#~ msgid ""
-#~ "Let's begin! Please enter the email address and name you'd like to send "
-#~ "mail from."
-#~ msgstr ""
-#~ "Cominciamo! Inserisci per favore l'indirizzo email e il nome dal quale "
-#~ "vuoi inviare la posta."
-
-#~ msgid "This is the server that Postman will use to deliver your mail."
-#~ msgstr "Questo è il server che Postman userà per consegnare la posta."
-
-#~ msgctxt "Wizard Step Title"
-#~ msgid "SMTP Server Port"
-#~ msgstr "SMTP Server Port"
-
-#~ msgid "Your email provider will dictate which port to use."
-#~ msgstr "Il tuo provider email indicherà la porta da utilizzare."
-
-#~ msgid "Port 25"
-#~ msgstr "Porta 25"
-
-#~ msgctxt "TCP Port Status"
-#~ msgid "Unknown"
-#~ msgstr "Sconosciuto"
-
-#~ msgid "Port 465"
-#~ msgstr "Porta 465"
-
-#~ msgid "Port 587"
-#~ msgstr "Porta 587"
-
-#~ msgid ""
-#~ "Choose Login authentication unless you've been instructed otherwise. Your "
-#~ "username is most likely your email address."
-#~ msgstr ""
-#~ "Scegli autenticazione per l’ accesso a meno che non sei stato istruito "
-#~ "diversamente. Il tuo nome utente è probabilmente il tuo indirizzo email."
-
-#~ msgctxt "Configuration Input Field"
-#~ msgid "Encryption"
-#~ msgstr "Crittografia"
-
-#~ msgid ""
-#~ "Warning: Password authentication (Plain/Login/CRAMMD5) requires a "
-#~ "username and password."
-#~ msgstr ""
-#~ "Attenzione: l'autenticazione password (Plain / Login / CRAMMD5) richiede "
-#~ "un nome utente e una password."
-
-#~ msgid ""
-#~ "Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing "
-#~ "Mail Server, Sender Email Address, %1$s, and %2$s."
-#~ msgstr ""
-#~ "Attenzione: L’ autenticazione OAuth 2.0 richiede un server cha abbia la "
-#~ "funzione per la posta in uscita OAuth 2.0 abilitata, Indirizzo e-mail del "
-#~ "mittente, %1$s, e %2$s."
-
-#~ msgid "Warning: Outgoing Mail Server (SMTP) and Port can not be empty."
-#~ msgstr ""
-#~ "Attenzione: Server Posta in Uscita (SMTP) e Porta non possono essere "
-#~ "vuoti."
-
-#~ msgid ""
-#~ "Warning: Postman is <em>not</em> intercepting mail requests. <a href=\"%s"
-#~ "\">Configure</a> the plugin."
-#~ msgstr ""
-#~ "Attenzione: Postman <em>non</em> riesce ad intercettare le richieste "
-#~ "mail. <a href=\"%s\">Configura</a> il plugin."
-
-#~ msgid ""
-#~ "Warning: You may experience issues using older authentication. Change "
-#~ "your authentication type to OAuth 2.0."
-#~ msgstr ""
-#~ "Attenzione: Potrebbero verificarsi problemi con il metodo di "
-#~ "autenticazione più vecchio. Cambiare il tipo di autenticazione a OAuth "
-#~ "2.0."
-
-#~ msgid ""
-#~ "Warning: Debug messages are being piped into the HTML output. This is a "
-#~ "<span style=\"color:red\"><b>serious security risk</b></span> and may "
-#~ "hang Postman's remote AJAX calls. Disable <a href=\"%s"
-#~ "\">WP_DEBUG_DISPLAY</a>."
-#~ msgstr ""
-#~ "Attenzione: i messaggi di debug vengono convogliati nell' output HTML. "
-#~ "Questo pone un <span style=\"color:red\"><b>serio problema di sicurezza</"
-#~ "b></span> e potrebbe bloccare le chiamate remote AJAX di Postman. "
-#~ "Disabilita <a href=\"%s\">WP_DEBUG_DISPLAY</a>."
-
-#~ msgid ""
-#~ "Open the <a href=\"%1$s\" target=\"_new\">%2$s</a>, create %7$s using the "
-#~ "URL's displayed below, and copy the %3$s and %4$s here."
-#~ msgstr ""
-#~ "Apri il <a href=\"%1$s\" target=\"_new\">%2$s</a>, creato %7$s usando l' "
-#~ "URL mostrato di seguito, e copia i %3$s and %4$s qui"
-
-#~ msgid "https://wordpress.org/plugins/postman/"
-#~ msgstr "https://wordpress.org/plugins/postman/"
-
-#~ msgid ""
-#~ "Email not working? Postman is the first and only WordPress SMTP plugin to "
-#~ "implement OAuth 2.0 security for Gmail and Hotmail. Setup is a breeze "
-#~ "with the Configuration Wizard and integrated Port Tester. Enjoy worry-"
-#~ "free delivery even if your password changes!"
-#~ msgstr ""
-#~ "La Email non funziona? Postman è il primo e unico plugin WordPress SMTP "
-#~ "per implementare lo standard di sicurezza OAuth 2.0 per Gmail e Hotmail. "
-#~ "L'installazione è un gioco da ragazzi con la procedura guidata di "
-#~ "configurazione e Tester Port integrata. Godetevi la consegna senza "
-#~ "problemi, anche se effettuate una modifica della password!"
