@@ -99,10 +99,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// When the plugin options page is loaded, also load the stylesheet
 			add_action ( 'admin_print_styles-' . $page, array (
 					$this,
-					'enqueueSetupWizardResources' 
+					'enqueueWizardResources' 
 			) );
 		}
-		function enqueueSetupWizardResources() {
+		function enqueueWizardResources() {
 			$this->importableConfiguration = new PostmanImportableConfiguration ();
 			$startPage = 1;
 			if ($this->importableConfiguration->isImportAvailable ()) {
@@ -114,6 +114,11 @@ if (! class_exists ( 'PostmanViewController' )) {
 			wp_enqueue_style ( 'jquery_steps_style' );
 			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_script ( 'postman_wizard_script' );
+			if (startsWith ( get_locale (), 'fr' )) {
+				wp_enqueue_script ( 'jquery_validation_fr' );
+			} elseif (startsWith ( get_locale (), 'it' )) {
+				wp_enqueue_script ( 'jquery_validation_it' );
+			}
 		}
 		
 		/**
@@ -230,6 +235,12 @@ if (! class_exists ( 'PostmanViewController' )) {
 			), '1.1.0' );
 			wp_register_script ( 'jquery_validation', plugins_url ( 'script/jquery.validate.min.js', __FILE__ ), array (
 					self::JQUERY_SCRIPT 
+			), '1.13.1' );
+			wp_register_script ( 'jquery_validation_fr', plugins_url ( 'script/jquery-validate/messages_fr.js', __FILE__ ), array (
+					'jquery_validation' 
+			), '1.13.1' );
+			wp_register_script ( 'jquery_validation_it', plugins_url ( 'script/jquery-validate/messages_it.js', __FILE__ ), array (
+					'jquery_validation' 
 			), '1.13.1' );
 			wp_register_script ( 'postman_wizard_script', plugins_url ( 'script/postman_wizard.js', __FILE__ ), array (
 					self::JQUERY_SCRIPT,
@@ -574,7 +585,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'How will the connection to the MSA be established?', 'Wizard Step Title', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'Your connection to the SMTP server depends on what your email service provider offers, and what your WordPress host allows. Postman will attempt to determine which options are available to you.', 'postman-smtp' ) );
-			printf ( '<p>%s<span id="port_test_status">%s: </span></p>', _x ( 'Connectivity Test', 'Wizard Action', 'postman-smtp' ), _x ( 'Ready', 'TCP Port Test Status', 'postman-smtp' ) );
+			printf ( '<p>%s: <span id="port_test_status">%s</span></p>', _x ( 'Connectivity Test', 'Wizard Action', 'postman-smtp' ), _x ( 'Ready', 'TCP Port Test Status', 'postman-smtp' ) );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PORT );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::ENCRYPTION_TYPE );
