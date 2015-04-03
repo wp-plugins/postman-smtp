@@ -574,7 +574,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'How will the connection to the MSA be established?', 'Wizard Step Title', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'Your connection to the SMTP server depends on what your email service provider offers, and what your WordPress host allows. Postman will attempt to determine which options are available to you.', 'postman-smtp' ) );
-			printf ( '<p>%s<span id="port_test_status">%s: </span></p>', _x ( 'Connectivity Test', 'Wizard Action', 'postman-smtp' ), __ ( 'Ready', 'TCP Port Test Status', 'postman-smtp' ) );
+			printf ( '<p>%s<span id="port_test_status">%s: </span></p>', _x ( 'Connectivity Test', 'Wizard Action', 'postman-smtp' ), _x ( 'Ready', 'TCP Port Test Status', 'postman-smtp' ) );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PORT );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::ENCRYPTION_TYPE );
