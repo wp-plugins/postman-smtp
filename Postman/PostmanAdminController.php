@@ -318,7 +318,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 			
 			// Sanitize
-			add_settings_section ( 'transport_section', _x ( 'Transport', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( 'transport_section', _x ( 'Transport', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printTransportSectionInfo' 
 			), 'transport_options' );
@@ -329,7 +329,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), 'transport_options', 'transport_section' );
 			
 			// Sanitize
-			add_settings_section ( PostmanAdminController::SMTP_SECTION, _x ( 'Transport Settings', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::SMTP_SECTION, _x ( 'Transport Settings', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printSmtpSectionInfo' 
 			), PostmanAdminController::SMTP_OPTIONS );
@@ -354,7 +354,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'port_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, _x ( 'Authentication', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, _x ( 'Authentication', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printBasicAuthSectionInfo' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS );
@@ -370,7 +370,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
 			
 			// the OAuth section
-			add_settings_section ( PostmanAdminController::OAUTH_SECTION, _x ( 'Authentication', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::OAUTH_SECTION, _x ( 'Authentication', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printOAuthSectionInfo' 
 			), PostmanAdminController::OAUTH_OPTIONS );
@@ -396,7 +396,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
 			// the Message section
-			add_settings_section ( PostmanAdminController::MESSAGE_SENDER_SECTION, _x ( 'Sender', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::MESSAGE_SENDER_SECTION, _x ( 'Sender', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printMessageSenderSectionInfo' 
 			), PostmanAdminController::MESSAGE_SENDER_OPTIONS );
@@ -422,7 +422,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
 			
 			// the Message section
-			add_settings_section ( PostmanAdminController::MESSAGE_SECTION, _x ( 'Additional Addresses', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::MESSAGE_SECTION, _x ( 'Additional Addresses', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printMessageSectionInfo' 
 			), PostmanAdminController::MESSAGE_OPTIONS );
@@ -448,7 +448,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::MESSAGE_OPTIONS, PostmanAdminController::MESSAGE_SECTION );
 			
 			// the Message section
-			add_settings_section ( PostmanAdminController::MESSAGE_HEADERS_SECTION, _x ( 'Additional Headers', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::MESSAGE_HEADERS_SECTION, _x ( 'Additional Headers', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printAdditionalHeadersSectionInfo' 
 			), PostmanAdminController::MESSAGE_HEADERS_OPTIONS );
@@ -459,7 +459,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::MESSAGE_HEADERS_OPTIONS, PostmanAdminController::MESSAGE_HEADERS_SECTION );
 			
 			// the Advanced section
-			add_settings_section ( PostmanAdminController::NETWORK_SECTION, _x ( 'Network Settings', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::NETWORK_SECTION, _x ( 'Network Settings', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printNetworkSectionInfo' 
 			), PostmanAdminController::NETWORK_OPTIONS );
@@ -475,7 +475,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::NETWORK_OPTIONS, PostmanAdminController::NETWORK_SECTION );
 			
 			// the Advanced section
-			add_settings_section ( PostmanAdminController::ADVANCED_SECTION, _x ( 'Miscellaneous Settings', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::ADVANCED_SECTION, _x ( 'Miscellaneous Settings', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printAdvancedSectionInfo' 
 			), PostmanAdminController::ADVANCED_OPTIONS );
@@ -491,7 +491,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'testSanitize' 
 			) );
 			
-			add_settings_section ( 'TEST_EMAIL', _x ( 'Test Your Setup', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( 'TEST_EMAIL', _x ( 'Test Your Setup', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printTestEmailSectionInfo' 
 			), PostmanAdminController::POSTMAN_TEST_SLUG );
@@ -502,7 +502,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::POSTMAN_TEST_SLUG, 'TEST_EMAIL' );
 			
 			// the Purge Data section
-			add_settings_section ( 'PURGE_DATA', _x ( 'Delete plugin settings', 'Configuration Section', 'postman-smtp' ), array (
+			add_settings_section ( 'PURGE_DATA', _x ( 'Delete plugin settings', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printPurgeDataSectionInfo' 
 			), 'PURGE_DATA' );
