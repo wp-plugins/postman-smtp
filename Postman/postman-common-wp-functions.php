@@ -21,7 +21,7 @@ if (! function_exists ( 'postmanHttpTransport' )) {
 	/**
 	 * Makes the outgoing HTTP requests
 	 * Inside WordPress we can use wp_remote_post().
-	 * Outside WordPress, not so much. **Load it before postman-core.php**
+	 * Outside WordPress, not so much.
 	 *
 	 * @param unknown $url        	
 	 * @param unknown $args        	
