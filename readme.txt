@@ -248,10 +248,11 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.0 = 
+= 1.5.11 = 
 * Commercial-grade improvements to Connectivty Test and Setup Wizard. The new wizard interrogates the server for capabilities and intelligently suggests the best settings for the user, simultaneously preventing from incorrect settings from being entered. Steve Jobs would be proud.
 * Fixed Wizard's SMTP hostname guess for GoDaddy addresses
 * Fixed Wizard's SMTP hostname guess for Outlook 365 addresses
+* Added French/Italian translation for JQuery Validation
 
 = 1.5.10 - 2015-03-29 =
 * Fix for Fatal error: Cannot redeclare class PEAR_Common in C:\PHP5\PEAR\PEAR\Common.php - similar to [this error](https://wordpress.org/support/topic/plugin-wp-minify-cant-activate-plugin-fatal-error?replies=6) in WP Minify
