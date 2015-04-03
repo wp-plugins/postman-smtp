@@ -507,7 +507,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<div class="welcome-panel-column welcome-panel-last">';
 			printf ( '<h4>%s</h4>', _x ( 'Troubleshooting', 'Main Menu', 'postman-smtp' ) );
 			print '<ul>';
-			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::DIAGNOSTICS_SLUG ), __ ( 'Tips and Diagnostic Info', 'postman-smtp' ) );
+			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::DIAGNOSTICS_SLUG ), _x ( 'Tips and Diagnostic Info', 'Page Title', 'postman-smtp' ) );
 			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::PORT_TEST_SLUG ), _x ( 'Run a Connectivity Test', 'Main Menu', 'postman-smtp' ) );
 			printf ( '<li><a href="https://wordpress.org/support/plugin/postman-smtp" class="welcome-icon postman_support">%s</a></li>', _x ( 'Online Support', 'Main Menu', 'postman-smtp' ) );
 			print '</ul></div></div></div></div>';
@@ -663,7 +663,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<fieldset>';
 			print '<legend>';
 			print __ ( 'Sending the message:', 'postman-smtp' );
-			printf ( ' <span id="postman_test_message_status">%s</span>', __ ( 'In Outbox', 'Send a Test Email', 'postman-smtp' ) );
+			printf ( ' <span id="postman_test_message_status">%s</span>', _x ( 'In Outbox', 'Email Test Status', 'postman-smtp' ) );
 			print '</legend>';
 			print '<section>';
 			printf ( '<p><label>%s</label></p>', __ ( 'Status Message', 'postman-smtp' ) );
