@@ -60,22 +60,28 @@ If you are willing to translate Postman into your language, [please let me know]
 = To manually configure Password Authentication (Advanced users only) =
 
 1. Choose configure manually
-1. In 'Authentication' choose 'Plain', unless your provider has told you different.
-1. In 'Sender Email Address' enter your account's email address.
+1. If the 'Transport' menu is available, choose 'SMTP'
+1. In 'Authentication' choose 'Login', unless your provider has told you different.
+1. In 'Security' choose the appropriate type (a good guess is SMTPS for port 465, StartTLS otherwise)
 1. Enter the SMTP Server's hostname and port.
-1. If you chose Plain, Login or CRAM-MD5 as your authentication method then: Choose 'SSL' for encryption if your port is 465, or 'TLS' if your port is 587.
-1. Enter your username (probably your email address) and password in the Basic Auth Settings section.
+1. Enter the encryption if your port is 465, or 'TLS' if your port is 587.
+1. If your Authentication method is not 'None', enter your username (probably your email address) and password.
+1. Choose the 'Message' tab.
+1. In 'Sender Email Address' enter your account's email address.
 1. Choose the Save Changes button.
 1. Send yourself a test email. 
 
 = To manually configure OAuth 2.0 Authentication (Advanced users only) =
 
 1. Choose configure manually
-1. In 'Authentication' choose 'OAuth2 2.0'
-1. In 'Sender Email Address' enter your account's email address. This MUST be the same address you login to webmail with.
-1. In 'Outgoing Mail Server (SMTP)' enter the SMTP Server's hostname and port.
+1. If the 'Transport' menu is available, choose 'SMTP'
+1. In 'Authentication' choose 'OAuth 2.0'
+1. In 'Security' choose the appropriate type (a good guess is SMTPS for port 465, StartTLS otherwise)
+1. Enter the SMTP Server's hostname and port.
 1. Postman will tell you how to open the Client ID maintenance webpage of your host. Create a Client ID for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
 1. Copy your generated Client ID and Client secret into the plugin's Settings page.
+1. Choose the 'Message' tab.
+1. In 'Sender Email Address' enter your account's email address. This MUST be the same address you login to webmail with.
 1. Choose the Save Changes button.
 1. Choose the 'Request OAuth2 Permission' link and follow the instructions.
 1. Send yourself a test email. 
