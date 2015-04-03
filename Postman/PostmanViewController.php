@@ -278,10 +278,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 			wp_localize_script ( 'postman_port_test_script', 'postman_try_dif_smtp', __ ( 'Port %d can\'t send mail with %s. Try a different SMTP server.', 'postman-smtp' ) );
 			/* translators: where %d is a port number and %s is a hostname */
 			wp_localize_script ( 'postman_port_test_script', 'postman_smtp_success', __ ( 'Port %d can be used for SMTP to %s.', 'postman-smtp' ) );
-			/* translators: where %s is the URL for the Postman Gmail Extension */
-			wp_localize_script ( 'postman_port_test_script', 'postman_443_open', sprintf ( __ ( 'Port 443 can be used to send Gmail with the <a href="%s">Postman Gmail Extension</a>.', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-gmail-extension/' ) );
-			wp_localize_script ( 'postman_port_test_script', 'postman_443_closed', __ ( 'Port 443 is blocked. Contact your host for a solution, such as opening the port.', 'postman-smtp' ) );
-			
+			/* translators: where %d is a port number and %s is the URL for the Postman Gmail Extension */
+			wp_localize_script ( 'postman_port_test_script', 'postman_443_open', sprintf ( __ ( 'Port %d can be used to send Gmail with the <a href="%s">Postman Gmail Extension</a>.', 'postman-smtp' ), 443, 'https://wordpress.org/plugins/postman-gmail-extension/' ) );
+			/* translators: where %d is a port number */
+			wp_localize_script ( 'postman_port_test_script', 'postman_443_closed', sprintf ( __ ( 'Port %d is blocked. Contact your host for a solution, such as opening the port.', 'postman-smtp' ), 443 ) );
 			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_wait', __ ( 'Please wait for the port test to finish', 'postman-smtp' ) );
 			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_no_ports', __ ( 'No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.', 'postman-smtp' ) );
 			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_bad_redirect_url', __ ( 'You are about to configure OAuth 2.0 with an IP address in the URL which will fail. Either assign a real domain name to your site or add a fake one in your local machine\'s host file.', 'postman-smtp' ) );
