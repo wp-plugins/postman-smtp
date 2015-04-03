@@ -545,10 +545,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 		
 		/**
 		 * Print the Section text
+		 * @deprecated
 		 */
 		public function printTestEmailSectionInfo() {
-			// this isnt used anymore
-			print __ ( 'You will receive an email from Postman with the subject "WordPress Postman SMTP Test."', 'postman-smtp' );
+			// no-op
 		}
 		
 		/**
