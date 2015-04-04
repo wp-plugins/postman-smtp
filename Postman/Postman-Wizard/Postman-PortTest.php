@@ -6,6 +6,10 @@ if (! class_exists ( "PostmanPortTest" )) {
 		private $hostname;
 		private $port;
 		public $protocol;
+		public $http;
+		public $https;
+		public $smtp;
+		public $smtps;
 		public $startTls;
 		public $authLogin;
 		public $authPlain;
@@ -66,7 +70,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 			$connectionString = "ssl://%s:%s";
 			$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
 			@stream_set_timeout ( $stream, $readTimeout );
-			$serverName = postmanGetServerName();
+			$serverName = postmanGetServerName ();
 			if (! $stream) {
 				return false;
 			} else {
@@ -76,6 +80,8 @@ if (! class_exists ( "PostmanPortTest" )) {
 				$line = fgets ( $stream );
 				if (preg_match ( '/^HTTP.*\\s/U', $line, $matches )) {
 					$this->protocol = $matches [0];
+					$this->http = true;
+					$this->https = true;
 					return true;
 				} else {
 					return false;
@@ -88,9 +94,10 @@ if (! class_exists ( "PostmanPortTest" )) {
 		 * @param string $hostname        	
 		 */
 		public function testSmtpPorts($connectTimeout = 10, $readTimeout = 10) {
-			if ($this->port == 26) {
-				$this->debug ( 'Executing test code for port 26' );
+			if ($this->port == 8025) {
+				$this->debug ( 'Executing test code for port 8025' );
 				$this->protocol = 'SMTP';
+				$this->smtp = true;
 				$this->authNone = 'true';
 				return true;
 			}
@@ -120,6 +127,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 					$this->authNone = true;
 				}
 				$this->protocol = 'SMTPS';
+				$this->smtps = true;
 			}
 			return $success;
 		}
@@ -132,10 +140,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 		private function talkToMailServer($connectionString, $connectTimeout = 10, $readTimeout = 10) {
 			$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
 			@stream_set_timeout ( $stream, $readTimeout );
-			$serverName = $_SERVER ['SERVER_NAME'];
-			if (empty ( $serverName )) {
-				$serverName = $_SERVER ['HTTP_HOST'];
-			}
+			$serverName = postmanGetServerName();
 			if (! $stream) {
 				return false;
 			} else {
