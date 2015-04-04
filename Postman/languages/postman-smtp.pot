@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.5.11b1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-04 21:07:53+00:00\n"
+"POT-Creation-Date: 2015-04-04 21:25:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1107,9 +1107,11 @@ msgstr ""
 
 #: Postman/PostmanViewController.php:578
 msgid ""
-"This is the Outgoing Mail Server, also known as a Mail Submission Agent "
-"(MSA), that Postman will use to deliver your mail. If possible, Postman will "
-"try to determine this hostname based on the e-mail address."
+"This is the local Outgoing Mail Server, or Mail Submission Agent (MSA), "
+"which Postman delegates mail delivery to. These servers are normally "
+"specific to the email account you have, and if you don't know which server "
+"to use, ask your email service provider.<br/><br/>If possible, the Wizard "
+"will pre-fill this field based on the e-mail address you entered."
 msgstr ""
 
 #: Postman/PostmanViewController.php:584

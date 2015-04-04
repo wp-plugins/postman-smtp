@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-04 21:07:53+00:00\n"
-"PO-Revision-Date: 2015-04-04 17:08-0500\n"
+"POT-Creation-Date: 2015-04-04 21:25:19+00:00\n"
+"PO-Revision-Date: 2015-04-04 17:28-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -1206,12 +1206,14 @@ msgstr "Quel hôte sera relayer le courrier?"
 
 #: Postman/PostmanViewController.php:578
 msgid ""
-"This is the Outgoing Mail Server, also known as a Mail Submission Agent "
-"(MSA), that Postman will use to deliver your mail. If possible, Postman will "
-"try to determine this hostname based on the e-mail address."
+"This is the local Outgoing Mail Server, or Mail Submission Agent (MSA), "
+"which Postman delegates mail delivery to. These servers are normally "
+"specific to the email account you have, and if you don't know which server "
+"to use, ask your email service provider.<br/><br/>If possible, the Wizard "
+"will pre-fill this field based on the e-mail address you entered."
 msgstr ""
-"C'est le serveur, aussi connu comme une Courrier Submission Agent (CSA), qui "
-"Postman utilisé pour vous livrer votre courrier. Si possible, Postman "
+"C'est le serveur, aussi connu comme une Agent de Submission Courrier  (ASC), "
+"qui Postman utilisé pour vous livrer votre courrier. Si possible, Postman "
 "tentera de déterminer ce nom d'hôte basé sur l'adresse e-mail."
 
 #: Postman/PostmanViewController.php:584
@@ -1222,7 +1224,7 @@ msgstr "Test de connectivité"
 #: Postman/PostmanViewController.php:586
 msgctxt "Wizard Step Title"
 msgid "How will the connection to the MSA be established?"
-msgstr "Comment la connexion au MSA sera créé?"
+msgstr "Comment la connexion au ASC sera créé?"
 
 #: Postman/PostmanViewController.php:587
 msgid ""
@@ -1261,7 +1263,7 @@ msgstr "Authentification"
 #: Postman/PostmanViewController.php:601
 msgctxt "Wizard Step Title"
 msgid "How will you prove your identity to the MSA?"
-msgstr "Comment allez-vous prouver votre identité à la MSA?"
+msgstr "Comment allez-vous prouver votre identité à la ASC?"
 
 #: Postman/PostmanViewController.php:624
 msgid ""
@@ -1376,6 +1378,15 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid ""
+#~ "This is the Outgoing Mail Server, also known as a Mail Submission Agent "
+#~ "(MSA), that Postman will use to deliver your mail. If possible, Postman "
+#~ "will try to determine this hostname based on the e-mail address."
+#~ msgstr ""
+#~ "C'est le serveur, aussi connu comme une Courrier Submission Agent (CSA), "
+#~ "qui Postman utilisé pour vous livrer votre courrier. Si possible, Postman "
+#~ "tentera de déterminer ce nom d'hôte basé sur l'adresse e-mail."
 
 #~ msgid ""
 #~ "You are about to configure OAuth 2.0 with an IP address in the URL which "
