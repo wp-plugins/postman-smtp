@@ -1,8 +1,6 @@
 <?php
 if (! class_exists ( "PostmanLogger" )) {
 	
-	require_once 'PostmanOptions.php';
-	
 	//
 	class PostmanLogger {
 		const ALL_INT = - 2147483648;
@@ -14,13 +12,21 @@ if (! class_exists ( "PostmanLogger" )) {
 		const WARN_INT = 30000;
 		private $name;
 		private $logLevel;
+		private $wpDebug;
 		function __construct($name) {
 			$this->name = $name;
-			$this->logLevel = PostmanOptions::getInstance ()->getLogLevel ();
+			if (class_exists ( 'PostmanOptions' )) {
+				$this->logLevel = PostmanOptions::getInstance ()->getLogLevel ();
+			} else {
+				$this->logLevel = self::DEBUG_INT;
+			}
+			if (defined ( 'WP_DEBUG' )) {
+				$this->wpDebug = true;
+			}
 		}
 		// better logging thanks to http://www.smashingmagazine.com/2011/03/08/ten-things-every-wordpress-plugin-developer-should-know/
 		function debug($text) {
-			if (WP_DEBUG === true && self::DEBUG_INT >= $this->logLevel) {
+			if ($this->wpDebug && self::DEBUG_INT >= $this->logLevel) {
 				if (is_array ( $text ) || is_object ( $text )) {
 					error_log ( 'DEBUG ' . $this->name . ': ' . print_r ( $text, true ) );
 				} else {
@@ -29,7 +35,7 @@ if (! class_exists ( "PostmanLogger" )) {
 			}
 		}
 		function error($text) {
-			if (WP_DEBUG === true && self::ERROR_INT >= $this->logLevel) {
+			if ($this->$wpDebug && self::ERROR_INT >= $this->logLevel) {
 				if (is_array ( $text ) || is_object ( $text )) {
 					error_log ( 'ERROR' . $this->name . ': ' . print_r ( $text, true ) );
 				} else {
@@ -145,19 +151,34 @@ if (! class_exists ( 'ParseUrlException' )) {
 	}
 }
 
-if (! function_exists ( 'isIpAddressNotADomainName' )) {
+if (! function_exists ( 'isHostAddressNotADomainName' )) {
 	/**
 	 * Detect if the host is NOT a domain name
-	 * 
+	 *
 	 * @param unknown $ipAddress        	
 	 * @return number
 	 */
-	function isIpAddressNotADomainName($ipAddress) {
+	function isHostAddressNotADomainName($host) {
 		// IPv4 / IPv6 test from http://stackoverflow.com/a/17871737/4368109
-		$ipv6Detected = preg_match ('/(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/', $ipAddress);
-        $ipv4Detected = preg_match('/((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])/', $ipAddress);
-        return $ipv4Detected || $ipv6Detected;
-        //from http://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
-		//return preg_match ( '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9‌​]{2}|2[0-4][0-9]|25[0-5])$/', $ipAddress );
+		$ipv6Detected = preg_match ( '/(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/', $host );
+		$ipv4Detected = preg_match ( '/((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])/', $host );
+		return $ipv4Detected || $ipv6Detected;
+		// from http://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
+		// return preg_match ( '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9‌​]{2}|2[0-4][0-9]|25[0-5])$/', $ipAddress );
 	}
 }
+
+if (! function_exists ( 'postmanGetServerName' )) {
+	function postmanGetServerName() {
+		$serverName = '127.0.0.1';
+		if (isset ( $_SERVER ['SERVER_NAME'] )) {
+			$serverName = $_SERVER ['SERVER_NAME'];
+		}
+		if (empty ( $serverName )) {
+			if (isset ( $_SERVER ['HTTP_HOST'] )) {
+				$serverName = $_SERVER ['HTTP_HOST'];
+			}
+		}
+	}
+}
+
