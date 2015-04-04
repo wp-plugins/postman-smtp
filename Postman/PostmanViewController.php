@@ -591,7 +591,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::ENCRYPTION_TYPE );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::AUTHENTICATION_TYPE );
 			print '<p id="wizard_recommendation"></p>';
-			print '<p id="user_override" style="display:none"><span>Configuration will proceed on socket <select id="user_socket_override"></select> using <select id="user_auth_override"></select> authentication.</span></p>';
+			/* Translators: Where %1$s is the socket identifier and %2$s is the authentication type */
+			printf ( '<p id="user_override" style="display:none"><span>%s</span></p>', sprintf ( __ ( 'Configuration will proceed on socket %1$s using %2$s authentication.' ), '<select id="user_socket_override"></select>', '<select id="user_auth_override"></select>' ) );
 			print '</fieldset>';
 			
 			// Wizard Step 4
