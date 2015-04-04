@@ -357,15 +357,11 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 			try {
 				$emailTester = new PostmanSendTestEmailController ();
 				$serverName = postmanGetServerName ();
-				if (empty ( $serverName )) {
-					$serverName = 'WordPress';
-				}
+				/* translators: where %s is the domain name of the site */
 				$subject = sprintf ( _x ( 'Postman SMTP Test (%s)', 'Test Email Subject', 'postman-smtp' ), $serverName );
 				// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
 				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
 				$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanMessage::EOL, PostmanMessage::EOL, sprintf ( _x ( 'Sent by Postman %s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) );
-				/* translators: where %s is the Postman plugin version number (e.g. 1.5.7) */
-				
 				$message2 = '
 Content-Type: text/plain; charset = "UTF-8"
 Content-Transfer-Encoding: 8bit
