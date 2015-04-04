@@ -179,6 +179,7 @@ if (! function_exists ( 'postmanGetServerName' )) {
 				$serverName = $_SERVER ['HTTP_HOST'];
 			}
 		}
+		return $serverName;
 	}
 }
 
