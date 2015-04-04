@@ -198,8 +198,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			$urlParts = parse_url ( $scribe->getCallbackUrl () );
 			$response ['dot_notation_url'] = false;
 			if (isset ( $urlParts ['host'] )) {
-				// from http://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
-				if (preg_match ( '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9‌​]{2}|2[0-4][0-9]|25[0-5])$/', $urlParts ['host'] )) {
+				if (isIpAddressNotADomainName ( $urlParts ['host'] )) {
 					$response ['dot_notation_url'] = true;
 				}
 			}
