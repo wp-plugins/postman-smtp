@@ -51,13 +51,3 @@ if (! function_exists ( 'postmanHttpTransport' )) {
 
 require_once 'postman-common-functions.php';
 
-if (! function_exists ( 'postmanGetServerName' )) {
-	function postmanGetServerName() {
-		$serverName = $_SERVER ['SERVER_NAME'];
-		if (empty ( $serverName )) {
-			$serverName = $_SERVER ['HTTP_HOST'];
-		}
-		return $serverName;
-	}
-}
-
