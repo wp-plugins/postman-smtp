@@ -435,7 +435,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			$this->outputChildPageHeader ( _x ( 'Connectivity Test', 'Page Title', 'postman-smtp' ) );
 			
 			print '<p>';
-			print __ ( 'This test determines which well-known sockets are available for Postman to use.', 'postman-smtp' );
+			print __ ( 'This test determines which well-known ports are available for Postman to use.', 'postman-smtp' );
 			print '<form id="port_test_form_id" method="post">';
 			printf ( '<label for="hostname">%s</label>', _x ( 'SMTP Server Hostname', 'Configuration Input Field', 'postman-smtp' ) );
 			$this->adminController->port_test_hostname_callback ();
