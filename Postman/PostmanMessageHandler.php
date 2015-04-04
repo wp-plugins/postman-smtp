@@ -100,7 +100,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		private function storeMessage($message, $type) {
 			$messageArray = array ();
 			$oldMessageArray = PostmanSession::getInstance ()->getErrorMessage ();
-			if (isset ( $oldMessageArray )) {
+			if ($oldMessageArray) {
 				$messageArray = $oldMessageArray;
 			}
 			$weGotIt = false;

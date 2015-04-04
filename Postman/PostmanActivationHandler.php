@@ -97,11 +97,13 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 				}
 			}
 			// always update the version number
-			if (!isset ( $postmanState ['install_date'] )) {
+			if (! isset ( $postmanState ['install_date'] )) {
 				$postmanState ['install_date'] = time ();
 			}
 			$postmanState ['version'] = POSTMAN_PLUGIN_VERSION;
 			update_option ( 'postman_state', $postmanState );
+			//
+			delete_option ( 'postman_session' );
 		}
 	}
 }

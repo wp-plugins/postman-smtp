@@ -16,22 +16,15 @@ if (! class_exists ( 'PostmanSession' )) {
 	 *        
 	 */
 	class PostmanSession {
-		const POSTMAN_SESSION_SLUG_NAME = 'postman_session';
+		// length of time to keep items around
+		const MINUTES_IN_SECONDS = 60;
+		
+		//
 		const OAUTH_IN_PROGRESS = 'oauth_in_progress';
 		const ACTION = 'action';
 		const ERROR_MESSAGE = 'error_message';
 		const WARNING_MESSAGE = 'warning_message';
 		const SUCCESS_MESSAGE = 'success_message';
-		
-		// options data
-		private $options;
-		
-		/**
-		 * private constructor
-		 */
-		private function __construct() {
-			$this->options = get_option ( self::POSTMAN_SESSION_SLUG_NAME );
-		}
 		
 		// singleton instance
 		public static function getInstance() {
@@ -43,32 +36,22 @@ if (! class_exists ( 'PostmanSession' )) {
 		}
 		
 		/**
-		 * Save the session state to the database
-		 */
-		private function save() {
-			update_option ( self::POSTMAN_SESSION_SLUG_NAME, $this->options );
-		}
-		
-		/**
 		 * OAuth is in progress $state is the randomly generated
 		 * transaction ID
 		 *
 		 * @param unknown $state        	
 		 */
 		public function isSetOauthInProgress() {
-			return isset ( $this->options [self::OAUTH_IN_PROGRESS] );
+			return get_transient ( self::OAUTH_IN_PROGRESS ) != false;
 		}
 		public function setOauthInProgress($state) {
-			$this->options [self::OAUTH_IN_PROGRESS] = $state;
-			$this->save ();
+			set_transient ( self::OAUTH_IN_PROGRESS, $state, 30 * self::MINUTES_IN_SECONDS );
 		}
 		public function getOauthInProgress() {
-			if ($this->isSetOauthInProgress ())
-				return $this->options [self::OAUTH_IN_PROGRESS];
+			return get_transient ( self::OAUTH_IN_PROGRESS );
 		}
 		public function unsetOauthInProgress() {
-			unset ( $this->options [self::OAUTH_IN_PROGRESS] );
-			$this->save ();
+			delete_transient ( self::OAUTH_IN_PROGRESS );
 		}
 		
 		/**
@@ -77,19 +60,16 @@ if (! class_exists ( 'PostmanSession' )) {
 		 * @param unknown $action        	
 		 */
 		public function isSetAction() {
-			return isset ( $this->options [self::ACTION] );
+			return get_transient ( self::ACTION ) != false;
 		}
 		public function setAction($action) {
-			$this->options [self::ACTION] = $action;
-			$this->save ();
+			set_transient ( self::ACTION, $action, 30 * self::MINUTES_IN_SECONDS );
 		}
 		public function getAction() {
-			if ($this->isSetAction ())
-				return $this->options [self::ACTION];
+			return get_transient ( self::ACTION );
 		}
 		public function unsetAction() {
-			unset ( $this->options [self::ACTION] );
-			$this->save ();
+			delete_transient ( self::ACTION );
 		}
 		
 		/**
@@ -98,19 +78,16 @@ if (! class_exists ( 'PostmanSession' )) {
 		 * @param unknown $message        	
 		 */
 		public function isSetErrorMessage() {
-			return isset ( $this->options [self::ERROR_MESSAGE] );
+			return get_transient ( self::ERROR_MESSAGE ) != false;
 		}
 		public function setErrorMessage($message) {
-			$this->options [self::ERROR_MESSAGE] = $message;
-			$this->save ();
+			set_transient ( self::ERROR_MESSAGE, $message, 30 * self::MINUTES_IN_SECONDS );
 		}
 		public function getErrorMessage() {
-			if ($this->isSetErrorMessage ())
-				return $this->options [self::ERROR_MESSAGE];
+			return get_transient ( self::ERROR_MESSAGE );
 		}
 		public function unsetErrorMessage() {
-			unset ( $this->options [self::ERROR_MESSAGE] );
-			$this->save ();
+			delete_transient ( self::ERROR_MESSAGE );
 		}
 		
 		/**
@@ -119,19 +96,16 @@ if (! class_exists ( 'PostmanSession' )) {
 		 * @param unknown $message        	
 		 */
 		public function isSetWarningMessage() {
-			return isset ( $this->options [self::WARNING_MESSAGE] );
+			return get_transient ( self::WARNING_MESSAGE ) != false;
 		}
 		public function setWarningMessage($message) {
-			$this->options [self::WARNING_MESSAGE] = $message;
-			$this->save ();
+			set_transient ( self::WARNING_MESSAGE, $message, 30 * self::MINUTES_IN_SECONDS );
 		}
 		public function getWarningMessage() {
-			if ($this->isSetWarningMessage ())
-				return $this->options [self::WARNING_MESSAGE];
+			return get_transient ( self::WARNING_MESSAGE );
 		}
 		public function unsetWarningMessage() {
-			unset ( $this->options [self::WARNING_MESSAGE] );
-			$this->save ();
+			delete_transient ( self::WARNING_MESSAGE );
 		}
 		
 		/**
@@ -140,19 +114,16 @@ if (! class_exists ( 'PostmanSession' )) {
 		 * @param unknown $message        	
 		 */
 		public function isSetSuccessMessage() {
-			return isset ( $this->options [self::SUCCESS_MESSAGE] );
+			return get_transient ( self::SUCCESS_MESSAGE ) != false;
 		}
 		public function setSuccessMessage($message) {
-			$this->options [self::SUCCESS_MESSAGE] = $message;
-			$this->save ();
+			set_transient ( self::SUCCESS_MESSAGE, $message, 30 * self::MINUTES_IN_SECONDS );
 		}
 		public function getSuccessMessage() {
-			if ($this->isSetSuccessMessage ())
-				return $this->options [self::SUCCESS_MESSAGE];
+			return get_transient ( self::SUCCESS_MESSAGE );
 		}
 		public function unsetSuccessMessage() {
-			unset ( $this->options [self::SUCCESS_MESSAGE] );
-			$this->save ();
+			delete_transient ( self::SUCCESS_MESSAGE );
 		}
 	}
 }
