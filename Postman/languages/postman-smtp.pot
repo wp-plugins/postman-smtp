@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.5.11b1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-04 05:50:36+00:00\n"
+"POT-Creation-Date: 2015-04-04 21:07:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -460,31 +460,31 @@ msgstr ""
 msgid "Error computing your domain root - please enter it manually"
 msgstr ""
 
-#: Postman/PostmanAjaxController.php:363
+#. translators: where %s is the domain name of the site
+#: Postman/PostmanAjaxController.php:361
 msgctxt "Test Email Subject"
 msgid "Postman SMTP Test (%s)"
 msgstr ""
 
 #. translators: where %s is the Postman plugin version number (e.g. 1.4)
-#. translators: where %s is the Postman plugin version number (e.g. 1.5.7)
-#: Postman/PostmanAjaxController.php:366 Postman/PostmanAjaxController.php:404
+#: Postman/PostmanAjaxController.php:364 Postman/PostmanAjaxController.php:400
 msgctxt "Test Email Tagline"
 msgid "Sent by Postman %s"
 msgstr ""
 
-#: Postman/PostmanAjaxController.php:421
+#: Postman/PostmanAjaxController.php:417
 msgid ""
 "Your message was delivered (%d ms) to the SMTP server! Congratulations :)"
 msgstr ""
 
 #. translators: where %s is the email service name (e.g. Gmail)
-#: Postman/PostmanAjaxController.php:434
+#: Postman/PostmanAjaxController.php:430
 msgid ""
 "Communication Error [334] - make sure the Sender Email belongs to the "
 "account which provided the %s OAuth 2.0 consent."
 msgstr ""
 
-#: Postman/PostmanAjaxController.php:441
+#: Postman/PostmanAjaxController.php:437
 msgid ""
 "The impossible is possible; sending through wp_mail() failed, but sending "
 "through internal engine succeeded."
@@ -784,9 +784,9 @@ msgstr ""
 
 #: Postman/PostmanViewController.php:298
 msgid ""
-"You are about to configure OAuth 2.0 with an IP address in the URL which "
-"will fail. Either assign a real domain name to your site or add a fake one "
-"in your local machine's host file."
+"You are about to configure OAuth 2.0 with an IP address instead of a domain "
+"name. This is not permitted. Either assign a real domain name to your site "
+"or add a fake one in your local host file."
 msgstr ""
 
 #: Postman/PostmanViewController.php:300

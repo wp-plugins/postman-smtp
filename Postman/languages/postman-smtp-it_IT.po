@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-04 05:50:36+00:00\n"
-"PO-Revision-Date: 2015-04-04 01:53-0500\n"
+"POT-Creation-Date: 2015-04-04 21:07:53+00:00\n"
+"PO-Revision-Date: 2015-04-04 17:09-0500\n"
 "Last-Translator: Andrea Greco <andreag.email@gmail.com>\n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -506,19 +506,19 @@ msgstr ""
 "Errore nello stabilire la tua root di dominio - per favore inseriscila "
 "manualmente"
 
-#: Postman/PostmanAjaxController.php:363
+#. translators: where %s is the domain name of the site
+#: Postman/PostmanAjaxController.php:361
 msgctxt "Test Email Subject"
 msgid "Postman SMTP Test (%s)"
 msgstr "Postman test SMTP (%s)"
 
 #. translators: where %s is the Postman plugin version number (e.g. 1.4)
-#. translators: where %s is the Postman plugin version number (e.g. 1.5.7)
-#: Postman/PostmanAjaxController.php:366 Postman/PostmanAjaxController.php:404
+#: Postman/PostmanAjaxController.php:364 Postman/PostmanAjaxController.php:400
 msgctxt "Test Email Tagline"
 msgid "Sent by Postman %s"
 msgstr "Inviato da Postman %s"
 
-#: Postman/PostmanAjaxController.php:421
+#: Postman/PostmanAjaxController.php:417
 msgid ""
 "Your message was delivered (%d ms) to the SMTP server! Congratulations :)"
 msgstr ""
@@ -526,7 +526,7 @@ msgstr ""
 "Congratulazioni :)"
 
 #. translators: where %s is the email service name (e.g. Gmail)
-#: Postman/PostmanAjaxController.php:434
+#: Postman/PostmanAjaxController.php:430
 msgid ""
 "Communication Error [334] - make sure the Sender Email belongs to the "
 "account which provided the %s OAuth 2.0 consent."
@@ -534,7 +534,7 @@ msgstr ""
 "Errore di comunicazione [334] - assicurarsi che il Mittente Email appartenga "
 "allo stesso profilo per il quale e' concesso il consenso %s OAuth 2.0."
 
-#: Postman/PostmanAjaxController.php:441
+#: Postman/PostmanAjaxController.php:437
 msgid ""
 "The impossible is possible; sending through wp_mail() failed, but sending "
 "through internal engine succeeded."
@@ -851,9 +851,9 @@ msgstr ""
 
 #: Postman/PostmanViewController.php:298
 msgid ""
-"You are about to configure OAuth 2.0 with an IP address in the URL which "
-"will fail. Either assign a real domain name to your site or add a fake one "
-"in your local machine's host file."
+"You are about to configure OAuth 2.0 with an IP address instead of a domain "
+"name. This is not permitted. Either assign a real domain name to your site "
+"or add a fake one in your local host file."
 msgstr ""
 "Stai per configurare OAuth 2.0 con un indirizzo IP nell'URL che fallirà. O "
 "assegnare un vero nome di dominio per il tuo sito o aggiungere un falso in "
@@ -1379,6 +1379,15 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid ""
+#~ "You are about to configure OAuth 2.0 with an IP address in the URL which "
+#~ "will fail. Either assign a real domain name to your site or add a fake "
+#~ "one in your local machine's host file."
+#~ msgstr ""
+#~ "Stai per configurare OAuth 2.0 con un indirizzo IP nell'URL che fallirà. "
+#~ "O assegnare un vero nome di dominio per il tuo sito o aggiungere un falso "
+#~ "in file host del computer locale."
 
 #~ msgid ""
 #~ "This test determines which well-known sockets are available for Postman "
