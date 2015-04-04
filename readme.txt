@@ -32,7 +32,7 @@ Postman's commercial-grade setup wizard makes configuring SMTP a breeze. Stop fi
 * Supports International alphabets, HTML Mail and MultiPart/Alternative
 * Supports [Mandrill](http://mandrill.com) custom headers and forced recipients (cc, bcc, to)
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
-* Security Support: SMTPS/STARTTLS with SSL and TLS
+* Security Support: SMTPS and STARTTLS (SSL/TLS)
 * Verified compatible with: [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), [Visual Forms Builder]((https://wordpress.org/plugins/visual-form-builder/), Email Log
 * Available translations: English, French, Italian
 
@@ -235,7 +235,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 1. Dashboard widget showing status at a glance
 1. Main Settings screen
-1. Setup Wizard (step 1) screen
+1. Setup Wizard (step 1) - Import data from other plugin
+1. Setup Wizard (step 4) - SMTP server interrogation 
 1. Manual Configuration - Account Settings: Password Authentication
 1. Manual Configuration - Account Settings: OAuth 2.0 Authentication
 1. Manual Configuration - Message Settings
@@ -248,7 +249,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.11 = 
+= 1.5.11 - 2015-04-06 = 
 * Commercial-grade improvements to Connectivty Test and Setup Wizard. The new wizard interrogates the server for capabilities and intelligently suggests the best settings for the user, simultaneously preventing from incorrect settings from being entered. Steve Jobs would be proud.
 * Fixed Wizard's SMTP hostname guess for GoDaddy addresses
 * Fixed Wizard's SMTP hostname guess for Outlook 365 addresses
@@ -406,7 +407,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Upgrade Notice ==
 
-= 1.6 =
+= 1.5.11 =
 Heavy-duty connectivity tester and setup wizard.
 
 = 1.5.10 =
