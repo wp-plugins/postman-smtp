@@ -16,7 +16,7 @@ function test() {
 	check ( '::ffff:192.0.2.128', true );
 }
 function check($ipAddress, $expectedresult) {
-	$result = isIpAddressNotADomainName ( $ipAddress );
+	$result = isHostAddressNotADomainName ( $ipAddress );
 	$displaySuccess = 'fail';
 	if ($result == $expectedresult) {
 		$displaySuccess = 'pass';
