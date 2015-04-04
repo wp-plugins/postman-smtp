@@ -12,14 +12,6 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function getName() {
 			return _x ( 'SMTP', 'Transport Name', 'postman-smtp' );
 		}
-		/**
-		 * What is this for?
-		 *
-		 * @deprecated
-		 *
-		 */
-		public function isSmtp() {
-		}
 		public function getVersion() {
 			return POSTMAN_PLUGIN_VERSION;
 		}
@@ -98,8 +90,25 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			} else if (PostmanOptions::AUTHENTICATION_TYPE_NONE == $authType) {
 				return _x ( 'no', 'Authentication Type', 'postman-smtp' );
 			} else {
+				switch ($authType) {
+					case PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 :
+						$authDescription = _x ( 'CRAM-MD5', 'Authentication Type', 'postman-smtp' );
+						break;
+					
+					case PostmanOptions::AUTHENTICATION_TYPE_LOGIN :
+						$authDescription = _x ( 'Login', 'Authentication Type', 'postman-smtp' );
+						break;
+					
+					case PostmanOptions::AUTHENTICATION_TYPE_PLAIN :
+						$authDescription = _x ( 'Plain', 'Authentication Type', 'postman-smtp' );
+						break;
+					
+					default :
+						$authDescription = $authType;
+						break;
+				}
 				/* translators: where %s is the Authentication Type (e.g. plain, login or crammd5) */
-				return sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $authType );
+				return sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $authDescription );
 			}
 		}
 		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
@@ -248,7 +257,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			
 			// if there was a way to send mail!
 			if ($score > 0) {
-
+				
 				// tiny weighting to prejudice the port selection
 				if ($port == 587) {
 					$score += 4;
@@ -286,38 +295,6 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
 		const SLUG = 'smtp';
-		/**
-		 * what is this for .
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 * .. @deprecated
-		 */
-		public function isSmtp() {
-		}
 		public function isServiceProviderGoogle($hostname) {
 			return endsWith ( $hostname, 'gmail.com' );
 		}
