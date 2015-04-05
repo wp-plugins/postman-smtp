@@ -39,10 +39,9 @@ Postman's commercial-grade setup wizard makes configuring SMTP a breeze. Stop fi
 If you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
 
 = Requirements =
-* WordPress 3.9 (or later)
-* PHP 5.2 with SPL and iconv
-* ✝ SMTP delivery requires connectivity to and authentication credentials with a 3rd-party email service provider
-* ✝✝ Custom domains require a valid SPF record for Blackhole-free and Spam-free delivery
+* WordPress 3.9 and PHP 5.2 with SPL and iconv
+* ✝ SMTP delivery requires connectivity to, and authentication credentials with, a 3rd-party email service provider
+* ✝✝ Custom domains **require** a valid SPF record, and potentially a DKIM record, for Blackhole-free and Spam-free delivery
 * ¹ Optional: a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
 * ² Optional: the [Postman Gmail API Extension](https://wordpress.org/plugins/postman-gmail-extension/) sends email over HTTPS
 
