@@ -90,6 +90,9 @@ Grant Code ->
 wp_mail() and Email in General
 -----------------------------
 
+What is the difference between ports 465 and 587?
+http://stackoverflow.com/a/19942206/4368109
+
 The Return Path
 https://wordpress.org/ideas/topic/wp-mail-and-php-mail-function-according-to-rfc-822
 
