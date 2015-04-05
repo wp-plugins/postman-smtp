@@ -344,12 +344,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'encryption_type_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::HOSTNAME, _x ( 'SMTP Server Hostname', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::HOSTNAME, _x ( 'Outgoing Mail Server Hostname', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'hostname_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::PORT, _x ( 'SMTP Server Port', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::PORT, _x ( 'Outgoing Mail Server Port', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'port_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
@@ -520,7 +520,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printSmtpSectionInfo() {
-			print __ ( 'Select the authentication method and enter the SMTP server hostname and port:', 'postman-smtp' );
+			print __ ( 'Select the authentication method, security type, and enter the Mail Submission Agent (MSA) hostname and port:', 'postman-smtp' );
 		}
 		
 		/**

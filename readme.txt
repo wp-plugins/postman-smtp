@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, smtps, email, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.1.1
-Stable tag: 1.5.10
+Stable tag: 1.5.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -251,8 +251,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 1.5.11 - 2015-04-06 = 
 * Commercial-grade improvements to Connectivty Test and Setup Wizard. The new wizard interrogates the server for capabilities and intelligently suggests the best settings for the user, simultaneously preventing from incorrect settings from being entered. Steve Jobs would be proud.
-* Fixed Wizard's SMTP hostname guess for GoDaddy addresses
-* Fixed Wizard's SMTP hostname guess for Outlook 365 addresses
+* Fixed Wizard's MSA hostname guess for GoDaddy addresses (smtp.secureserver.net is the MTA not the MSA)
+* Fixed Wizard's MSA hostname guess for Outlook 365 addresses (smtp.live.com is for their free Hotmail service)
 * Added French/Italian translation for JQuery Validation
 
 = 1.5.10 - 2015-03-29 =
