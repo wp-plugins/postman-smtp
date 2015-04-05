@@ -224,9 +224,15 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$recommendation = array ();
 			// increment score for auth type
 			if ($hostData ['start_tls']) {
+				// STARTTLS was formalized in 2002
+				// http://www.rfc-editor.org/rfc/rfc3207.txt
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
 				$score += 30000;
 			} elseif ($hostData ['protocol'] == 'SMTPS') {
+				// "The hopelessly confusing and imprecise term, SSL,
+				// has often been used to indicate the SMTPS wrapper and
+				// TLS to indicate the STARTTLS protocol extension."
+				// http://stackoverflow.com/a/19942206/4368109
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
 				$score += 20000;
 			} elseif ($hostData ['protocol'] == 'SMTP') {
@@ -261,9 +267,17 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				// tiny weighting to prejudice the port selection
 				if ($port == 587) {
 					$score += 4;
-				} elseif ($port == 465) {
-					$score += 3;
 				} elseif ($port == 25) {
+					// "due to the prevalence of machines that have worms,
+					// viruses, or other malicious software that generate large amounts of
+					// spam, many sites now prohibit outbound traffic on the standard SMTP
+					// port (port 25), funneling all mail submissions through submission
+					// servers."
+					// http://www.rfc-editor.org/rfc/rfc6409.txt
+					$score += 3;
+				} elseif ($port == 465) {
+					// use of port 465 for SMTP was deprecated in 1998
+					// http://www.imc.org/ietf-apps-tls/mail-archive/msg00204.html
 					$score += 2;
 				} else {
 					$score += 1;
