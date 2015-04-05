@@ -33,7 +33,7 @@ if (! class_exists ( "PostmanLogger" )) {
 			}
 		}
 		function error($text) {
-			if ($this->$wpDebug && self::ERROR_INT >= $this->logLevel) {
+			if ($this->wpDebug && self::ERROR_INT >= $this->logLevel) {
 				if (is_array ( $text ) || is_object ( $text )) {
 					error_log ( 'ERROR' . $this->name . ': ' . print_r ( $text, true ) );
 				} else {
