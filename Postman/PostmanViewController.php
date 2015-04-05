@@ -222,18 +222,18 @@ if (! class_exists ( 'PostmanViewController' )) {
 		public function initializeAdminPage() {
 			// register the stylesheet and javascript external resources
 			wp_register_style ( self::POSTMAN_STYLE, plugins_url ( 'style/postman.css', __FILE__ ), null, POSTMAN_PLUGIN_VERSION );
-			wp_register_style ( 'jquery_ui_style', plugins_url ( 'style/jquery-ui.css', __FILE__ ), self::POSTMAN_STYLE, POSTMAN_PLUGIN_VERSION );
+			wp_register_style ( 'jquery_ui_style', plugins_url ( 'style/jquery-steps/jquery-ui.css', __FILE__ ), self::POSTMAN_STYLE, '1.1.0' );
+			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery-steps/jquery.steps.css', __FILE__ ), self::POSTMAN_STYLE, '1.1.0' );
 			wp_register_style ( 'postman_send_test_email', plugins_url ( 'style/postman_send_test_email.css', __FILE__ ), self::POSTMAN_STYLE, POSTMAN_PLUGIN_VERSION );
-			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery.steps.css', __FILE__ ), self::POSTMAN_STYLE, '1.1.0' );
 			
 			wp_register_script ( self::POSTMAN_SCRIPT, plugins_url ( 'script/postman.js', __FILE__ ), array (
 					self::JQUERY_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_register_script ( 'sprintf', plugins_url ( 'script/sprintf.min.js', __FILE__ ), null, '1.0.2' );
-			wp_register_script ( 'jquery_steps_script', plugins_url ( 'script/jquery.steps.min.js', __FILE__ ), array (
+			wp_register_script ( 'sprintf', plugins_url ( 'script/sprintf/sprintf.min.js', __FILE__ ), null, '1.0.2' );
+			wp_register_script ( 'jquery_steps_script', plugins_url ( 'script/jquery-steps/jquery.steps.min.js', __FILE__ ), array (
 					self::JQUERY_SCRIPT 
 			), '1.1.0' );
-			wp_register_script ( 'jquery_validation', plugins_url ( 'script/jquery.validate.min.js', __FILE__ ), array (
+			wp_register_script ( 'jquery_validation', plugins_url ( 'script/jquery-validate/jquery.validate.min.js', __FILE__ ), array (
 					self::JQUERY_SCRIPT 
 			), '1.13.1' );
 			wp_register_script ( 'jquery_validation_fr', plugins_url ( 'script/jquery-validate/messages_fr.js', __FILE__ ), array (
