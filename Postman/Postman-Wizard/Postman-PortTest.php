@@ -15,7 +15,6 @@ if (! class_exists ( "PostmanPortTest" )) {
 		public $authPlain;
 		public $authCrammd5;
 		public $authXoauth;
-		public $authAnonymous;
 		public $authNone;
 		public $trySmtps;
 		const DEBUG = false;
@@ -105,7 +104,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 			$success = $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
 			if ($success) {
 				$this->protocol = 'SMTP';
-				if (! ($this->authAnonymous || $this->authCrammd5 || $this->authLogin || $this->authPlain || $this->authXoauth)) {
+				if (! ($this->authCrammd5 || $this->authLogin || $this->authPlain || $this->authXoauth)) {
 					$this->authNone = true;
 				}
 			} else {
@@ -123,7 +122,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 			$connectionString = "ssl://%s:%s";
 			$success = $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
 			if ($success) {
-				if (! ($this->authAnonymous || $this->authCrammd5 || $this->authLogin || $this->authPlain || $this->authXoauth)) {
+				if (! ($this->authCrammd5 || $this->authLogin || $this->authPlain || $this->authXoauth)) {
 					$this->authNone = true;
 				}
 				$this->protocol = 'SMTPS';
@@ -206,8 +205,9 @@ if (! class_exists ( "PostmanPortTest" )) {
 						$this->debug ( 'authXoauth' );
 					}
 					if (preg_match ( '/\\sANONYMOUS\\s/', $line )) {
-						$this->authAnonymous = true;
-						$this->debug ( 'authAnonymous' );
+						// Postman treats ANONYMOUS login as no authentication.
+						$this->authNone = true;
+						$this->debug ( 'authAnonymous => authNone' );
 					}
 					// done
 					$result = 'auth';
