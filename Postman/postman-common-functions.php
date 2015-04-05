@@ -15,13 +15,11 @@ if (! class_exists ( "PostmanLogger" )) {
 		private $wpDebug;
 		function __construct($name) {
 			$this->name = $name;
+			$this->wpDebug = defined ( 'WP_DEBUG' );
 			if (class_exists ( 'PostmanOptions' )) {
 				$this->logLevel = PostmanOptions::getInstance ()->getLogLevel ();
 			} else {
 				$this->logLevel = self::DEBUG_INT;
-			}
-			if (defined ( 'WP_DEBUG' )) {
-				$this->wpDebug = true;
 			}
 		}
 		// better logging thanks to http://www.smashingmagazine.com/2011/03/08/ten-things-every-wordpress-plugin-developer-should-know/
