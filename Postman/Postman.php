@@ -13,6 +13,7 @@ if (! class_exists ( 'Postman' )) {
 	require_once 'PostmanWpMailBinder.php';
 	require_once 'PostmanAdminController.php';
 	require_once 'PostmanActivationHandler.php';
+	require_once 'PostmanEmailLog.php';
 	
 	/**
 	 *
@@ -46,12 +47,6 @@ if (! class_exists ( 'Postman' )) {
 			$this->options = PostmanOptions::getInstance ();
 			$this->authToken = PostmanOAuthToken::getInstance ();
 			
-			// create an instance of the MessageHandler
-			$this->messageHandler = new PostmanMessageHandler ( $this->options, $this->authToken );
-			
-			// store an instance of the WpMailBinder
-			$this->wpMailBinder = PostmanWpMailBinder::getInstance ();
-			
 			// These are operations that have to happen NOW, before the init() hook
 			// and even before WordPress loads its internal pluggable functions
 			$this->preInit ();
@@ -63,6 +58,15 @@ if (! class_exists ( 'Postman' )) {
 		private function preInit() {
 			// load the text domain
 			$this->loadTextDomain ();
+			
+			// create an instance of the MessageHandler
+			$this->messageHandler = new PostmanMessageHandler ( $this->options, $this->authToken );
+			
+			// create an instance of the EmailLog
+			$emailLog = new PostmanEmailLog ();
+			
+			// store an instance of the WpMailBinder
+			$this->wpMailBinder = PostmanWpMailBinder::getInstance ();
 			
 			// register the SMTP transport
 			$this->registerTransport ();

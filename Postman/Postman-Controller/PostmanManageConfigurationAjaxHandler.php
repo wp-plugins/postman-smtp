@@ -127,21 +127,21 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 						if ($value ['auth_crammd5'] || $value ['auth_login'] || $value ['auth_plain']) {
 							array_push ( $overrideAuthItem, array (
 									'selected' => $passwordMode,
-									'name' => _x ( 'Password', 'Authentication Type', 'postman-smtp' ),
+									'name' => _x ( 'Password', 'Authentication Type is Password', 'postman-smtp' ),
 									'value' => 'password' 
 							) );
 						}
 						if ($value ['auth_xoauth'] || $winningRecommendation ['auth'] == 'oauth2') {
 							array_push ( $overrideAuthItem, array (
 									'selected' => $oauth2Mode,
-									'name' => _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' ),
+									'name' => _x ( 'OAuth 2.0', 'OAuthentication Type is OAuth 2.0', 'postman-smtp' ),
 									'value' => 'oauth2' 
 							) );
 						}
 						if ($value ['auth_none']) {
 							array_push ( $overrideAuthItem, array (
 									'selected' => $noAuthMode,
-									'name' => __ ( 'No' ),
+									'name' => __ ( 'No', 'as in "No Authentication"', 'postman-smtp' ),
 									'value' => 'none' 
 							) );
 						}
