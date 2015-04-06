@@ -10,6 +10,9 @@ if (! class_exists ( 'PostmanPreRequisitesCheck' )) {
 		public static function checkOpenSsl() {
 			return extension_loaded ( 'openssl' );
 		}
+		public static function checkSockets() {
+			return extension_loaded ( 'php_sockets' );
+		}
 		public static function checkAllowUrlFopen() {
 			return filter_var ( ini_get ( 'allow_url_fopen' ), FILTER_VALIDATE_BOOLEAN );
 		}
@@ -32,6 +35,11 @@ if (! class_exists ( 'PostmanPreRequisitesCheck' )) {
 			array_push ( $state, array (
 					'name' => 'openssl',
 					'ready' => self::checkOpenSsl (),
+					'required' => false 
+			) );
+			array_push ( $state, array (
+					'name' => 'php_sockets',
+					'ready' => self::checkSockets(),
 					'required' => false 
 			) );
 			array_push ( $state, array (
