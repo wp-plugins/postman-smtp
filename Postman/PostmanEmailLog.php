@@ -13,18 +13,17 @@ if (! class_exists ( 'PostmanEmailLog' )) {
 		function create_post_type() {
 			register_post_type ( 'postman_email', array (
 					'labels' => array (
-							'name' => __ ( 'Sent Emails' ),
-							'singular_name' => __ ( 'Sent Email' ) 
+							'name' => _x ( 'Sent Emails', 'A List of Emails that have been sent', 'postman-smtp' ),
+							'singular_name' => _x ( 'Sent Email', 'A List of Emails that have been sent', 'postman-smtp' ) 
 					),
 					'public' => true,
 					'has_archive' => true 
 			) );
-			$this->logger->debug('Created custom post type \'postman_email\'');
+			$this->logger->debug ( 'Created custom post type \'postman_email\'' );
 		}
 	}
 	
 	// WordPress.org
-	
 	
 	// Custom Post Type Screens
 	// When a custom post type is created like in the example above, it gets a new top-level administration menu to create and manage posts of that new post type. New administration screens will be accessible from that menu, such as post edit screen where you will have a full post editor and everything that comes along with it according to what features you set that your custom post type should support by the supports argument of the register_post_type() function. You can customize the screens with several action and filter hooks, see this Custom Post Type Snippets post by Yoast for an explanation and code examples on how to change a custom post type overview screen.
