@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.5.7\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-06 19:12:33+00:00\n"
-"PO-Revision-Date: 2015-04-06 15:13-0500\n"
+"POT-Creation-Date: 2015-04-06 19:54:10+00:00\n"
+"PO-Revision-Date: 2015-04-06 21:10-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr_TR\n"
@@ -27,9 +27,9 @@ msgid "Password"
 msgstr "Şifre"
 
 #: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:137
-msgctxt "OAuthentication Type is OAuth 2.0"
+msgctxt "Authentication Type is OAuth 2.0"
 msgid "OAuth 2.0"
-msgstr "OAuth 2.0"
+msgstr ""
 
 #: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:144
 msgid "No"
@@ -638,10 +638,12 @@ msgid "Request OAuth Permission"
 msgstr "OAuth Yetki Ver"
 
 #: Postman/PostmanEmailLog.php:16
+msgctxt "A List of Emails that have been sent"
 msgid "Sent Emails"
 msgstr ""
 
 #: Postman/PostmanEmailLog.php:17
+msgctxt "A List of Emails that have been sent"
 msgid "Sent Email"
 msgstr ""
 
@@ -1210,6 +1212,10 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgctxt "OAuthentication Type is OAuth 2.0"
+#~ msgid "OAuth 2.0"
+#~ msgstr "OAuth 2.0"
 
 #~ msgctxt "Authentication Type"
 #~ msgid "Password"

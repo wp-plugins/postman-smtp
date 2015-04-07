@@ -514,9 +514,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Transport section info
 		 */
 		public function printTransportSectionInfo() {
-			$totalTransportsAvailable = sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () );
-			/* translators: These two phrases represent the cases for 1) a single transport installed and 2) mulitple transports installed */
-			print _n ( 'The default transport is SMTP.', 'One or more extension(s) has installed additional transports:', $totalTransportsAvailable, 'postman-smtp' );
+			if (1 == sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () )) {
+				print __ ( 'The default transport is SMTP.', 'postman-smtp' );
+			} else {
+				print __ ( 'Select the transport to use:', 'postman-smtp' );
+			}
 		}
 		/**
 		 * Print the Section text
@@ -547,7 +549,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		
 		/**
 		 * Print the Section text
+		 *
 		 * @deprecated
+		 *
 		 */
 		public function printTestEmailSectionInfo() {
 			// no-op

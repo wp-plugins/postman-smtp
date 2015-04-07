@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.6.0b1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-06 19:50:27+00:00\n"
+"POT-Creation-Date: 2015-04-06 19:54:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -684,10 +684,12 @@ msgid "Request OAuth Permission"
 msgstr ""
 
 #: Postman/PostmanEmailLog.php:16
+msgctxt "A List of Emails that have been sent"
 msgid "Sent Emails"
 msgstr ""
 
 #: Postman/PostmanEmailLog.php:17
+msgctxt "A List of Emails that have been sent"
 msgid "Sent Email"
 msgstr ""
 

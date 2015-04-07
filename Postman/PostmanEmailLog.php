@@ -11,12 +11,11 @@ if (! class_exists ( 'PostmanEmailLog' )) {
 			) );
 		}
 		function create_post_type() {
-			register_post_type ( 'postman_email', array (
+			register_post_type ( 'postman_sent_mail', array (
 					'labels' => array (
-							'name' => _x ( 'Sent Emails', 'A List of Emails that have been sent', 'postman-smtp' ),
-							'singular_name' => _x ( 'Sent Email', 'A List of Emails that have been sent', 'postman-smtp' ) 
 					),
-					'public' => true,
+					'show_in_nav_menus' => true,
+					'show_ui' => true,
 					'has_archive' => true 
 			) );
 			$this->logger->debug ( 'Created custom post type \'postman_email\'' );
