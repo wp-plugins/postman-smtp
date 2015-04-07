@@ -97,7 +97,7 @@ A modern replacement for traditional password-based authentication. Postman supp
 
 Postman requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) and perform a specific service (handle Gmail, stay out of Google Docs) with no need for you to surrender your username and password credentials (master house key).
 
-Once you grant access, Postman then overrides the WordPress wp_mail() function to provide an incredibly stable mail sub-system.
+Once access is granted, Postman commandeers the WordPress wp_mail() function to provide an incredibly stable mail sub-system.
 
 = Can't I just tell Google to allow less secure apps and keep using my old password? =
 
@@ -163,6 +163,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 = Who do we thank for translations? =
 * French - [Etienne Provost](https://www.facebook.com/eprovost3)
 * Italian - [Andrea Greco]
+* Turkish - [ercan yaris]
 
 
 
@@ -247,6 +248,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.5.11 - 2015-04-05 = 
+* Two thousand installations! :D
 * Commercial-grade improvements to Connectivty Test and Setup Wizard. The new wizard prevents misconfiguration by interrogating the MTA for capabilities and intelligently suggests the best settings for the user. Steve Jobs would be proud.
 * Fixed Wizard's MSA hostname guess for GoDaddy addresses (smtp.secureserver.net is the MTA not the MSA)
 * Fixed Wizard's MSA hostname guess for Outlook 365 addresses (smtp.live.com is for their free Hotmail service)
