@@ -47,7 +47,7 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 
 == Installation ==
 
-> If you are trying to install on GoDaddy, or another host that blocks the standard mail ports, your only option may be the [Postman Gmail API extension](https://wordpress.org/plugins/postman-gmail-extension/). If you are trying to install on WPEngine, you may run into [Error 502 Bad Gateway](https://wordpress.org/support/topic/test-email-hangs?replies=7).
+> To use email belonging to a specific provider, you must use their SMTP server. If Postman is unable to connect to the SMTP server you want, you may have to ask your host to open the ports, setup a new email account with your host, or switch hosts! 
 
 = Easy install and setup! (Recommended for all users) =
 1. Install and activate the plugin through the 'Plugins' menu in WordPress.
