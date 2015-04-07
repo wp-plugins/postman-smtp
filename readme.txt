@@ -47,7 +47,9 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 
 == Installation ==
 
-> To use email belonging to a specific provider, you must use their SMTP server. If Postman is unable to connect to the SMTP server you want, you may have to ask your host to open the ports, setup a new email account with your host, or switch hosts! 
+> To use email belonging to a specific provider, you must use their SMTP server. If Postman is unable to connect to the SMTP server you want, you may have to ask your host to open the ports, or create a new email account managed by your host, or switch hosts!
+> 
+> The Postman Connectivity Test utility will tell you which ports are open and which are closed, and what actions you can take.
 
 = Easy install and setup! (Recommended for all users) =
 1. Install and activate the plugin through the 'Plugins' menu in WordPress.
