@@ -118,6 +118,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 				wp_enqueue_script ( 'jquery_validation_fr' );
 			} elseif (startsWith ( get_locale (), 'it' )) {
 				wp_enqueue_script ( 'jquery_validation_it' );
+			} elseif (startsWith ( get_locale (), 'tr' )) {
+				wp_enqueue_script ( 'jquery_validation_tr' );
 			}
 		}
 		
@@ -240,6 +242,9 @@ if (! class_exists ( 'PostmanViewController' )) {
 					'jquery_validation' 
 			), '1.13.1' );
 			wp_register_script ( 'jquery_validation_it', plugins_url ( 'script/jquery-validate/messages_it.js', __FILE__ ), array (
+					'jquery_validation' 
+			), '1.13.1' );
+			wp_register_script ( 'jquery_validation_tr', plugins_url ( 'script/jquery-validate/messages_tr.js', __FILE__ ), array (
 					'jquery_validation' 
 			), '1.13.1' );
 			wp_register_script ( 'postman_wizard_script', plugins_url ( 'script/postman_wizard.js', __FILE__ ), array (

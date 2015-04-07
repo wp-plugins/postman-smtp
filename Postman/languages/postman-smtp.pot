@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.6.0b1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-06 19:54:10+00:00\n"
+"POT-Creation-Date: 2015-04-07 05:35:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -60,8 +60,8 @@ msgid "SMTP-STARTTLS"
 msgstr ""
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:89
-#: Postman/PostmanAdminController.php:618
-#: Postman/PostmanAdminController.php:626
+#: Postman/PostmanAdminController.php:622
+#: Postman/PostmanAdminController.php:630
 #: Postman/PostmanViewController.php:453
 msgctxt "Authentication Type"
 msgid "OAuth 2.0"
@@ -73,22 +73,22 @@ msgid "no"
 msgstr ""
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:95
-#: Postman/PostmanAdminController.php:617
+#: Postman/PostmanAdminController.php:621
 #: Postman/PostmanViewController.php:452
 msgctxt "Authentication Type"
 msgid "CRAM-MD5"
 msgstr ""
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:99
-#: Postman/PostmanAdminController.php:616
+#: Postman/PostmanAdminController.php:620
 #: Postman/PostmanViewController.php:450
 msgctxt "Authentication Type"
 msgid "Login"
 msgstr ""
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:103
-#: Postman/PostmanAdminController.php:615
-#: Postman/PostmanAdminController.php:625
+#: Postman/PostmanAdminController.php:619
+#: Postman/PostmanAdminController.php:629
 #: Postman/PostmanViewController.php:451
 msgctxt "Authentication Type"
 msgid "Plain"
@@ -364,110 +364,110 @@ msgctxt "Configuration Section Title"
 msgid "Delete plugin settings"
 msgstr ""
 
-#. translators: These two phrases represent the cases for 1) a single transport
-#. installed and 2) mulitple transports installed
-#: Postman/PostmanAdminController.php:519
+#: Postman/PostmanAdminController.php:518
 msgid "The default transport is SMTP."
-msgid_plural "One or more extension(s) has installed additional transports:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
-#: Postman/PostmanAdminController.php:525
+#: Postman/PostmanAdminController.php:520
+msgid "Select the transport to use:"
+msgstr ""
+
+#: Postman/PostmanAdminController.php:527
 msgid ""
 "Select the authentication method, security type, and enter the Mail "
 "Submission Agent (MSA) hostname and port:"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:538
+#: Postman/PostmanAdminController.php:540
 msgid "Enter the username (email address) and password you use to send email"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:560
+#: Postman/PostmanAdminController.php:564
 #: Postman/PostmanViewController.php:424
 msgid ""
 "This will purge all of Postman's settings, including SMTP server info, "
 "username/password and OAuth Credentials."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:560
+#: Postman/PostmanAdminController.php:564
 #: Postman/PostmanViewController.php:424
 msgid "Are you sure?"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:567
+#: Postman/PostmanAdminController.php:571
 msgid "The message sender is used as the <b>From:</b> address."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:574
+#: Postman/PostmanAdminController.php:578
 msgid ""
 "The Reply-To overrides the Sender when the recipient composes a reply. "
 "Separate multiple <b>to</b>/<b>cc</b>/<b>bcc</b> recipients with commas."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:581
+#: Postman/PostmanAdminController.php:585
 msgid ""
 "Increase the timeouts if your host is intermittenly failing to send mail. Be "
 "careful, this also correlates to how long your user must wait if the mail "
 "server is unreachable."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:587
+#: Postman/PostmanAdminController.php:591
 msgid ""
 "Log Level specifies the level of detail written to the WordPress and PHP "
 "logfiles."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:593
+#: Postman/PostmanAdminController.php:597
 msgid ""
 "Specify custom headers (e.g. <code>X-MC-Tags: wordpress-site-A</code>), one "
 "per line. Use custom headers with caution as they can negatively affect your "
 "Spam score."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:614
-#: Postman/PostmanAdminController.php:624
+#: Postman/PostmanAdminController.php:618
+#: Postman/PostmanAdminController.php:628
 #: Postman/PostmanViewController.php:449
 msgctxt "Authentication Type"
 msgid "None"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:635
-#: Postman/PostmanAdminController.php:643
+#: Postman/PostmanAdminController.php:639
+#: Postman/PostmanAdminController.php:647
 msgctxt "Encryption Type"
 msgid "None"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:636
+#: Postman/PostmanAdminController.php:640
 msgctxt "Encryption Type"
 msgid "SSL (SMTPS)"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:637
+#: Postman/PostmanAdminController.php:641
 msgctxt "Encryption Type"
 msgid "TLS (StartTLS)"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:644
+#: Postman/PostmanAdminController.php:648
 msgctxt "Encryption Type"
 msgid "SSL"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:645
+#: Postman/PostmanAdminController.php:649
 msgctxt "Encryption Type"
 msgid "TLS"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:690
-#: Postman/PostmanAdminController.php:692
+#: Postman/PostmanAdminController.php:694
+#: Postman/PostmanAdminController.php:696
 msgid "Prevent the Sender Name from being overridden"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:716
-#: Postman/PostmanAdminController.php:718
+#: Postman/PostmanAdminController.php:720
+#: Postman/PostmanAdminController.php:722
 msgid "Prevent the Sender Email Address from being overridden"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:735
+#: Postman/PostmanAdminController.php:739
 msgid "Error computing your domain root - please enter it manually"
 msgstr ""
 
@@ -681,16 +681,6 @@ msgstr ""
 #: Postman/PostmanConfigTextHelper.php:301
 msgctxt "Command to initiate OAuth authentication"
 msgid "Request OAuth Permission"
-msgstr ""
-
-#: Postman/PostmanEmailLog.php:16
-msgctxt "A List of Emails that have been sent"
-msgid "Sent Emails"
-msgstr ""
-
-#: Postman/PostmanEmailLog.php:17
-msgctxt "A List of Emails that have been sent"
-msgid "Sent Email"
 msgstr ""
 
 #: Postman/PostmanMessageHandler.php:128
