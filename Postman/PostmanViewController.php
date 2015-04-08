@@ -463,7 +463,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '</ol>';
 			print '</section>';
 			print '<section id="blocked-port-help" style="display:none">';
-			print sprintf ( '<p><b>%s</b></p>', __ ( 'A <span style="color:red">Closed</span> port indicates one or more of these issues:' ), 'postman-smtp' );
+			print sprintf ( '<p><b>%s</b></p>', __ ( 'A <span style="color:red">Closed</span> port indicates one or more of these issues:', 'postman-smtp' ) );
 			print '<ol>';
 			printf ( '<li>%s</li>', __ ( 'Your host has placed a firewall between this site and the Internet', 'postman-smtp' ) );
 			/* translators: where %s is the URL to the PHP documentation on 'allow-url-fopen' */
