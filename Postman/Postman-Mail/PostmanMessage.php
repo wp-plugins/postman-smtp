@@ -76,6 +76,9 @@ if (! class_exists ( "PostmanMessage" )) {
 		function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->headers = array ();
+			$this->toRecipients = array ();
+			$this->ccRecipients = array ();
+			$this->bccRecipients = array ();
 		}
 		
 		/**
@@ -122,10 +125,10 @@ if (! class_exists ( "PostmanMessage" )) {
 			$sender->setName ( apply_filters ( 'wp_mail_from_name', $sender->getName () ) );
 			
 			// but the MailAuthenticator and user have the final say
-			if ($authenticator->isSenderEmailOverridePrevented() || $this->isSenderEmailOverridePrevented ()) {
+			if ($authenticator->isSenderEmailOverridePrevented () || $this->isSenderEmailOverridePrevented ()) {
 				$sender->setEmail ( $this->sender->getEmail () );
 			}
-			if ($authenticator->isSenderNameOverridePrevented() || $this->isSenderNameOverridePrevented ()) {
+			if ($authenticator->isSenderNameOverridePrevented () || $this->isSenderNameOverridePrevented ()) {
 				$sender->setName ( $this->sender->getName () );
 			}
 			
@@ -193,9 +196,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @throws Exception
 		 */
 		public function addTo($to) {
-			if (! isset ( $this->toRecipients )) {
-				$this->toRecipients = array ();
-			}
 			$this->addRecipients ( $this->toRecipients, $to );
 		}
 		/**
@@ -205,9 +205,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @throws Exception
 		 */
 		public function addCc($cc) {
-			if (! isset ( $this->ccRecipients )) {
-				$this->ccRecipients = array ();
-			}
 			$this->addRecipients ( $this->ccRecipients, $cc );
 		}
 		/**
@@ -217,9 +214,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @throws Exception
 		 */
 		public function addBcc($bcc) {
-			if (! isset ( $this->bccRecipients )) {
-				$this->bccRecipients = array ();
-			}
 			$this->addRecipients ( $this->bccRecipients, $bcc );
 		}
 		/**
@@ -229,9 +223,9 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @throws Exception
 		 */
 		private function addRecipients(&$recipientList, $recipients) {
-			$recipients = PostmanEmailAddress::convertToArray ( $recipients );
-			foreach ( $recipients as $recipient ) {
-				if (! empty ( $recipient )) {
+			if (! empty ( $recipients )) {
+				$recipients = PostmanEmailAddress::convertToArray ( $recipients );
+				foreach ( $recipients as $recipient ) {
 					$this->logger->debug ( sprintf ( 'User Added recipient: "%s"', $recipient ) );
 					array_push ( $recipientList, new PostmanEmailAddress ( $recipient ) );
 				}

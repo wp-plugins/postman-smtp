@@ -259,6 +259,7 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 					'hostname' => $hostname,
 					'port' => $port,
 					'protocol' => $portTest->protocol,
+					'domain_name' => $portTest->domainName,
 					'message' => $portTest->getErrorMessage (),
 					'start_tls' => $portTest->startTls,
 					'auth_plain' => $portTest->authPlain,

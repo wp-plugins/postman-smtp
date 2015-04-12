@@ -94,7 +94,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			// add the sender
 			$sender = $message->addFrom ( $mail, $this->authenticator );
 			$sender->log ( $this->logger, 'From' );
-				
+			
 			// add the to recipients
 			foreach ( ( array ) $message->getToRecipients () as $recipient ) {
 				$recipient->log ( $this->logger, 'To' );
@@ -198,14 +198,33 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			// send the message
 			$this->logger->debug ( "Sending mail" );
 			try {
+				$log = new PostmanEmailLog ();
+				$log->subject = $mail->getSubject ();
+				$log->body = '';
+				if ($mail->getBodyText ())
+					$log->body .= $mail->getBodyText ()->getRawContent ();
+				if ($mail->getBodyHtml ())
+					$log->body .= $mail->getBodyHtml ()->getRawContent ();
+				$log->message = 'Ok';
+				$log->sender = $mail->getFrom ();
+				$log->recipients = $mail->getRecipients ();
+				$log->success = true;
 				$mail->send ( $zendTransport );
-				if ($zendTransport->getConnection ())
-					$this->transcript = $zendTransport->getConnection ()->getLog ();
+				if ($zendTransport->getConnection ()) {
+					$sessionTranscript = $zendTransport->getConnection ()->getLog ();
+					$this->transcript = $sessionTranscript;
+					$log->sessionTranscript = $sessionTranscript;
+					$this->logger->debug ( $sessionTranscript );
+				}
+				PostmanEmailLogService::getInstance ()->writeToEmailLog ( $log );
 			} catch ( Exception $e ) {
 				$c = $zendTransport->getConnection ();
 				if (isset ( $c )) {
 					$this->transcript = $zendTransport->getConnection ()->getLog ();
 				}
+				$log->message = $e->getMessage ();
+				$log->success = false;
+				PostmanEmailLogService::getInstance ()->writeToEmailLog ( $log );
 				throw $e;
 			}
 		}

@@ -13,7 +13,8 @@ if (! class_exists ( 'Postman' )) {
 	require_once 'PostmanWpMailBinder.php';
 	require_once 'PostmanAdminController.php';
 	require_once 'PostmanActivationHandler.php';
-	require_once 'PostmanEmailLog.php';
+	require_once 'PostmanEmailLogService.php';
+	require_once 'PostmanHelp.php';
 	
 	/**
 	 *
@@ -63,7 +64,7 @@ if (! class_exists ( 'Postman' )) {
 			$this->messageHandler = new PostmanMessageHandler ( $this->options, $this->authToken );
 			
 			// create an instance of the EmailLog
-			$emailLog = new PostmanEmailLog ();
+			$emailLog = PostmanEmailLogService::getInstance();
 			
 			// store an instance of the WpMailBinder
 			$this->wpMailBinder = PostmanWpMailBinder::getInstance ();

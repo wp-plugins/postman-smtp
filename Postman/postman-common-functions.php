@@ -59,13 +59,26 @@ if (! function_exists ( 'postmanValidateEmail' )) {
 
 if (! function_exists ( 'str_getcsv' )) {
 	/**
-	 * Using fgetscv (PHP 4) as a work-around for str_getcsv (PHP 5.3)
-	 * From http://stackoverflow.com/questions/13430120/str-getcsv-alternative-for-older-php-version-gives-me-an-empty-array-at-the-e
+	 * PHP version less than 5.3 don't have str_getcsv natively.
 	 *
 	 * @param unknown $string        	
 	 * @return multitype:
 	 */
 	function str_getcsv($string) {
+		$logger = new PostmanLogger ( 'postman-common-functions' );
+		$logger->debug ( 'Using custom str_getcsv' );
+		return postman_strgetcsv_impl ( $string );
+	}
+}
+
+if (! function_exists ( 'postman_strgetcsv_impl' )) {
+	/**
+	 * From http://stackoverflow.com/questions/13430120/str-getcsv-alternative-for-older-php-version-gives-me-an-empty-array-at-the-e
+	 *
+	 * @param unknown $string        	
+	 * @return multitype:
+	 */
+	function postman_strgetcsv_impl($string) {
 		$fh = fopen ( 'php://temp', 'r+' );
 		fwrite ( $fh, $string );
 		rewind ( $fh );

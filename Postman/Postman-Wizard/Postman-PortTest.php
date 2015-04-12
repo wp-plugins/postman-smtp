@@ -5,6 +5,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 		private $logger;
 		private $hostname;
 		private $port;
+		public $domainName;
 		public $protocol;
 		public $http;
 		public $https;
@@ -17,7 +18,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 		public $authXoauth;
 		public $authNone;
 		public $trySmtps;
-		const DEBUG = false;
+		const DEBUG = true;
 		
 		/**
 		 */
@@ -139,14 +140,16 @@ if (! class_exists ( "PostmanPortTest" )) {
 		private function talkToMailServer($connectionString, $connectTimeout = 10, $readTimeout = 10) {
 			$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
 			@stream_set_timeout ( $stream, $readTimeout );
-			$serverName = postmanGetServerName();
+			$serverName = postmanGetServerName ();
 			if (! $stream) {
 				return false;
 			} else {
 				// see http://php.net/manual/en/transports.inet.php#113244
 				// see http://php.net/stream_socket_enable_crypto
-				$done = $this->readSmtpResponse ( $stream );
-				if ($done == 'smtp') {
+				$result = $this->readSmtpResponse ( $stream );
+				if ($result) {
+					$this->domainName = $result;
+					$this->debug('domain name: ' . $result);
 					$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
 					$done = $this->readSmtpResponse ( $stream );
 					if ($done == 'auth') {
@@ -213,8 +216,8 @@ if (! class_exists ( "PostmanPortTest" )) {
 					$result = 'auth';
 				} elseif (preg_match ( '/STARTTLS/', $line )) {
 					$result = 'starttls';
-				} elseif (preg_match ( '/^220\\s/', $line )) {
-					$result = 'smtp';
+				} elseif (preg_match ( '/^220[\\s-](.*?)\\s/', $line, $matches )) {
+					$result = $matches [1];
 				}
 				if (preg_match ( '/^\d\d\d\\s/', $line )) {
 					// always exist on last server response line
@@ -222,7 +225,7 @@ if (! class_exists ( "PostmanPortTest" )) {
 					return $result;
 				}
 			}
-			return "fail";
+			return false;
 		}
 		public function getErrorMessage() {
 			return $this->errstr;

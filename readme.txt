@@ -249,6 +249,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.5.12 - 2015-04-12 =
+* [[Ticket](https://wordpress.org/support/topic/help-mail-is-failing-in-test?replies=9) Fix for test messages that fail but still deliver / CF7 freezes when using PHP 5.2
+
 = 1.5.11 - 2015-04-05 = 
 * Two thousand installations! :D
 * Commercial-grade improvements to Connectivty Test and Setup Wizard. The new wizard prevents misconfiguration by interrogating the MTA for capabilities and intelligently suggests the best settings for the user. Steve Jobs would be proud.
