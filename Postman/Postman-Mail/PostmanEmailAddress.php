@@ -49,6 +49,7 @@ if (! class_exists ( 'PostmanEmailAddress' )) {
 		 * @param unknown $recipients        	
 		 */
 		public static function convertToArray($emails) {
+			assert ( ! empty ( $emails ) );
 			if (! is_array ( $emails )) {
 				// http://tiku.io/questions/955963/splitting-comma-separated-email-addresses-in-a-string-with-commas-in-quotes-in-p
 				$t = str_getcsv ( $emails );

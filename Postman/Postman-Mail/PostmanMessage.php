@@ -122,10 +122,10 @@ if (! class_exists ( "PostmanMessage" )) {
 			$sender->setName ( apply_filters ( 'wp_mail_from_name', $sender->getName () ) );
 			
 			// but the MailAuthenticator and user have the final say
-			if ($authenticator->isSenderEmailOverridePrevented() || $this->isSenderEmailOverridePrevented ()) {
+			if ($authenticator->isSenderEmailOverridePrevented () || $this->isSenderEmailOverridePrevented ()) {
 				$sender->setEmail ( $this->sender->getEmail () );
 			}
-			if ($authenticator->isSenderNameOverridePrevented() || $this->isSenderNameOverridePrevented ()) {
+			if ($authenticator->isSenderNameOverridePrevented () || $this->isSenderNameOverridePrevented ()) {
 				$sender->setName ( $this->sender->getName () );
 			}
 			
@@ -229,11 +229,13 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @throws Exception
 		 */
 		private function addRecipients(&$recipientList, $recipients) {
-			$recipients = PostmanEmailAddress::convertToArray ( $recipients );
-			foreach ( $recipients as $recipient ) {
-				if (! empty ( $recipient )) {
-					$this->logger->debug ( sprintf ( 'User Added recipient: "%s"', $recipient ) );
-					array_push ( $recipientList, new PostmanEmailAddress ( $recipient ) );
+			if (! empty ( $recipients )) {
+				$recipients = PostmanEmailAddress::convertToArray ( $recipients );
+				foreach ( $recipients as $recipient ) {
+					if (! empty ( $recipient )) {
+						$this->logger->debug ( sprintf ( 'User Added recipient: "%s"', $recipient ) );
+						array_push ( $recipientList, new PostmanEmailAddress ( $recipient ) );
+					}
 				}
 			}
 		}
