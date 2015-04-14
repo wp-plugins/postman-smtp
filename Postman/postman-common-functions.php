@@ -4,6 +4,7 @@ if (! class_exists ( "PostmanLogger" )) {
 	//
 	class PostmanLogger {
 		const ALL_INT = - 2147483648;
+		const TRACE_INT = 5000;
 		const DEBUG_INT = 10000;
 		const ERROR_INT = 40000;
 		const FATAL_INT = 50000;
@@ -29,6 +30,15 @@ if (! class_exists ( "PostmanLogger" )) {
 					error_log ( 'DEBUG ' . $this->name . ': ' . print_r ( $text, true ) );
 				} else {
 					error_log ( 'DEBUG ' . $this->name . ': ' . $text );
+				}
+			}
+		}
+		function trace($text) {
+			if ($this->wpDebug && self::TRACE_INT >= $this->logLevel) {
+				if (is_array ( $text ) || is_object ( $text )) {
+					error_log ( 'TRACE ' . $this->name . ': ' . print_r ( $text, true ) );
+				} else {
+					error_log ( 'TRACE ' . $this->name . ': ' . $text );
 				}
 			}
 		}

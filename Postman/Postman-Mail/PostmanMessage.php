@@ -44,6 +44,9 @@ if (! class_exists ( "PostmanMessage" )) {
 		// logger for all concrete classes - populate with setLogger($logger)
 		protected $logger;
 		
+		//
+		private $authenticator;
+		
 		// set by the caller
 		private $sender;
 		private $replyTo;
@@ -73,19 +76,41 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @param unknown $senderEmail        	
 		 * @param unknown $accessToken        	
 		 */
-		function __construct() {
+		function __construct(PostmanMailAuthenticator $authenticator) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->headers = array ();
 			$this->toRecipients = array ();
 			$this->ccRecipients = array ();
 			$this->bccRecipients = array ();
+			$this->authenticator = $authenticator;
 		}
 		
 		/**
 		 *
 		 * @param Postman_Zend_Mail $mail        	
+		 * @param PostmanMailAuthenticator $authenticator        	
+		 * @deprecated by getFrom()
 		 */
 		public function addFrom(Postman_Zend_Mail $mail, PostmanMailAuthenticator $authenticator) {
+			$sender = $this->getSender ();
+			// now log it and push it into the message
+			$senderEmail = $sender->getEmail ();
+			$senderName = $sender->getName ();
+			assert ( ! empty ( $senderEmail ) );
+			if (! empty ( $senderName )) {
+				$mail->setFrom ( $senderEmail, $senderName );
+			} else {
+				$mail->setFrom ( $senderEmail );
+			}
+			return $sender;
+		}
+		
+		/**
+		 *
+		 * @return PostmanEmailAddress
+		 */
+		public function getSender() {
+			$authenticator = $this->authenticator;
 			
 			// by default, sender is what Postman set
 			$sender = PostmanEmailAddress::copy ( $this->sender );
@@ -130,16 +155,6 @@ if (! class_exists ( "PostmanMessage" )) {
 			}
 			if ($authenticator->isSenderNameOverridePrevented () || $this->isSenderNameOverridePrevented ()) {
 				$sender->setName ( $this->sender->getName () );
-			}
-			
-			// now log it and push it into the message
-			$senderEmail = $sender->getEmail ();
-			$senderName = $sender->getName ();
-			assert ( ! empty ( $senderEmail ) );
-			if (! empty ( $senderName )) {
-				$mail->setFrom ( $senderEmail, $senderName );
-			} else {
-				$mail->setFrom ( $senderEmail );
 			}
 			
 			return $sender;
@@ -257,9 +272,9 @@ if (! class_exists ( "PostmanMessage" )) {
 									"'",
 									'"' 
 							), '', $parts [1] ) );
-							$this->logger->debug ( sprintf ( 'processing special boundary header %s', $this->getBoundary () ) );
+							$this->logger->debug ( sprintf ( 'Processing special boundary header \'%s\'', $this->getBoundary () ) );
 						} else {
-							$this->logger->debug ( sprintf ( 'ignoring broken header %s', $header ) );
+							$this->logger->debug ( sprintf ( 'Ignoring broken header \'%s\'', $header ) );
 						}
 						continue;
 					}
@@ -458,6 +473,20 @@ if (! class_exists ( "PostmanMessage" )) {
 		}
 		public function getBody() {
 			return $this->body;
+		}
+	}
+}
+
+if (! class_exists ( 'PostmanMessageFactory' )) {
+	class PostmanMessageFactory {
+		public static function createEmptyMessage() {
+			$transport = PostmanTransportUtils::getCurrentTransport ();
+			assert ( isset ( $transport ) );
+			$options = PostmanOptions::getInstance ();
+			$authorizationToken = PostmanOAuthToken::getInstance ();
+			$authenticator = $transport->createPostmanMailAuthenticator ( $options, $authorizationToken );
+			$message = new PostmanMessage ( $authenticator );
+			return $message;
 		}
 	}
 }

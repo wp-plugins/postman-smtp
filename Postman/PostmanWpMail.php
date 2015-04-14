@@ -35,48 +35,50 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$this->logger->debug ( 'Sending mail' );
 			// interact with the SMTP Engine
 			try {
-				$engine = PostmanMailEngineFactory::getInstance ()->createMailEngine ( $wpMailOptions, $wpMailAuthorizationToken );
-				try {
-					$message = new PostmanMessage ();
-					$message->addHeaders ( $headers );
-					$message->addHeaders ( $wpMailOptions->getAdditionalHeaders () );
-					$message->setBody ( $body );
-					$message->setSubject ( $subject );
-					$message->addTo ( $to );
-					$message->addTo ( $wpMailOptions->getForcedToRecipients () );
-					$message->addCc ( $wpMailOptions->getForcedCcRecipients () );
-					$message->addBcc ( $wpMailOptions->getForcedBccRecipients () );
-					$message->setAttachments ( $attachments );
-					$message->setSender ( $wpMailOptions->getSenderEmail (), $wpMailOptions->getSenderName () );
-					$message->setPreventSenderEmailOverride($wpMailOptions->isSenderEmailOverridePrevented());
-					$message->setPreventSenderNameOverride($wpMailOptions->isSenderNameOverridePrevented());
-						
-					// set the reply-to address if it hasn't been set already in the user's headers
-					$optionsReplyTo = $wpMailOptions->getReplyTo ();
-					$messageReplyTo = $message->getReplyTo ();
-					if (! empty ( $optionsReplyTo ) && empty ( $messageReplyTo )) {
-						$message->setReplyTo ( $optionsReplyTo );
-					}
-					
-					// send the message
-					$engine->send ( $message, $wpMailOptions->getHostname () );
-					PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
-					$this->transcript = $engine->getTranscript ();
-					return true;
-				} catch ( Exception $e ) {
-					$this->exception = $e;
-					$this->logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
-					PostmanStats::getInstance ()->incrementFailedDelivery ();
-					$this->transcript = $engine->getTranscript ();
-					return false;
+				$message = PostmanMessageFactory::createEmptyMessage();
+				$message->addHeaders ( $headers );
+				$message->addHeaders ( $wpMailOptions->getAdditionalHeaders () );
+				$message->setBody ( $body );
+				$message->setSubject ( $subject );
+				$message->addTo ( $to );
+				$message->addTo ( $wpMailOptions->getForcedToRecipients () );
+				$message->addCc ( $wpMailOptions->getForcedCcRecipients () );
+				$message->addBcc ( $wpMailOptions->getForcedBccRecipients () );
+				$message->setAttachments ( $attachments );
+				$message->setSender ( $wpMailOptions->getSenderEmail (), $wpMailOptions->getSenderName () );
+				$message->setPreventSenderEmailOverride ( $wpMailOptions->isSenderEmailOverridePrevented () );
+				$message->setPreventSenderNameOverride ( $wpMailOptions->isSenderNameOverridePrevented () );
+				
+				// set the reply-to address if it hasn't been set already in the user's headers
+				$optionsReplyTo = $wpMailOptions->getReplyTo ();
+				$messageReplyTo = $message->getReplyTo ();
+				if (! empty ( $optionsReplyTo ) && empty ( $messageReplyTo )) {
+					$message->setReplyTo ( $optionsReplyTo );
 				}
+				
+				// send the message
+				$engine = PostmanMailEngineFactory::getInstance ()->createMailEngine ( $wpMailOptions, $wpMailAuthorizationToken );
+				$engine->send ( $message, $wpMailOptions->getHostname () );
+				$this->transcript = $engine->getTranscript ();
+				
+				// log the successful delivery
+				PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
+				$log = PostmanEmailLogFactory::createSuccessLog($message, $this->transcript);
+				PostmanEmailLogService::getInstance ()->writeToEmailLog ( $log );
+				return true;
 			} catch ( Exception $e ) {
+				// save the error for later
 				$this->exception = $e;
+				
+				// write the error to the PHP log
 				$this->logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
+
+				// log the failed delivery
 				PostmanStats::getInstance ()->incrementFailedDelivery ();
+				$log = PostmanEmailLogFactory::createFailureLog($message, $this->transcript, $e->getMessage());
+				PostmanEmailLogService::getInstance ()->writeToEmailLog ( $log );
 				return false;
 			}
-			return false;
 		}
 		public function getException() {
 			return $this->exception;

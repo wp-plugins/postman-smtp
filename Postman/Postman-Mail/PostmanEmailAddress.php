@@ -23,6 +23,13 @@ if (! class_exists ( 'PostmanEmailAddress' )) {
 		public function getEmail() {
 			return $this->email;
 		}
+		public function format() {
+			if (! empty ( $senderName )) {
+				return sprintf ( '"%s" <%s>', $this->getName (), $this->getEmail () );
+			} else {
+				return sprintf ( '%s', $this->getEmail () );
+			}
+		}
 		public function setName($name) {
 			$this->name = $name;
 		}

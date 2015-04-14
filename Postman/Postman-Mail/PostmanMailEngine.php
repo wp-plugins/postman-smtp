@@ -195,36 +195,21 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$zendTransport = $this->transport->createZendMailTransport ( $hostname, $config );
 			assert ( ! empty ( $zendTransport ) );
 			
-			// send the message
-			$this->logger->debug ( "Sending mail" );
 			try {
-				$log = new PostmanEmailLog ();
-				$log->subject = $mail->getSubject ();
-				$log->body = '';
-				if ($mail->getBodyText ())
-					$log->body .= $mail->getBodyText ()->getRawContent ();
-				if ($mail->getBodyHtml ())
-					$log->body .= $mail->getBodyHtml ()->getRawContent ();
-				$log->message = 'Ok';
-				$log->sender = $mail->getFrom ();
-				$log->recipients = $mail->getRecipients ();
-				$log->success = true;
+				// send the message
+				$this->logger->debug ( "Sending mail" );
 				$mail->send ( $zendTransport );
+				// finally not supported??
 				if ($zendTransport->getConnection ()) {
-					$sessionTranscript = $zendTransport->getConnection ()->getLog ();
-					$this->transcript = $sessionTranscript;
-					$log->sessionTranscript = $sessionTranscript;
-					$this->logger->debug ( $sessionTranscript );
-				}
-				PostmanEmailLogService::getInstance ()->writeToEmailLog ( $log );
-			} catch ( Exception $e ) {
-				$c = $zendTransport->getConnection ();
-				if (isset ( $c )) {
 					$this->transcript = $zendTransport->getConnection ()->getLog ();
+					$this->logger->debug ( $this->transcript );
 				}
-				$log->message = $e->getMessage ();
-				$log->success = false;
-				PostmanEmailLogService::getInstance ()->writeToEmailLog ( $log );
+			} catch ( Exception $e ) {
+				// finally not supported??
+				if ($zendTransport->getConnection ()) {
+					$this->transcript = $zendTransport->getConnection ()->getLog ();
+					$this->logger->debug ( $this->transcript );
+				}
 				throw $e;
 			}
 		}

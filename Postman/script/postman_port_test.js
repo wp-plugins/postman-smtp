@@ -82,7 +82,7 @@ function portTest2(hostname, port, button, open) {
 						addConclusion(postman_443_open, true);
 					} else {
 						addConclusion(sprintf(postman_smtp_success, port,
-								response.data.domain_name), true);
+								hostname + ' (' + response.data.domain_name + ')'), true);
 					}
 				} else {
 					if (response.data.try_smtps) {
@@ -121,7 +121,7 @@ function portTest3(hostname, port, button, open) {
 							+ response.data.protocol + '</span>');
 					inspectResponse(response.data, port);
 					addConclusion(sprintf(postman_smtp_success, port,
-							response.data.domain_name), true);
+							hostname + ' (' + response.data.domain_name + ')'), true);
 				} else {
 					testEl.html('<span style="color:red">' + postman_no
 							+ '</span>');
