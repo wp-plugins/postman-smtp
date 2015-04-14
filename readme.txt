@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, smtps, email, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.1.1
-Stable tag: 1.5.11
+Stable tag: 1.5.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -164,8 +164,8 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 
 = Who do we thank for translations? =
 * French - [Etienne Provost](https://www.facebook.com/eprovost3)
-* Italian - [Andrea Greco]
-* Turkish - [ercan yaris]
+* Italian - Andrea Greco
+* Turkish - [ercan yaris](http://lunar.com.tr/)
 
 
 
@@ -249,8 +249,15 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.12 - 2015-04-12 =
+= 1.6 =
+* Log all email attempts with error messages (if any)
+* (TBD): View the damn logs!
+* (TBD): Preference screen for logging - disabled for existing users?
+* (TBD): Obscure password from front-end - ask to see password when typing
+
+= 1.5.12 - 2015-04-14 - the Jamaican release! =
 * [[Ticket](https://wordpress.org/support/topic/help-mail-is-failing-in-test?replies=9) Fix for test messages that fail but still deliver / CF7 freezes when using PHP 5.2
+* Translated into Turkish, thank-you ercan yaris
 
 = 1.5.11 - 2015-04-05 = 
 * Two thousand installations! :D
@@ -271,6 +278,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * [[Ticket](https://wordpress.org/support/topic/problem-with-responding?replies=7#post-6723830)] Hide PHP warnings from `stream_set_timeout()` in case the host has disabled this function. 
 
 = 1.5.8 - 2015-03-16 =
+* One thousand installations! :D
 * [[Ticket](https://wordpress.org/support/topic/openssl-error-after-upgrading?replies=2#post-6699480)] Postman will not shut down if it can't find OpenSSL. It will just display a warning to the user.
 
 = 1.5.7 - 2015-03-14 =
