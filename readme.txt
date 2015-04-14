@@ -249,7 +249,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.12 - 2015-04-14 =
+= 1.5.12 - 2015-04-14 - The Jamaican release! =
 * [[Ticket](https://wordpress.org/support/topic/help-mail-is-failing-in-test?replies=9) Fix for test messages that fail but still deliver / CF7 freezes when using PHP 5.2
 * Translated into Turkish, thank-you ercan yaris
 
