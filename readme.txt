@@ -255,7 +255,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 1.5.11 - 2015-04-05 = 
 * Two thousand installations! :D
-* Commercial-grade improvements to Connectivty Test and Setup Wizard. The new wizard prevents misconfiguration by interrogating the MTA for capabilities and intelligently suggests the best settings for the user. Steve Jobs would be proud.
+* Commercial-grade improvements to Connectivity Test and Setup Wizard. The new wizard prevents misconfiguration by interrogating the MTA for capabilities and intelligently suggests the best settings for the user. Steve Jobs would be proud.
 * Fixed Wizard's MSA hostname guess for GoDaddy addresses (smtp.secureserver.net is the MTA not the MSA)
 * Fixed Wizard's MSA hostname guess for Outlook 365 addresses (smtp.live.com is for their free Hotmail service)
 * Added French/Italian translation for JQuery Validation
