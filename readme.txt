@@ -164,8 +164,8 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 
 = Who do we thank for translations? =
 * French - [Etienne Provost](https://www.facebook.com/eprovost3)
-* Italian - [Andrea Greco]
-* Turkish - [ercan yaris]
+* Italian - Andrea Greco
+* Turkish - [ercan yaris](http://lunar.com.tr/)
 
 
 
@@ -249,8 +249,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.5.12 - 2015-04-12 =
+= 1.5.12 - 2015-04-14 =
 * [[Ticket](https://wordpress.org/support/topic/help-mail-is-failing-in-test?replies=9) Fix for test messages that fail but still deliver / CF7 freezes when using PHP 5.2
+* Translated into Turkish, thank-you ercan yaris
 
 = 1.5.11 - 2015-04-05 = 
 * Two thousand installations! :D
