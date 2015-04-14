@@ -250,7 +250,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.5.12 - 2015-04-14 - The Jamaican release! =
-* [[Ticket](https://wordpress.org/support/topic/help-mail-is-failing-in-test?replies=9)] Fix for PHP 5.2 users: fixes test messages that show failure messages but still get delivered; fix for Contact Form 7 submission freezes
+* [[Ticket](https://wordpress.org/support/topic/help-mail-is-failing-in-test?replies=9)] PHP 5.2 users: fix test messages that show failure messages but still get delivered; and Contact Form 7 submission freezes
 * Translated into Turkish, thank-you ercan yaris
 
 = 1.5.11 - 2015-04-05 = 
