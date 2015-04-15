@@ -15,20 +15,6 @@ if (! class_exists ( 'PostmanEmailLog' )) {
 
 if (! class_exists ( 'PostmanEmailLogFactory' )) {
 	class PostmanEmailLogFactory {
-		public static function createLogFromPostmanMailEngine(PostmanMailEngine $engine, $transcript) {
-			$log = new PostmanEmailLog ();
-			$log->subject = $mail->getSubject ();
-			$log->body = '';
-			if ($mail->getBodyText ())
-				$log->body .= $mail->getBodyText ()->getRawContent ();
-			if ($mail->getBodyHtml ())
-				$log->body .= $mail->getBodyHtml ()->getRawContent ();
-			$log->message = 'Ok';
-			$log->sender = $mail->getFrom ();
-			$log->recipients = $mail->getRecipients ();
-			$log->success = true;
-			return $log;
-		}
 		public static function createSuccessLog(PostmanMessage $message, $transcript) {
 			return PostmanEmailLogFactory::createLog ( $message, $transcript, 'Ok', true );
 		}
@@ -133,8 +119,6 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 					'show_ui' => true,
 					'has_archive' => true 
 			) );
-			
-			$this->logger->debug ( 'Created custom post type \'postman_email\'' );
 		}
 		
 		/**
@@ -144,13 +128,21 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			// Create post object
 			// from http://stackoverflow.com/questions/20444042/wordpress-how-to-sanitize-multi-line-text-from-a-textarea-without-losing-line
 			$sanitizedBody = implode ( PHP_EOL, array_map ( 'sanitize_text_field', explode ( PHP_EOL, $log->body ) ) );
+			/*
+			 * Private content is published only for your eyes, or the eyes of only those with authorization
+			 * permission levels to see private content. Normal users and visitors will not be aware of
+			 * private content. It will not appear in the article lists. If a visitor were to guess the URL
+			 * for your private post, they would still not be able to see your content. You will only see
+			 * the private content when you are logged into your WordPress blog.
+			 */
 			$my_post = array (
 					'post_type' => self::POSTMAN_CUSTOM_POST_TYPE_SLUG,
 					'post_title' => wp_slash ( sanitize_text_field ( $log->subject ) ),
 					'post_content' => wp_slash ( $sanitizedBody ),
 					'post_excerpt' => wp_slash ( sanitize_text_field ( $log->message ) ),
 					'post_status' => 'private' 
-			);
+			) // publish
+;
 			
 			// Insert the post into the database
 			$post_id = wp_insert_post ( $my_post );
@@ -177,6 +169,7 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		
 		/**
 		 * From http://www.hughlashbrooke.com/2014/02/wordpress-add-items-glance-widget/
+		 * http://coffeecupweb.com/how-to-add-custom-post-types-to-at-a-glance-dashboard-widget-in-wordpress/
 		 *
 		 * @param unknown $items        	
 		 * @return string
@@ -196,9 +189,10 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 				if ($num_posts) {
 					
 					$published = intval ( $num_posts->publish );
+					$privated = intval ( $num_posts->private );
 					$post_type = get_post_type_object ( $type );
 					
-					$text = _n ( '%s ' . $post_type->labels->singular_name, '%s ' . $post_type->labels->name, $published, 'your_textdomain' );
+					$text = _n ( '%s ' . $post_type->labels->singular_name, '%s ' . $post_type->labels->name, $published, 'postman-smtp' );
 					$text = sprintf ( $text, number_format_i18n ( $published ) );
 					
 					if (current_user_can ( $post_type->cap->edit_posts )) {

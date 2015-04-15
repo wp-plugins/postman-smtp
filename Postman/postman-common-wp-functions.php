@@ -10,8 +10,8 @@ if (! function_exists ( 'postmanRedirect' )) {
 	 * @param unknown $url        	
 	 */
 	function postmanRedirect($url) {
-		$logger = new PostmanLogger ( 'postman.php' );
-		$logger->debug ( sprintf ( "Redirecting to '%s'", $url ) );
+		$logger = new PostmanLogger ( 'postman-common-wp-functions.php' );
+		$logger->trace ( sprintf ( "Redirecting to '%s'", $url ) );
 		wp_redirect ( $url );
 		exit ();
 	}
@@ -33,9 +33,9 @@ if (! function_exists ( 'postmanHttpTransport' )) {
 				'body' => $parameters 
 		);
 		$logger = new PostmanLogger ( 'postman-common-wp-functions' );
-		$logger->debug ( sprintf ( 'Posting to %s', $url ) );
-		$logger->debug ( sprintf ( 'Post header is %s', implode ( $headers ) ) );
-		$logger->debug ( sprintf ( 'Posting args are %s', implode ( $parameters ) ) );
+		$logger->trace ( sprintf ( 'Posting to %s', $url ) );
+		$logger->trace ( sprintf ( 'Post header is %s', implode ( $headers ) ) );
+		$logger->trace ( sprintf ( 'Posting args are %s', implode ( $parameters ) ) );
 		$response = wp_remote_post ( $url, $args );
 		
 		// pre-process the response

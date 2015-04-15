@@ -25,38 +25,30 @@ if (! class_exists ( 'Postman' )) {
 		const POSTMAN_TCP_READ_TIMEOUT = 60;
 		const POSTMAN_TCP_CONNECTION_TIMEOUT = 10;
 		const LONG_ENOUGH_SEC = 432000;
-		private $postmanPhpFile;
+		private $rootPluginFilenameAndPath;
 		private $logger;
 		private $messageHandler;
 		private $options;
 		private $authToken;
 		private $wpMailBinder;
+		private $pluginData;
 		
 		/**
 		 *
-		 * @param unknown $postmanPhpFile        	
+		 * @param unknown $rootPluginFilenameAndPath        	
 		 */
-		public function __construct($postmanPhpFile) {
-			
-			// store the root filename
-			$this->postmanPhpFile = $postmanPhpFile;
+		public function __construct($rootPluginFilenameAndPath) {
 			
 			// create an instance of the logger
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			
+			// store the root filename
+			$this->rootPluginFilenameAndPath = $rootPluginFilenameAndPath;
 			
 			// store instances of the Options and OAuthToken
 			$this->options = PostmanOptions::getInstance ();
 			$this->authToken = PostmanOAuthToken::getInstance ();
 			
-			// These are operations that have to happen NOW, before the init() hook
-			// and even before WordPress loads its internal pluggable functions
-			$this->preInit ();
-		}
-		
-		/**
-		 * These functions have to be called before the WordPress pluggables are loaded
-		 */
-		private function preInit() {
 			// load the text domain
 			$this->loadTextDomain ();
 			
@@ -64,7 +56,7 @@ if (! class_exists ( 'Postman' )) {
 			$this->messageHandler = new PostmanMessageHandler ( $this->options, $this->authToken );
 			
 			// create an instance of the EmailLog
-			$emailLog = PostmanEmailLogService::getInstance();
+			$emailLog = PostmanEmailLogService::getInstance ();
 			
 			// store an instance of the WpMailBinder
 			$this->wpMailBinder = PostmanWpMailBinder::getInstance ();
@@ -75,15 +67,16 @@ if (! class_exists ( 'Postman' )) {
 			// bind to wp_mail
 			$this->wpMailBinder->bind ();
 			
+			$this->pluginData = get_plugin_data ( $rootPluginFilenameAndPath );
+			
 			if (is_admin ()) {
 				// fire up the AdminController, and only for those with admin access
-				$basename = plugin_basename ( $this->postmanPhpFile );
-				$adminController = new PostmanAdminController ( $basename, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
+				$adminController = new PostmanAdminController ( $this->rootPluginFilenameAndPath, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
 			}
 			
 			// register activation handler on the activation event
 			$upgrader = new PostmanActivationHandler ();
-			register_activation_hook ( $this->postmanPhpFile, array (
+			register_activation_hook ( $this->rootPluginFilenameAndPath, array (
 					$upgrader,
 					'activatePostman' 
 			) );
@@ -103,7 +96,7 @@ if (! class_exists ( 'Postman' )) {
 		 * 3. adds the [postman-version] shortcode
 		 */
 		public function init() {
-			$this->logger->debug ( 'Postman Smtp v' . POSTMAN_PLUGIN_VERSION . ' starting' );
+			$this->logger->debug ( sprintf ( '%1$s v%2$s starting', $this->pluginData ['Name'], $this->pluginData ['Version'] ) );
 			
 			// are we bound?
 			if ($this->wpMailBinder->isUnboundDueToException ()) {
@@ -129,7 +122,7 @@ if (! class_exists ( 'Postman' )) {
 		 */
 		private function loadTextDomain() {
 			$textDomain = 'postman-smtp';
-			$langDir = basename ( dirname ( $this->postmanPhpFile ) ) . '/Postman/languages/';
+			$langDir = basename ( dirname ( $this->rootPluginFilenameAndPath ) ) . '/Postman/languages/';
 			$success = load_plugin_textdomain ( $textDomain, false, $langDir );
 		}
 		

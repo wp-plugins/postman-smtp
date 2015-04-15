@@ -202,13 +202,13 @@ if (! class_exists ( "PostmanMailEngine" )) {
 				// finally not supported??
 				if ($zendTransport->getConnection ()) {
 					$this->transcript = $zendTransport->getConnection ()->getLog ();
-					$this->logger->debug ( $this->transcript );
+					$this->logger->trace ( $this->transcript );
 				}
 			} catch ( Exception $e ) {
 				// finally not supported??
 				if ($zendTransport->getConnection ()) {
 					$this->transcript = $zendTransport->getConnection ()->getLog ();
-					$this->logger->debug ( $this->transcript );
+					$this->logger->trace ( $this->transcript );
 				}
 				throw $e;
 			}

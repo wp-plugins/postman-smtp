@@ -58,7 +58,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		private $logger;
 		
 		// Holds the values to be used in the fields callbacks
-		private $basename;
+		private $rootPluginFilenameAndPath;
 		private $options;
 		private $authorizationToken;
 		private $importableConfiguration;
@@ -71,8 +71,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 * Start up
 		 */
-		public function __construct($basename, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanMessageHandler $messageHandler, PostmanWpMailBinder $binder) {
-			assert ( ! empty ( $basename ) );
+		public function __construct($rootPluginFilenameAndPath, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanMessageHandler $messageHandler, PostmanWpMailBinder $binder) {
+			assert ( ! empty ( $rootPluginFilenameAndPath ) );
 			assert ( ! empty ( $options ) );
 			assert ( ! empty ( $authorizationToken ) );
 			assert ( ! empty ( $messageHandler ) );
@@ -80,7 +80,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->messageHandler = $messageHandler;
-			$this->basename = $basename;
+			$this->rootPluginFilenameAndPath = $rootPluginFilenameAndPath;
 			$this->wpMailBinder = $binder;
 			
 			// check if the user saved data, and if validation was successful
@@ -114,6 +114,17 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this,
 					'init' 
 			) );
+			add_action ( 'in_admin_footer', array (
+					&$this,
+					'print_signature' 
+			) );
+		}
+		/**
+		 * http://striderweb.com/nerdaphernalia/2008/06/give-your-wordpress-plugin-credit/
+		 */
+		function print_signature() {
+			$plugin_data = get_plugin_data ( $this->rootPluginFilenameAndPath );
+			printf ( __ ( '%1$s | Version %2$s', 'postman-smtp' ) . '<br />', $plugin_data ['Title'], $plugin_data ['Version'] );
 		}
 		public function init() {
 			//
@@ -121,7 +132,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
 			// Adds "Settings" link to the plugin action page
-			add_filter ( 'plugin_action_links_' . $this->basename, array (
+			add_filter ( 'plugin_action_links_' . plugin_basename ( $this->rootPluginFilenameAndPath ), array (
 					$this,
 					'postmanModifyLinksOnPluginsListPage' 
 			) );
@@ -816,7 +827,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function log_level_callback() {
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::LOG_LEVEL );
 			printf ( '<option value="%s" %s>Off</option>', PostmanLogger::OFF_INT, PostmanLogger::OFF_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
+			printf ( '<option value="%s" %s>Trace</option>', PostmanLogger::TRACE_INT, PostmanLogger::TRACE_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
 			printf ( '<option value="%s" %s>Debug</option>', PostmanLogger::DEBUG_INT, PostmanLogger::DEBUG_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
+			printf ( '<option value="%s" %s>Info</option>', PostmanLogger::INFO_INT, PostmanLogger::INFO_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
 			printf ( '<option value="%s" %s>Errors</option>', PostmanLogger::ERROR_INT, PostmanLogger::ERROR_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
 			printf ( '</select>' );
 		}

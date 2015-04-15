@@ -23,31 +23,36 @@ if (! class_exists ( "PostmanLogger" )) {
 				$this->logLevel = self::DEBUG_INT;
 			}
 		}
-		// better logging thanks to http://www.smashingmagazine.com/2011/03/08/ten-things-every-wordpress-plugin-developer-should-know/
-		function debug($text) {
-			if ($this->wpDebug && self::DEBUG_INT >= $this->logLevel) {
-				if (is_array ( $text ) || is_object ( $text )) {
-					error_log ( 'DEBUG ' . $this->name . ': ' . print_r ( $text, true ) );
-				} else {
-					error_log ( 'DEBUG ' . $this->name . ': ' . $text );
-				}
-			}
-		}
 		function trace($text) {
-			if ($this->wpDebug && self::TRACE_INT >= $this->logLevel) {
-				if (is_array ( $text ) || is_object ( $text )) {
-					error_log ( 'TRACE ' . $this->name . ': ' . print_r ( $text, true ) );
-				} else {
-					error_log ( 'TRACE ' . $this->name . ': ' . $text );
-				}
-			}
+			$this->printLog ( $text, self::TRACE_INT, 'TRACE' );
+		}
+		function debug($text) {
+			$this->printLog ( $text, self::DEBUG_INT, 'DEBUG' );
+		}
+		function info($text) {
+			$this->printLog ( $text, self::INFO_INT, 'INFO' );
+		}
+		function warn($text) {
+			$this->printLog ( $text, self::WARN_INT, 'WARN' );
 		}
 		function error($text) {
-			if ($this->wpDebug && self::ERROR_INT >= $this->logLevel) {
+			$this->printLog ( $text, self::ERROR_INT, 'ERROR' );
+		}
+		function fatal($text) {
+			$this->printLog ( $text, self::FATAL_INT, 'FATAL' );
+		}
+		/**
+		 * better logging thanks to http://www.smashingmagazine.com/2011/03/08/ten-things-every-wordpress-plugin-developer-should-know/
+		 *
+		 * @param unknown $intLogLevel        	
+		 * @param unknown $logLevelName        	
+		 */
+		private function printLog($text, $intLogLevel, $logLevelName) {
+			if ($this->wpDebug && $intLogLevel >= $this->logLevel) {
 				if (is_array ( $text ) || is_object ( $text )) {
-					error_log ( 'ERROR' . $this->name . ': ' . print_r ( $text, true ) );
+					error_log ( $logLevelName . ' ' . $this->name . ': ' . print_r ( $text, true ) );
 				} else {
-					error_log ( 'ERROR ' . $this->name . ': ' . $text );
+					error_log ( $logLevelName . ' ' . $this->name . ': ' . $text );
 				}
 			}
 		}

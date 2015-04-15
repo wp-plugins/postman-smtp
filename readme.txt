@@ -34,7 +34,7 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Security Support: SMTPS and STARTTLS (SSL/TLS)
 * Verified compatible with: [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), [Visual Forms Builder](https://wordpress.org/plugins/visual-form-builder/), [Fast Secure Contact Form](https://wordpress.org/support/plugin/si-contact-form), Email Log
-* Available translations: English, French, Italian, Turkish - if you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
+* Available translations: French, Italian and Turkish - if you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
 
 = Requirements =
 * WordPress 3.9 and PHP 5.2 with SPL and iconv
@@ -255,13 +255,13 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * (TBD): Preference screen for logging - disabled for existing users?
 * (TBD): Obscure password from front-end - ask to see password when typing
 
-= 1.5.12 - 2015-04-14 - the Jamaican release! =
-* [[Ticket](https://wordpress.org/support/topic/help-mail-is-failing-in-test?replies=9) Fix for test messages that fail but still deliver / CF7 freezes when using PHP 5.2
+= 1.5.12 - 2015-04-14 - The Jamaican release! =
+* [[Ticket](https://wordpress.org/support/topic/help-mail-is-failing-in-test?replies=9)] PHP 5.2 users: fix test messages that show failures but still get delivered; fix Contact Form 7 submission freezes
 * Translated into Turkish, thank-you ercan yaris
 
 = 1.5.11 - 2015-04-05 = 
 * Two thousand installations! :D
-* Commercial-grade improvements to Connectivty Test and Setup Wizard. The new wizard prevents misconfiguration by interrogating the MTA for capabilities and intelligently suggests the best settings for the user. Steve Jobs would be proud.
+* Commercial-grade improvements to Connectivity Test and Setup Wizard. The new wizard prevents misconfiguration by interrogating the MTA for capabilities and intelligently suggests the best settings for the user. Steve Jobs would be proud.
 * Fixed Wizard's MSA hostname guess for GoDaddy addresses (smtp.secureserver.net is the MTA not the MSA)
 * Fixed Wizard's MSA hostname guess for Outlook 365 addresses (smtp.live.com is for their free Hotmail service)
 * Added French/Italian translation for JQuery Validation
