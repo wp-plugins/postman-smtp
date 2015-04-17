@@ -80,20 +80,18 @@ if (! class_exists ( "PostmanWpMail" )) {
 			// get the Options and AuthToken
 			$wpMailOptions = PostmanOptions::getInstance ();
 			$wpMailAuthorizationToken = PostmanOAuthToken::getInstance ();
-			// send the message
-			$this->logger->debug ( 'Sending mail' );
-			// interact with the SMTP Engine
 			try {
 				// create the message
-				$message = $this->createMessage ( $wpMailOptions, $to, $subject, $body, $headers, $attachments );
+				$messageBuilder = $this->createMessage ( $wpMailOptions, $to, $subject, $message, $headers, $attachments );
 				// send the message
+				$this->logger->debug ( 'Sending mail' );
 				$engine = PostmanMailEngineFactory::getInstance ()->createMailEngine ( $wpMailOptions, $wpMailAuthorizationToken );
-				$engine->send ( $message, $wpMailOptions->getHostname () );
+				$engine->send ( $messageBuilder, $wpMailOptions->getHostname () );
 				$this->transcript = $engine->getTranscript ();
 				
 				// log the successful delivery
 				PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
-				$log = PostmanEmailLogFactory::createSuccessLog ( $message, $this->transcript );
+				$log = PostmanEmailLogFactory::createSuccessLog ( $messageBuilder, $this->transcript );
 				PostmanEmailLogService::getInstance ()->writeToEmailLog ( $log );
 				return true;
 			} catch ( Exception $e ) {
@@ -105,7 +103,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 				
 				// log the failed delivery
 				PostmanStats::getInstance ()->incrementFailedDelivery ();
-				$log = PostmanEmailLogFactory::createFailureLog ( $message, $this->transcript, $e->getMessage () );
+				$log = PostmanEmailLogFactory::createFailureLog ( $messageBuilder, $this->transcript, $e->getMessage () );
 				PostmanEmailLogService::getInstance ()->writeToEmailLog ( $log );
 				return false;
 			}
@@ -142,6 +140,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 			if (! empty ( $optionsReplyTo ) && empty ( $messageReplyTo )) {
 				$message->setReplyTo ( $optionsReplyTo );
 			}
+			return $message;
 		}
 		
 		/**

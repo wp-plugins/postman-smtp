@@ -114,22 +114,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this,
 					'init' 
 			) );
+			
 			add_action ( 'in_admin_footer', array (
 					&$this,
 					'print_signature' 
 			) );
-		}
-		/**
-		 * http://striderweb.com/nerdaphernalia/2008/06/give-your-wordpress-plugin-credit/
-		 */
-		function print_signature() {
-			$plugin_data = get_plugin_data ( $this->rootPluginFilenameAndPath );
-			printf ( __ ( '%1$s | Version %2$s', 'postman-smtp' ) . '<br />', $plugin_data ['Title'], $plugin_data ['Version'] );
-		}
-		public function init() {
-			//
-			$transport = PostmanTransportUtils::getCurrentTransport ();
-			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
 			// Adds "Settings" link to the plugin action page
 			add_filter ( 'plugin_action_links_' . plugin_basename ( $this->rootPluginFilenameAndPath ), array (
@@ -142,6 +131,24 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this,
 					'initializeAdminPage' 
 			) );
+			
+			// dashboard glance mod
+			add_filter ( 'dashboard_glance_items', array (
+					$this,
+					'custom_glance_items' 
+			), 10, 1 );
+		}
+		/**
+		 * http://striderweb.com/nerdaphernalia/2008/06/give-your-wordpress-plugin-credit/
+		 */
+		function print_signature() {
+			$plugin_data = get_plugin_data ( $this->rootPluginFilenameAndPath );
+			printf ( __ ( '%1$s | Version %2$s', 'postman-smtp' ) . '<br />', $plugin_data ['Title'], $plugin_data ['Version'] );
+		}
+		public function init() {
+			//
+			$transport = PostmanTransportUtils::getCurrentTransport ();
+			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
 			// register Ajax handlers
 			new PostmanManageConfigurationAjaxHandler ();
@@ -215,6 +222,45 @@ if (! class_exists ( "PostmanAdminController" )) {
 					printf ( '<p><span style="color:red">%s</span> %s</p>', __ ( 'Postman is <em>not</em> handling email delivery.', 'postman-smtp' ), $goToSettings );
 				}
 			}
+		}
+		
+		/**
+		 * From http://www.hughlashbrooke.com/2014/02/wordpress-add-items-glance-widget/
+		 * http://coffeecupweb.com/how-to-add-custom-post-types-to-at-a-glance-dashboard-widget-in-wordpress/
+		 *
+		 * @param unknown $items        	
+		 * @return string
+		 */
+		function custom_glance_items($items = array()) {
+			$post_types = array (
+					self::POSTMAN_CUSTOM_POST_TYPE_SLUG 
+			);
+			
+			foreach ( $post_types as $type ) {
+				
+				if (! post_type_exists ( $type ))
+					continue;
+				
+				$num_posts = wp_count_posts ( $type );
+				
+				if ($num_posts) {
+					
+					$published = intval ( $num_posts->publish );
+					$privated = intval ( $num_posts->private );
+					$post_type = get_post_type_object ( $type );
+					
+					$text = _n ( '%s ' . $post_type->labels->singular_name, '%s ' . $post_type->labels->name, $published, 'postman-smtp' );
+					$text = sprintf ( $text, number_format_i18n ( $published ) );
+					
+					if (current_user_can ( $post_type->cap->edit_posts )) {
+						$items [] = sprintf ( '<a class="%1$s-count" href="edit.php?post_type=%1$s">%2$s</a>', $type, $text ) . "\n";
+					} else {
+						$items [] = sprintf ( '<span class="%1$s-count">%2$s</span>', $type, $text ) . "\n";
+					}
+				}
+			}
+			
+			return $items;
 		}
 		
 		/**

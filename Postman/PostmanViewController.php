@@ -72,20 +72,50 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 */
 		public function generateDefaultContent() {
 			// This page will be under "Settings"
-			$page = add_options_page ( _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::POSTMAN_MENU_SLUG, array (
+			$pageTitle = _x ( 'Postman Settings', 'Page Title', 'postman-smtp' );
+			$pluginName = 'Postman SMTP';
+			$uniqueId = self::POSTMAN_MENU_SLUG;
+			$pageOptions = array (
 					$this,
 					'outputDefaultContent' 
-			) );
+			);
+			$mainPostmanSettingsPage = add_options_page ( $pageTitle, $pluginName, 'manage_options', $uniqueId, $pageOptions );
 			// When the plugin options page is loaded, also load the stylesheet
-			add_action ( 'admin_print_styles-' . $page, array (
+			add_action ( 'admin_print_styles-' . $mainPostmanSettingsPage, array (
 					$this,
 					'enqueueHomeScreenStylesheet' 
 			) );
-			return $page;
+			add_action ( 'load-' . $mainPostmanSettingsPage, array (
+					$this,
+					'addHomeScreenHelp' 
+			) );
 		}
 		function enqueueHomeScreenStylesheet() {
 			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_script ( 'postman_script' );
+		}
+		
+		/**
+		 * https://codex.wordpress.org/Adding_Contextual_Help_to_Administration_Menus
+		 */
+		function addHomeScreenHelp() {
+			// We are in the correct screen because we are taking advantage of the load-* action (below)
+			$screen = get_current_screen ();
+			// $screen->remove_help_tabs();
+			$screen->add_help_tab ( array (
+					'id' => 'postman-smtp-welcome',
+					'title' => __ ( 'Welcome' ),
+					'content' => 'This is the Settings page for Postman, an SMTP mailer that delivers email from your site to the Internet. From here you can configure the plugin, and access testing and diagnostic tools.' 
+			) );
+			$screen->add_help_tab ( array (
+					'id' => 'postman-smtp-online-support',
+					'title' => __ ( 'Online Support' ),
+					'content' => sprintf ( __ ( 'Having trouble? You can ask for help on our <a href="https://wordpress.org/support/plugin/postman-smtp" target="_blank">Support Forum</a>. To get the help you need quickly, please post the <a href="%s">Diagnostic Data</a> with your question. You can also check the on-line FAQ and Error Messages pages for answers.' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) ) 
+			) );
+			// add more help tabs as needed with unique id's
+			
+			// Help sidebars are optional
+			// $screen->set_help_sidebar ( '<p><strong>' . __ ( 'About' ) . '</strong></p>' . '<p>Postman SMTP 1.6.0b1<br/>by Jason Hendriks</p>' );
 		}
 		
 		/**
@@ -178,11 +208,38 @@ if (! class_exists ( 'PostmanViewController' )) {
 					$this,
 					'enqueueDiagnosticsScreenStylesheet' 
 			) );
+			add_action ( 'load-' . $page, array (
+					$this,
+					'addDiagnosticScreenHelp' 
+			) );
 		}
 		function enqueueDiagnosticsScreenStylesheet() {
 			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_script ( 'postman_diagnostics_script' );
 		}
+		/**
+		 * https://codex.wordpress.org/Adding_Contextual_Help_to_Administration_Menus
+		 */
+		function addDiagnosticScreenHelp() {
+			// We are in the correct screen because we are taking advantage of the load-* action (below)
+			$screen = get_current_screen ();
+			// $screen->remove_help_tabs();
+			$screen->add_help_tab ( array (
+					'id' => 'postman-smtp-connectivity-test',
+					'title' => __ ( 'Connectivity Test' ),
+					'content' => 'The Connectivity Test will interrogate the SMTP server for it\'s capabilities. If the server cannot be reached, it will report on the network blocks that it finds'
+			) );
+			$screen->add_help_tab ( array (
+					'id' => 'postman-smtp-online-support',
+					'title' => __ ( 'Online Support' ),
+					'content' => sprintf ( __ ( 'Having trouble? You can ask for help on our <a href="https://wordpress.org/support/plugin/postman-smtp" target="_blank">Support Forum</a>. To get the help you need quickly, please post the <a href="%s">Diagnostic Data</a> with your question. You can also check the on-line FAQ and Error Messages pages for answers.' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) )
+			) );
+			// add more help tabs as needed with unique id's
+				
+			// Help sidebars are optional
+			// $screen->set_help_sidebar ( '<p><strong>' . __ ( 'About' ) . '</strong></p>' . '<p>Postman SMTP 1.6.0b1<br/>by Jason Hendriks</p>' );
+		}
+		
 		
 		/**
 		 * Register the Email Test screen
@@ -197,10 +254,51 @@ if (! class_exists ( 'PostmanViewController' )) {
 					$this,
 					'enqueuePortTestResources' 
 			) );
+			add_action ( 'load-' . $page, array (
+					$this,
+					'addConnectivityTestScreenHelp' 
+			) );
 		}
 		function enqueuePortTestResources() {
 			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_script ( 'postman_port_test_script' );
+		}
+		/**
+		 * https://codex.wordpress.org/Adding_Contextual_Help_to_Administration_Menus
+		 */
+		function addConnectivityTestScreenHelp() {
+			// We are in the correct screen because we are taking advantage of the load-* action (below)
+			$screen = get_current_screen ();
+			// $screen->remove_help_tabs();
+			$screen->add_help_tab ( array (
+					'id' => 'postman-smtp-connectivity-test',
+					'title' => __ ( 'Connectivity Test' ),
+					'content' => 'The Connectivity Test will interrogate the SMTP server for it\'s capabilities. If the server cannot be reached, the tool will report the problems it finds.'
+			) );
+			$screen->add_help_tab ( array (
+					'id' => 'postman-smtp-internet-access',
+					'title' => __ ( 'Outbound to Internet' ),
+					'content' => sprintf ( __ ( 'This tests the connectivity between your site and the Internet at large.' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) )
+			) );
+			$screen->add_help_tab ( array (
+					'id' => 'postman-smtp-service-available',
+					'title' => __ ( 'Service Available' ),
+					'content' => sprintf ( __ ( 'This shows the service found for a particular host/port combination. You can next expect <b>SMTP</b>, <b>SMTPS</b> (secure socket-level communication) - also known (incorrectly) as "ssl" - and <b>HTTPS</b> (API).' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) )
+			) );
+			$screen->add_help_tab ( array (
+					'id' => 'postman-smtp-starttls',
+					'title' => __ ( 'STARTTLS' ),
+					'content' => sprintf ( __ ( 'This indicates whether the server supports STARTTLS (secure protocol-level communication) - also known (incorrectly) as "tls".' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) )
+			) );
+			$screen->add_help_tab ( array (
+					'id' => 'postman-smtp-online-support',
+					'title' => __ ( 'Online Support' ),
+					'content' => sprintf ( __ ( 'Having trouble? You can ask for help on our <a href="https://wordpress.org/support/plugin/postman-smtp" target="_blank">Support Forum</a>. To get the help you need quickly, please post the <a href="%s">Diagnostic Data</a> with your question. You can also check the on-line FAQ and Error Messages pages for answers.' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) )
+			) );
+			// add more help tabs as needed with unique id's
+		
+			// Help sidebars are optional
+			// $screen->set_help_sidebar ( '<p><strong>' . __ ( 'About' ) . '</strong></p>' . '<p>Postman SMTP 1.6.0b1<br/>by Jason Hendriks</p>' );
 		}
 		
 		/**
@@ -295,7 +393,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			/* translators: where %d is a port number and %s is a hostname */
 			wp_localize_script ( 'postman_port_test_script', 'postman_smtp_success', __ ( 'Port %d can be used for SMTP to %s.', 'postman-smtp' ) );
 			/* translators: where %d is a port number and %s is the URL for the Postman Gmail Extension */
-			wp_localize_script ( 'postman_port_test_script', 'postman_443_open', sprintf ( __ ( 'Port %d can be used to send Gmail with the optional plugin, <a href="%s">Postman Gmail Extension</a>.', 'postman-smtp' ), 443, 'https://wordpress.org/plugins/postman-gmail-extension/' ) );
+			wp_localize_script ( 'postman_port_test_script', 'postman_443_open', sprintf ( __ ( 'Port %d can be used to send Gmail with an additional plugin; install the <a href="%s">Postman Gmail Extension</a>.', 'postman-smtp' ), 443, 'https://wordpress.org/plugins/postman-gmail-extension/' ) );
 			/* translators: where %d is a port number */
 			wp_localize_script ( 'postman_port_test_script', 'postman_443_closed', sprintf ( __ ( 'Port %d is closed. Contact your host for a solution, such as opening the port.', 'postman-smtp' ), 443 ) );
 			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_wait', __ ( 'Please wait for the port test to finish', 'postman-smtp' ) );
@@ -364,7 +462,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		}
 		private function outputChildPageHeader($title) {
 			printf ( '<h2>%s</h2>', _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ) );
-			print '<div id="welcome-panel" class="welcome-panel">';
+			print '<div id="postman-main-menu" class="welcome-panel">';
 			print '<div class="welcome-panel-content">';
 			print '<div class="welcome-panel-column-container">';
 			print '<div class="welcome-panel-column welcome-panel-last">';
@@ -449,6 +547,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<table id="connectivity_test_table">';
 			print sprintf ( '<tr><th colspan="2" class="test">%s</th><th class="port_25">%s</th><th class="port_443">%s</th><th class="port_465">%s</th><th class="port_587">%s</th></tr>', _x ( 'Test', 'Connectivity Test Table', 'postman-smtp' ), sprintf ( _x ( 'Port %s', 'Port Test', 'postman-smtp' ), 25 ), sprintf ( _x ( 'Port %s', 'Port Test', 'postman-smtp' ), 443 ), sprintf ( _x ( 'Port %s', 'Port Test', 'postman-smtp' ), 465 ), sprintf ( _x ( 'Port %s', 'Port Test', 'postman-smtp' ), 587 ) );
 			print sprintf ( '<tr><th colspan="2">%s</th><td id="port-test-port-25">-</td><td id="port-test-port-443">-</td><td id="port-test-port-465">-</td><td id="port-test-port-587">-</td></tr>', _x ( 'Outbound to Internet', 'Connectivity Test Table', 'postman-smtp' ) );
+			print sprintf ( '<tr><th colspan="2">%s</th><td id="smtp_test_port_25">-</td><td id="smtp_test_port_443">-</td><td id="smtp_test_port_465">-</td><td id="smtp_test_port_587">-</td></tr>', _x ( 'Server ID', 'The identifier (domain name) of the SMTP server', 'postman-smtp' ) );
 			print sprintf ( '<tr><th colspan="2">%s</th><td id="smtp_test_port_25">-</td><td id="smtp_test_port_443">-</td><td id="smtp_test_port_465">-</td><td id="smtp_test_port_587">-</td></tr>', _x ( 'Service Available', 'Connectivity Test Table', 'postman-smtp' ) );
 			print sprintf ( '<tr><th colspan="2">%s</th><td id="starttls_test_port_25">-</td><td id="starttls_test_port_443">-</td><td id="starttls_test_port_465">-</td><td id="starttls_test_port_587">-</td></tr>', _x ( 'STARTTLS', 'Connectivity Test Table', 'postman-smtp' ) );
 			print sprintf ( '<tr><th rowspan="5">%s</th><th>%s</th><td id="auth_none_test_port_25">-</td><td id="auth_none_test_port_443">-</td><td id="auth_none_test_port_465">-</td><td id="auth_none_test_port_587">-</td></tr>', _x ( 'Auth', 'Short for Authentication', 'postman-smtp' ), _x ( 'None', 'Authentication Type', 'postman-smtp' ) );
@@ -481,7 +580,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// test features
 			print '<div class="wrap">';
 			
-			$this->outputChildPageHeader ( _x ( 'Tips and Diagnostic Info', 'Page Title', 'postman-smtp' ) );
+			$this->outputChildPageHeader ( _x ( 'Diagnostic Info', 'Page Title', 'postman-smtp' ) );
 			
 			printf ( '<h4>%s</h4>', __ ( 'Are you having issues with Postman?', 'postman-smtp' ) );
 			/* translators: where %1$s and %2$s are the URLs to the Troubleshooting and Support Forums on WordPress.org */
@@ -523,8 +622,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<div class="welcome-panel-column welcome-panel-last">';
 			printf ( '<h4>%s</h4>', _x ( 'Troubleshooting', 'Main Menu', 'postman-smtp' ) );
 			print '<ul>';
-			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::DIAGNOSTICS_SLUG ), _x ( 'Tips and Diagnostic Info', 'Page Title', 'postman-smtp' ) );
 			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::PORT_TEST_SLUG ), _x ( 'Run a Connectivity Test', 'Main Menu', 'postman-smtp' ) );
+			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::DIAGNOSTICS_SLUG ), _x ( 'Diagnostic Info', 'Page Title', 'postman-smtp' ) );
 			printf ( '<li><a href="https://wordpress.org/support/plugin/postman-smtp" class="welcome-icon postman_support">%s</a></li>', _x ( 'Online Support', 'Main Menu', 'postman-smtp' ) );
 			print '</ul></div></div></div></div>';
 		}

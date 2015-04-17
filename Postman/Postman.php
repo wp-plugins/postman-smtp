@@ -14,7 +14,6 @@ if (! class_exists ( 'Postman' )) {
 	require_once 'PostmanAdminController.php';
 	require_once 'PostmanActivationHandler.php';
 	require_once 'PostmanEmailLogService.php';
-	require_once 'PostmanHelp.php';
 	
 	/**
 	 *
@@ -69,6 +68,7 @@ if (! class_exists ( 'Postman' )) {
 			
 			$this->pluginData = get_plugin_data ( $rootPluginFilenameAndPath );
 			
+			
 			if (is_admin ()) {
 				// fire up the AdminController, and only for those with admin access
 				$adminController = new PostmanAdminController ( $this->rootPluginFilenameAndPath, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
@@ -85,6 +85,12 @@ if (! class_exists ( 'Postman' )) {
 			add_action ( 'plugins_loaded', array (
 					$this,
 					'init' 
+			) );
+
+			// register the shortcode handler on the add_shortcode event
+			add_shortcode ( 'postman-version', array (
+					$this,
+					'version_shortcode' 
 			) );
 		}
 		
@@ -103,11 +109,6 @@ if (! class_exists ( 'Postman' )) {
 				$this->messageHandler->addError ( __ ( 'Postman is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.', 'postman-smtp' ) );
 			}
 			
-			// register the shortcode handler on the add_shortcode event
-			add_shortcode ( 'postman-version', array (
-					$this,
-					'version_shortcode' 
-			) );
 		}
 		
 		/**
