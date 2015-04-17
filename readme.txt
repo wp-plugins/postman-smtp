@@ -147,20 +147,18 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
 = How do I get a Yahoo Client ID? (For Yahoo Mail users only!) =
-1. Go to [Yahoo Developer Network](https://developer.apps.yahoo.com/projects) and select 'Create an App'.
-1. In the 'Application Name' field enter 'Postman SMTP'. For 'Application Type' choose 'Web-based'. In description write the name of your WordPress site.
-1. In 'Home Page URL', enter the 'Home Page URL' shown on Postman's Settings page.
-1. In 'Access Scopes' choose 'This app requires access to private user data.'
-1. In 'Callback Domain', enter the 'Callback Domain' given by Postman (either from the wizard, or from the manual configuration page).
-1. Under 'Select APIs for private user data access' choose 'Mail Web Service'
-1. Under 'Mail Web Service' choose 'Read/Write'
+1. Go to [Yahoo Developer Network](https://developer.yahoo.com/apps/) and select 'Create an App'.
+1. In the 'Application Name' field enter 'Postman SMTP'. For 'Application Type' choose 'Web Application'.
+1. In 'Home Page URL', enter the 'Home Page URL' given by Postman.
+1. In 'Callback Domain', enter the 'Callback Domain' given by Postman.
+1. Under 'API Permissions' choose 'Mail'. Under 'Mail' choose 'Read/Write'
 1. Click 'Create App'
-1. Enter the Consumer Key and Consumer Secret: displayed here into Postman's settings page.
+1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
 = How can I revoke Postman's OAuth 2.0 access? =
 * If you have a Google Account, from the [Google Developer's Console](https://console.developers.google.com/) use the Delete button under the Client ID.
 * If you have a Microsoft Live account, from the [Microsoft account Developer Center](https://account.live.com/developers/applications/index), select the Application and choose Delete Application.
-* If you have a Yahoo Account, from the [Yahoo Developer Network My Apps](https://developer.apps.yahoo.com/projects), select the Application and choose Delete App. 
+* If you have a Yahoo Account, from the [Yahoo Developer Network My Apps](https://developer.yahoo.com/apps/), select the Application and choose Delete App. 
 
 = Who do we thank for translations? =
 * French - [Etienne Provost](https://www.facebook.com/eprovost3)

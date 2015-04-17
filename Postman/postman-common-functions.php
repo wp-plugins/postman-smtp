@@ -137,7 +137,7 @@ if (! function_exists ( 'stripUrlPath' )) {
 	function stripUrlPath($url) {
 		$urlParts = parse_url ( $url );
 		if (isset ( $urlParts ['scheme'] ) && isset ( $urlParts ['host'] )) {
-			return $urlParts ['scheme'] . "://" . $urlParts ['host'] . "/";
+			return $urlParts ['scheme'] . "://" . $urlParts ['host'];
 		} else {
 			throw new ParseUrlException ();
 		}

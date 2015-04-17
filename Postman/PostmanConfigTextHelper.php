@@ -199,13 +199,18 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 		public function getCallbackUrl() {
 			return admin_url ( 'options-general.php' ) . '?page=postman';
 		}
+		function getCallbackDomain() {
+			$callbackUrl = $this->getCallbackUrl ();
+			if (! empty ( $callbackUrl ))
+				return stripUrlPath ( $this->getCallbackUrl () );
+		}
 		public function getClientIdLabel() {
 			/* Translators: This description is specific to Yahoo */
-			return _x ( 'Consumer Key', 'Name of the OAuth 2.0 Client ID', 'postman-smtp' );
+			return _x ( 'Client ID', 'Name of the OAuth 2.0 Client ID', 'postman-smtp' );
 		}
 		public function getClientSecretLabel() {
 			/* Translators: This description is specific to Yahoo */
-			return _x ( 'Consumer Secret', 'Name of the OAuth 2.0 Client Secret', 'postman-smtp' );
+			return _x ( 'Client Secret', 'Name of the OAuth 2.0 Client Secret', 'postman-smtp' );
 		}
 		public function getCallbackUrlLabel() {
 			/* Translators: This description is specific to Yahoo */
@@ -232,7 +237,7 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 			return _x ( 'Yahoo Developer Network', 'Name of the email service portal', 'postman-smtp' );
 		}
 		public function getApplicationPortalUrl() {
-			return 'https://developer.apps.yahoo.com/projects';
+			return 'https://developer.yahoo.com/apps/';
 		}
 		public function getOAuthPort() {
 			return 465;
