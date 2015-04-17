@@ -68,11 +68,6 @@ if (! class_exists ( 'PostmanAbstractConfigTextHelper' )) {
 		function isYahoo() {
 			return false;
 		}
-		function getCallbackDomain() {
-			$callbackUrl = $this->getCallbackUrl ();
-			if (! empty ( $callbackUrl ))
-				return stripUrlPath ( $this->getCallbackUrl () );
-		}
 		public function getRequestPermissionLinkText() {
 			/* translators: where %s is the Email Service Owner (e.g. Google, Microsoft or Yahoo) */
 			return sprintf ( _x ( 'Request permission from %s', 'Command to initiate OAuth authentication', 'postman-smtp' ), $this->getOwnerName () );
@@ -90,6 +85,14 @@ if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
 		public function getCallbackUrl() {
 			// see https://codex.wordpress.org/Function_Reference/admin_url#Related
 			return admin_url ( 'options-general.php' ) . '?page=postman';
+		}
+		function getCallbackDomain() {
+			$urlParts = parse_url ( $this->getCallbackUrl () );
+			if (isset ( $urlParts ['scheme'] ) && isset ( $urlParts ['host'] )) {
+				return $urlParts ['scheme'] . "://" . $urlParts ['host'];
+			} else {
+				throw new ParseUrlException ();
+			}
 		}
 		public function getClientIdLabel() {
 			/* Translators: This description is specific to Google */
@@ -145,6 +148,14 @@ if (! class_exists ( 'PostmanMicrosoftOAuthScribe' )) {
 		public function getCallbackUrl() {
 			return admin_url ( 'options-general.php' );
 		}
+		function getCallbackDomain() {
+			$urlParts = parse_url ( $this->getCallbackUrl () );
+			if (isset ( $urlParts ['host'] )) {
+				return $urlParts ['host'];
+			} else {
+				throw new ParseUrlException ();
+			}
+		}
 		public function getClientIdLabel() {
 			/* Translators: This description is specific to Microsoft */
 			return _x ( 'Client ID', 'Name of the OAuth 2.0 Client ID', 'postman-smtp' );
@@ -198,6 +209,14 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 		}
 		public function getCallbackUrl() {
 			return admin_url ( 'options-general.php' ) . '?page=postman';
+		}
+		function getCallbackDomain() {
+			$urlParts = parse_url ( $this->getCallbackUrl () );
+			if (isset ( $urlParts ['host'] )) {
+				return $urlParts ['host'];
+			} else {
+				throw new ParseUrlException ();
+			}
 		}
 		public function getClientIdLabel() {
 			/* Translators: This description is specific to Yahoo */
@@ -262,6 +281,9 @@ if (! class_exists ( 'PostmanNonOAuthScribe' )) {
 			return sprintf ( '<span style="color:red" class="normal">%s</span>', $text );
 		}
 		public function getCallbackUrl() {
+			return '';
+		}
+		function getCallbackDomain() {
 			return '';
 		}
 		public function getClientIdLabel() {
