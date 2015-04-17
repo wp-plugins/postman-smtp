@@ -346,10 +346,10 @@ function handleConfigurationResponse(response) {
 				.val(response.configuration.redirect_url);
 		jQuery('#input_oauth_callback_domain').val(
 				response.configuration.callback_domain);
-		jQuery('#client_id').html(response.client_id_label);
-		jQuery('#client_secret').html(response.client_secret_label);
-		jQuery('#redirect_url').html(response.redirect_url_label);
-		jQuery('#callback_domain').html(response.callback_domain_label);
+		jQuery('#client_id').html(response.configuration.client_id_label);
+		jQuery('#client_secret').html(response.configuration.client_secret_label);
+		jQuery('#redirect_url').html(response.configuration.redirect_url_label);
+		jQuery('#callback_domain').html(response.configuration.callback_domain_label);
 	}
 	redirectUrlWarning = response.configuration.dot_notation_url;
 	jQuery('#input_transport_type').val(response.configuration.transport_type);

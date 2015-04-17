@@ -249,9 +249,12 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 1.6 =
 * Log all email attempts with error messages (if any)
+* Help screens
 * (TBD): View the damn logs!
 * (TBD): Preference screen for logging - disabled for existing users?
 * (TBD): Obscure password from front-end - ask to see password when typing
+* Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)
+* Lots of changes at Yahoo's Developer Network required: updated format of Callback Domain; updated Yahoo Developer Network portal launch link; renamed Consumer Key/Secret to Client ID/Client Secret; updated FAQ for Yahoo Client ID instructions 
 
 = 1.5.12 - 2015-04-14 - The Jamaican release! =
 * [[Ticket](https://wordpress.org/support/topic/help-mail-is-failing-in-test?replies=9)] PHP 5.2 users: fix test messages that show failures but still get delivered; fix Contact Form 7 submission freezes
