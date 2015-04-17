@@ -33,7 +33,7 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 * Supports [Mandrill](http://mandrill.com) X-headers and forced recipients (cc, bcc, to)
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Security Support: SMTPS and STARTTLS (SSL/TLS)
-* Verified compatible with: [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), [Visual Forms Builder](https://wordpress.org/plugins/visual-form-builder/), [Fast Secure Contact Form](https://wordpress.org/support/plugin/si-contact-form), Email Log
+* Verified compatible with: [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), [Visual Forms Builder](https://wordpress.org/plugins/visual-form-builder/), [Fast Secure Contact Form](https://wordpress.org/support/plugin/si-contact-form), [cformsII](https://wordpress.org/plugins/cforms2/), Email Log
 * Available translations: French, Italian and Turkish - if you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
 
 = Requirements =
