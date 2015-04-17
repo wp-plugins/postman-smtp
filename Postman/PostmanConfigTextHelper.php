@@ -199,11 +199,6 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 		public function getCallbackUrl() {
 			return admin_url ( 'options-general.php' ) . '?page=postman';
 		}
-		function getCallbackDomain() {
-			$callbackUrl = $this->getCallbackUrl ();
-			if (! empty ( $callbackUrl ))
-				return stripUrlPath ( $this->getCallbackUrl () );
-		}
 		public function getClientIdLabel() {
 			/* Translators: This description is specific to Yahoo */
 			return _x ( 'Client ID', 'Name of the OAuth 2.0 Client ID', 'postman-smtp' );
