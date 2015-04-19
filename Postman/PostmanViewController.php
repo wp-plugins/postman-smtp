@@ -359,7 +359,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		}
 		private function outputChildPageHeader($title) {
 			printf ( '<h2>%s</h2>', _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ) );
-			print '<div id="welcome-panel" class="welcome-panel">';
+			print '<div id="postman-main-menu" class="welcome-panel">';
 			print '<div class="welcome-panel-content">';
 			print '<div class="welcome-panel-column-container">';
 			print '<div class="welcome-panel-column welcome-panel-last">';
@@ -491,7 +491,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		private function displayTopNavigation() {
 			screen_icon ();
 			printf ( '<h2>%s</h2>', _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ) );
-			print '<div id="welcome-panel" class="welcome-panel">';
+			print '<div id="postman-main-menu" class="welcome-panel">';
 			print '<div class="welcome-panel-content">';
 			print '<div class="welcome-panel-column-container">';
 			print '<div class="welcome-panel-column">';

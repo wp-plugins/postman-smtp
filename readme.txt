@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, smtps, email, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.1.1
-Stable tag: 1.5.12
+Stable tag: 1.5.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,7 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Security Support: SMTPS and STARTTLS (SSL/TLS)
 * Verified compatible with: [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), [Visual Forms Builder](https://wordpress.org/plugins/visual-form-builder/), [Fast Secure Contact Form](https://wordpress.org/support/plugin/si-contact-form), Email Log
-* Available translations: English, French, Italian, Turkish - if you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
+* Available translations: French, Italian and Turkish - if you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
 
 = Requirements =
 * WordPress 3.9 and PHP 5.2 with SPL and iconv
@@ -246,6 +246,11 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 
 == Changelog ==
+
+= 1.5.13 - 2015-04-18 =
+* Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)
+* Lots of changes at Yahoo's Developer Network required changes here: updated format of Callback Domain; updated Yahoo Developer Network portal launch link; renamed Consumer Key/Secret to Client ID/Client Secret; updated FAQ for Yahoo Client ID instructions
+* [[Ticket](https://wordpress.org/support/topic/re-initializing-the-plugin?replies=5)] Updated stylesheet to avoid interference from Dating Solutions Plugin (DSP)
 
 = 1.5.12 - 2015-04-14 - The Jamaican release! =
 * [[Ticket](https://wordpress.org/support/topic/help-mail-is-failing-in-test?replies=9)] PHP 5.2 users: fix test messages that show failure messages but still get delivered; and Contact Form 7 submission freezes
