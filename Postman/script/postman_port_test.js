@@ -146,6 +146,10 @@ function enableButtonCheck(button) {
 	}
 }
 function inspectResponse(response, port) {
+	var testEl = jQuery('#server_id_port_' + port);
+	if(repsonse.domain_name) {
+		testEl.html('<span>' + response.domain_name + '</span>');
+	}
 	var testEl = jQuery('#starttls_test_port_' + port);
 	if (response.start_tls) {
 		testEl.html('<span style="color:green">' + postman_yes + '</span>');

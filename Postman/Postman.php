@@ -12,6 +12,7 @@ if (! class_exists ( 'Postman' )) {
 	require_once 'PostmanMessageHandler.php';
 	require_once 'PostmanWpMailBinder.php';
 	require_once 'PostmanAdminController.php';
+	require_once 'Postman-Controller/PostmanDashboardWidgetController.php';
 	require_once 'PostmanActivationHandler.php';
 	require_once 'PostmanEmailLogService.php';
 	
@@ -72,6 +73,7 @@ if (! class_exists ( 'Postman' )) {
 			if (is_admin ()) {
 				// fire up the AdminController, and only for those with admin access
 				$adminController = new PostmanAdminController ( $this->rootPluginFilenameAndPath, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
+				new PostmanDashboardWidgetController();
 			}
 			
 			// register activation handler on the activation event

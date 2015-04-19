@@ -227,19 +227,18 @@ if (! class_exists ( 'PostmanViewController' )) {
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-connectivity-test',
 					'title' => __ ( 'Connectivity Test' ),
-					'content' => 'The Connectivity Test will interrogate the SMTP server for it\'s capabilities. If the server cannot be reached, it will report on the network blocks that it finds'
+					'content' => 'The Connectivity Test will interrogate the SMTP server for it\'s capabilities. If the server cannot be reached, it will report on the network blocks that it finds' 
 			) );
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-online-support',
 					'title' => __ ( 'Online Support' ),
-					'content' => sprintf ( __ ( 'Having trouble? You can ask for help on our <a href="https://wordpress.org/support/plugin/postman-smtp" target="_blank">Support Forum</a>. To get the help you need quickly, please post the <a href="%s">Diagnostic Data</a> with your question. You can also check the on-line FAQ and Error Messages pages for answers.' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) )
+					'content' => sprintf ( __ ( 'Having trouble? You can ask for help on our <a href="https://wordpress.org/support/plugin/postman-smtp" target="_blank">Support Forum</a>. To get the help you need quickly, please post the <a href="%s">Diagnostic Data</a> with your question. You can also check the on-line FAQ and Error Messages pages for answers.' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) ) 
 			) );
 			// add more help tabs as needed with unique id's
-				
+			
 			// Help sidebars are optional
 			// $screen->set_help_sidebar ( '<p><strong>' . __ ( 'About' ) . '</strong></p>' . '<p>Postman SMTP 1.6.0b1<br/>by Jason Hendriks</p>' );
 		}
-		
 		
 		/**
 		 * Register the Email Test screen
@@ -273,30 +272,30 @@ if (! class_exists ( 'PostmanViewController' )) {
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-connectivity-test',
 					'title' => __ ( 'Connectivity Test' ),
-					'content' => 'The Connectivity Test will interrogate the SMTP server for it\'s capabilities. If the server cannot be reached, the tool will report the problems it finds.'
+					'content' => 'The Connectivity Test will interrogate the SMTP server for it\'s capabilities. If the server cannot be reached, the tool will report the problems it finds.' 
 			) );
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-internet-access',
 					'title' => __ ( 'Outbound to Internet' ),
-					'content' => sprintf ( __ ( 'This tests the connectivity between your site and the Internet at large.' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) )
+					'content' => sprintf ( __ ( 'This tests the connectivity between your site and the Internet at large.' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) ) 
 			) );
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-service-available',
 					'title' => __ ( 'Service Available' ),
-					'content' => sprintf ( __ ( 'This shows the service found for a particular host/port combination. You can next expect <b>SMTP</b>, <b>SMTPS</b> (secure socket-level communication) - also known (incorrectly) as "ssl" - and <b>HTTPS</b> (API).' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) )
+					'content' => sprintf ( __ ( 'This shows the service found for a particular host/port combination. You can next expect <b>SMTP</b>, <b>SMTPS</b> (secure socket-level communication) - also known (incorrectly) as "ssl" - and <b>HTTPS</b> (API).' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) ) 
 			) );
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-starttls',
 					'title' => __ ( 'STARTTLS' ),
-					'content' => sprintf ( __ ( 'This indicates whether the server supports STARTTLS (secure protocol-level communication) - also known (incorrectly) as "tls".' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) )
+					'content' => sprintf ( __ ( 'This indicates whether the server supports STARTTLS (secure protocol-level communication) - also known (incorrectly) as "tls".' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) ) 
 			) );
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-online-support',
 					'title' => __ ( 'Online Support' ),
-					'content' => sprintf ( __ ( 'Having trouble? You can ask for help on our <a href="https://wordpress.org/support/plugin/postman-smtp" target="_blank">Support Forum</a>. To get the help you need quickly, please post the <a href="%s">Diagnostic Data</a> with your question. You can also check the on-line FAQ and Error Messages pages for answers.' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) )
+					'content' => sprintf ( __ ( 'Having trouble? You can ask for help on our <a href="https://wordpress.org/support/plugin/postman-smtp" target="_blank">Support Forum</a>. To get the help you need quickly, please post the <a href="%s">Diagnostic Data</a> with your question. You can also check the on-line FAQ and Error Messages pages for answers.' ), $this->getPageUrl ( self::DIAGNOSTICS_SLUG ) ) 
 			) );
 			// add more help tabs as needed with unique id's
-		
+			
 			// Help sidebars are optional
 			// $screen->set_help_sidebar ( '<p><strong>' . __ ( 'About' ) . '</strong></p>' . '<p>Postman SMTP 1.6.0b1<br/>by Jason Hendriks</p>' );
 		}
@@ -441,7 +440,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 				if ($this->options->isAuthTypeOAuth2 ()) {
 					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins and themes are forbidden from overriding the sender email address.</em>', 'postman-smtp' ) );
 				} else if ($this->options->isAuthTypePassword ()) {
-					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins and themes may override the sender name and email address causing rejection with some email services, such as Yahoo Mail. If you experience problems, try leaving the sender email address empty in these plugins or themes.</em>', 'postman-smtp' ) );
+					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins and themes may override the sender name and email address causing rejection with some email services, such as Yahoo Mail. If you experience problems, enable "Prevent Sender Address Override" in the settings.</em>', 'postman-smtp' ) );
 				}
 				if (PostmanState::getInstance ()->isTimeToReviewPostman () && ! PostmanOptions::getInstance ()->isNew ()) {
 					/* translators: where %d is the number of emails delivered */
@@ -481,6 +480,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<div id="config_tabs"><ul>';
 			print sprintf ( '<li><a href="#account_config">%s</a></li>', _x ( 'Account', 'Manual Configuration Tab Label', 'postman-smtp' ) );
 			print sprintf ( '<li><a href="#message_config">%s</a></li>', _x ( 'Message', 'Manual Configuration Tab Label', 'postman-smtp' ) );
+			print sprintf ( '<li><a href="#logging_config">%s</a></li>', _x ( 'Logging', 'Manual Configuration Tab Label', 'postman-smtp' ) );
 			print sprintf ( '<li><a href="#advanced_options_config">%s</a></li>', _x ( 'Advanced', 'Manual Configuration Tab Label', 'postman-smtp' ) );
 			print '</ul>';
 			print '<form method="post" action="options.php">';
@@ -507,6 +507,14 @@ if (! class_exists ( 'PostmanViewController' )) {
 			do_settings_sections ( PostmanAdminController::MESSAGE_OPTIONS );
 			do_settings_sections ( PostmanAdminController::MESSAGE_HEADERS_OPTIONS );
 			print '</section>';
+			print '<section id="logging_config">';
+			do_settings_sections ( PostmanAdminController::LOGGING_OPTIONS );
+			print '</section>';
+			/*
+			print '<section id="logging_config">';
+			do_settings_sections ( PostmanAdminController::MULTISITE_OPTIONS );
+			print '</section>';
+			*/
 			print '<section id="advanced_options_config">';
 			do_settings_sections ( PostmanAdminController::NETWORK_OPTIONS );
 			do_settings_sections ( PostmanAdminController::ADVANCED_OPTIONS );
@@ -547,8 +555,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<table id="connectivity_test_table">';
 			print sprintf ( '<tr><th colspan="2" class="test">%s</th><th class="port_25">%s</th><th class="port_443">%s</th><th class="port_465">%s</th><th class="port_587">%s</th></tr>', _x ( 'Test', 'Connectivity Test Table', 'postman-smtp' ), sprintf ( _x ( 'Port %s', 'Port Test', 'postman-smtp' ), 25 ), sprintf ( _x ( 'Port %s', 'Port Test', 'postman-smtp' ), 443 ), sprintf ( _x ( 'Port %s', 'Port Test', 'postman-smtp' ), 465 ), sprintf ( _x ( 'Port %s', 'Port Test', 'postman-smtp' ), 587 ) );
 			print sprintf ( '<tr><th colspan="2">%s</th><td id="port-test-port-25">-</td><td id="port-test-port-443">-</td><td id="port-test-port-465">-</td><td id="port-test-port-587">-</td></tr>', _x ( 'Outbound to Internet', 'Connectivity Test Table', 'postman-smtp' ) );
-			print sprintf ( '<tr><th colspan="2">%s</th><td id="smtp_test_port_25">-</td><td id="smtp_test_port_443">-</td><td id="smtp_test_port_465">-</td><td id="smtp_test_port_587">-</td></tr>', _x ( 'Server ID', 'The identifier (domain name) of the SMTP server', 'postman-smtp' ) );
 			print sprintf ( '<tr><th colspan="2">%s</th><td id="smtp_test_port_25">-</td><td id="smtp_test_port_443">-</td><td id="smtp_test_port_465">-</td><td id="smtp_test_port_587">-</td></tr>', _x ( 'Service Available', 'Connectivity Test Table', 'postman-smtp' ) );
+			print sprintf ( '<tr><th colspan="2">%s</th><td id="server_id_port_25">-</td><td id="server_id_port_443">-</td><td id="server_id_port_465">-</td><td id="server_id_port_587">-</td></tr>', _x ( 'Server ID', 'The identifier (domain name) of the SMTP server', 'postman-smtp' ) );
 			print sprintf ( '<tr><th colspan="2">%s</th><td id="starttls_test_port_25">-</td><td id="starttls_test_port_443">-</td><td id="starttls_test_port_465">-</td><td id="starttls_test_port_587">-</td></tr>', _x ( 'STARTTLS', 'Connectivity Test Table', 'postman-smtp' ) );
 			print sprintf ( '<tr><th rowspan="5">%s</th><th>%s</th><td id="auth_none_test_port_25">-</td><td id="auth_none_test_port_443">-</td><td id="auth_none_test_port_465">-</td><td id="auth_none_test_port_587">-</td></tr>', _x ( 'Auth', 'Short for Authentication', 'postman-smtp' ), _x ( 'None', 'Authentication Type', 'postman-smtp' ) );
 			print sprintf ( '<tr><th>%s</th><td id="auth_login_test_port_25">-</td><td id="auth_login_test_port_443">-</td><td id="auth_login_test_port_465">-</td><td id="auth_login_test_port_587">-</td></tr>', _x ( 'Login', 'Authentication Type', 'postman-smtp' ) );
@@ -595,7 +603,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		private function displayTopNavigation() {
 			screen_icon ();
 			printf ( '<h2>%s</h2>', _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ) );
-			print '<div id="welcome-panel" class="welcome-panel">';
+			print '<div id="postman-main-menu" class="welcome-panel">';
 			print '<div class="welcome-panel-content">';
 			print '<div class="welcome-panel-column-container">';
 			print '<div class="welcome-panel-column">';

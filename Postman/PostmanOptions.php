@@ -45,6 +45,10 @@ if (! class_exists ( "PostmanOptions" )) {
 		const CONNECTION_TIMEOUT = 'connection_timeout';
 		const READ_TIMEOUT = 'read_timeout';
 		const LOG_LEVEL = 'log_level';
+		const RUN_MODE = 'run_mode';
+		const RUN_MODE_PRODUCTION = 'production';
+		const RUN_MODE_LOG_ONLY = 'log_only';
+		const RUN_MODE_IGNORE = 'ignore';
 		
 		// options data
 		private $options;
@@ -70,6 +74,12 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function isNew() {
 			return ! isset ( $this->options [PostmanOptions::VERSION] );
+		}
+		public function isLoggingEnabled() {
+			return true;
+		}
+		public function getLoggingMaxEntries() {
+			return 10;
 		}
 		public function getLogLevel() {
 			if (isset ( $this->options [PostmanOptions::LOG_LEVEL] ))
@@ -137,6 +147,9 @@ if (! class_exists ( "PostmanOptions" )) {
 		public function getPassword() {
 			if (isset ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] ))
 				return base64_decode ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] );
+		}
+		public function getObfuscatedPassword() {
+			return postmanObfuscatePassword ( $this->getPassword () );
 		}
 		public function getReplyTo() {
 			if (isset ( $this->options [PostmanOptions::REPLY_TO] ))

@@ -251,8 +251,14 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Log all email attempts with error messages (if any)
 * Help screens
 * (TBD): View the damn logs!
-* (TBD): Preference screen for logging - disabled for existing users?
-* (TBD): Obscure password from front-end - ask to see password when typing
+* Preference screen for logging
+* (TBD): Add option for MailPoet
+* (TBD): Logging disabled for existing setups?
+* Obscure password from front-end
+* (TBD): Ask to see password when typing
+* (TBD): Check for GoDaddy SMTP server during Wizard and suggest that they install Gmail Extension
+* Check for Gmail during intro and remember for smtp id check and gmail extension option.
+* (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail
 * Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)
 * Lots of changes at Yahoo's Developer Network required: updated format of Callback Domain; updated Yahoo Developer Network portal launch link; renamed Consumer Key/Secret to Client ID/Client Secret; updated FAQ for Yahoo Client ID instructions
 * [[Ticket](https://wordpress.org/support/topic/re-initializing-the-plugin?replies=5)] Updated stylesheet to avoid interference from Dating Solutions Plugin (DSP)

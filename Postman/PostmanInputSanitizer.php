@@ -42,7 +42,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			$this->sanitizeString ( 'Client ID', PostmanOptions::CLIENT_ID, $input, $new_input );
 			$this->sanitizeString ( 'Client Secret', PostmanOptions::CLIENT_SECRET, $input, $new_input );
 			$this->sanitizeString ( 'Username', PostmanOptions::BASIC_AUTH_USERNAME, $input, $new_input );
-			$this->sanitizeString ( 'Password', PostmanOptions::BASIC_AUTH_PASSWORD, $input, $new_input );
+			$this->sanitizePassword ( 'Password', PostmanOptions::BASIC_AUTH_PASSWORD, $input, $new_input );
 			$this->sanitizeEmail ( 'Reply-To', PostmanOptions::REPLY_TO, $input, $new_input );
 			$this->sanitizeString ( 'Sender Name Override', PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, $input, $new_input );
 			$this->sanitizeString ( 'Sender Email Override', PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE, $input, $new_input );
@@ -70,19 +70,6 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 				$this->logger->debug ( "Recognized new Client ID" );
 				// the user entered a new client id and we should destroy the stored auth token
 				delete_option ( PostmanOAuthToken::OPTIONS_NAME );
-			}
-			
-			// WordPress calling Sanitize twice is a known issue
-			// https://core.trac.wordpress.org/ticket/21989
-			$action = PostmanSession::getInstance ()->getAction ();
-			if ($action != self::VALIDATION_SUCCESS && $action != self::VALIDATION_FAILED) {
-				if (! empty ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] )) {
-					// base-64 scramble password
-					$new_input [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] );
-					$this->logger->debug ( 'Encoding password as ' . $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] );
-				}
-			} else {
-				$this->logger->debug ( 'Wordpress called sanitize() twice, skipping the second password encode' );
 			}
 			
 			// add Postman plugin version number to database
@@ -113,13 +100,36 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 		private function sanitizeEmail($desc, $key, $input, &$new_input) {
 			if (isset ( $input [$key] )) {
 				$this->logSanitize ( $desc, $input [$key] );
-				$new_input [$key] = ( $input [$key] );
+				$new_input [$key] = ($input [$key]);
 			}
 		}
 		private function sanitizeString($desc, $key, $input, &$new_input) {
 			if (isset ( $input [$key] )) {
 				$this->logSanitize ( $desc, $input [$key] );
 				$new_input [$key] = sanitize_text_field ( $input [$key] );
+			}
+		}
+		private function sanitizePassword($desc, $key, $input, &$new_input) {
+			if (isset ( $input [$key] )) {
+				if (strlen ( $input [$key] ) > 0 && preg_match ( '/^\**$/', $input [$key] )) {
+					// if the password is all stars, then keep the existing password
+					$new_input [$key] = $this->options->getPassword ();
+				} else {
+					$new_input [$key] = sanitize_text_field ( $input [$key] );
+				}
+				$this->logSanitize ( $desc, $new_input [$key] );
+			}
+			// WordPress calling Sanitize twice is a known issue
+			// https://core.trac.wordpress.org/ticket/21989
+			$action = PostmanSession::getInstance ()->getAction ();
+			if ($action != self::VALIDATION_SUCCESS && $action != self::VALIDATION_FAILED) {
+				if (! empty ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] )) {
+					// base-64 scramble password
+					$new_input [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] );
+					$this->logger->debug ( 'Encoding Password as ' . $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] );
+				}
+			} else {
+				$this->logger->debug ( 'Wordpress called sanitize() twice, skipping the second password encode' );
 			}
 		}
 		private function sanitizeInt($desc, $key, $input, &$new_input) {
