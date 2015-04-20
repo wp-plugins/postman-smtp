@@ -259,8 +259,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * (TBD): Check for GoDaddy SMTP server during Wizard and suggest that they install Gmail Extension
 * Check for Gmail during intro and remember for smtp id check and gmail extension option.
 * (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail
+
+= 1.5.13 - 2015-04-18 =
 * Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)
-* Lots of changes at Yahoo's Developer Network required: updated format of Callback Domain; updated Yahoo Developer Network portal launch link; renamed Consumer Key/Secret to Client ID/Client Secret; updated FAQ for Yahoo Client ID instructions
+* Lots of changes at Yahoo's Developer Network required changes here: updated format of Callback Domain; updated Yahoo Developer Network portal launch link; renamed Consumer Key/Secret to Client ID/Client Secret; updated FAQ for Yahoo Client ID instructions
 * [[Ticket](https://wordpress.org/support/topic/re-initializing-the-plugin?replies=5)] Updated stylesheet to avoid interference from Dating Solutions Plugin (DSP)
 
 = 1.5.12 - 2015-04-14 - The Jamaican release! =
