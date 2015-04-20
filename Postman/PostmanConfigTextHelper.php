@@ -70,7 +70,7 @@ if (! class_exists ( 'PostmanAbstractConfigTextHelper' )) {
 		}
 		public function getRequestPermissionLinkText() {
 			/* translators: where %s is the Email Service Owner (e.g. Google, Microsoft or Yahoo) */
-			return sprintf ( _x ( 'Request permission from %s', 'Command to initiate OAuth authentication', 'postman-smtp' ), $this->getOwnerName () );
+			return sprintf ( _x ( 'Grant permission with %s', 'Command to initiate OAuth authentication', 'postman-smtp' ), $this->getOwnerName () );
 		}
 	}
 }

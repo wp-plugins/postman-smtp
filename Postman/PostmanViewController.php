@@ -752,7 +752,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<section>';
 			printf ( '<p>%s</p>', __ ( 'Click Finish to save these settings, then:', 'postman-smtp' ) );
 			print '<ul style="margin-left: 20px">';
-			printf ( '<li class="wizard-auth-oauth2">%s</li>', __ ( 'Request permission from the Email Provider to allow Postman to send email and', 'postman-smtp' ) );
+			printf ( '<li class="wizard-auth-oauth2">%s</li>', __ ( 'Grant permission with the Email Provider for Postman to send email and', 'postman-smtp' ) );
 			printf ( '<li>%s</li>', __ ( 'Send yourself a Test Email to make sure everything is working!', 'postman-smtp' ) );
 			print '</ul>';
 			print '</section>';
