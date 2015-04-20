@@ -125,6 +125,7 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 			$hostData ['auth_login'] = $connectivityTestResults ['auth_login'];
 			$hostData ['auth_crammd5'] = $connectivityTestResults ['auth_crammd5'];
 			$hostData ['auth_none'] = $connectivityTestResults ['auth_none'];
+			$hostData ['id'] = $connectivityTestResults['reported_hostname_domain_only'];
 			// filter for user preference (remove select auth data)
 			if ($userAuthPreference == 'oauth2') {
 				$hostData ['auth_plain'] = null;

@@ -257,9 +257,11 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
 			$response = array (
 					'hostname' => $hostname,
+					'hostname_domain_only' => $portTest->hostnameDomainOnly,
 					'port' => $port,
 					'protocol' => $portTest->protocol,
-					'domain_name' => $portTest->domainName,
+					'reported_hostname' => $portTest->reportedHostname,
+					'reported_hostname_domain_only' => $portTest->reportedHostnameDomainOnly,
 					'message' => $portTest->getErrorMessage (),
 					'start_tls' => $portTest->startTls,
 					'auth_plain' => $portTest->authPlain,

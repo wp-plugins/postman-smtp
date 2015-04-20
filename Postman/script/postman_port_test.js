@@ -82,7 +82,7 @@ function portTest2(hostname, port, button, open) {
 						addConclusion(postman_443_open, true);
 					} else {
 						addConclusion(sprintf(postman_smtp_success, port,
-								hostname + ' (' + response.data.domain_name + ')'), true);
+								hostname + ' (' + response.data.reported_hostname_domain_only + ')'), true);
 					}
 				} else {
 					if (response.data.try_smtps) {
@@ -121,7 +121,7 @@ function portTest3(hostname, port, button, open) {
 							+ response.data.protocol + '</span>');
 					inspectResponse(response.data, port);
 					addConclusion(sprintf(postman_smtp_success, port,
-							hostname + ' (' + response.data.domain_name + ')'), true);
+							hostname + ' (' + response.data.reported_hostname_domain_only + ')'), true);
 				} else {
 					testEl.html('<span style="color:red">' + postman_no
 							+ '</span>');
@@ -147,8 +147,8 @@ function enableButtonCheck(button) {
 }
 function inspectResponse(response, port) {
 	var testEl = jQuery('#server_id_port_' + port);
-	if(repsonse.domain_name) {
-		testEl.html('<span>' + response.domain_name + '</span>');
+	if(response.reported_hostname_domain_only) {
+		testEl.html('<span>' + response.reported_hostname_domain_only + '</span>');
 	}
 	var testEl = jQuery('#starttls_test_port_' + port);
 	if (response.start_tls) {
