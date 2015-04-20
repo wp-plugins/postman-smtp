@@ -81,6 +81,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				assert ( ! empty ( $options ) );
 				assert ( ! empty ( $authorizationToken ) );
 				assert ( ! empty ( $messageHandler ) );
+				assert ( ! empty ( $binder ) );
 				$this->logger = new PostmanLogger ( get_class ( $this ) );
 				$this->options = $options;
 				$this->authorizationToken = $authorizationToken;
@@ -732,7 +733,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<input type="checkbox" id="input_logging_status" name="postman_options[input_logging_status]" %s />', null !== $this->options->isLoggingEnabled () ? 'checked="checked"' : '' );
 		}
 		public function loggingMaxEntriesInputField() {
-			printf ( '<input type="text" id="input_logging_max_entries" value="%s"/>', $this->options->getLoggingMaxEntries() );
+			printf ( '<input type="text" id="input_logging_max_entries" value="%s"/>', $this->options->getLoggingMaxEntries () );
 		}
 		
 		/**

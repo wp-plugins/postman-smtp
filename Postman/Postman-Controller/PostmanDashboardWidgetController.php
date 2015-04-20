@@ -3,11 +3,24 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 	
 	//
 	class PostmanDashboardWidgetController {
+		private $rootPluginFilenameAndPath;
+		private $options;
+		private $authorizationToken;
+		private $wpMailBinder;
 		
 		/**
 		 * Start up
 		 */
-		public function __construct() {
+		public function __construct($rootPluginFilenameAndPath, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanWpMailBinder $binder) {
+			assert ( ! empty ( $rootPluginFilenameAndPath ) );
+			assert ( ! empty ( $options ) );
+			assert ( ! empty ( $authorizationToken ) );
+			assert ( ! empty ( $binder ) );
+			$this->rootPluginFilenameAndPath = $rootPluginFilenameAndPath;
+			$this->options = $options;
+			$this->authorizationToken = $authorizationToken;
+			$this->wpMailBinder = $binder;
+			
 			if (is_admin ()) {
 				
 				add_action ( 'wp_dashboard_setup', array (
