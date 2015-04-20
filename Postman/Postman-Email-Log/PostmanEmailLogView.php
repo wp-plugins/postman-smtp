@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * See http://wpengineer.com/2426/wp_list_table-a-step-by-step-guide/
+ * 
+ */
+
 /*
 Plugin Name: Custom List Table Example
 Plugin URI: http://www.mattvanandel.com/
