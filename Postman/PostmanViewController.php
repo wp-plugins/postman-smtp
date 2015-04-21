@@ -2,6 +2,7 @@
 if (! class_exists ( 'PostmanViewController' )) {
 	class PostmanViewController {
 		private $logger;
+		private $rootPluginFilenameAndPath;
 		private $options;
 		private $authorizationToken;
 		private $oauthScribe;
@@ -29,8 +30,9 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 * @param PostmanOAuthTokenInterface $authorizationToken        	
 		 * @param PostmanConfigTextHelper $oauthScribe        	
 		 */
-		function __construct(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe, PostmanAdminController $adminController) {
+		function __construct($rootPluginFilenameAndPath, PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe, PostmanAdminController $adminController) {
 			$this->options = $options;
+			$this->rootPluginFilenameAndPath = $rootPluginFilenameAndPath;
 			$this->authorizationToken = $authorizationToken;
 			$this->oauthScribe = $oauthScribe;
 			$this->adminController = $adminController;
@@ -320,54 +322,54 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 */
 		public function initializeAdminPage() {
 			// register the stylesheet and javascript external resources
-			wp_register_style ( self::POSTMAN_STYLE, plugins_url ( 'style/postman.css', __FILE__ ), null, POSTMAN_PLUGIN_VERSION );
-			wp_register_style ( 'jquery_ui_style', plugins_url ( 'style/jquery-steps/jquery-ui.css', __FILE__ ), self::POSTMAN_STYLE, '1.1.0' );
-			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery-steps/jquery.steps.css', __FILE__ ), self::POSTMAN_STYLE, '1.1.0' );
-			wp_register_style ( 'postman_send_test_email', plugins_url ( 'style/postman_send_test_email.css', __FILE__ ), self::POSTMAN_STYLE, POSTMAN_PLUGIN_VERSION );
+			wp_register_style ( self::POSTMAN_STYLE, plugins_url ( 'style/postman.css', $this->rootPluginFilenameAndPath ), null, POSTMAN_PLUGIN_VERSION );
+			wp_register_style ( 'jquery_ui_style', plugins_url ( 'style/jquery-steps/jquery-ui.css', $this->rootPluginFilenameAndPath ), self::POSTMAN_STYLE, '1.1.0' );
+			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery-steps/jquery.steps.css', $this->rootPluginFilenameAndPath ), self::POSTMAN_STYLE, '1.1.0' );
+			wp_register_style ( 'postman_send_test_email', plugins_url ( 'style/postman_send_test_email.css', $this->rootPluginFilenameAndPath ), self::POSTMAN_STYLE, POSTMAN_PLUGIN_VERSION );
 			
-			wp_register_script ( self::POSTMAN_SCRIPT, plugins_url ( 'script/postman.js', __FILE__ ), array (
+			wp_register_script ( self::POSTMAN_SCRIPT, plugins_url ( 'script/postman.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_register_script ( 'sprintf', plugins_url ( 'script/sprintf/sprintf.min.js', __FILE__ ), null, '1.0.2' );
-			wp_register_script ( 'jquery_steps_script', plugins_url ( 'script/jquery-steps/jquery.steps.min.js', __FILE__ ), array (
+			wp_register_script ( 'sprintf', plugins_url ( 'script/sprintf/sprintf.min.js', $this->rootPluginFilenameAndPath ), null, '1.0.2' );
+			wp_register_script ( 'jquery_steps_script', plugins_url ( 'script/jquery-steps/jquery.steps.min.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT 
 			), '1.1.0' );
-			wp_register_script ( 'jquery_validation', plugins_url ( 'script/jquery-validate/jquery.validate.min.js', __FILE__ ), array (
+			wp_register_script ( 'jquery_validation', plugins_url ( 'script/jquery-validate/jquery.validate.min.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT 
 			), '1.13.1' );
-			wp_register_script ( 'jquery_validation_fr', plugins_url ( 'script/jquery-validate/messages_fr.js', __FILE__ ), array (
+			wp_register_script ( 'jquery_validation_fr', plugins_url ( 'script/jquery-validate/messages_fr.js', $this->rootPluginFilenameAndPath ), array (
 					'jquery_validation' 
 			), '1.13.1' );
-			wp_register_script ( 'jquery_validation_it', plugins_url ( 'script/jquery-validate/messages_it.js', __FILE__ ), array (
+			wp_register_script ( 'jquery_validation_it', plugins_url ( 'script/jquery-validate/messages_it.js', $this->rootPluginFilenameAndPath ), array (
 					'jquery_validation' 
 			), '1.13.1' );
-			wp_register_script ( 'jquery_validation_tr', plugins_url ( 'script/jquery-validate/messages_tr.js', __FILE__ ), array (
+			wp_register_script ( 'jquery_validation_tr', plugins_url ( 'script/jquery-validate/messages_tr.js', $this->rootPluginFilenameAndPath ), array (
 					'jquery_validation' 
 			), '1.13.1' );
-			wp_register_script ( 'postman_wizard_script', plugins_url ( 'script/postman_wizard.js', __FILE__ ), array (
+			wp_register_script ( 'postman_wizard_script', plugins_url ( 'script/postman_wizard.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					'jquery_steps_script',
 					self::POSTMAN_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_register_script ( 'postman_test_email_wizard_script', plugins_url ( 'script/postman_test_email_wizard.js', __FILE__ ), array (
+			wp_register_script ( 'postman_test_email_wizard_script', plugins_url ( 'script/postman_test_email_wizard.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					'jquery_steps_script',
 					self::POSTMAN_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_register_script ( 'postman_manual_config_script', plugins_url ( 'script/postman_manual_config.js', __FILE__ ), array (
+			wp_register_script ( 'postman_manual_config_script', plugins_url ( 'script/postman_manual_config.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					self::POSTMAN_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_register_script ( 'postman_port_test_script', plugins_url ( 'script/postman_port_test.js', __FILE__ ), array (
+			wp_register_script ( 'postman_port_test_script', plugins_url ( 'script/postman_port_test.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					self::POSTMAN_SCRIPT,
 					'sprintf' 
 			), POSTMAN_PLUGIN_VERSION );
-			wp_register_script ( 'postman_diagnostics_script', plugins_url ( 'script/postman_diagnostics.js', __FILE__ ), array (
+			wp_register_script ( 'postman_diagnostics_script', plugins_url ( 'script/postman_diagnostics.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					self::POSTMAN_SCRIPT 
 			), POSTMAN_PLUGIN_VERSION );
