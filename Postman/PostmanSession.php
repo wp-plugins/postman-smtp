@@ -23,8 +23,6 @@ if (! class_exists ( 'PostmanSession' )) {
 		const OAUTH_IN_PROGRESS = 'oauth_in_progress';
 		const ACTION = 'action';
 		const ERROR_MESSAGE = 'error_message';
-		const WARNING_MESSAGE = 'warning_message';
-		const SUCCESS_MESSAGE = 'success_message';
 		
 		// singleton instance
 		public static function getInstance() {
@@ -80,50 +78,15 @@ if (! class_exists ( 'PostmanSession' )) {
 		public function isSetErrorMessage() {
 			return get_transient ( self::ERROR_MESSAGE ) != false;
 		}
-		public function setErrorMessage($message) {
+		public function setMessage($message) {
 			set_transient ( self::ERROR_MESSAGE, $message, 30 * self::MINUTES_IN_SECONDS );
 		}
-		public function getErrorMessage() {
+		public function getMessage() {
 			return get_transient ( self::ERROR_MESSAGE );
 		}
-		public function unsetErrorMessage() {
+		public function unsetMessage() {
 			delete_transient ( self::ERROR_MESSAGE );
 		}
 		
-		/**
-		 * Sometimes I need to keep track of what I'm doing between requests
-		 *
-		 * @param unknown $message        	
-		 */
-		public function isSetWarningMessage() {
-			return get_transient ( self::WARNING_MESSAGE ) != false;
-		}
-		public function setWarningMessage($message) {
-			set_transient ( self::WARNING_MESSAGE, $message, 30 * self::MINUTES_IN_SECONDS );
-		}
-		public function getWarningMessage() {
-			return get_transient ( self::WARNING_MESSAGE );
-		}
-		public function unsetWarningMessage() {
-			delete_transient ( self::WARNING_MESSAGE );
-		}
-		
-		/**
-		 * Sometimes I need to keep track of what I'm doing between requests
-		 *
-		 * @param unknown $message        	
-		 */
-		public function isSetSuccessMessage() {
-			return get_transient ( self::SUCCESS_MESSAGE ) != false;
-		}
-		public function setSuccessMessage($message) {
-			set_transient ( self::SUCCESS_MESSAGE, $message, 30 * self::MINUTES_IN_SECONDS );
-		}
-		public function getSuccessMessage() {
-			return get_transient ( self::SUCCESS_MESSAGE );
-		}
-		public function unsetSuccessMessage() {
-			delete_transient ( self::SUCCESS_MESSAGE );
-		}
 	}
 }

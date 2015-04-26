@@ -70,8 +70,8 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 		 * Create the function to output the contents of our Dashboard Widget.
 		 */
 		public function printDashboardWidget() {
-			$goToSettings = sprintf ( '[<a href="%s">%s</a>]', POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Settings', 'Dashboard Widget Settings Link label', 'postman-smtp' ) );
-			$goToEmailLog = sprintf ( '[<a href="%s">%s</a>]', '#', _x ( 'Email Log', 'Dashboard Widget Settings Link label', 'postman-smtp' ) );
+			$goToSettings = sprintf ( '[<a href="%s">%s</a>]', PostmanUtils::getSettingsPageUrl(), _x ( 'Settings', 'Dashboard Widget Settings Link label', 'postman-smtp' ) );
+			$goToEmailLog = sprintf ( '[<a href="%s">%s</a>]', PostmanUtils::getEmailLogPageUrl(), _x ( 'Email Log', 'Dashboard Widget Settings Link label', 'postman-smtp' ) );
 			if (! PostmanPreRequisitesCheck::isReady ()) {
 				printf ( '<p><span style="color:red">%s</span> %s</p>', __ ( 'Postman is missing a required PHP library.', 'postman-smtp' ), $goToSettings );
 			} else if ($this->wpMailBinder->isUnboundDueToException ()) {

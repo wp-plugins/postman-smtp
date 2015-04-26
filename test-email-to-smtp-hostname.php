@@ -2,6 +2,8 @@
 require_once 'Postman/postman-common-functions.php';
 require_once 'Postman/Postman-Wizard/Postman-SmtpDiscovery.php';
 function test() {
+	check ( 'test@1and1.com', 'smtp.1and1.com' );
+	check ( 'test@aol.com', 'smtp.aol.com' );
 	check ( 'test@andrethierry.com', 'relay-hosting.secureserver.net' );
 	check ( 'test@apple.com' );
 	check ( 'test@artegennaro.com', 'relay-hosting.secureserver.net' );

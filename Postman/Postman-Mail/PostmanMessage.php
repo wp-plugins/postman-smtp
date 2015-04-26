@@ -3,31 +3,6 @@ if (! class_exists ( "PostmanMessage" )) {
 	
 	require_once 'PostmanEmailAddress.php';
 	
-	require_once 'Zend-1.12.10/Loader.php';
-	require_once 'Zend-1.12.10/Registry.php';
-	require_once 'Zend-1.12.10/Mime/Message.php';
-	require_once 'Zend-1.12.10/Mime/Part.php';
-	require_once 'Zend-1.12.10/Mime.php';
-	require_once 'Zend-1.12.10/Validate/Interface.php';
-	require_once 'Zend-1.12.10/Validate/Abstract.php';
-	require_once 'Zend-1.12.10/Validate.php';
-	require_once 'Zend-1.12.10/Validate/Ip.php';
-	require_once 'Zend-1.12.10/Validate/Hostname.php';
-	require_once 'Zend-1.12.10/Mail.php';
-	require_once 'Zend-1.12.10/Exception.php';
-	require_once 'Zend-1.12.10/Mail/Exception.php';
-	require_once 'Zend-1.12.10/Mail/Transport/Exception.php';
-	require_once 'Zend-1.12.10/Mail/Transport/Abstract.php';
-	require_once 'Zend-1.12.10/Mail/Transport/Smtp.php';
-	require_once 'Zend-1.12.10/Mail/Transport/Sendmail.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Abstract.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Exception.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Smtp.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Oauth2.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Login.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Crammd5.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Plain.php';
-	
 	/**
 	 * This class knows how to interface with Wordpress
 	 * including loading/saving to the database.
@@ -43,9 +18,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		
 		// logger for all concrete classes - populate with setLogger($logger)
 		protected $logger;
-		
-		//
-		private $authenticator;
 		
 		// set by the caller
 		private $sender;
@@ -76,41 +48,19 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @param unknown $senderEmail        	
 		 * @param unknown $accessToken        	
 		 */
-		function __construct(PostmanMailAuthenticator $authenticator) {
+		function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->headers = array ();
 			$this->toRecipients = array ();
 			$this->ccRecipients = array ();
 			$this->bccRecipients = array ();
-			$this->authenticator = $authenticator;
-		}
-		
-		/**
-		 *
-		 * @param Postman_Zend_Mail $mail        	
-		 * @param PostmanMailAuthenticator $authenticator        	
-		 * @deprecated by getFrom()
-		 */
-		public function addFrom(Postman_Zend_Mail $mail, PostmanMailAuthenticator $authenticator) {
-			$sender = $this->getSender ();
-			// now log it and push it into the message
-			$senderEmail = $sender->getEmail ();
-			$senderName = $sender->getName ();
-			assert ( ! empty ( $senderEmail ) );
-			if (! empty ( $senderName )) {
-				$mail->setFrom ( $senderEmail, $senderName );
-			} else {
-				$mail->setFrom ( $senderEmail );
-			}
-			return $sender;
 		}
 		
 		/**
 		 *
 		 * @return PostmanEmailAddress
 		 */
-		public function getSender() {
-			$authenticator = $this->authenticator;
+		public function getSender($forceSenderName, $forceSenderEmail) {
 			
 			// by default, sender is what Postman set
 			$sender = PostmanEmailAddress::copy ( $this->sender );
@@ -149,11 +99,11 @@ if (! class_exists ( "PostmanMessage" )) {
 			// and other plugins can override the name via a filter
 			$sender->setName ( apply_filters ( 'wp_mail_from_name', $sender->getName () ) );
 			
-			// but the MailAuthenticator and user have the final say
-			if ($authenticator->isSenderEmailOverridePrevented () || $this->isSenderEmailOverridePrevented ()) {
+			// but the caller and the user have the final say
+			if ($forceSenderEmail || $this->isSenderEmailOverridePrevented ()) {
 				$sender->setEmail ( $this->sender->getEmail () );
 			}
-			if ($authenticator->isSenderNameOverridePrevented () || $this->isSenderNameOverridePrevented ()) {
+			if ($forceSenderName || $this->isSenderNameOverridePrevented ()) {
 				$sender->setName ( $this->sender->getName () );
 			}
 			
@@ -480,13 +430,7 @@ if (! class_exists ( "PostmanMessage" )) {
 if (! class_exists ( 'PostmanMessageFactory' )) {
 	class PostmanMessageFactory {
 		public static function createEmptyMessage() {
-			$transport = PostmanTransportUtils::getCurrentTransport ();
-			assert ( isset ( $transport ) );
-			$options = PostmanOptions::getInstance ();
-			$authorizationToken = PostmanOAuthToken::getInstance ();
-			$authenticator = $transport->createPostmanMailAuthenticator ( $options, $authorizationToken );
-			$message = new PostmanMessage ( $authenticator );
-			return $message;
+			return new PostmanMessage ();
 		}
 	}
 }

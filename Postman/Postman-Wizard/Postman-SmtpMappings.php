@@ -3,6 +3,7 @@ if (! class_exists ( 'SmtpMapping' )) {
 	class SmtpMapping {
 		// if an email is in this domain array, it is a known smtp server (easy lookup)
 		private $emailDomain = array (
+				'aol.com' => 'smtp.aol.com',
 				'gmail.com' => 'smtp.gmail.com',
 				'hotmail.com' => 'smtp.live.com',
 				'icloud.com' => 'smtp.mail.me.com',

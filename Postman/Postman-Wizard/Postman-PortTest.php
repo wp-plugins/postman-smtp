@@ -227,8 +227,8 @@ class PostmanPortTest {
 				$result = 'auth';
 			} elseif (preg_match ( '/STARTTLS/', $line )) {
 				$result = 'starttls';
-			} elseif (preg_match ( '/^220[\\s-](.*?)\\s/', $line, $matches )) {
-				$result = $matches [1];
+			} elseif (preg_match ( '/^220.(.*?)\\s/', $line, $matches )) {
+				if(empty($result)) $result = $matches [1];
 			}
 			if (preg_match ( '/^\d\d\d\\s/', $line )) {
 				// always exist on last server response line

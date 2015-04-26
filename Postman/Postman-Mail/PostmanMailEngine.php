@@ -92,7 +92,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$this->logger->debug ( 'Adding content-type ' . $contentType );
 			
 			// add the sender
-			$sender = $message->addFrom ( $mail, $this->authenticator );
+			$sender = $this->addFrom ( $message, $mail, $this->authenticator );
 			$sender->log ( $this->logger, 'From' );
 			
 			// add the to recipients
@@ -212,6 +212,26 @@ if (! class_exists ( "PostmanMailEngine" )) {
 				}
 				throw $e;
 			}
+		}
+		
+		/**
+		 *
+		 * @param Postman_Zend_Mail $mail        	
+		 * @param PostmanMailAuthenticator $authenticator        	
+		 * @deprecated by getFrom()
+		 */
+		public function addFrom(PostmanMessage $message, Postman_Zend_Mail $mail, PostmanMailAuthenticator $authenticator) {
+			$sender = $message->getSender ( $authenticator->isSenderNameOverridePrevented (), $authenticator->isSenderEmailOverridePrevented () );
+			// now log it and push it into the message
+			$senderEmail = $sender->getEmail ();
+			$senderName = $sender->getName ();
+			assert ( ! empty ( $senderEmail ) );
+			if (! empty ( $senderName )) {
+				$mail->setFrom ( $senderEmail, $senderName );
+			} else {
+				$mail->setFrom ( $senderEmail );
+			}
+			return $sender;
 		}
 		
 		// return the SMTP session transcript

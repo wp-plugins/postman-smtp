@@ -161,7 +161,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			new PostmanSendTestEmailAjaxController ( $this->options, $this->authorizationToken, $this->oauthScribe );
 			
 			// register content handlers
-			$viewController = new PostmanViewController ( $this->options, $this->authorizationToken, $this->oauthScribe, $this );
+			$viewController = new PostmanViewController ( $this->rootPluginFilenameAndPath, $this->options, $this->authorizationToken, $this->oauthScribe, $this );
 			
 			// register action handlers
 			$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );
@@ -446,7 +446,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printLoggingSectionInfo' 
 			), PostmanAdminController::LOGGING_OPTIONS );
 			
-			add_settings_field ( 'logging_status', _x ( 'Logging Enabled', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( 'logging_status', _x ( 'Enable Logging', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'loggingStatusInputField' 
 			), PostmanAdminController::LOGGING_OPTIONS, PostmanAdminController::LOGGING_SECTION );
@@ -572,7 +572,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printMessageSenderSectionInfo() {
-			print __ ( 'The message sender is used as the <b>From:</b> address.', 'postman-smtp' );
+			print __ ( 'The message sender is used as the default <b>From:</b> address.', 'postman-smtp' );
 		}
 		
 		/**
@@ -695,9 +695,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
 			}
 			if (! $transportConfigured || ! $authenticator->isSenderNameOverridePrevented ()) {
-				printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', null !== $this->options->isSenderNameOverridePrevented () ? 'checked="checked"' : '', __ ( 'Prevent the Sender Name from being overridden', 'postman-smtp' ) );
+				printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', null !== $this->options->isSenderNameOverridePrevented () ? 'checked="checked"' : '', __ ( 'Force this Sender Name for all messages', 'postman-smtp' ) );
 			} else {
-				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_name_override" checked="checked"/> %s', __ ( 'Prevent the Sender Name from being overridden', 'postman-smtp' ) );
+				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_name_override" checked="checked"/> %s', __ ( 'Force this Sender Name for all messages', 'postman-smtp' ) );
 				if ($this->options->isSenderNameOverridePrevented ()) {
 					printf ( '<input type="hidden" name="postman_options[prevent_sender_name_override]" value="on"/>' );
 				}
@@ -721,19 +721,19 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
 			}
 			if (! $transportConfigured || ! $authenticator->isSenderEmailOverridePrevented ()) {
-				printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', null !== $this->options->isSenderEmailOverridePrevented () ? 'checked="checked"' : '', __ ( 'Prevent the Sender Email Address from being overridden', 'postman-smtp' ) );
+				printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', null !== $this->options->isSenderEmailOverridePrevented () ? 'checked="checked"' : '', __ ( 'Force this Sender Email Address for all messages', 'postman-smtp' ) );
 			} else {
-				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_email_override" checked="checked"/> %s', __ ( 'Prevent the Sender Email Address from being overridden', 'postman-smtp' ) );
+				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_email_override" checked="checked"/> %s', __ ( 'Force this Sender Email Address for all messages', 'postman-smtp' ) );
 				if ($this->options->isSenderEmailOverridePrevented ()) {
 					printf ( '<input type="hidden" name="postman_options[prevent_sender_email_override]" value="on"/>' );
 				}
 			}
 		}
 		public function loggingStatusInputField() {
-			printf ( '<input type="checkbox" id="input_logging_status" name="postman_options[input_logging_status]" %s />', null !== $this->options->isLoggingEnabled () ? 'checked="checked"' : '' );
+			printf ( '<input type="checkbox" id="input_logging_status" name="postman_options[%s]" %s />', PostmanOptions::MAIL_LOG_ENABLED, $this->options->isMailLoggingEnabled () ? 'checked="checked"' : '' );
 		}
 		public function loggingMaxEntriesInputField() {
-			printf ( '<input type="text" id="input_logging_max_entries" value="%s"/>', $this->options->getLoggingMaxEntries () );
+			printf ( '<input type="text" id="input_logging_max_entries" name="postman_options[%s]" value="%s"/>', PostmanOptions::MAIL_LOG_MAX_ENTRIES, $this->options->getMailLoggingMaxEntries () );
 		}
 		
 		/**
@@ -768,7 +768,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function basic_auth_password_callback() {
-			printf ( '<input type="text" autocomplete="off" id="input_basic_auth_password" name="postman_options[basic_auth_password]" value="%s" size="40" class="required"/>', null !== $this->options->getPassword () ? esc_attr ( $this->options->getObfuscatedPassword () ) : '' );
+			printf ( '<input type="password" autocomplete="off" id="input_basic_auth_password" name="postman_options[basic_auth_password]" value="%s" size="40" class="required"/>', null !== $this->options->getPassword () ? esc_attr ( $this->options->getObfuscatedPassword () ) : '' );
+			print ' <input type="button" id="togglePasswordField" value="Show Password" class="button button-secondary" style="visibility:hidden" />';
 		}
 		
 		/**

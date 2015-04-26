@@ -388,15 +388,15 @@ if (! class_exists ( 'PostmanViewController' )) {
 					'failed' => _x ( 'Failed', 'Email Test Status', 'postman-smtp' ) 
 			) );
 			/* translators: where %d is a port number */
-			wp_localize_script ( 'postman_port_test_script', 'postman_port_blocked', __ ( 'Port %d is closed. Contact your host for a solution, such as using their local SMTP server or opening the port.', 'postman-smtp' ) );
+			wp_localize_script ( 'postman_port_test_script', 'postman_port_blocked', __ ( 'No outbound route between this site and the Internet on Port %d.', 'postman-smtp' ) );
 			/* translators: where %d is a port number and %s is a hostname */
-			wp_localize_script ( 'postman_port_test_script', 'postman_try_dif_smtp', __ ( 'Port %d can\'t send mail with %s. Try a different SMTP server.', 'postman-smtp' ) );
+			wp_localize_script ( 'postman_port_test_script', 'postman_try_dif_smtp', __ ( 'Port %d is open, but not to %s. The smtp host may not service this port, or your web host may have blocked it.', 'postman-smtp' ) );
 			/* translators: where %d is a port number and %s is a hostname */
 			wp_localize_script ( 'postman_port_test_script', 'postman_smtp_success', __ ( 'Port %d can be used for SMTP to %s.', 'postman-smtp' ) );
 			/* translators: where %d is a port number and %s is the URL for the Postman Gmail Extension */
-			wp_localize_script ( 'postman_port_test_script', 'postman_443_open', sprintf ( __ ( 'Port %d can be used to send Gmail with an additional plugin; install the <a href="%s">Postman Gmail Extension</a>.', 'postman-smtp' ), 443, 'https://wordpress.org/plugins/postman-gmail-extension/' ) );
+			wp_localize_script ( 'postman_port_test_script', 'postman_443_open', sprintf ( __ ( 'Port %d can be used to send Gmail with the Gmail API.', 'postman-smtp' ), 443, 'https://wordpress.org/plugins/postman-gmail-extension/' ) );
 			/* translators: where %d is a port number */
-			wp_localize_script ( 'postman_port_test_script', 'postman_443_closed', sprintf ( __ ( 'Port %d is closed. Contact your host for a solution, such as opening the port.', 'postman-smtp' ), 443 ) );
+			wp_localize_script ( 'postman_port_test_script', 'postman_443_closed', sprintf ( __ ( 'No outbound route between this site and the Internet on Port %d. Contact your host for a solution, such as opening the port.', 'postman-smtp' ), 443 ) );
 			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_wait', __ ( 'Please wait for the port test to finish', 'postman-smtp' ) );
 			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_no_ports', __ ( 'No ports are available for this SMTP server. Try a different SMTP host or contact your WordPress host for their specific solution.', 'postman-smtp' ) );
 			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_bad_redirect_url', __ ( 'You are about to configure OAuth 2.0 with an IP address instead of a domain name. This is not permitted. Either assign a real domain name to your site or add a fake one in your local host file.', 'postman-smtp' ) );
@@ -442,7 +442,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 				if ($this->options->isAuthTypeOAuth2 ()) {
 					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins and themes are forbidden from overriding the sender email address.</em>', 'postman-smtp' ) );
 				} else if ($this->options->isAuthTypePassword ()) {
-					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins and themes may override the sender name and email address causing rejection with some email services, such as Yahoo Mail. If you experience problems, enable "Prevent Sender Address Override" in the settings.</em>', 'postman-smtp' ) );
+					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, some WordPress plugins and themes may set an unauthorized sender email address causing rejection with services like Yahoo Mail. If you experience problems, enable "Force this Sender Email Address for all messages" in the settings.</em>', 'postman-smtp' ) );
 				}
 				if (PostmanState::getInstance ()->isTimeToReviewPostman () && ! PostmanOptions::getInstance ()->isNew ()) {
 					/* translators: where %d is the number of emails delivered */
@@ -534,7 +534,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			$this->outputChildPageHeader ( _x ( 'Delete plugin settings', 'Page Title', 'postman-smtp' ) );
 			print '<form method="POST" action="' . get_admin_url () . 'admin-post.php">';
 			printf ( '<input type="hidden" name="action" value="%s" />', PostmanAdminController::PURGE_DATA_SLUG );
-			printf ( '<p><span>%s</span></p><p><span>%s</span></p>', __ ( 'This will purge all of Postman\'s settings, including SMTP server info, username/password and OAuth Credentials.', 'postman-smtp' ), __ ( 'Are you sure?', 'postman-smtp' ) );
+			printf ( '<p><span>%s</span></p><p><span>%s</span></p>', __ ( 'This will purge all of Postman\'s settings, including account credentials and the mail log.', 'postman-smtp' ), __ ( 'Are you sure?', 'postman-smtp' ) );
 			submit_button ( _x ( 'Delete All Data', 'Button Label', 'postman-smtp' ), 'delete', 'submit', true, 'style="background-color:red;color:white"' );
 			print '</form>';
 			print '</div>';
@@ -567,19 +567,21 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print sprintf ( '<tr><th>%s</th><td id="auth_xoauth_test_port_25">-</td><td id="auth_xoauth_test_port_443">-</td><td id="auth_xoauth_test_port_465">-</td><td id="auth_xoauth_test_port_587">-</td></tr>', _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' ) );
 			print '</table>';
 			print '<section id="conclusion" style="display:none">';
-			print sprintf ( '<h3>%s:</h3>', __ ( 'Conclusion', 'postman-smtp' ) );
+			print sprintf ( '<h3>%s:</h3>', __ ( 'Summary', 'postman-smtp' ) );
 			print '<ol class="conclusion">';
 			print '</ol>';
 			print '</section>';
 			print '<section id="blocked-port-help" style="display:none">';
-			print sprintf ( '<p><b>%s</b></p>', __ ( 'A <span style="color:red">Closed</span> port indicates one or more of these issues:', 'postman-smtp' ) );
+			print sprintf ( '<p><b>%s</b></p>', __ ( '<span style="color:red">No</span> service indicates one or more of these issues:', 'postman-smtp' ) );
 			print '<ol>';
-			printf ( '<li>%s</li>', __ ( 'Your host has placed a firewall between this site and the Internet', 'postman-smtp' ) );
+			printf ( '<li>%s</li>', __ ( 'Your web host has placed a firewall between this site and the Internet', 'postman-smtp' ) );
+			printf ( '<li>%s</li>', __ ( 'The SMTP hostname is wrong or does not provide service on this port', 'postman-smtp' ) );
 			/* translators: where %s is the URL to the PHP documentation on 'allow-url-fopen' */
 			printf ( '<li>%s</li>', sprintf ( __ ( 'Your <a href="%s">PHP configuration</a> is preventing outbound connections', 'postman-smtp' ), 'http://php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen' ) );
 			/* translators: where %s is the URL to an article on disabling external requests in WordPress */
 			printf ( '<li>%s</li>', sprintf ( __ ( 'Your <a href="%s">WordPress configuration</a> is preventing outbound connections', 'postman-smtp' ), 'http://wp-mix.com/disable-external-url-requests/' ) );
 			print '</ol></p>';
+			print sprintf ( '<p><b>%s</b></p>', __ ( 'If the issues above can not be resolved, your last option is to use an email account managed by your web host with an SMTP server managed by your web host.', 'postman-smtp' ) );
 			print '</section>';
 			print '</div>';
 		}
@@ -655,6 +657,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<input type="hidden" id="input_connection_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::CONNECTION_TIMEOUT, $this->options->getConnectionTimeout () );
 			printf ( '<input type="hidden" id="input_read_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::READ_TIMEOUT, $this->options->getReadTimeout () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::LOG_LEVEL, $this->options->getLogLevel () );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::MAIL_LOG_ENABLED, $this->options->isMailLoggingEnabled() );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::MAIL_LOG_MAX_ENTRIES, $this->options->getMailLoggingMaxEntries() );
 			settings_fields ( PostmanAdminController::SETTINGS_GROUP_NAME );
 			
 			// Wizard Step 0
@@ -735,7 +739,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '</section>';
 			
 			print '<section class="wizard-auth-basic">';
-			printf ( '<p class="port-explanation-ssl">%s</p>', __ ( 'Enter your credentials. Your username is most likely your email address.', 'postman-smtp' ) );
+			printf ( '<p class="port-explanation-ssl">%s</p>', __ ( 'Enter your credentials. Your username is often your email address.', 'postman-smtp' ) );
 			printf ( '<label for="username">%s</label>', _x ( 'Username', 'Configuration Input Field', 'postman-smtp' ) );
 			print '<br />';
 			print $this->adminController->basic_auth_username_callback ();

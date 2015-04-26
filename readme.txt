@@ -2,7 +2,7 @@
 Contributors: jasonhendriks
 Tags: smtp, smtps, email, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
-Tested up to: 4.1.1
+Tested up to: 4.2
 Stable tag: 1.5.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -250,12 +250,13 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.6 =
 * Log all email attempts with error messages (if any)
 * Help screens
-* (TBD): View the damn logs!
+* View the damn logs!
+* (TBD): delete logs on purge
 * Preference screen for logging
 * (TBD): Add option for MailPoet
-* (TBD): Logging disabled for existing setups?
+* (TBD): Highlight Logging option to users
 * Obscure password from front-end
-* (TBD): Ask to see password when typing
+* Ask to see password when typing
 * (TBD): Check for GoDaddy SMTP server during Wizard and suggest that they install Gmail Extension
 * Check for Gmail during intro and remember for smtp id check and gmail extension option.
 * (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail

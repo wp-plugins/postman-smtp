@@ -53,7 +53,9 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			$this->sanitizeInt ( 'Read Timeout', PostmanOptions::READ_TIMEOUT, $input, $new_input );
 			$this->sanitizeInt ( 'Conenction Timeout', PostmanOptions::CONNECTION_TIMEOUT, $input, $new_input );
 			$this->sanitizeInt ( 'Log Level', PostmanOptions::LOG_LEVEL, $input, $new_input );
-			
+			$this->sanitizeString ( 'SMTP Log Enabled', PostmanOptions::MAIL_LOG_ENABLED, $input, $new_input );
+			$this->sanitizeInt ( 'SMTP Log Max Entries', PostmanOptions::MAIL_LOG_MAX_ENTRIES, $input, $new_input );
+				
 			if (! empty ( $input [PostmanOptions::SENDER_EMAIL] )) {
 				$newEmail = $input [PostmanOptions::SENDER_EMAIL];
 				$this->logger->debug ( 'Sanitize Sender Email ' . $newEmail );

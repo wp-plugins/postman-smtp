@@ -49,6 +49,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		const RUN_MODE_PRODUCTION = 'production';
 		const RUN_MODE_LOG_ONLY = 'log_only';
 		const RUN_MODE_IGNORE = 'ignore';
+		const MAIL_LOG_ENABLED = 'mail_log_enabled';
+		const MAIL_LOG_MAX_ENTRIES = 'mail_log_max_entries';
 		
 		// options data
 		private $options;
@@ -75,11 +77,17 @@ if (! class_exists ( "PostmanOptions" )) {
 		public function isNew() {
 			return ! isset ( $this->options [PostmanOptions::VERSION] );
 		}
-		public function isLoggingEnabled() {
-			return true;
+		public function isMailLoggingEnabled() {
+			if (isset ( $this->options [PostmanOptions::MAIL_LOG_ENABLED] ))
+				return $this->options [PostmanOptions::MAIL_LOG_ENABLED];
+			else
+				return false;
 		}
-		public function getLoggingMaxEntries() {
-			return 10;
+		public function getMailLoggingMaxEntries() {
+			if (isset ( $this->options [PostmanOptions::MAIL_LOG_MAX_ENTRIES] ))
+				return $this->options [PostmanOptions::MAIL_LOG_MAX_ENTRIES];
+			else
+				return 10;
 		}
 		public function getLogLevel() {
 			if (isset ( $this->options [PostmanOptions::LOG_LEVEL] ))
