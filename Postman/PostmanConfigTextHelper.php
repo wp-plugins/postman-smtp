@@ -100,15 +100,15 @@ if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
 		}
 		public function getClientSecretLabel() {
 			/* Translators: This description is specific to Google */
-			return _x ( 'Client Secret', 'Name of the OAuth 2.0 Client Secret', 'postman-smtp' );
+			return _x ( 'Client secret', 'Name of the OAuth 2.0 Client Secret', 'postman-smtp' );
 		}
 		public function getCallbackUrlLabel() {
 			/* Translators: This description is specific to Google */
-			return _x ( 'Redirect URI', 'Name of the Application Callback URI', 'postman-smtp' );
+			return _x ( 'Authorized redirect URI', 'Name of the Application Callback URI', 'postman-smtp' );
 		}
 		public function getCallbackDomainLabel() {
 			/* Translators: This description is specific to Google */
-			return _x ( 'Javascript Origins', 'Name of the Application Callback Domain', 'postman-smtp' );
+			return _x ( 'Authorized JavaScript origins', 'Name of the Application Callback Domain', 'postman-smtp' );
 		}
 		public function getOwnerName() {
 			/* Translators: This description is specific to Google */

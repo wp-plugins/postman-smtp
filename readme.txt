@@ -17,9 +17,9 @@ Postman is an intelligent, next-generation SMTP mailer that brings reliable emai
 
 In 2014, Google announced if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)." For Google Apps users, OAuth 2.0 is a [requirement](http://plugins.svn.wordpress.org/postman-smtp/assets/Screen%20Shot%202015-02-21%20at%208.52.13%20PM.png), not a nice-to-have.
 
-Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) ✝, lost emails, spam and phishing warnings ✝✝, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Postman's Setup Wizard makes configuring SMTP easy. Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) ¹ to send SMTP messages on your behalf, without rejection, and without the work-arounds.
+Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) ✝, lost emails, spam and phishing warnings ✝✝, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) ¹ to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
-[Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished since January of this year. See how fast e-mail delivery is with Postman - [test my contact form](http://programmer.jasonhendriks.com/contact/).
+[Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished.
 
 
 = Features =
@@ -130,7 +130,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose 'Create Project', or use an existing project if you have one.
 1. If you have previously created a project, select it from the Projects page and you will arrive at the Project Dashboard. If you have just created a project, you are brought to the Project Dashboard automatically.
 1. If you have not filled out the consent screen for this project, do it now. In the left-hand hand navigation menu, select 'Consent Screen' from under 'APIs & auth'. Into 'email address' choose the correct Gmail address and in 'product name' put 'Postman SMTP'. Choose 'Save'.
-1. Select 'API's' from under 'APIs & auth'. Set 'Gmail API' to 'ON'.
+1. Select 'API's' from under 'APIs & auth'. Find 'Gmail API'. Select 'Enable API'.
 1. Select 'Credentials' from under 'APIs & auth'. Choose 'Create a new Client ID'.
 1. For the 'Application Type' use 'Web application'.
 1. In 'Authorized Javascript origins' enter the 'Javascript Origins' given by Postman (either from the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or from the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
@@ -247,19 +247,30 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6 =
-* Log all email attempts with error messages (if any)
-* Help screens
-* View the damn logs!
-* (TBD): delete logs on purge
-* Preference screen for logging
+= 1.6.1 =
 * (TBD): Add option for MailPoet
+* (TBD): Add option for MyMail
+
+= 1.6 =
+* (TBD): Help screens
+* Log all email attempts with error messages (if any)
+* View the damn logs!
+* (TBD): View the details of a single log entry! - http://www.ericmmartin.com/projects/simplemodal/ ?
+* (TBD): delete logs on purge - separate Log Delete to its own class, instantiate in Admin class, and re-use that code
+* Preference screen for logging
+* (TBD): Add MX and SPF to diagnostic data
 * (TBD): Highlight Logging option to users
 * Obscure password from front-end
 * Ask to see password when typing
-* (TBD): Check for GoDaddy SMTP server during Wizard and suggest that they install Gmail Extension
-* Check for Gmail during intro and remember for smtp id check and gmail extension option.
-* (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail
+* (TBD): Check for GoDaddy SMTP server during Wizard and use that SMTP server
+* (TBD): Check for Gmail during wizard and remember for gmail api option.
+* (TBD): Check for well-known domains and warn when configuring the wrong SMTP server
+* (TBD): Warn when using AUTH with NO encryption
+* (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
+* (TBD): Enable logging in Wizard
+* (TBD): Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
+* (TBD): Delivery mode - production, logging, test
+
 
 = 1.5.13 - 2015-04-18 =
 * Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)

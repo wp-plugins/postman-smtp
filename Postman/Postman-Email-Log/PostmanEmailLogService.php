@@ -32,7 +32,7 @@ if (! class_exists ( 'PostmanEmailLogFactory' )) {
 			}
 			$log->success = $success;
 			$log->statusMessage = $statusMessage;
-			$log->transportUri = PostmanTransportUtils::getDeliveryUri ( $transport );
+			$log->transportUri = PostmanTransportUtils::getTransportUri ( $transport, false );
 			$log->sessionTranscript = 'n/a';
 			if (! empty ( $transcript )) {
 				$log->sessionTranscript = $transcript;

@@ -2,7 +2,7 @@
 if (! class_exists ( 'SmtpMapping' )) {
 	class SmtpMapping {
 		// if an email is in this domain array, it is a known smtp server (easy lookup)
-		private $emailDomain = array (
+		private static $emailDomain = array (
 				'aol.com' => 'smtp.aol.com',
 				'gmail.com' => 'smtp.gmail.com',
 				'hotmail.com' => 'smtp.live.com',
@@ -39,7 +39,7 @@ if (! class_exists ( 'SmtpMapping' )) {
 		);
 		// if an email's mx is in this domain array, it is a known smtp server (dns lookup)
 		// useful for custom domains that map to a mail service
-		private $mx = array (
+		private static $mx = array (
 				'google.com' => 'smtp.gmail.com',
 				'icloud.com' => 'smtp.mail.me.com',
 				'hotmail.com' => 'smtp.live.com',

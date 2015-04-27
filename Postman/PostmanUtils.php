@@ -18,12 +18,12 @@ if (! class_exists ( 'PostmanUtils' )) {
 		
 		//
 		public static function getEmailLogPageUrl() {
-			return menu_page_url ( SELF::POSTMAN_EMAIL_LOG_PAGE_STUB, self::NO_ECHO );
+			return menu_page_url ( self::POSTMAN_EMAIL_LOG_PAGE_STUB, self::NO_ECHO );
 		}
 		
 		//
 		public static function getSettingsPageUrl() {
-			return menu_page_url ( SELF::POSTMAN_SETTINGS_PAGE_STUB, self::NO_ECHO );
+			return menu_page_url ( self::POSTMAN_SETTINGS_PAGE_STUB, self::NO_ECHO );
 		}
 		
 		//

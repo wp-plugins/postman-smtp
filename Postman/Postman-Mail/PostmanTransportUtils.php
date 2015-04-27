@@ -17,7 +17,15 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 				return $transports [$slug];
 			}
 		}
+		/**
+		 * @deprecated by getTransportUri()
+		 * @param PostmanTransport $transport
+		 * @return string
+		 */
 		public static function getDeliveryUri(PostmanTransport $transport) {
+			return PostmanTransportUtils::getTransportUri ( $transport, true, true );
+		}
+		public static function getTransportUri(PostmanTransport $transport, $obscureUsername = false, $obscurePassword = true) {
 			if (! method_exists ( $transport, 'getVersion' )) {
 				return 'undefined';
 			} else {
@@ -25,8 +33,16 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 				$transportName = $transport->getSlug ();
 				$auth = $transport->getAuthenticationType ( $options );
 				$security = $transport->getSecurityType ( $options );
-				$user = postmanObfuscateEmail ( $transport->getCredentialsId ( $options ) );
-				$pass = postmanObfuscatePassword ( $transport->getCredentialsSecret ( $options ) );
+				if ($obscureUsername) {
+					$user = postmanObfuscateEmail ( $transport->getCredentialsId ( $options ) );
+				} else {
+					$user = $transport->getCredentialsId ( $options );
+				}
+				if ($obscurePassword) {
+					$pass = postmanObfuscatePassword ( $transport->getCredentialsSecret ( $options ) );
+				} else {
+					$pass = $transport->getCredentialsSecret ( $options );
+				}
 				$host = $transport->getHostname ( $options );
 				$port = $transport->getHostPort ( $options );
 				return sprintf ( '%s:%s:%s://%s:%s@%s:%s', $transportName, $security, $auth, $user, $pass, $host, $port );
@@ -125,7 +141,7 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 			$hostData ['auth_login'] = $connectivityTestResults ['auth_login'];
 			$hostData ['auth_crammd5'] = $connectivityTestResults ['auth_crammd5'];
 			$hostData ['auth_none'] = $connectivityTestResults ['auth_none'];
-			$hostData ['id'] = $connectivityTestResults['reported_hostname_domain_only'];
+			$hostData ['id'] = $connectivityTestResults ['reported_hostname_domain_only'];
 			// filter for user preference (remove select auth data)
 			if ($userAuthPreference == 'oauth2') {
 				$hostData ['auth_plain'] = null;
