@@ -682,12 +682,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($transportConfigured) {
 				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
 			}
-			$enforced = $this->options->isNew() || null !== $this->options->isSenderNameOverridePrevented ();
-			if (! $transportConfigured || ! $authenticator->isPluginSenderNameEnforced ()) {
+			$enforced = $this->options->isPluginSenderNameEnforced ();
+			// always let the user configure it in the wizard
+			$wizard = PostmanUtils::isCurrentPagePostmanAdmin('postman/configuration_wizard');
+			if ($wizard || ! $transportConfigured || ! $authenticator->isPluginSenderNameEnforced ()) {
 				printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this Sender Name for all messages', 'postman-smtp' ) );
 			} else {
+				// show it as forced "on" because that is the transport behavior
 				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_name_override" checked="checked"/> %s', __ ( 'Force this Sender Name for all messages', 'postman-smtp' ) );
-				if ($this->options->isSenderNameOverridePrevented ()) {
+				if ($enforced) {
+					// only save "on" to the database if the user has enabled it
 					printf ( '<input type="hidden" name="postman_options[prevent_sender_name_override]" value="on"/>' );
 				}
 			}
@@ -709,12 +713,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($transportConfigured) {
 				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
 			}
-			$enforced = $this->options->isNew() || null !== $this->options->isSenderEmailOverridePrevented ();
-			if (! $transportConfigured || ! $authenticator->isPluginSenderEmailEnforced ()) {
+			$enforced = $this->options->isPluginSenderEmailEnforced ();
+			// always let the user configure it in the wizard
+			$wizard = PostmanUtils::isCurrentPagePostmanAdmin('postman/configuration_wizard');
+			if ($wizard || ! $transportConfigured || ! $authenticator->isPluginSenderEmailEnforced ()) {
 				printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this Sender Email Address for all messages', 'postman-smtp' ) );
 			} else {
+				// show it as forced "on" because that is the transport behavior
 				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_email_override" checked="checked"/> %s', __ ( 'Force this Sender Email Address for all messages', 'postman-smtp' ) );
-				if ($this->options->isSenderEmailOverridePrevented ()) {
+				if ($enforced) {
+					// only save "on" to the database if the user has enabled it
 					printf ( '<input type="hidden" name="postman_options[prevent_sender_email_override]" value="on"/>' );
 				}
 			}

@@ -176,6 +176,8 @@ if (! class_exists ( "PostmanOptions" )) {
 				return Postman::POSTMAN_TCP_READ_TIMEOUT;
 		}
 		public function isPluginSenderNameEnforced() {
+			if($this->isNew())
+				return true;
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] ))
 				return $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE];
 		}
@@ -189,6 +191,8 @@ if (! class_exists ( "PostmanOptions" )) {
 			return $this->isPluginSenderEmailEnforced ();
 		}
 		public function isPluginSenderEmailEnforced() {
+			if($this->isNew())
+				return true;
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE] ))
 				return $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE];
 		}
