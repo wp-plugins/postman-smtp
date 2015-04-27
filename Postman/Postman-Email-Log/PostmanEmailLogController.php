@@ -82,9 +82,12 @@ class PostmanEmailLogController extends WP_List_Table {
         
         //Build row actions
         $deleteUrl = wp_nonce_url(admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s','delete',$item['ID'])), 'delete_email_log_item_' . $item['ID']);
+		$viewUrl   = admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s&TB_iframe=true&width=600&height=550', 'view', $item['ID']));
+        
         $actions = array(
             'delete'    => sprintf('<a href="%s">Delete</a>',$deleteUrl),
-        );
+            'view'    => sprintf('<a href="%s" class="thickbox">View</a>',$viewUrl),
+            );
         
         //Return the title contents
         return sprintf('%1$s %3$s',

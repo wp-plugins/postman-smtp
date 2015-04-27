@@ -27,7 +27,7 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 * Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0 ¹
 * Easy-to-use, powerful Setup Wizard for perfect configuration
 * Fire-and-forget delivery continues even if the password changes ¹
-* Send email over HTTPS if the standard SMTP ports are blocked ²
+* Send Gmail over HTTPS if the standard SMTP ports are blocked ²
 * Commercial-grade Connectivity Tester to diagnose server issues
 * Supports International alphabets, HTML Mail and MultiPart/Alternative
 * Supports [Mandrill](http://mandrill.com) X-headers and forced recipients (cc, bcc, to)
@@ -41,7 +41,6 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 * ✝ SMTP delivery requires connectivity to, and authentication credentials with, a 3rd-party email service provider
 * ✝✝ Custom domains **require** a valid SPF record, and potentially a DKIM record, for Blackhole-free and Spam-free delivery
 * ¹ Optional: a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
-* ² Optional: the [Postman Gmail Extension](https://wordpress.org/plugins/postman-gmail-extension/) sends email over HTTPS
 
 
 
@@ -255,7 +254,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * (TBD): Help screens
 * Log all email attempts with error messages (if any)
 * View the damn logs!
-* (TBD): View the details of a single log entry! - http://www.ericmmartin.com/projects/simplemodal/ ?
+* View the details of a single log entry! - http://www.ericmmartin.com/projects/simplemodal/ ?
 * (TBD): delete logs on purge - separate Log Delete to its own class, instantiate in Admin class, and re-use that code
 * Preference screen for logging
 * (TBD): Add MX and SPF to diagnostic data
@@ -268,6 +267,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * (TBD): Warn when using AUTH with NO encryption
 * (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
 * (TBD): Enable logging in Wizard
+* (TBD): Truncate logs to max amount - add option for unlimited logs?
 * (TBD): Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
 * (TBD): Delivery mode - production, logging, test
 

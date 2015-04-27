@@ -31,6 +31,10 @@ class PostmanEmailLogView {
 					$this,
 					'delete_log_item' 
 			) );
+			add_action ( 'admin_post_view', array (
+					$this,
+					'view_log_item' 
+			) );
 			add_action ( 'admin_init', array (
 					$this,
 					'handle_bulk_action' 
@@ -63,6 +67,43 @@ class PostmanEmailLogView {
 			}
 			$this->redirectToLogPage ();
 		}
+	}
+	
+	/**
+	 */
+	function view_log_item() {
+		$this->logger->trace ( 'handling view item' );
+		$postid = $_REQUEST ['email'];
+		$post = get_post ( $postid );
+		$meta_values = get_post_meta ( $postid );
+		// https://css-tricks.com/examples/hrs/
+		print '<html><head><style>body {font-family: monospace;} hr {
+    border: 0;
+    border-bottom: 1px dashed #ccc;
+    background: #bbb;
+}</style></head><body>';
+		print '<table>';
+		if (! empty ( $meta_values ['from_header'] [0] )) {
+			printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', __ ( 'From', 'postman-smtp' ), esc_html ( $meta_values ['from_header'] [0] ) );
+		}
+		if (! empty ( $meta_values ['to_header'] [0] )) {
+			printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', __ ( 'To', 'postman-smtp' ), esc_html ( $meta_values ['to_header'] [0] ) );
+		}
+		if (! empty ( $meta_values ['reply_to_header'] [0] )) {
+			printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', __ ( 'Reply-To', 'postman-smtp' ), esc_html ( $meta_values ['reply_to_header'] [0] ) );
+		}
+		printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', __ ( 'Date', 'postman-smtp' ), $post->post_date );
+		printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', __ ( 'Subject', 'postman-smtp' ), esc_html ( $post->post_title ) );
+		if (! empty ( $meta_values ['transport_uri'] [0] )) {
+			printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', __ ( 'Delivery-URI', 'postman-smtp' ), esc_html ( $meta_values ['transport_uri'] [0] ) );
+		}
+		print '</table>';
+		print '<hr/>';
+		print '<pre>';
+		print esc_html ( $post->post_content );
+		print '</pre>';
+		print '</body></html>';
+		die ();
 	}
 	
 	/**
@@ -193,6 +234,8 @@ class PostmanEmailLogView {
 		<!-- Now we can render the completed list table -->
             <?php $testListTable->display()?>
         </form>
+        
+        <?php add_thickbox(); ?>
 
 </div>
 <?php

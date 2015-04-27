@@ -364,7 +364,7 @@ if (! class_exists ( "PostmanMessage" )) {
 			$this->sender = new PostmanEmailAddress ( $sender, $name );
 		}
 		function setReplyTo($replyTo) {
-			$this->replyTo = $replyTo;
+			$this->replyTo = new PostmanEmailAddress($replyTo);
 		}
 		function setReturnPath($returnPath) {
 			$this->returnPath = $returnPath;

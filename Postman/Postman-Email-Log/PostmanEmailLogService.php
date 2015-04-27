@@ -11,6 +11,7 @@ if (! class_exists ( 'PostmanEmailLog' )) {
 		public $statusMessage;
 		public $sessionTranscript;
 		public $transportUri;
+		public $replyTo;
 	}
 }
 
@@ -25,14 +26,17 @@ if (! class_exists ( 'PostmanEmailLogFactory' )) {
 		private static function createLog(PostmanMessage $message = null, $transcript, $statusMessage, $success, PostmanTransport $transport) {
 			$log = new PostmanEmailLog ();
 			if ($message) {
-				$log->sender = $message->getSender ()->getEmail ();
+				$log->sender = $message->getSender ()->format ();
 				$log->recipients = PostmanEmailLogFactory::flattenEmails ( $message->getToRecipients () );
 				$log->subject = $message->getSubject ();
 				$log->body = $message->getBody ();
+				if (null !== $message->getReplyTo ()) {
+					$log->replyTo = $message->getReplyTo ()->format ();
+				}
 			}
 			$log->success = $success;
 			$log->statusMessage = $statusMessage;
-			$log->transportUri = PostmanTransportUtils::getTransportUri ( $transport, false );
+			$log->transportUri = PostmanTransportUtils::getPublicTransportUri ( $transport );
 			$log->sessionTranscript = 'n/a';
 			if (! empty ( $transcript )) {
 				$log->sessionTranscript = $transcript;
@@ -46,7 +50,7 @@ if (! class_exists ( 'PostmanEmailLogFactory' )) {
 				if ($count > 0) {
 					$flat .= ', ';
 				}
-				$flat .= $address->getEmail ();
+				$flat .= $address->format ();
 				$count ++;
 			}
 			return $flat;
@@ -126,6 +130,7 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			// Create post object
 			// from http://stackoverflow.com/questions/20444042/wordpress-how-to-sanitize-multi-line-text-from-a-textarea-without-losing-line
 			$sanitizedBody = implode ( PHP_EOL, array_map ( 'sanitize_text_field', explode ( PHP_EOL, $log->body ) ) );
+			$sanitizedBody = $log->body;
 			/*
 			 * Private content is published only for your eyes, or the eyes of only those with authorization
 			 * permission levels to see private content. Normal users and visitors will not be aware of
@@ -135,6 +140,7 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			 */
 			$my_post = array (
 					'post_type' => self::POSTMAN_CUSTOM_POST_TYPE_SLUG,
+					// https://codex.wordpress.org/Function_Reference/wp_slash
 					'post_title' => wp_slash ( sanitize_text_field ( $log->subject ) ),
 					'post_content' => wp_slash ( $sanitizedBody ),
 					'post_excerpt' => wp_slash ( sanitize_text_field ( $log->statusMessage ) ),
@@ -147,11 +153,13 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			$this->logger->trace ( $log );
 			
 			// meta
-			update_post_meta ( $post_id, 'from_header', wp_slash ( sanitize_text_field ( $log->sender ) ) );
-			update_post_meta ( $post_id, 'to_header', wp_slash ( sanitize_text_field ( $log->recipients ) ) );
+			update_post_meta ( $post_id, 'from_header', wp_slash ( $log->sender ) );
+			update_post_meta ( $post_id, 'to_header', wp_slash ( $log->recipients ) );
+			update_post_meta ( $post_id, 'reply_to_header', wp_slash ( $log->replyTo ) );
 			update_post_meta ( $post_id, 'transport_uri', wp_slash ( sanitize_text_field ( $log->transportUri ) ) );
 			// from http://stackoverflow.com/questions/20444042/wordpress-how-to-sanitize-multi-line-text-from-a-textarea-without-losing-line
-			$sanitizedTranscript = implode ( PHP_EOL, array_map ( 'sanitize_text_field', explode ( PHP_EOL, $log->sessionTranscript ) ) );
+			$sanitizedTranscript = $log->sessionTranscript;
+// 			$sanitizedTranscript = implode ( PHP_EOL, array_map ( 'sanitize_text_field', explode ( PHP_EOL, $log->sessionTranscript ) ) );
 			update_post_meta ( $post_id, 'session_transcript', wp_slash ( $sanitizedTranscript ) );
 		}
 		

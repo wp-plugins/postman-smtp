@@ -24,8 +24,9 @@ if (! class_exists ( 'PostmanEmailAddress' )) {
 			return $this->email;
 		}
 		public function format() {
-			if (! empty ( $senderName )) {
-				return sprintf ( '"%s" <%s>', $this->getName (), $this->getEmail () );
+			$name = $this->getName ();
+			if (! empty ( $name )) {
+				return sprintf ( '%s <%s>', $this->getName (), $this->getEmail () );
 			} else {
 				return sprintf ( '%s', $this->getEmail () );
 			}

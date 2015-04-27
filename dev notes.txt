@@ -26,6 +26,8 @@ http://planetozh.com/blog/2009/08/how-to-make-http-requests-with-wordpress/
 "Once the action is complete. I want the page to redirect back to the form that called the script."
 http://stackoverflow.com/questions/21450966/wp-redirect-call-to-undefined-function-new-plugin
 
+"Data Sanitization and Validation With WordPress"
+http://code.tutsplus.com/articles/data-sanitization-and-validation-with-wordpress--wp-25536
 
 Tutorials
 ---------

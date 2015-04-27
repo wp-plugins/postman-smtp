@@ -116,7 +116,6 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			// add the reply-to
 			$replyTo = $message->getReplyTo ();
 			if (! empty ( $replyTo )) {
-				$replyTo = new PostmanEmailAddress ( $replyTo );
 				$mail->setReplyTo ( $replyTo->getEmail (), $replyTo->getName () );
 			}
 			

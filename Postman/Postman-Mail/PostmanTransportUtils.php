@@ -18,14 +18,15 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 			}
 		}
 		/**
+		 *
 		 * @deprecated by getTransportUri()
-		 * @param PostmanTransport $transport
+		 * @param PostmanTransport $transport        	
 		 * @return string
 		 */
 		public static function getDeliveryUri(PostmanTransport $transport) {
-			return PostmanTransportUtils::getTransportUri ( $transport, true, true );
+			return PostmanTransportUtils::getSecretTransportUri ( $transport, true, true );
 		}
-		public static function getTransportUri(PostmanTransport $transport, $obscureUsername = false, $obscurePassword = true) {
+		public static function getSecretTransportUri(PostmanTransport $transport, $obscureUsername = false, $obscurePassword = true) {
 			if (! method_exists ( $transport, 'getVersion' )) {
 				return 'undefined';
 			} else {
@@ -46,6 +47,19 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 				$host = $transport->getHostname ( $options );
 				$port = $transport->getHostPort ( $options );
 				return sprintf ( '%s:%s:%s://%s:%s@%s:%s', $transportName, $security, $auth, $user, $pass, $host, $port );
+			}
+		}
+		public static function getPublicTransportUri(PostmanTransport $transport) {
+			if (! method_exists ( $transport, 'getVersion' )) {
+				return 'undefined';
+			} else {
+				$options = PostmanOptions::getInstance ();
+				$transportName = $transport->getSlug ();
+				$auth = $transport->getAuthenticationType ( $options );
+				$security = $transport->getSecurityType ( $options );
+				$host = $transport->getHostname ( $options );
+				$port = $transport->getHostPort ( $options );
+				return sprintf ( '%s:%s:%s://%s:%s', $transportName, $security, $auth, $host, $port );
 			}
 		}
 		/**
