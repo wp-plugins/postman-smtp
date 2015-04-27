@@ -82,10 +82,12 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$wpMailAuthorizationToken = PostmanOAuthToken::getInstance ();
 			try {
 				// create the message
-				$messageBuilder = $this->createMessage ( $wpMailOptions, $to, $subject, $message, $headers, $attachments );
+				$transport = PostmanTransportUtils::getCurrentTransport ();
+				$transportConfiguration = PostmanMailTransportConfigurationFactory::getInstance ()->createMailTransportConfiguration ( $transport, $wpMailOptions, $wpMailAuthorizationToken );
+				$messageBuilder = $this->createMessage ( $wpMailOptions, $to, $subject, $message, $headers, $attachments, $transportConfiguration );
 				// send the message
 				$this->logger->debug ( 'Sending mail' );
-				$engine = PostmanMailEngineFactory::getInstance ()->createMailEngine ( $wpMailOptions, $wpMailAuthorizationToken );
+				$engine = PostmanMailEngineFactory::getInstance ()->createMailEngine ( $wpMailOptions, $wpMailAuthorizationToken, $transport, $transportConfiguration );
 				$engine->send ( $messageBuilder, $wpMailOptions->getHostname () );
 				$this->transcript = $engine->getTranscript ();
 				
@@ -119,7 +121,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @param unknown $headers        	
 		 * @param unknown $attachments        	
 		 */
-		private function createMessage($wpMailOptions, $to, $subject, $body, $headers, $attachments) {
+		private function createMessage(PostmanOptionsInterface $wpMailOptions, $to, $subject, $body, $headers, $attachments, PostmanMailTransportConfiguration $transportation) {
 			$message = PostmanMessageFactory::createEmptyMessage ();
 			$message->addHeaders ( $headers );
 			$message->addHeaders ( $wpMailOptions->getAdditionalHeaders () );
@@ -131,8 +133,8 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$message->addBcc ( $wpMailOptions->getForcedBccRecipients () );
 			$message->setAttachments ( $attachments );
 			$message->setSender ( $wpMailOptions->getSenderEmail (), $wpMailOptions->getSenderName () );
-			$message->setPreventSenderEmailOverride ( $wpMailOptions->isSenderEmailOverridePrevented () );
-			$message->setPreventSenderNameOverride ( $wpMailOptions->isSenderNameOverridePrevented () );
+			$message->setPreventSenderEmailOverride ( $wpMailOptions->isSenderEmailOverridePrevented () || $transportation->isPluginSenderEmailEnforced () );
+			$message->setPreventSenderNameOverride ( $wpMailOptions->isSenderNameOverridePrevented () || $transportation->isPluginSenderNameEnforced () );
 			
 			// set the reply-to address if it hasn't been set already in the user's headers
 			$optionsReplyTo = $wpMailOptions->getReplyTo ();

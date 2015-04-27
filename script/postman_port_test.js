@@ -45,7 +45,6 @@ function portTest(tdValue, port, button) {
 				} else {
 					testEl.html('<span style="color:red">'
 							+ postman_port_test_closed + '</span>');
-					show('#blocked-port-help');
 				}
 				portTest2(hostname, port, button, response.success);
 			}).fail(
@@ -94,6 +93,7 @@ function portTest2(hostname, port, button, open) {
 								+ '</span>');
 						totalPortsTested += 1;
 						addConclusion(postman_443_closed, false);
+						show('#blocked-port-help');
 					}
 				}
 				enableButtonCheck(button);
@@ -125,6 +125,7 @@ function portTest3(hostname, port, button, open) {
 				} else {
 					testEl.html('<span style="color:red">' + postman_no
 							+ '</span>');
+					show('#blocked-port-help');
 					if (open) {
 						addConclusion(sprintf(postman_try_dif_smtp, port,
 								hostname), false);

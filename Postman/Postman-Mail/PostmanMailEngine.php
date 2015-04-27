@@ -53,7 +53,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 		 * @param unknown $senderEmail        	
 		 * @param unknown $accessToken        	
 		 */
-		function __construct(PostmanMailAuthenticator $authenticator, PostmanTransport $transport) {
+		function __construct(PostmanMailTransportConfiguration $authenticator, PostmanTransport $transport) {
 			assert ( isset ( $authenticator ) );
 			assert ( isset ( $transport ) );
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
@@ -92,7 +92,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$this->logger->debug ( 'Adding content-type ' . $contentType );
 			
 			// add the sender
-			$sender = $this->addFrom ( $message, $mail, $this->authenticator );
+			$sender = $this->addFrom ( $message, $mail );
 			$sender->log ( $this->logger, 'From' );
 			
 			// add the to recipients
@@ -215,13 +215,14 @@ if (! class_exists ( "PostmanMailEngine" )) {
 		}
 		
 		/**
+		 * Get the sender from PostmanMessage and add it to the Postman_Zend_Mail object
 		 *
+		 * @param PostmanMessage $message        	
 		 * @param Postman_Zend_Mail $mail        	
-		 * @param PostmanMailAuthenticator $authenticator        	
-		 * @deprecated by getFrom()
+		 * @return PostmanEmailAddress
 		 */
-		public function addFrom(PostmanMessage $message, Postman_Zend_Mail $mail, PostmanMailAuthenticator $authenticator) {
-			$sender = $message->getSender ( $authenticator->isSenderNameOverridePrevented (), $authenticator->isSenderEmailOverridePrevented () );
+		public function addFrom(PostmanMessage $message, Postman_Zend_Mail $mail) {
+			$sender = $message->getSender ();
 			// now log it and push it into the message
 			$senderEmail = $sender->getEmail ();
 			$senderName = $sender->getName ();

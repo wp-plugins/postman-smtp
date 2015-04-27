@@ -45,12 +45,13 @@ class PostmanPortTest {
 	 */
 	public function genericConnectionTest($timeout = 10) {
 		// test if the port is open
-		$socket = sprintf ( '%s:%s', $this->hostname, $this->port );
-		$stream = @stream_socket_client ( $socket, $errno, $errstr, $timeout );
-		$this->debug ( 'connect to %s: %s', $socket, ($stream ? 'yes' : 'no') );
+		$connectionString = sprintf ( '%s:%s', $this->hostname, $this->port );
+		$stream = @stream_socket_client ( $connectionString, $errno, $errstr, $timeout );
 		if (! $stream) {
+			$this->debug ( sprintf ( 'connected to %s', $connectionString ) );
 			return false;
 		} else {
+			$this->debug ( sprintf ( 'Could not connect to %s because %s [%s]', $connectionString, $errstr, $errno ) );
 			return true;
 		}
 	}
@@ -62,11 +63,13 @@ class PostmanPortTest {
 	 */
 	public function testPortQuiz($timeout = 10) {
 		// test if the port is open
-		$stream = @stream_socket_client ( sprintf ( 'portquiz.net:%s', $this->port ), $errno, $errstr, $timeout );
-		$this->debug ( 'connect to portquiz.net: ' . ($stream ? 'yes' : 'no') );
+		$connectionString = sprintf ( 'portquiz.net:%s', $this->port );
+		$stream = @stream_socket_client ( $connectionString, $errno, $errstr, $timeout );
 		if (! $stream) {
+			$this->debug ( sprintf ( 'connected to %s', $connectionString ) );
 			return false;
 		} else {
+			$this->debug ( sprintf ( 'Could not connect to %s because %s [%s]', $connectionString, $errstr, $errno ) );
 			return true;
 		}
 	}
@@ -77,13 +80,15 @@ class PostmanPortTest {
 	 * @param string $hostname        	
 	 */
 	public function testHttpPorts($connectTimeout = 10, $readTimeout = 10) {
-		$connectionString = "ssl://%s:%s";
+		$connectionString = sprintf ( "ssl://%s:%s", $this->hostname, $this->port );
 		$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
-		@stream_set_timeout ( $stream, $readTimeout );
-		$serverName = postmanGetServerName ();
 		if (! $stream) {
+			$this->debug ( sprintf ( 'Could not connect to %s because %s [%s]', $connectionString, $errstr, $errno ) );
 			return false;
 		} else {
+			$this->debug ( sprintf ( 'connected to %s', $connectionString ) );
+			@stream_set_timeout ( $stream, $readTimeout );
+			$serverName = postmanGetServerName ();
 			// see http://php.net/manual/en/transports.inet.php#113244
 			$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
 			$matches = array ();
@@ -111,7 +116,7 @@ class PostmanPortTest {
 			$this->authNone = 'true';
 			return true;
 		}
-		$connectionString = "%s:%s";
+		$connectionString = sprintf ( "%s:%s", $this->hostname, $this->port );
 		$success = $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
 		if ($success) {
 			$this->protocol = 'SMTP';
@@ -130,7 +135,7 @@ class PostmanPortTest {
 	 * @param string $hostname        	
 	 */
 	public function testSmtpsPorts($connectTimeout = 10, $readTimeout = 10) {
-		$connectionString = "ssl://%s:%s";
+		$connectionString = sprintf ( "ssl://%s:%s", $this->hostname, $this->port );
 		$success = $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
 		if ($success) {
 			if (! ($this->authCrammd5 || $this->authLogin || $this->authPlain || $this->authXoauth)) {
@@ -148,12 +153,14 @@ class PostmanPortTest {
 	 * @param string $hostname        	
 	 */
 	private function talkToMailServer($connectionString, $connectTimeout = 10, $readTimeout = 10) {
-		$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
+		$stream = @stream_socket_client ( $connectionString, $errno, $errstr, $connectTimeout );
 		@stream_set_timeout ( $stream, $readTimeout );
 		$serverName = postmanGetServerName ();
 		if (! $stream) {
+			$this->debug ( sprintf ( 'Could not connect to %s because %s [%s]', $connectionString, $errstr, $errno ) );
 			return false;
 		} else {
+			$this->debug ( sprintf ( 'connected to %s', $connectionString ) );
 			// see http://php.net/manual/en/transports.inet.php#113244
 			// see http://php.net/stream_socket_enable_crypto
 			$result = $this->readSmtpResponse ( $stream );
@@ -228,7 +235,8 @@ class PostmanPortTest {
 			} elseif (preg_match ( '/STARTTLS/', $line )) {
 				$result = 'starttls';
 			} elseif (preg_match ( '/^220.(.*?)\\s/', $line, $matches )) {
-				if(empty($result)) $result = $matches [1];
+				if (empty ( $result ))
+					$result = $matches [1];
 			}
 			if (preg_match ( '/^\d\d\d\\s/', $line )) {
 				// always exist on last server response line

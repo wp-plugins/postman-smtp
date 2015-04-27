@@ -18,5 +18,10 @@ if (! class_exists ( 'PostmanUtils' )) {
 		public static function getSettingsPageUrl() {
 			return menu_page_url ( SELF::POSTMAN_SETTINGS_PAGE_STUB, self::NO_ECHO );
 		}
+		
+		//
+		public static function isCurrentPagePostmanAdmin($page = 'postman') {
+			return (isset ( $_REQUEST ['page'] ) && substr ( $_REQUEST ['page'], 0, strlen ( $page ) ) == $page);
+		}
 	}
 }

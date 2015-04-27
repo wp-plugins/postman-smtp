@@ -28,10 +28,11 @@ class PostmanMailEngineFactory {
 	 * @param PostmanOAuthToken $authorizationToken        	
 	 * @return PostmanSmtpEngine
 	 */
-	public function createMailEngine(PostmanOptions $options, PostmanOAuthToken $authorizationToken) {
-		$transport = PostmanTransportUtils::getCurrentTransport ();
+	public function createMailEngine(PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanTransport $transport, PostmanMailTransportConfiguration $authenticator) {
+		assert ( isset ( $options ) );
+		assert ( isset ( $authorizationToken ) );
 		assert ( isset ( $transport ) );
-		$authenticator = $transport->createPostmanMailAuthenticator ( $options, $authorizationToken );
+		assert ( isset ( $authenticator ) );
 		if ($options->isAuthTypeOAuth2 ()) {
 			$this->ensureAuthtokenIsUpdated ( $transport, $options, $authorizationToken );
 		}

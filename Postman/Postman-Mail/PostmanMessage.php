@@ -60,7 +60,7 @@ if (! class_exists ( "PostmanMessage" )) {
 		 *
 		 * @return PostmanEmailAddress
 		 */
-		public function getSender($forceSenderName, $forceSenderEmail) {
+		public function getSender() {
 			
 			// by default, sender is what Postman set
 			$sender = PostmanEmailAddress::copy ( $this->sender );
@@ -100,10 +100,10 @@ if (! class_exists ( "PostmanMessage" )) {
 			$sender->setName ( apply_filters ( 'wp_mail_from_name', $sender->getName () ) );
 			
 			// but the caller and the user have the final say
-			if ($forceSenderEmail || $this->isSenderEmailOverridePrevented ()) {
+			if ($this->isPluginSenderEmailEnforced ()) {
 				$sender->setEmail ( $this->sender->getEmail () );
 			}
-			if ($forceSenderName || $this->isSenderNameOverridePrevented ()) {
+			if ($this->isPluginSenderNameEnforced ()) {
 				$sender->setName ( $this->sender->getName () );
 			}
 			
@@ -377,13 +377,13 @@ if (! class_exists ( "PostmanMessage" )) {
 		}
 		
 		// sender override
-		public function isSenderNameOverridePrevented() {
+		public function isPluginSenderNameEnforced() {
 			return $this->preventSenderNameOverride;
 		}
 		public function setPreventSenderNameOverride($preventSenderNameOverride) {
 			$this->preventSenderNameOverride = $preventSenderNameOverride;
 		}
-		public function isSenderEmailOverridePrevented() {
+		public function isPluginSenderEmailEnforced() {
 			return $this->preventSenderEmailOverride;
 		}
 		public function setPreventSenderEmailOverride($preventSenderEmailOverride) {

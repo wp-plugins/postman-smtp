@@ -95,6 +95,11 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			}
 			return $transports;
 		}
+		
+		/**
+		 * Diagnostic Data test to current SMTP server
+		 * @return string
+		 */
 		private function testConnectivity() {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
 			if ($transport->isConfigured ( $this->options, $this->authorizationToken ) && method_exists ( $transport, 'getHostname' ) && method_exists ( $transport, 'getHostPort' )) {

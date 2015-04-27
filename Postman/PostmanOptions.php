@@ -175,13 +175,29 @@ if (! class_exists ( "PostmanOptions" )) {
 			else
 				return Postman::POSTMAN_TCP_READ_TIMEOUT;
 		}
-		public function isSenderNameOverridePrevented() {
+		public function isPluginSenderNameEnforced() {
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] ))
 				return $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE];
 		}
-		public function isSenderEmailOverridePrevented() {
+		/**
+		 * (non-PHPdoc)
+		 * 
+		 * @see PostmanOptionsInterface::isSenderNameOverridePrevented()
+		 * @deprecated by isPluginSenderNameEnforced
+		 */
+		public function isSenderNameOverridePrevented() {
+			return $this->isPluginSenderEmailEnforced ();
+		}
+		public function isPluginSenderEmailEnforced() {
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE] ))
 				return $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE];
+		}
+		/**
+		 *
+		 * @deprecated by isPluginSenderEmailEnforced
+		 */
+		public function isSenderEmailOverridePrevented() {
+			return $this->isPluginSenderEmailEnforced ();
 		}
 		public function setSenderNameOverridePrevented($prevent) {
 			$this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] = $prevent;

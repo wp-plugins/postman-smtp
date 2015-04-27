@@ -5,6 +5,7 @@ if (! class_exists ( 'Postman' )) {
 	
 	require_once 'postman-common-wp-functions.php';
 	require_once 'Postman-Common.php';
+	require_once 'PostmanUtils.php';
 	require_once 'Postman-Mail/PostmanSmtpTransport.php';
 	require_once 'Postman-Mail/PostmanGmailApiTransport.php';
 	require_once 'PostmanOAuthToken.php';
@@ -70,9 +71,17 @@ if (! class_exists ( 'Postman' )) {
 			
 			if (is_admin ()) {
 				// the following classes should only be used if the current user is an admin
-				$adminController = new PostmanAdminController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
 				new PostmanDashboardWidgetController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->wpMailBinder );
+				$adminController = new PostmanAdminController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
 				new PostmanEmailLogView ( $rootPluginFilenameAndPath );
+
+				// do this only if we're on a postman admin screen
+				if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
+					add_action ( 'in_admin_footer', array (
+							&$this,
+							'print_signature' 
+					) );
+				}
 			}
 			
 			// register activation handler on the activation event
@@ -107,9 +116,9 @@ if (! class_exists ( 'Postman' )) {
 			$this->logger->trace ( 'transports: ' . sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () ) );
 			$transport = PostmanTransportUtils::getCurrentTransport ();
 			$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
-
+			
 			// on any Postman page, print the config error messages
-			if (isset ( $_GET ['page'] ) && substr ( $_GET ['page'], 0, 7 ) == 'postman') {
+			if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
 				
 				if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
 					// no configuration errors to show
@@ -150,6 +159,14 @@ if (! class_exists ( 'Postman' )) {
 			PostmanTransportDirectory::getInstance ()->registerTransport ( new PostmanGmailApiTransport () );
 		}
 		
+		/**
+		 * http://striderweb.com/nerdaphernalia/2008/06/give-your-wordpress-plugin-credit/
+		 */
+		function print_signature() {
+			$pluginData = $this->pluginData;
+			printf ( __ ( '%1$s %2$s', 'postman-smtp' ) . '<br />', $pluginData ['Title'], $pluginData ['Version'] );
+		}
+
 		/**
 		 * Loads the appropriate language file
 		 */

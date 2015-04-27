@@ -121,11 +121,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'init' 
 				) );
 				
-				add_action ( 'in_admin_footer', array (
-						&$this,
-						'print_signature' 
-				) );
-				
 				// Adds "Settings" link to the plugin action page
 				add_filter ( 'plugin_action_links_' . plugin_basename ( $this->rootPluginFilenameAndPath ), array (
 						$this,
@@ -138,13 +133,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 						'initializeAdminPage' 
 				) );
 			}
-		}
-		/**
-		 * http://striderweb.com/nerdaphernalia/2008/06/give-your-wordpress-plugin-credit/
-		 */
-		function print_signature() {
-			$plugin_data = get_plugin_data ( $this->rootPluginFilenameAndPath );
-			printf ( __ ( '%1$s | Version %2$s', 'postman-smtp' ) . '<br />', $plugin_data ['Title'], $plugin_data ['Version'] );
 		}
 		public function init() {
 			//
@@ -167,7 +155,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );
 			$this->registerAdminPostAction ( self::REQUEST_OAUTH2_GRANT_SLUG, 'handleOAuthPermissionRequestAction' );
 			
-			if (isset ( $_REQUEST ['page'] ) && substr ( $_REQUEST ['page'], 0, 7 ) == 'postman') {
+			if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
 				$this->checkPreRequisites ();
 			}
 		}
@@ -316,16 +304,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printSmtpSectionInfo' 
 			), PostmanAdminController::SMTP_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::AUTHENTICATION_TYPE, _x ( 'Authentication', 'Configuration Input Field', 'postman-smtp' ), array (
-					$this,
-					'authentication_type_callback' 
-			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
-			
-			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( 'Security', 'Configuration Input Field', 'postman-smtp' ), array (
-					$this,
-					'encryption_type_callback' 
-			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
-			
 			add_settings_field ( PostmanOptions::HOSTNAME, _x ( 'Outgoing Mail Server Hostname', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'hostname_callback' 
@@ -334,6 +312,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			add_settings_field ( PostmanOptions::PORT, _x ( 'Outgoing Mail Server Port', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'port_callback' 
+			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
+			
+			add_settings_field ( PostmanOptions::ENCRYPTION_TYPE, _x ( 'Security', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'encryption_type_callback' 
+			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
+			
+			add_settings_field ( PostmanOptions::AUTHENTICATION_TYPE, _x ( 'Authentication', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'authentication_type_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
 			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, _x ( 'Authentication', 'Configuration Section Title', 'postman-smtp' ), array (
@@ -383,16 +371,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printMessageSenderSectionInfo' 
 			), PostmanAdminController::MESSAGE_SENDER_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::SENDER_NAME, _x ( 'Sender Name', 'Configuration Input Field', 'postman-smtp' ), array (
-					$this,
-					'sender_name_callback' 
-			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
-			
-			add_settings_field ( PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, '', array (
-					$this,
-					'prevent_sender_name_override_callback' 
-			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
-			
 			add_settings_field ( PostmanOptions::SENDER_EMAIL, _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'sender_email_callback' 
@@ -401,6 +379,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			add_settings_field ( PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE, '', array (
 					$this,
 					'prevent_sender_email_override_callback' 
+			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
+			
+			add_settings_field ( PostmanOptions::SENDER_NAME, _x ( 'Sender Name', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'sender_name_callback' 
+			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
+			
+			add_settings_field ( PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, '', array (
+					$this,
+					'prevent_sender_name_override_callback' 
 			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
 			
 			// the Additional Addresses section
@@ -694,8 +682,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($transportConfigured) {
 				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
 			}
-			if (! $transportConfigured || ! $authenticator->isSenderNameOverridePrevented ()) {
-				printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', null !== $this->options->isSenderNameOverridePrevented () ? 'checked="checked"' : '', __ ( 'Force this Sender Name for all messages', 'postman-smtp' ) );
+			$enforced = $this->options->isNew() || null !== $this->options->isSenderNameOverridePrevented ();
+			if (! $transportConfigured || ! $authenticator->isPluginSenderNameEnforced ()) {
+				printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this Sender Name for all messages', 'postman-smtp' ) );
 			} else {
 				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_name_override" checked="checked"/> %s', __ ( 'Force this Sender Name for all messages', 'postman-smtp' ) );
 				if ($this->options->isSenderNameOverridePrevented ()) {
@@ -720,8 +709,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 			if ($transportConfigured) {
 				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
 			}
-			if (! $transportConfigured || ! $authenticator->isSenderEmailOverridePrevented ()) {
-				printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', null !== $this->options->isSenderEmailOverridePrevented () ? 'checked="checked"' : '', __ ( 'Force this Sender Email Address for all messages', 'postman-smtp' ) );
+			$enforced = $this->options->isNew() || null !== $this->options->isSenderEmailOverridePrevented ();
+			if (! $transportConfigured || ! $authenticator->isPluginSenderEmailEnforced ()) {
+				printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this Sender Email Address for all messages', 'postman-smtp' ) );
 			} else {
 				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_email_override" checked="checked"/> %s', __ ( 'Force this Sender Email Address for all messages', 'postman-smtp' ) );
 				if ($this->options->isSenderEmailOverridePrevented ()) {

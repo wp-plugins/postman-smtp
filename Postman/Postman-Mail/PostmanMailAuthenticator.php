@@ -1,24 +1,46 @@
 <?php
-if (! interface_exists ( 'PostmanMailAuthenticator' )) {
-	interface PostmanMailAuthenticator {
+if (! interface_exists ( 'PostmanMailTransportConfiguration' )) {
+	interface PostmanMailTransportConfiguration {
 		function createConfig();
-		function isSenderNameOverridePrevented();
-		function isSenderEmailOverridePrevented();
+		function isPluginSenderNameEnforced();
+		function isPluginSenderEmailEnforced();
+	}
+}
+
+if (! class_exists ( 'PostmanMailTransportConfigurationFactory' )) {
+	class PostmanMailTransportConfigurationFactory {
+		private $logger;
+		
+		// singleton instance
+		public static function getInstance() {
+			static $inst = null;
+			if ($inst === null) {
+				$inst = new PostmanMailTransportConfigurationFactory ();
+			}
+			return $inst;
+		}
+		private function __construct() {
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
+		}
+		
+		public function createMailTransportConfiguration(PostmanTransport $transport, PostmanOptions $options, PostmanOAuthToken $authorizationToken) {
+			return $transport->createPostmanMailAuthenticator($options, $authorizationToken);
+		}
 	}
 }
 
 if (! class_exists ( 'PostmanGeneralMailAuthenticator' )) {
-	class PostmanGeneralMailAuthenticator implements PostmanMailAuthenticator {
+	class PostmanGeneralMailAuthenticator implements PostmanMailTransportConfiguration {
 		private $options;
 		private $authToken;
 		public function __construct(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			$this->options = $options;
 			$this->authToken = $authToken;
 		}
-		public function isSenderNameOverridePrevented() {
+		public function isPluginSenderNameEnforced() {
 			return false;
 		}
-		public function isSenderEmailOverridePrevented() {
+		public function isPluginSenderEmailEnforced() {
 			return false;
 		}
 		public function createConfig() {
@@ -47,7 +69,7 @@ if (! class_exists ( 'PostmanGeneralMailAuthenticator' )) {
 }
 
 if (! class_exists ( 'PostmanOAuth2MailAuthenticator' )) {
-	class PostmanOAuth2MailAuthenticator implements PostmanMailAuthenticator {
+	class PostmanOAuth2MailAuthenticator implements PostmanMailTransportConfiguration {
 		private $options;
 		private $authToken;
 		private $logger;
@@ -56,10 +78,10 @@ if (! class_exists ( 'PostmanOAuth2MailAuthenticator' )) {
 			$this->authToken = $authToken;
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
-		public function isSenderNameOverridePrevented() {
+		public function isPluginSenderNameEnforced() {
 			return false;
 		}
-		public function isSenderEmailOverridePrevented() {
+		public function isPluginSenderEmailEnforced() {
 			return true;
 		}
 		private function getEncryptionType() {

@@ -21,9 +21,11 @@ class PostmanEmailLogView {
 					$this,
 					'postmanAddMenuItem' 
 			) );
+		} else {
+			$this->logger->trace ( 'not creating PostmanEmailLog admin menu item' );
 		}
-		if (isset ( $_REQUEST ['page'] ) && ($_REQUEST ['page']) === 'postman_email_log') {
-			$this->logger->debug ( 'on postman email log page' );
+		if (PostmanUtils::isCurrentPagePostmanAdmin ( 'postman_email_log' )) {
+			$this->logger->trace ( 'on postman email log page' );
 			// $this->logger->debug ( 'Registering ' . $actionName . ' Action Post handler' );
 			add_action ( 'admin_post_delete', array (
 					$this,
@@ -116,7 +118,7 @@ class PostmanEmailLogView {
 			if ($post->ID == $postid) {
 				$this->logger->debug ( 'deleting log item ' . $postid );
 				$force_delete = true;
-				wp_delete_post( $postid, $force_delete );
+				wp_delete_post ( $postid, $force_delete );
 				return;
 			}
 		}
@@ -135,6 +137,7 @@ class PostmanEmailLogView {
 	 * Register the page
 	 */
 	function postmanAddMenuItem() {
+		$this->logger->trace ( 'created PostmanEmailLog admin menu item' );
 		$page = add_management_page ( 'Postman SMTP Log', 'Email Log', 'read_private_posts', 'postman_email_log', array (
 				$this,
 				'postman_render_email_page' 
