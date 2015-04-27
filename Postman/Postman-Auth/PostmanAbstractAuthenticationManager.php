@@ -87,7 +87,8 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 					throw new Exception ( $authToken->{'error'} );
 				}
 			} else {
-				$this->getLogger ()->debug ( 'Processing response ' . $response );
+				$this->getLogger ()->trace ( 'Processing response:' );
+				$this->getLogger ()->trace ( $response );
 				$this->decodeReceivedAuthorizationToken ( $authToken );
 			}
 		}

@@ -1,6 +1,7 @@
 <?php
 if (! class_exists ( 'PostmanUtils' )) {
 	class PostmanUtils {
+		private static $logger;
 		
 		//
 		const POSTMAN_SETTINGS_PAGE_STUB = 'postman_email_log';
@@ -8,6 +9,12 @@ if (! class_exists ( 'PostmanUtils' )) {
 		
 		//
 		const NO_ECHO = false;
+		public static function staticInit() {
+			PostmanUtils::$logger = new PostmanLogger ( 'PostmanUtils' );
+			if (isset ( $_REQUEST ['page'] )) {
+				PostmanUtils::$logger->trace ( 'Current page: ' . $_REQUEST ['page'] );
+			}
+		}
 		
 		//
 		public static function getEmailLogPageUrl() {
@@ -21,7 +28,9 @@ if (! class_exists ( 'PostmanUtils' )) {
 		
 		//
 		public static function isCurrentPagePostmanAdmin($page = 'postman') {
-			return (isset ( $_REQUEST ['page'] ) && substr ( $_REQUEST ['page'], 0, strlen ( $page ) ) == $page);
+			$result = (isset ( $_REQUEST ['page'] ) && substr ( $_REQUEST ['page'], 0, strlen ( $page ) ) == $page);
+			return $result;
 		}
 	}
+	PostmanUtils::staticInit ();
 }

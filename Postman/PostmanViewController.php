@@ -533,6 +533,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<div class="wrap">';
 			$this->outputChildPageHeader ( _x ( 'Delete plugin settings', 'Page Title', 'postman-smtp' ) );
 			print '<form method="POST" action="' . get_admin_url () . 'admin-post.php">';
+			wp_nonce_field( 'purge-data' );
 			printf ( '<input type="hidden" name="action" value="%s" />', PostmanAdminController::PURGE_DATA_SLUG );
 			printf ( '<p><span>%s</span></p><p><span>%s</span></p>', __ ( 'This will purge all of Postman\'s settings, including account credentials and the mail log.', 'postman-smtp' ), __ ( 'Are you sure?', 'postman-smtp' ) );
 			submit_button ( _x ( 'Delete All Data', 'Button Label', 'postman-smtp' ), 'delete', 'submit', true, 'style="background-color:red;color:white"' );

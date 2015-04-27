@@ -27,7 +27,6 @@ class PostmanPortTest {
 	public $authXoauth;
 	public $authNone;
 	public $trySmtps;
-	const DEBUG = true;
 	
 	/**
 	 */
@@ -36,6 +35,15 @@ class PostmanPortTest {
 		$this->hostname = $hostname;
 		$this->hostnameDomainOnly = getRegisteredDomain ( $hostname );
 		$this->port = $port;
+	}
+	private function createStream($connectionString, $timeout) {
+		$stream = @stream_socket_client ( $connectionString, $errno, $errstr, $timeout );
+		if ($stream) {
+			$this->trace ( sprintf ( 'connected to %s', $connectionString ) );
+		} else {
+			$this->trace ( sprintf ( 'Could not connect to %s because %s [%s]', $connectionString, $errstr, $errno ) );
+		}
+		return $stream;
 	}
 	
 	/**
@@ -46,14 +54,8 @@ class PostmanPortTest {
 	public function genericConnectionTest($timeout = 10) {
 		// test if the port is open
 		$connectionString = sprintf ( '%s:%s', $this->hostname, $this->port );
-		$stream = @stream_socket_client ( $connectionString, $errno, $errstr, $timeout );
-		if (! $stream) {
-			$this->debug ( sprintf ( 'connected to %s', $connectionString ) );
-			return false;
-		} else {
-			$this->debug ( sprintf ( 'Could not connect to %s because %s [%s]', $connectionString, $errstr, $errno ) );
-			return true;
-		}
+		$stream = $this->createStream ( $connectionString, $timeout );
+		return null != $stream;
 	}
 	
 	/**
@@ -64,14 +66,8 @@ class PostmanPortTest {
 	public function testPortQuiz($timeout = 10) {
 		// test if the port is open
 		$connectionString = sprintf ( 'portquiz.net:%s', $this->port );
-		$stream = @stream_socket_client ( $connectionString, $errno, $errstr, $timeout );
-		if (! $stream) {
-			$this->debug ( sprintf ( 'connected to %s', $connectionString ) );
-			return false;
-		} else {
-			$this->debug ( sprintf ( 'Could not connect to %s because %s [%s]', $connectionString, $errstr, $errno ) );
-			return true;
-		}
+		$stream = $this->createStream ( $connectionString, $timeout );
+		return null != $stream;
 	}
 	
 	/**
@@ -82,11 +78,8 @@ class PostmanPortTest {
 	public function testHttpPorts($connectTimeout = 10, $readTimeout = 10) {
 		$connectionString = sprintf ( "ssl://%s:%s", $this->hostname, $this->port );
 		$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
-		if (! $stream) {
-			$this->debug ( sprintf ( 'Could not connect to %s because %s [%s]', $connectionString, $errstr, $errno ) );
-			return false;
-		} else {
-			$this->debug ( sprintf ( 'connected to %s', $connectionString ) );
+		$stream = $this->createStream ( $connectionString, $connectTimeout );
+		if ($stream) {
 			@stream_set_timeout ( $stream, $readTimeout );
 			$serverName = postmanGetServerName ();
 			// see http://php.net/manual/en/transports.inet.php#113244
@@ -101,6 +94,8 @@ class PostmanPortTest {
 			} else {
 				return false;
 			}
+		} else {
+			return false;
 		}
 	}
 	/**
@@ -153,14 +148,10 @@ class PostmanPortTest {
 	 * @param string $hostname        	
 	 */
 	private function talkToMailServer($connectionString, $connectTimeout = 10, $readTimeout = 10) {
-		$stream = @stream_socket_client ( $connectionString, $errno, $errstr, $connectTimeout );
-		@stream_set_timeout ( $stream, $readTimeout );
-		$serverName = postmanGetServerName ();
-		if (! $stream) {
-			$this->debug ( sprintf ( 'Could not connect to %s because %s [%s]', $connectionString, $errstr, $errno ) );
-			return false;
-		} else {
-			$this->debug ( sprintf ( 'connected to %s', $connectionString ) );
+		$stream = $this->createStream ( $connectionString, $connectTimeout );
+		if ($stream) {
+			$serverName = postmanGetServerName ();
+			@stream_set_timeout ( $stream, $readTimeout );
 			// see http://php.net/manual/en/transports.inet.php#113244
 			// see http://php.net/stream_socket_enable_crypto
 			$result = $this->readSmtpResponse ( $stream );
@@ -193,20 +184,18 @@ class PostmanPortTest {
 				$this->debug ( 'return false' );
 				return false;
 			}
+		} else {
+			return false;
 		}
 	}
 	private function sendSmtpCommand($stream, $message) {
-		if (self::DEBUG) {
-			$this->debug ( 'tx: ' . $message );
-		}
+		$this->trace ( 'tx: ' . $message );
 		fputs ( $stream, $message . "\r\n" );
 	}
 	private function readSmtpResponse($stream) {
 		$result = '';
 		while ( ($line = fgets ( $stream )) !== false ) {
-			if (self::DEBUG) {
-				$this->debug ( 'rx: ' . $line );
-			}
+			$this->trace ( 'rx: ' . $line );
 			if (preg_match ( '/^250.AUTH/', $line )) {
 				// $this->debug ( '250-AUTH' );
 				if (preg_match ( '/\\sLOGIN\\s/', $line )) {
@@ -248,6 +237,9 @@ class PostmanPortTest {
 	}
 	public function getErrorMessage() {
 		return $this->errstr;
+	}
+	private function trace($message) {
+		$this->logger->trace ( sprintf ( '%s:%s => %s', $this->hostname, $this->port, $message ) );
 	}
 	private function debug($message) {
 		$this->logger->debug ( sprintf ( '%s:%s => %s', $this->hostname, $this->port, $message ) );

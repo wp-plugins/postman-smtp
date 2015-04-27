@@ -20,7 +20,7 @@ if (! class_exists ( "PostmanLogger" )) {
 			if (class_exists ( 'PostmanOptions' )) {
 				$this->logLevel = PostmanOptions::getInstance ()->getLogLevel ();
 			} else {
-				$this->logLevel = self::DEBUG_INT;
+				$this->logLevel = self::OFF_INT;
 			}
 		}
 		function trace($text) {

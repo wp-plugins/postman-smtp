@@ -141,7 +141,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			}
 		}
 		private function logSanitize($desc, $value) {
-			$this->logger->debug ( 'Sanitize ' . $desc . ' ' . $value );
+			$this->logger->trace ( 'Sanitize ' . $desc . ' ' . $value );
 		}
 	}
 }

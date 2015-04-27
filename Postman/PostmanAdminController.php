@@ -224,12 +224,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			postmanRedirect ( POSTMAN_HOME_PAGE_RELATIVE_URL );
 		}
 		public function handlePurgeDataAction() {
-			$this->logger->debug ( 'Purging stored data' );
-			delete_option ( PostmanOptions::POSTMAN_OPTIONS );
-			delete_option ( PostmanOAuthToken::OPTIONS_NAME );
-			delete_option ( PostmanAdminController::TEST_OPTIONS );
-			$this->messageHandler->addMessage ( __ ( 'All plugin settings were removed.', 'postman-smtp' ) );
-			postmanRedirect ( POSTMAN_HOME_PAGE_RELATIVE_URL );
+			if (wp_verify_nonce ( $_REQUEST ['_wpnonce'], 'purge-data' )) {
+				$this->logger->debug ( 'Purging stored data' );
+				delete_option ( PostmanOptions::POSTMAN_OPTIONS );
+				delete_option ( PostmanOAuthToken::OPTIONS_NAME );
+				delete_option ( PostmanAdminController::TEST_OPTIONS );
+				$this->messageHandler->addMessage ( __ ( 'All plugin settings were removed.', 'postman-smtp' ) );
+				postmanRedirect ( POSTMAN_HOME_PAGE_RELATIVE_URL );
+			} else {
+				$this->logger->warn ( sprintf ( 'nonce "%s" failed validation', $_REQUEST ['_wpnonce'] ) );
+			}
 		}
 		/**
 		 * Handles the authorization grant
@@ -503,11 +507,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Transport section info
 		 */
 		public function printTransportSectionInfo() {
-			if (1 == sizeof ( PostmanTransportDirectory::getInstance ()->getTransports () )) {
-				print __ ( 'The default transport is SMTP.', 'postman-smtp' );
-			} else {
-				print __ ( 'Select the transport to use:', 'postman-smtp' );
-			}
+			print __ ( 'The transport is normally SMTP, though new transports will become available in the form of APIs:', 'postman-smtp' );
 		}
 		/**
 		 * Print the Section text
@@ -684,7 +684,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 			$enforced = $this->options->isPluginSenderNameEnforced ();
 			// always let the user configure it in the wizard
-			$wizard = PostmanUtils::isCurrentPagePostmanAdmin('postman/configuration_wizard');
+			$wizard = PostmanUtils::isCurrentPagePostmanAdmin ( 'postman/configuration_wizard' );
 			if ($wizard || ! $transportConfigured || ! $authenticator->isPluginSenderNameEnforced ()) {
 				printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this Sender Name for all messages', 'postman-smtp' ) );
 			} else {
@@ -715,7 +715,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 			$enforced = $this->options->isPluginSenderEmailEnforced ();
 			// always let the user configure it in the wizard
-			$wizard = PostmanUtils::isCurrentPagePostmanAdmin('postman/configuration_wizard');
+			$wizard = PostmanUtils::isCurrentPagePostmanAdmin ( 'postman/configuration_wizard' );
 			if ($wizard || ! $transportConfigured || ! $authenticator->isPluginSenderEmailEnforced ()) {
 				printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this Sender Email Address for all messages', 'postman-smtp' ) );
 			} else {

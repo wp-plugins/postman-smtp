@@ -114,7 +114,7 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 							'name' => _x ( 'Email Log', 'A List of Emails that have been sent', 'postman-smtp' ) 
 					)
 			) );
-			$this->logger->debug('Created custom post type');
+			$this->logger->trace('Created custom post type');
 		}
 		
 		/**

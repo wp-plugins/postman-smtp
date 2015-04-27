@@ -34,8 +34,8 @@ if (! class_exists ( 'PostmanAbstractAjaxHandler' )) {
 		protected function getRequestParameter($parameterName) {
 			if (isset ( $_POST [$parameterName] )) {
 				$value = $_POST [$parameterName];
-				$this->logger->debug ( 'Found parameter name ' . $parameterName );
-				$this->logger->debug ( $value );
+				$this->logger->trace ( sprintf ( 'Found parameter "%s"', $parameterName ) );
+				$this->logger->trace ( $value );
 				return $value;
 			}
 		}
@@ -98,6 +98,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		
 		/**
 		 * Diagnostic Data test to current SMTP server
+		 * 
 		 * @return string
 		 */
 		private function testConnectivity() {
@@ -155,8 +156,8 @@ if (! class_exists ( 'PostmanGetPortsToTestViaAjax' )) {
 				$queryHostname = $_POST ['hostname'];
 			}
 			$hosts = PostmanTransportUtils::getHostsToTest ( $queryHostname );
-			$this->logger->debug ( 'hostsToTest:' );
-			$this->logger->debug ( $hosts );
+			$this->logger->trace ( 'hostsToTest:' );
+			$this->logger->trace ( $hosts );
 			$response = array (
 					'hosts' => $hosts,
 					'success' => true 
@@ -277,8 +278,8 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 					'try_smtps' => $portTest->trySmtps,
 					'success' => $success 
 			);
-			$this->logger->debug ( 'Ajax response:' );
-			$this->logger->debug ( $response );
+			$this->logger->trace ( 'Ajax response:' );
+			$this->logger->trace ( $response );
 			if ($success) {
 				wp_send_json_success ( $response );
 			} else {

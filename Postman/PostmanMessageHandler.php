@@ -106,7 +106,7 @@ if (! class_exists ( 'PostmanMessageHandler' )) {
 		 * @param unknown $message        	
 		 * @param unknown $className        	
 		 */
-		private function printMessage($message, $className) {
+		public function printMessage($message, $className) {
 			printf ( '<div class="%s"><p>%s</p></div>', $className, $message );
 		}
 	}

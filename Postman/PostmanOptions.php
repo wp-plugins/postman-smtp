@@ -78,6 +78,8 @@ if (! class_exists ( "PostmanOptions" )) {
 			return ! isset ( $this->options [PostmanOptions::VERSION] );
 		}
 		public function isMailLoggingEnabled() {
+			if ($this->isNew ())
+				return true;
 			if (isset ( $this->options [PostmanOptions::MAIL_LOG_ENABLED] ))
 				return $this->options [PostmanOptions::MAIL_LOG_ENABLED];
 			else
@@ -139,6 +141,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		public function getTransportType() {
 			if (isset ( $this->options [PostmanOptions::TRANSPORT_TYPE] ))
 				return $this->options [PostmanOptions::TRANSPORT_TYPE];
+			else
+				return PostmanSmtpTransport::SLUG;
 		}
 		public function getAuthenticationType() {
 			if (isset ( $this->options [PostmanOptions::AUTHENTICATION_TYPE] ))
@@ -176,14 +180,14 @@ if (! class_exists ( "PostmanOptions" )) {
 				return Postman::POSTMAN_TCP_READ_TIMEOUT;
 		}
 		public function isPluginSenderNameEnforced() {
-			if($this->isNew())
+			if ($this->isNew ())
 				return true;
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] ))
 				return $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE];
 		}
 		/**
 		 * (non-PHPdoc)
-		 * 
+		 *
 		 * @see PostmanOptionsInterface::isSenderNameOverridePrevented()
 		 * @deprecated by isPluginSenderNameEnforced
 		 */
@@ -191,7 +195,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			return $this->isPluginSenderEmailEnforced ();
 		}
 		public function isPluginSenderEmailEnforced() {
-			if($this->isNew())
+			if ($this->isNew ())
 				return true;
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE] ))
 				return $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE];

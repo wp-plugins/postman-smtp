@@ -50,13 +50,13 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			
 			// determine a configuration recommendation
 			$winningRecommendation = $this->getConfigurationRecommendation ( $queryHostData, $userPortOverride, $userAuthOverride );
-			$this->logger->debug ( 'winning recommendation:' );
-			$this->logger->debug ( $winningRecommendation );
+			$this->logger->trace ( 'winning recommendation:' );
+			$this->logger->trace ( $winningRecommendation );
 			
 			// create user override menu
 			$overrideMenu = $this->createOverrideMenu ( $queryHostData, $winningRecommendation );
-			$this->logger->debug ( 'override menu:' );
-			$this->logger->debug ( $overrideMenu );
+			$this->logger->trace ( 'override menu:' );
+			$this->logger->trace ( $overrideMenu );
 			
 			// create the reponse
 			$response = array ();
@@ -74,15 +74,15 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 				$this->populateResponseFromTransport ( $winningRecommendation, $configuration );
 				$response ['override_menu'] = $overrideMenu;
 				$response ['configuration'] = $configuration;
-				$this->logger->debug ( 'configuration:' );
-				$this->logger->debug ( $configuration );
+				$this->logger->trace ( 'configuration:' );
+				$this->logger->trace ( $configuration );
 				wp_send_json_success ( $response );
 			} else {
 				/* translators: where %s is the URL to the Connectivity Test page */
 				$configuration ['message'] = sprintf ( __ ( 'Postman can\'t find any way to send mail on your system. Run a <a href="%s">connectivity test</a>.', 'postman-smtp' ), PostmanViewController::getPageUrl ( PostmanViewController::PORT_TEST_SLUG ) );
 				$response ['configuration'] = $configuration;
-				$this->logger->debug ( 'configuration:' );
-				$this->logger->debug ( $configuration );
+				$this->logger->trace ( 'configuration:' );
+				$this->logger->trace ( $configuration );
 				wp_send_json_error ( $response );
 			}
 		}
