@@ -4,7 +4,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 		private static $logger;
 		
 		//
-		const POSTMAN_SETTINGS_PAGE_STUB = 'postman_email_log';
+		const POSTMAN_SETTINGS_PAGE_STUB = 'postman';
 		const POSTMAN_EMAIL_LOG_PAGE_STUB = 'postman_email_log';
 		
 		//
