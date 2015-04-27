@@ -69,10 +69,10 @@ class PostmanEmailLogView {
 	 */
 	function delete_log_item() {
 		$this->logger->trace ( 'handling delete item' );
-		if (wp_verify_nonce ( $_REQUEST ['_wpnonce'], 'delete' )) {
+		$postid = $_REQUEST ['email'];
+		if (wp_verify_nonce ( $_REQUEST ['_wpnonce'], 'delete_email_log_item_' . $postid )) {
 			$this->logger->trace ( sprintf ( 'nonce "%s" passed validation', $_REQUEST ['_wpnonce'] ) );
 			$logItems = $this->getMailLogItems ();
-			$postid = $_REQUEST ['email'];
 			$this->verifyLogItemExistsAndRemove ( $logItems, $postid );
 			$mh = new PostmanMessageHandler ();
 			$mh->addMessage ( __ ( 'Mail Log Entry was deleted.', 'postman-smtp' ) );

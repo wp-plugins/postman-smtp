@@ -10,18 +10,19 @@ if (! class_exists ( 'PostmanEmailLog' )) {
 		public $success;
 		public $statusMessage;
 		public $sessionTranscript;
+		public $transportUri;
 	}
 }
 
 if (! class_exists ( 'PostmanEmailLogFactory' )) {
 	class PostmanEmailLogFactory {
-		public static function createSuccessLog(PostmanMessage $message, $transcript) {
-			return PostmanEmailLogFactory::createLog ( $message, $transcript, __ ( 'Sent' ), true );
+		public static function createSuccessLog(PostmanMessage $message, $transcript, PostmanTransport $transport) {
+			return PostmanEmailLogFactory::createLog ( $message, $transcript, __ ( 'Sent' ), true, $transport );
 		}
-		public static function createFailureLog(PostmanMessage $message = null, $transcript, $statusMessage) {
-			return PostmanEmailLogFactory::createLog ( $message, $transcript, $statusMessage, false );
+		public static function createFailureLog(PostmanMessage $message = null, $transcript, PostmanTransport $transport, $statusMessage) {
+			return PostmanEmailLogFactory::createLog ( $message, $transcript, $statusMessage, false, $transport );
 		}
-		private static function createLog(PostmanMessage $message = null, $transcript, $statusMessage, $success) {
+		private static function createLog(PostmanMessage $message = null, $transcript, $statusMessage, $success, PostmanTransport $transport) {
 			$log = new PostmanEmailLog ();
 			if ($message) {
 				$log->sender = $message->getSender ()->getEmail ();
@@ -31,6 +32,7 @@ if (! class_exists ( 'PostmanEmailLogFactory' )) {
 			}
 			$log->success = $success;
 			$log->statusMessage = $statusMessage;
+			$log->transportUri = PostmanTransportUtils::getDeliveryUri ( $transport );
 			$log->sessionTranscript = 'n/a';
 			if (! empty ( $transcript )) {
 				$log->sessionTranscript = $transcript;
@@ -112,9 +114,9 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			register_post_type ( self::POSTMAN_CUSTOM_POST_TYPE_SLUG, array (
 					'labels' => array (
 							'name' => _x ( 'Email Log', 'A List of Emails that have been sent', 'postman-smtp' ) 
-					)
+					) 
 			) );
-			$this->logger->trace('Created custom post type');
+			$this->logger->trace ( 'Created custom post type' );
 		}
 		
 		/**
@@ -147,6 +149,7 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			// meta
 			update_post_meta ( $post_id, 'from_header', wp_slash ( sanitize_text_field ( $log->sender ) ) );
 			update_post_meta ( $post_id, 'to_header', wp_slash ( sanitize_text_field ( $log->recipients ) ) );
+			update_post_meta ( $post_id, 'transport_uri', wp_slash ( sanitize_text_field ( $log->transportUri ) ) );
 			// from http://stackoverflow.com/questions/20444042/wordpress-how-to-sanitize-multi-line-text-from-a-textarea-without-losing-line
 			$sanitizedTranscript = implode ( PHP_EOL, array_map ( 'sanitize_text_field', explode ( PHP_EOL, $log->sessionTranscript ) ) );
 			update_post_meta ( $post_id, 'session_transcript', wp_slash ( $sanitizedTranscript ) );

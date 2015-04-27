@@ -54,7 +54,7 @@ class PostmanEmailLogController extends WP_List_Table {
     function column_default($item, $column_name){
         switch($column_name){
             case 'date':
-            case 'director':
+            case 'status':
                 return $item[$column_name];
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes
@@ -81,7 +81,7 @@ class PostmanEmailLogController extends WP_List_Table {
     function column_title($item){
         
         //Build row actions
-        $deleteUrl = wp_nonce_url(admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s','delete',$item['ID'])), 'delete');
+        $deleteUrl = wp_nonce_url(admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s','delete',$item['ID'])), 'delete_email_log_item_' . $item['ID']);
         $actions = array(
             'delete'    => sprintf('<a href="%s">Delete</a>',$deleteUrl),
         );
@@ -130,8 +130,8 @@ class PostmanEmailLogController extends WP_List_Table {
         $columns = array(
             'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text
             'title'     => 'Subject',
-            'director'  => 'Status Message',
-            'date'    => 'Date'
+            'status'  => 'Status Message',
+            'date'    => 'Delivery Time'
         );
         return $columns;
     }
@@ -155,7 +155,7 @@ class PostmanEmailLogController extends WP_List_Table {
     	return array();
         $sortable_columns = array(
             'title'     => array('title',false),     //true means it's already sorted
-            'director'  => array('director',false),
+            'status'  => array('status',false),
             'date'    => array('date',false)
         );
         return $sortable_columns;
@@ -279,7 +279,7 @@ class PostmanEmailLogController extends WP_List_Table {
 		foreach ( $posts as $post ) {
 			$flattenedPost = array (
 					'title' => $post->post_title,
-					'director' => $post->post_excerpt,
+					'status' => $post->post_excerpt,
 					'date' => human_time_diff( strtotime($post->post_date), current_time('timestamp') ) . ' ago',
 					'ID' => $post->ID 
 			);

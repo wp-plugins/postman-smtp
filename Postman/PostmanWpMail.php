@@ -93,7 +93,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 				
 				// log the successful delivery
 				PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
-				$log = PostmanEmailLogFactory::createSuccessLog ( $messageBuilder, $this->transcript );
+				$log = PostmanEmailLogFactory::createSuccessLog ( $messageBuilder, $this->transcript, $transport );
 				PostmanEmailLogService::getInstance ()->writeToEmailLog ( $log );
 				return true;
 			} catch ( Exception $e ) {
@@ -105,7 +105,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 				
 				// log the failed delivery
 				PostmanStats::getInstance ()->incrementFailedDelivery ();
-				$log = PostmanEmailLogFactory::createFailureLog ( $messageBuilder, $this->transcript, $e->getMessage () );
+				$log = PostmanEmailLogFactory::createFailureLog ( $messageBuilder, $this->transcript, $transport, $e->getMessage () );
 				PostmanEmailLogService::getInstance ()->writeToEmailLog ( $log );
 				return false;
 			}
