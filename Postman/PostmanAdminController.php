@@ -229,7 +229,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 				delete_option ( PostmanOptions::POSTMAN_OPTIONS );
 				delete_option ( PostmanOAuthToken::OPTIONS_NAME );
 				delete_option ( PostmanAdminController::TEST_OPTIONS );
-				$this->messageHandler->addMessage ( __ ( 'All plugin settings were removed.', 'postman-smtp' ) );
+				$logPurger = new PostmanEmailLogPurger();
+				$logPurger->removeAll();
+				$this->messageHandler->addMessage ( __ ( 'Plugin data was removed.', 'postman-smtp' ) );
 				postmanRedirect ( POSTMAN_HOME_PAGE_RELATIVE_URL );
 			} else {
 				$this->logger->warn ( sprintf ( 'nonce "%s" failed validation', $_REQUEST ['_wpnonce'] ) );
