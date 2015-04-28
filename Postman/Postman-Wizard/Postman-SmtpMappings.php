@@ -55,7 +55,7 @@ if (! class_exists ( 'SmtpMapping' )) {
 		);
 		public function getSmtpFromEmail($email) {
 			$hostname = substr ( strrchr ( $email, "@" ), 1 );
-			while ( list ( $domain, $smtp ) = each ( $this->emailDomain ) ) {
+			while ( list ( $domain, $smtp ) = each ( SmtpMapping::$emailDomain ) ) {
 				if (strcasecmp ( $hostname, $domain ) == 0) {
 					return $smtp;
 				}
@@ -63,7 +63,7 @@ if (! class_exists ( 'SmtpMapping' )) {
 			return null;
 		}
 		public function getSmtpFromMx($mx) {
-			while ( list ( $domain, $smtp ) = each ( $this->mx ) ) {
+			while ( list ( $domain, $smtp ) = each ( SmtpMapping::$mx ) ) {
 				if ($this->endswith ( $mx, $domain )) {
 					return $smtp;
 				}

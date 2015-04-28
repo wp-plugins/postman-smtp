@@ -117,8 +117,11 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		function create_post_type() {
 			register_post_type ( self::POSTMAN_CUSTOM_POST_TYPE_SLUG, array (
 					'labels' => array (
-							'name' => _x ( 'Email Log', 'A List of Emails that have been sent', 'postman-smtp' ) 
-					) 
+							'name' => _x ( 'Sent Messages', 'A List of Emails that have been sent', 'postman-smtp' ), 
+							'singular_name' => _x ( 'Sent Message', 'A List of Emails that have been sent', 'postman-smtp' ) 
+							),
+					'capability_type' => '',
+					'capabilities' => array() 
 			) );
 			$this->logger->trace ( 'Created custom post type' );
 		}

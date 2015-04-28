@@ -34,10 +34,12 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 				) );
 				
 				// dashboard glance mod
-				add_filter ( 'dashboard_glance_items', array (
-						$this,
-						'customizeAtAGlanceDashboardWidget' 
-				), 10, 1 );
+				if ($this->options->isMailLoggingEnabled ()) {
+					add_filter ( 'dashboard_glance_items', array (
+							$this,
+							'customizeAtAGlanceDashboardWidget' 
+					), 10, 1 );
+				}
 			}
 		}
 		/**
@@ -124,14 +126,10 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 					$privated = intval ( $num_posts->private );
 					$post_type = get_post_type_object ( $type );
 					
-					$text = _n ( '%s ' . $post_type->labels->singular_name, '%s ' . $post_type->labels->name, $published, 'postman-smtp' );
-					$text = sprintf ( $text, number_format_i18n ( $published ) );
+					$text = _n ( '%s ' . $post_type->labels->singular_name, '%s ' . $post_type->labels->name, $privated, 'postman-smtp' );
+					$text = sprintf ( $text, number_format_i18n ( $privated ) );
 					
-					if (current_user_can ( $post_type->cap->edit_posts )) {
-						$items [] = sprintf ( '<a class="%1$s-count" href="edit.php?post_type=%1$s">%2$s</a>', $type, $text ) . "\n";
-					} else {
-						$items [] = sprintf ( '<span class="%1$s-count">%2$s</span>', $type, $text ) . "\n";
-					}
+					$items [] = sprintf ( '<a class="%1$s-count" href="%3$s">%2$s</a>', $type, $text, PostmanUtils::getEmailLogPageUrl () ) . "\n";
 				}
 			}
 			

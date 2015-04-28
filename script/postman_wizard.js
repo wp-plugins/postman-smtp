@@ -130,9 +130,6 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		portsChecked = 0;
 		portsToCheck = 0;
 		totalAvail = 0;
-		// this should be the only place i disable the next button but Steps
-		// enables it after the screen slides
-		jQuery('li + li').addClass('disabled');
 
 		getHostsToCheck(jQuery(postman_hostname_element_name).val());
 
@@ -167,9 +164,15 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	// to the previous step.
 	if (currentIndex === 2) {
 		jQuery(postman_hostname_element_name).focus();
+		// this is the second place i disable the next button but Steps
+		// re-enables it after the screen slides
+		if (priorIndex === 1) {
+			disable('#input_hostname');
+			jQuery('li').addClass('disabled');
+		}
 	}
 	if (currentIndex === 3) {
-		if (portCheckBlocksUi) {
+		if (priorIndex === 2) {
 			// this is the second place i disable the next button but Steps
 			// re-enables it after the screen slides
 			jQuery('li').addClass('disabled');
@@ -179,13 +182,14 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 		if (redirectUrlWarning) {
 			alert(postman_wizard_bad_redirect_url);
 		}
-	}
-	if (currentIndex === 4 && priorIndex === 5 && chosenPort == 'none') {
-		myself.steps("previous");
-		return;
-	}
-	if (currentIndex === 4 && chosenPort == 'none') {
-		myself.steps("next");
+		if (chosenPort == 'none') {
+			if (priorIndex === 5) {
+
+				myself.steps("previous");
+				return;
+			}
+			myself.steps("next");
+		}
 	}
 
 }
@@ -199,6 +203,7 @@ function getHostsToCheck(hostname) {
 	jQuery('table#wizard_port_test').html('');
 	jQuery('#wizard_recommendation').html('');
 	hide('#user_override');
+	show('#connectivity_test_status');
 	connectivtyTestResults = {};
 	portCheckBlocksUi = true;
 	portTestInProgress = true;
@@ -259,7 +264,8 @@ function postThePortTest(hostname, port, data) {
 function handlePortTestResponse(hostname, port, data, response) {
 	if (!response.data.try_smtps) {
 		portsChecked++;
-		updateStatus(postman_test_in_progress + " " + (portsToCheck - portsChecked));
+		updateStatus(postman_test_in_progress + " "
+				+ (portsToCheck - portsChecked));
 		connectivtyTestResults[hostname + '_' + port] = response.data;
 		if (response.success) {
 			// a totalAvail > 0 is our signal to go to the next step
@@ -298,7 +304,9 @@ function afterPortsChecked() {
 			'host_data' : connectivtyTestResults
 		};
 		postTheConfigurationRequest(data);
-		updateStatus(postman_test_in_progress + " " + postman_port_test_done);
+		hide('#connectivity_test_status');
+		// updateStatus(postman_test_in_progress + " " +
+		// postman_port_test_done);
 	}
 }
 
@@ -347,9 +355,11 @@ function handleConfigurationResponse(response) {
 		jQuery('#input_oauth_callback_domain').val(
 				response.configuration.callback_domain);
 		jQuery('#client_id').html(response.configuration.client_id_label);
-		jQuery('#client_secret').html(response.configuration.client_secret_label);
+		jQuery('#client_secret').html(
+				response.configuration.client_secret_label);
 		jQuery('#redirect_url').html(response.configuration.redirect_url_label);
-		jQuery('#callback_domain').html(response.configuration.callback_domain_label);
+		jQuery('#callback_domain').html(
+				response.configuration.callback_domain_label);
 	}
 	redirectUrlWarning = response.configuration.dot_notation_url;
 	jQuery('#input_transport_type').val(response.configuration.transport_type);
@@ -410,6 +420,8 @@ function checkEmail(email) {
 		if (response.hostname != '') {
 			jQuery(postman_hostname_element_name).val(response.hostname);
 		}
+		enable('#input_hostname');
+		jQuery('li').removeClass('disabled');
 	});
 }
 /**

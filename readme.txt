@@ -263,6 +263,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Ask to see password when typing
 * (TBD): Check for GoDaddy SMTP server during Wizard and use that SMTP server
 * (TBD): Check for Gmail during wizard and remember for gmail api option.
+* When the wizard is looking up the email, disable the smtp hostname field
 * (TBD): Check for well-known domains and warn when configuring the wrong SMTP server
 * (TBD): Warn when using AUTH with NO encryption
 * (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
@@ -270,7 +271,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * (TBD): Truncate logs to max amount - add option for unlimited logs?
 * (TBD): Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
 * (TBD): Delivery mode - production, logging, test
-
+* Remove warning from main screen for sender override if it's already on
 
 = 1.5.13 - 2015-04-18 =
 * Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)
