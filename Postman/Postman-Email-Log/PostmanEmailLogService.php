@@ -164,6 +164,8 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			$sanitizedTranscript = $log->sessionTranscript;
 // 			$sanitizedTranscript = implode ( PHP_EOL, array_map ( 'sanitize_text_field', explode ( PHP_EOL, $log->sessionTranscript ) ) );
 			update_post_meta ( $post_id, 'session_transcript', wp_slash ( $sanitizedTranscript ) );
+			$purger = new PostmanEmailLogPurger();
+			$purger->truncateLogItems(PostmanOptions::getInstance()->getMailLoggingMaxEntries());
 		}
 		
 		/**

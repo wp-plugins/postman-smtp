@@ -255,7 +255,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Log all email attempts with error messages (if any)
 * View the damn logs!
 * View the details of a single log entry! - http://www.ericmmartin.com/projects/simplemodal/ ?
-* (TBD): delete logs on purge - separate Log Delete to its own class, instantiate in Admin class, and re-use that code
+* Delete logs on purge - separate Log Delete to its own class, instantiate in Admin class, and re-use that code
 * Preference screen for logging
 * (TBD): Add MX and SPF to diagnostic data
 * (TBD): Highlight Logging option to users
@@ -267,7 +267,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * (TBD): Check for well-known domains and warn when configuring the wrong SMTP server
 * (TBD): Warn when using AUTH with NO encryption
 * (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
-* (TBD): Enable logging in Wizard
+* Enable logging in Wizard
 * (TBD): Truncate logs to max amount - add option for unlimited logs?
 * (TBD): Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
 * (TBD): Delivery mode - production, logging, test

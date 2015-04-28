@@ -256,5 +256,19 @@ if (! class_exists ( 'PostmanEmailLogPurger' )) {
 				wp_delete_post ( $post->ID, $force_delete );
 			}
 		}
+		
+		/**
+		 * 
+		 * @param unknown $size
+		 */
+		function truncateLogItems($size) {
+			$index = count ( $this->posts );
+			$force_delete = true;
+			while ( $index > $size ) {
+				$postid = $this->posts [-- $index]->ID;
+				$this->logger->debug ( 'deleting log item ' . $postid );
+				wp_delete_post ( $postid, $force_delete );
+			}
+		}
 	}
 }
