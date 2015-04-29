@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-29 16:01:48+00:00\n"
-"PO-Revision-Date: 2015-04-29 12:10-0500\n"
+"POT-Creation-Date: 2015-04-29 16:11:32+00:00\n"
+"PO-Revision-Date: 2015-04-29 12:18-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -246,14 +246,16 @@ msgid "no"
 msgstr "non"
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:95
+#: Postman/PostmanAdminController.php:615
 #: Postman/PostmanViewController.php:624
-msgctxt "Authentication Type"
+msgctxt "As in type used: CRAM-MD5"
 msgid "CRAM-MD5"
 msgstr "CRAM-MD5"
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:99
+#: Postman/PostmanAdminController.php:614
 #: Postman/PostmanViewController.php:622
-msgctxt "Authentication Type"
+msgctxt "As in type used: Login"
 msgid "Login"
 msgstr "Login"
 
@@ -530,16 +532,6 @@ msgctxt "As in type used: Plain"
 msgid "Plain"
 msgstr "Vide"
 
-#: Postman/PostmanAdminController.php:614
-msgctxt "As in type used: Login"
-msgid "Login"
-msgstr "Login"
-
-#: Postman/PostmanAdminController.php:615
-msgctxt "As in type used: CRAM-MD5"
-msgid "CRAM-MD5"
-msgstr "CRAM-MD5"
-
 #: Postman/PostmanAdminController.php:616
 msgctxt "As in type used: OAuth 2.0"
 msgid "OAuth 2.0"
@@ -548,12 +540,12 @@ msgstr "OAuth 2,0"
 #: Postman/PostmanAdminController.php:627
 msgctxt "Encryption Type"
 msgid "SSL (SMTPS)"
-msgstr "SSL"
+msgstr "SSL (SMTPS)"
 
 #: Postman/PostmanAdminController.php:628
 msgctxt "Encryption Type"
 msgid "TLS (StartTLS)"
-msgstr "TLS"
+msgstr "TLS (StartTLS)"
 
 #: Postman/PostmanAdminController.php:676
 #: Postman/PostmanAdminController.php:679
@@ -1135,6 +1127,7 @@ msgid "Actions"
 msgstr "Actions"
 
 #: Postman/PostmanViewController.php:685 Postman/PostmanViewController.php:687
+#: Postman/PostmanViewController.php:844
 msgid "Send a Test Email"
 msgstr "Envoyer un message test"
 
@@ -1268,11 +1261,6 @@ msgstr "Accorder l'autorisation avec le fournisseur de messagerie pour Postman, 
 msgid "Send yourself a Test Email to make sure everything is working!"
 msgstr "Envoyez-vous un message test pour vérifier que tout fonctionne!"
 
-#: Postman/PostmanViewController.php:844
-msgctxt "Page Title"
-msgid "Send a Test Email"
-msgstr "Envoyer un message test"
-
 #: Postman/PostmanViewController.php:849
 msgid "Choose the Recipient"
 msgstr "Choisir un récipiandaire"
@@ -1331,6 +1319,18 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgctxt "Authentication Type"
+#~ msgid "CRAM-MD5"
+#~ msgstr "CRAM-MD5"
+
+#~ msgctxt "Authentication Type"
+#~ msgid "Login"
+#~ msgstr "Login"
+
+#~ msgctxt "Page Title"
+#~ msgid "Send a Test Email"
+#~ msgstr "Envoyer un message test"
 
 #~ msgctxt "Postman Dashboard  Widget Title"
 #~ msgid "Postman SMTP"

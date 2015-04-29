@@ -86,7 +86,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		private function getAuthenticationDescription($authType) {
 			if (PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $authType) {
-				return _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' );
+				return _x ( 'OAuth 2.0', 'Authentication Type is OAuth 2.0', 'postman-smtp' );
 			} else if (PostmanOptions::AUTHENTICATION_TYPE_NONE == $authType) {
 				return _x ( 'no', 'as in "There is no Authentication"', 'postman-smtp' );
 			} else {

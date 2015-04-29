@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.6.0b1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-29 16:01:48+00:00\n"
+"POT-Creation-Date: 2015-04-29 16:11:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -262,14 +262,16 @@ msgid "no"
 msgstr ""
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:95
+#: Postman/PostmanAdminController.php:615
 #: Postman/PostmanViewController.php:624
-msgctxt "Authentication Type"
+msgctxt "As in type used: CRAM-MD5"
 msgid "CRAM-MD5"
 msgstr ""
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:99
+#: Postman/PostmanAdminController.php:614
 #: Postman/PostmanViewController.php:622
-msgctxt "Authentication Type"
+msgctxt "As in type used: Login"
 msgid "Login"
 msgstr ""
 
@@ -564,16 +566,6 @@ msgstr ""
 #: Postman/PostmanAdminController.php:613
 msgctxt "As in type used: Plain"
 msgid "Plain"
-msgstr ""
-
-#: Postman/PostmanAdminController.php:614
-msgctxt "As in type used: Login"
-msgid "Login"
-msgstr ""
-
-#: Postman/PostmanAdminController.php:615
-msgctxt "As in type used: CRAM-MD5"
-msgid "CRAM-MD5"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:616
@@ -1249,6 +1241,7 @@ msgid "Actions"
 msgstr ""
 
 #: Postman/PostmanViewController.php:685 Postman/PostmanViewController.php:687
+#: Postman/PostmanViewController.php:844
 msgid "Send a Test Email"
 msgstr ""
 
@@ -1400,11 +1393,6 @@ msgstr ""
 
 #: Postman/PostmanViewController.php:831
 msgid "Send yourself a Test Email to make sure everything is working!"
-msgstr ""
-
-#: Postman/PostmanViewController.php:844
-msgctxt "Page Title"
-msgid "Send a Test Email"
 msgstr ""
 
 #: Postman/PostmanViewController.php:849
