@@ -613,9 +613,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 			submit_button ( _x ( 'Begin Test', 'Button Label', 'postman-smtp' ), 'primary', 'begin-port-test', true );
 			print '</form>';
 			print '<table id="connectivity_test_table">';
+			print sprintf ( '<tr><th colspan="2" rowspan="2" class="test">%s</th><th id="socket_hostname_25" class="port_25"></th><th id="socket_hostname_443" class="port_443"></th><th id="socket_hostname_465" class="port_465"></th><th id="socket_hostname_587" class="port_587"></th></tr>', _x ( 'Socket', 'A socket is the network term for host and port together', 'postman-smtp' ) );
 			/* Translators where %d is the port number */
 			$portText = _x ( 'Port %d', 'The port number', 'postman-smtp' );
-			print sprintf ( '<tr><th colspan="2" class="test">%s</th><th class="port_25">%s</th><th class="port_443">%s</th><th class="port_465">%s</th><th class="port_587">%s</th></tr>', _x ( 'Test', 'Connectivity Test Table', 'postman-smtp' ), sprintf ( $portText, 25 ), sprintf ( $portText, 443 ), sprintf ( $portText, 465 ), sprintf ( $portText, 587 ) );
+			print sprintf ( '<tr><th class="port_25">%s</th><th class="port_443">%s</th><th class="port_465">%s</th><th class="port_587">%s</th></tr>', sprintf ( $portText, 25 ), sprintf ( $portText, 443 ), sprintf ( $portText, 465 ), sprintf ( $portText, 587 ) );
 			print sprintf ( '<tr><th colspan="2">%s</th><td id="port-test-port-25">-</td><td id="port-test-port-443">-</td><td id="port-test-port-465">-</td><td id="port-test-port-587">-</td></tr>', _x ( 'Outbound to Internet', 'Is it possible to create network connections to the Internet?', 'postman-smtp' ) );
 			print sprintf ( '<tr><th colspan="2">%s</th><td id="smtp_test_port_25">-</td><td id="smtp_test_port_443">-</td><td id="smtp_test_port_465">-</td><td id="smtp_test_port_587">-</td></tr>', _x ( 'Service Available', 'What service is available?', 'postman-smtp' ) );
 			print sprintf ( '<tr><th colspan="2">%s</th><td id="server_id_port_25">-</td><td id="server_id_port_443">-</td><td id="server_id_port_465">-</td><td id="server_id_port_587">-</td></tr>', _x ( 'ID', 'What is this server\'s ID?', 'postman-smtp' ) );
