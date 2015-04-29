@@ -283,7 +283,8 @@ class PostmanEmailLogController extends WP_List_Table {
 			$flattenedPost = array (
 					'title' => $post->post_title,
 					'status' => $post->post_excerpt,
-					'date' => human_time_diff( strtotime($post->post_date), current_time('timestamp') ) . ' '. _x('ago','As in "five days ago"', 'postman-smtp'),
+					/* Translators where %s indicates the relative time from now */
+					'date' => sprintf(_x('%s ago','A relative time as in "five days ago"', 'postman-smtp'), human_time_diff( strtotime($post->post_date), current_time('timestamp'))),
 					'ID' => $post->ID 
 			);
         	array_push($data, $flattenedPost);

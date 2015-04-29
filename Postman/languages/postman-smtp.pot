@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.6.0b1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-29 05:41:54+00:00\n"
+"POT-Creation-Date: 2015-04-29 11:43:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -35,7 +35,7 @@ msgid "Settings"
 msgstr ""
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:69
-msgctxt "Dashboard Widget Settings Link label"
+msgctxt "The log of Emails that have been delivered"
 msgid "Email Log"
 msgstr ""
 
@@ -112,6 +112,7 @@ msgid "Delivery Time"
 msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:286
+msgctxt "As in \"five days ago\""
 msgid "ago"
 msgstr ""
 
@@ -121,12 +122,12 @@ msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogService.php:120
 msgctxt "The group of Emails that have been delivered"
-msgid "Sent Messages"
+msgid "Sent Emails"
 msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogService.php:121
 msgctxt "An Email that has been delivered"
-msgid "Sent Message"
+msgid "Sent Email"
 msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:62
@@ -150,6 +151,7 @@ msgid "Reply-To"
 msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:113
+msgctxt "What is the date today?"
 msgid "Date"
 msgstr ""
 
@@ -163,6 +165,7 @@ msgid "Postman Email Log"
 msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:141
+msgctxt "The group of Emails that have been delivered"
 msgid "Email Log"
 msgstr ""
 
@@ -307,7 +310,7 @@ msgid ""
 "deactivated."
 msgstr ""
 
-#. translators: where %s is the URL to the Postman Settings page
+#. translators: where %s is the URL to the Postman Setup page
 #: Postman/Postman.php:147
 msgid "<a href=\"%s\">Configure</a> the plugin."
 msgstr ""
@@ -508,7 +511,7 @@ msgid "Recipient Email Address"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:502
-msgctxt "Configuration Section Title"
+#: Postman/PostmanViewController.php:592 Postman/PostmanViewController.php:690
 msgid "Delete plugin settings"
 msgstr ""
 
@@ -827,7 +830,7 @@ msgstr ""
 #: Postman/PostmanViewController.php:365 Postman/PostmanViewController.php:523
 #: Postman/PostmanViewController.php:668
 msgctxt "Page Title"
-msgid "Postman Settings"
+msgid "Postman Setup"
 msgstr ""
 
 #: Postman/PostmanViewController.php:109
@@ -856,12 +859,15 @@ msgid ""
 "answers."
 msgstr ""
 
-#: Postman/PostmanViewController.php:194
-msgid "Configure Manually"
+#: Postman/PostmanViewController.php:194 Postman/PostmanViewController.php:675
+msgctxt "Adjust the Postman settings by hand"
+msgid "configure manually"
 msgstr ""
 
 #: Postman/PostmanViewController.php:197 Postman/PostmanViewController.php:249
-#: Postman/PostmanViewController.php:347
+#: Postman/PostmanViewController.php:347 Postman/PostmanViewController.php:607
+#: Postman/PostmanViewController.php:772 Postman/PostmanViewController.php:776
+msgctxt "A testing tool which determines connectivity to the Internet"
 msgid "Connectivity Test"
 msgstr ""
 
@@ -895,7 +901,9 @@ msgid ""
 "<em>every</em> email.</li>"
 msgstr ""
 
-#: Postman/PostmanViewController.php:294
+#: Postman/PostmanViewController.php:294 Postman/PostmanViewController.php:654
+#: Postman/PostmanViewController.php:697
+msgctxt "Short for \"Diagnostic Information\""
 msgid "Diagnostic Info"
 msgstr ""
 
@@ -1164,11 +1172,6 @@ msgctxt "Manual Configuration Tab Label"
 msgid "Advanced"
 msgstr ""
 
-#: Postman/PostmanViewController.php:592
-msgctxt "Page Title"
-msgid "Delete plugin settings"
-msgstr ""
-
 #: Postman/PostmanViewController.php:596
 msgid ""
 "This will purge all of Postman's settings, including account credentials and "
@@ -1178,11 +1181,6 @@ msgstr ""
 #: Postman/PostmanViewController.php:597
 msgctxt "Button Label"
 msgid "Delete All Data"
-msgstr ""
-
-#: Postman/PostmanViewController.php:607
-msgctxt "Page Title"
-msgid "Connectivity Test"
 msgstr ""
 
 #: Postman/PostmanViewController.php:610
@@ -1250,11 +1248,6 @@ msgid ""
 "managed by your web host."
 msgstr ""
 
-#: Postman/PostmanViewController.php:654 Postman/PostmanViewController.php:697
-msgctxt "Page Title"
-msgid "Diagnostic Info"
-msgstr ""
-
 #: Postman/PostmanViewController.php:656
 msgid "Are you having issues with Postman?"
 msgstr ""
@@ -1265,27 +1258,22 @@ msgstr ""
 msgid ""
 "Please check the <a href=\"%1$s\">troubleshooting and error messages</a> "
 "page and the <a href=\"%2$s\">support forum</a>.</br>If you write for help, "
-"please include the following diagnostic information:"
+"please include the following:"
 msgstr ""
 
 #: Postman/PostmanViewController.php:659
-msgctxt "Page Title"
+msgctxt "Details about the system"
 msgid "Diagnostic Information"
 msgstr ""
 
 #: Postman/PostmanViewController.php:673
 msgctxt "Main Menu"
-msgid "Get Started"
+msgid "Settings"
 msgstr ""
 
 #: Postman/PostmanViewController.php:674
 msgctxt "Button Label"
 msgid "Start the Wizard"
-msgstr ""
-
-#: Postman/PostmanViewController.php:675
-msgctxt "Main Menu"
-msgid "configure manually"
 msgstr ""
 
 #: Postman/PostmanViewController.php:678
@@ -1297,11 +1285,6 @@ msgstr ""
 #: Postman/PostmanViewController.php:845
 msgctxt "Page Title"
 msgid "Send a Test Email"
-msgstr ""
-
-#: Postman/PostmanViewController.php:690
-msgctxt "Main Menu"
-msgid "Delete plugin settings"
 msgstr ""
 
 #: Postman/PostmanViewController.php:694
@@ -1421,11 +1404,6 @@ msgid ""
 "prevent you from using others."
 msgstr ""
 
-#: Postman/PostmanViewController.php:772
-msgctxt "Wizard Step Title"
-msgid "Connectivity Test"
-msgstr ""
-
 #: Postman/PostmanViewController.php:774
 msgctxt "Wizard Step Title"
 msgid "How will the connection to the MSA be established?"
@@ -1436,11 +1414,6 @@ msgid ""
 "Your connection settings depend on what your email service provider offers, "
 "and what your WordPress host allows. Postman will attempt to determine which "
 "options are available to you."
-msgstr ""
-
-#: Postman/PostmanViewController.php:776
-msgctxt "Wizard Action"
-msgid "Connectivity Test"
 msgstr ""
 
 #: Postman/PostmanViewController.php:776
