@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-29 12:25:42+00:00\n"
-"PO-Revision-Date: 2015-04-29 08:49-0500\n"
+"POT-Creation-Date: 2015-04-29 12:54:42+00:00\n"
+"PO-Revision-Date: 2015-04-29 08:56-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -84,22 +84,29 @@ msgid "No"
 msgstr "Non"
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:88
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:184
+msgctxt "Delete an item from the email log"
 msgid "Delete"
 msgstr "Supprimer"
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:89
+msgctxt "View an item from the email log"
 msgid "View"
 msgstr "Voir"
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:135
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:114
+msgctxt "What is the subject of this message?"
 msgid "Subject"
 msgstr "Sujet"
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:136
+msgctxt "Was sending this email successful or not?"
 msgid "Status"
 msgstr "Statut"
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:137
+msgctxt "When was this email sent?"
 msgid "Delivery Time"
 msgstr "Délai de livraison"
 
@@ -149,11 +156,6 @@ msgstr "Reply-To"
 msgctxt "What is the date today?"
 msgid "Date"
 msgstr "Date"
-
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:114
-msgctxt "What is the subject of this message?"
-msgid "Subject"
-msgstr "Sujet"
 
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:116
 msgctxt "What is the unique URI of the configuration?"
@@ -593,6 +595,14 @@ msgstr "Test SMTP de Postman (%s)"
 msgctxt "Test Email Tagline"
 msgid "Sent by Postman %s"
 msgstr "Envoyé par Postman %s"
+
+#: Postman/PostmanAjaxController.php:413
+msgid "Image source"
+msgstr "Source de l'image"
+
+#: Postman/PostmanAjaxController.php:413
+msgid "Used with permission"
+msgstr "Utilisé avec permission"
 
 #: Postman/PostmanAjaxController.php:426
 msgid "Your message was delivered (%d ms) to the SMTP server! Congratulations :)"
@@ -1394,6 +1404,21 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "Delete"
+#~ msgstr "Supprimer"
+
+#~ msgid "View"
+#~ msgstr "Voir"
+
+#~ msgid "Subject"
+#~ msgstr "Sujet"
+
+#~ msgid "Status"
+#~ msgstr "Statut"
+
+#~ msgid "Delivery Time"
+#~ msgstr "Délai de livraison"
 
 #~ msgid "To"
 #~ msgstr "A"
