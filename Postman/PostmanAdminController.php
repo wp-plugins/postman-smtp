@@ -509,7 +509,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Transport section info
 		 */
 		public function printTransportSectionInfo() {
-			print __ ( 'The transport is normally SMTP, though new transports will become available in the form of APIs:', 'postman-smtp' );
+			print __ ( 'The most common transport is SMTP:', 'postman-smtp' );
 		}
 		/**
 		 * Print the Section text

@@ -102,18 +102,18 @@ if (! class_exists ( 'PostmanEmailLogView' )) {
 }</style></head><body>';
 			print '<table>';
 			if (! empty ( $meta_values ['from_header'] [0] )) {
-				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', __ ( 'From', 'Who is this message from?', 'postman-smtp' ), esc_html ( $meta_values ['from_header'] [0] ) );
+				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'From', 'Who is this message from?', 'postman-smtp' ), esc_html ( $meta_values ['from_header'] [0] ) );
 			}
 			if (! empty ( $meta_values ['to_header'] [0] )) {
-				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', __ ( 'To', 'Who is this message to?', 'postman-smtp' ), esc_html ( $meta_values ['to_header'] [0] ) );
+				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'To', 'Who is this message to?', 'postman-smtp' ), esc_html ( $meta_values ['to_header'] [0] ) );
 			}
 			if (! empty ( $meta_values ['reply_to_header'] [0] )) {
-				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', __ ( 'Reply-To', 'Who do we reply to?', 'postman-smtp' ), esc_html ( $meta_values ['reply_to_header'] [0] ) );
+				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Reply-To', 'Who do we reply to?', 'postman-smtp' ), esc_html ( $meta_values ['reply_to_header'] [0] ) );
 			}
 			printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Date', 'What is the date today?', 'postman-smtp' ), $post->post_date );
-			printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', __ ( 'Subject', 'What is the subject of this message?', 'postman-smtp' ), esc_html ( $post->post_title ) );
+			printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Subject', 'What is the subject of this message?', 'postman-smtp' ), esc_html ( $post->post_title ) );
 			if (! empty ( $meta_values ['transport_uri'] [0] )) {
-				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', __ ( 'Delivery-URI', 'What is the unique URI of the configuration?', 'postman-smtp' ), esc_html ( $meta_values ['transport_uri'] [0] ) );
+				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Delivery-URI', 'What is the unique URI of the configuration?', 'postman-smtp' ), esc_html ( $meta_values ['transport_uri'] [0] ) );
 			}
 			print '</table>';
 			print '<hr/>';
@@ -138,7 +138,7 @@ if (! class_exists ( 'PostmanEmailLogView' )) {
 		 */
 		function postmanAddMenuItem() {
 			$this->logger->trace ( 'created PostmanEmailLog admin menu item' );
-			$page = add_management_page ( __ ( 'Postman Email Log', 'postman-smtp' ), _x ( 'Email Log', 'The group of Emails that have been delivered', 'postman-smtp' ), 'read_private_posts', 'postman_email_log', array (
+			$page = add_management_page ( __ ( 'Postman Email Log', 'postman-smtp' ), _x ( 'Email Log', 'The log of Emails that have been delivered', 'postman-smtp' ), 'read_private_posts', 'postman_email_log', array (
 					$this,
 					'postman_render_email_page' 
 			) );
@@ -182,9 +182,7 @@ if (! class_exists ( 'PostmanEmailLogView' )) {
 		style="background: #ECECEC; border: 1px solid #CCC; padding: 0 10px; margin-top: 5px; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;">
 		<p><?php
 			
-			echo __ ( 'This is a record of delivery attempts made to the Mail Submission
-			Agent (MSA). It does not neccessarily indicate sucessful delivery to
-			the recipient.', 'postman-smtp' )?></p>
+			echo __ ( 'This is a record of delivery attempts made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient.', 'postman-smtp' )?></p>
 	</div>
 
 	<!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->

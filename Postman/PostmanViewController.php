@@ -242,7 +242,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			$content = __ ( 'The Email Test will send an email to you. If the test fails, the full SMTP session transcript is available to you. <br/><br/>Receiving a single test email does not indicate perfect configuration. Some services may dump your email into a black-hole or mark it as Spam if you:' , 'postman-smtp');
 			$content .= '<ul>';
 			$content .= sprintf ( '<li><b>%s</b>: %s</li>', __ ( 'Violate an SPF record', 'postman-smtp' ), __ ( 'You must use the SMTP server (MSA) approved by your domain to deliver your mail. (eg.) a @gmail.com sender address requires that authentication and delivery always be through smtp.gmail.com.' , 'postman-smtp') );
-			$content .= sprintf ( '<li><b>%s</b>: %s</li>', __ ( 'Forge a From Address', 'postman-smtp' ), sprintf ( __ ( '<a href="%s">Spoofing</a>, when it results in an SPF violation, will get your message binned. Use your own address as the sender (From:) in <em>every</em> email.</li>' , 'postman-smtp'), 'http://en.m.wikipedia.org/wiki/Email_spoofing' ) );
+			$content .= sprintf ( '<li><b>%s</b>: %s</li>', __ ( 'Forge the From Address', 'postman-smtp' ), sprintf ( __ ( '<a href="%s">Spoofing</a>, when it results in an SPF violation, will get your message binned. Use your own address as the sender (From:) in <em>every</em> email.</li>' , 'postman-smtp'), 'http://en.m.wikipedia.org/wiki/Email_spoofing' ) );
 			$content .= '</ul>';
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-connectivity-test',
@@ -455,12 +455,12 @@ if (! class_exists ( 'PostmanViewController' )) {
 			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_wait', __ ( 'Please wait for the port test to finish', 'postman-smtp' ) );
 			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_bad_redirect_url', __ ( 'You are about to configure OAuth 2.0 with an IP address instead of a domain name. This is not permitted. Either assign a real domain name to your site or add a fake one in your local host file.', 'postman-smtp' ) );
 			
-			wp_localize_script ( 'jquery_steps_script', 'steps_current_step', _x ( 'current step:', 'Wizard Label', 'postman-smtp' ) );
-			wp_localize_script ( 'jquery_steps_script', 'steps_pagination', _x ( 'Pagination', 'Wizard Label', 'postman-smtp' ) );
-			wp_localize_script ( 'jquery_steps_script', 'steps_finish', _x ( 'Finish', 'Wizard Label', 'postman-smtp' ) );
-			wp_localize_script ( 'jquery_steps_script', 'steps_next', _x ( 'Next', 'Wizard Label', 'postman-smtp' ) );
-			wp_localize_script ( 'jquery_steps_script', 'steps_previous', _x ( 'Previous', 'Wizard Label', 'postman-smtp' ) );
-			wp_localize_script ( 'jquery_steps_script', 'steps_loading', _x ( 'Loading ...', 'Wizard Label', 'postman-smtp' ) );
+			//wp_localize_script ( 'jquery_steps_script', 'steps_current_step', _x ( 'current step:', 'Wizard Label', 'postman-smtp' ) );
+			//wp_localize_script ( 'jquery_steps_script', 'steps_pagination', _x ( 'Pagination', 'Go to the ', 'postman-smtp' ) );
+			wp_localize_script ( 'jquery_steps_script', 'steps_finish', _x ( 'Finish', 'Press this button to Finish this task', 'postman-smtp' ) );
+			wp_localize_script ( 'jquery_steps_script', 'steps_next', _x ( 'Next', 'Press this button to go to the next step', 'postman-smtp' ) );
+			wp_localize_script ( 'jquery_steps_script', 'steps_previous', _x ( 'Previous', 'Press this button to go to the previous step', 'postman-smtp' ) );
+			wp_localize_script ( 'jquery_steps_script', 'steps_loading', _x ( 'Loading ...', 'Please Wait, the screen is loading.', 'postman-smtp' ) );
 			
 			// user input
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_email', '#input_' . PostmanOptions::SENDER_EMAIL );
@@ -634,7 +634,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print sprintf ( '<p><b>%s</b></p>', __ ( 'A port with Service Available <span style="color:red">"No"</span> indicates one or more of these issues:', 'postman-smtp' ) );
 			print '<ol>';
 			printf ( '<li>%s</li>', __ ( 'Your web host has placed a firewall between this site and the Internet', 'postman-smtp' ) );
-			printf ( '<li>%s</li>', __ ( 'The SMTP hostname is wrong or does not provide service on this port', 'postman-smtp' ) );
+			printf ( '<li>%s</li>', __ ( 'The SMTP hostname is wrong or the mail server does not provide service on this port', 'postman-smtp' ) );
 			/* translators: where %s is the URL to the PHP documentation on 'allow-url-fopen' */
 			printf ( '<li>%s</li>', sprintf ( __ ( 'Your <a href="%s">PHP configuration</a> is preventing outbound connections', 'postman-smtp' ), 'http://php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen' ) );
 			/* translators: where %s is the URL to an article on disabling external requests in WordPress */
@@ -822,7 +822,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '</fieldset>';
 			
 			// Wizard Step 5
-			printf ( '<h5>%s</h5>', _x ( 'Finish', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<h5>%s</h5>', _x ( 'Finish', 'The end of the Wizard', 'postman-smtp' ) );
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'You\'re Done!', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<section>';
