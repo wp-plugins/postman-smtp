@@ -18,7 +18,7 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 			return self::SLUG;
 		}
 		public function getName() {
-			return _x ( 'Gmail API', 'Transport Name', 'postman-gmail-extension' );
+			return _x ( 'Gmail API', 'Transport Name', 'postman-smtp' );
 		}
 		/**
 		 * v0.2.1
@@ -121,9 +121,9 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 			return new PostmanZendMailTransportGmailApi ( $hostname, $config );
 		}
 		public function getDeliveryDetails(PostmanOptionsInterface $options) {
-			$deliveryDetails ['auth_desc'] = _x ( 'OAuth 2.0', 'Authentication Type', 'postman-gmail-extension' );
+			$deliveryDetails ['auth_desc'] = _x ( 'OAuth 2.0', 'Authentication Type is OAuth 2.0', 'postman-smtp' );
 			/* translators: %s is the Authentication Type (e.g. OAuth 2.0) */
-			return sprintf ( __ ( 'Postman will send mail via the <b>Gmail API</b> using %s authentication.', 'postman-gmail-extension' ), '<b>' . $deliveryDetails ['auth_desc'] . '</b>' );
+			return sprintf ( __ ( 'Postman will send mail via the <b>Gmail API</b> using %s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails ['auth_desc'] . '</b>' );
 		}
 		/**
 		 * If the Transport is not properly configured, the MessageHandler warns the user,
@@ -168,9 +168,9 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 		}
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			if ($this->isConfigurationNeeded ( $options )) {
-				return sprintf ( __ ( 'The Gmail API transport requires a Sender Email Address, Client ID and Client Secret.', 'postman-gmail-extension' ) );
+				return sprintf ( __ ( 'The Gmail API transport requires a Sender Email Address, Client ID and Client Secret.', 'postman-smtp' ) );
 			} else if ($this->isPermissionNeeded ( $token )) {
-				$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-gmail-extension' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
+				$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
 				$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanAdminController::getActionUrl ( PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG ), $scribe->getRequestPermissionLinkText () );
 				return $message;
 			}

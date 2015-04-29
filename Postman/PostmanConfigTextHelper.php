@@ -100,7 +100,7 @@ if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
 		}
 		public function getClientSecretLabel() {
 			/* Translators: This description is specific to Google */
-			return _x ( 'Client secret', 'Name of the OAuth 2.0 Client Secret', 'postman-smtp' );
+			return _x ( 'Client Secret', 'Name of the OAuth 2.0 Client Secret', 'postman-smtp' );
 		}
 		public function getCallbackUrlLabel() {
 			/* Translators: This description is specific to Google */
@@ -162,7 +162,7 @@ if (! class_exists ( 'PostmanMicrosoftOAuthScribe' )) {
 		}
 		public function getClientSecretLabel() {
 			/* Translators: This description is specific to Microsoft */
-			return _x ( 'Client secret', 'Name of the OAuth 2.0 Client Secret', 'postman-smtp' );
+			return _x ( 'Client Secret', 'Name of the OAuth 2.0 Client Secret', 'postman-smtp' );
 		}
 		public function getCallbackUrlLabel() {
 			/* Translators: This description is specific to Microsoft */
@@ -320,7 +320,7 @@ if (! class_exists ( 'PostmanNonOAuthScribe' )) {
 			return '';
 		}
 		public function getRequestPermissionLinkText() {
-			return _x ( 'Request OAuth Permission', 'Command to initiate OAuth authentication', 'postman-smtp' );
+			return _x ( 'Grant OAuth Permission', 'Command to initiate OAuth authentication', 'postman-smtp' );
 		}
 	}
 }

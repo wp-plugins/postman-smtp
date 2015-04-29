@@ -49,13 +49,13 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 		 * This function is hooked into the 'wp_dashboard_setup' action below.
 		 */
 		public function addDashboardWidget() {
-			wp_add_dashboard_widget ( 'example_dashboard_widget', _x ( 'Postman SMTP', 'Postman Dashboard  Widget Title', 'postman-smtp' ), array (
+			wp_add_dashboard_widget ( 'example_dashboard_widget', __ ( 'Postman SMTP', 'postman-smtp' ), array (
 					$this,
 					'printDashboardWidget' 
 			) ); // Display function.
 		}
 		public function addNetworkDashboardWidget() {
-			wp_add_dashboard_widget ( 'example_dashboard_widget', _x ( 'Postman SMTP', 'Postman Dashboard  Widget Title', 'postman-smtp' ), array (
+			wp_add_dashboard_widget ( 'example_dashboard_widget', __ ( 'Postman SMTP', 'postman-smtp' ), array (
 					$this,
 					'printNetworkDashboardWidget' 
 			) ); // Display function.
@@ -65,7 +65,7 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 		 * Create the function to output the contents of our Dashboard Widget.
 		 */
 		public function printDashboardWidget() {
-			$goToSettings = sprintf ( '<a href="%s">%s</a>', PostmanUtils::getSettingsPageUrl (), _x ( 'Settings', 'Dashboard Widget Settings Link label', 'postman-smtp' ) );
+			$goToSettings = sprintf ( '<a href="%s">%s</a>', PostmanUtils::getSettingsPageUrl (), _x ( 'Settings', 'The configuration page of the plugin', 'postman-smtp' ) );
 			$goToEmailLog = sprintf ( '%s', _x ( 'Email Log', 'The log of Emails that have been delivered', 'postman-smtp' ) );
 			if ($this->options->isMailLoggingEnabled ()) {
 				$goToEmailLog = sprintf ( '<a href="%s">%s</a>', PostmanUtils::getEmailLogPageUrl (), $goToEmailLog );

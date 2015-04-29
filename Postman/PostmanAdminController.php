@@ -164,7 +164,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			foreach ( $states as $state ) {
 				if (! $state ['ready']) {
 					/* Translators: where %1$s is the name of the library */
-					$message = sprintf ( __ ( 'This PHP installation requires the <b>%1$s</b> library.' , 'postman-smtp'), $state ['name'] );
+					$message = sprintf ( __ ( 'This PHP installation requires the <b>%1$s</b> library.', 'postman-smtp' ), $state ['name'] );
 					if ($state ['required']) {
 						$this->messageHandler->addError ( $message );
 					} else {
@@ -209,7 +209,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function postmanModifyLinksOnPluginsListPage($links) {
 			$mylinks = array (
-					sprintf ( '<a href="%s">%s</a>', esc_url ( POSTMAN_HOME_PAGE_ABSOLUTE_URL ), _x ( 'Settings', 'Plugin Action Links', 'postman-smtp' ) ) 
+					sprintf ( '<a href="%s">%s</a>', esc_url ( POSTMAN_HOME_PAGE_ABSOLUTE_URL ), _x ( 'Settings', 'The configuration page of the plugin', 'postman-smtp' ) ) 
 			);
 			return array_merge ( $mylinks, $links );
 		}
@@ -229,8 +229,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 				delete_option ( PostmanOptions::POSTMAN_OPTIONS );
 				delete_option ( PostmanOAuthToken::OPTIONS_NAME );
 				delete_option ( PostmanAdminController::TEST_OPTIONS );
-				$logPurger = new PostmanEmailLogPurger();
-				$logPurger->removeAll();
+				$logPurger = new PostmanEmailLogPurger ();
+				$logPurger->removeAll ();
 				$this->messageHandler->addMessage ( __ ( 'Plugin data was removed.', 'postman-smtp' ) );
 				postmanRedirect ( POSTMAN_HOME_PAGE_RELATIVE_URL );
 			} else {
@@ -294,12 +294,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 			) );
 			
 			// Sanitize
-			add_settings_section ( 'transport_section', _x ( 'Transport', 'Configuration Section Title', 'postman-smtp' ), array (
+			add_settings_section ( 'transport_section', _x ( 'Transport', 'The Transport is the method for sending mail, SMTP or API', 'postman-smtp' ), array (
 					$this,
 					'printTransportSectionInfo' 
 			), 'transport_options' );
 			
-			add_settings_field ( PostmanOptions::TRANSPORT_TYPE, _x ( 'Transport', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::TRANSPORT_TYPE, _x ( 'Transport', 'The Transport is the method for sending mail, SMTP or API', 'postman-smtp' ), array (
 					$this,
 					'transport_type_callback' 
 			), 'transport_options', 'transport_section' );
@@ -310,12 +310,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printSmtpSectionInfo' 
 			), PostmanAdminController::SMTP_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::HOSTNAME, _x ( 'Outgoing Mail Server Hostname', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::HOSTNAME, __ ( 'Outgoing Mail Server Hostname', 'postman-smtp' ), array (
 					$this,
 					'hostname_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::PORT, _x ( 'Outgoing Mail Server Port', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::PORT, __ ( 'Outgoing Mail Server Port', 'postman-smtp' ), array (
 					$this,
 					'port_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
@@ -325,12 +325,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'encryption_type_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_field ( PostmanOptions::AUTHENTICATION_TYPE, _x ( 'Authentication', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::AUTHENTICATION_TYPE, _x ( 'Authentication', 'Authentication proves the user\'s identity', 'postman-smtp' ), array (
 					$this,
 					'authentication_type_callback' 
 			), PostmanAdminController::SMTP_OPTIONS, PostmanAdminController::SMTP_SECTION );
 			
-			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, _x ( 'Authentication', 'Configuration Section Title', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::BASIC_AUTH_SECTION, _x ( 'Authentication', 'Authentication proves the user\'s identity', 'postman-smtp' ), array (
 					$this,
 					'printBasicAuthSectionInfo' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS );
@@ -340,13 +340,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'basic_auth_username_callback' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
 			
-			add_settings_field ( PostmanOptions::BASIC_AUTH_PASSWORD, _x ( 'Password', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::BASIC_AUTH_PASSWORD, __ ( 'Password', 'postman-smtp' ), array (
 					$this,
 					'basic_auth_password_callback' 
 			), PostmanAdminController::BASIC_AUTH_OPTIONS, PostmanAdminController::BASIC_AUTH_SECTION );
 			
 			// the OAuth section
-			add_settings_section ( PostmanAdminController::OAUTH_SECTION, _x ( 'Authentication', 'Configuration Section Title', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::OAUTH_SECTION, _x ( 'Authentication', 'Authentication proves the user\'s identity', 'postman-smtp' ), array (
 					$this,
 					'printOAuthSectionInfo' 
 			), PostmanAdminController::OAUTH_OPTIONS );
@@ -403,7 +403,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printMessageSectionInfo' 
 			), PostmanAdminController::MESSAGE_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::REPLY_TO, _x ( 'Reply-To', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::REPLY_TO, _x ( 'Reply-To', 'Who do we reply to?', 'postman-smtp' ), array (
 					$this,
 					'reply_to_callback' 
 			), PostmanAdminController::MESSAGE_OPTIONS, PostmanAdminController::MESSAGE_SECTION );
@@ -609,39 +609,24 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function authentication_type_callback() {
 			$authType = $this->options->getAuthenticationType ();
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::AUTHENTICATION_TYPE );
-			printf ( '<option class="input_auth_type_none" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_NONE, $authType == PostmanOptions::AUTHENTICATION_TYPE_NONE ? 'selected="selected"' : '', _x ( 'None', 'Authentication Type', 'postman-smtp' ) );
-			printf ( '<option class="input_auth_type_plain" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_PLAIN, $authType == PostmanOptions::AUTHENTICATION_TYPE_PLAIN ? 'selected="selected"' : '', _x ( 'Plain', 'Authentication Type', 'postman-smtp' ) );
-			printf ( '<option class="input_auth_type_login" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_LOGIN, $authType == PostmanOptions::AUTHENTICATION_TYPE_LOGIN ? 'selected="selected"' : '', _x ( 'Login', 'Authentication Type', 'postman-smtp' ) );
-			printf ( '<option class="input_auth_type_crammd5" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5, $authType == PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 ? 'selected="selected"' : '', _x ( 'CRAM-MD5', 'Authentication Type', 'postman-smtp' ) );
-			printf ( '<option class="input_auth_type_oauth2" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 ? 'selected="selected"' : '', _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' ) );
+			printf ( '<option class="input_auth_type_none" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_NONE, $authType == PostmanOptions::AUTHENTICATION_TYPE_NONE ? 'selected="selected"' : '', _x ( 'None', 'As in type used: None', 'postman-smtp' ) );
+			printf ( '<option class="input_auth_type_plain" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_PLAIN, $authType == PostmanOptions::AUTHENTICATION_TYPE_PLAIN ? 'selected="selected"' : '', _x ( 'Plain', 'As in type used: Plain', 'postman-smtp' ) );
+			printf ( '<option class="input_auth_type_login" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_LOGIN, $authType == PostmanOptions::AUTHENTICATION_TYPE_LOGIN ? 'selected="selected"' : '', _x ( 'Login', 'As in type used: Login', 'postman-smtp' ) );
+			printf ( '<option class="input_auth_type_crammd5" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5, $authType == PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 ? 'selected="selected"' : '', _x ( 'CRAM-MD5', 'As in type used: CRAM-MD5', 'postman-smtp' ) );
+			printf ( '<option class="input_auth_type_oauth2" value="%s" %s>%s</option>', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, $authType == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 ? 'selected="selected"' : '', _x ( 'OAuth 2.0', 'As in type used: OAuth 2.0', 'postman-smtp' ) );
 			print '</select>';
 		}
-		public function authenticationTypeRadioCallback() {
-			$authType = $this->options->getAuthenticationType ();
-			print '<table class="input_auth_type"><tr>';
-			printf ( '<td><input type="radio" id="input_auth_none"   name="postman_options[auth_type]" class="input_auth_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::AUTHENTICATION_TYPE_NONE, _x ( 'None', 'Authentication Type', 'postman-smtp' ) );
-			printf ( '<td><input type="radio" id="input_auth_plain"  name="postman_options[auth_type]" class="input_auth_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::AUTHENTICATION_TYPE_PLAIN, _x ( 'Plain', 'Authentication Type', 'postman-smtp' ) );
-			printf ( '<td><input type="radio" id="input_auth_oauth2" name="postman_options[auth_type]" class="input_auth_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::AUTHENTICATION_TYPE_OAUTH2, _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' ) );
-			print '</tr></table>';
-		}
+		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function encryption_type_callback() {
 			$encType = $this->options->getEncryptionType ();
 			print '<select id="input_enc_type" class="input_encryption_type" name="postman_options[enc_type]">';
-			printf ( '<option class="input_enc_type_none" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_NONE, $encType == PostmanOptions::ENCRYPTION_TYPE_NONE ? 'selected="selected"' : '', _x ( 'None', 'Encryption Type', 'postman-smtp' ) );
+			printf ( '<option class="input_enc_type_none" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_NONE, $encType == PostmanOptions::ENCRYPTION_TYPE_NONE ? 'selected="selected"' : '', _x ( 'None', 'As in type used: None', 'postman-smtp' ) );
 			printf ( '<option class="input_enc_type_ssl" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_SSL, $encType == PostmanOptions::ENCRYPTION_TYPE_SSL ? 'selected="selected"' : '', _x ( 'SSL (SMTPS)', 'Encryption Type', 'postman-smtp' ) );
 			printf ( '<option class="input_enc_type_tls" value="%s" %s>%s</option>', PostmanOptions::ENCRYPTION_TYPE_TLS, $encType == PostmanOptions::ENCRYPTION_TYPE_TLS ? 'selected="selected"' : '', _x ( 'TLS (StartTLS)', 'Encryption Type', 'postman-smtp' ) );
 			print '</select>';
-		}
-		public function encryption_type_radio_callback() {
-			$encType = $this->options->getEncryptionType ();
-			print '<table class="input_encryption_type"><tr>';
-			printf ( '<td><input type="radio" id="input_enc_none" name="postman_options[enc_type]" class="input_encryption_type" value="%s"/></td><td><label> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_NONE, _x ( 'None', 'Encryption Type', 'postman-smtp' ) );
-			printf ( '<td><input type="radio" id="input_enc_ssl" name="postman_options[enc_type]" class="input_encryption_type" value="%s"/></td><td> <label class="input_enc_type_ssl"> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_SSL, _x ( 'SSL', 'Encryption Type', 'postman-smtp' ) );
-			printf ( '<td><input type="radio" id="input_enc_tls" name="postman_options[enc_type]" class="input_encryption_type" value="%s"/></td><td> <label> %s</label></td>', PostmanOptions::ENCRYPTION_TYPE_TLS, _x ( 'TLS', 'Encryption Type', 'postman-smtp' ) );
-			print '</tr></table>';
 		}
 		
 		/**

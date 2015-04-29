@@ -88,7 +88,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			if (PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $authType) {
 				return _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' );
 			} else if (PostmanOptions::AUTHENTICATION_TYPE_NONE == $authType) {
-				return _x ( 'no', 'Authentication Type', 'postman-smtp' );
+				return _x ( 'no', 'as in "There is no Authentication"', 'postman-smtp' );
 			} else {
 				switch ($authType) {
 					case PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 :
@@ -108,7 +108,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 						break;
 				}
 				/* translators: where %s is the Authentication Type (e.g. plain, login or crammd5) */
-				return sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $authDescription );
+				return sprintf ( _x ( 'Password (%s)', 'This authentication type is password-based', 'postman-smtp' ), $authDescription );
 			}
 		}
 		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
