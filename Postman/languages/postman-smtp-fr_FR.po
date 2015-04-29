@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-29 11:56:03+00:00\n"
-"PO-Revision-Date: 2015-04-29 08:24-0500\n"
+"POT-Creation-Date: 2015-04-29 12:25:42+00:00\n"
+"PO-Revision-Date: 2015-04-29 08:49-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -35,9 +35,10 @@ msgid "Settings"
 msgstr "Réglages"
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:69
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:141
 msgctxt "The log of Emails that have been delivered"
 msgid "Email Log"
-msgstr "Email Connexion"
+msgstr "Niveau du journal"
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:74
 msgid "Postman is missing a required PHP library."
@@ -91,7 +92,6 @@ msgid "View"
 msgstr "Voir"
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:135
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:114
 msgid "Subject"
 msgstr "Sujet"
 
@@ -131,14 +131,17 @@ msgid "Mail Log Entry was deleted."
 msgstr "Entrée du journal des messages a été supprimée."
 
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:105
+msgctxt "Who is this message from?"
 msgid "From"
-msgstr ""
+msgstr "De"
 
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:108
+msgctxt "Who is this message to?"
 msgid "To"
 msgstr "A"
 
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:111
+msgctxt "Who do we reply to?"
 msgid "Reply-To"
 msgstr "Reply-To"
 
@@ -147,7 +150,13 @@ msgctxt "What is the date today?"
 msgid "Date"
 msgstr "Date"
 
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:114
+msgctxt "What is the subject of this message?"
+msgid "Subject"
+msgstr "Sujet"
+
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:116
+msgctxt "What is the unique URI of the configuration?"
 msgid "Delivery-URI"
 msgstr "Livraison-URI"
 
@@ -156,17 +165,9 @@ msgstr "Livraison-URI"
 msgid "Postman Email Log"
 msgstr "Niveau du journal"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:141
-msgctxt "The group of Emails that have been delivered"
-msgid "Email Log"
-msgstr ""
-
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:185
-msgid ""
-"This is a record of delivery attempts made to the Mail Submission\n"
-"\t\t\tAgent (MSA). It does not neccessarily indicate sucessful delivery to\n"
-"\t\t\tthe recipient."
-msgstr ""
+msgid "This is a record of delivery attempts made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient."
+msgstr "Il s'agit d'un record de tentatives de remise faite à l'Agent de Submission Courrier (ASC). Il n'indique pas nécessairement sucessful remise au destinataire."
 
 #: Postman/Postman-Mail/PostmanGmailApiTransport.php:21
 msgctxt "Transport Name"
@@ -494,12 +495,12 @@ msgid "Delete plugin settings"
 msgstr "Supprimer les réglages de l'extension"
 
 #: Postman/PostmanAdminController.php:512
-msgid "The transport is normally SMTP, though new transports will become available in the form of APIs:"
-msgstr "Le transport est normalement SMTP, bien que les nouveaux transports deviendra disponibles sous forme d'API :"
+msgid "The most common transport is SMTP:"
+msgstr "Le transport le plus couramment est SMTP :"
 
 #: Postman/PostmanAdminController.php:518
 msgid "Configure the communication with the Mail Submission Agent (MSA):"
-msgstr "Configurer la communication avec Mail Submission Agent (MSA):"
+msgstr "Configurer la communication avec Agent de Submission Courrier (ASC):"
 
 #: Postman/PostmanAdminController.php:531
 msgid "Enter the account username (email address) and password:"
@@ -828,11 +829,11 @@ msgstr "Violer un enregistrement SPF"
 
 #: Postman/PostmanViewController.php:244
 msgid "You must use the SMTP server (MSA) approved by your domain to deliver your mail. (eg.) a @gmail.com sender address requires that authentication and delivery always be through smtp.gmail.com."
-msgstr "Vous devez utiliser le serveur SMTP (MSA), approuvé par votre nom de domaine pour votre courrier entrant. (par exemple.) une adresse de l'expéditeur @gmail.com exige que l'authentification et la livraison toujours par smtp.gmail.com."
+msgstr "Vous devez utiliser le serveur SMTP (ASC), approuvé par votre nom de domaine pour votre courrier entrant. Par exemple, une adresse de l'expéditeur @gmail.com exige que l'authentification et la livraison toujours par smtp.gmail.com."
 
 #: Postman/PostmanViewController.php:245
-msgid "Forge a From Address"
-msgstr ""
+msgid "Forge the From Address"
+msgstr "Forger l'adresse"
 
 #: Postman/PostmanViewController.php:245
 msgid "<a href=\"%s\">Spoofing</a>, when it results in an SPF violation, will get your message binned. Use your own address as the sender (From:) in <em>every</em> email.</li>"
@@ -981,33 +982,23 @@ msgstr "S'il vous plaît attendre la fin du test de port"
 msgid "You are about to configure OAuth 2.0 with an IP address instead of a domain name. This is not permitted. Either assign a real domain name to your site or add a fake one in your local host file."
 msgstr "Vous êtes sur le point de configurer OAuth 2.0 avec une adresse IP dans l'URL qui échouera. Soit attribuer un nom de domaine pour votre site ou ajouter un faux dans le fichier hôte de votre machine locale."
 
-#: Postman/PostmanViewController.php:458
-msgctxt "Wizard Label"
-msgid "current step:"
-msgstr "étape en cours:"
-
-#: Postman/PostmanViewController.php:459
-msgctxt "Wizard Label"
-msgid "Pagination"
-msgstr "Pagination"
-
 #: Postman/PostmanViewController.php:460
-msgctxt "Wizard Label"
+msgctxt "Press this button to Finish this task"
 msgid "Finish"
 msgstr "Fin"
 
 #: Postman/PostmanViewController.php:461
-msgctxt "Wizard Label"
+msgctxt "Press this button to go to the next step"
 msgid "Next"
 msgstr "Prochain"
 
 #: Postman/PostmanViewController.php:462
-msgctxt "Wizard Label"
+msgctxt "Press this button to go to the previous step"
 msgid "Previous"
 msgstr "Précédent"
 
-#: Postman/PostmanViewController.php:463 Postman/PostmanViewController.php:660
-msgctxt "Wizard Label"
+#: Postman/PostmanViewController.php:463
+msgctxt "Please Wait, the screen is loading."
 msgid "Loading ..."
 msgstr "Attendez ..."
 
@@ -1121,8 +1112,8 @@ msgid "Your web host has placed a firewall between this site and the Internet"
 msgstr "L'Hôte à mis en place un Firewall entre ce site et le serveur SMTP"
 
 #: Postman/PostmanViewController.php:637
-msgid "The SMTP hostname is wrong or does not provide service on this port"
-msgstr ""
+msgid "The SMTP hostname is wrong or the mail server does not provide service on this port"
+msgstr "Le nom d'hôte SMTP est erronée ou le serveur de messagerie ne fournit pas de service sur ce port"
 
 #. translators: where %s is the URL to the PHP documentation on
 #. 'allow-url-fopen'
@@ -1154,6 +1145,11 @@ msgstr "Consultez la page <a href=\"%1$s/\">des messages de dépannage et d'erre
 msgctxt "Details about the system"
 msgid "Diagnostic Information"
 msgstr "Informations de diagnostic"
+
+#: Postman/PostmanViewController.php:660
+msgctxt "Wizard Label"
+msgid "Loading ..."
+msgstr "Attendez ..."
 
 #: Postman/PostmanViewController.php:673
 msgctxt "Main Menu"
@@ -1270,7 +1266,7 @@ msgstr "Quel hôte sera relayer le courrier?"
 
 #: Postman/PostmanViewController.php:765
 msgid "This is the Outgoing (SMTP) Mail Server, or Mail Submission Agent (MSA), which Postman delegates mail delivery to. These servers are specific to your email account, and if you don't know what to use, ask your email service provider."
-msgstr "C'est le serveur de courrier sortant (SMTP), ou courrier présentation Agent (MSA), dont les représentants postier courrier à. Ces serveurs sont spécifiques à votre compte de messagerie et si vous ne savez pas quoi utiliser, demandent à votre fournisseur de service de messagerie."
+msgstr "C'est le serveur de courrier sortant (SMTP), ou Agent de Submission Courrier (ASC), dont les représentants postier courrier à. Ces serveurs sont spécifiques à votre compte de messagerie et si vous ne savez pas quoi utiliser, demandent à votre fournisseur de service de messagerie."
 
 #: Postman/PostmanViewController.php:766
 msgid "Note that many WordPress hosts, such as GoDaddy, Bluehost and Dreamhost, require that you use their mail accounts with their mail servers, and prevent you from using others."
@@ -1311,7 +1307,7 @@ msgid "Enter your credentials. Your username is often your email address."
 msgstr "Entrez vos informations d'identification. Votre nom d'utilisateur est souvent votre adresse email."
 
 #: Postman/PostmanViewController.php:825
-msgctxt "Wizard Step Title"
+msgctxt "The end of the Wizard"
 msgid "Finish"
 msgstr "Fin"
 
@@ -1398,6 +1394,42 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "To"
+#~ msgstr "A"
+
+#~ msgid "Reply-To"
+#~ msgstr "Reply-To"
+
+#~ msgid "Delivery-URI"
+#~ msgstr "Livraison-URI"
+
+#~ msgid "The transport is normally SMTP, though new transports will become available in the form of APIs:"
+#~ msgstr "Le transport est normalement SMTP, bien que les nouveaux transports deviendra disponibles sous forme d'API :"
+
+#~ msgctxt "Wizard Label"
+#~ msgid "current step:"
+#~ msgstr "étape en cours:"
+
+#~ msgctxt "Wizard Label"
+#~ msgid "Pagination"
+#~ msgstr "Pagination"
+
+#~ msgctxt "Wizard Label"
+#~ msgid "Finish"
+#~ msgstr "Fin"
+
+#~ msgctxt "Wizard Label"
+#~ msgid "Next"
+#~ msgstr "Prochain"
+
+#~ msgctxt "Wizard Label"
+#~ msgid "Previous"
+#~ msgstr "Précédent"
+
+#~ msgctxt "Wizard Step Title"
+#~ msgid "Finish"
+#~ msgstr "Fin"
 
 #~ msgid "Date"
 #~ msgstr "Date"

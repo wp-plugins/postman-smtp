@@ -455,8 +455,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_wait', __ ( 'Please wait for the port test to finish', 'postman-smtp' ) );
 			wp_localize_script ( 'postman_wizard_script', 'postman_wizard_bad_redirect_url', __ ( 'You are about to configure OAuth 2.0 with an IP address instead of a domain name. This is not permitted. Either assign a real domain name to your site or add a fake one in your local host file.', 'postman-smtp' ) );
 			
-			//wp_localize_script ( 'jquery_steps_script', 'steps_current_step', _x ( 'current step:', 'Wizard Label', 'postman-smtp' ) );
-			//wp_localize_script ( 'jquery_steps_script', 'steps_pagination', _x ( 'Pagination', 'Go to the ', 'postman-smtp' ) );
+			wp_localize_script ( 'jquery_steps_script', 'steps_current_step', 'steps_current_step' );
+			wp_localize_script ( 'jquery_steps_script', 'steps_pagination', 'steps_pagination' );
 			wp_localize_script ( 'jquery_steps_script', 'steps_finish', _x ( 'Finish', 'Press this button to Finish this task', 'postman-smtp' ) );
 			wp_localize_script ( 'jquery_steps_script', 'steps_next', _x ( 'Next', 'Press this button to go to the next step', 'postman-smtp' ) );
 			wp_localize_script ( 'jquery_steps_script', 'steps_previous', _x ( 'Previous', 'Press this button to go to the previous step', 'postman-smtp' ) );

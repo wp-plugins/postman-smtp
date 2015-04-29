@@ -410,7 +410,7 @@ Content-Transfer-Encoding: 8bit
 									</td>
 								</tr>
 							</tbody>
-						</table> <br><span style="font-size:0.9em;color:#94c0dc;">Image source: <a style="color:#94c0dc" href="http://poofytoo.com">poofytoo.com</a> - Used with permission</span></td>
+						</table> <br><span style="font-size:0.9em;color:#94c0dc;">' . __('Image source','postman-smtp').': <a style="color:#94c0dc" href="http://poofytoo.com">poofytoo.com</a> - ' . __('Used with permission','postman-smtp'). '</span></td>
 				</tr>
 			</tbody>
 		</table>

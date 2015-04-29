@@ -85,8 +85,8 @@ class PostmanEmailLogController extends WP_List_Table {
 		$viewUrl   = admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s&TB_iframe=true&width=600&height=550', 'view', $item['ID']));
         
         $actions = array(
-            'delete'    => sprintf('<a href="%s">%s</a>',$deleteUrl,__('Delete', 'Delete an item from the email log', 'postman-smtp')),
-            'view'    => sprintf('<a href="%s" class="thickbox">%s</a>',$viewUrl,__('View','View an item from the email log', 'postman-smtp')),
+            'delete'    => sprintf('<a href="%s">%s</a>',$deleteUrl,_x('Delete', 'Delete an item from the email log', 'postman-smtp')),
+            'view'    => sprintf('<a href="%s" class="thickbox">%s</a>',$viewUrl,_x('View','View an item from the email log', 'postman-smtp')),
             );
         
         //Return the title contents
@@ -132,9 +132,9 @@ class PostmanEmailLogController extends WP_List_Table {
     function get_columns(){
         $columns = array(
             'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text
-            'title'     => __('Subject', 'postman-smtp'),
-            'status'  => __('Status','Was sending this email successful or not?', 'postman-smtp'),
-            'date'    => __('Delivery Time','When was this email sent?', 'postman-smtp')
+            'title'     => _x ( 'Subject', 'What is the subject of this message?', 'postman-smtp' ),
+            'status'  => _x('Status','Was sending this email successful or not?', 'postman-smtp'),
+            'date'    => _x('Delivery Time','When was this email sent?', 'postman-smtp')
         );
         return $columns;
     }
@@ -181,7 +181,7 @@ class PostmanEmailLogController extends WP_List_Table {
      **************************************************************************/
     function get_bulk_actions() {
         $actions = array(
-            'bulk_delete'    => 'Delete'
+            'bulk_delete'    => _x('Delete', 'Delete an item from the email log', 'postman-smtp')
         );
         return $actions;
     }

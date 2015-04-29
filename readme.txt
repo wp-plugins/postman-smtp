@@ -267,6 +267,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Highlight Logging option to users - http://code.tutsplus.com/articles/integrating-with-wordpress-ui-admin-pointers--wp-26853
 * Check for GoDaddy SMTP server during Wizard and use that SMTP server
 * Check for GoDaddy 
+* (TBD): Add hostname to connectivity test table.
 * (TBD): Check for redirect errors - relative URLs only
 * (TBD): Check for well-known domains and warn when configuring the wrong SMTP server
 * (TBD): Check for Gmail during wizard and remember for gmail api option.

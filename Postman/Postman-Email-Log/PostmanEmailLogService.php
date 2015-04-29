@@ -18,7 +18,7 @@ if (! class_exists ( 'PostmanEmailLog' )) {
 if (! class_exists ( 'PostmanEmailLogFactory' )) {
 	class PostmanEmailLogFactory {
 		public static function createSuccessLog(PostmanMessage $message, $transcript, PostmanTransport $transport) {
-			return PostmanEmailLogFactory::createLog ( $message, $transcript, __ ( 'Sent' ), true, $transport );
+			return PostmanEmailLogFactory::createLog ( $message, $transcript, __ ( 'Sent' , 'postman-smtp'), true, $transport );
 		}
 		public static function createFailureLog(PostmanMessage $message = null, $transcript, PostmanTransport $transport, $statusMessage) {
 			return PostmanEmailLogFactory::createLog ( $message, $transcript, $statusMessage, false, $transport );

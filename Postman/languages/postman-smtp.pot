@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.6.0b1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-29 11:56:03+00:00\n"
+"POT-Creation-Date: 2015-04-29 12:25:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -35,6 +35,7 @@ msgid "Settings"
 msgstr ""
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:69
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:141
 msgctxt "The log of Emails that have been delivered"
 msgid "Email Log"
 msgstr ""
@@ -99,7 +100,6 @@ msgid "View"
 msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:135
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:114
 msgid "Subject"
 msgstr ""
 
@@ -139,14 +139,17 @@ msgid "Mail Log Entry was deleted."
 msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:105
+msgctxt "Who is this message from?"
 msgid "From"
 msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:108
+msgctxt "Who is this message to?"
 msgid "To"
 msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:111
+msgctxt "Who do we reply to?"
 msgid "Reply-To"
 msgstr ""
 
@@ -155,7 +158,13 @@ msgctxt "What is the date today?"
 msgid "Date"
 msgstr ""
 
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:114
+msgctxt "What is the subject of this message?"
+msgid "Subject"
+msgstr ""
+
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:116
+msgctxt "What is the unique URI of the configuration?"
 msgid "Delivery-URI"
 msgstr ""
 
@@ -164,16 +173,10 @@ msgstr ""
 msgid "Postman Email Log"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:141
-msgctxt "The group of Emails that have been delivered"
-msgid "Email Log"
-msgstr ""
-
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:185
 msgid ""
-"This is a record of delivery attempts made to the Mail Submission\n"
-"\t\t\tAgent (MSA). It does not neccessarily indicate sucessful delivery to\n"
-"\t\t\tthe recipient."
+"This is a record of delivery attempts made to the Mail Submission Agent "
+"(MSA). It does not neccessarily indicate sucessful delivery to the recipient."
 msgstr ""
 
 #: Postman/Postman-Mail/PostmanGmailApiTransport.php:21
@@ -516,9 +519,7 @@ msgid "Delete plugin settings"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:512
-msgid ""
-"The transport is normally SMTP, though new transports will become available "
-"in the form of APIs:"
+msgid "The most common transport is SMTP:"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:518
@@ -891,7 +892,7 @@ msgid ""
 msgstr ""
 
 #: Postman/PostmanViewController.php:245
-msgid "Forge a From Address"
+msgid "Forge the From Address"
 msgstr ""
 
 #: Postman/PostmanViewController.php:245
@@ -1068,33 +1069,23 @@ msgid ""
 "or add a fake one in your local host file."
 msgstr ""
 
-#: Postman/PostmanViewController.php:458
-msgctxt "Wizard Label"
-msgid "current step:"
-msgstr ""
-
-#: Postman/PostmanViewController.php:459
-msgctxt "Wizard Label"
-msgid "Pagination"
-msgstr ""
-
 #: Postman/PostmanViewController.php:460
-msgctxt "Wizard Label"
+msgctxt "Press this button to Finish this task"
 msgid "Finish"
 msgstr ""
 
 #: Postman/PostmanViewController.php:461
-msgctxt "Wizard Label"
+msgctxt "Press this button to go to the next step"
 msgid "Next"
 msgstr ""
 
 #: Postman/PostmanViewController.php:462
-msgctxt "Wizard Label"
+msgctxt "Press this button to go to the previous step"
 msgid "Previous"
 msgstr ""
 
-#: Postman/PostmanViewController.php:463 Postman/PostmanViewController.php:660
-msgctxt "Wizard Label"
+#: Postman/PostmanViewController.php:463
+msgctxt "Please Wait, the screen is loading."
 msgid "Loading ..."
 msgstr ""
 
@@ -1223,7 +1214,9 @@ msgid "Your web host has placed a firewall between this site and the Internet"
 msgstr ""
 
 #: Postman/PostmanViewController.php:637
-msgid "The SMTP hostname is wrong or does not provide service on this port"
+msgid ""
+"The SMTP hostname is wrong or the mail server does not provide service on "
+"this port"
 msgstr ""
 
 #. translators: where %s is the URL to the PHP documentation on
@@ -1264,6 +1257,11 @@ msgstr ""
 #: Postman/PostmanViewController.php:659
 msgctxt "Details about the system"
 msgid "Diagnostic Information"
+msgstr ""
+
+#: Postman/PostmanViewController.php:660
+msgctxt "Wizard Label"
+msgid "Loading ..."
 msgstr ""
 
 #: Postman/PostmanViewController.php:673
@@ -1442,7 +1440,7 @@ msgid "Enter your credentials. Your username is often your email address."
 msgstr ""
 
 #: Postman/PostmanViewController.php:825
-msgctxt "Wizard Step Title"
+msgctxt "The end of the Wizard"
 msgid "Finish"
 msgstr ""
 
