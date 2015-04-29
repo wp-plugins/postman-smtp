@@ -242,7 +242,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			$content = __ ( 'The Email Test will send an email to you. If the test fails, the full SMTP session transcript is available to you. <br/><br/>Receiving a single test email does not indicate perfect configuration. Some services may dump your email into a black-hole or mark it as Spam if you:' , 'postman-smtp');
 			$content .= '<ul>';
 			$content .= sprintf ( '<li><b>%s</b>: %s</li>', __ ( 'Violate an SPF record', 'postman-smtp' ), __ ( 'You must use the SMTP server (MSA) approved by your domain to deliver your mail. (eg.) a @gmail.com sender address requires that authentication and delivery always be through smtp.gmail.com.' , 'postman-smtp') );
-			$content .= sprintf ( '<li><b>%s</b>: %s</li>', __ ( 'Forge the From Address', 'postman-smtp' ), sprintf ( __ ( '<a href="%s">Spoofing</a>, when it results in an SPF violation, will get your message binned. Use your own address as the sender (From:) in <em>every</em> email.</li>' , 'postman-smtp'), 'http://en.m.wikipedia.org/wiki/Email_spoofing' ) );
+			$content .= sprintf ( '<li><b>%s</b>: %s</li>', _x ( 'Forge the From Address', 'Forge as in a forgery (fake) is made', 'postman-smtp' ), sprintf ( __ ( '<a href="%s">Spoofing</a>, when it results in an SPF violation, will get your message binned. Use your own address as the sender (From:) in <em>every</em> email.</li>' , 'postman-smtp'), 'http://en.m.wikipedia.org/wiki/Email_spoofing' ) );
 			$content .= '</ul>';
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-connectivity-test',
