@@ -619,9 +619,9 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print sprintf ( '<tr><th colspan="2">%s</th><td id="server_id_port_25">-</td><td id="server_id_port_443">-</td><td id="server_id_port_465">-</td><td id="server_id_port_587">-</td></tr>', _x ( 'ID', 'What is this server\'s ID?', 'postman-smtp' ) );
 			print sprintf ( '<tr><th colspan="2">%s</th><td id="starttls_test_port_25">-</td><td id="starttls_test_port_443">-</td><td id="starttls_test_port_465">-</td><td id="starttls_test_port_587">-</td></tr>', __ ( 'STARTTLS', 'postman-smtp' ) );
 			print sprintf ( '<tr><th rowspan="5">%s</th><th>%s</th><td id="auth_none_test_port_25">-</td><td id="auth_none_test_port_443">-</td><td id="auth_none_test_port_465">-</td><td id="auth_none_test_port_587">-</td></tr>', _x ( 'Auth', 'Short for Authentication', 'postman-smtp' ), _x ( 'None', 'Authentication Type', 'postman-smtp' ) );
-			print sprintf ( '<tr><th>%s</th><td id="auth_login_test_port_25">-</td><td id="auth_login_test_port_443">-</td><td id="auth_login_test_port_465">-</td><td id="auth_login_test_port_587">-</td></tr>', _x ( 'Login', 'Authentication Type', 'postman-smtp' ) );
+			print sprintf ( '<tr><th>%s</th><td id="auth_login_test_port_25">-</td><td id="auth_login_test_port_443">-</td><td id="auth_login_test_port_465">-</td><td id="auth_login_test_port_587">-</td></tr>', _x ( 'Login', 'As in type used: Login', 'postman-smtp' ) );
 			print sprintf ( '<tr><th>%s</th><td id="auth_plain_test_port_25">-</td><td id="auth_plain_test_port_443">-</td><td id="auth_plain_test_port_465">-</td><td id="auth_plain_test_port_587">-</td></tr>', _x ( 'Plain', 'Authentication Type', 'postman-smtp' ) );
-			print sprintf ( '<tr><th>%s</th><td id="auth_crammd5_test_port_25">-</td><td id="auth_crammd5_test_port_443">-</td><td id="auth_crammd5_test_port_465">-</td><td id="auth_crammd5_test_port_587">-</td></tr>', _x ( 'CRAM-MD5', 'Authentication Type', 'postman-smtp' ) );
+			print sprintf ( '<tr><th>%s</th><td id="auth_crammd5_test_port_25">-</td><td id="auth_crammd5_test_port_443">-</td><td id="auth_crammd5_test_port_465">-</td><td id="auth_crammd5_test_port_587">-</td></tr>', _x ( 'CRAM-MD5', 'As in type used: CRAM-MD5', 'postman-smtp' ) );
 			print sprintf ( '<tr><th>%s</th><td id="auth_xoauth_test_port_25">-</td><td id="auth_xoauth_test_port_443">-</td><td id="auth_xoauth_test_port_465">-</td><td id="auth_xoauth_test_port_587">-</td></tr>', _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' ) );
 			print '</table>';
 			print '<section id="conclusion" style="display:none">';
@@ -841,7 +841,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		public function outputTestEmailWizardContent() {
 			print '<div class="wrap">';
 			
-			$this->outputChildPageHeader ( _x ( 'Send a Test Email', 'Page Title', 'postman-smtp' ) );
+			$this->outputChildPageHeader ( __ ( 'Send a Test Email', 'postman-smtp' ) );
 			
 			printf ( '<form id="postman_test_email_wizard" method="post" action="%s">', POSTMAN_HOME_PAGE_ABSOLUTE_URL );
 			

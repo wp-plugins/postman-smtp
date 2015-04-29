@@ -92,11 +92,11 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			} else {
 				switch ($authType) {
 					case PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 :
-						$authDescription = _x ( 'CRAM-MD5', 'Authentication Type', 'postman-smtp' );
+						$authDescription = _x ( 'CRAM-MD5', 'As in type used: CRAM-MD5', 'postman-smtp' );
 						break;
 					
 					case PostmanOptions::AUTHENTICATION_TYPE_LOGIN :
-						$authDescription = _x ( 'Login', 'Authentication Type', 'postman-smtp' );
+						$authDescription = _x ( 'Login', 'As in type used: Login', 'postman-smtp' );
 						break;
 					
 					case PostmanOptions::AUTHENTICATION_TYPE_PLAIN :
