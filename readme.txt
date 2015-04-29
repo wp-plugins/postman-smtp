@@ -29,6 +29,7 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 * Fire-and-forget delivery continues even if the password changes ¹
 * Send Gmail over HTTPS if the standard SMTP ports are blocked ²
 * Commercial-grade Connectivity Tester to diagnose server issues
+* Log of all emails sent, including error messages if any
 * Supports International alphabets, HTML Mail and MultiPart/Alternative
 * Supports [Mandrill](http://mandrill.com) X-headers and forced recipients (cc, bcc, to)
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
@@ -263,14 +264,18 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Truncate logs to max amount - add option for unlimited logs?
 * Remove warning from main screen for sender override if it's already on
 * Help screens
+* Highlight Logging option to users - http://code.tutsplus.com/articles/integrating-with-wordpress-ui-admin-pointers--wp-26853
 * (TBD): Check for well-known domains and warn when configuring the wrong SMTP server
+* "Warning: Your email address belongs to %1$s, but you are not using the %1$s SMTP server. Mail delivery will not be reliable."
 * (TBD): Check for Gmail during wizard and remember for gmail api option.
 * (TBD): Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
+* "Socket: " and "Authentication:"
 * (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
+* "Warning: Expected to reach %1$s but %2$s answered instead, something may be wrong."
 * (TBD): Delivery mode - production, logging, test
 * (TBD): Warn when using AUTH with NO encryption
+* "Warning: This configuration option will send your authorization credentials in the clear."
 * (TBD): Check for GoDaddy SMTP server during Wizard and use that SMTP server
-* (TBD): Highlight Logging option to users - http://code.tutsplus.com/articles/integrating-with-wordpress-ui-admin-pointers--wp-26853
 * (TBD): Add MX and SPF to diagnostic data
 
 = 1.5.13 - 2015-04-18 =

@@ -28,6 +28,23 @@ jQuery(document).ready(function() {
 		reloadOauthSection();
 		switchBetweenPasswordAndOAuth();
 	});
+
+	// are we on GoDaddy? check.
+	var data = {
+		'action' : 'wizard_port_test',
+		'hostname' : 'relay-hosting.secureserver.net',
+		'port' : 25
+	};
+	goDaddy = 'unknown';
+	jQuery.post(ajaxurl, data, function(response) {
+		if (response.success) {
+			goDaddy = true;
+		} else {
+			goDaddy = false;
+		}
+		enableSmtpHostnameInput();
+	});
+
 });
 
 /**
@@ -416,13 +433,23 @@ function checkEmail(email) {
 		'action' : 'check_email',
 		'email' : email
 	};
+	checkedEmail = false;
 	jQuery.post(ajaxurl, data, function(response) {
+		checkedEmail = true;
 		if (response.hostname != '') {
 			jQuery(postman_hostname_element_name).val(response.hostname);
 		}
+		enableSmtpHostnameInput();
+	});
+}
+function enableSmtpHostnameInput() {
+	if (checkedEmail & goDaddy != 'unknown') {
+		if(goDaddy) {
+			jQuery(postman_hostname_element_name).val('relay-hosting.secureserver.net');
+		}
 		enable('#input_hostname');
 		jQuery('li').removeClass('disabled');
-	});
+	}
 }
 /**
  * Handles population of the configuration based on the options set in a

@@ -173,10 +173,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 					$this,
 					'enqueueConfigurationResources' 
 			) );
-// 			add_action ( 'load-' . $page, array (
-// 					$this,
-// 					'addConfigurationScreenHelp' 
-// 			) );
+			// add_action ( 'load-' . $page, array (
+			// $this,
+			// 'addConfigurationScreenHelp'
+			// ) );
 		}
 		function enqueueConfigurationResources() {
 			wp_enqueue_style ( self::POSTMAN_STYLE );
@@ -195,19 +195,18 @@ if (! class_exists ( 'PostmanViewController' )) {
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-connectivity-test',
 					'title' => __ ( 'Connectivity Test' ),
-					'content' => $content
+					'content' => $content 
 			) );
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-online-support',
 					'title' => __ ( 'Online Support' ),
-					'content' => $this->generateOnlineSupportContent ()
+					'content' => $this->generateOnlineSupportContent () 
 			) );
 			// add more help tabs as needed with unique id's
-				
+			
 			// Help sidebars are optional
 			// $screen->set_help_sidebar ( '<p><strong>' . __ ( 'About' ) . '</strong></p>' . '<p>Postman SMTP 1.6.0b1<br/>by Jason Hendriks</p>' );
 		}
-		
 		
 		/**
 		 * Register the Email Test screen
@@ -743,7 +742,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<h5>%s</h5>', _x ( 'Sender Details', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'Who is the mail coming from?', 'Wizard Step Title', 'postman-smtp' ) );
-			printf ( '<p>%s</p>', __ ( 'Please enter the email address and name you\'d like to send mail from.', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'Enter the email address and name you\'d like to send mail as.', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'Please note that to combat Spam, many email services will <em>not</em> let you send from an email address other than the one you authenticate with.', 'postman-smtp' ) );
 			printf ( '<label for="postman_options[sender_email]">%s</label>', _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->adminController->sender_email_callback ();
@@ -752,11 +751,19 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print $this->adminController->sender_name_callback ();
 			print '</fieldset>';
 			
+			/* Translators: where %1$s is the name of the Email Service, like Google */
+			$futureText1 = __ ( 'Warning: Your email address belongs to %1$s, but you are not using the %1$s SMTP server. Mail delivery will not be reliable.', 'postman-smtp' );
+			$futureText2 = _x ( 'Socket', 'A socket is the network term for host and port together', 'postman-smtp' );
+			/* Translators: where %1$s and %2$s are the names of the Email Service, like Google */
+			$futureText3 = __ ( 'Warning: Expected to reach %1$s but %2$s answered instead, something may be wrong.', 'postman-smtp' );
+			$futureText4 = __ ( 'Warning: This configuration option will send your authorization credentials in the clear.', 'postman-smtp' );
+			
 			// Wizard Step 2
 			printf ( '<h5>%s</h5>', _x ( 'Outgoing Mail Server Hostname', 'Wizard Step Title', 'postman-smtp' ) );
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'Which host will relay the mail?', 'Wizard Step Title', 'postman-smtp' ) );
-			printf ( '<p>%s</p>', __ ( 'This is the local Outgoing Mail Server, or Mail Submission Agent (MSA), which Postman delegates mail delivery to. These servers are normally specific to the email account you have, and if you don\'t know which server to use, ask your email service provider.', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'This is the Outgoing (SMTP) Mail Server, or Mail Submission Agent (MSA), which Postman delegates mail delivery to. These servers are specific to your email account, and if you don\'t know what to use, ask your email service provider.', 'postman-smtp' ) );
+			printf ( '<p>%s</p>', __ ( 'Note that many WordPress hosts, such as GoDaddy, Bluehost and Dreamhost, require that you use their mail accounts with their mail servers, and prevent you from using others.', 'postman-smtp' ) );
 			printf ( '<label for="hostname">%s</label>', _x ( 'Outgoing Mail Server Hostname', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->adminController->hostname_callback ();
 			print '</fieldset>';
