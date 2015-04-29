@@ -3,31 +3,6 @@ if (! class_exists ( "PostmanMessage" )) {
 	
 	require_once 'PostmanEmailAddress.php';
 	
-	require_once 'Zend-1.12.10/Loader.php';
-	require_once 'Zend-1.12.10/Registry.php';
-	require_once 'Zend-1.12.10/Mime/Message.php';
-	require_once 'Zend-1.12.10/Mime/Part.php';
-	require_once 'Zend-1.12.10/Mime.php';
-	require_once 'Zend-1.12.10/Validate/Interface.php';
-	require_once 'Zend-1.12.10/Validate/Abstract.php';
-	require_once 'Zend-1.12.10/Validate.php';
-	require_once 'Zend-1.12.10/Validate/Ip.php';
-	require_once 'Zend-1.12.10/Validate/Hostname.php';
-	require_once 'Zend-1.12.10/Mail.php';
-	require_once 'Zend-1.12.10/Exception.php';
-	require_once 'Zend-1.12.10/Mail/Exception.php';
-	require_once 'Zend-1.12.10/Mail/Transport/Exception.php';
-	require_once 'Zend-1.12.10/Mail/Transport/Abstract.php';
-	require_once 'Zend-1.12.10/Mail/Transport/Smtp.php';
-	require_once 'Zend-1.12.10/Mail/Transport/Sendmail.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Abstract.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Exception.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Smtp.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Oauth2.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Login.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Crammd5.php';
-	require_once 'Zend-1.12.10/Mail/Protocol/Smtp/Auth/Plain.php';
-	
 	/**
 	 * This class knows how to interface with Wordpress
 	 * including loading/saving to the database.
@@ -76,13 +51,16 @@ if (! class_exists ( "PostmanMessage" )) {
 		function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->headers = array ();
+			$this->toRecipients = array ();
+			$this->ccRecipients = array ();
+			$this->bccRecipients = array ();
 		}
 		
 		/**
 		 *
-		 * @param Postman_Zend_Mail $mail        	
+		 * @return PostmanEmailAddress
 		 */
-		public function addFrom(Postman_Zend_Mail $mail, PostmanMailAuthenticator $authenticator) {
+		public function getSender() {
 			
 			// by default, sender is what Postman set
 			$sender = PostmanEmailAddress::copy ( $this->sender );
@@ -121,22 +99,12 @@ if (! class_exists ( "PostmanMessage" )) {
 			// and other plugins can override the name via a filter
 			$sender->setName ( apply_filters ( 'wp_mail_from_name', $sender->getName () ) );
 			
-			// but the MailAuthenticator and user have the final say
-			if ($authenticator->isSenderEmailOverridePrevented() || $this->isSenderEmailOverridePrevented ()) {
+			// but the caller and the user have the final say
+			if ($this->isPluginSenderEmailEnforced ()) {
 				$sender->setEmail ( $this->sender->getEmail () );
 			}
-			if ($authenticator->isSenderNameOverridePrevented() || $this->isSenderNameOverridePrevented ()) {
+			if ($this->isPluginSenderNameEnforced ()) {
 				$sender->setName ( $this->sender->getName () );
-			}
-			
-			// now log it and push it into the message
-			$senderEmail = $sender->getEmail ();
-			$senderName = $sender->getName ();
-			assert ( ! empty ( $senderEmail ) );
-			if (! empty ( $senderName )) {
-				$mail->setFrom ( $senderEmail, $senderName );
-			} else {
-				$mail->setFrom ( $senderEmail );
 			}
 			
 			return $sender;
@@ -193,9 +161,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @throws Exception
 		 */
 		public function addTo($to) {
-			if (! isset ( $this->toRecipients )) {
-				$this->toRecipients = array ();
-			}
 			$this->addRecipients ( $this->toRecipients, $to );
 		}
 		/**
@@ -205,9 +170,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @throws Exception
 		 */
 		public function addCc($cc) {
-			if (! isset ( $this->ccRecipients )) {
-				$this->ccRecipients = array ();
-			}
 			$this->addRecipients ( $this->ccRecipients, $cc );
 		}
 		/**
@@ -217,9 +179,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @throws Exception
 		 */
 		public function addBcc($bcc) {
-			if (! isset ( $this->bccRecipients )) {
-				$this->bccRecipients = array ();
-			}
 			$this->addRecipients ( $this->bccRecipients, $bcc );
 		}
 		/**
@@ -229,9 +188,9 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @throws Exception
 		 */
 		private function addRecipients(&$recipientList, $recipients) {
-			$recipients = PostmanEmailAddress::convertToArray ( $recipients );
-			foreach ( $recipients as $recipient ) {
-				if (! empty ( $recipient )) {
+			if (! empty ( $recipients )) {
+				$recipients = PostmanEmailAddress::convertToArray ( $recipients );
+				foreach ( $recipients as $recipient ) {
 					$this->logger->debug ( sprintf ( 'User Added recipient: "%s"', $recipient ) );
 					array_push ( $recipientList, new PostmanEmailAddress ( $recipient ) );
 				}
@@ -263,9 +222,9 @@ if (! class_exists ( "PostmanMessage" )) {
 									"'",
 									'"' 
 							), '', $parts [1] ) );
-							$this->logger->debug ( sprintf ( 'processing special boundary header %s', $this->getBoundary () ) );
+							$this->logger->debug ( sprintf ( 'Processing special boundary header \'%s\'', $this->getBoundary () ) );
 						} else {
-							$this->logger->debug ( sprintf ( 'ignoring broken header %s', $header ) );
+							$this->logger->debug ( sprintf ( 'Ignoring broken header \'%s\'', $header ) );
 						}
 						continue;
 					}
@@ -405,7 +364,7 @@ if (! class_exists ( "PostmanMessage" )) {
 			$this->sender = new PostmanEmailAddress ( $sender, $name );
 		}
 		function setReplyTo($replyTo) {
-			$this->replyTo = $replyTo;
+			$this->replyTo = new PostmanEmailAddress($replyTo);
 		}
 		function setReturnPath($returnPath) {
 			$this->returnPath = $returnPath;
@@ -418,13 +377,13 @@ if (! class_exists ( "PostmanMessage" )) {
 		}
 		
 		// sender override
-		public function isSenderNameOverridePrevented() {
+		public function isPluginSenderNameEnforced() {
 			return $this->preventSenderNameOverride;
 		}
 		public function setPreventSenderNameOverride($preventSenderNameOverride) {
 			$this->preventSenderNameOverride = $preventSenderNameOverride;
 		}
-		public function isSenderEmailOverridePrevented() {
+		public function isPluginSenderEmailEnforced() {
 			return $this->preventSenderEmailOverride;
 		}
 		public function setPreventSenderEmailOverride($preventSenderEmailOverride) {
@@ -464,6 +423,14 @@ if (! class_exists ( "PostmanMessage" )) {
 		}
 		public function getBody() {
 			return $this->body;
+		}
+	}
+}
+
+if (! class_exists ( 'PostmanMessageFactory' )) {
+	class PostmanMessageFactory {
+		public static function createEmptyMessage() {
+			return new PostmanMessage ();
 		}
 	}
 }

@@ -12,14 +12,6 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function getName() {
 			return _x ( 'SMTP', 'Transport Name', 'postman-smtp' );
 		}
-		/**
-		 * What is this for?
-		 *
-		 * @deprecated
-		 *
-		 */
-		public function isSmtp() {
-		}
 		public function getVersion() {
 			return POSTMAN_PLUGIN_VERSION;
 		}
@@ -94,12 +86,29 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		private function getAuthenticationDescription($authType) {
 			if (PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $authType) {
-				return _x ( 'OAuth 2.0', 'Authentication Type', 'postman-smtp' );
+				return _x ( 'OAuth 2.0', 'Authentication Type is OAuth 2.0', 'postman-smtp' );
 			} else if (PostmanOptions::AUTHENTICATION_TYPE_NONE == $authType) {
-				return _x ( 'no', 'Authentication Type', 'postman-smtp' );
+				return _x ( 'no', 'as in "There is no Authentication"', 'postman-smtp' );
 			} else {
+				switch ($authType) {
+					case PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5 :
+						$authDescription = _x ( 'CRAM-MD5', 'As in type used: CRAM-MD5', 'postman-smtp' );
+						break;
+					
+					case PostmanOptions::AUTHENTICATION_TYPE_LOGIN :
+						$authDescription = _x ( 'Login', 'As in type used: Login', 'postman-smtp' );
+						break;
+					
+					case PostmanOptions::AUTHENTICATION_TYPE_PLAIN :
+						$authDescription = _x ( 'Plain', 'As in type used: Plain', 'postman-smtp' );
+						break;
+					
+					default :
+						$authDescription = $authType;
+						break;
+				}
 				/* translators: where %s is the Authentication Type (e.g. plain, login or crammd5) */
-				return sprintf ( _x ( 'Password (%s)', 'Authentication Type', 'postman-smtp' ), $authType );
+				return sprintf ( _x ( 'Password (%s)', 'This authentication type is password-based', 'postman-smtp' ), $authDescription );
 			}
 		}
 		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
@@ -163,7 +172,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			if (! $this->isTransportConfigured ( $options )) {
 				return __ ( 'Outgoing Mail Server (SMTP) and Port can not be empty.', 'postman-smtp' );
 			} else if ($options->isAuthTypePassword () && ! $this->isPasswordAuthenticationConfigured ( $options )) {
-				return __ ( 'Password authentication (Plain/Login/CRAMMD5) requires a username and password.', 'postman-smtp' );
+				return __ ( 'Password authentication (Plain/Login/CRAM-MD5) requires a username and password.', 'postman-smtp' );
 			} else if ($options->isAuthTypeOAuth2 () && ! $this->isOAuthAuthenticationConfigured ( $options )) {
 				/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label (e.g. Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, Client ID, and Client Secret.) */
 				return sprintf ( __ ( 'OAuth 2.0 authentication requires a supported OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, %1$s, and %2$s.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
@@ -209,21 +218,28 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function getConfigurationRecommendation($hostData) {
 			$port = $hostData ['port'];
 			$hostname = $hostData ['host'];
-			$oauthPotential = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
+			// because some servers, like smtp.broadband.rogers.com, report XOAUTH2 but have no OAuth2 front-end
+			$supportedOAuth2Provider = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
 			$score = 0;
 			$recommendation = array ();
 			// increment score for auth type
 			if ($hostData ['start_tls']) {
+				// STARTTLS was formalized in 2002
+				// http://www.rfc-editor.org/rfc/rfc3207.txt
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
-				$score += 3000;
+				$score += 30000;
 			} elseif ($hostData ['protocol'] == 'SMTPS') {
+				// "The hopelessly confusing and imprecise term, SSL,
+				// has often been used to indicate the SMTPS wrapper and
+				// TLS to indicate the STARTTLS protocol extension."
+				// http://stackoverflow.com/a/19942206/4368109
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
-				$score += 2000;
+				$score += 20000;
 			} elseif ($hostData ['protocol'] == 'SMTP') {
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
-				$score += 1000;
+				$score += 10000;
 			}
-			if ($hostData ['auth_xoauth']) {
+			if ($hostData ['auth_xoauth'] && $supportedOAuth2Provider) {
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 				$recommendation ['display_auth'] = 'oauth2';
 				$score += 500;
@@ -245,7 +261,28 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				$score += 100;
 			}
 			
+			// if there was a way to send mail!
 			if ($score > 0) {
+				
+				// tiny weighting to prejudice the port selection
+				if ($port == 587) {
+					$score += 4;
+				} elseif ($port == 25) {
+					// "due to the prevalence of machines that have worms,
+					// viruses, or other malicious software that generate large amounts of
+					// spam, many sites now prohibit outbound traffic on the standard SMTP
+					// port (port 25), funneling all mail submissions through submission
+					// servers."
+					// http://www.rfc-editor.org/rfc/rfc6409.txt
+					$score += 3;
+				} elseif ($port == 465) {
+					// use of port 465 for SMTP was deprecated in 1998
+					// http://www.imc.org/ietf-apps-tls/mail-archive/msg00204.html
+					$score += 2;
+				} else {
+					$score += 1;
+				}
+				
 				// fill-in the rest of the recommendation
 				$recommendation ['transport'] = PostmanSmtpTransport::SLUG;
 				$recommendation ['priority'] = $score;
@@ -272,36 +309,6 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
 		const SLUG = 'smtp';
-		/**
-		 * what is this for .
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 *
-		 * .. @deprecated
-		 */
-		public function isSmtp() {
-		}
 		public function isServiceProviderGoogle($hostname) {
 			return endsWith ( $hostname, 'gmail.com' );
 		}

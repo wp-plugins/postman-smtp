@@ -26,6 +26,8 @@ http://planetozh.com/blog/2009/08/how-to-make-http-requests-with-wordpress/
 "Once the action is complete. I want the page to redirect back to the form that called the script."
 http://stackoverflow.com/questions/21450966/wp-redirect-call-to-undefined-function-new-plugin
 
+"Data Sanitization and Validation With WordPress"
+http://code.tutsplus.com/articles/data-sanitization-and-validation-with-wordpress--wp-25536
 
 Tutorials
 ---------
@@ -89,6 +91,9 @@ Grant Code ->
 
 wp_mail() and Email in General
 -----------------------------
+
+What is the difference between ports 465 and 587?
+http://stackoverflow.com/a/19942206/4368109
 
 The Return Path
 https://wordpress.org/ideas/topic/wp-mail-and-php-mail-function-according-to-rfc-822

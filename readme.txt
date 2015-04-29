@@ -2,8 +2,8 @@
 Contributors: jasonhendriks
 Tags: smtp, smtps, email, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
-Tested up to: 4.1.1
-Stable tag: 1.5.10
+Tested up to: 4.2
+Stable tag: 1.5.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,39 +17,39 @@ Postman is an intelligent, next-generation SMTP mailer that brings reliable emai
 
 In 2014, Google announced if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)." For Google Apps users, OAuth 2.0 is a [requirement](http://plugins.svn.wordpress.org/postman-smtp/assets/Screen%20Shot%202015-02-21%20at%208.52.13%20PM.png), not a nice-to-have.
 
-Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) ✝, lost emails, emails landing as Spam ✝✝, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
+Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) ✝, lost emails, spam and phishing warnings ✝✝, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) ¹ to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
-[Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished since January of this year.
+[Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished.
 
 
 = Features =
 * Send mail to any host just like the 'Big Five' SMTP plugins
-* Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0
-* Easy-to-use Setup Wizard makes configuration a breeze
-* Fire-and-forget: delivery continues even if your password changes
-* The extension for [blocked SMTP ports](https://wordpress.org/plugins/postman-gmail-extension/) sends mail over HTTPS
-* Integrated TCP Port Tester for troubleshooting connectivity issues
+* Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0 ¹
+* Easy-to-use, powerful Setup Wizard for perfect configuration
+* Fire-and-forget delivery continues even if the password changes ¹
+* Send Gmail over HTTPS if the standard SMTP ports are blocked ²
+* Commercial-grade Connectivity Tester to diagnose server issues
+* Log of all emails sent, including error messages if any
 * Supports International alphabets, HTML Mail and MultiPart/Alternative
-* Supports [Mandrill](http://mandrill.com) custom headers and forced recipients (cc, bcc, to)
+* Supports [Mandrill](http://mandrill.com) X-headers and forced recipients (cc, bcc, to)
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
-* Security Support: SMTPS/STARTTLS with SSL and TLS
-* Verified compatible with: [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), Email Log
-* Available translations: English, French, Italian
-
-If you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
+* Security Support: SMTPS and STARTTLS (SSL/TLS)
+* Verified compatible with: [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), [Visual Forms Builder](https://wordpress.org/plugins/visual-form-builder/), [Fast Secure Contact Form](https://wordpress.org/support/plugin/si-contact-form), [cformsII](https://wordpress.org/plugins/cforms2/), Email Log
+* Available translations: French, Italian and Turkish - if you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
 
 = Requirements =
-* WordPress 3.9 (or later)
-* PHP 5.2 with SPL and iconv
-* ✝ SMTP delivery requires connectivity to and authentication credentials with a 3rd-party server email service provider
-* ✝✝ Custom domains require a correct SPF record for Spam-free delivery
-* Optional: a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
+* WordPress 3.9 and PHP 5.2 with SPL and iconv
+* ✝ SMTP delivery requires connectivity to, and authentication credentials with, a 3rd-party email service provider
+* ✝✝ Custom domains **require** a valid SPF record, and potentially a DKIM record, for Blackhole-free and Spam-free delivery
+* ¹ Optional: a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
 
 
 
 == Installation ==
 
-> If you are trying to install on GoDaddy, or another host that blocks the standard mail ports, your only option may be the [Postman Gmail API extension](https://wordpress.org/plugins/postman-gmail-extension/). If you are trying to install on WPEngine, you may run into [Error 502 Bad Gateway](https://wordpress.org/support/topic/test-email-hangs?replies=7).
+> To use email belonging to a specific provider, you must use their SMTP server. If Postman is unable to connect to the SMTP server you want, you may have to ask your host to open the ports, or create a new email account managed by your host, or switch hosts!
+> 
+> The Postman Connectivity Test utility will tell you which ports are open and which are closed, and what actions you can take.
 
 = Easy install and setup! (Recommended for all users) =
 1. Install and activate the plugin through the 'Plugins' menu in WordPress.
@@ -59,22 +59,28 @@ If you are willing to translate Postman into your language, [please let me know]
 = To manually configure Password Authentication (Advanced users only) =
 
 1. Choose configure manually
-1. In 'Authentication' choose 'Plain', unless your provider has told you different.
-1. In 'Sender Email Address' enter your account's email address.
+1. If the 'Transport' menu is available, choose 'SMTP'
+1. In 'Authentication' choose 'Login', unless your provider has told you different.
+1. In 'Security' choose the appropriate type (a good guess is SMTPS for port 465, StartTLS otherwise)
 1. Enter the SMTP Server's hostname and port.
-1. If you chose Plain, Login or CRAM-MD5 as your authentication method then: Choose 'SSL' for encryption if your port is 465, or 'TLS' if your port is 587.
-1. Enter your username (probably your email address) and password in the Basic Auth Settings section.
+1. Enter the encryption if your port is 465, or 'TLS' if your port is 587.
+1. If your Authentication method is not 'None', enter your username (probably your email address) and password.
+1. Choose the 'Message' tab.
+1. In 'Sender Email Address' enter your account's email address.
 1. Choose the Save Changes button.
 1. Send yourself a test email. 
 
 = To manually configure OAuth 2.0 Authentication (Advanced users only) =
 
 1. Choose configure manually
-1. In 'Authentication' choose 'OAuth2 2.0'
-1. In 'Sender Email Address' enter your account's email address. This MUST be the same address you login to webmail with.
-1. In 'Outgoing Mail Server (SMTP)' enter the SMTP Server's hostname and port.
+1. If the 'Transport' menu is available, choose 'SMTP'
+1. In 'Authentication' choose 'OAuth 2.0'
+1. In 'Security' choose the appropriate type (a good guess is SMTPS for port 465, StartTLS otherwise)
+1. Enter the SMTP Server's hostname and port.
 1. Postman will tell you how to open the Client ID maintenance webpage of your host. Create a Client ID for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
 1. Copy your generated Client ID and Client secret into the plugin's Settings page.
+1. Choose the 'Message' tab.
+1. In 'Sender Email Address' enter your account's email address. This MUST be the same address you login to webmail with.
 1. Choose the Save Changes button.
 1. Choose the 'Request OAuth2 Permission' link and follow the instructions.
 1. Send yourself a test email. 
@@ -93,7 +99,7 @@ A modern replacement for traditional password-based authentication. Postman supp
 
 Postman requests a limited access OAuth 2.0 token (valet key) to access the APIs (enter the house) and perform a specific service (handle Gmail, stay out of Google Docs) with no need for you to surrender your username and password credentials (master house key).
 
-Once you grant access, Postman then overrides the WordPress wp_mail() function to provide an incredibly stable mail sub-system.
+Once access is granted, Postman commandeers the WordPress wp_mail() function to provide an incredibly stable mail sub-system.
 
 = Can't I just tell Google to allow less secure apps and keep using my old password? =
 
@@ -124,7 +130,7 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose 'Create Project', or use an existing project if you have one.
 1. If you have previously created a project, select it from the Projects page and you will arrive at the Project Dashboard. If you have just created a project, you are brought to the Project Dashboard automatically.
 1. If you have not filled out the consent screen for this project, do it now. In the left-hand hand navigation menu, select 'Consent Screen' from under 'APIs & auth'. Into 'email address' choose the correct Gmail address and in 'product name' put 'Postman SMTP'. Choose 'Save'.
-1. Select 'API's' from under 'APIs & auth'. Set 'Gmail API' to 'ON'.
+1. Select 'API's' from under 'APIs & auth'. Find 'Gmail API'. Select 'Enable API'.
 1. Select 'Credentials' from under 'APIs & auth'. Choose 'Create a new Client ID'.
 1. For the 'Application Type' use 'Web application'.
 1. In 'Authorized Javascript origins' enter the 'Javascript Origins' given by Postman (either from the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or from the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
@@ -141,24 +147,23 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
 = How do I get a Yahoo Client ID? (For Yahoo Mail users only!) =
-1. Go to [Yahoo Developer Network](https://developer.apps.yahoo.com/projects) and select 'Create an App'.
-1. In the 'Application Name' field enter 'Postman SMTP'. For 'Application Type' choose 'Web-based'. In description write the name of your WordPress site.
-1. In 'Home Page URL', enter the 'Home Page URL' shown on Postman's Settings page.
-1. In 'Access Scopes' choose 'This app requires access to private user data.'
-1. In 'Callback Domain', enter the 'Callback Domain' given by Postman (either from the wizard, or from the manual configuration page).
-1. Under 'Select APIs for private user data access' choose 'Mail Web Service'
-1. Under 'Mail Web Service' choose 'Read/Write'
+1. Go to [Yahoo Developer Network](https://developer.yahoo.com/apps/) and select 'Create an App'.
+1. In the 'Application Name' field enter 'Postman SMTP'. For 'Application Type' choose 'Web Application'.
+1. In 'Home Page URL', enter the 'Home Page URL' given by Postman.
+1. In 'Callback Domain', enter the 'Callback Domain' given by Postman.
+1. Under 'API Permissions' choose 'Mail'. Under 'Mail' choose 'Read/Write'
 1. Click 'Create App'
-1. Enter the Consumer Key and Consumer Secret: displayed here into Postman's settings page.
+1. Enter the Client ID and Client Secret displayed here into Postman's settings page.
 
 = How can I revoke Postman's OAuth 2.0 access? =
 * If you have a Google Account, from the [Google Developer's Console](https://console.developers.google.com/) use the Delete button under the Client ID.
 * If you have a Microsoft Live account, from the [Microsoft account Developer Center](https://account.live.com/developers/applications/index), select the Application and choose Delete Application.
-* If you have a Yahoo Account, from the [Yahoo Developer Network My Apps](https://developer.apps.yahoo.com/projects), select the Application and choose Delete App. 
+* If you have a Yahoo Account, from the [Yahoo Developer Network My Apps](https://developer.yahoo.com/apps/), select the Application and choose Delete App. 
 
 = Who do we thank for translations? =
 * French - [Etienne Provost](https://www.facebook.com/eprovost3)
-* Italian - [Andrea Greco]
+* Italian - Andrea Greco
+* Turkish - [ercan yaris](http://lunar.com.tr/)
 
 
 
@@ -228,7 +233,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 1. Dashboard widget showing status at a glance
 1. Main Settings screen
-1. Setup Wizard (step 1) screen
+1. Setup Wizard (step 1) - Import data from other plugin
+1. Setup Wizard (step 4) - SMTP server interrogation 
 1. Manual Configuration - Account Settings: Password Authentication
 1. Manual Configuration - Account Settings: OAuth 2.0 Authentication
 1. Manual Configuration - Message Settings
@@ -241,10 +247,51 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.0 = 
-* Added commercial-grade Connectivty Test and Setup Wizard. The new wizard interrogates the server for capabilities and intelligently suggests the best settings for the user, simultaneously preventing from incorrect settings from being entered. Steve Jobs would be proud.
-* Fixed Wizard's SMTP hostname guess for GoDaddy addresses
-* Fixed Wizard's SMTP hostname guess for Outlook 365 addresses
+= 1.6.1 =
+* (TBD): Add option for MailPoet
+* (TBD): Add option for MyMail
+
+= 1.6 =
+* Log all email attempts with error messages (if any)
+* View the damn logs!
+* View the details of a single log entry! - http://www.ericmmartin.com/projects/simplemodal/ ?
+* Delete logs on purge - separate Log Delete to its own class, instantiate in Admin class, and re-use that code
+* Preference screen for logging
+* Obscure password from front-end
+* Ask to see password when typing
+* When the wizard is looking up the email, disable the smtp hostname field
+* Enable logging in Wizard
+* Truncate logs to max amount - add option for unlimited logs?
+* Remove warning from main screen for sender override if it's already on
+* Help screens
+* Highlight Logging option to users - http://code.tutsplus.com/articles/integrating-with-wordpress-ui-admin-pointers--wp-26853
+* Check for GoDaddy SMTP server during Wizard and use that SMTP server
+* Check for GoDaddy 
+* (TBD): Add hostname to connectivity test table.
+* (TBD): Check for redirect errors - relative URLs only
+* (TBD): Check for well-known domains and warn when configuring the wrong SMTP server
+* (TBD): Check for Gmail during wizard and remember for gmail api option.
+* (TBD): Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
+* (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
+* (TBD): Warn when using AUTH with NO encryption
+* (TBD): Delivery mode - production, logging, test
+* (TBD): Add MX and SPF to diagnostic data
+
+= 1.5.13 - 2015-04-18 =
+* Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)
+* Lots of changes at Yahoo's Developer Network required changes here: updated format of Callback Domain; updated Yahoo Developer Network portal launch link; renamed Consumer Key/Secret to Client ID/Client Secret; updated FAQ for Yahoo Client ID instructions
+* [[Ticket](https://wordpress.org/support/topic/re-initializing-the-plugin?replies=5)] Updated stylesheet to avoid interference from Dating Solutions Plugin (DSP)
+
+= 1.5.12 - 2015-04-14 - The Jamaican release! =
+* [[Ticket](https://wordpress.org/support/topic/help-mail-is-failing-in-test?replies=9)] PHP 5.2 users: fix test messages that show failures but still get delivered; fix Contact Form 7 submission freezes
+* Translated into Turkish, thank-you ercan yaris
+
+= 1.5.11 - 2015-04-05 = 
+* Two thousand installations! :D
+* Commercial-grade improvements to Connectivity Test and Setup Wizard. The new wizard prevents misconfiguration by interrogating the MTA for capabilities and intelligently suggests the best settings for the user. Steve Jobs would be proud.
+* Fixed Wizard's MSA hostname guess for GoDaddy addresses (smtp.secureserver.net is the MTA not the MSA)
+* Fixed Wizard's MSA hostname guess for Outlook 365 addresses (smtp.live.com is for their free Hotmail service)
+* Added French/Italian translation for JQuery Validation
 
 = 1.5.10 - 2015-03-29 =
 * Fix for Fatal error: Cannot redeclare class PEAR_Common in C:\PHP5\PEAR\PEAR\Common.php - similar to [this error](https://wordpress.org/support/topic/plugin-wp-minify-cant-activate-plugin-fatal-error?replies=6) in WP Minify
@@ -258,6 +305,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * [[Ticket](https://wordpress.org/support/topic/problem-with-responding?replies=7#post-6723830)] Hide PHP warnings from `stream_set_timeout()` in case the host has disabled this function. 
 
 = 1.5.8 - 2015-03-16 =
+* One thousand installations! :D
 * [[Ticket](https://wordpress.org/support/topic/openssl-error-after-upgrading?replies=2#post-6699480)] Postman will not shut down if it can't find OpenSSL. It will just display a warning to the user.
 
 = 1.5.7 - 2015-03-14 =
@@ -398,7 +446,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Upgrade Notice ==
 
-= 1.6 =
+= 1.5.11 =
 Heavy-duty connectivity tester and setup wizard.
 
 = 1.5.10 =

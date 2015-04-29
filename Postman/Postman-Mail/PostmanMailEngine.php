@@ -53,7 +53,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 		 * @param unknown $senderEmail        	
 		 * @param unknown $accessToken        	
 		 */
-		function __construct(PostmanMailAuthenticator $authenticator, PostmanTransport $transport) {
+		function __construct(PostmanMailTransportConfiguration $authenticator, PostmanTransport $transport) {
 			assert ( isset ( $authenticator ) );
 			assert ( isset ( $transport ) );
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
@@ -92,9 +92,9 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$this->logger->debug ( 'Adding content-type ' . $contentType );
 			
 			// add the sender
-			$sender = $message->addFrom ( $mail, $this->authenticator );
+			$sender = $this->addFrom ( $message, $mail );
 			$sender->log ( $this->logger, 'From' );
-				
+			
 			// add the to recipients
 			foreach ( ( array ) $message->getToRecipients () as $recipient ) {
 				$recipient->log ( $this->logger, 'To' );
@@ -116,7 +116,6 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			// add the reply-to
 			$replyTo = $message->getReplyTo ();
 			if (! empty ( $replyTo )) {
-				$replyTo = new PostmanEmailAddress ( $replyTo );
 				$mail->setReplyTo ( $replyTo->getEmail (), $replyTo->getName () );
 			}
 			
@@ -195,19 +194,44 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$zendTransport = $this->transport->createZendMailTransport ( $hostname, $config );
 			assert ( ! empty ( $zendTransport ) );
 			
-			// send the message
-			$this->logger->debug ( "Sending mail" );
 			try {
+				// send the message
+				$this->logger->debug ( "Sending mail" );
 				$mail->send ( $zendTransport );
-				if ($zendTransport->getConnection ())
+				// finally not supported??
+				if ($zendTransport->getConnection ()) {
 					$this->transcript = $zendTransport->getConnection ()->getLog ();
+					$this->logger->trace ( $this->transcript );
+				}
 			} catch ( Exception $e ) {
-				$c = $zendTransport->getConnection ();
-				if (isset ( $c )) {
+				// finally not supported??
+				if ($zendTransport->getConnection ()) {
 					$this->transcript = $zendTransport->getConnection ()->getLog ();
+					$this->logger->trace ( $this->transcript );
 				}
 				throw $e;
 			}
+		}
+		
+		/**
+		 * Get the sender from PostmanMessage and add it to the Postman_Zend_Mail object
+		 *
+		 * @param PostmanMessage $message        	
+		 * @param Postman_Zend_Mail $mail        	
+		 * @return PostmanEmailAddress
+		 */
+		public function addFrom(PostmanMessage $message, Postman_Zend_Mail $mail) {
+			$sender = $message->getSender ();
+			// now log it and push it into the message
+			$senderEmail = $sender->getEmail ();
+			$senderName = $sender->getName ();
+			assert ( ! empty ( $senderEmail ) );
+			if (! empty ( $senderName )) {
+				$mail->setFrom ( $senderEmail, $senderName );
+			} else {
+				$mail->setFrom ( $senderEmail );
+			}
+			return $sender;
 		}
 		
 		// return the SMTP session transcript

@@ -23,6 +23,14 @@ if (! class_exists ( 'PostmanEmailAddress' )) {
 		public function getEmail() {
 			return $this->email;
 		}
+		public function format() {
+			$name = $this->getName ();
+			if (! empty ( $name )) {
+				return sprintf ( '%s <%s>', $this->getName (), $this->getEmail () );
+			} else {
+				return sprintf ( '%s', $this->getEmail () );
+			}
+		}
 		public function setName($name) {
 			$this->name = $name;
 		}
@@ -49,6 +57,7 @@ if (! class_exists ( 'PostmanEmailAddress' )) {
 		 * @param unknown $recipients        	
 		 */
 		public static function convertToArray($emails) {
+			assert ( ! empty ( $emails ) );
 			if (! is_array ( $emails )) {
 				// http://tiku.io/questions/955963/splitting-comma-separated-email-addresses-in-a-string-with-commas-in-quotes-in-p
 				$t = str_getcsv ( $emails );

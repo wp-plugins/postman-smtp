@@ -50,13 +50,13 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			
 			// determine a configuration recommendation
 			$winningRecommendation = $this->getConfigurationRecommendation ( $queryHostData, $userPortOverride, $userAuthOverride );
-			$this->logger->debug ( 'winning recommendation:' );
-			$this->logger->debug ( $winningRecommendation );
+			$this->logger->trace ( 'winning recommendation:' );
+			$this->logger->trace ( $winningRecommendation );
 			
 			// create user override menu
 			$overrideMenu = $this->createOverrideMenu ( $queryHostData, $winningRecommendation );
-			$this->logger->debug ( 'override menu:' );
-			$this->logger->debug ( $overrideMenu );
+			$this->logger->trace ( 'override menu:' );
+			$this->logger->trace ( $overrideMenu );
 			
 			// create the reponse
 			$response = array ();
@@ -74,15 +74,15 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 				$this->populateResponseFromTransport ( $winningRecommendation, $configuration );
 				$response ['override_menu'] = $overrideMenu;
 				$response ['configuration'] = $configuration;
-				$this->logger->debug ( 'configuration:' );
-				$this->logger->debug ( $configuration );
+				$this->logger->trace ( 'configuration:' );
+				$this->logger->trace ( $configuration );
 				wp_send_json_success ( $response );
 			} else {
 				/* translators: where %s is the URL to the Connectivity Test page */
 				$configuration ['message'] = sprintf ( __ ( 'Postman can\'t find any way to send mail on your system. Run a <a href="%s">connectivity test</a>.', 'postman-smtp' ), PostmanViewController::getPageUrl ( PostmanViewController::PORT_TEST_SLUG ) );
 				$response ['configuration'] = $configuration;
-				$this->logger->debug ( 'configuration:' );
-				$this->logger->debug ( $configuration );
+				$this->logger->trace ( 'configuration:' );
+				$this->logger->trace ( $configuration );
 				wp_send_json_error ( $response );
 			}
 		}
@@ -127,21 +127,21 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 						if ($value ['auth_crammd5'] || $value ['auth_login'] || $value ['auth_plain']) {
 							array_push ( $overrideAuthItem, array (
 									'selected' => $passwordMode,
-									'name' => __ ( 'Password' ),
+									'name' => __ ( 'Password', 'postman-smtp' ),
 									'value' => 'password' 
 							) );
 						}
 						if ($value ['auth_xoauth'] || $winningRecommendation ['auth'] == 'oauth2') {
 							array_push ( $overrideAuthItem, array (
 									'selected' => $oauth2Mode,
-									'name' => __ ( 'OAuth 2.0' ),
+									'name' => _x ( 'OAuth 2.0', 'Authentication Type is OAuth 2.0', 'postman-smtp' ),
 									'value' => 'oauth2' 
 							) );
 						}
 						if ($value ['auth_none']) {
 							array_push ( $overrideAuthItem, array (
 									'selected' => $noAuthMode,
-									'name' => __ ( 'No' ),
+									'name' => _x ( 'No', 'as in "No Authentication"', 'postman-smtp' ),
 									'value' => 'none' 
 							) );
 						}
@@ -196,11 +196,10 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			// checks to see if the host is an IP address and sticks the result in the response
 			// IP addresses are not allowed in the Redirect URL
 			$urlParts = parse_url ( $scribe->getCallbackUrl () );
-			$response ['dotNotationUrl'] = false;
+			$response ['dot_notation_url'] = false;
 			if (isset ( $urlParts ['host'] )) {
-				// from http://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
-				if (preg_match ( '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9‌​]{2}|2[0-4][0-9]|25[0-5])$/', $urlParts ['host'] )) {
-					$response ['dotNotationUrl'] = true;
+				if (isHostAddressNotADomainName ( $urlParts ['host'] )) {
+					$response ['dot_notation_url'] = true;
 				}
 			}
 			$response ['redirect_url'] = $scribe->getCallbackUrl ();

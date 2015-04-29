@@ -45,6 +45,12 @@ if (! class_exists ( "PostmanOptions" )) {
 		const CONNECTION_TIMEOUT = 'connection_timeout';
 		const READ_TIMEOUT = 'read_timeout';
 		const LOG_LEVEL = 'log_level';
+		const RUN_MODE = 'run_mode';
+		const RUN_MODE_PRODUCTION = 'production';
+		const RUN_MODE_LOG_ONLY = 'log_only';
+		const RUN_MODE_IGNORE = 'ignore';
+		const MAIL_LOG_ENABLED = 'mail_log_enabled';
+		const MAIL_LOG_MAX_ENTRIES = 'mail_log_max_entries';
 		
 		// options data
 		private $options;
@@ -70,6 +76,20 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function isNew() {
 			return ! isset ( $this->options [PostmanOptions::VERSION] );
+		}
+		public function isMailLoggingEnabled() {
+			if ($this->isNew ())
+				return true;
+			if (isset ( $this->options [PostmanOptions::MAIL_LOG_ENABLED] ))
+				return $this->options [PostmanOptions::MAIL_LOG_ENABLED];
+			else
+				return false;
+		}
+		public function getMailLoggingMaxEntries() {
+			if (isset ( $this->options [PostmanOptions::MAIL_LOG_MAX_ENTRIES] ))
+				return $this->options [PostmanOptions::MAIL_LOG_MAX_ENTRIES];
+			else
+				return 10;
 		}
 		public function getLogLevel() {
 			if (isset ( $this->options [PostmanOptions::LOG_LEVEL] ))
@@ -121,6 +141,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		public function getTransportType() {
 			if (isset ( $this->options [PostmanOptions::TRANSPORT_TYPE] ))
 				return $this->options [PostmanOptions::TRANSPORT_TYPE];
+			else
+				return PostmanSmtpTransport::SLUG;
 		}
 		public function getAuthenticationType() {
 			if (isset ( $this->options [PostmanOptions::AUTHENTICATION_TYPE] ))
@@ -138,6 +160,9 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] ))
 				return base64_decode ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] );
 		}
+		public function getObfuscatedPassword() {
+			return postmanObfuscatePassword ( $this->getPassword () );
+		}
 		public function getReplyTo() {
 			if (isset ( $this->options [PostmanOptions::REPLY_TO] ))
 				return $this->options [PostmanOptions::REPLY_TO];
@@ -154,13 +179,33 @@ if (! class_exists ( "PostmanOptions" )) {
 			else
 				return Postman::POSTMAN_TCP_READ_TIMEOUT;
 		}
-		public function isSenderNameOverridePrevented() {
+		public function isPluginSenderNameEnforced() {
+			if ($this->isNew ())
+				return true;
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] ))
 				return $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE];
 		}
-		public function isSenderEmailOverridePrevented() {
+		/**
+		 * (non-PHPdoc)
+		 *
+		 * @see PostmanOptionsInterface::isSenderNameOverridePrevented()
+		 * @deprecated by isPluginSenderNameEnforced
+		 */
+		public function isSenderNameOverridePrevented() {
+			return $this->isPluginSenderEmailEnforced ();
+		}
+		public function isPluginSenderEmailEnforced() {
+			if ($this->isNew ())
+				return true;
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE] ))
 				return $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE];
+		}
+		/**
+		 *
+		 * @deprecated by isPluginSenderEmailEnforced
+		 */
+		public function isSenderEmailOverridePrevented() {
+			return $this->isPluginSenderEmailEnforced ();
 		}
 		public function setSenderNameOverridePrevented($prevent) {
 			$this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] = $prevent;

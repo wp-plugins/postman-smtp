@@ -86,22 +86,22 @@ if (! class_exists ( 'PostmanAbstractPluginOptions' )) {
 			$username = $this->getUsername ();
 			$password = $this->getPassword ();
 			$valid &= ! empty ( $host );
-			$this->logger->debug ( 'host ok ' . $valid );
+			$this->logger->trace ( 'host ok ' . $valid );
 			$valid &= ! empty ( $port ) && absint ( $port ) > 0 && absint ( $port ) <= 65535;
-			$this->logger->debug ( 'port ok ' . $valid );
+			$this->logger->trace ( 'port ok ' . $valid );
 			$valid &= ! empty ( $senderEmail );
-			$this->logger->debug ( 'sender email ok ' . $valid );
+			$this->logger->trace ( 'sender email ok ' . $valid );
 			$valid &= ! empty ( $senderName );
-			$this->logger->debug ( 'sender name ok ' . $valid );
+			$this->logger->trace ( 'sender name ok ' . $valid );
 			$valid &= ! empty ( $auth );
-			$this->logger->debug ( 'auth ok ' . $valid );
+			$this->logger->trace ( 'auth ok ' . $valid );
 			$valid &= ! empty ( $enc );
-			$this->logger->debug ( 'enc ok ' . $valid );
+			$this->logger->trace ( 'enc ok ' . $valid );
 			if ($auth != PostmanOptions::AUTHENTICATION_TYPE_NONE) {
 				$valid &= ! empty ( $username );
 				$valid &= ! empty ( $password );
 			}
-			$this->logger->debug ( 'user/pass ok ' . $valid );
+			$this->logger->trace ( 'user/pass ok ' . $valid );
 			return $valid;
 		}
 		public function isImportable() {

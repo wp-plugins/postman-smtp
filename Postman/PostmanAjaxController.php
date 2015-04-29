@@ -34,8 +34,8 @@ if (! class_exists ( 'PostmanAbstractAjaxHandler' )) {
 		protected function getRequestParameter($parameterName) {
 			if (isset ( $_POST [$parameterName] )) {
 				$value = $_POST [$parameterName];
-				$this->logger->debug ( 'Found parameter name ' . $parameterName );
-				$this->logger->debug ( $value );
+				$this->logger->trace ( sprintf ( 'Found parameter "%s"', $parameterName ) );
+				$this->logger->trace ( $value );
 				return $value;
 			}
 		}
@@ -95,11 +95,17 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			}
 			return $transports;
 		}
+		
+		/**
+		 * Diagnostic Data test to current SMTP server
+		 *
+		 * @return string
+		 */
 		private function testConnectivity() {
 			$transport = PostmanTransportUtils::getCurrentTransport ();
 			if ($transport->isConfigured ( $this->options, $this->authorizationToken ) && method_exists ( $transport, 'getHostname' ) && method_exists ( $transport, 'getHostPort' )) {
 				$portTest = new PostmanPortTest ( $transport->getHostname ( $this->options ), $transport->getHostPort ( $this->options ) );
-				$result = $portTest->testSmtpPorts ( $this->options->getConnectionTimeout () );
+				$result = $portTest->genericConnectionTest ( $this->options->getConnectionTimeout () );
 				if ($result) {
 					return 'Yes';
 				} else {
@@ -111,12 +117,12 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		public function getDiagnostics() {
 			$this->addToDiagnostics ( sprintf ( 'OS: %s', php_uname () ) );
 			$this->addToDiagnostics ( sprintf ( 'HTTP User Agent: %s', $_SERVER ['HTTP_USER_AGENT'] ) );
-			$this->addToDiagnostics ( sprintf ( 'Platform: PHP %s %s / WordPress %s', PHP_OS, PHP_VERSION, get_bloginfo ( 'version' ) ) );
+			$this->addToDiagnostics ( sprintf ( 'Platform: PHP %s %s / WordPress %s %s', PHP_OS, PHP_VERSION, get_bloginfo ( 'version' ), get_locale () ) );
 			$this->addToDiagnostics ( $this->getPhpDependencies () );
 			$this->addToDiagnostics ( $this->getActivePlugins () );
-			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', get_current_theme () ) );
+			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', wp_get_theme () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', POSTMAN_PLUGIN_VERSION ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Sender: %s', (postmanObfuscateEmail ( $this->options->getSenderEmail () )) ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Sender Domain: %s', $hostname = substr ( strrchr ( $this->options->getSenderEmail (), "@" ), 1 ) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI: %s', PostmanTransportUtils::getDeliveryUri ( PostmanTransportUtils::getCurrentTransport () ) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport Status (Configured|Ready|Connected): %s|%s|%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', $this->testConnectivity () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Deliveries (Success|Fail): %d|%d', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PostmanStats::getInstance ()->getFailedDeliveries () ) );
@@ -150,8 +156,8 @@ if (! class_exists ( 'PostmanGetPortsToTestViaAjax' )) {
 				$queryHostname = $_POST ['hostname'];
 			}
 			$hosts = PostmanTransportUtils::getHostsToTest ( $queryHostname );
-			$this->logger->debug ( 'hostsToTest:' );
-			$this->logger->debug ( $hosts );
+			$this->logger->trace ( 'hostsToTest:' );
+			$this->logger->trace ( $hosts );
 			$response = array (
 					'hosts' => $hosts,
 					'success' => true 
@@ -257,8 +263,11 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 			$this->logger->debug ( sprintf ( 'testing port result for %s:%s success=%s', $hostname, $port, $success ) );
 			$response = array (
 					'hostname' => $hostname,
+					'hostname_domain_only' => $portTest->hostnameDomainOnly,
 					'port' => $port,
 					'protocol' => $portTest->protocol,
+					'reported_hostname' => $portTest->reportedHostname,
+					'reported_hostname_domain_only' => $portTest->reportedHostnameDomainOnly,
 					'message' => $portTest->getErrorMessage (),
 					'start_tls' => $portTest->startTls,
 					'auth_plain' => $portTest->authPlain,
@@ -269,8 +278,8 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 					'try_smtps' => $portTest->trySmtps,
 					'success' => $success 
 			);
-			$this->logger->debug ( 'Ajax response:' );
-			$this->logger->debug ( $response );
+			$this->logger->trace ( 'Ajax response:' );
+			$this->logger->trace ( $response );
 			if ($success) {
 				wp_send_json_success ( $response );
 			} else {
@@ -356,12 +365,12 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 			$method = $this->getRequestParameter ( 'method' );
 			try {
 				$emailTester = new PostmanSendTestEmailController ();
-				$subject = _x ( 'WordPress Postman SMTP Test', 'Test Email Subject', 'postman-smtp' );
+				$serverName = postmanGetServerName ();
+				/* translators: where %s is the domain name of the site */
+				$subject = sprintf ( _x ( 'Postman SMTP Test (%s)', 'Test Email Subject', 'postman-smtp' ), $serverName );
 				// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
 				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
-				$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanMessage::EOL, PostmanMessage::EOL, sprintf ( _x ( 'Sent by Postman v%s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) );
-				/* translators: where %s is the Postman plugin version number (e.g. 1.5.7) */
-				
+				$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanMessage::EOL, PostmanMessage::EOL, sprintf ( _x ( 'Sent by Postman %s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) );
 				$message2 = '
 Content-Type: text/plain; charset = "UTF-8"
 Content-Transfer-Encoding: 8bit
@@ -396,12 +405,12 @@ Content-Transfer-Encoding: 8bit
 								<tr>
 									<td>
 										<div
-											style="max-width: 600px; height: 400px; margin: 0 auto; overflow: hidden;background-image:url(\'http://plugins.svn.wordpress.org/postman-smtp/assets/email/poofytoo.png\');background-repeat: no-repeat;">
-											<div style="margin:50px 0 0 300px; width:300px; font-size:2em;">Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は</div>' . sprintf ( '<div style="text-align:right;font-size: 1.4em; color:black;margin:150px 0 0 200px;">%s<br/><span style="font-size: 0.8em"><a style="color:#3f73b9" href="https://wordpress.org/plugins/postman-smtp/">https://wordpress.org/plugins/postman-smtp/</a></span></div>', sprintf ( __ ( 'Sent by <em>Postman</em> v%s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) ) . '</div>
+											style="max-width: 600px; height: 400px; margin: 0 auto; overflow: hidden;background-image:url(\'https://ps.w.org/postman-smtp/assets/email/poofytoo.png\');background-repeat: no-repeat;">
+											<div style="margin:50px 0 0 300px; width:300px; font-size:2em;">Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は</div>' . sprintf ( '<div style="text-align:right;font-size: 1.4em; color:black;margin:150px 0 0 200px;">%s<br/><span style="font-size: 0.8em"><a style="color:#3f73b9" href="https://wordpress.org/plugins/postman-smtp/">https://wordpress.org/plugins/postman-smtp/</a></span></div>', sprintf ( _x ( 'Sent by Postman %s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) ) . '</div>
 									</td>
 								</tr>
 							</tbody>
-						</table> <br><span style="font-size:0.9em;color:#94c0dc;">Image source: <a style="color:#94c0dc" href="http://poofytoo.com">poofytoo.com</a> - Used with permission</span></td>
+						</table> <br><span style="font-size:0.9em;color:#94c0dc;">' . __('Image source','postman-smtp').': <a style="color:#94c0dc" href="http://poofytoo.com">poofytoo.com</a> - ' . __('Used with permission','postman-smtp'). '</span></td>
 				</tr>
 			</tbody>
 		</table>

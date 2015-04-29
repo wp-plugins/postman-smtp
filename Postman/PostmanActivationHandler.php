@@ -13,10 +13,20 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 	 * @author jasonhendriks
 	 */
 	class PostmanActivationHandler {
+		
+		/**
+		 */
+		public function __construct($rootPluginFilenameAndPath) {
+			register_activation_hook ( $rootPluginFilenameAndPath, array (
+					$this,
+					'activate_postman' 
+			) );
+		}
+		
 		/**
 		 * Handle activation of plugin
 		 */
-		public function activatePostman() {
+		public function activate_postman() {
 			$logger = new PostmanLogger ( get_class ( $this ) );
 			$logger->debug ( "Activating plugin" );
 			// prior to version 0.2.5, $authOptions did not exist
@@ -97,11 +107,13 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 				}
 			}
 			// always update the version number
-			if (!isset ( $postmanState ['install_date'] )) {
+			if (! isset ( $postmanState ['install_date'] )) {
 				$postmanState ['install_date'] = time ();
 			}
 			$postmanState ['version'] = POSTMAN_PLUGIN_VERSION;
 			update_option ( 'postman_state', $postmanState );
+			//
+			delete_option ( 'postman_session' );
 		}
 	}
 }

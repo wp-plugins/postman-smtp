@@ -2,12 +2,15 @@
 if (! class_exists ( 'SmtpMapping' )) {
 	class SmtpMapping {
 		// if an email is in this domain array, it is a known smtp server (easy lookup)
-		private $emailDomain = array (
+		private static $emailDomain = array (
+				'aol.com' => 'smtp.aol.com',
 				'gmail.com' => 'smtp.gmail.com',
 				'hotmail.com' => 'smtp.live.com',
 				'icloud.com' => 'smtp.mail.me.com',
 				'mail.com' => 'smtp.mail.com',
+				'ntlworld.com' => 'smtp.ntlworld.com',
 				'rocketmail.com' => 'plus.smtp.mail.yahoo.com',
+				'rogers.com' => 'smtp.broadband.rogers.com',
 				'yahoo.ca' => 'smtp.mail.yahoo.ca',
 				'yahoo.co.id' => 'smtp.mail.yahoo.co.id',
 				'yahoo.co.in' => 'smtp.mail.yahoo.co.in',
@@ -31,25 +34,32 @@ if (! class_exists ( 'SmtpMapping' )) {
 				'yahoo.es' => 'smtp.correo.yahoo.es',
 				'yahoo.fr' => 'smtp.mail.yahoo.fr',
 				'yahoo.ie' => 'smtp.mail.yahoo.co.uk',
-				'yahoo.it' => 'smtp.mail.yahoo.it' 
+				'yahoo.it' => 'smtp.mail.yahoo.it',
+				'zoho.com' => 'smtp.zoho.com' 
 		);
 		// if an email's mx is in this domain array, it is a known smtp server (dns lookup)
 		// useful for custom domains that map to a mail service
-		private $mx = array (
+		private static $mx = array (
 				'google.com' => 'smtp.gmail.com',
 				'icloud.com' => 'smtp.mail.me.com',
 				'hotmail.com' => 'smtp.live.com',
 				'mx-eu.mail.am0.yahoodns.net' => 'smtp.mail.yahoo.com',
-				'mail.protection.outlook.com' => 'smtp.office365.com',
+				// 'mail.protection.outlook.com' => 'smtp.office365.com',
+				// 'mail.eo.outlook.com' => 'smtp.office365.com',
+				'outlook.com' => 'smtp.office365.com',
 				'biz.mail.am0.yahoodns.net' => 'smtp.bizmail.yahoo.com',
 				'hushmail.com' => 'smtp.hushmail.com',
 				'gmx.net' => 'mail.gmx.com',
 				'mandrillapp.com' => 'smtp.mandrillapp.com',
-				'secureserver.net' => 'relay-hosting.secureserver.net' 
+				'smtp.secureserver.net' => 'relay-hosting.secureserver.net',
+				'presmtp.ex1.secureserver.net' => 'smtp.ex1.secureserver.net',
+				'presmtp.ex2.secureserver.net' => 'smtp.ex2.secureserver.net',
+				'presmtp.ex3.secureserver.net' => 'smtp.ex2.secureserver.net',
+				'presmtp.ex4.secureserver.net' => 'smtp.ex2.secureserver.net' 
 		);
 		public function getSmtpFromEmail($email) {
 			$hostname = substr ( strrchr ( $email, "@" ), 1 );
-			while ( list ( $domain, $smtp ) = each ( $this->emailDomain ) ) {
+			while ( list ( $domain, $smtp ) = each ( SmtpMapping::$emailDomain ) ) {
 				if (strcasecmp ( $hostname, $domain ) == 0) {
 					return $smtp;
 				}
@@ -57,7 +67,7 @@ if (! class_exists ( 'SmtpMapping' )) {
 			return null;
 		}
 		public function getSmtpFromMx($mx) {
-			while ( list ( $domain, $smtp ) = each ( $this->mx ) ) {
+			while ( list ( $domain, $smtp ) = each ( SmtpMapping::$mx ) ) {
 				if ($this->endswith ( $mx, $domain )) {
 					return $smtp;
 				}

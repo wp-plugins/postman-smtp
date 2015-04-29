@@ -42,7 +42,7 @@ if (! class_exists ( "PostmanSendTestEmailController" )) {
 			// $wp_mail_result = wp_mail ( $recipient, $subject, $message, $headers );
 			// $this->logger->error ( 'wp_mail failed :( re-trying through the internal engine' );
 			$postmanWpMail = new PostmanWpMail ();
-			$postmanWpMailResult = $postmanWpMail->send ( $options, $authorizationToken, $recipient, $subject, $message, $headers );
+			$postmanWpMailResult = $postmanWpMail->send ( $recipient, $subject, $message, $headers );
 			$this->transcript = $postmanWpMail->getTranscript ();
 			PostmanStats::getInstance ()->enable ();
 			
