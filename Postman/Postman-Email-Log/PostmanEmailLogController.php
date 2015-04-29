@@ -85,8 +85,8 @@ class PostmanEmailLogController extends WP_List_Table {
 		$viewUrl   = admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s&TB_iframe=true&width=600&height=550', 'view', $item['ID']));
         
         $actions = array(
-            'delete'    => sprintf('<a href="%s">Delete</a>',$deleteUrl),
-            'view'    => sprintf('<a href="%s" class="thickbox">View</a>',$viewUrl),
+            'delete'    => sprintf('<a href="%s">%s</a>',$deleteUrl,__('Delete', 'Delete an item from the email log')),
+            'view'    => sprintf('<a href="%s" class="thickbox">%s</a>',$viewUrl,__('View','View an item from the email log')),
             );
         
         //Return the title contents
@@ -132,9 +132,9 @@ class PostmanEmailLogController extends WP_List_Table {
     function get_columns(){
         $columns = array(
             'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text
-            'title'     => 'Subject',
-            'status'  => 'Status Message',
-            'date'    => 'Delivery Time'
+            'title'     => __('Subject'),
+            'status'  => __('Status','Was sending this email successful or not?'),
+            'date'    => __('Delivery Time','When was this email sent?')
         );
         return $columns;
     }
@@ -283,7 +283,7 @@ class PostmanEmailLogController extends WP_List_Table {
 			$flattenedPost = array (
 					'title' => $post->post_title,
 					'status' => $post->post_excerpt,
-					'date' => human_time_diff( strtotime($post->post_date), current_time('timestamp') ) . ' ago',
+					'date' => human_time_diff( strtotime($post->post_date), current_time('timestamp') ) . ' '. __('ago','As in "five days ago"'),
 					'ID' => $post->ID 
 			);
         	array_push($data, $flattenedPost);

@@ -164,7 +164,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			foreach ( $states as $state ) {
 				if (! $state ['ready']) {
 					/* Translators: where %1$s is the name of the library */
-					$message = sprintf ( __ ( 'This PHP installation requires the <b>%1$s</b> library.' ), $state ['name'] );
+					$message = sprintf ( __ ( 'This PHP installation requires the <b>%1$s</b> library.' , 'postman-smtp'), $state ['name'] );
 					if ($state ['required']) {
 						$this->messageHandler->addError ( $message );
 					} else {
