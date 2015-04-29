@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.6.0b1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-29 17:50:28+00:00\n"
+"POT-Creation-Date: 2015-04-29 18:05:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -273,8 +273,9 @@ msgid "Login"
 msgstr ""
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:103
+#: Postman/PostmanAdminController.php:613
 #: Postman/PostmanViewController.php:626
-msgctxt "Authentication Type"
+msgctxt "As in type used: Plain"
 msgid "Plain"
 msgstr ""
 
@@ -558,11 +559,6 @@ msgstr ""
 #: Postman/PostmanViewController.php:733
 msgctxt "As in type used: None"
 msgid "None"
-msgstr ""
-
-#: Postman/PostmanAdminController.php:613
-msgctxt "As in type used: Plain"
-msgid "Plain"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:627
@@ -881,6 +877,7 @@ msgid ""
 msgstr ""
 
 #: Postman/PostmanViewController.php:245
+msgctxt "Forge as in a forgery (fake) is made"
 msgid "Forge the From Address"
 msgstr ""
 

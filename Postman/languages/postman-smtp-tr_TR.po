@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.5.7\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-29 17:45:53+00:00\n"
-"PO-Revision-Date: 2015-04-29 13:49-0500\n"
+"POT-Creation-Date: 2015-04-29 18:05:32+00:00\n"
+"PO-Revision-Date: 2015-04-29 14:07-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr_TR\n"
@@ -258,8 +258,9 @@ msgid "Login"
 msgstr "Login"
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:103
+#: Postman/PostmanAdminController.php:613
 #: Postman/PostmanViewController.php:626
-msgctxt "Authentication Type"
+msgctxt "As in type used: Plain"
 msgid "Plain"
 msgstr "Plain"
 
@@ -525,11 +526,6 @@ msgctxt "As in type used: None"
 msgid "None"
 msgstr "Hiçbiri"
 
-#: Postman/PostmanAdminController.php:613
-msgctxt "As in type used: Plain"
-msgid "Plain"
-msgstr "Plain"
-
 #: Postman/PostmanAdminController.php:627
 msgctxt "Encryption Type"
 msgid "SSL (SMTPS)"
@@ -553,6 +549,19 @@ msgstr "Gönderen email adresinin geçersiz kılınmasını önle"
 #: Postman/PostmanAdminController.php:734
 msgid "Error computing your domain root - please enter it manually"
 msgstr "Domain adından dizin alınırken hata oluştu - lütfen el ile giriniz"
+
+#: Postman/PostmanAdminController.php:823
+msgctxt "When the server is online to the public, this is \"Production\" mode"
+msgid "Production"
+msgstr ""
+
+#: Postman/PostmanAdminController.php:824
+msgid "Log Emails, then Dump"
+msgstr ""
+
+#: Postman/PostmanAdminController.php:825
+msgid "Dump All Emails"
+msgstr ""
 
 #. translators: where %s is the domain name of the site
 #: Postman/PostmanAjaxController.php:370
@@ -814,6 +823,7 @@ msgid "You must use the SMTP server (MSA) approved by your domain to deliver you
 msgstr ""
 
 #: Postman/PostmanViewController.php:245
+msgctxt "Forge as in a forgery (fake) is made"
 msgid "Forge the From Address"
 msgstr ""
 
@@ -1061,7 +1071,7 @@ msgstr ""
 #: Postman/PostmanViewController.php:618
 msgctxt "The port number"
 msgid "Port %d"
-msgstr ""
+msgstr "%d Portunu"
 
 #: Postman/PostmanViewController.php:624
 msgctxt "Authentication Type"
@@ -1313,6 +1323,10 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgctxt "Authentication Type"
+#~ msgid "Plain"
+#~ msgstr "Plain"
 
 #~ msgctxt "Authentication Type"
 #~ msgid "OAuth 2.0"

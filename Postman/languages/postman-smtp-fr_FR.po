@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-29 17:50:28+00:00\n"
-"PO-Revision-Date: 2015-04-29 13:58-0500\n"
+"POT-Creation-Date: 2015-04-29 17:59:09+00:00\n"
+"PO-Revision-Date: 2015-04-29 13:59-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -257,8 +257,9 @@ msgid "Login"
 msgstr "Login"
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:103
+#: Postman/PostmanAdminController.php:613
 #: Postman/PostmanViewController.php:626
-msgctxt "Authentication Type"
+msgctxt "As in type used: Plain"
 msgid "Plain"
 msgstr "Vide"
 
@@ -523,11 +524,6 @@ msgstr "Spécifiez têtes personnalisés (par exemple <code>X-MC-Tags: wordpress
 msgctxt "As in type used: None"
 msgid "None"
 msgstr "Aucun"
-
-#: Postman/PostmanAdminController.php:613
-msgctxt "As in type used: Plain"
-msgid "Plain"
-msgstr "Vide"
 
 #: Postman/PostmanAdminController.php:627
 msgctxt "Encryption Type"
@@ -1319,6 +1315,10 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgctxt "Authentication Type"
+#~ msgid "Plain"
+#~ msgstr "Vide"
 
 #~ msgctxt "Authentication Type"
 #~ msgid "OAuth 2.0"
