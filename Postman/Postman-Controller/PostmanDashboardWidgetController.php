@@ -66,7 +66,7 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 		 */
 		public function printDashboardWidget() {
 			$goToSettings = sprintf ( '<a href="%s">%s</a>', PostmanUtils::getSettingsPageUrl (), _x ( 'Settings', 'Dashboard Widget Settings Link label', 'postman-smtp' ) );
-			$goToEmailLog = sprintf ( '%s', _x ( 'Email Log', 'Dashboard Widget Settings Link label', 'postman-smtp' ) );
+			$goToEmailLog = sprintf ( '%s', _x ( 'Email Log', 'The log of Emails that have been delivered', 'postman-smtp' ) );
 			if ($this->options->isMailLoggingEnabled ()) {
 				$goToEmailLog = sprintf ( '<a href="%s">%s</a>', PostmanUtils::getEmailLogPageUrl (), $goToEmailLog );
 			}

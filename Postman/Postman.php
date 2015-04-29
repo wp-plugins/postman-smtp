@@ -143,7 +143,7 @@ if (! class_exists ( 'Postman' )) {
 			$this->logger->debug ( 'Displaying configuration required warning' );
 			$message = sprintf ( __ ( 'Postman is <em>not</em> handling email delivery.', 'postman-smtp' ) );
 			$message .= ' ';
-			/* translators: where %s is the URL to the Postman Settings page */
+			/* translators: where %s is the URL to the Postman Setup page */
 			$message .= sprintf ( __ ( '<a href="%s">Configure</a> the plugin.', 'postman-smtp' ), POSTMAN_HOME_PAGE_ABSOLUTE_URL );
 			$this->messageHandler->printMessage ( $message, PostmanMessageHandler::ERROR_CLASS );
 		}

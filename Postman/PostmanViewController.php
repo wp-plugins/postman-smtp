@@ -74,7 +74,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 */
 		public function generateDefaultContent() {
 			// This page will be under "Settings"
-			$pageTitle = _x ( 'Postman Settings', 'Page Title', 'postman-smtp' );
+			$pageTitle = _x ( 'Postman Setup', 'Page Title', 'postman-smtp' );
 			$pluginName = 'Postman SMTP';
 			$uniqueId = self::POSTMAN_MENU_SLUG;
 			$pageOptions = array (
@@ -129,7 +129,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 * Register the Setup Wizard screen
 		 */
 		public function addSetupWizardSubmenu() {
-			$page = add_submenu_page ( null, _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::CONFIGURATION_WIZARD_SLUG, array (
+			$page = add_submenu_page ( null, _x ( 'Postman Setup', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::CONFIGURATION_WIZARD_SLUG, array (
 					$this,
 					'outputWizardContent' 
 			) );
@@ -164,7 +164,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 * Register the Configuration screen
 		 */
 		public function addConfigurationSubmenu() {
-			$page = add_submenu_page ( null, _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::CONFIGURATION_SLUG, array (
+			$page = add_submenu_page ( null, _x ( 'Postman Setup', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::CONFIGURATION_SLUG, array (
 					$this,
 					'outputManualConfigurationContent' 
 			) );
@@ -191,10 +191,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// We are in the correct screen because we are taking advantage of the load-* action (below)
 			$screen = get_current_screen ();
 			// $screen->remove_help_tabs();
-			$content = __ ( 'Configure Manually' , 'postman-smtp');
+			$content = _x ( 'configure manually', 'Adjust the Postman settings by hand', 'postman-smtp' );
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-connectivity-test',
-					'title' => __ ( 'Connectivity Test' , 'postman-smtp'),
+					'title' => _x ( 'Connectivity Test' , 'A testing tool which determines connectivity to the Internet', 'postman-smtp'),
 					'content' => $content 
 			) );
 			$screen->add_help_tab ( array (
@@ -212,7 +212,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 * Register the Email Test screen
 		 */
 		public function addEmailTestSubmenu() {
-			$page = add_submenu_page ( null, _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::EMAIL_TEST_SLUG, array (
+			$page = add_submenu_page ( null, _x ( 'Postman Setup', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::EMAIL_TEST_SLUG, array (
 					$this,
 					'outputTestEmailWizardContent' 
 			) );
@@ -246,7 +246,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			$content .= '</ul>';
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-connectivity-test',
-					'title' => __ ( 'Connectivity Test' , 'postman-smtp'),
+					'title' => _x ( 'Connectivity Test' , 'A testing tool which determines connectivity to the Internet', 'postman-smtp'),
 					'content' => $content 
 			) );
 			$screen->add_help_tab ( array (
@@ -264,7 +264,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 * Register the Diagnostics screen
 		 */
 		public function addDiagnosticsSubmenu() {
-			$page = add_submenu_page ( null, _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::DIAGNOSTICS_SLUG, array (
+			$page = add_submenu_page ( null, _x ( 'Postman Setup', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::DIAGNOSTICS_SLUG, array (
 					$this,
 					'outputDiagnosticsContent' 
 			) );
@@ -291,7 +291,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// $screen->remove_help_tabs();
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-connectivity-test',
-					'title' => __ ( 'Diagnostic Info' , 'postman-smtp'),
+					'title' => _x ( 'Diagnostic Info' , 'Short for "Diagnostic Information"', 'postman-smtp'),
 					'content' => __ ( 'Consolidates details of your setup to aid the author in debugging problems, including: operating system details, WordPress configuration, Postman configuration, network connectivity and your domain\'s primary MX and SPF records. Your private authorization credentials are masked.' , 'postman-smtp') 
 			) );
 			$screen->add_help_tab ( array (
@@ -309,7 +309,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 * Register the Email Test screen
 		 */
 		public function addPortTestSubmenu() {
-			$page = add_submenu_page ( null, _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::PORT_TEST_SLUG, array (
+			$page = add_submenu_page ( null, _x ( 'Postman Setup', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', self::PORT_TEST_SLUG, array (
 					$this,
 					'outputPortTestContent' 
 			) );
@@ -344,7 +344,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			$content .= '</ul>';
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-connectivity-test',
-					'title' => __ ( 'Connectivity Test' , 'postman-smtp'),
+					'title' => _x ( 'Connectivity Test' , 'A testing tool which determines connectivity to the Internet', 'postman-smtp'),
 					'content' => $content 
 			) );
 			$screen->add_help_tab ( array (
@@ -362,7 +362,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 * Register the Email Test screen
 		 */
 		public function addPurgeDataSubmenu() {
-			$page = add_submenu_page ( null, _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', PostmanAdminController::PURGE_DATA_SLUG, array (
+			$page = add_submenu_page ( null, _x ( 'Postman Setup', 'Page Title', 'postman-smtp' ), 'Postman SMTP', 'manage_options', PostmanAdminController::PURGE_DATA_SLUG, array (
 					$this,
 					'outputPurgeDataContent' 
 			) );
@@ -520,7 +520,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			}
 		}
 		private function outputChildPageHeader($title) {
-			printf ( '<h2>%s</h2>', _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ) );
+			printf ( '<h2>%s</h2>', _x ( 'Postman Setup', 'Page Title', 'postman-smtp' ) );
 			print '<div id="postman-main-menu" class="welcome-panel">';
 			print '<div class="welcome-panel-content">';
 			print '<div class="welcome-panel-column-container">';
@@ -589,7 +589,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 */
 		public function outputPurgeDataContent() {
 			print '<div class="wrap">';
-			$this->outputChildPageHeader ( _x ( 'Delete plugin settings', 'Page Title', 'postman-smtp' ) );
+			$this->outputChildPageHeader ( __ ( 'Delete plugin settings', 'postman-smtp' ) );
 			print '<form method="POST" action="' . get_admin_url () . 'admin-post.php">';
 			wp_nonce_field ( 'purge-data' );
 			printf ( '<input type="hidden" name="action" value="%s" />', PostmanAdminController::PURGE_DATA_SLUG );
@@ -604,7 +604,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		public function outputPortTestContent() {
 			print '<div class="wrap">';
 			
-			$this->outputChildPageHeader ( _x ( 'Connectivity Test', 'Page Title', 'postman-smtp' ) );
+			$this->outputChildPageHeader ( _x ( 'Connectivity Test' , 'A testing tool which determines connectivity to the Internet', 'postman-smtp') );
 			
 			print '<p>';
 			print __ ( 'This test determines which well-known ports are available for Postman to use.', 'postman-smtp' );
@@ -651,12 +651,12 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// test features
 			print '<div class="wrap">';
 			
-			$this->outputChildPageHeader ( _x ( 'Diagnostic Info', 'Page Title', 'postman-smtp' ) );
+			$this->outputChildPageHeader ( _x ( 'Diagnostic Info', 'Short for "Diagnostic Information"', 'postman-smtp' ) );
 			
 			printf ( '<h4>%s</h4>', __ ( 'Are you having issues with Postman?', 'postman-smtp' ) );
 			/* translators: where %1$s and %2$s are the URLs to the Troubleshooting and Support Forums on WordPress.org */
-			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Please check the <a href="%1$s">troubleshooting and error messages</a> page and the <a href="%2$s">support forum</a>.</br>If you write for help, please include the following diagnostic information:', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-smtp/other_notes/', 'https://wordpress.org/support/plugin/postman-smtp' ) );
-			printf ( '<h4>%s</h4>', _x ( 'Diagnostic Information', 'Page Title', 'postman-smtp' ) );
+			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Please check the <a href="%1$s">troubleshooting and error messages</a> page and the <a href="%2$s">support forum</a>.</br>If you write for help, please include the following:', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-smtp/other_notes/', 'https://wordpress.org/support/plugin/postman-smtp' ) );
+			printf ( '<h4>%s</h4>', _x ( 'Diagnostic Information', 'Details about the system', 'postman-smtp' ) );
 			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="10">%s</textarea>', _x ( 'Loading ...', 'Wizard Label', 'postman-smtp' ) );
 			print '</div>';
 		}
@@ -665,14 +665,14 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 */
 		private function displayTopNavigation() {
 			screen_icon ();
-			printf ( '<h2>%s</h2>', _x ( 'Postman Settings', 'Page Title', 'postman-smtp' ) );
+			printf ( '<h2>%s</h2>', _x ( 'Postman Setup', 'Page Title', 'postman-smtp' ) );
 			print '<div id="postman-main-menu" class="welcome-panel">';
 			print '<div class="welcome-panel-content">';
 			print '<div class="welcome-panel-column-container">';
 			print '<div class="welcome-panel-column">';
-			printf ( '<h4>%s</h4>', _x ( 'Get Started', 'Main Menu', 'postman-smtp' ) );
+			printf ( '<h4>%s</h4>', _x ( 'Settings', 'Main Menu', 'postman-smtp' ) );
 			printf ( '<a class="button button-primary button-hero" href="%s">%s</a>', $this->getPageUrl ( self::CONFIGURATION_WIZARD_SLUG ), _x ( 'Start the Wizard', 'Button Label', 'postman-smtp' ) );
-			printf ( '<p class="">or, <a href="%s" class="configure_manually">%s</a>. </p>', $this->getPageUrl ( self::CONFIGURATION_SLUG ), _x ( 'configure manually', 'Main Menu', 'postman-smtp' ) );
+			printf ( '<p class="">or, <a href="%s" class="configure_manually">%s</a>. </p>', $this->getPageUrl ( self::CONFIGURATION_SLUG ), _x ( 'configure manually', 'Adjust the Postman settings by hand', 'postman-smtp' ) );
 			print '</div>';
 			print '<div class="welcome-panel-column">';
 			printf ( '<h4>%s</h4>', _x ( 'Actions', 'Main Menu', 'postman-smtp' ) );
@@ -687,14 +687,14 @@ if (! class_exists ( 'PostmanViewController' )) {
 			} else {
 				printf ( '<li><div class="welcome-icon send_test_email">%s</div></li>', _x ( 'Send a Test Email', 'Page Title', 'postman-smtp' ) );
 			}
-			printf ( '<li><a href="%s" class="welcome-icon oauth-authorize">%s</a></li>', $this->getPageUrl ( PostmanAdminController::PURGE_DATA_SLUG ), _x ( 'Delete plugin settings', 'Main Menu', 'postman-smtp' ) );
+			printf ( '<li><a href="%s" class="welcome-icon oauth-authorize">%s</a></li>', $this->getPageUrl ( PostmanAdminController::PURGE_DATA_SLUG ), __ ( 'Delete plugin settings', 'postman-smtp' ) );
 			print '</ul>';
 			print '</div>';
 			print '<div class="welcome-panel-column welcome-panel-last">';
 			printf ( '<h4>%s</h4>', _x ( 'Troubleshooting', 'Main Menu', 'postman-smtp' ) );
 			print '<ul>';
 			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::PORT_TEST_SLUG ), _x ( 'Run a Connectivity Test', 'Main Menu', 'postman-smtp' ) );
-			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::DIAGNOSTICS_SLUG ), _x ( 'Diagnostic Info', 'Page Title', 'postman-smtp' ) );
+			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::DIAGNOSTICS_SLUG ), _x ( 'Diagnostic Info', 'Short for "Diagnostic Information"', 'postman-smtp' ) );
 			printf ( '<li><a href="https://wordpress.org/support/plugin/postman-smtp" class="welcome-icon postman_support">%s</a></li>', _x ( 'Online Support', 'Main Menu', 'postman-smtp' ) );
 			print '</ul></div></div></div></div>';
 		}
@@ -769,11 +769,11 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '</fieldset>';
 			
 			// Wizard Step 3
-			printf ( '<h5>%s</h5>', _x ( 'Connectivity Test', 'Wizard Step Title', 'postman-smtp' ) );
+			printf ( '<h5>%s</h5>', _x ( 'Connectivity Test' , 'A testing tool which determines connectivity to the Internet', 'postman-smtp') );
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'How will the connection to the MSA be established?', 'Wizard Step Title', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'Your connection settings depend on what your email service provider offers, and what your WordPress host allows. Postman will attempt to determine which options are available to you.', 'postman-smtp' ) );
-			printf ( '<p id="connectivity_test_status">%s: <span id="port_test_status">%s</span></p>', _x ( 'Connectivity Test', 'Wizard Action', 'postman-smtp' ), _x ( 'Ready', 'TCP Port Test Status', 'postman-smtp' ) );
+			printf ( '<p id="connectivity_test_status">%s: <span id="port_test_status">%s</span></p>', _x ( 'Connectivity Test' , 'A testing tool which determines connectivity to the Internet', 'postman-smtp'), _x ( 'Ready', 'TCP Port Test Status', 'postman-smtp' ) );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PORT );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::ENCRYPTION_TYPE );

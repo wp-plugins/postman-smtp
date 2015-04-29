@@ -499,7 +499,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::POSTMAN_TEST_SLUG, 'TEST_EMAIL' );
 			
 			// the Purge Data section
-			add_settings_section ( 'PURGE_DATA', _x ( 'Delete plugin settings', 'Configuration Section Title', 'postman-smtp' ), array (
+			add_settings_section ( 'PURGE_DATA', __ ( 'Delete plugin settings', 'postman-smtp' ), array (
 					$this,
 					'printPurgeDataSectionInfo' 
 			), 'PURGE_DATA' );
