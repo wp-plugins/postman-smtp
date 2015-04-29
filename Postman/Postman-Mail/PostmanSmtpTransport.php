@@ -100,7 +100,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 						break;
 					
 					case PostmanOptions::AUTHENTICATION_TYPE_PLAIN :
-						$authDescription = _x ( 'Plain', 'Authentication Type', 'postman-smtp' );
+						$authDescription = _x ( 'Plain', 'As in type used: Plain', 'postman-smtp' );
 						break;
 					
 					default :
