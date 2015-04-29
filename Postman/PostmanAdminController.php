@@ -820,9 +820,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		public function runModeCallback() {
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::RUN_MODE );
-			printf ( '<option value="%s" %s>Production</option>', PostmanOptions::RUN_MODE_PRODUCTION, PostmanOptions::RUN_MODE_PRODUCTION == $this->options->getLogLevel () ? 'selected="selected"' : '' );
-			printf ( '<option value="%s" %s>Log Emails, then Dump</option>', PostmanOptions::RUN_MODE_LOG_ONLY, PostmanOptions::RUN_MODE_LOG_ONLY == $this->options->getLogLevel () ? 'selected="selected"' : '' );
-			printf ( '<option value="%s" %s>Dump All Emails</option>', PostmanOptions::RUN_MODE_IGNORE, PostmanOptions::RUN_MODE_IGNORE == $this->options->getLogLevel () ? 'selected="selected"' : '' );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_PRODUCTION, PostmanOptions::RUN_MODE_PRODUCTION == $this->options->getLogLevel () ? 'selected="selected"' : '', _x ( 'Production', 'When the server is online to the public, this is "Production" mode', 'postman-smtp' ) );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_LOG_ONLY, PostmanOptions::RUN_MODE_LOG_ONLY == $this->options->getLogLevel () ? 'selected="selected"' : '', __ ( 'Log Emails, then Dump', 'postman-smtp' ) );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_IGNORE, PostmanOptions::RUN_MODE_IGNORE == $this->options->getLogLevel () ? 'selected="selected"' : '', __ ( 'Dump All Emails', 'postman-smtp' ) );
 			printf ( '</select>' );
 		}
 		
