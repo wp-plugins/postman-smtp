@@ -265,18 +265,15 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Remove warning from main screen for sender override if it's already on
 * Help screens
 * Highlight Logging option to users - http://code.tutsplus.com/articles/integrating-with-wordpress-ui-admin-pointers--wp-26853
+* Check for GoDaddy SMTP server during Wizard and use that SMTP server
 * (TBD): Check for well-known domains and warn when configuring the wrong SMTP server
-* "Warning: Your email address belongs to %1$s, but you are not using the %1$s SMTP server. Mail delivery will not be reliable."
 * (TBD): Check for Gmail during wizard and remember for gmail api option.
 * (TBD): Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
-* "Socket: " and "Authentication:"
 * (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
-* "Warning: Expected to reach %1$s but %2$s answered instead, something may be wrong."
 * (TBD): Delivery mode - production, logging, test
 * (TBD): Warn when using AUTH with NO encryption
-* "Warning: This configuration option will send your authorization credentials in the clear."
-* (TBD): Check for GoDaddy SMTP server during Wizard and use that SMTP server
 * (TBD): Add MX and SPF to diagnostic data
+* (TBD): Check for redirect errors - relative URLs only
 
 = 1.5.13 - 2015-04-18 =
 * Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)
