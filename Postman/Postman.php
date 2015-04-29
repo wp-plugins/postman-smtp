@@ -17,6 +17,7 @@ if (! class_exists ( 'Postman' )) {
 	require_once 'Postman-Controller/PostmanDashboardWidgetController.php';
 	require_once 'PostmanActivationHandler.php';
 	require_once 'Postman-Email-Log/PostmanEmailLogView.php';
+	require_once 'Postman-Controller/PostmanAdminPointer.php';
 	
 	/**
 	 *
@@ -74,7 +75,7 @@ if (! class_exists ( 'Postman' )) {
 				new PostmanDashboardWidgetController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->wpMailBinder );
 				$adminController = new PostmanAdminController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
 				new PostmanEmailLogView ( $rootPluginFilenameAndPath );
-				
+				new PostmanAdminPointer ( $rootPluginFilenameAndPath );
 				// do this only if we're on a postman admin screen
 				if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
 					add_action ( 'in_admin_footer', array (

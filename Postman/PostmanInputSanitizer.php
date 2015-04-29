@@ -63,7 +63,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 					$new_input [PostmanOptions::SENDER_EMAIL] = sanitize_text_field ( $newEmail );
 				} else {
 					$new_input [PostmanOptions::SENDER_EMAIL] = $this->options->getSenderEmail ();
-					add_settings_error ( PostmanOptions::SENDER_EMAIL, PostmanOptions::SENDER_EMAIL, 'You have entered an invalid e-mail address', 'error' );
+					add_settings_error ( PostmanOptions::SENDER_EMAIL, PostmanOptions::SENDER_EMAIL, 'You have entered an invalid email address', 'error' );
 					$success = false;
 				}
 			}

@@ -251,27 +251,27 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * (TBD): Add option for MyMail
 
 = 1.6 =
-* (TBD): Help screens
 * Log all email attempts with error messages (if any)
 * View the damn logs!
 * View the details of a single log entry! - http://www.ericmmartin.com/projects/simplemodal/ ?
 * Delete logs on purge - separate Log Delete to its own class, instantiate in Admin class, and re-use that code
 * Preference screen for logging
-* (TBD): Add MX and SPF to diagnostic data
-* (TBD): Highlight Logging option to users
 * Obscure password from front-end
 * Ask to see password when typing
-* (TBD): Check for GoDaddy SMTP server during Wizard and use that SMTP server
-* (TBD): Check for Gmail during wizard and remember for gmail api option.
 * When the wizard is looking up the email, disable the smtp hostname field
-* (TBD): Check for well-known domains and warn when configuring the wrong SMTP server
-* (TBD): Warn when using AUTH with NO encryption
-* (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
 * Enable logging in Wizard
-* (TBD): Truncate logs to max amount - add option for unlimited logs?
-* (TBD): Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
-* (TBD): Delivery mode - production, logging, test
+* Truncate logs to max amount - add option for unlimited logs?
 * Remove warning from main screen for sender override if it's already on
+* Help screens
+* (TBD): Check for well-known domains and warn when configuring the wrong SMTP server
+* (TBD): Check for Gmail during wizard and remember for gmail api option.
+* (TBD): Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
+* (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
+* (TBD): Delivery mode - production, logging, test
+* (TBD): Warn when using AUTH with NO encryption
+* (TBD): Check for GoDaddy SMTP server during Wizard and use that SMTP server
+* (TBD): Highlight Logging option to users - http://code.tutsplus.com/articles/integrating-with-wordpress-ui-admin-pointers--wp-26853
+* (TBD): Add MX and SPF to diagnostic data
 
 = 1.5.13 - 2015-04-18 =
 * Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)

@@ -138,7 +138,7 @@ if (! class_exists ( 'PostmanEmailLogView' )) {
 		 */
 		function postmanAddMenuItem() {
 			$this->logger->trace ( 'created PostmanEmailLog admin menu item' );
-			$page = add_management_page ( 'Postman SMTP Log', 'Email Log', 'read_private_posts', 'postman_email_log', array (
+			$page = add_management_page ( __ ( 'Postman Email Log', 'postman-smtp' ), __ ( 'Email Log', 'postman-smtp' ), 'read_private_posts', 'postman_email_log', array (
 					$this,
 					'postman_render_email_page' 
 			) );
@@ -176,13 +176,15 @@ if (! class_exists ( 'PostmanEmailLogView' )) {
 	<div id="icon-users" class="icon32">
 		<br />
 	</div>
-	<h2>Postman SMTP Log</h2>
+	<h2><?php echo __ ( 'Postman Email Log', 'postman-smtp' ) ?></h2>
 
 	<div
 		style="background: #ECECEC; border: 1px solid #CCC; padding: 0 10px; margin-top: 5px; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;">
-		<p>This is a record of delivery attempts made to the Mail Submission
+		<p><?php
+			
+echo __ ( 'This is a record of delivery attempts made to the Mail Submission
 			Agent (MSA). It does not neccessarily indicate sucessful delivery to
-			the recipient.</p>
+			the recipient.', 'postman-smtp' )?></p>
 	</div>
 
 	<!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
@@ -258,8 +260,8 @@ if (! class_exists ( 'PostmanEmailLogPurger' )) {
 		}
 		
 		/**
-		 * 
-		 * @param unknown $size
+		 *
+		 * @param unknown $size        	
 		 */
 		function truncateLogItems($size) {
 			$index = count ( $this->posts );
