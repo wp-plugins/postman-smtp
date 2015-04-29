@@ -161,7 +161,7 @@ if (! class_exists ( 'Postman' )) {
 		 */
 		function print_signature() {
 			$pluginData = $this->pluginData;
-			printf ( __ ( '%1$s %2$s', 'postman-smtp' ) . '<br />', $pluginData ['Title'], $pluginData ['Version'] );
+			printf ( '%s %s<br/>', $pluginData ['Title'], $pluginData ['Version'] );
 		}
 		
 		/**

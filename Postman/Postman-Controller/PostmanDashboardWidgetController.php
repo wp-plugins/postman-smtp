@@ -42,13 +42,6 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 				}
 			}
 		}
-		/**
-		 * http://striderweb.com/nerdaphernalia/2008/06/give-your-wordpress-plugin-credit/
-		 */
-		function print_signature() {
-			$plugin_data = get_plugin_data ( $this->rootPluginFilenameAndPath );
-			printf ( __ ( '%1$s | Version %2$s', 'postman-smtp' ) . '<br />', $plugin_data ['Title'], $plugin_data ['Version'] );
-		}
 		
 		/**
 		 * Add a widget to the dashboard.

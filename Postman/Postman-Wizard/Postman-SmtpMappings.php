@@ -35,7 +35,7 @@ if (! class_exists ( 'SmtpMapping' )) {
 				'yahoo.fr' => 'smtp.mail.yahoo.fr',
 				'yahoo.ie' => 'smtp.mail.yahoo.co.uk',
 				'yahoo.it' => 'smtp.mail.yahoo.it',
-				'zoho.com' => 'smtp.zoho.com'
+				'zoho.com' => 'smtp.zoho.com' 
 		);
 		// if an email's mx is in this domain array, it is a known smtp server (dns lookup)
 		// useful for custom domains that map to a mail service
@@ -51,7 +51,11 @@ if (! class_exists ( 'SmtpMapping' )) {
 				'hushmail.com' => 'smtp.hushmail.com',
 				'gmx.net' => 'mail.gmx.com',
 				'mandrillapp.com' => 'smtp.mandrillapp.com',
-				'secureserver.net' => 'relay-hosting.secureserver.net' 
+				'smtp.secureserver.net' => 'relay-hosting.secureserver.net',
+				'presmtp.ex1.secureserver.net' => 'smtp.ex1.secureserver.net',
+				'presmtp.ex2.secureserver.net' => 'smtp.ex2.secureserver.net',
+				'presmtp.ex3.secureserver.net' => 'smtp.ex2.secureserver.net',
+				'presmtp.ex4.secureserver.net' => 'smtp.ex2.secureserver.net' 
 		);
 		public function getSmtpFromEmail($email) {
 			$hostname = substr ( strrchr ( $email, "@" ), 1 );
