@@ -78,6 +78,11 @@ function portTest2(hostname, port, button, open) {
 							testEl.html('<span style="color:green">'
 									+ response.data.protocol + '</span>');
 							if (port == 443) {
+								var p443El = jQuery('#server_id_port_' + port);
+								if (response.data.reported_hostname_domain_only) {
+									p443El.html('<span>' + response.data.reported_hostname_domain_only
+											+ '</span>');
+								}
 								addConclusion(postman_https_success, true);
 							} else {
 								inspectResponse(response.data, port);

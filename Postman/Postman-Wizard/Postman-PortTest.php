@@ -90,6 +90,8 @@ class PostmanPortTest {
 				$this->protocol = $matches [0];
 				$this->http = true;
 				$this->https = true;
+				$this->reportedHostname = $this->hostname;
+				$this->reportedHostnameDomainOnly = getRegisteredDomain($this->hostname);
 				return true;
 			} else {
 				return false;
