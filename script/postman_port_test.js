@@ -75,16 +75,20 @@ function portTest2(hostname, port, button, open) {
 					function(response) {
 						if (response.success) {
 							totalPortsTested += 1;
-							testEl.html('<span style="color:green">'
-									+ response.data.protocol + '</span>');
 							if (port == 443) {
+								testEl.html('<span style="color:green">&#x1f512; '
+										+ response.data.protocol + '</span>');
 								var p443El = jQuery('#server_id_port_' + port);
 								if (response.data.reported_hostname_domain_only) {
-									p443El.html('<span>' + response.data.reported_hostname_domain_only
-											+ '</span>');
+									p443El
+											.html('<span>'
+													+ response.data.reported_hostname_domain_only
+													+ '</span>');
 								}
 								addConclusion(postman_https_success, true);
 							} else {
+								testEl.html('<span style="color:green">'
+										+ response.data.protocol + '</span>');
 								inspectResponse(response.data, port);
 								addConclusion(
 										sprintf(
@@ -132,8 +136,16 @@ function portTest3(hostname, port, button, open) {
 					data,
 					function(response) {
 						if (response.success) {
-							testEl.html('<span style="color:green">'
-									+ response.data.protocol + '</span>');
+							if (response.data.protocol == 'SMTPS') {
+								testEl
+										.html('<span style="color:green">&#x1f512; '
+												+ response.data.protocol
+												+ '</span>');
+							} else {
+
+								testEl.html('<span style="color:green">'
+										+ response.data.protocol + '</span>');
+							}
 							inspectResponse(response.data, port);
 							addConclusion(
 									sprintf(
@@ -178,7 +190,8 @@ function inspectResponse(response, port) {
 	}
 	var testEl = jQuery('#starttls_test_port_' + port);
 	if (response.start_tls) {
-		testEl.html('<span style="color:green">' + postman_yes + '</span>');
+		testEl.html('<span style="color:green">&#x1f512; ' + postman_yes
+				+ '</span>');
 	} else {
 		testEl.html('<span>' + postman_no + '</span>');
 	}
