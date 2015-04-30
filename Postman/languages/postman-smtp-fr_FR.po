@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-04-29 17:59:09+00:00\n"
-"PO-Revision-Date: 2015-04-29 13:59-0500\n"
+"POT-Creation-Date: 2015-04-30 03:21:45+00:00\n"
+"PO-Revision-Date: 2015-04-29 23:23-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -85,7 +85,7 @@ msgstr "Password"
 #: Postman/Postman-Mail/PostmanGmailApiTransport.php:124
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:89
 #: Postman/PostmanAdminController.php:616
-#: Postman/PostmanViewController.php:628
+#: Postman/PostmanViewController.php:627
 msgctxt "Authentication Type is OAuth 2.0"
 msgid "OAuth 2.0"
 msgstr "OAuth 2,0"
@@ -244,21 +244,21 @@ msgstr "non"
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:95
 #: Postman/PostmanAdminController.php:615
-#: Postman/PostmanViewController.php:627
+#: Postman/PostmanViewController.php:626
 msgctxt "As in type used: CRAM-MD5"
 msgid "CRAM-MD5"
 msgstr "CRAM-MD5"
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:99
 #: Postman/PostmanAdminController.php:614
-#: Postman/PostmanViewController.php:625
+#: Postman/PostmanViewController.php:624
 msgctxt "As in type used: Login"
 msgid "Login"
 msgstr "Login"
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:103
 #: Postman/PostmanAdminController.php:613
-#: Postman/PostmanViewController.php:626
+#: Postman/PostmanViewController.php:625
 msgctxt "As in type used: Plain"
 msgid "Plain"
 msgstr "Vide"
@@ -816,6 +816,7 @@ msgid "You must use the SMTP server (MSA) approved by your domain to deliver you
 msgstr "Vous devez utiliser le serveur SMTP (ASC), approuvé par votre nom de domaine pour votre courrier entrant. Par exemple, une adresse de l'expéditeur @gmail.com exige que l'authentification et la livraison toujours par smtp.gmail.com."
 
 #: Postman/PostmanViewController.php:245
+msgctxt "Forge as in a forgery (fake) is made"
 msgid "Forge the From Address"
 msgstr "Forger l'adresse"
 
@@ -837,7 +838,7 @@ msgstr "Consolide détails de votre installation pour aider l&#39;auteur dans le
 msgid "The Connectivity Test will report this site's ability to reach a mail server, and interrogate the mail server for it's capabilities."
 msgstr "Le Test de connectivité sera rapport capacité de ce site pour atteindre un serveur de messagerie et interroger le serveur de messagerie pour ses capacités."
 
-#: Postman/PostmanViewController.php:339 Postman/PostmanViewController.php:620
+#: Postman/PostmanViewController.php:339 Postman/PostmanViewController.php:619
 msgctxt "Is it possible to create network connections to the Internet?"
 msgid "Outbound to Internet"
 msgstr "Sortant à Internet"
@@ -846,7 +847,7 @@ msgstr "Sortant à Internet"
 msgid "This tests the ability to make outbound connections from your site to the Internet in general. If the result is Closed, then there is a communication problem with the Internet, like a firewall.</li>"
 msgstr "Il teste la capacité de faire les connexions sortantes de votre site Internet en général. Si le résultat est fermé, puis il y a un problème de communication avec l'Internet, comme un pare-feu."
 
-#: Postman/PostmanViewController.php:340 Postman/PostmanViewController.php:621
+#: Postman/PostmanViewController.php:340 Postman/PostmanViewController.php:620
 msgctxt "What service is available?"
 msgid "Service Available"
 msgstr "Service Disponible"
@@ -855,7 +856,7 @@ msgstr "Service Disponible"
 msgid "This shows the service found for a particular host/port. Possible successful results are <b>SMTP</b>, <b>SMTPS</b> (secure) and <b>HTTPS</b> (secure). If the result is No and the hostname you entered is correct, there was a communication problem with the mail server, like a firewall.</li>"
 msgstr "Cela montre le service trouvé pour un hôte/port particulier. Résultats positifs possibles sont le <b>SMTP</b>, <b>SMTPS</b> (sécurisé) et <b>HTTPS</b> (sécurisé). Si le résultat est non, et le nom d'hôte que vous avez entré est correct, il y avait un problème de communication avec le serveur de messagerie, comme un pare-feu."
 
-#: Postman/PostmanViewController.php:341 Postman/PostmanViewController.php:622
+#: Postman/PostmanViewController.php:341 Postman/PostmanViewController.php:621
 msgctxt "What is this server's ID?"
 msgid "ID"
 msgstr "ID"
@@ -864,7 +865,7 @@ msgstr "ID"
 msgid "Some hosts redirect mail traffic to their own mail server, breaking authentication and SPF verification. This is revealed by an incorrect server identity.</li>"
 msgstr "Certains hébergeurs de redirigent le trafic de courrier à leur propre serveur de messagerie, rupture d'authentification et de vérification SPF. Ceci est révélé par une identité de serveur incorrect."
 
-#: Postman/PostmanViewController.php:342 Postman/PostmanViewController.php:623
+#: Postman/PostmanViewController.php:342 Postman/PostmanViewController.php:622
 msgid "STARTTLS"
 msgstr "STARTTLS"
 
@@ -872,7 +873,7 @@ msgstr "STARTTLS"
 msgid "This indicates whether the server supports protocol-level security. Either STARTTLS, SMTPS or HTTPS is required for secure transmission of your credentials.</li>"
 msgstr "Ceci indique si le serveur prend en charge la sécurité au niveau du protocole. STARTTLS, SMTPS ou HTTPS est requis pour la transmission sécurisée de vos informations d'identification."
 
-#: Postman/PostmanViewController.php:343 Postman/PostmanViewController.php:624
+#: Postman/PostmanViewController.php:343 Postman/PostmanViewController.php:623
 msgctxt "Short for Authentication"
 msgid "Auth"
 msgstr "Auth"
@@ -904,7 +905,7 @@ msgstr "Oui"
 msgid "No"
 msgstr "Non"
 
-#: Postman/PostmanViewController.php:438
+#: Postman/PostmanViewController.php:438 Postman/PostmanViewController.php:618
 msgctxt "eg. TCP Port 25"
 msgid "Port"
 msgstr "Port"
@@ -1056,20 +1057,19 @@ msgctxt "Button Label"
 msgid "Begin Test"
 msgstr "Commencer le test"
 
-#: Postman/PostmanViewController.php:616 Postman/PostmanViewController.php:758
-msgctxt "A socket is the network term for host and port together"
-msgid "Socket"
-msgstr "Socket"
-
-#: Postman/PostmanViewController.php:618
+#: Postman/PostmanViewController.php:617
 msgctxt "The port number"
-msgid "Port %d"
-msgstr "Port %d"
+msgid "Port %s"
+msgstr "Port %s"
 
-#: Postman/PostmanViewController.php:624
+#: Postman/PostmanViewController.php:623
 msgctxt "Authentication Type"
 msgid "None"
 msgstr "Aucun"
+
+#: Postman/PostmanViewController.php:630
+msgid "* Port 443 tests against googleapis.com, not the SMTP hostname you enter."
+msgstr "* Port 443 teste contre googleapis.com, pas le nom d'hôte SMTP vous entrez."
 
 #: Postman/PostmanViewController.php:631
 msgid "Summary"
@@ -1182,6 +1182,11 @@ msgstr "Veuillez noter que pour combattre le Spam, plusieurs services de message
 #: Postman/PostmanViewController.php:757
 msgid "Warning: Your email address belongs to %1$s, but you are not using the %1$s SMTP server. Mail delivery will not be reliable."
 msgstr "AVERTISSEMENT : Votre adresse e-mail appartient à %1$s, mais vous n'utilisez pas le serveur SMTP de %1$s. La distribution du courrier ne sera pas fiable."
+
+#: Postman/PostmanViewController.php:758
+msgctxt "A socket is the network term for host and port together"
+msgid "Socket"
+msgstr "Socket"
 
 #. Translators: where %1$s and %2$s are the names of the Email Service, like
 #. Google
@@ -1315,6 +1320,13 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "Forge the From Address"
+#~ msgstr "Forger l'adresse"
+
+#~ msgctxt "The port number"
+#~ msgid "Port %d"
+#~ msgstr "Port %d"
 
 #~ msgctxt "Authentication Type"
 #~ msgid "Plain"
