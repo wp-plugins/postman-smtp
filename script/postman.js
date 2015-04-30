@@ -39,6 +39,12 @@ function getRedirectUrl(data) {
 		}
 	});
 }
+function hideLoaderIcon() {
+	hide('.ajax-loader');
+}
+function showLoaderIcon() {
+	show('.ajax-loader');
+}
 function handleConfigurationResponse(response) {
 	response = response.data;
 	if (response.display_auth == 'oauth2') {
@@ -144,3 +150,9 @@ function enablePasswordDisplayOnEntry() {
 			});
 
 }
+
+jQuery('body').ajaxStart(function() {
+    $(this).css({'cursor' : 'wait'});
+}).ajaxStop(function() {
+    $(this).css({'cursor' : 'default'});
+});

@@ -267,7 +267,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Highlight Logging option to users - http://code.tutsplus.com/articles/integrating-with-wordpress-ui-admin-pointers--wp-26853
 * Check for GoDaddy SMTP server during Wizard and use that SMTP server
 * Check for GoDaddy 
-* (TBD): Add hostname to connectivity test table.
+* Add hostname to connectivity test table.
 * (TBD): Check for redirect errors - relative URLs only
 * (TBD): Check for well-known domains and warn when configuring the wrong SMTP server
 * (TBD): Check for Gmail during wizard and remember for gmail api option.
@@ -276,6 +276,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * (TBD): Warn when using AUTH with NO encryption
 * (TBD): Delivery mode - production, logging, test
 * (TBD): Add MX and SPF to diagnostic data
+* (TBD): Remove hard coded plugin version
 
 = 1.5.13 - 2015-04-18 =
 * Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)

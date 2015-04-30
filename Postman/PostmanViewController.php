@@ -768,6 +768,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<p>%s</p>', __ ( 'Note that many WordPress hosts, such as GoDaddy, Bluehost and Dreamhost, require that you use their mail accounts with their mail servers, and prevent you from using others.', 'postman-smtp' ) );
 			printf ( '<label for="hostname">%s</label>', __ ( 'Outgoing Mail Server Hostname', 'postman-smtp' ) );
 			print $this->adminController->hostname_callback ();
+			printf ('<p class="ajax-loader" style="display:none"><img src="%s"/></p>', plugins_url('postman-smtp/style/ajax-loader.gif'));
 			print '</fieldset>';
 			
 			// Wizard Step 3
@@ -776,6 +777,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<legend>%s</legend>', _x ( 'How will the connection to the MSA be established?', 'Wizard Step Title', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'Your connection settings depend on what your email service provider offers, and what your WordPress host allows. Postman will attempt to determine which options are available to you.', 'postman-smtp' ) );
 			printf ( '<p id="connectivity_test_status">%s: <span id="port_test_status">%s</span></p>', _x ( 'Connectivity Test' , 'A testing tool which determines connectivity to the Internet', 'postman-smtp'), _x ( 'Ready', 'TCP Port Test Status', 'postman-smtp' ) );
+			printf ('<p class="ajax-loader" style="display:none"><img src="%s"/></p>', plugins_url('postman-smtp/style/ajax-loader.gif'));
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PORT );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::ENCRYPTION_TYPE );

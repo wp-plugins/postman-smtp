@@ -186,6 +186,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 		if (priorIndex === 1) {
 			disable('#input_hostname');
 			jQuery('li').addClass('disabled');
+			showLoaderIcon();
 		}
 	}
 	if (currentIndex === 3) {
@@ -193,6 +194,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 			// this is the second place i disable the next button but Steps
 			// re-enables it after the screen slides
 			jQuery('li').addClass('disabled');
+			showLoaderIcon();
 		}
 	}
 	if (currentIndex === 4) {
@@ -312,6 +314,7 @@ function updateStatus(message) {
  */
 function afterPortsChecked() {
 	if (portsChecked >= portsToCheck) {
+		hideLoaderIcon();
 		if (totalAvail != 0) {
 			jQuery('li').removeClass('disabled');
 			portCheckBlocksUi = false;
@@ -449,6 +452,7 @@ function enableSmtpHostnameInput() {
 		}
 		enable('#input_hostname');
 		jQuery('li').removeClass('disabled');
+		hideLoaderIcon();
 	}
 }
 /**
