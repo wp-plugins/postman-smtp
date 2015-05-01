@@ -95,7 +95,7 @@ if (! class_exists ( 'PostmanOAuth2MailAuthenticator' )) {
 			$initClientRequestEncoded = '';
 			$senderEmail = $this->options->getSenderEmail ();
 			assert ( ! empty ( $senderEmail ) );
-			if (endsWith ( $this->options->getHostname (), 'yahoo.com' )) {
+			if (PostmanUtils::endsWith ( $this->options->getHostname (), 'yahoo.com' )) {
 				// Yahoo Mail requires a Vendor - see http://imapclient.freshfoo.com/changeset/535%3A80ae438f4e4a/
 				$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$this->authToken->getAccessToken()}\1vendor=Postman SMTP {$version}\1\1" );
 			} else {

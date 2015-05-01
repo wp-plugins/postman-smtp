@@ -1,6 +1,6 @@
 <?php
 require_once 'Postman/postman-common-functions.php';
-require_once 'Postman/Postman-Wizard/Postman-SmtpDiscovery.php';
+require_once 'Postman/Postman-Wizard/PostmanSmtpDiscovery.php';
 function test() {
 	// DNS tests
 	check ( 'andrethierry.com', false );
@@ -16,7 +16,7 @@ function test() {
 	check ( '::ffff:192.0.2.128', true );
 }
 function check($ipAddress, $expectedresult) {
-	$result = isHostAddressNotADomainName ( $ipAddress );
+	$result = PostmanUtils::isHostAddressNotADomainName ( $ipAddress );
 	$displaySuccess = 'fail';
 	if ($result == $expectedresult) {
 		$displaySuccess = 'pass';

@@ -177,9 +177,10 @@ if (! class_exists ( 'PostmanGetHostnameByEmailAjaxController' )) {
 		 */
 		function getAjaxHostnameByEmail() {
 			$email = $this->getRequestParameter ( 'email' );
-			$d = new SmtpDiscovery ();
-			$smtp = $d->getSmtpServer ( $email );
+			$d = new PostmanSmtpDiscovery ( $email );
+			$smtp = $d->getSmtpServer ();
 			$this->logger->debug ( 'given email ' . $email . ', smtp server is ' . $smtp );
+			$this->logger->trace ( $d );
 			$response = array (
 					'hostname' => ! empty ( $smtp ) ? $smtp : '' 
 			);
@@ -410,7 +411,7 @@ Content-Transfer-Encoding: 8bit
 									</td>
 								</tr>
 							</tbody>
-						</table> <br><span style="font-size:0.9em;color:#94c0dc;">' . __('Image source','postman-smtp').': <a style="color:#94c0dc" href="http://poofytoo.com">poofytoo.com</a> - ' . __('Used with permission','postman-smtp'). '</span></td>
+						</table> <br><span style="font-size:0.9em;color:#94c0dc;">' . __ ( 'Image source', 'postman-smtp' ) . ': <a style="color:#94c0dc" href="http://poofytoo.com">poofytoo.com</a> - ' . __ ( 'Used with permission', 'postman-smtp' ) . '</span></td>
 				</tr>
 			</tbody>
 		</table>

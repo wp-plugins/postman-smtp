@@ -151,11 +151,11 @@ if (! class_exists ( 'PostmanViewController' )) {
 			wp_enqueue_style ( 'jquery_steps_style' );
 			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_script ( 'postman_wizard_script' );
-			if (startsWith ( get_locale (), 'fr' )) {
+			if (PostmanUtils::startsWith ( get_locale (), 'fr' )) {
 				wp_enqueue_script ( 'jquery_validation_fr' );
-			} elseif (startsWith ( get_locale (), 'it' )) {
+			} elseif (PostmanUtils::startsWith ( get_locale (), 'it' )) {
 				wp_enqueue_script ( 'jquery_validation_it' );
-			} elseif (startsWith ( get_locale (), 'tr' )) {
+			} elseif (PostmanUtils::startsWith ( get_locale (), 'tr' )) {
 				wp_enqueue_script ( 'jquery_validation_tr' );
 			}
 		}

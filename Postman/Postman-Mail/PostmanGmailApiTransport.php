@@ -195,7 +195,7 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 		 */
 		public function getHostsToTest($hostname) {
 			$hosts = array ();
-			if (endswith ( $hostname, 'gmail.com' )) {
+			if (PostmanUtils::endsWith ( $hostname, 'gmail.com' )) {
 				$hosts = array (
 						array (
 								'host' => self::HOST,

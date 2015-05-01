@@ -161,7 +161,7 @@ if (! class_exists ( "PostmanOptions" )) {
 				return base64_decode ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] );
 		}
 		public function getObfuscatedPassword() {
-			return postmanObfuscatePassword ( $this->getPassword () );
+			return PostmanUtils::postmanObfuscatePassword ( $this->getPassword () );
 		}
 		public function getReplyTo() {
 			if (isset ( $this->options [PostmanOptions::REPLY_TO] ))

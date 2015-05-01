@@ -198,7 +198,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			$urlParts = parse_url ( $scribe->getCallbackUrl () );
 			$response ['dot_notation_url'] = false;
 			if (isset ( $urlParts ['host'] )) {
-				if (isHostAddressNotADomainName ( $urlParts ['host'] )) {
+				if (PostmanUtils::isHostAddressNotADomainName ( $urlParts ['host'] )) {
 					$response ['dot_notation_url'] = true;
 				}
 			}

@@ -42,10 +42,10 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			}
 		}
 		public function isServiceProviderGoogle($hostname) {
-			return endsWith ( $hostname, 'gmail.com' );
+			return PostmanUtils::endsWith ( $hostname, 'gmail.com' );
 		}
 		public function isServiceProviderMicrosoft($hostname) {
-			return endsWith ( $hostname, 'live.com' );
+			return PostmanUtils::endsWith ( $hostname, 'live.com' );
 		}
 		public function isServiceProviderYahoo($hostname) {
 			return strpos ( $hostname, 'yahoo' );
@@ -310,13 +310,13 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		}
 		const SLUG = 'smtp';
 		public function isServiceProviderGoogle($hostname) {
-			return endsWith ( $hostname, 'gmail.com' );
+			return PostmanUtils::endsWith ( $hostname, 'gmail.com' );
 		}
 		public function isServiceProviderMicrosoft($hostname) {
-			return endsWith ( $hostname, 'live.com' );
+			return PostmanUtils::endsWith ( $hostname, 'live.com' );
 		}
 		public function isServiceProviderYahoo($hostname) {
-			return endsWith ( $hostname, 'yahoo.com' );
+			return PostmanUtils::endsWith ( $hostname, 'yahoo.com' );
 		}
 		public function isOAuthUsed($authType) {
 			return false;

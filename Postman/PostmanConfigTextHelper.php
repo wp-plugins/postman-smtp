@@ -268,13 +268,13 @@ if (! class_exists ( 'PostmanNonOAuthScribe' )) {
 			$this->hostname = $hostname;
 		}
 		public function isGoogle() {
-			return endsWith ( $this->hostname, 'gmail.com' );
+			return PostmanUtils::endsWith ( $this->hostname, 'gmail.com' );
 		}
 		public function isMicrosoft() {
-			return endsWith ( $this->hostname, 'live.com' );
+			return PostmanUtils::endsWith ( $this->hostname, 'live.com' );
 		}
 		public function isYahoo() {
-			return endsWith ( $this->hostname, 'yahoo.com' );
+			return PostmanUtils::endsWith ( $this->hostname, 'yahoo.com' );
 		}
 		public function getOAuthHelp() {
 			$text = __ ( 'Enter an Outgoing Mail Server with OAuth2 capabilities.', 'postman-smtp' );
