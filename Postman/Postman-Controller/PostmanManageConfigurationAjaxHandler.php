@@ -1,8 +1,8 @@
 <?php
 if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 	class PostmanManageConfigurationAjaxHandler extends PostmanAbstractAjaxHandler {
-		function __construct() {
-			parent::__construct ();
+		function __construct($pluginData) {
+			parent::__construct ($pluginData);
 			$this->registerAjaxHandler ( 'manual_config', $this, 'getManualConfigurationViaAjax' );
 			$this->registerAjaxHandler ( 'get_wizard_configuration_options', $this, 'getWizardConfigurationViaAjax' );
 		}

@@ -2,8 +2,10 @@
 if (! class_exists ( 'PostmanSmtpTransport' )) {
 	class PostmanSmtpTransport implements PostmanTransport {
 		private $logger;
-		public function __construct() {
+		private $pluginData;
+		public function __construct($pluginData) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			$this->pluginData = $pluginData;
 		}
 		const SLUG = 'smtp';
 		public function getSlug() {
@@ -13,7 +15,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			return _x ( 'SMTP', 'Transport Name', 'postman-smtp' );
 		}
 		public function getVersion() {
-			return POSTMAN_PLUGIN_VERSION;
+			return $this->pluginData ['Version'];
 		}
 		public function getHostname(PostmanOptionsInterface $options) {
 			return $options->getHostname ();
@@ -58,9 +60,9 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			if ($options->getAuthenticationType () == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
-				return new PostmanOAuth2MailAuthenticator ( $options, $authToken );
+				return new PostmanOAuth2MailAuthenticator ( $options, $authToken, $this->pluginData ['Version'] );
 			} else {
-				return new PostmanGeneralMailAuthenticator ( $options, $authToken );
+				return new PostmanGeneralMailAuthenticator ( $options, $authToken, $this->pluginData ['Version'] );
 			}
 		}
 		public function createZendMailTransport($hostname, $config) {

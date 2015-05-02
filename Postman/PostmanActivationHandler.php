@@ -14,13 +14,17 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 	 */
 	class PostmanActivationHandler {
 		
+		private $pluginVersion;
+		
 		/**
 		 */
-		public function __construct($rootPluginFilenameAndPath) {
+		public function __construct($rootPluginFilenameAndPath, $pluginVersion) {
+			assert(isset($pluginVersion));
 			register_activation_hook ( $rootPluginFilenameAndPath, array (
 					$this,
 					'activate_postman' 
 			) );
+			$this->pluginVersion = $pluginVersion;
 		}
 		
 		/**
@@ -110,7 +114,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			if (! isset ( $postmanState ['install_date'] )) {
 				$postmanState ['install_date'] = time ();
 			}
-			$postmanState ['version'] = POSTMAN_PLUGIN_VERSION;
+			$postmanState ['version'] = $this->pluginVersion;
 			update_option ( 'postman_state', $postmanState );
 			//
 			delete_option ( 'postman_session' );

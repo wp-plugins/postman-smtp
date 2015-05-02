@@ -268,14 +268,15 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Check for GoDaddy SMTP server during Wizard and use that SMTP server
 * Check for GoDaddy 
 * Add hostname to connectivity test table.
+* Check for Gmail during wizard and remember for gmail api option.
+* Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
+* Warn when using AUTH with NO encryption - done with padlock emoji
+* Remove hard-coded plugin version number
+* Need some kind of success boolean in the email log
 * (TBD): Check for redirect errors - relative URLs only
-* (TBD): Check for Gmail during wizard and remember for gmail api option.
-* (TBD): Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
 * (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
-* (TBD): Warn when using AUTH with NO encryption
 * (TBD): Delivery mode - production, logging, test
 * (TBD): Add MX and SPF to diagnostic data
-* (TBD): Remove hard coded plugin version
 
 = 1.5.13 - 2015-04-18 =
 * Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)

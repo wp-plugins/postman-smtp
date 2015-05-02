@@ -2,6 +2,7 @@
 if (! interface_exists ( 'PostmanMailTransportConfiguration' )) {
 	interface PostmanMailTransportConfiguration {
 		function createConfig();
+		function getPluginVersion();
 		function isPluginSenderNameEnforced();
 		function isPluginSenderEmailEnforced();
 	}
@@ -22,9 +23,8 @@ if (! class_exists ( 'PostmanMailTransportConfigurationFactory' )) {
 		private function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
-		
 		public function createMailTransportConfiguration(PostmanTransport $transport, PostmanOptions $options, PostmanOAuthToken $authorizationToken) {
-			return $transport->createPostmanMailAuthenticator($options, $authorizationToken);
+			return $transport->createPostmanMailAuthenticator ( $options, $authorizationToken );
 		}
 	}
 }
@@ -33,15 +33,21 @@ if (! class_exists ( 'PostmanGeneralMailAuthenticator' )) {
 	class PostmanGeneralMailAuthenticator implements PostmanMailTransportConfiguration {
 		private $options;
 		private $authToken;
-		public function __construct(PostmanOptions $options, PostmanOAuthToken $authToken) {
+		private $pluginVersion;
+		public function __construct(PostmanOptions $options, PostmanOAuthToken $authToken, $pluginVersion) {
+			assert ( isset ( $pluginVersion ) );
 			$this->options = $options;
 			$this->authToken = $authToken;
+			$this->pluginVersion = $pluginVersion;
 		}
 		public function isPluginSenderNameEnforced() {
 			return false;
 		}
 		public function isPluginSenderEmailEnforced() {
 			return false;
+		}
+		public function getPluginVersion() {
+			return $this->pluginVersion;
 		}
 		public function createConfig() {
 			$logger = new PostmanLogger ( get_class ( $this ) );
@@ -73,10 +79,13 @@ if (! class_exists ( 'PostmanOAuth2MailAuthenticator' )) {
 		private $options;
 		private $authToken;
 		private $logger;
-		public function __construct(PostmanOptions $options, PostmanOAuthToken $authToken) {
+		private $pluginVersion;
+		public function __construct(PostmanOptions $options, PostmanOAuthToken $authToken, $pluginVersion) {
+			assert ( isset ( $pluginVersion ) );
 			$this->options = $options;
 			$this->authToken = $authToken;
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			$this->pluginVersion = $pluginVersion;
 		}
 		public function isPluginSenderNameEnforced() {
 			return false;
@@ -90,14 +99,16 @@ if (! class_exists ( 'PostmanOAuth2MailAuthenticator' )) {
 		private function getPort() {
 			return $this->options->getPort ();
 		}
+		public function getPluginVersion() {
+			return $this->pluginVersion;
+		}
 		public function createConfig() {
-			$version = POSTMAN_PLUGIN_VERSION;
 			$initClientRequestEncoded = '';
 			$senderEmail = $this->options->getSenderEmail ();
 			assert ( ! empty ( $senderEmail ) );
 			if (PostmanUtils::endsWith ( $this->options->getHostname (), 'yahoo.com' )) {
 				// Yahoo Mail requires a Vendor - see http://imapclient.freshfoo.com/changeset/535%3A80ae438f4e4a/
-				$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$this->authToken->getAccessToken()}\1vendor=Postman SMTP {$version}\1\1" );
+				$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$this->authToken->getAccessToken()}\1vendor=Postman SMTP {$this->pluginVersion}\1\1" );
 			} else {
 				$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$this->authToken->getAccessToken()}\1\1" );
 			}

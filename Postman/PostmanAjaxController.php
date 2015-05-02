@@ -10,8 +10,11 @@ if (! class_exists ( 'PostmanAbstractAjaxHandler' )) {
 	 */
 	abstract class PostmanAbstractAjaxHandler {
 		protected $logger;
-		function __construct() {
+		protected $pluginData;
+		function __construct($pluginData) {
+			assert ( isset ( $pluginData ) );
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			$this->pluginData = $pluginData;
 		}
 		/**
 		 *
@@ -66,8 +69,8 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		 *
 		 * @param PostmanOptionsInterface $options        	
 		 */
-		function __construct(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken) {
-			parent::__construct ();
+		function __construct($pluginData, PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken) {
+			parent::__construct ($pluginData);
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->diagnostics = '';
@@ -134,7 +137,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->addToDiagnostics ( $this->getPhpDependencies () );
 			$this->addToDiagnostics ( $this->getActivePlugins () );
 			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', wp_get_theme () ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', POSTMAN_PLUGIN_VERSION ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', $this->pluginData['Version'] ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Sender Domain: %s', $hostname = substr ( strrchr ( $this->options->getSenderEmail (), "@" ), 1 ) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI: %s', $transportRegistry->getDeliveryUri ( $transportRegistry->getCurrentTransport () ) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport Status (Configured|Ready|Connected): %s|%s|%s', $transportRegistry->getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', $this->testConnectivity () ) );
@@ -153,8 +156,8 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 
 if (! class_exists ( 'PostmanGetPortsToTestViaAjax' )) {
 	class PostmanGetPortsToTestViaAjax extends PostmanAbstractAjaxHandler {
-		function __construct() {
-			parent::__construct ();
+		function __construct($pluginData) {
+			parent::__construct ($pluginData);
 			$this->registerAjaxHandler ( 'get_hosts_to_test', $this, 'getPortsToTestViaAjax' );
 		}
 		/**
@@ -180,8 +183,8 @@ if (! class_exists ( 'PostmanGetPortsToTestViaAjax' )) {
 if (! class_exists ( 'PostmanGetHostnameByEmailAjaxController' )) {
 	class PostmanGetHostnameByEmailAjaxController extends PostmanAbstractAjaxHandler {
 		const IS_GOOGLE_PARAMETER = 'is_google';
-		function __construct() {
-			parent::__construct ();
+		function __construct($pluginData) {
+			parent::__construct ($pluginData);
 			$this->registerAjaxHandler ( 'check_email', $this, 'getAjaxHostnameByEmail' );
 		}
 		/**
@@ -213,8 +216,8 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		 *
 		 * @param PostmanOptionsInterface $options        	
 		 */
-		function __construct(PostmanOptionsInterface $options) {
-			parent::__construct ();
+		function __construct($pluginData, PostmanOptionsInterface $options) {
+			parent::__construct ($pluginData);
 			$this->options = $options;
 			$this->registerAjaxHandler ( 'wizard_port_test', $this, 'runSmtpTest' );
 			$this->registerAjaxHandler ( 'wizard_port_test_smtps', $this, 'runSmtpsTest' );
@@ -319,8 +322,8 @@ if (! class_exists ( 'PostmanImportConfigurationAjaxController' )) {
 		 *
 		 * @param PostmanOptionsInterface $options        	
 		 */
-		function __construct(PostmanOptionsInterface $options) {
-			parent::__construct ();
+		function __construct($pluginData, PostmanOptionsInterface $options) {
+			parent::__construct ($pluginData);
 			$this->options = $options;
 			$this->registerAjaxHandler ( 'import_configuration', $this, 'getConfigurationFromExternalPluginViaAjax' );
 		}
@@ -372,8 +375,8 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 		 * @param PostmanOAuthTokenInterface $authorizationToken        	
 		 * @param PostmanConfigTextHelper $oauthScribe        	
 		 */
-		function __construct(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe) {
-			parent::__construct ();
+		function __construct($pluginData, PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe) {
+			parent::__construct ($pluginData);
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->oauthScribe = $oauthScribe;
@@ -393,7 +396,7 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 				$subject = sprintf ( _x ( 'Postman SMTP Test (%s)', 'Test Email Subject', 'postman-smtp' ), $serverName );
 				// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
 				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
-				$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanMessage::EOL, PostmanMessage::EOL, sprintf ( _x ( 'Sent by Postman %s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) );
+				$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanMessage::EOL, PostmanMessage::EOL, sprintf ( _x ( 'Sent by Postman %s', 'Test Email Tagline', 'postman-smtp' ), $this->pluginData['Version'] ) );
 				$message2 = '
 Content-Type: text/plain; charset = "UTF-8"
 Content-Transfer-Encoding: 8bit
@@ -429,7 +432,7 @@ Content-Transfer-Encoding: 8bit
 									<td>
 										<div
 											style="max-width: 600px; height: 400px; margin: 0 auto; overflow: hidden;background-image:url(\'https://ps.w.org/postman-smtp/assets/email/poofytoo.png\');background-repeat: no-repeat;">
-											<div style="margin:50px 0 0 300px; width:300px; font-size:2em;">Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は</div>' . sprintf ( '<div style="text-align:right;font-size: 1.4em; color:black;margin:150px 0 0 200px;">%s<br/><span style="font-size: 0.8em"><a style="color:#3f73b9" href="https://wordpress.org/plugins/postman-smtp/">https://wordpress.org/plugins/postman-smtp/</a></span></div>', sprintf ( _x ( 'Sent by Postman %s', 'Test Email Tagline', 'postman-smtp' ), POSTMAN_PLUGIN_VERSION ) ) . '</div>
+											<div style="margin:50px 0 0 300px; width:300px; font-size:2em;">Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は</div>' . sprintf ( '<div style="text-align:right;font-size: 1.4em; color:black;margin:150px 0 0 200px;">%s<br/><span style="font-size: 0.8em"><a style="color:#3f73b9" href="https://wordpress.org/plugins/postman-smtp/">https://wordpress.org/plugins/postman-smtp/</a></span></div>', sprintf ( _x ( 'Sent by Postman %s', 'Test Email Tagline', 'postman-smtp' ), $this->pluginData['Version'] ) ) . '</div>
 									</td>
 								</tr>
 							</tbody>

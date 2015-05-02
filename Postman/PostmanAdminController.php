@@ -60,6 +60,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		
 		// logging
 		private $logger;
+		private $pluginData;
 		
 		// Holds the values to be used in the fields callbacks
 		private $rootPluginFilenameAndPath;
@@ -75,9 +76,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 * Start up
 		 */
-		public function __construct($rootPluginFilenameAndPath, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanMessageHandler $messageHandler, PostmanWpMailBinder $binder) {
+		public function __construct($rootPluginFilenameAndPath, $pluginData, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanMessageHandler $messageHandler, PostmanWpMailBinder $binder) {
 			if (is_admin ()) {
 				assert ( ! empty ( $rootPluginFilenameAndPath ) );
+				assert ( isset ( $pluginData ) );
 				assert ( ! empty ( $options ) );
 				assert ( ! empty ( $authorizationToken ) );
 				assert ( ! empty ( $messageHandler ) );
@@ -87,6 +89,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->authorizationToken = $authorizationToken;
 				$this->messageHandler = $messageHandler;
 				$this->rootPluginFilenameAndPath = $rootPluginFilenameAndPath;
+				$this->pluginData = $pluginData;
 				$this->wpMailBinder = $binder;
 				
 				// check if the user saved data, and if validation was successful
@@ -136,20 +139,20 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		public function init() {
 			//
-			$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
+			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
 			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
 			// register Ajax handlers
-			new PostmanManageConfigurationAjaxHandler ();
-			new PostmanGetHostnameByEmailAjaxController ();
-			new PostmanGetPortsToTestViaAjax ();
-			new PostmanPortTestAjaxController ( $this->options );
-			new PostmanImportConfigurationAjaxController ( $this->options );
-			new PostmanGetDiagnosticsViaAjax ( $this->options, $this->authorizationToken );
-			new PostmanSendTestEmailAjaxController ( $this->options, $this->authorizationToken, $this->oauthScribe );
+			new PostmanManageConfigurationAjaxHandler ( $this->pluginData );
+			new PostmanGetHostnameByEmailAjaxController ( $this->pluginData );
+			new PostmanGetPortsToTestViaAjax ( $this->pluginData );
+			new PostmanPortTestAjaxController ( $this->pluginData, $this->options );
+			new PostmanImportConfigurationAjaxController ( $this->pluginData, $this->options );
+			new PostmanGetDiagnosticsViaAjax ( $this->pluginData, $this->options, $this->authorizationToken );
+			new PostmanSendTestEmailAjaxController ( $this->pluginData, $this->options, $this->authorizationToken, $this->oauthScribe );
 			
 			// register content handlers
-			$viewController = new PostmanViewController ( $this->rootPluginFilenameAndPath, $this->options, $this->authorizationToken, $this->oauthScribe, $this );
+			$viewController = new PostmanViewController ( $this->rootPluginFilenameAndPath, $this->pluginData, $this->options, $this->authorizationToken, $this->oauthScribe, $this );
 			
 			// register action handlers
 			$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );
@@ -248,7 +251,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$transactionId = PostmanSession::getInstance ()->getOauthInProgress ();
 			PostmanSession::getInstance ()->unsetOauthInProgress ();
 			
-			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( PostmanTransportRegistry::getInstance()->getCurrentTransport (), $options, $authorizationToken );
+			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( PostmanTransportRegistry::getInstance ()->getCurrentTransport (), $options, $authorizationToken );
 			try {
 				if ($authenticationManager->processAuthorizationGrantCode ( $transactionId )) {
 					$logger->debug ( 'Authorization successful' );
@@ -275,7 +278,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function handleOAuthPermissionRequestAction() {
 			$this->logger->debug ( 'handling OAuth Permission request' );
-			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( PostmanTransportRegistry::getInstance()->getCurrentTransport (), $this->options, $this->authorizationToken );
+			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( PostmanTransportRegistry::getInstance ()->getCurrentTransport (), $this->options, $this->authorizationToken );
 			$transactionId = $authenticationManager->generateRequestTransactionId ();
 			PostmanSession::getInstance ()->setOauthInProgress ( $transactionId );
 			$authenticationManager->requestVerificationCode ( $transactionId );
@@ -664,7 +667,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 */
 		public function prevent_sender_name_override_callback() {
-			$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
+			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
 			$transportConfigured = $transport->isConfigured ( $this->options, $this->authorizationToken );
 			if ($transportConfigured) {
 				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
@@ -695,7 +698,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function prevent_sender_email_override_callback() {
-			$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
+			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
 			$transportConfigured = $transport->isConfigured ( $this->options, $this->authorizationToken );
 			if ($transportConfigured) {
 				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );

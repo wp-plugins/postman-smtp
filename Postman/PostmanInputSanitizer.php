@@ -74,9 +74,6 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 				delete_option ( PostmanOAuthToken::OPTIONS_NAME );
 			}
 			
-			// add Postman plugin version number to database
-			$new_input [PostmanOptions::VERSION] = POSTMAN_PLUGIN_VERSION;
-			
 			if ($success) {
 				PostmanSession::getInstance ()->setAction ( self::VALIDATION_SUCCESS );
 			} else {

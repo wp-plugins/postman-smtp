@@ -67,7 +67,7 @@ if (! class_exists ( 'Postman' )) {
 			$this->wpMailBinder = PostmanWpMailBinder::getInstance ();
 			
 			// register the SMTP transport
-			$this->registerTransport ();
+			$this->registerTransport ( $this->pluginData );
 			
 			// bind to wp_mail - this has to happen before the "init" action
 			$this->wpMailBinder->bind ();
@@ -75,8 +75,8 @@ if (! class_exists ( 'Postman' )) {
 			if (is_admin ()) {
 				// the following classes should only be used if the current user is an admin
 				new PostmanDashboardWidgetController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->wpMailBinder );
-				$adminController = new PostmanAdminController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
-				new PostmanEmailLogView ( $rootPluginFilenameAndPath );
+				$adminController = new PostmanAdminController ( $rootPluginFilenameAndPath, $this->pluginData, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
+				new PostmanEmailLogView ( $rootPluginFilenameAndPath, $this->pluginData );
 				new PostmanAdminPointer ( $rootPluginFilenameAndPath );
 				// do this only if we're on a postman admin screen
 				if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
@@ -88,7 +88,7 @@ if (! class_exists ( 'Postman' )) {
 			}
 			
 			// register activation handler on the activation event
-			new PostmanActivationHandler ( $rootPluginFilenameAndPath );
+			new PostmanActivationHandler ( $rootPluginFilenameAndPath, $this->pluginData );
 			
 			// register the shortcode handler on the add_shortcode event
 			add_shortcode ( 'postman-version', array (
@@ -112,24 +112,24 @@ if (! class_exists ( 'Postman' )) {
 				$this->messageHandler->addError ( __ ( 'Postman is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.', 'postman-smtp' ) );
 			}
 			
-			$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
+			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
 			$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
 			// on any Postman page, print the config error messages
 			if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
 				
-				if (PostmanTransportRegistry::getInstance()->isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
+				if (PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
 					// no configuration errors to show
 				} else if (! $this->options->isNew ()) {
 					// show the errors as long as this is not a virgin install
-					$message = PostmanTransportRegistry::getInstance()->getCurrentTransport ()->getMisconfigurationMessage ( $scribe, $this->options, $this->authToken );
+					$message = PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->getMisconfigurationMessage ( $scribe, $this->options, $this->authToken );
 					if ($message) {
 						$this->logger->trace ( 'Transport has a configuration error: ' . $message );
 						$this->messageHandler->addError ( $message );
 					}
 				}
 			} else {
-				if (! PostmanTransportRegistry::getInstance()->isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
+				if (! PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
 					add_action ( 'admin_notices', Array (
 							$this,
 							'display_configuration_required_warning' 
@@ -153,9 +153,10 @@ if (! class_exists ( 'Postman' )) {
 		/**
 		 * Adds the regular SMTP transport
 		 */
-		private function registerTransport() {
-			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanSmtpTransport () );
-			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanGmailApiTransport () );
+		private function registerTransport($pluginData) {
+			assert ( isset ( $pluginData ) );
+			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanSmtpTransport ( $pluginData ) );
+			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanGmailApiTransport ( $pluginData ) );
 		}
 		
 		/**
@@ -182,7 +183,7 @@ if (! class_exists ( 'Postman' )) {
 		 * @return string Plugin version
 		 */
 		function version_shortcode() {
-			return POSTMAN_PLUGIN_VERSION;
+			return $this->pluginData ['Version'];
 		}
 	}
 }

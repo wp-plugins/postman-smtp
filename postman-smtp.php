@@ -16,9 +16,6 @@
 // -- add WPMU functionality. ideas: allow network setup for network emails. allow network admin to choose whether subdomains may override with their own settings. subdomains may override with their own settings.
 // -- send mail in the background using ajax - the single mail thread can block the PHP server for quite some time
 
-// define constants
-define ( 'POSTMAN_PLUGIN_VERSION', '1.6.0b1' );
-
 // start Postman
 require_once 'Postman/Postman.php';
 $kevinCostner = new Postman ( __FILE__ );

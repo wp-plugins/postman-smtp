@@ -12,11 +12,11 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 		const PORT = 443;
 		const HOST = 'www.googleapis.com';
 		const ENCRYPTION_TYPE = 'ssl';
-		
 		private $logger;
-		
-		public function __construct() {
-			$this->logger = new PostmanLogger(get_class($this));
+		private $pluginData;
+		public function __construct($pluginData) {
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			$this->pluginData = $pluginData;
 		}
 		
 		// this should be standard across all transports
@@ -32,7 +32,7 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 		 * @return string
 		 */
 		public function getVersion() {
-			return POSTMAN_PLUGIN_VERSION;
+			return $this->pluginData ['Version'];
 		}
 		/**
 		 * v0.2.1
@@ -99,7 +99,7 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 		}
 		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			require_once 'PostmanGmailApiMailAuthenticator.php';
-			return new PostmanGmailApiMailAuthenticator ( $options, $authToken );
+			return new PostmanGmailApiMailAuthenticator ( $options, $authToken, $this->pluginData['Version'] );
 		}
 		public function createZendMailTransport($hostname, $config) {
 			require_once 'PostmanZendMailTransportGmailApi.php';
@@ -209,8 +209,8 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 						) 
 				);
 			}
-			$this->logger->debug('hosts to test:');
-			$this->logger->debug($hosts);
+			$this->logger->debug ( 'hosts to test:' );
+			$this->logger->debug ( $hosts );
 			return $hosts;
 		}
 		

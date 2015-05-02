@@ -74,7 +74,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$mail = new Postman_Zend_Mail ( $charset );
 			
 			// add the Postman signature - append it to whatever the user may have set
-			$mail->addHeader ( 'X-Mailer', sprintf ( 'Postman SMTP %s for WordPress (%s)', POSTMAN_PLUGIN_VERSION, 'https://wordpress.org/plugins/postman-smtp/' ), true );
+			$mail->addHeader ( 'X-Mailer', sprintf ( 'Postman SMTP %s for WordPress (%s)', $this->authenticator->getPluginVersion(), 'https://wordpress.org/plugins/postman-smtp/' ), true );
 			
 			// add the headers
 			foreach ( ( array ) $message->getHeaders () as $header ) {
