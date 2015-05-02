@@ -18,7 +18,7 @@ if (! class_exists ( 'PostmanEmailLog' )) {
 if (! class_exists ( 'PostmanEmailLogFactory' )) {
 	class PostmanEmailLogFactory {
 		public static function createSuccessLog(PostmanMessage $message, $transcript, PostmanTransport $transport) {
-			return PostmanEmailLogFactory::createLog ( $message, $transcript, __ ( 'Sent' , 'postman-smtp'), true, $transport );
+			return PostmanEmailLogFactory::createLog ( $message, $transcript, '', true, $transport );
 		}
 		public static function createFailureLog(PostmanMessage $message = null, $transcript, PostmanTransport $transport, $statusMessage) {
 			return PostmanEmailLogFactory::createLog ( $message, $transcript, $statusMessage, false, $transport );
@@ -36,7 +36,7 @@ if (! class_exists ( 'PostmanEmailLogFactory' )) {
 			}
 			$log->success = $success;
 			$log->statusMessage = $statusMessage;
-			$log->transportUri = PostmanTransportRegistry::getInstance()->getPublicTransportUri ( $transport );
+			$log->transportUri = PostmanTransportRegistry::getInstance ()->getPublicTransportUri ( $transport );
 			$log->sessionTranscript = 'n/a';
 			if (! empty ( $transcript )) {
 				$log->sessionTranscript = $transcript;
@@ -94,7 +94,6 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		 */
 		public function init() {
 			$this->create_post_type ();
-			$this->createTaxonomy ();
 		}
 		private function truncateEmailLog() {
 			$args = array (
@@ -117,11 +116,11 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		function create_post_type() {
 			register_post_type ( self::POSTMAN_CUSTOM_POST_TYPE_SLUG, array (
 					'labels' => array (
-							'name' => _x ( 'Sent Emails', 'The group of Emails that have been delivered', 'postman-smtp' ), 
+							'name' => _x ( 'Sent Emails', 'The group of Emails that have been delivered', 'postman-smtp' ),
 							'singular_name' => _x ( 'Sent Email', 'An Email that has been delivered', 'postman-smtp' ) 
-							),
+					),
 					'capability_type' => '',
-					'capabilities' => array() 
+					'capabilities' => array () 
 			) );
 			$this->logger->trace ( 'Created custom post type' );
 		}
@@ -156,25 +155,18 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			$this->logger->trace ( $log );
 			
 			// meta
+			update_post_meta ( $post_id, 'success', $log->success );
 			update_post_meta ( $post_id, 'from_header', wp_slash ( $log->sender ) );
 			update_post_meta ( $post_id, 'to_header', wp_slash ( $log->recipients ) );
 			update_post_meta ( $post_id, 'reply_to_header', wp_slash ( $log->replyTo ) );
 			update_post_meta ( $post_id, 'transport_uri', wp_slash ( sanitize_text_field ( $log->transportUri ) ) );
 			// from http://stackoverflow.com/questions/20444042/wordpress-how-to-sanitize-multi-line-text-from-a-textarea-without-losing-line
 			$sanitizedTranscript = $log->sessionTranscript;
-// 			$sanitizedTranscript = implode ( PHP_EOL, array_map ( 'sanitize_text_field', explode ( PHP_EOL, $log->sessionTranscript ) ) );
+			// $sanitizedTranscript = implode ( PHP_EOL, array_map ( 'sanitize_text_field', explode ( PHP_EOL, $log->sessionTranscript ) ) );
 			update_post_meta ( $post_id, 'session_transcript', wp_slash ( $sanitizedTranscript ) );
-			$purger = new PostmanEmailLogPurger();
-			$purger->truncateLogItems(PostmanOptions::getInstance()->getMailLoggingMaxEntries());
+			$purger = new PostmanEmailLogPurger ();
+			$purger->truncateLogItems ( PostmanOptions::getInstance ()->getMailLoggingMaxEntries () );
 		}
 		
-		/**
-		 */
-		private function createTaxonomy() {
-			// create taxonomy
-			$args = array ();
-			register_taxonomy ( 'postman_sent_mail_category', 'success', $args );
-			register_taxonomy ( 'postman_sent_mail_category', 'fail', $args );
-		}
 	}
 }
