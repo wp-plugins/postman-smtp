@@ -13,6 +13,12 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 		const HOST = 'www.googleapis.com';
 		const ENCRYPTION_TYPE = 'ssl';
 		
+		private $logger;
+		
+		public function __construct() {
+			$this->logger = new PostmanLogger(get_class($this));
+		}
+		
 		// this should be standard across all transports
 		public function getSlug() {
 			return self::SLUG;
@@ -193,9 +199,9 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 		 *
 		 * May return an array of several combinations.
 		 */
-		public function getHostsToTest($hostname) {
+		public function getHostsToTest($hostname, $isGmail) {
 			$hosts = array ();
-			if (PostmanUtils::endsWith ( $hostname, 'gmail.com' )) {
+			if ($isGmail) {
 				$hosts = array (
 						array (
 								'host' => self::HOST,
@@ -203,6 +209,8 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 						) 
 				);
 			}
+			$this->logger->debug('hosts to test:');
+			$this->logger->debug($hosts);
 			return $hosts;
 		}
 		

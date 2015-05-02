@@ -189,7 +189,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		 *
 		 * May return an array of several combinations.
 		 */
-		public function getHostsToTest($hostname) {
+		public function getHostsToTest($hostname, $isGmail) {
 			$hosts = array (
 					array (
 							'host' => $hostname,
@@ -340,7 +340,7 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			return false;
 		}
-		public function getHostsToTest($hostname) {
+		public function getHostsToTest($hostname, $isGmail) {
 		}
 		public function getConfigurationRecommendation($hostData) {
 		}

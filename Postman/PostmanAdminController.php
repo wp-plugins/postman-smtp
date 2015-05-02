@@ -136,7 +136,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		public function init() {
 			//
-			$transport = PostmanTransportUtils::getCurrentTransport ();
+			$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
 			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
 			// register Ajax handlers
@@ -248,7 +248,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$transactionId = PostmanSession::getInstance ()->getOauthInProgress ();
 			PostmanSession::getInstance ()->unsetOauthInProgress ();
 			
-			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( PostmanTransportUtils::getCurrentTransport (), $options, $authorizationToken );
+			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( PostmanTransportRegistry::getInstance()->getCurrentTransport (), $options, $authorizationToken );
 			try {
 				if ($authenticationManager->processAuthorizationGrantCode ( $transactionId )) {
 					$logger->debug ( 'Authorization successful' );
@@ -275,7 +275,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function handleOAuthPermissionRequestAction() {
 			$this->logger->debug ( 'handling OAuth Permission request' );
-			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( PostmanTransportUtils::getCurrentTransport (), $this->options, $this->authorizationToken );
+			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( PostmanTransportRegistry::getInstance()->getCurrentTransport (), $this->options, $this->authorizationToken );
 			$transactionId = $authenticationManager->generateRequestTransactionId ();
 			PostmanSession::getInstance ()->setOauthInProgress ( $transactionId );
 			$authenticationManager->requestVerificationCode ( $transactionId );
@@ -597,7 +597,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function transport_type_callback() {
 			$transportType = $this->options->getTransportType ();
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSPORT_TYPE );
-			foreach ( PostmanTransportDirectory::getInstance ()->getTransports () as $transport ) {
+			foreach ( PostmanTransportRegistry::getInstance ()->getTransports () as $transport ) {
 				printf ( '<option class="input_tx_type_%1$s" value="%1$s" %3$s>%2$s</option>', $transport->getSlug (), $transport->getName (), $transportType == $transport->getSlug () ? 'selected="selected"' : '' );
 			}
 			print '</select>';
@@ -664,7 +664,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 */
 		public function prevent_sender_name_override_callback() {
-			$transport = PostmanTransportUtils::getCurrentTransport ();
+			$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
 			$transportConfigured = $transport->isConfigured ( $this->options, $this->authorizationToken );
 			if ($transportConfigured) {
 				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
@@ -695,7 +695,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function prevent_sender_email_override_callback() {
-			$transport = PostmanTransportUtils::getCurrentTransport ();
+			$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
 			$transportConfigured = $transport->isConfigured ( $this->options, $this->authorizationToken );
 			if ($transportConfigured) {
 				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );

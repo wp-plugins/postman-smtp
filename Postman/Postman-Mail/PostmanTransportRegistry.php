@@ -1,6 +1,42 @@
 <?php
-if (! class_exists ( 'PostmanTransportUtils' )) {
-	class PostmanTransportUtils {
+if (! interface_exists ( 'PostmanTransport' )) {
+	interface PostmanTransport {
+		public function isServiceProviderGoogle($hostname);
+		public function isServiceProviderMicrosoft($hostname);
+		public function isServiceProviderYahoo($hostname);
+		public function isOAuthUsed($authType);
+		public function isTranscriptSupported();
+		public function getSlug();
+		public function getName();
+		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken);
+		public function createZendMailTransport($hostname, $config);
+		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
+		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token);
+		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token);
+		public function getConfigurationRecommendation($hostData);
+		public function getHostsToTest($hostname, $isGmail);
+	}
+}
+
+if (! class_exists ( 'PostmanTransportRegistry' )) {
+	class PostmanTransportRegistry {
+		private $transports;
+		
+		// singleton instance
+		public static function getInstance() {
+			static $inst = null;
+			if ($inst === null) {
+				$inst = new PostmanTransportRegistry ();
+			}
+			return $inst;
+		}
+		public function registerTransport(PostmanTransport $instance) {
+			$this->transports [$instance->getSlug ()] = $instance;
+		}
+		public function getTransports() {
+			return $this->transports;
+		}
+		
 		/**
 		 * Retrieve a Transport by slug
 		 * Look up a specific Transport use:
@@ -10,9 +46,8 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 		 *
 		 * @param unknown $slug        	
 		 */
-		public static function getTransport($slug) {
-			$directory = PostmanTransportDirectory::getInstance ();
-			$transports = $directory->getTransports ();
+		public function getTransport($slug) {
+			$transports = $this->getTransports ();
 			if (isset ( $transports [$slug] )) {
 				return $transports [$slug];
 			}
@@ -23,10 +58,10 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 		 * @param PostmanTransport $transport        	
 		 * @return string
 		 */
-		public static function getDeliveryUri(PostmanTransport $transport) {
-			return PostmanTransportUtils::getSecretTransportUri ( $transport, true, true );
+		public function getDeliveryUri(PostmanTransport $transport) {
+			return $this->getSecretTransportUri ( $transport, true, true );
 		}
-		public static function getSecretTransportUri(PostmanTransport $transport, $obscureUsername = false, $obscurePassword = true) {
+		public function getSecretTransportUri(PostmanTransport $transport, $obscureUsername = false, $obscurePassword = true) {
 			if (! method_exists ( $transport, 'getVersion' )) {
 				return 'undefined';
 			} else {
@@ -49,7 +84,7 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 				return sprintf ( '%s:%s:%s://%s:%s@%s:%s', $transportName, $security, $auth, $user, $pass, $host, $port );
 			}
 		}
-		public static function getPublicTransportUri(PostmanTransport $transport) {
+		public function getPublicTransportUri(PostmanTransport $transport) {
 			if (! method_exists ( $transport, 'getVersion' )) {
 				return 'undefined';
 			} else {
@@ -67,9 +102,8 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 		 *
 		 * @param unknown $slug        	
 		 */
-		public static function isRegistered($slug) {
-			$directory = PostmanTransportDirectory::getInstance ();
-			$transports = $directory->getTransports ();
+		public function isRegistered($slug) {
+			$transports = $this->getTransports ();
 			return isset ( $transports [$slug] );
 		}
 		
@@ -78,9 +112,9 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 		 *
 		 * @return PostmanDummyTransport|PostmanTransport
 		 */
-		public static function getCurrentTransport() {
+		public function getCurrentTransport() {
 			$transportType = PostmanOptions::getInstance ()->getTransportType ();
-			$transports = PostmanTransportDirectory::getInstance ()->getTransports ();
+			$transports = $this->getTransports ();
 			if (! isset ( $transports [$transportType] )) {
 				// the dummy transport is usefor for specific error messages when no transport is loaded
 				return new PostmanDummyTransport ();
@@ -94,10 +128,9 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 		 * @param PostmanOAuthToken $token        	
 		 * @return boolean
 		 */
-		public static function isPostmanReadyToSendEmail(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
-			$directory = PostmanTransportDirectory::getInstance ();
+		public function isPostmanReadyToSendEmail(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			$selectedTransport = $options->getTransportType ();
-			foreach ( $directory->getTransports () as $transport ) {
+			foreach ( $this->getTransports () as $transport ) {
 				if ($transport->getSlug () == $selectedTransport && $transport->isReady ( $options, $token )) {
 					return true;
 				}
@@ -116,7 +149,7 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 		 * @param PostmanOptionsInterface $options        	
 		 * @return boolean
 		 */
-		public static function isRequestOAuthPermissionAllowed(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authToken) {
+		public function isRequestOAuthPermissionAllowed(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authToken) {
 			// does the current transport use OAuth 2.0
 			$oauthUsed = self::getCurrentTransport ()->isOAuthUsed ( $options->getAuthenticationType () );
 			
@@ -125,11 +158,10 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 			
 			return $oauthUsed && $configured;
 		}
-		public static function getHostsToTest($hostname) {
-			$directory = PostmanTransportDirectory::getInstance ();
+		public function getHostsToTest($hostname, $isGmail) {
 			$hosts = array ();
-			foreach ( $directory->getTransports () as $transport ) {
-				$hosts = array_merge ( $hosts, $transport->getHostsToTest ( $hostname ) );
+			foreach ( $this->getTransports () as $transport ) {
+				$hosts = array_merge ( $hosts, $transport->getHostsToTest ( $hostname, $isGmail ) );
 			}
 			return $hosts;
 		}
@@ -143,7 +175,7 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 		 *
 		 * @param unknown $hostData        	
 		 */
-		public static function getConfigurationBid($connectivityTestResults, $userAuthPreference = '') {
+		public function getConfigurationBid($connectivityTestResults, $userAuthPreference = '') {
 			$hostData ['host'] = $connectivityTestResults ['hostname'];
 			$hostData ['port'] = $connectivityTestResults ['port'];
 			$hostData ['protocol'] = $connectivityTestResults ['protocol'];
@@ -167,11 +199,10 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 			}
 			
 			//
-			$directory = PostmanTransportDirectory::getInstance ();
 			$priority = - 1;
 			$winningRecommendation = null;
-			$logger = new PostmanLogger ( 'PostmanTransportUtils' );
-			foreach ( $directory->getTransports () as $transport ) {
+			$logger = new PostmanLogger ( get_class ( $this ) );
+			foreach ( $this->getTransports () as $transport ) {
 				$logger->debug ( sprintf ( 'Asking transport %s to bid on: %s:%s', $transport->getName (), $hostData ['host'], $hostData ['port'] ) );
 				$recommendation = $transport->getConfigurationRecommendation ( $hostData );
 				if ($recommendation) {
@@ -180,11 +211,6 @@ if (! class_exists ( 'PostmanTransportUtils' )) {
 						$winningRecommendation = $recommendation;
 					}
 				}
-			}
-			// TODO remove this sometime
-			// for some reason i coded Gmail API Transport <= 1.0.0 that 'auth' is null??? wtf
-			if ($winningRecommendation ['transport'] == 'gmail_api') {
-				$winningRecommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 			}
 			return $winningRecommendation;
 		}

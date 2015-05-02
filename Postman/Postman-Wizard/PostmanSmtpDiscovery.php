@@ -104,8 +104,9 @@ if (! class_exists ( 'PostmanSmtpDiscovery' )) {
 	class PostmanSmtpDiscovery {
 		
 		// private instance variables
-		private $isGoogle;
-		private $isWellKnownDomain;
+		public $isGoogle;
+		public $isGoDaddy;
+		public $isWellKnownDomain;
 		private $smtpServer;
 		private $primaryMx;
 		private $email;
@@ -120,24 +121,7 @@ if (! class_exists ( 'PostmanSmtpDiscovery' )) {
 			$this->email = $email;
 			$this->determineSmtpServer ( $email );
 			$this->isGoogle = $this->smtpServer == 'smtp.gmail.com';
-		}
-		/**
-		 * if a Domain is serviced by Gmail or Google Mail
-		 * then it is eligible for the Gmail API.
-		 * This is determined by the looking up the MX hosts
-		 * for the domain.
-		 *
-		 * @return boolean
-		 */
-		public function isGoogle() {
-			$this->isGoogle;
-		}
-		/**
-		 * Well-known domains MUST use the noted SMTP server.
-		 * This is determined by the domain of the email address.
-		 */
-		public function isWellKnownDomain() {
-			return $this->isWellKnownDomain;
+			$this->isGoDaddy = PostmanUtils::endsWith ( $this->smtpServer, 'secureserver.net' );
 		}
 		/**
 		 * The SMTP server we suggest to use - this is determined

@@ -7,6 +7,7 @@ if (! class_exists ( 'Postman' )) {
 	require_once 'PostmanUtils.php';
 	require_once 'postman-common-wp-functions.php';
 	require_once 'Postman-Common.php';
+	require_once 'Postman-Mail/PostmanTransportRegistry.php';
 	require_once 'Postman-Mail/PostmanSmtpTransport.php';
 	require_once 'Postman-Mail/PostmanGmailApiTransport.php';
 	require_once 'PostmanOAuthToken.php';
@@ -111,24 +112,24 @@ if (! class_exists ( 'Postman' )) {
 				$this->messageHandler->addError ( __ ( 'Postman is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.', 'postman-smtp' ) );
 			}
 			
-			$transport = PostmanTransportUtils::getCurrentTransport ();
+			$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
 			$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
 			
 			// on any Postman page, print the config error messages
 			if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
 				
-				if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
+				if (PostmanTransportRegistry::getInstance()->isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
 					// no configuration errors to show
 				} else if (! $this->options->isNew ()) {
 					// show the errors as long as this is not a virgin install
-					$message = PostmanTransportUtils::getCurrentTransport ()->getMisconfigurationMessage ( $scribe, $this->options, $this->authToken );
+					$message = PostmanTransportRegistry::getInstance()->getCurrentTransport ()->getMisconfigurationMessage ( $scribe, $this->options, $this->authToken );
 					if ($message) {
 						$this->logger->trace ( 'Transport has a configuration error: ' . $message );
 						$this->messageHandler->addError ( $message );
 					}
 				}
 			} else {
-				if (! PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
+				if (! PostmanTransportRegistry::getInstance()->isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
 					add_action ( 'admin_notices', Array (
 							$this,
 							'display_configuration_required_warning' 
@@ -153,8 +154,8 @@ if (! class_exists ( 'Postman' )) {
 		 * Adds the regular SMTP transport
 		 */
 		private function registerTransport() {
-			PostmanTransportDirectory::getInstance ()->registerTransport ( new PostmanSmtpTransport () );
-			PostmanTransportDirectory::getInstance ()->registerTransport ( new PostmanGmailApiTransport () );
+			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanSmtpTransport () );
+			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanGmailApiTransport () );
 		}
 		
 		/**

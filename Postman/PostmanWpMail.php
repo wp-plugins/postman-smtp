@@ -82,7 +82,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$wpMailAuthorizationToken = PostmanOAuthToken::getInstance ();
 			try {
 				// create the message
-				$transport = PostmanTransportUtils::getCurrentTransport ();
+				$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
 				$transportConfiguration = PostmanMailTransportConfigurationFactory::getInstance ()->createMailTransportConfiguration ( $transport, $wpMailOptions, $wpMailAuthorizationToken );
 				$messageBuilder = $this->createMessage ( $wpMailOptions, $to, $subject, $message, $headers, $attachments, $transportConfiguration );
 				// send the message

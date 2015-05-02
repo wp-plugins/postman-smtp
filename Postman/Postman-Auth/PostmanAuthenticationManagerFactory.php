@@ -28,7 +28,7 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 			$clientSecret = $options->getClientSecret ();
 			$senderEmail = $options->getSenderEmail ();
 			if (! isset ( $scribe )) {
-				$transport = PostmanTransportUtils::getCurrentTransport ();
+				$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
 				$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $hostname );
 			}
 			$redirectUrl = $scribe->getCallbackUrl ();

@@ -30,6 +30,18 @@ if (! class_exists ( 'PostmanAbstractAjaxHandler' )) {
 		}
 		
 		/**
+		 *
+		 * @param unknown $parameterName        	
+		 * @return mixed
+		 */
+		protected function getBooleanRequestParameter($parameterName) {
+			return filter_var ( $this->getRequestParameter ( $parameterName ), FILTER_VALIDATE_BOOLEAN );
+		}
+		
+		/**
+		 *
+		 * @param unknown $parameterName        	
+		 * @return unknown
 		 */
 		protected function getRequestParameter($parameterName) {
 			if (isset ( $_POST [$parameterName] )) {
@@ -87,7 +99,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		}
 		private function getTransports() {
 			$transports = '';
-			foreach ( PostmanTransportDirectory::getInstance ()->getTransports () as $transport ) {
+			foreach ( PostmanTransportRegistry::getInstance ()->getTransports () as $transport ) {
 				$transports .= ' : ' . $transport->getName ();
 				if (method_exists ( $transport, 'getVersion' )) {
 					$transports .= ' (' . $transport->getVersion () . ')';
@@ -102,7 +114,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		 * @return string
 		 */
 		private function testConnectivity() {
-			$transport = PostmanTransportUtils::getCurrentTransport ();
+			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
 			if ($transport->isConfigured ( $this->options, $this->authorizationToken ) && method_exists ( $transport, 'getHostname' ) && method_exists ( $transport, 'getHostPort' )) {
 				$portTest = new PostmanPortTest ( $transport->getHostname ( $this->options ), $transport->getHostPort ( $this->options ) );
 				$result = $portTest->genericConnectionTest ( $this->options->getConnectionTimeout () );
@@ -115,6 +127,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			return 'undefined';
 		}
 		public function getDiagnostics() {
+			$transportRegistry = PostmanTransportRegistry::getInstance ();
 			$this->addToDiagnostics ( sprintf ( 'OS: %s', php_uname () ) );
 			$this->addToDiagnostics ( sprintf ( 'HTTP User Agent: %s', $_SERVER ['HTTP_USER_AGENT'] ) );
 			$this->addToDiagnostics ( sprintf ( 'Platform: PHP %s %s / WordPress %s %s', PHP_OS, PHP_VERSION, get_bloginfo ( 'version' ), get_locale () ) );
@@ -123,8 +136,8 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', wp_get_theme () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', POSTMAN_PLUGIN_VERSION ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Sender Domain: %s', $hostname = substr ( strrchr ( $this->options->getSenderEmail (), "@" ), 1 ) ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI: %s', PostmanTransportUtils::getDeliveryUri ( PostmanTransportUtils::getCurrentTransport () ) ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Transport Status (Configured|Ready|Connected): %s|%s|%s', PostmanTransportUtils::getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PostmanTransportUtils::getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', $this->testConnectivity () ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI: %s', $transportRegistry->getDeliveryUri ( $transportRegistry->getCurrentTransport () ) ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Transport Status (Configured|Ready|Connected): %s|%s|%s', $transportRegistry->getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', $this->testConnectivity () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Deliveries (Success|Fail): %d|%d', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PostmanStats::getInstance ()->getFailedDeliveries () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Bind (Success|Fail): %s|%s', (PostmanWpMailBinder::getInstance ()->isBound () ? 'Yes' : 'No'), (PostmanWpMailBinder::getInstance ()->isUnboundDueToException () ? 'Yes' : 'No') ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Available Transports%s', $this->getTransports () ) );
@@ -151,11 +164,9 @@ if (! class_exists ( 'PostmanGetPortsToTestViaAjax' )) {
 		 * combinations to run the connectivity test on
 		 */
 		function getPortsToTestViaAjax() {
-			$queryHostname = '';
-			if (isset ( $_POST ['hostname'] )) {
-				$queryHostname = $_POST ['hostname'];
-			}
-			$hosts = PostmanTransportUtils::getHostsToTest ( $queryHostname );
+			$queryHostname = $this->getRequestParameter ( 'hostname' );
+			$isGmail = $this->getBooleanRequestParameter ( PostmanGetHostnameByEmailAjaxController::IS_GOOGLE_PARAMETER );
+			$hosts = PostmanTransportRegistry::getInstance ()->getHostsToTest ( $queryHostname, $isGmail );
 			$this->logger->trace ( 'hostsToTest:' );
 			$this->logger->trace ( $hosts );
 			$response = array (
@@ -168,6 +179,7 @@ if (! class_exists ( 'PostmanGetPortsToTestViaAjax' )) {
 }
 if (! class_exists ( 'PostmanGetHostnameByEmailAjaxController' )) {
 	class PostmanGetHostnameByEmailAjaxController extends PostmanAbstractAjaxHandler {
+		const IS_GOOGLE_PARAMETER = 'is_google';
 		function __construct() {
 			parent::__construct ();
 			$this->registerAjaxHandler ( 'check_email', $this, 'getAjaxHostnameByEmail' );
@@ -182,9 +194,13 @@ if (! class_exists ( 'PostmanGetHostnameByEmailAjaxController' )) {
 			$this->logger->debug ( 'given email ' . $email . ', smtp server is ' . $smtp );
 			$this->logger->trace ( $d );
 			$response = array (
-					'hostname' => ! empty ( $smtp ) ? $smtp : '' 
+					'hostname' => $d->getSmtpServer (),
+					SELF::IS_GOOGLE_PARAMETER => $d->isGoogle,
+					'is_go_daddy' => $d->isGoDaddy,
+					'is_well_known' => $d->isWellKnownDomain 
 			);
-			wp_send_json ( $response );
+			$this->logger->trace ( $response );
+			wp_send_json_success ( $response );
 		}
 	}
 }
@@ -232,7 +248,13 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		function runSmtpTest() {
 			$hostname = trim ( $this->getRequestParameter ( 'hostname' ) );
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
+			$timeout = $this->getRequestParameter ( 'timeout' );
+			$this->logger->trace ( $timeout );
 			$portTest = new PostmanPortTest ( $hostname, $port );
+			if (isset ( $timeout )) {
+				$portTest->setConnectionTimeout ( intval ( $timeout ) );
+				$portTest->setReadTimeout ( intval ( $timeout ) );
+			}
 			if ($port != 443) {
 				$this->logger->debug ( 'testing SMTP port: hostname ' . $hostname . ' port ' . $port );
 				$success = $portTest->testSmtpPorts ();

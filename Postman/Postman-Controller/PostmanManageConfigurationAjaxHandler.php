@@ -19,7 +19,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			
 			// the outgoing server hostname is only required for the SMTP Transport
 			// the Gmail API transport doesn't use an SMTP server
-			$transport = PostmanTransportUtils::getTransport ( $queryTransportType );
+			$transport = PostmanTransportRegistry::getInstance()->getTransport ( $queryTransportType );
 			if (! $transport) {
 				throw new Exception ( 'Unable to find transport ' . $queryTransportType );
 			}
@@ -68,7 +68,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			
 			if (isset ( $winningRecommendation )) {
 				// create an appropriate (theoretical) transport
-				$transport = PostmanTransportUtils::getTransport ( $winningRecommendation ['transport'] );
+				$transport = PostmanTransportRegistry::getInstance()->getTransport ( $winningRecommendation ['transport'] );
 				$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $winningRecommendation ['hostname'] );
 				$this->populateResponseFromScribe ( $scribe, $configuration );
 				$this->populateResponseFromTransport ( $winningRecommendation, $configuration );
@@ -127,21 +127,21 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 						if ($value ['auth_crammd5'] || $value ['auth_login'] || $value ['auth_plain']) {
 							array_push ( $overrideAuthItem, array (
 									'selected' => $passwordMode,
-									'name' => __ ( 'Password', 'postman-smtp' ),
+									'name' => __ ( 'Password (requires username and password)', 'postman-smtp' ),
 									'value' => 'password' 
 							) );
 						}
 						if ($value ['auth_xoauth'] || $winningRecommendation ['auth'] == 'oauth2') {
 							array_push ( $overrideAuthItem, array (
 									'selected' => $oauth2Mode,
-									'name' => _x ( 'OAuth 2.0', 'Authentication Type is OAuth 2.0', 'postman-smtp' ),
+									'name' => _x ( 'OAuth 2.0 (requires Client ID and Client Secret)', 'postman-smtp' ),
 									'value' => 'oauth2' 
 							) );
 						}
 						if ($value ['auth_none']) {
 							array_push ( $overrideAuthItem, array (
 									'selected' => $noAuthMode,
-									'name' => _x ( 'No', 'as in "No Authentication"', 'postman-smtp' ),
+									'name' => _x ( 'None', 'As in type used: None', 'postman-smtp' ),
 									'value' => 'none' 
 							) );
 						}
@@ -168,7 +168,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 				$available = filter_var ( $value ['success'], FILTER_VALIDATE_BOOLEAN );
 				if ($available) {
 					$this->logger->debug ( sprintf ( 'Asking for judgement on %s:%s', $value ['hostname'], $value ['port'] ) );
-					$recommendation = PostmanTransportUtils::getConfigurationBid ( $value, $userAuthOverride );
+					$recommendation = PostmanTransportRegistry::getInstance()->getConfigurationBid ( $value, $userAuthOverride );
 					$recommendationId = sprintf ( '%s_%s', $value ['hostname'], $value ['port'] );
 					$recommendation ['id'] = $recommendationId;
 					$this->logger->debug ( sprintf ( 'Got a recommendation: [%d] %s', $recommendation ['priority'], $recommendationId ) );

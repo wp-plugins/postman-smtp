@@ -11,14 +11,6 @@ jQuery(document).ready(function() {
 	jQuery('input[name="input_plugin"]').click(function() {
 		getConfiguration();
 	});
-	// add an event on the user port override field
-	jQuery('select#user_socket_override').change(function() {
-		userOverrideMenu();
-	});
-	// add an event on the user port override field
-	jQuery('select#user_auth_override').change(function() {
-		userOverrideMenu();
-	});
 
 	// add an event on the transport input field
 	// when the user changes the transport, determine whether
@@ -33,7 +25,8 @@ jQuery(document).ready(function() {
 	var data = {
 		'action' : 'wizard_port_test',
 		'hostname' : 'relay-hosting.secureserver.net',
-		'port' : 25
+		'port' : 25,
+		'timeout' : 5
 	};
 	goDaddy = 'unknown';
 	jQuery.post(ajaxurl, data, function(response) {
@@ -111,13 +104,6 @@ function initializeJQuerySteps() {
 function handleStepChange(event, currentIndex, newIndex, form) {
 	// Always allow going backward even if
 	// the current step contains invalid fields!
-	if (currentIndex > newIndex) {
-		if (portTestInProgress) {
-			alert(postman_wizard_wait);
-			return false;
-		}
-		return true;
-	}
 
 	// Clean up if user went backward
 	// before
@@ -142,7 +128,12 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		// page 1 : look-up the email
 		// address for the smtp server
 		checkEmail(jQuery(postman_input_sender_email).val());
+
 	} else if (currentIndex === 2) {
+
+		if (!(checkedEmail && goDaddy != 'unknown')) {
+			return false;
+		}
 		// page 2 : check the port
 		portsChecked = 0;
 		portsToCheck = 0;
@@ -154,7 +145,6 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 
 		// user has clicked next but we haven't finished the check
 		if (portTestInProgress) {
-			alert(postman_wizard_wait);
 			return false;
 		}
 		// or all ports are unavailable
@@ -221,14 +211,15 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 function getHostsToCheck(hostname) {
 	jQuery('table#wizard_port_test').html('');
 	jQuery('#wizard_recommendation').html('');
-	hide('#user_override');
+	hide('.user_override');
 	show('#connectivity_test_status');
 	connectivtyTestResults = {};
 	portCheckBlocksUi = true;
 	portTestInProgress = true;
 	var data = {
 		'action' : 'get_hosts_to_test',
-		'hostname' : hostname
+		'hostname' : hostname,
+		'is_google' : smtpDiscovery.is_google
 	};
 	jQuery.post(ajaxurl, data, function(response) {
 		handleHostsToCheckResponse(response);
@@ -331,12 +322,12 @@ function afterPortsChecked() {
 }
 
 function userOverrideMenu() {
-	disable('select#user_socket_override');
-	disable('select#user_auth_override');
+	disable('input.user_socket_override');
+	disable('input.user_auth_override');
 	var data = {
 		'action' : 'get_wizard_configuration_options',
-		'user_port_override' : jQuery('select#user_socket_override').val(),
-		'user_auth_override' : jQuery('select#user_auth_override').val(),
+		'user_port_override' : jQuery("input.radio[name='socket_configuration_method']:checked").val(),
+		'user_auth_override' : jQuery("input:radio[name='auth_configuration_method']:checked").val(),
 		'host_data' : connectivtyTestResults
 	};
 	postTheConfigurationRequest(data);
@@ -350,8 +341,8 @@ function postTheConfigurationRequest(data) {
 			$message = '<span style="color:green">'
 					+ response.data.configuration.message + '</span>';
 			handleConfigurationResponse(response.data);
-			enable('select#user_socket_override');
-			enable('select#user_auth_override');
+			enable('input.user_socket_override');
+			enable('input.user_auth_override');
 			// enable both next/back buttons
 			jQuery('li').removeClass('disabled');
 		} else {
@@ -391,30 +382,27 @@ function handleConfigurationResponse(response) {
 	var el1 = jQuery('#user_socket_override');
 	el1.html('');
 	for (i = 0; i < response.override_menu.length; i++) {
-		el1.append(jQuery('<option/>', {
-			selected : response.override_menu[i].selected,
-			value : response.override_menu[i].value,
-			text : response.override_menu[i].description
-		}));
+		buildRadioButtonGroup(el1, 'socket_configuration_method', response.override_menu[i].selected, response.override_menu[i].value, response.override_menu[i].description);
 		// populate user Auth Override menu
 		if (response.override_menu[i].selected) {
 			var el2 = jQuery('#user_auth_override');
 			el2.html('');
 			for (j = 0; j < response.override_menu[i].auth_items.length; j++) {
-				var x = jQuery(
-						'<option/>',
-						{
-							selected : response.override_menu[i].auth_items[j].selected,
-							value : response.override_menu[i].auth_items[j].value,
-							text : response.override_menu[i].auth_items[j].name
-						});
-				el2.append(x);
+				buildRadioButtonGroup(el2, 'auth_configuration_method', response.override_menu[i].auth_items[j].selected, response.override_menu[i].auth_items[j].value, response.override_menu[i].auth_items[j].name);
 			}
+			// add an event on the user port override field
+			jQuery('input.user_auth_override').change(function() {
+				userOverrideMenu();
+			});
 		}
 
 	}
+	// add an event on the user port override field
+	jQuery('input.user_socket_override').change(function() {
+		userOverrideMenu();
+	});
 
-	show('#user_override');
+	show('.user_override');
 	// hide the fields we don't use so validation
 	// will work
 	if (response.configuration.display_auth == 'oauth2') {
@@ -431,30 +419,59 @@ function handleConfigurationResponse(response) {
 		hide('.wizard-auth-basic');
 	}
 }
+
+function buildRadioButtonGroup(tableElement, radioGroupName, isSelected, value, label) {
+	var radioInputValue = ' value="' + value + '"';
+	var radioInputChecked = '';
+	if(isSelected) {
+		radioInputChecked = ' checked = "checked"';
+	}
+	tableElement.append('<tr><td><input class="user_auth_override" type="radio" name="' + radioGroupName + '"' + radioInputChecked + radioInputValue + '/></td><td>' + label + '</td></tr>');
+}
+
 function checkEmail(email) {
 	var data = {
 		'action' : 'check_email',
 		'email' : email
 	};
 	checkedEmail = false;
+	hide('#godaddy_block');
+	hide('#godaddy_spf_required');
 	jQuery.post(ajaxurl, data, function(response) {
 		checkedEmail = true;
-		if (response.hostname != '') {
-			jQuery(postman_hostname_element_name).val(response.hostname);
+		smtpDiscovery = response.data;
+		if (response.data.hostname != '') {
+			jQuery(postman_hostname_element_name).val(response.data.hostname);
 		}
 		enableSmtpHostnameInput();
 	});
 }
 function enableSmtpHostnameInput() {
-	if (checkedEmail & goDaddy != 'unknown') {
-		if(goDaddy) {
-			jQuery(postman_hostname_element_name).val('relay-hosting.secureserver.net');
+	if (checkedEmail && goDaddy != 'unknown') {
+		if (goDaddy && !smtpDiscovery.is_gmail) {
+			// this is a godaddy server and we are using a godaddy smtp server
+			// (gmail excepted)
+			if (smtpDiscovery.is_go_daddy) {
+				// no-op
+			} else if (smtpDiscovery.is_well_known) {
+				// this is a godaddy server but the SMTP must be the email
+				// service
+				jQuery(postman_hostname_element_name).val(':-(');
+				show('#godaddy_block');
+			} else {
+				// this is a godaddy server and we're using a (possibly) custom
+				// domain
+				jQuery(postman_hostname_element_name).val(
+						default_go_daddy_smtp_hostname);
+				show('#godaddy_spf_required');
+			}
 		}
 		enable('#input_hostname');
 		jQuery('li').removeClass('disabled');
 		hideLoaderIcon();
 	}
 }
+
 /**
  * Handles population of the configuration based on the options set in a
  * 3rd-party SMTP plugin

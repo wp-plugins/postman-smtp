@@ -269,7 +269,6 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Check for GoDaddy 
 * Add hostname to connectivity test table.
 * (TBD): Check for redirect errors - relative URLs only
-* (TBD): Check for well-known domains and warn when configuring the wrong SMTP server
 * (TBD): Check for Gmail during wizard and remember for gmail api option.
 * (TBD): Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
 * (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)

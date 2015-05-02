@@ -75,9 +75,9 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 			} else if ($this->wpMailBinder->isUnboundDueToException ()) {
 				printf ( '<p><span style="color:red">%s</span></p>', __ ( 'Postman is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.', 'postman-smtp' ) );
 			} else {
-				if (PostmanTransportUtils::isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
+				if (PostmanTransportRegistry::getInstance()->isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
 					printf ( '<p class="wp-menu-image dashicons-before dashicons-email"> %s </p>', sprintf ( _n ( '<span style="color:green">Postman is configured</span> and has delivered <span style="color:green">%d</span> email.', '<span style="color:green">Postman is configured</span> and has delivered <span style="color:green">%d</span> emails.', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
-					$currentTransport = PostmanTransportUtils::getCurrentTransport ();
+					$currentTransport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
 					$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
 					printf ( '<p>%s</p>', $deliveryDetails );
 				} else {

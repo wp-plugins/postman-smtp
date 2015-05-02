@@ -13,6 +13,8 @@ class PostmanPortTest {
 	private $hostname;
 	public $hostnameDomainOnly;
 	private $port;
+	private $connectionTimeout;
+	private $readTimeout;
 	public $reportedHostname;
 	public $reportedHostnameDomainOnly;
 	public $protocol;
@@ -35,9 +37,19 @@ class PostmanPortTest {
 		$this->hostname = $hostname;
 		$this->hostnameDomainOnly = getRegisteredDomain ( $hostname );
 		$this->port = $port;
+		$this->connectionTimeout = 3;
+		$this->readTimeout = 3;
 	}
-	private function createStream($connectionString, $timeout) {
-		$stream = @stream_socket_client ( $connectionString, $errno, $errstr, $timeout );
+	public function setConnectionTimeout($timeout) {
+		$this->connectionTimeout = $timeout;
+		$this->logger->trace ( $this->connectionTimeout );
+	}
+	public function setReadTimeout($timeout) {
+		$this->readTimeout = $timeout;
+		$this->logger->trace ( $this->readTimeout );
+	}
+	private function createStream($connectionString) {
+		$stream = @stream_socket_client ( $connectionString, $errno, $errstr, $this->connectionTimeout );
 		if ($stream) {
 			$this->trace ( sprintf ( 'connected to %s', $connectionString ) );
 		} else {
@@ -51,10 +63,11 @@ class PostmanPortTest {
 	 * @param number $timeout        	
 	 * @return boolean
 	 */
-	public function genericConnectionTest($timeout = 10) {
+	public function genericConnectionTest() {
+		$this->logger->trace('testCustomConnection()');
 		// test if the port is open
 		$connectionString = sprintf ( '%s:%s', $this->hostname, $this->port );
-		$stream = $this->createStream ( $connectionString, $timeout );
+		$stream = $this->createStream ( $connectionString, $this->connectionTimeout );
 		return null != $stream;
 	}
 	
@@ -63,10 +76,11 @@ class PostmanPortTest {
 	 * @param number $timeout        	
 	 * @return boolean
 	 */
-	public function testPortQuiz($timeout = 10) {
+	public function testPortQuiz() {
+		$this->logger->trace('testPortQuiz()');
 		// test if the port is open
 		$connectionString = sprintf ( 'portquiz.net:%s', $this->port );
-		$stream = $this->createStream ( $connectionString, $timeout );
+		$stream = $this->createStream ( $connectionString, $this->connectionTimeout );
 		return null != $stream;
 	}
 	
@@ -75,12 +89,13 @@ class PostmanPortTest {
 	 *
 	 * @param string $hostname        	
 	 */
-	public function testHttpPorts($connectTimeout = 10, $readTimeout = 10) {
+	public function testHttpPorts() {
+		$this->logger->trace('testHttpPorts()');
 		$connectionString = sprintf ( "ssl://%s:%s", $this->hostname, $this->port );
 		$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
-		$stream = $this->createStream ( $connectionString, $connectTimeout );
+		$stream = $this->createStream ( $connectionString, $this->connectionTimeout );
 		if ($stream) {
-			@stream_set_timeout ( $stream, $readTimeout );
+			@stream_set_timeout ( $stream, $this->readTimeout );
 			$serverName = postmanGetServerName ();
 			// see http://php.net/manual/en/transports.inet.php#113244
 			$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
@@ -91,7 +106,7 @@ class PostmanPortTest {
 				$this->http = true;
 				$this->https = true;
 				$this->reportedHostname = $this->hostname;
-				$this->reportedHostnameDomainOnly = getRegisteredDomain($this->hostname);
+				$this->reportedHostnameDomainOnly = getRegisteredDomain ( $this->hostname );
 				return true;
 			} else {
 				return false;
@@ -105,7 +120,8 @@ class PostmanPortTest {
 	 *
 	 * @param string $hostname        	
 	 */
-	public function testSmtpPorts($connectTimeout = 10, $readTimeout = 10) {
+	public function testSmtpPorts() {
+		$this->logger->trace('testSmtpPorts()');
 		if ($this->port == 8025) {
 			$this->debug ( 'Executing test code for port 8025' );
 			$this->protocol = 'SMTP';
@@ -114,7 +130,7 @@ class PostmanPortTest {
 			return true;
 		}
 		$connectionString = sprintf ( "%s:%s", $this->hostname, $this->port );
-		$success = $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
+		$success = $this->talkToMailServer ( $connectionString, $this->connectionTimeout, $this->readTimeout );
 		if ($success) {
 			$this->protocol = 'SMTP';
 			if (! ($this->authCrammd5 || $this->authLogin || $this->authPlain || $this->authXoauth)) {
@@ -131,9 +147,10 @@ class PostmanPortTest {
 	 *
 	 * @param string $hostname        	
 	 */
-	public function testSmtpsPorts($connectTimeout = 10, $readTimeout = 10) {
+	public function testSmtpsPorts() {
+		$this->logger->trace('testSmtpsPorts()');
 		$connectionString = sprintf ( "ssl://%s:%s", $this->hostname, $this->port );
-		$success = $this->talkToMailServer ( $connectionString, $connectTimeout, $readTimeout );
+		$success = $this->talkToMailServer ( $connectionString, $this->connectionTimeout, $this->readTimeout );
 		if ($success) {
 			if (! ($this->authCrammd5 || $this->authLogin || $this->authPlain || $this->authXoauth)) {
 				$this->authNone = true;
@@ -149,11 +166,12 @@ class PostmanPortTest {
 	 *
 	 * @param string $hostname        	
 	 */
-	private function talkToMailServer($connectionString, $connectTimeout = 10, $readTimeout = 10) {
-		$stream = $this->createStream ( $connectionString, $connectTimeout );
+	private function talkToMailServer($connectionString) {
+		$this->logger->trace('talkToMailServer()');
+		$stream = $this->createStream ( $connectionString, $this->connectionTimeout );
 		if ($stream) {
 			$serverName = postmanGetServerName ();
-			@stream_set_timeout ( $stream, $readTimeout );
+			@stream_set_timeout ( $stream, $this->readTimeout );
 			// see http://php.net/manual/en/transports.inet.php#113244
 			// see http://php.net/stream_socket_enable_crypto
 			$result = $this->readSmtpResponse ( $stream );

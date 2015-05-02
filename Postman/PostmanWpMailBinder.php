@@ -41,7 +41,7 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 				$binderOptions = PostmanOptions::getInstance ();
 				$binderAuthorizationToken = PostmanOAuthToken::getInstance ();
 				$ready = true;
-				if (! PostmanTransportUtils::isPostmanReadyToSendEmail ( $binderOptions, $binderAuthorizationToken )) {
+				if (! PostmanTransportRegistry::getInstance()->isPostmanReadyToSendEmail ( $binderOptions, $binderAuthorizationToken )) {
 					$this->logger->debug ( 'Transport is not configured and ready' );
 					$ready = false;
 				}

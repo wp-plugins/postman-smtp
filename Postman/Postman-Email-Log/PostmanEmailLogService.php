@@ -36,7 +36,7 @@ if (! class_exists ( 'PostmanEmailLogFactory' )) {
 			}
 			$log->success = $success;
 			$log->statusMessage = $statusMessage;
-			$log->transportUri = PostmanTransportUtils::getPublicTransportUri ( $transport );
+			$log->transportUri = PostmanTransportRegistry::getInstance()->getPublicTransportUri ( $transport );
 			$log->sessionTranscript = 'n/a';
 			if (! empty ( $transcript )) {
 				$log->sessionTranscript = $transcript;

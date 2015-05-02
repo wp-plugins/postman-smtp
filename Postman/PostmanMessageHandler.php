@@ -1,8 +1,7 @@
 <?php
 if (! class_exists ( 'PostmanMessageHandler' )) {
-	require_once ('PostmanOptions.php');
+	
 	require_once ('PostmanSession.php');
-	require_once ('Postman-Mail/PostmanTransportUtils.php');
 	class PostmanMessageHandler {
 		
 		// The Session variables that carry messages
