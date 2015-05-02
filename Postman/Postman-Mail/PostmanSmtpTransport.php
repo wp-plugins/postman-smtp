@@ -227,6 +227,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				// STARTTLS was formalized in 2002
 				// http://www.rfc-editor.org/rfc/rfc3207.txt
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
+				$recommendation ['secure'] = true;
 				$score += 30000;
 			} elseif ($hostData ['protocol'] == 'SMTPS') {
 				// "The hopelessly confusing and imprecise term, SSL,
@@ -234,6 +235,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				// TLS to indicate the STARTTLS protocol extension."
 				// http://stackoverflow.com/a/19942206/4368109
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
+				$recommendation ['secure'] = true;
 				$score += 20000;
 			} elseif ($hostData ['protocol'] == 'SMTP') {
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
@@ -294,7 +296,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				$transportDescription = $this->getTransportDescription ( $recommendation ['enc'] );
 				$authDesc = $this->getAuthenticationDescription ( $recommendation ['auth'] );
 				/* translators: where %1$s is a description of the transport (eg. SMTPS-SSL), %2$s is a description of the authentication (eg. Password-CRAMMD5) and %3$d is the TCP port (eg. 465) */
-				$recommendation ['message'] = sprintf ( __ ( 'Your recommended settings are %1$s with %2$s authentication on port %3$d.', 'postman-smtp' ), $transportDescription, $authDesc, $port );
+				$recommendation ['message'] = sprintf ( __ ( 'Your recommended settings are %1$s with %2$s authentication to host %4$s on port %3$d.', 'postman-smtp' ), $transportDescription, $authDesc, $port, $hostname );
 			}
 			return $recommendation;
 		}

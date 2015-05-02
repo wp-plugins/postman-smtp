@@ -19,7 +19,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			
 			// the outgoing server hostname is only required for the SMTP Transport
 			// the Gmail API transport doesn't use an SMTP server
-			$transport = PostmanTransportRegistry::getInstance()->getTransport ( $queryTransportType );
+			$transport = PostmanTransportRegistry::getInstance ()->getTransport ( $queryTransportType );
 			if (! $transport) {
 				throw new Exception ( 'Unable to find transport ' . $queryTransportType );
 			}
@@ -54,7 +54,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			$this->logger->trace ( $winningRecommendation );
 			
 			// create user override menu
-			$overrideMenu = $this->createOverrideMenu ( $queryHostData, $winningRecommendation );
+			$overrideMenu = $this->createOverrideMenu ( $queryHostData, $winningRecommendation, $userPortOverride, $userAuthOverride );
 			$this->logger->trace ( 'override menu:' );
 			$this->logger->trace ( $overrideMenu );
 			
@@ -62,13 +62,13 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			$response = array ();
 			$configuration = array ();
 			$response ['referer'] = 'wizard';
-			if (isset ( $userPortOverride )) {
+			if (isset ( $userPortOverride ) || isset ( $userAuthOverride )) {
 				$configuration ['user_override'] = true;
 			}
 			
 			if (isset ( $winningRecommendation )) {
 				// create an appropriate (theoretical) transport
-				$transport = PostmanTransportRegistry::getInstance()->getTransport ( $winningRecommendation ['transport'] );
+				$transport = PostmanTransportRegistry::getInstance ()->getTransport ( $winningRecommendation ['transport'] );
 				$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $winningRecommendation ['hostname'] );
 				$this->populateResponseFromScribe ( $scribe, $configuration );
 				$this->populateResponseFromTransport ( $winningRecommendation, $configuration );
@@ -92,11 +92,12 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 * @param unknown $queryHostData        	
 		 * @return multitype:
 		 */
-		private function createOverrideMenu($queryHostData, $winningRecommendation) {
+		private function createOverrideMenu($queryHostData, $winningRecommendation, $userSocketOverride, $userAuthOverride) {
 			$overrideMenu = array ();
 			foreach ( $queryHostData as $id => $value ) {
 				if (filter_var ( $value ['success'], FILTER_VALIDATE_BOOLEAN )) {
 					$overrideItem = array ();
+					$overrideItem ['secure'] = $winningRecommendation ['secure'];
 					$overrideItem ['value'] = sprintf ( '%s_%s', $value ['hostname'], $value ['port'] );
 					$selected = ($winningRecommendation ['id'] == $overrideItem ['value']);
 					$overrideItem ['selected'] = $selected;
@@ -106,7 +107,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 					$passwordMode = false;
 					$oauth2Mode = false;
 					$noAuthMode = false;
-					if (isset ( $userAuthOverride )) {
+					if (isset ( $userAuthOverride ) || isset ( $userSocketOverride )) {
 						if ($userAuthOverride == 'password') {
 							$passwordMode = true;
 						} elseif ($userAuthOverride == 'oauth2') {
@@ -168,7 +169,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 				$available = filter_var ( $value ['success'], FILTER_VALIDATE_BOOLEAN );
 				if ($available) {
 					$this->logger->debug ( sprintf ( 'Asking for judgement on %s:%s', $value ['hostname'], $value ['port'] ) );
-					$recommendation = PostmanTransportRegistry::getInstance()->getConfigurationBid ( $value, $userAuthOverride );
+					$recommendation = PostmanTransportRegistry::getInstance ()->getConfigurationBid ( $value, $userAuthOverride );
 					$recommendationId = sprintf ( '%s_%s', $value ['hostname'], $value ['port'] );
 					$recommendation ['id'] = $recommendationId;
 					$this->logger->debug ( sprintf ( 'Got a recommendation: [%d] %s', $recommendation ['priority'], $recommendationId ) );

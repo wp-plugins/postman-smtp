@@ -233,6 +233,7 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 					$recommendation ['transport'] = self::SLUG;
 					$recommendation ['priority'] = 19500;
 					$recommendation ['enc'] = null;
+					$recommendation ['secure'] = true;
 					$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 					$recommendation ['port'] = null;
 					$recommendation ['hostname'] = null;

@@ -104,6 +104,15 @@ function initializeJQuerySteps() {
 function handleStepChange(event, currentIndex, newIndex, form) {
 	// Always allow going backward even if
 	// the current step contains invalid fields!
+	if (currentIndex > newIndex) {
+		if (currentIndex === 2 && !(checkedEmail && goDaddy != 'unknown')) {
+			return false;
+		}
+		if (currentIndex === 3 && portTestInProgress) {
+			return false;
+		}
+		return true;
+	}
 
 	// Clean up if user went backward
 	// before
@@ -326,8 +335,10 @@ function userOverrideMenu() {
 	disable('input.user_auth_override');
 	var data = {
 		'action' : 'get_wizard_configuration_options',
-		'user_port_override' : jQuery("input.radio[name='socket_configuration_method']:checked").val(),
-		'user_auth_override' : jQuery("input:radio[name='auth_configuration_method']:checked").val(),
+		'user_port_override' : jQuery(
+				"input:radio[name='user_socket_override']:checked").val(),
+		'user_auth_override' : jQuery(
+				"input:radio[name='user_auth_override']:checked").val(),
 		'host_data' : connectivtyTestResults
 	};
 	postTheConfigurationRequest(data);
@@ -382,13 +393,20 @@ function handleConfigurationResponse(response) {
 	var el1 = jQuery('#user_socket_override');
 	el1.html('');
 	for (i = 0; i < response.override_menu.length; i++) {
-		buildRadioButtonGroup(el1, 'socket_configuration_method', response.override_menu[i].selected, response.override_menu[i].value, response.override_menu[i].description);
+		buildRadioButtonGroup(el1, 'user_socket_override',
+				response.override_menu[i].selected,
+				response.override_menu[i].value,
+				response.override_menu[i].description,
+				response.override_menu[i].secure);
 		// populate user Auth Override menu
 		if (response.override_menu[i].selected) {
 			var el2 = jQuery('#user_auth_override');
 			el2.html('');
 			for (j = 0; j < response.override_menu[i].auth_items.length; j++) {
-				buildRadioButtonGroup(el2, 'auth_configuration_method', response.override_menu[i].auth_items[j].selected, response.override_menu[i].auth_items[j].value, response.override_menu[i].auth_items[j].name);
+				buildRadioButtonGroup(el2, 'user_auth_override',
+						response.override_menu[i].auth_items[j].selected,
+						response.override_menu[i].auth_items[j].value,
+						response.override_menu[i].auth_items[j].name, false);
 			}
 			// add an event on the user port override field
 			jQuery('input.user_auth_override').change(function() {
@@ -420,13 +438,21 @@ function handleConfigurationResponse(response) {
 	}
 }
 
-function buildRadioButtonGroup(tableElement, radioGroupName, isSelected, value, label) {
+function buildRadioButtonGroup(tableElement, radioGroupName, isSelected, value,
+		label, isSecure) {
 	var radioInputValue = ' value="' + value + '"';
 	var radioInputChecked = '';
-	if(isSelected) {
+	if (isSelected) {
 		radioInputChecked = ' checked = "checked"';
 	}
-	tableElement.append('<tr><td><input class="user_auth_override" type="radio" name="' + radioGroupName + '"' + radioInputChecked + radioInputValue + '/></td><td>' + label + '</td></tr>');
+	var secureIcon = '';
+	if (isSecure) {
+		secureIcon = '&#x1f512; ';
+	}
+	tableElement.append('<tr><td><input class="' + radioGroupName
+			+ '" type="radio" name="' + radioGroupName + '"'
+			+ radioInputChecked + radioInputValue + '/></td><td>' + secureIcon
+			+ label + '</td></tr>');
 }
 
 function checkEmail(email) {
