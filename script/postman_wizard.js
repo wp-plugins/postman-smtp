@@ -403,9 +403,14 @@ function handleConfigurationResponse(response) {
 				response.override_menu[i].secure);
 		// populate user Auth Override menu
 		if (response.override_menu[i].selected) {
-			if(response.override_menu[i].mitm) {
+			if (response.override_menu[i].mitm) {
 				show('#smtp_mitm');
-				jQuery('#smtp_mitm').html(sprintf(postman_smtp_mitm,response.override_menu[i].reported_hostname_domain_only,response.override_menu[i].hostname_domain_only));
+				jQuery('#smtp_mitm')
+						.html(
+								sprintf(
+										postman_smtp_mitm,
+										response.override_menu[i].reported_hostname_domain_only,
+										response.override_menu[i].hostname_domain_only));
 			} else {
 				hide('#smtp_mitm');
 			}
@@ -417,7 +422,9 @@ function handleConfigurationResponse(response) {
 						response.override_menu[i].auth_items[j].selected,
 						response.override_menu[i].auth_items[j].value,
 						response.override_menu[i].auth_items[j].name, false);
-				if(response.override_menu[i].auth_items[j].selected && !response.override_menu[i].secure && response.override_menu[i].auth_items[j].value != 'none') {
+				if (response.override_menu[i].auth_items[j].selected
+						&& !response.override_menu[i].secure
+						&& response.override_menu[i].auth_items[j].value != 'none') {
 					show('#smtp_not_secure');
 				}
 			}
@@ -494,15 +501,15 @@ function enableSmtpHostnameInput() {
 			} else if (smtpDiscovery.is_well_known) {
 				// this is a godaddy server but the SMTP must be the email
 				// service
-				jQuery(postman_hostname_element_name).val(
-						default_go_daddy_smtp_hostname);
 				show('#godaddy_block');
 			} else {
 				// this is a godaddy server and we're using a (possibly) custom
 				// domain
+				show('#godaddy_spf_required');
+			}
+			if (!smtpDiscovery.hostname) {
 				jQuery(postman_hostname_element_name).val(
 						default_go_daddy_smtp_hostname);
-				show('#godaddy_spf_required');
 			}
 		}
 		enable('#input_hostname');
