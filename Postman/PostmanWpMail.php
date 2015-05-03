@@ -82,19 +82,23 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$wpMailAuthorizationToken = PostmanOAuthToken::getInstance ();
 			try {
 				// create the message
-				$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
+				$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
 				$transportConfiguration = PostmanMailTransportConfigurationFactory::getInstance ()->createMailTransportConfiguration ( $transport, $wpMailOptions, $wpMailAuthorizationToken );
 				$messageBuilder = $this->createMessage ( $wpMailOptions, $to, $subject, $message, $headers, $attachments, $transportConfiguration );
-				// send the message
-				$this->logger->debug ( 'Sending mail' );
-				$engine = PostmanMailEngineFactory::getInstance ()->createMailEngine ( $wpMailOptions, $wpMailAuthorizationToken, $transport, $transportConfiguration );
-				$engine->send ( $messageBuilder, $wpMailOptions->getHostname () );
-				$this->transcript = $engine->getTranscript ();
 				
-				// log the successful delivery
-				PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
-				$log = PostmanEmailLogFactory::createSuccessLog ( $messageBuilder, $this->transcript, $transport );
-				PostmanEmailLogService::getInstance ()->writeToEmailLog ( $log );
+				// send the message
+				if ($wpMailOptions->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
+					$this->logger->debug ( 'Sending mail' );
+					$engine = PostmanMailEngineFactory::getInstance ()->createMailEngine ( $wpMailOptions, $wpMailAuthorizationToken, $transport, $transportConfiguration );
+					$engine->send ( $messageBuilder, $wpMailOptions->getHostname () );
+					$this->transcript = $engine->getTranscript ();
+					
+					// log the successful delivery
+					PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
+				}
+				if ($wpMailOptions->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $wpMailOptions->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
+					PostmanEmailLogService::getInstance ()->createSuccessLog ( $messageBuilder, $this->transcript, $transport );
+				}
 				return true;
 			} catch ( Exception $e ) {
 				// save the error for later
@@ -104,9 +108,12 @@ if (! class_exists ( "PostmanWpMail" )) {
 				$this->logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
 				
 				// log the failed delivery
-				PostmanStats::getInstance ()->incrementFailedDelivery ();
-				$log = PostmanEmailLogFactory::createFailureLog ( $messageBuilder, $this->transcript, $transport, $e->getMessage () );
-				PostmanEmailLogService::getInstance ()->writeToEmailLog ( $log );
+				if ($wpMailOptions->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
+					PostmanStats::getInstance ()->incrementFailedDelivery ();
+				}
+				if ($wpMailOptions->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $wpMailOptions->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
+					PostmanEmailLogService::getInstance ()->createFailureLog ( $messageBuilder, $this->transcript, $transport, $e->getMessage () );
+				}
 				return false;
 			}
 		}

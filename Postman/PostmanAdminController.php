@@ -438,7 +438,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::MESSAGE_HEADERS_OPTIONS, PostmanAdminController::MESSAGE_HEADERS_SECTION );
 			
 			// the Logging section
-			add_settings_section ( PostmanAdminController::LOGGING_SECTION, _x ( 'Logging Settings', 'Configuration Section Title', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::LOGGING_SECTION, __ ( 'Email Log Settings', 'postman-smtp' ), array (
 					$this,
 					'printLoggingSectionInfo' 
 			), PostmanAdminController::LOGGING_OPTIONS );
@@ -541,7 +541,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<p id="wizard_oauth2_help">%s</p>', $this->oauthScribe->getOAuthHelp () );
 		}
 		public function printLoggingSectionInfo() {
-			print ('Enter a Log Entries Limit of 0 for unlimited entries') ;
+			print __('Configure the delivery audit log:','postman-smtp') ;
 		}
 		
 		/**
@@ -718,7 +718,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 		}
 		public function loggingStatusInputField() {
-			printf ( '<input type="checkbox" id="input_logging_status" name="postman_options[%s]" %s />', PostmanOptions::MAIL_LOG_ENABLED, $this->options->isMailLoggingEnabled () ? 'checked="checked"' : '' );
+			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::MAIL_LOG_ENABLED_OPTION );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::MAIL_LOG_ENABLED_OPTION_YES, PostmanOptions::MAIL_LOG_ENABLED_OPTION_YES == $this->options->getMailLoggingEnabled () ? 'selected="selected"' : '', __ ( 'Yes', 'postman-smtp' ) );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::MAIL_LOG_ENABLED_OPTION_NO, PostmanOptions::MAIL_LOG_ENABLED_OPTION_NO == $this->options->getMailLoggingEnabled () ? 'selected="selected"' : '', __ ( 'No', 'postman-smtp' ) );
+			printf ( '</select>' );
 		}
 		public function loggingMaxEntriesInputField() {
 			printf ( '<input type="text" id="input_logging_max_entries" name="postman_options[%s]" value="%s"/>', PostmanOptions::MAIL_LOG_MAX_ENTRIES, $this->options->getMailLoggingMaxEntries () );
@@ -823,9 +826,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		public function runModeCallback() {
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::RUN_MODE );
-			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_PRODUCTION, PostmanOptions::RUN_MODE_PRODUCTION == $this->options->getLogLevel () ? 'selected="selected"' : '', _x ( 'Production', 'When the server is online to the public, this is "Production" mode', 'postman-smtp' ) );
-			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_LOG_ONLY, PostmanOptions::RUN_MODE_LOG_ONLY == $this->options->getLogLevel () ? 'selected="selected"' : '', __ ( 'Log Emails, then Dump', 'postman-smtp' ) );
-			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_IGNORE, PostmanOptions::RUN_MODE_IGNORE == $this->options->getLogLevel () ? 'selected="selected"' : '', __ ( 'Dump All Emails', 'postman-smtp' ) );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_PRODUCTION, PostmanOptions::RUN_MODE_PRODUCTION == $this->options->getRunMode () ? 'selected="selected"' : '', _x ( 'Production', 'When the server is online to the public, this is "Production" mode', 'postman-smtp' ) );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_LOG_ONLY, PostmanOptions::RUN_MODE_LOG_ONLY == $this->options->getRunMode () ? 'selected="selected"' : '', __ ( 'Log Emails, then Dump', 'postman-smtp' ) );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_IGNORE, PostmanOptions::RUN_MODE_IGNORE == $this->options->getRunMode () ? 'selected="selected"' : '', __ ( 'Dump All Emails', 'postman-smtp' ) );
 			printf ( '</select>' );
 		}
 		

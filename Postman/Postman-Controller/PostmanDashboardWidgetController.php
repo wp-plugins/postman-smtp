@@ -71,17 +71,19 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 				$goToEmailLog = sprintf ( '<a href="%s">%s</a>', PostmanUtils::getEmailLogPageUrl (), $goToEmailLog );
 			}
 			if (! PostmanPreRequisitesCheck::isReady ()) {
-				printf ( '<p><span style="color:red">%s</span></p>', __ ( 'Postman is missing a required PHP library.', 'postman-smtp' ) );
+				printf ( '<p><span style="color:red">%s</span></p>', __ ( 'Error: Postman is missing a required PHP library.', 'postman-smtp' ) );
 			} else if ($this->wpMailBinder->isUnboundDueToException ()) {
-				printf ( '<p><span style="color:red">%s</span></p>', __ ( 'Postman is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.', 'postman-smtp' ) );
+				printf ( '<p><span style="color:red">%s</span></p>', __ ( 'Error: Postman is properly configured, but the current theme or another plugin is preventing service.', 'postman-smtp' ) );
 			} else {
-				if (PostmanTransportRegistry::getInstance()->isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
+				if ($this->options->getRunMode () != PostmanOptions::RUN_MODE_PRODUCTION) {
+					printf ( '<p><span style="background-color:yellow">%s</span></p>', __ ( 'Postman is in <em>non-Production</em> mode and is dumping all emails.', 'postman-smtp' ) );
+				} else if (PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
 					printf ( '<p class="wp-menu-image dashicons-before dashicons-email"> %s </p>', sprintf ( _n ( '<span style="color:green">Postman is configured</span> and has delivered <span style="color:green">%d</span> email.', '<span style="color:green">Postman is configured</span> and has delivered <span style="color:green">%d</span> emails.', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
-					$currentTransport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
+					$currentTransport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
 					$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
 					printf ( '<p>%s</p>', $deliveryDetails );
 				} else {
-					printf ( '<p><span style="color:red">%s</span></p>', __ ( 'Postman is <em>not</em> handling email delivery.', 'postman-smtp' ) );
+					printf ( '<p><span>%s %s</span></p>', __ ( 'Postman is <em>not</em> handling email delivery.', 'postman-smtp' ), sprintf ( __ ( '<a href="%s">Configure</a> the plugin.', 'postman-smtp' ), PostmanUtils::getSettingsPageUrl() ) );
 				}
 			}
 			printf ( '<p>%s | %s</p>', $goToEmailLog, $goToSettings );

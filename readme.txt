@@ -277,6 +277,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
 * (TBD): Delivery mode - production, logging, test
 * (TBD): Add MX and SPF to diagnostic data
+* (TBD): Fix logging enable/disable
 
 = 1.5.13 - 2015-04-18 =
 * Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)

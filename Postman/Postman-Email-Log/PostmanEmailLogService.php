@@ -15,49 +15,6 @@ if (! class_exists ( 'PostmanEmailLog' )) {
 	}
 }
 
-if (! class_exists ( 'PostmanEmailLogFactory' )) {
-	class PostmanEmailLogFactory {
-		public static function createSuccessLog(PostmanMessage $message, $transcript, PostmanTransport $transport) {
-			return PostmanEmailLogFactory::createLog ( $message, $transcript, '', true, $transport );
-		}
-		public static function createFailureLog(PostmanMessage $message = null, $transcript, PostmanTransport $transport, $statusMessage) {
-			return PostmanEmailLogFactory::createLog ( $message, $transcript, $statusMessage, false, $transport );
-		}
-		private static function createLog(PostmanMessage $message = null, $transcript, $statusMessage, $success, PostmanTransport $transport) {
-			$log = new PostmanEmailLog ();
-			if ($message) {
-				$log->sender = $message->getSender ()->format ();
-				$log->recipients = PostmanEmailLogFactory::flattenEmails ( $message->getToRecipients () );
-				$log->subject = $message->getSubject ();
-				$log->body = $message->getBody ();
-				if (null !== $message->getReplyTo ()) {
-					$log->replyTo = $message->getReplyTo ()->format ();
-				}
-			}
-			$log->success = $success;
-			$log->statusMessage = $statusMessage;
-			$log->transportUri = PostmanTransportRegistry::getInstance ()->getPublicTransportUri ( $transport );
-			$log->sessionTranscript = 'n/a';
-			if (! empty ( $transcript )) {
-				$log->sessionTranscript = $transcript;
-			}
-			return $log;
-		}
-		private static function flattenEmails(array $addresses) {
-			$flat = '';
-			$count = 0;
-			foreach ( $addresses as $address ) {
-				if ($count > 0) {
-					$flat .= ', ';
-				}
-				$flat .= $address->format ();
-				$count ++;
-			}
-			return $flat;
-		}
-	}
-}
-
 if (! class_exists ( 'PostmanEmailLogService' )) {
 	class PostmanEmailLogService {
 		
@@ -167,6 +124,45 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			$purger = new PostmanEmailLogPurger ();
 			$purger->truncateLogItems ( PostmanOptions::getInstance ()->getMailLoggingMaxEntries () );
 		}
-		
+		public function createSuccessLog(PostmanMessage $message, $transcript, PostmanTransport $transport) {
+			return $this->createLog ( $message, $transcript, '', true, $transport );
+		}
+		public function createFailureLog(PostmanMessage $message = null, $transcript, PostmanTransport $transport, $statusMessage) {
+			return $this->createLog ( $message, $transcript, $statusMessage, false, $transport );
+		}
+		private function createLog(PostmanMessage $message = null, $transcript, $statusMessage, $success, PostmanTransport $transport) {
+			if (PostmanOptions::getInstance ()->isMailLoggingEnabled ()) {
+				$log = new PostmanEmailLog ();
+				if ($message) {
+					$log->sender = $message->getSender ()->format ();
+					$log->recipients = $this->flattenEmails ( $message->getToRecipients () );
+					$log->subject = $message->getSubject ();
+					$log->body = $message->getBody ();
+					if (null !== $message->getReplyTo ()) {
+						$log->replyTo = $message->getReplyTo ()->format ();
+					}
+				}
+				$log->success = $success;
+				$log->statusMessage = $statusMessage;
+				$log->transportUri = PostmanTransportRegistry::getInstance ()->getPublicTransportUri ( $transport );
+				$log->sessionTranscript = 'n/a';
+				if (! empty ( $transcript )) {
+					$log->sessionTranscript = $transcript;
+				}
+				$this->writeToEmailLog ( $log );
+			}
+		}
+		private static function flattenEmails(array $addresses) {
+			$flat = '';
+			$count = 0;
+			foreach ( $addresses as $address ) {
+				if ($count > 0) {
+					$flat .= ', ';
+				}
+				$flat .= $address->format ();
+				$count ++;
+			}
+			return $flat;
+		}
 	}
 }

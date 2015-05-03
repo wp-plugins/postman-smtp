@@ -49,7 +49,9 @@ if (! class_exists ( "PostmanOptions" )) {
 		const RUN_MODE_PRODUCTION = 'production';
 		const RUN_MODE_LOG_ONLY = 'log_only';
 		const RUN_MODE_IGNORE = 'ignore';
-		const MAIL_LOG_ENABLED = 'mail_log_enabled';
+		const MAIL_LOG_ENABLED_OPTION = 'mail_log_enabled';
+		const MAIL_LOG_ENABLED_OPTION_YES = 'true';
+		const MAIL_LOG_ENABLED_OPTION_NO = 'false';
 		const MAIL_LOG_MAX_ENTRIES = 'mail_log_max_entries';
 		
 		// options data
@@ -78,12 +80,19 @@ if (! class_exists ( "PostmanOptions" )) {
 			return ! isset ( $this->options [PostmanOptions::VERSION] );
 		}
 		public function isMailLoggingEnabled() {
-			if ($this->isNew ())
-				return true;
-			if (isset ( $this->options [PostmanOptions::MAIL_LOG_ENABLED] ))
-				return $this->options [PostmanOptions::MAIL_LOG_ENABLED];
+			return $this->getMailLoggingEnabled () == self::MAIL_LOG_ENABLED_OPTION_YES;
+		}
+		public function getMailLoggingEnabled() {
+			if (isset ( $this->options [PostmanOptions::MAIL_LOG_ENABLED_OPTION] ))
+				return $this->options [PostmanOptions::MAIL_LOG_ENABLED_OPTION];
 			else
-				return false;
+				return self::MAIL_LOG_ENABLED_OPTION_YES;
+		}
+		public function getRunMode() {
+			if (isset ( $this->options [self::RUN_MODE] ))
+				return $this->options [self::RUN_MODE];
+			else
+				return self::RUN_MODE_PRODUCTION;
 		}
 		public function getMailLoggingMaxEntries() {
 			if (isset ( $this->options [PostmanOptions::MAIL_LOG_MAX_ENTRIES] ))
