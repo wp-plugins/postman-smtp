@@ -403,11 +403,6 @@ function handleConfigurationResponse(response) {
 				response.override_menu[i].secure);
 		// populate user Auth Override menu
 		if (response.override_menu[i].selected) {
-			if(!response.override_menu[i].secure) {
-				show('#smtp_not_secure');
-			} else {
-				hide('#smtp_not_secure');
-			}
 			if(response.override_menu[i].mitm) {
 				show('#smtp_mitm');
 				jQuery('#smtp_mitm').html(sprintf(postman_smtp_mitm,response.override_menu[i].reported_hostname_domain_only,response.override_menu[i].hostname_domain_only));
@@ -416,11 +411,15 @@ function handleConfigurationResponse(response) {
 			}
 			var el2 = jQuery('#user_auth_override');
 			el2.html('');
+			hide('#smtp_not_secure');
 			for (j = 0; j < response.override_menu[i].auth_items.length; j++) {
 				buildRadioButtonGroup(el2, 'user_auth_override',
 						response.override_menu[i].auth_items[j].selected,
 						response.override_menu[i].auth_items[j].value,
 						response.override_menu[i].auth_items[j].name, false);
+				if(response.override_menu[i].auth_items[j].selected && !response.override_menu[i].secure && response.override_menu[i].auth_items[j].value != 'none') {
+					show('#smtp_not_secure');
+				}
 			}
 			// add an event on the user port override field
 			jQuery('input.user_auth_override').change(function() {
