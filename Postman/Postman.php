@@ -88,7 +88,7 @@ if (! class_exists ( 'Postman' )) {
 			}
 			
 			// register activation handler on the activation event
-			new PostmanActivationHandler ( $rootPluginFilenameAndPath, $this->pluginData );
+			new PostmanActivationHandler ( $rootPluginFilenameAndPath, $this->pluginData['Version'] );
 			
 			// register the shortcode handler on the add_shortcode event
 			add_shortcode ( 'postman-version', array (
@@ -113,7 +113,7 @@ if (! class_exists ( 'Postman' )) {
 			}
 			
 			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
-			$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
+			$scribe = PostmanConfigTextHelperFactory::createScribe ( $this->options->getHostname (), $transport );
 			
 			// on any Postman page, print the config error messages
 			if (PostmanUtils::isCurrentPagePostmanAdmin ()) {

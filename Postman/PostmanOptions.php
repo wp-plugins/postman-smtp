@@ -77,7 +77,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			update_option ( PostmanOptions::POSTMAN_OPTIONS, $this->options );
 		}
 		public function isNew() {
-			return ! isset ( $this->options [PostmanOptions::VERSION] );
+			return ! isset ( $this->options [PostmanOptions::TRANSPORT_TYPE] );
 		}
 		public function isMailLoggingEnabled() {
 			return $this->getMailLoggingEnabled () == self::MAIL_LOG_ENABLED_OPTION_YES;
@@ -170,7 +170,7 @@ if (! class_exists ( "PostmanOptions" )) {
 				return base64_decode ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] );
 		}
 		public function getObfuscatedPassword() {
-			return PostmanUtils::postmanObfuscatePassword ( $this->getPassword () );
+			return PostmanUtils::obfuscatePassword ( $this->getPassword () );
 		}
 		public function getReplyTo() {
 			if (isset ( $this->options [PostmanOptions::REPLY_TO] ))

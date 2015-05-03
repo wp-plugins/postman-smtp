@@ -75,7 +75,7 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 					$user = $transport->getCredentialsId ( $options );
 				}
 				if ($obscurePassword) {
-					$pass = postmanObfuscatePassword ( $transport->getCredentialsSecret ( $options ) );
+					$pass = PostmanUtils::obfuscatePassword ( $transport->getCredentialsSecret ( $options ) );
 				} else {
 					$pass = $transport->getCredentialsSecret ( $options );
 				}

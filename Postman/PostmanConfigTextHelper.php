@@ -8,7 +8,7 @@ if (! class_exists ( 'PostmanConfigTextHelperFactory' )) {
 		 * @param unknown $hostname        	
 		 * @return PostmanGoogleOAuthScribe|PostmanMicrosoftOAuthScribe|PostmanYahooOAuthScribe|PostmanNonOAuthScribe
 		 */
-		static function createScribe(PostmanTransport $transport, $hostname) {
+		static function createScribe($hostname, PostmanTransport $transport = null) {
 			if ($transport->isServiceProviderGoogle ( $hostname )) {
 				return new PostmanGoogleOAuthScribe ();
 			} else if ($transport->isServiceProviderMicrosoft ( $hostname )) {

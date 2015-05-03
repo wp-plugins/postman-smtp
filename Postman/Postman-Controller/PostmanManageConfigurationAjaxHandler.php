@@ -25,7 +25,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			}
 			
 			// create the scribe
-			$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $queryHostname );
+			$scribe = PostmanConfigTextHelperFactory::createScribe ( $queryHostname, $transport );
 			
 			// create the response
 			$response = array ();
@@ -69,7 +69,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			if (isset ( $winningRecommendation )) {
 				// create an appropriate (theoretical) transport
 				$transport = PostmanTransportRegistry::getInstance ()->getTransport ( $winningRecommendation ['transport'] );
-				$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $winningRecommendation ['hostname'] );
+				$scribe = PostmanConfigTextHelperFactory::createScribe ( $winningRecommendation ['hostname'], $transport );
 				$this->populateResponseFromScribe ( $scribe, $configuration );
 				$this->populateResponseFromTransport ( $winningRecommendation, $configuration );
 				$response ['override_menu'] = $overrideMenu;

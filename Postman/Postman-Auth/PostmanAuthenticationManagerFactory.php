@@ -29,7 +29,7 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 			$senderEmail = $options->getSenderEmail ();
 			if (! isset ( $scribe )) {
 				$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
-				$scribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $hostname );
+				$scribe = PostmanConfigTextHelperFactory::createScribe ( $hostname, $transport );
 			}
 			$redirectUrl = $scribe->getCallbackUrl ();
 			if ($transport->isOAuthUsed ( $options->getAuthenticationType () ) && $transport->isServiceProviderGoogle ( $hostname )) {

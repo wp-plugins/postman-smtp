@@ -56,7 +56,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 			}
 			return (substr ( $haystack, - $length ) === $needle);
 		}
-		public static function postmanObfuscatePassword($password) {
+		public static function obfuscatePassword($password) {
 			return str_repeat ( '*', strlen ( $password ) );
 		}
 		/**

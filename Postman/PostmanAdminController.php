@@ -140,7 +140,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function init() {
 			//
 			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
-			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $transport, $this->options->getHostname () );
+			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $this->options->getHostname (), $transport );
 			
 			// register Ajax handlers
 			new PostmanManageConfigurationAjaxHandler ( $this->pluginData );
