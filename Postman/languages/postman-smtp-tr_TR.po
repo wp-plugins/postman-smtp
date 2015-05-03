@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.5.7\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-05-03 17:32:30+00:00\n"
-"PO-Revision-Date: 2015-05-03 14:23-0500\n"
+"POT-Creation-Date: 2015-05-03 20:21:01+00:00\n"
+"PO-Revision-Date: 2015-05-03 16:25-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr_TR\n"
@@ -81,20 +81,19 @@ msgid "Postman is operating in per-site mode."
 msgstr "Postacı site başına modunda çalışıyor."
 
 #. translators: where %s is the URL to the Connectivity Test page
-#: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:82
+#: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:84
 msgid "Postman can't find any way to send mail on your system. Run a <a href=\"%s\">connectivity test</a>."
 msgstr "Postman sisteminizden email gönderemiyor. Lütfen <a href=\"%s\">buraya tıklayarak</a> bağlantı testi yapın."
 
-#: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:135
+#: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:137
 msgid "Password (requires username and password)"
 msgstr "Şifre (kullanıcı adı ve parola gerekli)"
 
-#: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:142
-msgctxt "postman-smtp"
+#: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:144
 msgid "OAuth 2.0 (requires Client ID and Client Secret)"
 msgstr "OAuth 2.0 (müşteri kimliği ve istemci gizli gerektirir)"
 
-#: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:149
+#: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:151
 #: Postman/PostmanAdminController.php:615
 #: Postman/PostmanAdminController.php:629
 #: Postman/PostmanViewController.php:741
@@ -222,7 +221,7 @@ msgid "You have configured OAuth 2.0 authentication, but have not received permi
 msgstr "OAuth 2.0 konfigürasyonunu yaptınız ancak henüz gönderim için yetkilendirilmediniz."
 
 #. translators: where %d is the port number
-#: Postman/Postman-Mail/PostmanGoogleMailApiTransport.php:238
+#: Postman/Postman-Mail/PostmanGoogleMailApiTransport.php:246
 msgid "Postman recommends Gmail API configuration on port %d"
 msgstr "Postman Gmail API konfigürasyonu için %d nolu portu ayarlamanızı öneriyor."
 
@@ -303,12 +302,12 @@ msgstr "OAuth 2.0 metodu ile gönderim için OAuth 2.0 destekleyen bir Giden Mai
 #. translators: where %1$s is a description of the transport (eg. SMTPS-SSL),
 #. %2$s is a description of the authentication (eg. Password-CRAMMD5), %3$d is
 #. the TCP port (eg. 465), %4$d is the hostname
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:316
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:323
 msgid "Your recommended settings are %1$s with %2$s authentication to host %4$s on port %3$d."
 msgstr "Önerilen ayarları %1$s %2$s host %4$s bağlantı noktası %3$ d üzerinde kimlik doğrulaması ile vardır."
 
 #. translators: where %s is the name of the transport (e.g. smtp)
-#: Postman/Postman-Mail/PostmanSmtpTransport.php:375
+#: Postman/Postman-Mail/PostmanSmtpTransport.php:384
 msgid "The selected transport '%s' is unavailable. The external plugin was probably deactivated."
 msgstr "Seçtiğiniz iletim türü kullanılamıyor. Harici eklenti büyük ihtimalle devre dışı."
 
@@ -1337,6 +1336,10 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgctxt "postman-smtp"
+#~ msgid "OAuth 2.0 (requires Client ID and Client Secret)"
+#~ msgstr "OAuth 2.0 (müşteri kimliği ve istemci gizli gerektirir)"
 
 #~ msgid "Postman is missing a required PHP library."
 #~ msgstr "Postman gerek duyduğu bir PHP kütüphanesine ulaşamıyor."
