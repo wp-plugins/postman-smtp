@@ -409,7 +409,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					'jquery_steps_script',
-					self::POSTMAN_SCRIPT 
+					self::POSTMAN_SCRIPT,
+					'sprintf'
 			), $this->pluginData ['Version'] );
 			wp_register_script ( 'postman_test_email_wizard_script', plugins_url ( 'script/postman_test_email_wizard.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
@@ -452,6 +453,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 			wp_localize_script ( 'postman_port_test_script', 'postman_try_dif_smtp', __ ( 'Port %d is open, but not to %s.', 'postman-smtp' ) );
 			/* translators: where %d is a port number and %s is a hostname */
 			wp_localize_script ( 'postman_port_test_script', 'postman_smtp_success', __ ( 'Port %d can be used for SMTP to %s.', 'postman-smtp' ) );
+			/* translators: where %s is the name of the SMTP server */
+			wp_localize_script ( 'postman_port_test_script', 'postman_smtp_mitm', __ ( 'Warning: connected to %1$s instead of %2$s. This may be a problem.', 'postman-smtp' ) );
+			/* translators: where %s is the name of the SMTP server */
+			wp_localize_script ( 'postman_wizard_script', 'postman_smtp_mitm', __ ( 'Warning: connected to %1$s instead of %2$s. This may be a problem.', 'postman-smtp' ) );
 			/* translators: where %d is a port number and %s is the URL for the Postman Gmail Extension */
 			wp_localize_script ( 'postman_port_test_script', 'postman_https_success', sprintf ( __ ( 'Port %d can be used to send <b>Gmail</b> with the Gmail API.', 'postman-smtp' ), 443 ) );
 			/* translators: where %d is a port number */
@@ -756,10 +761,6 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print $this->adminController->sender_name_callback ();
 			print '</fieldset>';
 			
-			/* Translators: where %1$s and %2$s are the names of the Email Service, like Google */
-			$futureText3 = __ ( 'Warning: Expected to reach %1$s but %2$s answered instead, something may be wrong.', 'postman-smtp' );
-			$futureText4 = __ ( 'Warning: This configuration option will send your authorization credentials in the clear.', 'postman-smtp' );
-			
 			// Wizard Step 2
 			printf ( '<h5>%s</h5>', __ ( 'Outgoing Mail Server Hostname', 'postman-smtp' ) );
 			print '<fieldset>';
@@ -786,8 +787,10 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::AUTHENTICATION_TYPE );
 			print '<p id="wizard_recommendation"></p>';
 			/* Translators: Where %1$s is the socket identifier and %2$s is the authentication type */
-			printf ( '<p class="user_override" style="display:none"><label><span>%s:</span></label> <table id="user_socket_override"></table></p>', _x ( 'Socket', 'A socket is the network term for host and port together', 'postman-smtp' ) );
-			printf ( '<p class="user_override" style="display:none"><label><span>%s:</span></label> <table id="user_auth_override"></table></p>', _x ( 'Authentication', 'Authentication proves the user\'s identity', 'postman-smtp' ) );
+			printf ( '<p class="user_override" style="display:none"><label><span>%s:</span></label> <table id="user_socket_override" class="user_override"></table></p>', _x ( 'Socket', 'A socket is the network term for host and port together', 'postman-smtp' ) );
+			printf ( '<p class="user_override" style="display:none"><label><span>%s:</span></label> <table id="user_auth_override" class="user_override"></table></p>', _x ( 'Authentication', 'Authentication proves the user\'s identity', 'postman-smtp' ) );
+			print ( '<p><span id="smtp_mitm" style="display:none; background-color:yellow"></span></p>');
+			printf ( '<p id="smtp_not_secure" style="display:none"><span style="background-color:yellow">%s</span></p>', __ ( 'Warning: This configuration option will send your authorization credentials in the clear.', 'postman-smtp' ) );
 			print '</fieldset>';
 			
 			// Wizard Step 4

@@ -294,6 +294,8 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 					'hostname_domain_only' => $portTest->hostnameDomainOnly,
 					'port' => $port,
 					'protocol' => $portTest->protocol,
+					'secure' => ($portTest->secure),
+					'mitm' => ($portTest->mitm),
 					'reported_hostname' => $portTest->reportedHostname,
 					'reported_hostname_domain_only' => $portTest->reportedHostnameDomainOnly,
 					'message' => $portTest->getErrorMessage (),

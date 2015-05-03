@@ -93,11 +93,15 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 * @return multitype:
 		 */
 		private function createOverrideMenu($queryHostData, $winningRecommendation, $userSocketOverride, $userAuthOverride) {
+			$this->logger->trace($queryHostData);
 			$overrideMenu = array ();
 			foreach ( $queryHostData as $id => $value ) {
 				if (filter_var ( $value ['success'], FILTER_VALIDATE_BOOLEAN )) {
 					$overrideItem = array ();
-					$overrideItem ['secure'] = $winningRecommendation ['secure'];
+					$overrideItem ['secure'] = PostmanUtils::parseBoolean($value['secure']);
+					$overrideItem ['mitm'] = PostmanUtils::parseBoolean($value['mitm']);
+					$overrideItem ['hostname_domain_only'] = $value['hostname_domain_only'];
+					$overrideItem ['reported_hostname_domain_only'] = $value['reported_hostname_domain_only'];
 					$overrideItem ['value'] = sprintf ( '%s_%s', $value ['hostname'], $value ['port'] );
 					$selected = ($winningRecommendation ['id'] == $overrideItem ['value']);
 					$overrideItem ['selected'] = $selected;

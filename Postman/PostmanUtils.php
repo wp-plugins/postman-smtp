@@ -122,6 +122,9 @@ if (! class_exists ( 'PostmanUtils' )) {
 			wp_redirect ( $url );
 			exit ();
 		}
+		static function parseBoolean($var) {
+			return filter_var ( $var, FILTER_VALIDATE_BOOLEAN );
+		}
 	}
 	PostmanUtils::staticInit ();
 }

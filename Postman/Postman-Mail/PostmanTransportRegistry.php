@@ -22,6 +22,11 @@ if (! interface_exists ( 'PostmanTransport' )) {
 if (! class_exists ( 'PostmanTransportRegistry' )) {
 	class PostmanTransportRegistry {
 		private $transports;
+		private $logger;
+
+		private function __construct() {
+			$this->logger = new PostmanLogger(get_class($this));
+		}
 		
 		// singleton instance
 		public static function getInstance() {
@@ -162,7 +167,10 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 		public function getSocketsForSetupWizardToProbe($hostname, $isGmail) {
 			$hosts = array ();
 			foreach ( $this->getTransports () as $transport ) {
-				$hosts = array_merge ( $hosts, $transport->getSocketsForSetupWizardToProbe ( $hostname, $isGmail ) );
+				$socketsToTest = $transport->getSocketsForSetupWizardToProbe ( $hostname, $isGmail );
+				$this->logger->debug ( 'sockets to test:' );
+				$this->logger->debug ( $socketsToTest );
+				$hosts = array_merge ( $hosts, $socketsToTest );
 			}
 			return $hosts;
 		}

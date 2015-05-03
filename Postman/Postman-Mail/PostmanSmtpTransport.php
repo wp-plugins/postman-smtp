@@ -232,11 +232,20 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$score = 0;
 			$recommendation = array ();
 			// increment score for auth type
+			if ($hostData ['hostname_domain_only'] == 'gmail.com' && $hostData ['reported_hostname_domain_only'] != 'google.com') {
+				$score -= 10000;
+				$recommendation ['mitm'] = true;
+			} elseif ($hostData ['hostname_domain_only'] == 'live.com' && $hostData ['reported_hostname_domain_only'] != 'hotmail.com') {
+				$score -= 10000;
+				$recommendation ['mitm'] = true;
+			} elseif ($hostData ['hostname_domain_only'] != $hostData ['reported_hostname_domain_only']) {
+				$score -= 10000;
+				$recommendation ['mitm'] = true;
+			}
 			if ($hostData ['start_tls']) {
 				// STARTTLS was formalized in 2002
 				// http://www.rfc-editor.org/rfc/rfc3207.txt
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
-				$recommendation ['secure'] = true;
 				$score += 30000;
 			} elseif ($hostData ['protocol'] == 'SMTPS') {
 				// "The hopelessly confusing and imprecise term, SSL,
@@ -244,11 +253,10 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				// TLS to indicate the STARTTLS protocol extension."
 				// http://stackoverflow.com/a/19942206/4368109
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_SSL;
-				$recommendation ['secure'] = true;
-				$score += 20000;
+				$score += 28000;
 			} elseif ($hostData ['protocol'] == 'SMTP') {
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
-				$score += 10000;
+				$score += 26000;
 			}
 			if ($hostData ['auth_xoauth'] && $supportedOAuth2Provider) {
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;

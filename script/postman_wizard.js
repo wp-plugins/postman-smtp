@@ -29,6 +29,7 @@ jQuery(document).ready(function() {
 		'timeout' : 5
 	};
 	goDaddy = 'unknown';
+	checkedEmail = false;
 	jQuery.post(ajaxurl, data, function(response) {
 		if (response.success) {
 			goDaddy = true;
@@ -221,7 +222,8 @@ function getHostsToCheck(hostname) {
 	jQuery('table#wizard_port_test').html('');
 	jQuery('#wizard_recommendation').html('');
 	hide('.user_override');
-	show('#connectivity_test_status');
+	hide('#smtp_not_secure');
+	hide('#smtp_mitm');
 	connectivtyTestResults = {};
 	portCheckBlocksUi = true;
 	portTestInProgress = true;
@@ -246,6 +248,7 @@ function handleHostsToCheckResponse(response) {
 		var hostname = response.hosts[x].host;
 		var port = response.hosts[x].port
 		portsToCheck++;
+		show('#connectivity_test_status');
 		updateStatus(postman_test_in_progress + " " + portsToCheck);
 		var data = {
 			'action' : 'wizard_port_test',
@@ -400,6 +403,17 @@ function handleConfigurationResponse(response) {
 				response.override_menu[i].secure);
 		// populate user Auth Override menu
 		if (response.override_menu[i].selected) {
+			if(!response.override_menu[i].secure) {
+				show('#smtp_not_secure');
+			} else {
+				hide('#smtp_not_secure');
+			}
+			if(response.override_menu[i].mitm) {
+				show('#smtp_mitm');
+				jQuery('#smtp_mitm').html(sprintf(postman_smtp_mitm,response.override_menu[i].reported_hostname_domain_only,response.override_menu[i].hostname_domain_only));
+			} else {
+				hide('#smtp_mitm');
+			}
 			var el2 = jQuery('#user_auth_override');
 			el2.html('');
 			for (j = 0; j < response.override_menu[i].auth_items.length; j++) {
@@ -460,7 +474,6 @@ function checkEmail(email) {
 		'action' : 'check_email',
 		'email' : email
 	};
-	checkedEmail = false;
 	hide('#godaddy_block');
 	hide('#godaddy_spf_required');
 	jQuery.post(ajaxurl, data, function(response) {

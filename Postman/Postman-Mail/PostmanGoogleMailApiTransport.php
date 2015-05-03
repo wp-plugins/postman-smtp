@@ -217,8 +217,6 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 						) 
 				);
 			}
-			$this->logger->debug ( 'hosts to test:' );
-			$this->logger->debug ( $hosts );
 			return $hosts;
 		}
 		
@@ -239,9 +237,8 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 					/* translators: where %d is the port number */
 					$recommendation ['message'] = sprintf ( __ ( 'Postman recommends Gmail API configuration on port %d' ), self::PORT );
 					$recommendation ['transport'] = self::SLUG;
-					$recommendation ['priority'] = 19500;
+					$recommendation ['priority'] = 27000;
 					$recommendation ['enc'] = null;
-					$recommendation ['secure'] = true;
 					$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 					$recommendation ['port'] = null;
 					$recommendation ['hostname'] = null;

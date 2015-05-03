@@ -18,6 +18,8 @@ class PostmanPortTest {
 	public $reportedHostname;
 	public $reportedHostnameDomainOnly;
 	public $protocol;
+	public $secure;
+	public $mitm;
 	public $http;
 	public $https;
 	public $smtp;
@@ -29,6 +31,9 @@ class PostmanPortTest {
 	public $authXoauth;
 	public $authNone;
 	public $trySmtps;
+	
+	//
+	const SMTPS_PROTOCOL = 'SMTPS';
 	
 	/**
 	 */
@@ -64,7 +69,7 @@ class PostmanPortTest {
 	 * @return boolean
 	 */
 	public function genericConnectionTest() {
-		$this->logger->trace('testCustomConnection()');
+		$this->logger->trace ( 'testCustomConnection()' );
 		// test if the port is open
 		$connectionString = sprintf ( '%s:%s', $this->hostname, $this->port );
 		$stream = $this->createStream ( $connectionString, $this->connectionTimeout );
@@ -77,7 +82,7 @@ class PostmanPortTest {
 	 * @return boolean
 	 */
 	public function testPortQuiz() {
-		$this->logger->trace('testPortQuiz()');
+		$this->logger->trace ( 'testPortQuiz()' );
 		// test if the port is open
 		$connectionString = sprintf ( 'portquiz.net:%s', $this->port );
 		$stream = $this->createStream ( $connectionString, $this->connectionTimeout );
@@ -90,7 +95,7 @@ class PostmanPortTest {
 	 * @param string $hostname        	
 	 */
 	public function testHttpPorts() {
-		$this->logger->trace('testHttpPorts()');
+		$this->logger->trace ( 'testHttpPorts()' );
 		$connectionString = sprintf ( "ssl://%s:%s", $this->hostname, $this->port );
 		$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
 		$stream = $this->createStream ( $connectionString, $this->connectionTimeout );
@@ -105,6 +110,7 @@ class PostmanPortTest {
 				$this->protocol = $matches [0];
 				$this->http = true;
 				$this->https = true;
+				$this->secure = true;
 				$this->reportedHostname = $this->hostname;
 				$this->reportedHostnameDomainOnly = getRegisteredDomain ( $this->hostname );
 				return true;
@@ -121,7 +127,7 @@ class PostmanPortTest {
 	 * @param string $hostname        	
 	 */
 	public function testSmtpPorts() {
-		$this->logger->trace('testSmtpPorts()');
+		$this->logger->trace ( 'testSmtpPorts()' );
 		if ($this->port == 8025) {
 			$this->debug ( 'Executing test code for port 8025' );
 			$this->protocol = 'SMTP';
@@ -148,15 +154,16 @@ class PostmanPortTest {
 	 * @param string $hostname        	
 	 */
 	public function testSmtpsPorts() {
-		$this->logger->trace('testSmtpsPorts()');
+		$this->logger->trace ( 'testSmtpsPorts()' );
 		$connectionString = sprintf ( "ssl://%s:%s", $this->hostname, $this->port );
 		$success = $this->talkToMailServer ( $connectionString, $this->connectionTimeout, $this->readTimeout );
 		if ($success) {
 			if (! ($this->authCrammd5 || $this->authLogin || $this->authPlain || $this->authXoauth)) {
 				$this->authNone = true;
 			}
-			$this->protocol = 'SMTPS';
+			$this->protocol = self::SMTPS_PROTOCOL;
 			$this->smtps = true;
+			$this->secure = true;
 		}
 		return $success;
 	}
@@ -167,7 +174,7 @@ class PostmanPortTest {
 	 * @param string $hostname        	
 	 */
 	private function talkToMailServer($connectionString) {
-		$this->logger->trace('talkToMailServer()');
+		$this->logger->trace ( 'talkToMailServer()' );
 		$stream = $this->createStream ( $connectionString, $this->connectionTimeout );
 		if ($stream) {
 			$serverName = postmanGetServerName ();
@@ -178,6 +185,16 @@ class PostmanPortTest {
 			if ($result) {
 				$this->reportedHostname = $result;
 				$this->reportedHostnameDomainOnly = getRegisteredDomain ( $this->reportedHostname );
+				$this->logger->trace(sprintf('comparing %s with %s',$this->reportedHostnameDomainOnly,$this->hostnameDomainOnly));
+				$this->mitm = true;
+				// MITM exceptions
+				if ($this->reportedHostnameDomainOnly == 'google.com' && $this->hostnameDomainOnly == 'gmail.com') {
+					$this->mitm = false;
+				} elseif ($this->reportedHostnameDomainOnly == 'hotmail.com' && $this->hostnameDomainOnly == 'live.com') {
+					$this->mitm = false;
+				} elseif ($this->reportedHostnameDomainOnly == $this->hostnameDomainOnly) {
+					$this->mitm = false;
+				}
 				$this->debug ( sprintf ( 'domain name: %s (%s)', $this->reportedHostname, $this->reportedHostnameDomainOnly ) );
 				$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
 				$done = $this->readSmtpResponse ( $stream );
@@ -189,6 +206,7 @@ class PostmanPortTest {
 					$starttlsSuccess = @stream_socket_enable_crypto ( $stream, true, STREAM_CRYPTO_METHOD_TLS_CLIENT );
 					if ($starttlsSuccess) {
 						$this->startTls = true;
+						$this->secure = true;
 						$this->debug ( 'starttls started' );
 						$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
 						$done = $this->readSmtpResponse ( $stream );
