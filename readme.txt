@@ -275,7 +275,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Need some kind of success boolean in the email log
 * Delivery mode - production, logging, test
 * Fix logging enable/disable
-* (TBD): Check for redirect errors - relative URLs only
+* Check for redirect errors - relative URLs only
 * (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
 * (TBD): Add MX and SPF to diagnostic data
 

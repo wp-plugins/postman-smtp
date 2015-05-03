@@ -529,7 +529,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<div class="welcome-panel-column welcome-panel-last">';
 			printf ( '<h4>%s</h4>', $title );
 			print '</div>';
-			printf ( '<p style="text-align:right;margin-top:25px">%s <a id="back_to_menu_link" href="%s">%s</a></p>', self::BACK_ARROW_SYMBOL, POSTMAN_HOME_PAGE_ABSOLUTE_URL, _x ( 'Back To Main Menu', 'Return to main menu link', 'postman-smtp' ) );
+			printf ( '<p style="text-align:right;margin-top:25px">%s <a id="back_to_menu_link" href="%s">%s</a></p>', self::BACK_ARROW_SYMBOL, PostmanUtils::getSettingsPageUrl(), _x ( 'Back To Main Menu', 'Return to main menu link', 'postman-smtp' ) );
 			print '</div></div></div>';
 		}
 		
@@ -851,7 +851,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			
 			$this->outputChildPageHeader ( __ ( 'Send a Test Email', 'postman-smtp' ) );
 			
-			printf ( '<form id="postman_test_email_wizard" method="post" action="%s">', POSTMAN_HOME_PAGE_ABSOLUTE_URL );
+			printf ( '<form id="postman_test_email_wizard" method="post" action="%s">', PostmanUtils::getSettingsPageUrl() );
 			
 			// Step 1
 			printf ( '<h5>%s</h5>', __ ( 'Choose the Recipient', 'postman-smtp' ) );

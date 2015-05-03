@@ -185,13 +185,20 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				return $message;
 			}
 		}
-		
+		/**
+		 *
+		 * @deprecated (non-PHPdoc)
+		 * @see PostmanTransport::getHostsToTest()
+		 */
+		public function getHostsToTest($hostname) {
+			return $this->getSocketsForSetupWizardToProbe ( $hostname, $hostname == 'smtp.gmail.com' );
+		}
 		/**
 		 * Given a hostname, what ports should we test?
 		 *
 		 * May return an array of several combinations.
 		 */
-		public function getHostsToTest($hostname, $isGmail) {
+		public function getSocketsForSetupWizardToProbe($hostname, $isGmail) {
 			$hosts = array (
 					array (
 							'host' => $hostname,
@@ -344,7 +351,14 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			return false;
 		}
-		public function getHostsToTest($hostname, $isGmail) {
+		/**
+		 *
+		 * @deprecated (non-PHPdoc)
+		 * @see PostmanTransport::getHostsToTest()
+		 */
+		public function getHostsToTest($hostname) {
+		}
+		public function getSocketsForSetupWizardToProbe($hostname, $isGmail) {
 		}
 		public function getConfigurationRecommendation($hostData) {
 		}

@@ -1,5 +1,5 @@
 <?php
-if (! class_exists ( 'PostmanGmailApiTransport' )) {
+if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 	/**
 	 * This class integrates Postman with the Gmail API
 	 * http://ctrlq.org/code/19860-gmail-api-send-emails
@@ -7,7 +7,7 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 	 * @author jasonhendriks
 	 *        
 	 */
-	class PostmanGmailApiTransport implements PostmanTransport {
+	class PostmanGoogleMailApiTransport implements PostmanTransport {
 		const SLUG = 'gmail_api';
 		const PORT = 443;
 		const HOST = 'www.googleapis.com';
@@ -99,7 +99,7 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 		}
 		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			require_once 'PostmanGmailApiMailAuthenticator.php';
-			return new PostmanGmailApiMailAuthenticator ( $options, $authToken, $this->pluginData['Version'] );
+			return new PostmanGmailApiMailAuthenticator ( $options, $authToken, $this->pluginData ['Version'] );
 		}
 		public function createZendMailTransport($hostname, $config) {
 			require_once 'PostmanZendMailTransportGmailApi.php';
@@ -195,11 +195,19 @@ if (! class_exists ( 'PostmanGmailApiTransport' )) {
 		}
 		
 		/**
+		 *
+		 * @deprecated (non-PHPdoc)
+		 * @see PostmanTransport::getHostsToTest()
+		 */
+		public function getHostsToTest($hostname) {
+			return $this->getSocketsForSetupWizardToProbe ( $hostname, $hostname == 'smtp.gmail.com' );
+		}
+		/**
 		 * Given a hostname, what ports should we test?
 		 *
 		 * May return an array of several combinations.
 		 */
-		public function getHostsToTest($hostname, $isGmail) {
+		public function getSocketsForSetupWizardToProbe($hostname, $isGmail) {
 			$hosts = array ();
 			if ($isGmail) {
 				$hosts = array (

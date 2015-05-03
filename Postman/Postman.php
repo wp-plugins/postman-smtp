@@ -3,16 +3,16 @@
 // setup the main entry point
 if (! class_exists ( 'Postman' )) {
 	
+	require_once 'PostmanOptions.php';
 	require_once 'PostmanLogger.php';
 	require_once 'PostmanUtils.php';
-	require_once 'postman-common-wp-functions.php';
+	require_once 'postman-common-functions.php';
 	require_once 'Postman-Common.php';
 	require_once 'Postman-Mail/PostmanTransportRegistry.php';
 	require_once 'Postman-Mail/PostmanSmtpTransport.php';
-	require_once 'Postman-Mail/PostmanGmailApiTransport.php';
+	require_once 'Postman-Mail/PostmanGoogleMailApiTransport.php';
 	require_once 'PostmanOAuthToken.php';
 	require_once 'PostmanConfigTextHelper.php';
-	require_once 'PostmanOptions.php';
 	require_once 'PostmanMessageHandler.php';
 	require_once 'PostmanWpMailBinder.php';
 	require_once 'PostmanAdminController.php';
@@ -156,7 +156,7 @@ if (! class_exists ( 'Postman' )) {
 		private function registerTransport($pluginData) {
 			assert ( isset ( $pluginData ) );
 			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanSmtpTransport ( $pluginData ) );
-			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanGmailApiTransport ( $pluginData ) );
+			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanGoogleMailApiTransport ( $pluginData ) );
 		}
 		
 		/**

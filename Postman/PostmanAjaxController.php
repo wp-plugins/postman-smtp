@@ -169,7 +169,7 @@ if (! class_exists ( 'PostmanGetPortsToTestViaAjax' )) {
 		function getPortsToTestViaAjax() {
 			$queryHostname = $this->getRequestParameter ( 'hostname' );
 			$isGmail = $this->getBooleanRequestParameter ( PostmanGetHostnameByEmailAjaxController::IS_GOOGLE_PARAMETER );
-			$hosts = PostmanTransportRegistry::getInstance ()->getHostsToTest ( $queryHostname, $isGmail );
+			$hosts = PostmanTransportRegistry::getInstance ()->getSocketsForSetupWizardToProbe ( $queryHostname, $isGmail );
 			$this->logger->trace ( 'hostsToTest:' );
 			$this->logger->trace ( $hosts );
 			$response = array (

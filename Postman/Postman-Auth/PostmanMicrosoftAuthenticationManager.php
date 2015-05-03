@@ -63,7 +63,7 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 			$authUrl = $this->getAuthorizationUrl () . '?' . build_query ( $params );
 			
 			$this->getLogger ()->debug ( 'Requesting verification code from Microsoft' );
-			postmanRedirect ( $authUrl );
+			PostmanUtils::redirect ( $authUrl );
 		}
 		
 		/**
@@ -85,7 +85,7 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 						'redirect_uri' => $this->getCallbackUri (),
 						'code' => $code 
 				);
-				$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals );
+				$response = PostmanUtils::remotePost ( $this->getTokenUrl (), $postvals );
 				$this->processResponse ( $response );
 				$this->getAuthorizationToken ()->setVendorName ( self::VENDOR_NAME );
 				return true;

@@ -130,8 +130,7 @@ if (! class_exists ( 'PostmanEmailLogView' )) {
 		 * For whatever reason, PostmanUtils::get..url doesn't work here? :(
 		 */
 		function redirectToLogPage() {
-			$postmanEmailLogPageUrl = get_admin_url () . 'tools.php?page=postman_email_log';
-			postmanRedirect ( $postmanEmailLogPageUrl );
+			PostmanUtils::redirect ( PostmanUtils::POSTMAN_EMAIL_LOG_PAGE_RELATIVE_URL );
 			die ();
 		}
 		

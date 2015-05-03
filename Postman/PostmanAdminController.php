@@ -212,7 +212,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function postmanModifyLinksOnPluginsListPage($links) {
 			$mylinks = array (
-					sprintf ( '<a href="%s">%s</a>', esc_url ( POSTMAN_HOME_PAGE_ABSOLUTE_URL ), _x ( 'Settings', 'The configuration page of the plugin', 'postman-smtp' ) ) 
+					sprintf ( '<a href="%s">%s</a>', PostmanUtils::getSettingsPageUrl(), _x ( 'Settings', 'The configuration page of the plugin', 'postman-smtp' ) ) 
 			);
 			return array_merge ( $mylinks, $links );
 		}
@@ -224,7 +224,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// WordPress likes to keep GET parameters around for a long time
 			// (something in the call to settings_fields() does this)
 			// here we redirect after a successful save to clear those parameters
-			postmanRedirect ( POSTMAN_HOME_PAGE_RELATIVE_URL );
+			PostmanUtils::redirect ( PostmanUtils::POSTMAN_HOME_PAGE_RELATIVE_URL );
 		}
 		public function handlePurgeDataAction() {
 			if (wp_verify_nonce ( $_REQUEST ['_wpnonce'], 'purge-data' )) {
@@ -235,7 +235,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$logPurger = new PostmanEmailLogPurger ();
 				$logPurger->removeAll ();
 				$this->messageHandler->addMessage ( __ ( 'Plugin data was removed.', 'postman-smtp' ) );
-				postmanRedirect ( POSTMAN_HOME_PAGE_RELATIVE_URL );
+				PostmanUtils::redirect ( PostmanUtils::POSTMAN_HOME_PAGE_RELATIVE_URL );
 			} else {
 				$this->logger->warn ( sprintf ( 'nonce "%s" failed validation', $_REQUEST ['_wpnonce'] ) );
 			}
@@ -268,7 +268,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->messageHandler->addError ( sprintf ( __ ( 'Error authenticating with this Client ID - please create a new one. [%s]', 'postman-smtp' ), '<em>' . $e->getMessage () . '</em>' ) );
 			}
 			// redirect home
-			postmanRedirect ( POSTMAN_HOME_PAGE_RELATIVE_URL );
+			PostmanUtils::redirect ( PostmanUtils::POSTMAN_HOME_PAGE_RELATIVE_URL );
 		}
 		
 		/**

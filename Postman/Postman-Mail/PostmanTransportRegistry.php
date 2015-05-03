@@ -14,7 +14,8 @@ if (! interface_exists ( 'PostmanTransport' )) {
 		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function getConfigurationRecommendation($hostData);
-		public function getHostsToTest($hostname, $isGmail);
+		public function getHostsToTest($hostname); // deprecated
+		public function getSocketsForSetupWizardToProbe($hostname, $isGmail);
 	}
 }
 
@@ -158,10 +159,10 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 			
 			return $oauthUsed && $configured;
 		}
-		public function getHostsToTest($hostname, $isGmail) {
+		public function getSocketsForSetupWizardToProbe($hostname, $isGmail) {
 			$hosts = array ();
 			foreach ( $this->getTransports () as $transport ) {
-				$hosts = array_merge ( $hosts, $transport->getHostsToTest ( $hostname, $isGmail ) );
+				$hosts = array_merge ( $hosts, $transport->getSocketsForSetupWizardToProbe ( $hostname, $isGmail ) );
 			}
 			return $hosts;
 		}

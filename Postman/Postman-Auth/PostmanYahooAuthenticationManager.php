@@ -60,7 +60,7 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 			$authUrl = $this->getAuthorizationUrl () . '?' . build_query ( $params );
 			
 			$this->getLogger ()->debug ( 'Requesting verification code from Yahoo' );
-			postmanRedirect ( $authUrl );
+			PostmanUtils::redirect ( $authUrl );
 		}
 		
 		/**
@@ -92,7 +92,7 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 						'grant_type' => 'authorization_code',
 						'redirect_uri' => $this->getCallbackUri () 
 				);
-				$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals, $headers );
+				$response = PostmanUtils::remotePost ( $this->getTokenUrl (), $postvals, $headers );
 				$this->processResponse ( $response );
 				$this->getAuthorizationToken ()->setVendorName ( self::VENDOR_NAME );
 				return true;
@@ -120,7 +120,7 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 					'grant_type' => 'refresh_token',
 					'refresh_token' => $this->getAuthorizationToken ()->getRefreshToken () 
 			);
-			$response = postmanHttpTransport ( $this->getTokenUrl (), $postvals, $headers );
+			$response = PostmanUtils::remotePost ( $this->getTokenUrl (), $postvals, $headers );
 			$this->processResponse ( $response );
 		}
 		public function getAuthorizationUrl() {

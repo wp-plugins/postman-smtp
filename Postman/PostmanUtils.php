@@ -6,6 +6,9 @@ if (! class_exists ( 'PostmanUtils' )) {
 		//
 		const POSTMAN_SETTINGS_PAGE_STUB = 'postman';
 		const POSTMAN_EMAIL_LOG_PAGE_STUB = 'postman_email_log';
+		// redirections back to THIS SITE should always be relative because of IIS bug
+		const POSTMAN_EMAIL_LOG_PAGE_RELATIVE_URL = 'tools.php?page=postman_email_log';
+		const POSTMAN_HOME_PAGE_RELATIVE_URL = 'options-general.php?page=postman';
 		
 		//
 		const NO_ECHO = false;
@@ -16,12 +19,16 @@ if (! class_exists ( 'PostmanUtils' )) {
 			}
 		}
 		
-		//
+		/**
+		 * Returns an escaped URL
+		 */
 		public static function getEmailLogPageUrl() {
 			return menu_page_url ( self::POSTMAN_EMAIL_LOG_PAGE_STUB, self::NO_ECHO );
 		}
 		
-		//
+		/**
+		 * Returns an escaped URL
+		 */
 		public static function getSettingsPageUrl() {
 			return menu_page_url ( self::POSTMAN_SETTINGS_PAGE_STUB, self::NO_ECHO );
 		}
@@ -72,6 +79,48 @@ if (! class_exists ( 'PostmanUtils' )) {
 			return $ipv4Detected || $ipv6Detected;
 			// from http://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
 			// return preg_match ( '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9‌​]{2}|2[0-4][0-9]|25[0-5])$/', $ipAddress );
+		}
+		/**
+		 * Makes the outgoing HTTP requests
+		 * Inside WordPress we can use wp_remote_post().
+		 * Outside WordPress, not so much.
+		 *
+		 * @param unknown $url        	
+		 * @param unknown $args        	
+		 */
+		static function remotePost($url, $parameters, array $headers = array()) {
+			$args = array (
+					'timeout' => PostmanOptions::getInstance ()->getConnectionTimeout (),
+					'headers' => $headers,
+					'body' => $parameters 
+			);
+			PostmanUtils::$logger->trace ( sprintf ( 'Posting to %s', $url ) );
+			PostmanUtils::$logger->trace ( 'Post header:' );
+			PostmanUtils::$logger->trace ( $headers );
+			PostmanUtils::$logger->trace ( 'Posting args:' );
+			PostmanUtils::$logger->trace ( $parameters );
+			$response = wp_remote_post ( $url, $args );
+			
+			// pre-process the response
+			if (is_wp_error ( $response )) {
+				PostmanUtils::$logger->error ( $response->get_error_message () );
+				throw new Exception ( 'Error executing wp_remote_post: ' . $response->get_error_message () );
+			} else {
+				$theBody = wp_remote_retrieve_body ( $response );
+				return $theBody;
+			}
+		}
+		/**
+		 * A facade function that handles redirects.
+		 * Inside WordPress we can use wp_redirect(). Outside WordPress, not so much. **Load it before postman-core.php**
+		 *
+		 * @param unknown $url        	
+		 */
+		static function redirect($url) {
+			// redirections back to THIS SITE should always be relative because of IIS bug
+			PostmanUtils::$logger->trace ( sprintf ( "Redirecting to '%s'", $url ) );
+			wp_redirect ( $url );
+			exit ();
 		}
 	}
 	PostmanUtils::staticInit ();
