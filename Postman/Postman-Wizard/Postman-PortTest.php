@@ -42,8 +42,8 @@ class PostmanPortTest {
 		$this->hostname = $hostname;
 		$this->hostnameDomainOnly = getRegisteredDomain ( $hostname );
 		$this->port = $port;
-		$this->connectionTimeout = 3;
-		$this->readTimeout = 3;
+		$this->connectionTimeout = 10;
+		$this->readTimeout = 10;
 	}
 	public function setConnectionTimeout($timeout) {
 		$this->connectionTimeout = $timeout;

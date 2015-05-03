@@ -486,7 +486,7 @@ function checkEmail(email) {
 }
 function enableSmtpHostnameInput() {
 	if (checkedEmail && goDaddy != 'unknown') {
-		if (goDaddy && !smtpDiscovery.is_gmail) {
+		if (goDaddy && !smtpDiscovery.is_google) {
 			// this is a godaddy server and we are using a godaddy smtp server
 			// (gmail excepted)
 			if (smtpDiscovery.is_go_daddy) {
