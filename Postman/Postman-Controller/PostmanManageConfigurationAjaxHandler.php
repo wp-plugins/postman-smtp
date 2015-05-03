@@ -103,7 +103,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 					$overrideItem ['selected'] = $selected;
 					$hostnameToDisplay = $value ['hostname'];
 					$overrideItem ['description'] = sprintf ( '%s:%s', $hostnameToDisplay, $value ['port'] );
-					$overrideAuthItem = array ();
+					$overrideAuthItems = array ();
 					$passwordMode = false;
 					$oauth2Mode = false;
 					$noAuthMode = false;
@@ -126,27 +126,46 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 					}
 					if ($selected) {
 						if ($value ['auth_crammd5'] || $value ['auth_login'] || $value ['auth_plain']) {
-							array_push ( $overrideAuthItem, array (
+							array_push ( $overrideAuthItems, array (
 									'selected' => $passwordMode,
 									'name' => __ ( 'Password (requires username and password)', 'postman-smtp' ),
 									'value' => 'password' 
 							) );
 						}
 						if ($value ['auth_xoauth'] || $winningRecommendation ['auth'] == 'oauth2') {
-							array_push ( $overrideAuthItem, array (
+							array_push ( $overrideAuthItems, array (
 									'selected' => $oauth2Mode,
 									'name' => _x ( 'OAuth 2.0 (requires Client ID and Client Secret)', 'postman-smtp' ),
 									'value' => 'oauth2' 
 							) );
 						}
 						if ($value ['auth_none']) {
-							array_push ( $overrideAuthItem, array (
+							array_push ( $overrideAuthItems, array (
 									'selected' => $noAuthMode,
 									'name' => _x ( 'None', 'As in type used: None', 'postman-smtp' ),
 									'value' => 'none' 
 							) );
 						}
-						$overrideItem ['auth_items'] = $overrideAuthItem;
+
+						// marks at least one item as selected if none are selected
+						$atLeastOneSelected = false;
+						$firstItem = null;
+						foreach ($overrideAuthItems as &$item) {
+							if(!$firstItem) {
+							$this->logger->debug('found the first item');
+								$firstItem = &$item;
+							}
+							if($item['selected']) {
+								$atLeastOneSelected = true;
+							}
+						}
+						if(!$atLeastOneSelected) {
+							$this->logger->debug('forcing a selection on $overrideAuthItems');
+							$firstItem['selected'] = true;
+						}
+
+						// push the authentication options into the $overrideItem structure
+						$overrideItem ['auth_items'] = $overrideAuthItems;
 					}
 					array_push ( $overrideMenu, $overrideItem );
 				}

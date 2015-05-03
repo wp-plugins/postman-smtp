@@ -273,11 +273,11 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Warn when using AUTH with NO encryption - done with padlock emoji
 * Remove hard-coded plugin version number
 * Need some kind of success boolean in the email log
+* Delivery mode - production, logging, test
+* Fix logging enable/disable
 * (TBD): Check for redirect errors - relative URLs only
 * (TBD): Wizard check server ID when configuring Gmail/Yahoo/Hotmail (MITM)
-* (TBD): Delivery mode - production, logging, test
 * (TBD): Add MX and SPF to diagnostic data
-* (TBD): Fix logging enable/disable
 
 = 1.5.13 - 2015-04-18 =
 * Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)

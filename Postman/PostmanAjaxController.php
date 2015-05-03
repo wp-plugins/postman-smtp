@@ -198,7 +198,7 @@ if (! class_exists ( 'PostmanGetHostnameByEmailAjaxController' )) {
 			$this->logger->trace ( $d );
 			$response = array (
 					'hostname' => $d->getSmtpServer (),
-					SELF::IS_GOOGLE_PARAMETER => $d->isGoogle,
+					self::IS_GOOGLE_PARAMETER => $d->isGoogle,
 					'is_go_daddy' => $d->isGoDaddy,
 					'is_well_known' => $d->isWellKnownDomain 
 			);
