@@ -2,7 +2,7 @@
 if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 	class PostmanManageConfigurationAjaxHandler extends PostmanAbstractAjaxHandler {
 		function __construct($pluginData) {
-			parent::__construct ($pluginData);
+			parent::__construct ( $pluginData );
 			$this->registerAjaxHandler ( 'manual_config', $this, 'getManualConfigurationViaAjax' );
 			$this->registerAjaxHandler ( 'get_wizard_configuration_options', $this, 'getWizardConfigurationViaAjax' );
 		}
@@ -44,12 +44,14 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 * This Ajax function retrieves the OAuth redirectUrl and help text for based on the SMTP hostname supplied
 		 */
 		function getWizardConfigurationViaAjax() {
+			$this->logger->debug ( 'in getWizardConfiguration' );
+			$originalSmtpServer = $this->getRequestParameter ( 'original_smtp_server' );
 			$queryHostData = $this->getHostDataFromRequest ();
 			$userPortOverride = $this->getUserPortOverride ();
 			$userAuthOverride = $this->getUserAuthOverride ();
 			
 			// determine a configuration recommendation
-			$winningRecommendation = $this->getConfigurationRecommendation ( $queryHostData, $userPortOverride, $userAuthOverride );
+			$winningRecommendation = $this->getConfigurationRecommendation ( $queryHostData, $userPortOverride, $userAuthOverride, $originalSmtpServer );
 			$this->logger->trace ( 'winning recommendation:' );
 			$this->logger->trace ( $winningRecommendation );
 			
@@ -93,15 +95,15 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 * @return multitype:
 		 */
 		private function createOverrideMenu($queryHostData, $winningRecommendation, $userSocketOverride, $userAuthOverride) {
-			$this->logger->trace($queryHostData);
+			$this->logger->trace ( $queryHostData );
 			$overrideMenu = array ();
 			foreach ( $queryHostData as $id => $value ) {
 				if (filter_var ( $value ['success'], FILTER_VALIDATE_BOOLEAN )) {
 					$overrideItem = array ();
-					$overrideItem ['secure'] = PostmanUtils::parseBoolean($value['secure']);
-					$overrideItem ['mitm'] = PostmanUtils::parseBoolean($value['mitm']);
-					$overrideItem ['hostname_domain_only'] = $value['hostname_domain_only'];
-					$overrideItem ['reported_hostname_domain_only'] = $value['reported_hostname_domain_only'];
+					$overrideItem ['secure'] = PostmanUtils::parseBoolean ( $value ['secure'] );
+					$overrideItem ['mitm'] = PostmanUtils::parseBoolean ( $value ['mitm'] );
+					$overrideItem ['hostname_domain_only'] = $value ['hostname_domain_only'];
+					$overrideItem ['reported_hostname_domain_only'] = $value ['reported_hostname_domain_only'];
 					$overrideItem ['value'] = sprintf ( '%s_%s', $value ['hostname'], $value ['port'] );
 					$selected = ($winningRecommendation ['id'] == $overrideItem ['value']);
 					$overrideItem ['selected'] = $selected;
@@ -150,24 +152,23 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 									'value' => 'none' 
 							) );
 						}
-
+						
 						// marks at least one item as selected if none are selected
 						$atLeastOneSelected = false;
 						$firstItem = null;
-						foreach ($overrideAuthItems as &$item) {
-							if(!$firstItem) {
-							$this->logger->debug('found the first item');
+						foreach ( $overrideAuthItems as &$item ) {
+							if (! $firstItem) {
 								$firstItem = &$item;
 							}
-							if($item['selected']) {
+							if ($item ['selected']) {
 								$atLeastOneSelected = true;
 							}
 						}
-						if(!$atLeastOneSelected) {
-							$this->logger->debug('forcing a selection on $overrideAuthItems');
-							$firstItem['selected'] = true;
+						if (! $atLeastOneSelected) {
+							$this->logger->debug ( 'forcing a selection on $overrideAuthItems' );
+							$firstItem ['selected'] = true;
 						}
-
+						
 						// push the authentication options into the $overrideItem structure
 						$overrideItem ['auth_items'] = $overrideAuthItems;
 					}
@@ -185,14 +186,14 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 * @param unknown $queryHostData        	
 		 * @return unknown
 		 */
-		private function getConfigurationRecommendation($queryHostData, $userSocketOverride, $userAuthOverride) {
+		private function getConfigurationRecommendation($queryHostData, $userSocketOverride, $userAuthOverride, $originalSmtpServer) {
 			$recommendationPriority = - 1;
 			$winningRecommendation = null;
 			foreach ( $queryHostData as $id => $value ) {
 				$available = filter_var ( $value ['success'], FILTER_VALIDATE_BOOLEAN );
 				if ($available) {
 					$this->logger->debug ( sprintf ( 'Asking for judgement on %s:%s', $value ['hostname'], $value ['port'] ) );
-					$recommendation = PostmanTransportRegistry::getInstance ()->getConfigurationBid ( $value, $userAuthOverride );
+					$recommendation = PostmanTransportRegistry::getInstance ()->getConfigurationBid ( $value, $userAuthOverride, $originalSmtpServer );
 					$recommendationId = sprintf ( '%s_%s', $value ['hostname'], $value ['port'] );
 					$recommendation ['id'] = $recommendationId;
 					$this->logger->debug ( sprintf ( 'Got a recommendation: [%d] %s', $recommendation ['priority'], $recommendationId ) );

@@ -324,12 +324,11 @@ function afterPortsChecked() {
 		}
 		var data = {
 			'action' : 'get_wizard_configuration_options',
+			'original_smtp_server' : smtpDiscovery.hostname,
 			'host_data' : connectivtyTestResults
 		};
 		postTheConfigurationRequest(data);
 		hide('#connectivity_test_status');
-		// updateStatus(postman_test_in_progress + " " +
-		// postman_port_test_done);
 	}
 }
 
@@ -338,6 +337,7 @@ function userOverrideMenu() {
 	disable('input.user_auth_override');
 	var data = {
 		'action' : 'get_wizard_configuration_options',
+		'original_smtp_server' : smtpDiscovery.hostname,
 		'user_port_override' : jQuery(
 				"input:radio[name='user_socket_override']:checked").val(),
 		'user_auth_override' : jQuery(

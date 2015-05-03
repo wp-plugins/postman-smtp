@@ -219,7 +219,15 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 			}
 			return $hosts;
 		}
-		
+
+		/**
+		 * @deprecated
+		 * (non-PHPdoc)
+		 * @see PostmanTransport::getConfigurationRecommendation()
+		 */
+		public function getConfigurationRecommendation($hostData) {
+			return $this->getConfigurationBid($hostData, '');
+		}
 		/**
 		 * Postman Gmail API supports delivering mail with these parameters:
 		 *
@@ -227,7 +235,7 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 		 *
 		 * @param unknown $hostData        	
 		 */
-		public function getConfigurationRecommendation($hostData) {
+		public function getConfigurationBid($hostData, $originalSmtpServer) {
 			$port = $hostData ['port'];
 			$hostname = $hostData ['host'];
 			$oauthPotential = ($hostname == self::HOST);

@@ -13,7 +13,8 @@ if (! interface_exists ( 'PostmanTransport' )) {
 		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token);
-		public function getConfigurationRecommendation($hostData);
+		public function getConfigurationRecommendation($hostData); // deprecated
+		public function getConfigurationBid($hostData, $originalSmtpServer);
 		public function getHostsToTest($hostname); // deprecated
 		public function getSocketsForSetupWizardToProbe($hostname, $isGmail);
 	}
@@ -184,7 +185,8 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 		 *
 		 * @param unknown $hostData        	
 		 */
-		public function getConfigurationBid($connectivityTestResults, $userAuthPreference = '') {
+		public function getConfigurationBid($connectivityTestResults, $userAuthPreference, $originalSmtpServer) {
+			assert(!empty($originalSmtpServer));
 			$hostData ['host'] = $connectivityTestResults ['hostname'];
 			$hostData ['port'] = $connectivityTestResults ['port'];
 			$hostData ['protocol'] = $connectivityTestResults ['protocol'];
@@ -213,7 +215,7 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 			$logger = new PostmanLogger ( get_class ( $this ) );
 			foreach ( $this->getTransports () as $transport ) {
 				$logger->debug ( sprintf ( 'Asking transport %s to bid on: %s:%s', $transport->getName (), $hostData ['host'], $hostData ['port'] ) );
-				$recommendation = $transport->getConfigurationRecommendation ( $hostData );
+				$recommendation = $transport->getConfigurationBid($hostData, $originalSmtpServer );
 				if ($recommendation) {
 					if ($recommendation ['priority'] > $priority) {
 						$priority = $recommendation ['priority'];

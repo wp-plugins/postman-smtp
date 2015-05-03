@@ -217,6 +217,14 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		
 		/**
+		 *
+		 * @deprecated (non-PHPdoc)
+		 * @see PostmanTransport::getConfigurationRecommendation()
+		 */
+		public function getConfigurationRecommendation($hostData) {
+			return $this->getConfigurationBid ( $hostData, '' );
+		}
+		/**
 		 * First choose the auth method, in this order: XOAUTH (4000), CRAM-MD5 (3000), PLAIN (2000), LOGIN (1000)
 		 * Second, choose the port, in this order: 587/STARTLS (300), 465/SMTPS (200), 25/SMTP (100), 443/GMAIL (150)
 		 *
@@ -224,7 +232,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		 *
 		 * @param unknown $hostData        	
 		 */
-		public function getConfigurationRecommendation($hostData) {
+		public function getConfigurationBid($hostData, $originalSmtpServer) {
 			$port = $hostData ['port'];
 			$hostname = $hostData ['host'];
 			// because some servers, like smtp.broadband.rogers.com, report XOAUTH2 but have no OAuth2 front-end
@@ -232,17 +240,16 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$score = 0;
 			$recommendation = array ();
 			// increment score for auth type
-			if ($hostData ['hostname_domain_only'] == 'gmail.com' && $hostData ['reported_hostname_domain_only'] != 'google.com') {
-				$score -= 10000;
-				$recommendation ['mitm'] = true;
-			} elseif ($hostData ['hostname_domain_only'] == 'live.com' && $hostData ['reported_hostname_domain_only'] != 'hotmail.com') {
-				$score -= 10000;
-				$recommendation ['mitm'] = true;
-			} elseif ($hostData ['hostname_domain_only'] != $hostData ['reported_hostname_domain_only']) {
+			if (isset ( $hostData ['mitm'] )) {
+				$this->logger->debug ( 'Losing points for MITM' );
 				$score -= 10000;
 				$recommendation ['mitm'] = true;
 			}
-			if ($hostData ['start_tls']) {
+			if ($hostname != $originalSmtpServer) {
+				$this->logger->debug ( 'Losing points for Not The Original SMTP server' );
+				$score -= 10000;
+			}
+			if (isset ( $hostData ['start_tls'] )) {
 				// STARTTLS was formalized in 2002
 				// http://www.rfc-editor.org/rfc/rfc3207.txt
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
@@ -281,7 +288,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			}
 			
 			// if there was a way to send mail!
-			if ($score > 0) {
+			if ($score > 10) {
 				
 				// tiny weighting to prejudice the port selection
 				if ($port == 587) {
@@ -369,6 +376,8 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		public function getSocketsForSetupWizardToProbe($hostname, $isGmail) {
 		}
 		public function getConfigurationRecommendation($hostData) {
+		}
+		public function getConfigurationBid($hostData, $originalSmtpServer) {
 		}
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			/* translators: where %s is the name of the transport (e.g. smtp) */
