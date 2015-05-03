@@ -34,7 +34,9 @@ if (! interface_exists ( "PostmanOptionsInterface" )) {
 		public function isAuthTypeCrammd5();
 		public function isAuthTypeNone();
 		public function isMailLoggingEnabled();
+		public function getMailLoggingEnabled();
 		public function getMailLoggingMaxEntries();
+		public function getRunMode();
 	}
 }
 

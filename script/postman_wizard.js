@@ -482,7 +482,8 @@ function enableSmtpHostnameInput() {
 			} else if (smtpDiscovery.is_well_known) {
 				// this is a godaddy server but the SMTP must be the email
 				// service
-				jQuery(postman_hostname_element_name).val(':-(');
+				jQuery(postman_hostname_element_name).val(
+						default_go_daddy_smtp_hostname);
 				show('#godaddy_block');
 			} else {
 				// this is a godaddy server and we're using a (possibly) custom

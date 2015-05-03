@@ -32,7 +32,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 * @param PostmanConfigTextHelper $oauthScribe        	
 		 */
 		function __construct($rootPluginFilenameAndPath, $pluginData, PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe, PostmanAdminController $adminController) {
-			assert(isset($pluginData));
+			assert ( isset ( $pluginData ) );
 			$this->options = $options;
 			$this->rootPluginFilenameAndPath = $rootPluginFilenameAndPath;
 			$this->pluginData = $pluginData;
@@ -381,14 +381,14 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 */
 		public function initializeAdminPage() {
 			// register the stylesheet and javascript external resources
-			wp_register_style ( self::POSTMAN_STYLE, plugins_url ( 'style/postman.css', $this->rootPluginFilenameAndPath ), null, $this->pluginData['Version'] );
+			wp_register_style ( self::POSTMAN_STYLE, plugins_url ( 'style/postman.css', $this->rootPluginFilenameAndPath ), null, $this->pluginData ['Version'] );
 			wp_register_style ( 'jquery_ui_style', plugins_url ( 'style/jquery-steps/jquery-ui.css', $this->rootPluginFilenameAndPath ), self::POSTMAN_STYLE, '1.1.0' );
 			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery-steps/jquery.steps.css', $this->rootPluginFilenameAndPath ), self::POSTMAN_STYLE, '1.1.0' );
-			wp_register_style ( 'postman_send_test_email', plugins_url ( 'style/postman_send_test_email.css', $this->rootPluginFilenameAndPath ), self::POSTMAN_STYLE, $this->pluginData['Version'] );
+			wp_register_style ( 'postman_send_test_email', plugins_url ( 'style/postman_send_test_email.css', $this->rootPluginFilenameAndPath ), self::POSTMAN_STYLE, $this->pluginData ['Version'] );
 			
 			wp_register_script ( self::POSTMAN_SCRIPT, plugins_url ( 'script/postman.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT 
-			), $this->pluginData['Version'] );
+			), $this->pluginData ['Version'] );
 			wp_register_script ( 'sprintf', plugins_url ( 'script/sprintf/sprintf.min.js', $this->rootPluginFilenameAndPath ), null, '1.0.2' );
 			wp_register_script ( 'jquery_steps_script', plugins_url ( 'script/jquery-steps/jquery.steps.min.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT 
@@ -410,28 +410,28 @@ if (! class_exists ( 'PostmanViewController' )) {
 					'jquery_validation',
 					'jquery_steps_script',
 					self::POSTMAN_SCRIPT 
-			), $this->pluginData['Version'] );
+			), $this->pluginData ['Version'] );
 			wp_register_script ( 'postman_test_email_wizard_script', plugins_url ( 'script/postman_test_email_wizard.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					'jquery_steps_script',
 					self::POSTMAN_SCRIPT 
-			), $this->pluginData['Version'] );
+			), $this->pluginData ['Version'] );
 			wp_register_script ( 'postman_manual_config_script', plugins_url ( 'script/postman_manual_config.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					self::POSTMAN_SCRIPT 
-			), $this->pluginData['Version'] );
+			), $this->pluginData ['Version'] );
 			wp_register_script ( 'postman_port_test_script', plugins_url ( 'script/postman_port_test.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					self::POSTMAN_SCRIPT,
 					'sprintf' 
-			), $this->pluginData['Version'] );
+			), $this->pluginData ['Version'] );
 			wp_register_script ( 'postman_diagnostics_script', plugins_url ( 'script/postman_diagnostics.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					self::POSTMAN_SCRIPT 
-			), $this->pluginData['Version'] );
+			), $this->pluginData ['Version'] );
 			
 			wp_localize_script ( 'postman_wizard_script', 'default_go_daddy_smtp_hostname', 'relay-hosting.secureserver.net' );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_test_in_progress', _x ( 'Checking..', 'The "please wait" message', 'postman-smtp' ) );
@@ -529,7 +529,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<div class="welcome-panel-column welcome-panel-last">';
 			printf ( '<h4>%s</h4>', $title );
 			print '</div>';
-			printf ( '<p style="text-align:right;margin-top:25px">%s <a id="back_to_menu_link" href="%s">%s</a></p>', self::BACK_ARROW_SYMBOL, PostmanUtils::getSettingsPageUrl(), _x ( 'Back To Main Menu', 'Return to main menu link', 'postman-smtp' ) );
+			printf ( '<p style="text-align:right;margin-top:25px">%s <a id="back_to_menu_link" href="%s">%s</a></p>', self::BACK_ARROW_SYMBOL, PostmanUtils::getSettingsPageUrl (), _x ( 'Back To Main Menu', 'Return to main menu link', 'postman-smtp' ) );
 			print '</div></div></div>';
 		}
 		
@@ -721,7 +721,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<input type="hidden" id="input_connection_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::CONNECTION_TIMEOUT, $this->options->getConnectionTimeout () );
 			printf ( '<input type="hidden" id="input_read_timeout" name="%s[%s]" value="%s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::READ_TIMEOUT, $this->options->getReadTimeout () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::LOG_LEVEL, $this->options->getLogLevel () );
-			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::MAIL_LOG_ENABLED_OPTION, $this->options->isMailLoggingEnabled () );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::MAIL_LOG_ENABLED_OPTION, $this->options->getMailLoggingEnabled () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::MAIL_LOG_MAX_ENTRIES, $this->options->getMailLoggingMaxEntries () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE, $this->options->isPluginSenderEmailEnforced () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, $this->options->isPluginSenderNameEnforced () );
@@ -770,7 +770,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print $this->adminController->hostname_callback ();
 			printf ( '<p class="ajax-loader" style="display:none"><img src="%s"/></p>', plugins_url ( 'postman-smtp/style/ajax-loader.gif' ) );
 			printf ( '<p id="godaddy_block"><span style="color:red">%s</span></p>', __ ( '<b>Error</b>: Your email address <b>requires</b> access to a remote SMTP server blocked by GoDaddy. Use a different e-mail address.', 'postman-smtp' ) );
-			printf ( '<p id="godaddy_spf_required"><span style="background-color:yellow">%s</span></p>', sprintf ( __ ( '<b>Warning</b>: Your email will be sent via GoDaddy. Make sure your <a href="%s">domain has an SPF record authorizing this setup</a> or you will have delivery problems.', 'postman-smtp' ), 'http://www.mail-tester.com/spf/godaddy' ) );
+			printf ( '<p id="godaddy_spf_required"><span style="background-color:yellow">%s</span></p>', sprintf ( __ ( '<b>Warning</b>: If you own this domain, make sure it has an <a href="%s">SPF record authorizing GoDaddy</a> as a relay, or you will have delivery problems.', 'postman-smtp' ), 'http://www.mail-tester.com/spf/godaddy' ) );
 			print '</fieldset>';
 			
 			// Wizard Step 3
@@ -851,7 +851,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			
 			$this->outputChildPageHeader ( __ ( 'Send a Test Email', 'postman-smtp' ) );
 			
-			printf ( '<form id="postman_test_email_wizard" method="post" action="%s">', PostmanUtils::getSettingsPageUrl() );
+			printf ( '<form id="postman_test_email_wizard" method="post" action="%s">', PostmanUtils::getSettingsPageUrl () );
 			
 			// Step 1
 			printf ( '<h5>%s</h5>', __ ( 'Choose the Recipient', 'postman-smtp' ) );
