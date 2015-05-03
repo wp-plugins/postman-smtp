@@ -19,6 +19,9 @@ In 2014, Google announced if your site "currently uses plain passwords to authen
 
 Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) ✝, lost emails, spam and phishing warnings ✝✝, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) ¹ to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
+###* What's New for v1.6 *
+*Email Logging! See the contents of all delivered emails, and any delivery errors.*
+
 [Read the reviews](https://wordpress.org/support/view/plugin-reviews/postman-smtp) to see what Postman has accomplished.
 
 
