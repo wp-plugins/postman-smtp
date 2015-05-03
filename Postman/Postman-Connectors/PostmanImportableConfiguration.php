@@ -105,7 +105,7 @@ if (! class_exists ( 'PostmanAbstractPluginOptions' )) {
 			return $valid;
 		}
 		public function isImportable() {
-			return true;
+			return $this->isValid ();
 		}
 	}
 }
