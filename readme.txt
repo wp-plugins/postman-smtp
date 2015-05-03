@@ -25,11 +25,11 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 = Features =
 * Send mail to any host just like the 'Big Five' SMTP plugins
 * Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0 ¹
+* Send Gmail over HTTPS if the standard SMTP ports are blocked ²
+* Logs all emails sent, including content and error messages
 * Easy-to-use, powerful Setup Wizard for perfect configuration
 * Fire-and-forget delivery continues even if the password changes ¹
-* Send Gmail over HTTPS if the standard SMTP ports are blocked ²
 * Commercial-grade Connectivity Tester to diagnose server issues
-* Log of all emails sent, including error messages if any
 * Supports International alphabets, HTML Mail and MultiPart/Alternative
 * Supports [Mandrill](http://mandrill.com) X-headers and forced recipients (cc, bcc, to)
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
