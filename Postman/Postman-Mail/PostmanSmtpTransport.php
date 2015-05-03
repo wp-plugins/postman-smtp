@@ -304,7 +304,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				// create the recommendation message for the user
 				$transportDescription = $this->getTransportDescription ( $recommendation ['enc'] );
 				$authDesc = $this->getAuthenticationDescription ( $recommendation ['auth'] );
-				/* translators: where %1$s is a description of the transport (eg. SMTPS-SSL), %2$s is a description of the authentication (eg. Password-CRAMMD5) and %3$d is the TCP port (eg. 465) */
+				/* translators: where %1$s is a description of the transport (eg. SMTPS-SSL), %2$s is a description of the authentication (eg. Password-CRAMMD5), %3$d is the TCP port (eg. 465), %4$d is the hostname */
 				$recommendation ['message'] = sprintf ( __ ( 'Your recommended settings are %1$s with %2$s authentication to host %4$s on port %3$d.', 'postman-smtp' ), $transportDescription, $authDesc, $port, $hostname );
 			}
 			return $recommendation;
