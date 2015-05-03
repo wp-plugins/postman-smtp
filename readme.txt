@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, smtps, email, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.5.13
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -445,6 +445,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * First release. Happy Fig Newton Day! It was a grueling week-end, studying PHP and OAuth and Googling like a Boss, but it's done and it works!
 
 == Upgrade Notice ==
+
+= 1.6.0 =
+Introducing Email Logging.
 
 = 1.5.11 =
 Heavy-duty connectivity tester and setup wizard.
