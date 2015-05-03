@@ -254,7 +254,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * (TBD): Add option for MailPoet
 * (TBD): Add option for MyMail
 
-= 1.6 =
+= 1.6 - 2015-05-03 =
 * Log all email attempts with error messages (if any)
 * View the damn logs!
 * View the details of a single log entry! - http://www.ericmmartin.com/projects/simplemodal/ ?
