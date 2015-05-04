@@ -250,35 +250,32 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.1 =
+= 1.6.2 =
 * (TBD): Add option for MailPoet
 * (TBD): Add option for MyMail
 
+= 1.6.1 - 2015-05-04 =
+* You test and test and test, and there's always a bug. Fixed a problem in the Port Recommender where it thought STARTTLS was offered when it isn't (test case: test@aol.com)
+
 = 1.6 - 2015-05-03 =
+* Remove warning from main screen for sender override if it's already on
+* Delivery mode - production, logging, test
+* Help screens
 * Log all email attempts with error messages (if any)
-* View the damn logs!
-* View the details of a single log entry! - http://www.ericmmartin.com/projects/simplemodal/ ?
-* Delete logs on purge - separate Log Delete to its own class, instantiate in Admin class, and re-use that code
-* Preference screen for logging
+* Truncate logs to max amount
+* View all the email attempts, and view a single entry
+* Delete single, delete batch, and delete the entire log on pugin data purge
+* Highlight Logging option to users
 * Obscure password from front-end
 * Ask to see password when typing
-* When the wizard is looking up the email, disable the smtp hostname field
-* Enable logging in Wizard
-* Truncate logs to max amount - add option for unlimited logs?
-* Remove warning from main screen for sender override if it's already on
-* Help screens
-* Highlight Logging option to users - http://code.tutsplus.com/articles/integrating-with-wordpress-ui-admin-pointers--wp-26853
+* When the wizard is looking up details on the email address, disable the smtp hostname field
+* Wizard check server ID and warn for MITM 'attack'
 * Check for GoDaddy SMTP server during Wizard and use that SMTP server
-* Add hostname to connectivity test table.
 * Check for Gmail during wizard and remember for gmail api option.
 * Present choices to user when select the auth type and socket in wizard more elegantly (radio buttons?)
 * Warn when using AUTH with NO encryption - done with padlock emoji
+* Add hostname to connectivity test table.
 * Remove hard-coded plugin version number
-* Need some kind of success boolean in the email log
-* Delivery mode - production, logging, test
-* Fix logging enable/disable
-* Check for redirect errors - relative URLs only
-* Wizard check server ID and warn for MITM 'attack'
 
 = 1.5.13 - 2015-04-18 =
 * Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)

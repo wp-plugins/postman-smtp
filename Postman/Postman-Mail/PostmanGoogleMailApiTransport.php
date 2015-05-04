@@ -246,7 +246,7 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 					$recommendation ['message'] = sprintf ( __ ( 'Postman recommends Gmail API configuration on port %d' ), self::PORT );
 					$recommendation ['transport'] = self::SLUG;
 					$recommendation ['priority'] = 27000;
-					$recommendation ['enc'] = null;
+					$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
 					$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 					$recommendation ['port'] = null;
 					$recommendation ['hostname'] = null;

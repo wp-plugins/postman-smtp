@@ -240,7 +240,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$score = 0;
 			$recommendation = array ();
 			// increment score for auth type
-			if (isset ( $hostData ['mitm'] )) {
+			if (isset ( $hostData ['mitm'] ) && PostmanUtils::parseBoolean ( $hostData ['mitm'] )) {
 				$this->logger->debug ( 'Losing points for MITM' );
 				$score -= 10000;
 				$recommendation ['mitm'] = true;
@@ -249,7 +249,8 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				$this->logger->debug ( 'Losing points for Not The Original SMTP server' );
 				$score -= 10000;
 			}
-			if (isset ( $hostData ['start_tls'] )) {
+			$secure = true;
+			if (PostmanUtils::parseBoolean ( $hostData ['start_tls'] )) {
 				// STARTTLS was formalized in 2002
 				// http://www.rfc-editor.org/rfc/rfc3207.txt
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_TLS;
@@ -264,24 +265,41 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			} elseif ($hostData ['protocol'] == 'SMTP') {
 				$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
 				$score += 26000;
+				$secure = false;
 			}
-			if ($hostData ['auth_xoauth'] && $supportedOAuth2Provider) {
+			if (PostmanUtils::parseBoolean ( $hostData ['auth_xoauth'] ) && $supportedOAuth2Provider) {
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
 				$recommendation ['display_auth'] = 'oauth2';
 				$score += 500;
-			} elseif ($hostData ['auth_crammd5']) {
+				if (! $secure) {
+					$this->logger->debug ( 'Losing points for sending credentials in the clear' );
+					$score -= 10000;
+				}
+			} elseif (PostmanUtils::parseBoolean ( $hostData ['auth_crammd5'] )) {
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5;
 				$recommendation ['display_auth'] = 'password';
 				$score += 400;
-			} elseif ($hostData ['auth_plain']) {
+				if (! $secure) {
+					$this->logger->debug ( 'Losing points for sending credentials in the clear' );
+					$score -= 10000;
+				}
+			} elseif (PostmanUtils::parseBoolean ( $hostData ['auth_plain'] )) {
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
 				$recommendation ['display_auth'] = 'password';
 				$score += 300;
-			} elseif ($hostData ['auth_login']) {
+				if (! $secure) {
+					$this->logger->debug ( 'Losing points for sending credentials in the clear' );
+					$score -= 10000;
+				}
+			} elseif (PostmanUtils::parseBoolean ( $hostData ['auth_login'] )) {
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
 				$recommendation ['display_auth'] = 'password';
 				$score += 200;
-			} elseif ($hostData ['auth_none']) {
+				if (! $secure) {
+					$this->logger->debug ( 'Losing points for sending credentials in the clear' );
+					$score -= 10000;
+				}
+			} elseif (PostmanUtils::parseBoolean ( $hostData ['auth_none'] )) {
 				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_NONE;
 				$recommendation ['display_auth'] = 'none';
 				$score += 100;
