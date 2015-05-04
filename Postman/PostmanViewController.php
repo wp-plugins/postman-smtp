@@ -176,39 +176,12 @@ if (! class_exists ( 'PostmanViewController' )) {
 					$this,
 					'enqueueConfigurationResources' 
 			) );
-			// add_action ( 'load-' . $page, array (
-			// $this,
-			// 'addConfigurationScreenHelp'
-			// ) );
 		}
 		function enqueueConfigurationResources() {
 			wp_enqueue_style ( self::POSTMAN_STYLE );
 			wp_enqueue_style ( 'jquery_ui_style' );
 			wp_enqueue_script ( 'postman_manual_config_script' );
 			wp_enqueue_script ( 'jquery-ui-tabs' );
-		}
-		/**
-		 * https://codex.wordpress.org/Adding_Contextual_Help_to_Administration_Menus
-		 */
-		function addConfigurationScreenHelp() {
-			// We are in the correct screen because we are taking advantage of the load-* action (below)
-			$screen = get_current_screen ();
-			// $screen->remove_help_tabs();
-			$content = _x ( 'configure manually', 'Adjust the Postman settings by hand', 'postman-smtp' );
-			$screen->add_help_tab ( array (
-					'id' => 'postman-smtp-connectivity-test',
-					'title' => _x ( 'Connectivity Test', 'A testing tool which determines connectivity to the Internet', 'postman-smtp' ),
-					'content' => $content 
-			) );
-			$screen->add_help_tab ( array (
-					'id' => 'postman-smtp-online-support',
-					'title' => __ ( 'Online Support', 'postman-smtp' ),
-					'content' => $this->generateOnlineSupportContent () 
-			) );
-			// add more help tabs as needed with unique id's
-			
-			// Help sidebars are optional
-			// $screen->set_help_sidebar ( '<p><strong>' . __ ( 'About' ) . '</strong></p>' . '<p>Postman SMTP 1.6.0b1<br/>by Jason Hendriks</p>' );
 		}
 		
 		/**
@@ -249,7 +222,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			$content .= '</ul>';
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-connectivity-test',
-					'title' => _x ( 'Connectivity Test', 'A testing tool which determines connectivity to the Internet', 'postman-smtp' ),
+					'title' => __ ( 'Send a Test Email', 'postman-smtp' ),
 					'content' => $content 
 			) );
 			$screen->add_help_tab ( array (
