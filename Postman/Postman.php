@@ -109,7 +109,7 @@ if (! class_exists ( 'Postman' )) {
 		public function check_for_configuration_errors() {
 			// are we bound?
 			if ($this->wpMailBinder->isUnboundDueToException ()) {
-				$this->messageHandler->addError ( __ ( 'Postman is properly configured, but another plugin has taken over the mail service. Deactivate the other plugin.', 'postman-smtp' ) );
+				$this->messageHandler->addError ( __ ( 'Error: Postman is properly configured, but the current theme or another plugin is preventing service.', 'postman-smtp' ) );
 			}
 			
 			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
