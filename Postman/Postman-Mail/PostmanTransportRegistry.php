@@ -14,9 +14,7 @@ if (! interface_exists ( 'PostmanTransport' )) {
 		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function getConfigurationRecommendation($hostData); // deprecated
-		public function getConfigurationBid($hostData, $originalSmtpServer);
 		public function getHostsToTest($hostname); // deprecated
-		public function getSocketsForSetupWizardToProbe($hostname, $isGmail);
 	}
 }
 
