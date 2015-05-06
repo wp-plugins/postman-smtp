@@ -121,7 +121,7 @@ if (! class_exists ( 'PostmanSmtpDiscovery' )) {
 			$this->email = $email;
 			$this->determineSmtpServer ( $email );
 			$this->isGoogle = $this->smtpServer == 'smtp.gmail.com';
-			$this->isGoDaddy = PostmanUtils::endsWith ( $this->smtpServer, 'secureserver.net' );
+			$this->isGoDaddy = $this->smtpServer == 'relay-hosting.secureserver.net';
 		}
 		/**
 		 * The SMTP server we suggest to use - this is determined
