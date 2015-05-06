@@ -21,25 +21,61 @@ jQuery(document).ready(function() {
 		switchBetweenPasswordAndOAuth();
 	});
 
-	// are we on GoDaddy? check.
+});
+
+function checkGoDaddyAndCheckEmail(email) {
+	hide('#godaddy_block');
+	hide('#godaddy_spf_required');
+	// are we hosted on GoDaddy? check.
 	var data = {
 		'action' : 'wizard_port_test',
 		'hostname' : 'relay-hosting.secureserver.net',
 		'port' : 25,
-		'timeout' : 5
+		'timeout' : 3
 	};
 	goDaddy = 'unknown';
 	checkedEmail = false;
 	jQuery.post(ajaxurl, data, function(response) {
-		if (response.success) {
-			goDaddy = true;
-		} else {
-			goDaddy = false;
-		}
-		enableSmtpHostnameInput();
+		checkEmail(response.success, email);
 	});
+}
 
-});
+function checkEmail(goDaddyHostDetected, email) {
+	var data = {
+		'action' : 'check_email',
+		'go_daddy' : goDaddyHostDetected,
+		'email' : email
+	};
+	jQuery.post(ajaxurl, data, function(response) {
+		checkedEmail = true;
+		smtpDiscovery = response.data;
+		if (response.data.hostname != '') {
+			jQuery(postman_hostname_element_name).val(response.data.hostname);
+		}
+		enableSmtpHostnameInput(goDaddyHostDetected);
+	});
+}
+
+function enableSmtpHostnameInput(goDaddyHostDetected) {
+	if (goDaddyHostDetected && !smtpDiscovery.is_google) {
+		// this is a godaddy server and we are using a godaddy smtp server
+		// (gmail excepted)
+		if (smtpDiscovery.is_go_daddy) {
+			// we detected GoDaddy, and the user has entered a GoDaddy hosted email
+		} else if (smtpDiscovery.is_well_known) {
+			// this is a godaddy server but the SMTP must be the email
+			// service
+			show('#godaddy_block');
+		} else {
+			// this is a godaddy server and we're using a (possibly) custom
+			// domain
+			show('#godaddy_spf_required');
+		}
+	}
+	enable('#input_hostname');
+	jQuery('li').removeClass('disabled');
+	hideLoaderIcon();
+}
 
 /**
  * Initialize the Steps wizard
@@ -106,7 +142,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 	// Always allow going backward even if
 	// the current step contains invalid fields!
 	if (currentIndex > newIndex) {
-		if (currentIndex === 2 && !(checkedEmail && goDaddy != 'unknown')) {
+		if (currentIndex === 2 && !(checkedEmail)) {
 			return false;
 		}
 		if (currentIndex === 3 && portTestInProgress) {
@@ -137,11 +173,11 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 	if (currentIndex === 1) {
 		// page 1 : look-up the email
 		// address for the smtp server
-		checkEmail(jQuery(postman_input_sender_email).val());
+		checkGoDaddyAndCheckEmail(jQuery(postman_input_sender_email).val());
 
 	} else if (currentIndex === 2) {
 
-		if (!(checkedEmail && goDaddy != 'unknown')) {
+		if (!(checkedEmail)) {
 			return false;
 		}
 		// page 2 : check the port
@@ -466,45 +502,6 @@ function buildRadioButtonGroup(tableElement, radioGroupName, isSelected, value,
 			+ '" type="radio" name="' + radioGroupName + '"'
 			+ radioInputChecked + radioInputValue + '/></td><td>' + secureIcon
 			+ label + '</td></tr>');
-}
-
-function checkEmail(email) {
-	var data = {
-		'action' : 'check_email',
-		'email' : email
-	};
-	hide('#godaddy_block');
-	hide('#godaddy_spf_required');
-	jQuery.post(ajaxurl, data, function(response) {
-		checkedEmail = true;
-		smtpDiscovery = response.data;
-		if (response.data.hostname != '') {
-			jQuery(postman_hostname_element_name).val(response.data.hostname);
-		}
-		enableSmtpHostnameInput();
-	});
-}
-function enableSmtpHostnameInput() {
-	if (checkedEmail && goDaddy != 'unknown') {
-		if (goDaddy && !smtpDiscovery.is_google) {
-			// this is a godaddy server and we are using a godaddy smtp server
-			// (gmail excepted)
-			if (smtpDiscovery.is_go_daddy) {
-				// no-op
-			} else if (smtpDiscovery.is_well_known) {
-				// this is a godaddy server but the SMTP must be the email
-				// service
-				show('#godaddy_block');
-			} else {
-				// this is a godaddy server and we're using a (possibly) custom
-				// domain
-				show('#godaddy_spf_required');
-			}
-		}
-		enable('#input_hostname');
-		jQuery('li').removeClass('disabled');
-		hideLoaderIcon();
-	}
 }
 
 /**

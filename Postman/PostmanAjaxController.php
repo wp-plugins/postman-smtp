@@ -193,12 +193,13 @@ if (! class_exists ( 'PostmanGetHostnameByEmailAjaxController' )) {
 		 * This Ajax function retrieves the smtp hostname for a give e-mail address
 		 */
 		function getAjaxHostnameByEmail() {
+			$goDaddyHostDetected = $this->getBooleanRequestParameter ( 'go_daddy' );
 			$email = $this->getRequestParameter ( 'email' );
 			$d = new PostmanSmtpDiscovery ( $email );
 			$smtp = $d->getSmtpServer ();
 			$this->logger->debug ( 'given email ' . $email . ', smtp server is ' . $smtp );
 			$this->logger->trace ( $d );
-			if($d->isGoDaddy && !$d->isGoogle) {
+			if ($goDaddyHostDetected && ! $d->isGoogle) {
 				// override with the GoDaddy SMTP server
 				$smtp = 'relay-hosting.secureserver.net';
 				$this->logger->debug ( 'detected GoDaddy SMTP server, smtp server is ' . $smtp );
