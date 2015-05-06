@@ -407,7 +407,6 @@ if (! class_exists ( 'PostmanViewController' )) {
 					self::POSTMAN_SCRIPT 
 			), $this->pluginData ['Version'] );
 			
-			wp_localize_script ( 'postman_wizard_script', 'default_go_daddy_smtp_hostname', 'relay-hosting.secureserver.net' );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_test_in_progress', _x ( 'Checking..', 'The "please wait" message', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_open', _x ( 'Open', 'The port is open', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_closed', _x ( 'Closed', 'The port is closed', 'postman-smtp' ) );
