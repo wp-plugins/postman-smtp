@@ -98,11 +98,11 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 			return false;
 		}
 		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
-			require_once 'PostmanGmailApiMailAuthenticator.php';
-			return new PostmanGmailApiMailAuthenticator ( $options, $authToken, $this->pluginData ['Version'] );
+			require_once 'PostmanGoogleMailApiAuthenticator.php';
+			return new PostmanGoogleMailApiAuthenticator ( $options, $authToken, $this->pluginData ['Version'] );
 		}
 		public function createZendMailTransport($hostname, $config) {
-			require_once 'PostmanZendMailTransportGmailApi.php';
+			require_once 'PostmanGoogleMailApiZendMailTransport.php';
 			require_once 'google-api-php-client-1.1.2/src/Google/Client.php';
 			require_once 'google-api-php-client-1.1.2/src/Google/Service/Gmail.php';
 			$options = PostmanOptions::getInstance ();
@@ -123,8 +123,8 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 			// We only need permissions to compose and send emails
 			$client->addScope ( "https://www.googleapis.com/auth/gmail.compose" );
 			$service = new Postman_Google_Service_Gmail ( $client );
-			$config [PostmanZendMailTransportGmailApi::SERVICE_OPTION] = $service;
-			return new PostmanZendMailTransportGmailApi ( $hostname, $config );
+			$config [PostmanGoogleMailApiZendMailTransport::SERVICE_OPTION] = $service;
+			return new PostmanGoogleMailApiZendMailTransport ( $hostname, $config );
 		}
 		public function getDeliveryDetails(PostmanOptionsInterface $options) {
 			$deliveryDetails ['auth_desc'] = _x ( 'OAuth 2.0', 'Authentication Type is OAuth 2.0', 'postman-smtp' );

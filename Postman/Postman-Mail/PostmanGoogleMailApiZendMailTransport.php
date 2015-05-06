@@ -49,8 +49,8 @@
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license http://framework.zend.com/license/new-bsd New BSD License
  */
-if (! class_exists ( 'PostmanZendMailTransportGmailApi' )) {
-	class PostmanZendMailTransportGmailApi extends Postman_Zend_Mail_Transport_Abstract {
+if (! class_exists ( 'PostmanGoogleMailApiZendMailTransport' )) {
+	class PostmanGoogleMailApiZendMailTransport extends Postman_Zend_Mail_Transport_Abstract {
 		const SERVICE_OPTION = 'service';
 		const SENDER_EMAIL_OPTION = 'sender_email';
 		private $logger;
