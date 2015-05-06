@@ -42,6 +42,7 @@ if (! class_exists ( "PostmanMessage" )) {
 		
 		//
 		private $boundary;
+		private $enablePostmanSignature;
 		
 		/**
 		 *
@@ -54,6 +55,14 @@ if (! class_exists ( "PostmanMessage" )) {
 			$this->toRecipients = array ();
 			$this->ccRecipients = array ();
 			$this->bccRecipients = array ();
+		}
+
+		public function setPostmanSignatureEnabled($enableSignature) {
+			$this->enablePostmanSignature = $enableSignature;
+		}
+		
+		public function isPostmanSignatureEnabled() {
+			return $this->enablePostmanSignature;
 		}
 		
 		/**

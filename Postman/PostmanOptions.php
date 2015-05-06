@@ -53,6 +53,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		const MAIL_LOG_ENABLED_OPTION_YES = 'true';
 		const MAIL_LOG_ENABLED_OPTION_NO = 'false';
 		const MAIL_LOG_MAX_ENTRIES = 'mail_log_max_entries';
+		const STEALTH_MODE = 'stealth_mode';
 		
 		// options data
 		private $options;
@@ -81,6 +82,12 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function isMailLoggingEnabled() {
 			return $this->getMailLoggingEnabled () == self::MAIL_LOG_ENABLED_OPTION_YES;
+		}
+		public function isStealthModeEnabled() {
+			if (isset ( $this->options [PostmanOptions::STEALTH_MODE] ))
+				return $this->options [PostmanOptions::STEALTH_MODE];
+			else
+				return false;
 		}
 		public function getMailLoggingEnabled() {
 			if (isset ( $this->options [PostmanOptions::MAIL_LOG_ENABLED_OPTION] ))

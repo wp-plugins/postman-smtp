@@ -485,6 +485,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'runModeCallback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
+			add_settings_field ( PostmanOptions::STEALTH_MODE, _x ( 'Stealth Mode', 'This mode removes the Postman X-Mailer signature from emails', 'postman-smtp' ), array (
+					$this,
+					'stealthModeCallback' 
+			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			
 			// the Test Email section
 			register_setting ( 'email_group', PostmanAdminController::TEST_OPTIONS, array (
 					$sanitizer,
@@ -830,6 +835,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_LOG_ONLY, PostmanOptions::RUN_MODE_LOG_ONLY == $this->options->getRunMode () ? 'selected="selected"' : '', __ ( 'Log Emails, then Dump', 'postman-smtp' ) );
 			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_IGNORE, PostmanOptions::RUN_MODE_IGNORE == $this->options->getRunMode () ? 'selected="selected"' : '', __ ( 'Dump All Emails', 'postman-smtp' ) );
 			printf ( '</select>' );
+		}
+		
+		public function stealthModeCallback() {
+			printf ( '<input type="checkbox" id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]" %3$s /> %4$s', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::STEALTH_MODE, $this->options->isStealthModeEnabled() ? 'checked="checked"' : '', __ ( 'Remove the Postman X-Header signature from messages', 'postman-smtp' ) );
 		}
 		
 		/**

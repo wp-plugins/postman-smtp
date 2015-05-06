@@ -254,12 +254,13 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * (TBD): Add option for MailPoet
 * (TBD): Add option for MyMail
 
-= 1.6.2 - 2015-05-04 =
+= 1.6.2 - 2015-05-06 =
 * 4,000 installations!
+* [[Ticket](https://wordpress.org/plugins/postman-gmail-extension/)] Some of the changes released in v1.6 broke the Gmail Extension. Fixed.
 * Added a Transcript option in the Email Log
 * Fixed how the Wizard handles new GoDaddy Office-365 supported email
 
-= 1.6.1 - 2015-05-06 =
+= 1.6.1 - 2015-05-04 =
 * You test and test and test, and there's always a bug. Fixed a problem in the Port Recommender where it thought STARTTLS was offered when it isn't (test case: test@aol.com)
 
 = 1.6 - 2015-05-03 =

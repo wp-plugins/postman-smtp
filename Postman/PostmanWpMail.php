@@ -142,6 +142,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$message->setSender ( $wpMailOptions->getSenderEmail (), $wpMailOptions->getSenderName () );
 			$message->setPreventSenderEmailOverride ( $wpMailOptions->isSenderEmailOverridePrevented () || $transportation->isPluginSenderEmailEnforced () );
 			$message->setPreventSenderNameOverride ( $wpMailOptions->isSenderNameOverridePrevented () || $transportation->isPluginSenderNameEnforced () );
+			$message->setPostmanSignatureEnabled(!$wpMailOptions->isStealthModeEnabled());
 			
 			// set the reply-to address if it hasn't been set already in the user's headers
 			$optionsReplyTo = $wpMailOptions->getReplyTo ();
