@@ -82,12 +82,14 @@ class PostmanEmailLogController extends WP_List_Table {
         
         //Build row actions
         $deleteUrl = wp_nonce_url(admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s','delete',$item['ID'])), 'delete_email_log_item_' . $item['ID']);
-		$viewUrl   = admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s&TB_iframe=true&width=600&height=550', 'view', $item['ID']));
-        
+		$viewUrl   = admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s&TB_iframe=true&width=700&height=550', 'view', $item['ID']));
+		$transcriptUrl   = admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s&TB_iframe=true&width=700&height=550', 'transcript', $item['ID']));
+		
         $actions = array(
             'delete'    => sprintf('<a href="%s">%s</a>',$deleteUrl,_x('Delete', 'Delete an item from the email log', 'postman-smtp')),
             'view'    => sprintf('<a href="%s" class="thickbox">%s</a>',$viewUrl,_x('View','View an item from the email log', 'postman-smtp')),
-            );
+            'transcript'    => sprintf('<a href="%s" class="thickbox">%s</a>',$transcriptUrl,_x('Transcript','View the transcript of an item from the email log', 'postman-smtp')),
+        );
         
         //Return the title contents
         return sprintf('%1$s %3$s',

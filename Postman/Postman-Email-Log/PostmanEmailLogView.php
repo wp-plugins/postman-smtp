@@ -38,6 +38,10 @@ if (! class_exists ( 'PostmanEmailLogView' )) {
 						$this,
 						'view_log_item' 
 				) );
+				add_action ( 'admin_post_transcript', array (
+						$this,
+						'view_transcript_log_item' 
+				) );
 				add_action ( 'admin_init', array (
 						$this,
 						'handle_bulk_action' 
@@ -121,6 +125,28 @@ if (! class_exists ( 'PostmanEmailLogView' )) {
 			print '<hr/>';
 			print '<pre>';
 			print esc_html ( $post->post_content );
+			print '</pre>';
+			print '</body></html>';
+			die ();
+		}
+		
+		/**
+		 */
+		function view_transcript_log_item() {
+			$this->logger->trace ( 'handling view transcript item' );
+			$postid = $_REQUEST ['email'];
+			$post = get_post ( $postid );
+			$meta_values = get_post_meta ( $postid );
+			// https://css-tricks.com/examples/hrs/
+			print '<html><head><style>body {font-family: monospace;} hr {
+    border: 0;
+    border-bottom: 1px dashed #ccc;
+    background: #bbb;
+}</style></head><body>';
+			print '<pre>';
+			if (! empty ( $meta_values ['session_transcript'] [0] )) {
+				print esc_html ( $meta_values ['session_transcript'] [0] );
+			}
 			print '</pre>';
 			print '</body></html>';
 			die ();
