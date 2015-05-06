@@ -7,7 +7,7 @@ Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Gmail, Hotmail, and Yahoo Mail problems are solved with Postman, the first and only OAuth 2.0-capable SMTP Mailer and Email Log.
+The first OAuth2-capable SMTP Mailer and Email Log - configure WordPress to use an SMTP server and fix most email problems.
 
 
 
