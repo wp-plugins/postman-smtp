@@ -7,15 +7,15 @@ Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The first OAuth2-capable SMTP Mailer and Email Log - configure WordPress to use an SMTP server and fix most email problems.
+The most advanced SMTP Mailer and Email Log for WordPress. Configure an SMTP server and fix most mail problems, even on GoDaddy.
 
 
 
 == Description ==
 
-Postman is an intelligent, next-generation SMTP mailer that brings reliable email delivery to WordPress. Postman is unique because it supports both traditional username/password authentication, and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/) - Yahoo Mail, Hotmail and Gmail's preferred mechanism for authentication.
+Postman is a next-generation SMTP mailer that brings reliable email delivery to WordPress. It supports both traditional username/password authentication, and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/) - Yahoo Mail, Hotmail and Gmail's [preferred mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html).
 
-In 2014, Google announced if your site "currently uses plain passwords to authenticate to Google, [we strongly encourage you to minimize user disruption by switching to OAuth 2.0](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html)." For Google Apps users, OAuth 2.0 is a [requirement](http://plugins.svn.wordpress.org/postman-smtp/assets/Screen%20Shot%202015-02-21%20at%208.52.13%20PM.png), not a nice-to-have.
+What else makes Postman stand out? The intelligent Setup Wizard scans your SMTP server so you can't make a configuration mistake. The handy Email Log shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy, can't stop your Gmail as Postman will deliver via HTTPS instead of SMTP.
 
 Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) ✝, lost emails, spam and phishing warnings ✝✝, and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) ¹ to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
@@ -256,6 +256,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 1.6.2 - 2015-05-04 =
 * 4,000 installations!
+* Added a Transcript option in the Email Log
+* Fixed how the Wizard handles new GoDaddy Office-365 supported email
 
 = 1.6.1 - 2015-05-06 =
 * You test and test and test, and there's always a bug. Fixed a problem in the Port Recommender where it thought STARTTLS was offered when it isn't (test case: test@aol.com)
