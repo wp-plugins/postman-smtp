@@ -7,7 +7,7 @@ Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Gmail, Hotmail, and Yahoo Mail problems are solved with Postman, the first and only OAuth 2.0-capable SMTP mailer for WordPress.
+Gmail, Hotmail, and Yahoo Mail problems are solved with Postman, the first and only OAuth 2.0-capable SMTP Mailer and Email Log.
 
 
 
@@ -254,7 +254,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * (TBD): Add option for MailPoet
 * (TBD): Add option for MyMail
 
-= 1.6.1 - 2015-05-04 =
+= 1.6.2 - 2015-05-04 =
+* 4,000 installations!
+
+= 1.6.1 - 2015-05-06 =
 * You test and test and test, and there's always a bug. Fixed a problem in the Port Recommender where it thought STARTTLS was offered when it isn't (test case: test@aol.com)
 
 = 1.6 - 2015-05-03 =
@@ -276,6 +279,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Warn when using AUTH with NO encryption - done with padlock emoji
 * Add hostname to connectivity test table.
 * Remove hard-coded plugin version number
+
+= 1.5.13 - 2015-04-22 =
+* 3,000 installations!
 
 = 1.5.13 - 2015-04-18 =
 * Minor fix in Wizard: OAuth labels weren't updating dynamically (since v1.5.11)
