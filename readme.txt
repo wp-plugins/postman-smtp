@@ -460,41 +460,11 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.6.0 =
 Introducing Email Logging.
 
-= 1.5.11 =
-Heavy-duty connectivity tester and setup wizard.
-
-= 1.5.10 =
-Fix for rare bug in Windows installations.
-
-= 1.5.9 =
-Set additional recipients, additional headers, prevent sender override and minor bugfixes.
-
-= 1.5.8 =
-Postman will proceed even without OpenSSL installed, but with a warning to the user.
-
-= 1.5.7 =
-Multipart/Alternative email support, Italian translation, and fixes for increased stability.
-
-= 1.5.5 =
-Added Dashboard status widget. Minor bugfixes.
-
-= 1.5.4 =
-My birthday release includes compatibility with email-log and other plugins that use the 'wp_mail' filter.
-
-= 1.5.3 =
-Minor bugfixes.
-
-= 1.5.2 =
-Fixed a critical bug.. display_errors is forced on as I forgot to remove some debug code
-
 = 1.5 =
 Added support for external transports, such as the new Postman Gmail Extension.
 
 = 1.4 =
 Now supporting Yahoo Mail via OAuth 2.0!
-
-= 1.3.4 =
-This is a 'hardening' update which fixes several minor bugs and improves the stability of the UI and mail service.
 
 = 1.3 =
 Now supporting Hotmail via OAuth 2.0!
@@ -502,32 +472,12 @@ Now supporting Hotmail via OAuth 2.0!
 = 1.2 =
 Support for Sender Name and the Reply-To header.
 
-= 1.1.1 =
-Fixed bug that prevents Contact Form 7 from sending mail
-
 = 1.1 =
 Support for international characters and multipart/mime mail
 
 = 1.0 =
 Major overhaul of the UI including a Setup Wizard and a TCP Port Tester!
 
-= 0.2.7 =
-A bug in PostmanWpMail prevents all mail from going out. PLEASE UPGRADE!
-
-= 0.2.6 =
-Fixed the hyperlink in the message that displays when the plugin is not configured (just installed).
-
-= 0.2.5 =
-Please note that the Postman Redirect URI has changed. If you are upgrading, you MUST update the Client ID Redirect URI in the Google Developer Console, or create a new Client ID altogether. Attempting to re-authorize a Client ID created for an earlier version of Postman WILL FAIL with "Error: redirect_uri_mismatch".
-
-= 0.2.4 =
-Fixed problem installing on servers where the plugin directory is a symbolic link.
-
-= 0.2.1 =
-Fixed a small error that leaves the user on a blank screen after sending a test message.
-
-= 0.2 =
-A variety of bug fixes and enhancements.
 
 = 0.1 =
 The first version. Yay!
