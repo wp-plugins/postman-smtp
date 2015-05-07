@@ -39,7 +39,7 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 
 = Requirements =
 * WordPress 3.9 and PHP 5.2 with SPL and iconv
-* Connectivity to, and authentication credentials with, a 3rd-party email service provider
+* Connectivity to, and authentication credentials with, any email service provider
 * ¹ OAuth 2.0 features requires a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
 * ² Custom email domains require a valid SPF record, and potentially a DKIM record, for Blackhole-free and Spam-free delivery
 
