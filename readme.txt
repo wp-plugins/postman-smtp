@@ -26,7 +26,7 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 = Features =
 * Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0 ¹
 * Send Gmail over HTTPS if the standard SMTP ports are blocked ¹
-* Logs all emails sent, including content and error messages
+* Logs all emails sent, including message content and errors
 * Easy-to-use, powerful Setup Wizard for perfect configuration
 * Fire-and-forget delivery continues even if the password changes ¹
 * Commercial-grade Connectivity Tester to diagnose server issues
