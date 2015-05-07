@@ -383,7 +383,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 					'jquery_validation',
 					'jquery_steps_script',
 					self::POSTMAN_SCRIPT,
-					'sprintf'
+					'sprintf' 
 			), $this->pluginData ['Version'] );
 			wp_register_script ( 'postman_test_email_wizard_script', plugins_url ( 'script/postman_test_email_wizard.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
@@ -468,15 +468,19 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<div class="wrap">';
 			$this->displayTopNavigation ();
 			if (PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken ) && PostmanPreRequisitesCheck::isReady ()) {
-				printf ( '<p><span style="color:green;padding:2px 5px; font-size:1.2em">%s</span></p>', __ ( 'Postman is configured.', 'postman-smtp' ) );
-				$currentTransport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
-				$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
-				printf ( '<p style="margin:0 10px"><span>%s</span></p>', $deliveryDetails );
-				if ($this->options->isAuthTypeOAuth2 () || $this->options->isPluginSenderEmailEnforced ()) {
-					// printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins and themes are forbidden from overriding the sender email address.</em>', 'postman-smtp' ) );
-					// no-op
-				} else if ($this->options->isAuthTypePassword ()) {
-					printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, some WordPress plugins and themes may set an unauthorized sender email address causing rejection with services like Yahoo Mail. If you experience problems, enable "Force this Sender Email Address for all messages" in the settings.</em>', 'postman-smtp' ) );
+				if ($this->options->getRunMode () != PostmanOptions::RUN_MODE_PRODUCTION) {
+					printf ( '<p><span style="background-color:yellow">%s</span></p>', __ ( 'Postman is in <em>non-Production</em> mode and is dumping all emails.', 'postman-smtp' ) );
+				} else {
+					printf ( '<p><span style="color:green;padding:2px 5px; font-size:1.2em">%s</span></p>', __ ( 'Postman is configured.', 'postman-smtp' ) );
+					$currentTransport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
+					$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
+					printf ( '<p style="margin:0 10px"><span>%s</span></p>', $deliveryDetails );
+					if ($this->options->isAuthTypeOAuth2 () || $this->options->isPluginSenderEmailEnforced ()) {
+						// printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins and themes are forbidden from overriding the sender email address.</em>', 'postman-smtp' ) );
+						// no-op
+					} else if ($this->options->isAuthTypePassword ()) {
+						printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, some WordPress plugins and themes may set an unauthorized sender email address causing rejection with services like Yahoo Mail. If you experience problems, enable "Force this Sender Email Address for all messages" in the settings.</em>', 'postman-smtp' ) );
+					}
 				}
 				/* translators: where %d is the number of emails delivered */
 				printf ( '<p style="margin:10px 10px"><span>%s', sprintf ( _n ( 'Postman has delivered <span style="color:green">%d</span> email for you.', 'Postman has delivered <span style="color:green">%d</span> emails for you.', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );
@@ -761,7 +765,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			/* Translators: Where %1$s is the socket identifier and %2$s is the authentication type */
 			printf ( '<p class="user_override" style="display:none"><label><span>%s:</span></label> <table id="user_socket_override" class="user_override"></table></p>', _x ( 'Socket', 'A socket is the network term for host and port together', 'postman-smtp' ) );
 			printf ( '<p class="user_override" style="display:none"><label><span>%s:</span></label> <table id="user_auth_override" class="user_override"></table></p>', _x ( 'Authentication', 'Authentication proves the user\'s identity', 'postman-smtp' ) );
-			print ( '<p><span id="smtp_mitm" style="display:none; background-color:yellow"></span></p>');
+			print ('<p><span id="smtp_mitm" style="display:none; background-color:yellow"></span></p>') ;
 			printf ( '<p id="smtp_not_secure" style="display:none"><span style="background-color:yellow">%s</span></p>', __ ( 'Warning: This configuration option will send your authorization credentials in the clear.', 'postman-smtp' ) );
 			print '</fieldset>';
 			
