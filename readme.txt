@@ -15,7 +15,7 @@ The most advanced SMTP Mailer and Email Log for WordPress. Configure an SMTP ser
 
 Postman is a next-generation SMTP mailer that brings reliable email delivery to WordPress. It supports both traditional username/password authentication, and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/) - Yahoo Mail, Hotmail and Gmail's [preferred mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html).
 
-What else makes Postman stand out? The intelligent Setup Wizard scans your SMTP server so you can't make a configuration mistake. The handy Email Log shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy, can't stop your Gmail as Postman will deliver via HTTPS instead of SMTP.¹
+What else makes Postman stand out? The intelligent **Setup Wizard** scans your SMTP server so you can't make a configuration mistake. The handy **Email Log** shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy, can't stop your Gmail as **Postman will deliver via HTTPS** instead of SMTP.¹
 
 Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) ¹, lost emails, spam and phishing warnings ², and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) ¹ to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
@@ -160,6 +160,11 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 * If you have a Google Account, from the [Google Developer's Console](https://console.developers.google.com/) use the Delete button under the Client ID.
 * If you have a Microsoft Live account, from the [Microsoft account Developer Center](https://account.live.com/developers/applications/index), select the Application and choose Delete Application.
 * If you have a Yahoo Account, from the [Yahoo Developer Network My Apps](https://developer.yahoo.com/apps/), select the Application and choose Delete App. 
+
+= What URIs do I enter to whitelist the plugin? =
+If your WordPress site is configured with WP_HTTP_BLOCK_EXTERNAL to prevent outbound connections, you may exempt the APIs with these definitions:
+
+> define('WP_ACCESSIBLE_HOSTS', 'www.googleapis.com, login.live.com, api.login.yahoo.com');
 
 = Who do we thank for translations? =
 * French - [Etienne Provost](https://www.facebook.com/eprovost3)
