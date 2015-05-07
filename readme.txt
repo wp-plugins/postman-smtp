@@ -266,6 +266,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * You test and test and test, and there's always a bug. Fixed a problem in the Port Recommender where it thought STARTTLS was offered when it isn't (test case: test@aol.com)
 
 = 1.6 - 2015-05-03 =
+* Fold all code from the Postman Gmail Extension back into Postman
 * Remove warning from main screen for sender override if it's already on
 * Delivery mode - production, logging, test
 * Help screens
