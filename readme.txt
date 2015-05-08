@@ -253,6 +253,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.6.4 =
+* SMTP transport requires a Sender Email Address be set
 * (TBD): Add option for MailPoet
 * (TBD): Add option for MyMail
 
