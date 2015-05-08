@@ -57,7 +57,8 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			$this->sanitizeInt ( 'Email Log Max Entries', PostmanOptions::MAIL_LOG_MAX_ENTRIES, $input, $new_input );
 			$this->sanitizeString ( 'Run Mode', PostmanOptions::RUN_MODE, $input, $new_input );
 			$this->sanitizeString ( 'Stealth Mode', PostmanOptions::STEALTH_MODE, $input, $new_input );
-			
+			$this->sanitizeInt ( 'Transcript Size', PostmanOptions::TRANSCRIPT_SIZE, $input, $new_input );
+				
 			if (! empty ( $input [PostmanOptions::SENDER_EMAIL] )) {
 				$newEmail = $input [PostmanOptions::SENDER_EMAIL];
 				$this->logger->debug ( 'Sanitize Sender Email ' . $newEmail );

@@ -147,6 +147,7 @@ abstract class Postman_Zend_Mail_Protocol_Abstract
 
         $this->_host = $host;
         $this->_port = $port;
+        $this->_maximumLog = PostmanOptions::getInstance()->getTranscriptSize();
     }
 
 

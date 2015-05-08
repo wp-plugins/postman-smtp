@@ -27,8 +27,6 @@ if (! class_exists ( 'Postman' )) {
 	 *        
 	 */
 	class Postman {
-		const POSTMAN_TCP_READ_TIMEOUT = 60;
-		const POSTMAN_TCP_CONNECTION_TIMEOUT = 10;
 		const LONG_ENOUGH_SEC = 432000;
 		private $logger;
 		private $messageHandler;

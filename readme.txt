@@ -256,6 +256,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * SMTP transport requires a Sender Email Address be set
 * Wizard will not clear the hostname if it comes back null
 * If the host does not support "humanTime", the EMail Log will fall back to an ISO date
+* Added a new advanced option: Transcript size to adjust how much of the transcript is saved in the log
 
 = 1.6.3 - 2015-05-08 =
 * The wizard gets confused if the user specified auth type is undefined for the newly chosen socket. for example, a gmail address, with a mailtrap.io server, toggling between the gmailapi socket and the mailtrap socket. Fixed.
@@ -264,6 +265,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.6.2 - 2015-05-06 =
 * 4,000 installations!
 * [[Ticket](https://wordpress.org/plugins/postman-gmail-extension/)] Some of the changes released in v1.6 broke the Gmail Extension. Fixed.
+* [[Ticket](https://wordpress.org/support/topic/x-mailer?replies=9)] Added a new advanced option: Stealth Mode to hide the Postman X-Mailer signature
 * Added a Transcript option in the Email Log
 * Fixed how the Wizard handles new GoDaddy Office-365 supported email
 

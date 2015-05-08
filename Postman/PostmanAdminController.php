@@ -212,7 +212,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function postmanModifyLinksOnPluginsListPage($links) {
 			$mylinks = array (
-					sprintf ( '<a href="%s">%s</a>', PostmanUtils::getSettingsPageUrl(), _x ( 'Settings', 'The configuration page of the plugin', 'postman-smtp' ) ) 
+					sprintf ( '<a href="%s">%s</a>', PostmanUtils::getSettingsPageUrl (), _x ( 'Settings', 'The configuration page of the plugin', 'postman-smtp' ) ) 
 			);
 			return array_merge ( $mylinks, $links );
 		}
@@ -453,6 +453,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'loggingMaxEntriesInputField' 
 			), PostmanAdminController::LOGGING_OPTIONS, PostmanAdminController::LOGGING_SECTION );
 			
+			add_settings_field ( PostmanOptions::TRANSCRIPT_SIZE, _x ( 'Transcript Size (Total Lines)', 'The maximum number of lines of the SMTP transcript', 'postman-smtp' ), array (
+					$this,
+					'transcriptSizeInputField' 
+			), PostmanAdminController::LOGGING_OPTIONS, PostmanAdminController::LOGGING_SECTION );
+			
 			// the Network section
 			add_settings_section ( PostmanAdminController::NETWORK_SECTION, _x ( 'Network Settings', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
@@ -546,7 +551,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<p id="wizard_oauth2_help">%s</p>', $this->oauthScribe->getOAuthHelp () );
 		}
 		public function printLoggingSectionInfo() {
-			print __('Configure the delivery audit log:','postman-smtp') ;
+			print __ ( 'Configure the delivery audit log:', 'postman-smtp' );
 		}
 		
 		/**
@@ -731,6 +736,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		public function loggingMaxEntriesInputField() {
 			printf ( '<input type="text" id="input_logging_max_entries" name="postman_options[%s]" value="%s"/>', PostmanOptions::MAIL_LOG_MAX_ENTRIES, $this->options->getMailLoggingMaxEntries () );
 		}
+		public function transcriptSizeInputField() {
+			printf ( '<input type="text" id="input%2$s" name="%1$s[%2$s]" value="%3$s"/>', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TRANSCRIPT_SIZE, $this->options->getTranscriptSize () );
+		}
 		
 		/**
 		 * Get the settings option array and print one of its values
@@ -836,9 +844,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_IGNORE, PostmanOptions::RUN_MODE_IGNORE == $this->options->getRunMode () ? 'selected="selected"' : '', __ ( 'Dump All Emails', 'postman-smtp' ) );
 			printf ( '</select>' );
 		}
-		
 		public function stealthModeCallback() {
-			printf ( '<input type="checkbox" id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]" %3$s /> %4$s', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::STEALTH_MODE, $this->options->isStealthModeEnabled() ? 'checked="checked"' : '', __ ( 'Remove the Postman X-Header signature from messages', 'postman-smtp' ) );
+			printf ( '<input type="checkbox" id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]" %3$s /> %4$s', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::STEALTH_MODE, $this->options->isStealthModeEnabled () ? 'checked="checked"' : '', __ ( 'Remove the Postman X-Header signature from messages', 'postman-smtp' ) );
 		}
 		
 		/**

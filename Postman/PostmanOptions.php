@@ -54,6 +54,20 @@ if (! class_exists ( "PostmanOptions" )) {
 		const MAIL_LOG_ENABLED_OPTION_NO = 'false';
 		const MAIL_LOG_MAX_ENTRIES = 'mail_log_max_entries';
 		const STEALTH_MODE = 'stealth_mode';
+		const TRANSCRIPT_SIZE = 'transcript_size';
+		
+		// defaults
+		const DEFAULT_TRANSCRIPT_SIZE = 128;
+		const DEFAULT_STEALTH_MODE = false;
+		const DEFAULT_RUN_MODE = self::RUN_MODE_PRODUCTION;
+		const DEFAULT_MAIL_LOG_ENABLED = self::MAIL_LOG_ENABLED_OPTION_YES;
+		const DEFAULT_MAIL_LOG_ENTRIES = 10;
+		const DEFAULT_LOG_LEVEL = PostmanLogger::ERROR_INT;
+		const DEFAULT_TRANSPORT_TYPE = PostmanSmtpTransport::SLUG;
+		const DEFAULT_TCP_READ_TIMEOUT = 60;
+		const DEFAULT_TCP_CONNECTION_TIMEOUT = 10;
+		const DEFAULT_PLUGIN_SENDER_NAME_ENFORCED = true;
+		const DEFAULT_PLUGIN_SENDER_EMAIL_ENFORCED = true;
 		
 		// options data
 		private $options;
@@ -87,31 +101,37 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::STEALTH_MODE] ))
 				return $this->options [PostmanOptions::STEALTH_MODE];
 			else
-				return false;
+				return self::DEFAULT_STEALTH_MODE;
 		}
 		public function getMailLoggingEnabled() {
 			if (isset ( $this->options [PostmanOptions::MAIL_LOG_ENABLED_OPTION] ))
 				return $this->options [PostmanOptions::MAIL_LOG_ENABLED_OPTION];
 			else
-				return self::MAIL_LOG_ENABLED_OPTION_YES;
+				return self::DEFAULT_MAIL_LOG_ENABLED;
 		}
 		public function getRunMode() {
 			if (isset ( $this->options [self::RUN_MODE] ))
 				return $this->options [self::RUN_MODE];
 			else
-				return self::RUN_MODE_PRODUCTION;
+				return self::DEFAULT_RUN_MODE;
 		}
 		public function getMailLoggingMaxEntries() {
 			if (isset ( $this->options [PostmanOptions::MAIL_LOG_MAX_ENTRIES] ))
 				return $this->options [PostmanOptions::MAIL_LOG_MAX_ENTRIES];
 			else
-				return 10;
+				return self::DEFAULT_MAIL_LOG_ENTRIES;
+		}
+		public function getTranscriptSize() {
+			if (isset ( $this->options [PostmanOptions::TRANSCRIPT_SIZE] ))
+				return $this->options [PostmanOptions::TRANSCRIPT_SIZE];
+			else
+				return self::DEFAULT_TRANSCRIPT_SIZE;
 		}
 		public function getLogLevel() {
 			if (isset ( $this->options [PostmanOptions::LOG_LEVEL] ))
 				return $this->options [PostmanOptions::LOG_LEVEL];
 			else
-				return PostmanLogger::ERROR_INT;
+				return self::DEFAULT_LOG_LEVEL;
 		}
 		public function getForcedToRecipients() {
 			if (isset ( $this->options [self::FORCED_TO_RECIPIENTS] ))
@@ -158,7 +178,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::TRANSPORT_TYPE] ))
 				return $this->options [PostmanOptions::TRANSPORT_TYPE];
 			else
-				return PostmanSmtpTransport::SLUG;
+				return self::DEFAULT_TRANSPORT_TYPE;
 		}
 		public function getAuthenticationType() {
 			if (isset ( $this->options [PostmanOptions::AUTHENTICATION_TYPE] ))
@@ -187,17 +207,17 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (! empty ( $this->options [self::CONNECTION_TIMEOUT] ))
 				return $this->options [self::CONNECTION_TIMEOUT];
 			else
-				return Postman::POSTMAN_TCP_CONNECTION_TIMEOUT;
+				return self::DEFAULT_TCP_CONNECTION_TIMEOUT;
 		}
 		public function getReadTimeout() {
 			if (! empty ( $this->options [self::READ_TIMEOUT] ))
 				return $this->options [self::READ_TIMEOUT];
 			else
-				return Postman::POSTMAN_TCP_READ_TIMEOUT;
+				return self::DEFAULT_TCP_READ_TIMEOUT;
 		}
 		public function isPluginSenderNameEnforced() {
 			if ($this->isNew ())
-				return true;
+				return self::DEFAULT_PLUGIN_SENDER_NAME_ENFORCED;
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] ))
 				return $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE];
 		}
@@ -212,7 +232,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function isPluginSenderEmailEnforced() {
 			if ($this->isNew ())
-				return true;
+				return self::DEFAULT_PLUGIN_SENDER_EMAIL_ENFORCED;
 			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE] ))
 				return $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE];
 		}
