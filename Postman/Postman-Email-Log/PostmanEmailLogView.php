@@ -261,7 +261,6 @@ class PostmanEmailLogView extends WP_List_Table {
          * use sort and pagination data to build a custom query instead, as you'll
          * be able to use your precisely-queried data immediately.
          */
-         $data = $this->example_data;
          $data = array();
          $args = array(
         		'posts_per_page'   => 1000,
@@ -282,12 +281,17 @@ class PostmanEmailLogView extends WP_List_Table {
         );
         $posts = get_posts( $args );
 		foreach ( $posts as $post ) {
-			$this->logger->trace(sprintf('postid=%s post-date=%s post-time=%s post-human-time=%s', $post->ID , $post->post_date, strtotime($post->post_date), human_time_diff( strtotime($post->post_date))));
+			$date = $post->post_date;
+			$humanTime = human_time_diff( strtotime($post->post_date_gmt));
+			// if this PHP system support humanTime, than use it
+			if(!empty($humanTime)) {
+				$date = sprintf(_x('%s ago','A relative time as in "five days ago"', 'postman-smtp'), $humanTime);
+			}
 			$flattenedPost = array (
 					'title' => $post->post_title,
 					'status' => ($post->post_excerpt != null ? $post->post_excerpt : __ ( 'Sent' , 'postman-smtp')),
 					/* Translators where %s indicates the relative time from now */
-					'date' => sprintf(_x('%s ago','A relative time as in "five days ago"', 'postman-smtp'), human_time_diff( strtotime($post->post_date_gmt))),
+					'date' => $date,
 					'ID' => $post->ID 
 			);
         	array_push($data, $flattenedPost);

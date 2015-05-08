@@ -255,10 +255,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.6.4 - 2015-05-08 =
 * SMTP transport requires a Sender Email Address be set
 * Wizard will not clear the hostname if it comes back null
+* If the host does not support "humanTime", the EMail Log will fall back to an ISO date
 
 = 1.6.3 - 2015-05-08 =
 * The wizard gets confused if the user specified auth type is undefined for the newly chosen socket. for example, a gmail address, with a mailtrap.io server, toggling between the gmailapi socket and the mailtrap socket. Fixed.
-* Changed the Email Log to use post_date_gmt
 * Show a warning on the main setting screen if the Delivery mode is not set to Production
 
 = 1.6.2 - 2015-05-06 =
