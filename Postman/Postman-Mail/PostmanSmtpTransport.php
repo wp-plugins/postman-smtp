@@ -150,7 +150,8 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		private function isTransportConfigured(PostmanOptionsInterface $options) {
 			$hostname = $options->getHostname ();
 			$port = $options->getPort ();
-			return ! (empty ( $hostname ) || empty ( $port ));
+			$senderEmail = $options->getSenderEmail ();
+			return ! (empty ( $senderEmail ) || empty ( $hostname ) || empty ( $port ));
 		}
 		private function isPasswordAuthenticationConfigured(PostmanOptionsInterface $options) {
 			$username = $options->getUsername ();
@@ -172,12 +173,12 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			if (! $this->isTransportConfigured ( $options )) {
-				return __ ( 'Outgoing Mail Server (SMTP) and Port can not be empty.', 'postman-smtp' );
+				return __ ( 'Outgoing Mail Server Hostname/Port and Sender Email Address can not be empty.', 'postman-smtp' );
 			} else if ($options->isAuthTypePassword () && ! $this->isPasswordAuthenticationConfigured ( $options )) {
 				return __ ( 'Password authentication (Plain/Login/CRAM-MD5) requires a username and password.', 'postman-smtp' );
 			} else if ($options->isAuthTypeOAuth2 () && ! $this->isOAuthAuthenticationConfigured ( $options )) {
 				/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label (e.g. Warning: OAuth 2.0 authentication requires an OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, Client ID, and Client Secret.) */
-				return sprintf ( __ ( 'OAuth 2.0 authentication requires a supported OAuth 2.0-capable Outgoing Mail Server, Sender Email Address, %1$s, and %2$s.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
+				return sprintf ( __ ( 'OAuth 2.0 authentication requires a supported OAuth 2.0-capable Outgoing Mail Server, %1$s, and %2$s.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
 			} else if ($this->isPermissionNeeded ( $options, $token )) {
 				/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label */
 				$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
