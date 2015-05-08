@@ -22,9 +22,8 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 	class PostmanTransportRegistry {
 		private $transports;
 		private $logger;
-
 		private function __construct() {
-			$this->logger = new PostmanLogger(get_class($this));
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
 		}
 		
 		// singleton instance
@@ -183,37 +182,17 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 		 *
 		 * @param unknown $hostData        	
 		 */
-		public function getConfigurationBid($connectivityTestResults, $userAuthPreference, $originalSmtpServer) {
-			assert(!empty($originalSmtpServer));
-			$hostData ['host'] = $connectivityTestResults ['hostname'];
-			$hostData ['port'] = $connectivityTestResults ['port'];
-			$hostData ['protocol'] = $connectivityTestResults ['protocol'];
-			$hostData ['start_tls'] = $connectivityTestResults ['start_tls'];
-			
-			// write all the auth data
-			$hostData ['auth_xoauth'] = $connectivityTestResults ['auth_xoauth'];
-			$hostData ['auth_plain'] = $connectivityTestResults ['auth_plain'];
-			$hostData ['auth_login'] = $connectivityTestResults ['auth_login'];
-			$hostData ['auth_crammd5'] = $connectivityTestResults ['auth_crammd5'];
-			$hostData ['auth_none'] = $connectivityTestResults ['auth_none'];
-			$hostData ['id'] = $connectivityTestResults ['reported_hostname_domain_only'];
-			// filter for user preference (remove select auth data)
-			if ($userAuthPreference == 'oauth2') {
-				$hostData ['auth_plain'] = null;
-				$hostData ['auth_login'] = null;
-				$hostData ['auth_crammd5'] = null;
-			}
-			if ($userAuthPreference == 'password') {
-				$hostData ['auth_xoauth'] = null;
-			}
+		public function getRecommendation($hostData, $userAuthOverride, $originalSmtpServer) {
+			assert ( ! empty ( $originalSmtpServer ) );
 			
 			//
 			$priority = - 1;
 			$winningRecommendation = null;
 			$logger = new PostmanLogger ( get_class ( $this ) );
+			$scrubbedUserAuthOverride = $this->scrubUserOverride ( $hostData, $userAuthOverride );
 			foreach ( $this->getTransports () as $transport ) {
-				$logger->debug ( sprintf ( 'Asking transport %s to bid on: %s:%s', $transport->getName (), $hostData ['host'], $hostData ['port'] ) );
-				$recommendation = $transport->getConfigurationBid($hostData, $originalSmtpServer );
+				$logger->debug ( sprintf ( 'Asking transport %s to bid on: %s:%s', $transport->getName (), $hostData ['hostname'], $hostData ['port'] ) );
+				$recommendation = $transport->getConfigurationBid ( $hostData, $scrubbedUserAuthOverride, $originalSmtpServer );
 				if ($recommendation) {
 					if ($recommendation ['priority'] > $priority) {
 						$priority = $recommendation ['priority'];
@@ -222,6 +201,30 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 				}
 			}
 			return $winningRecommendation;
+		}
+		private function scrubUserOverride($hostData, $userAuthOverride) {
+			$this->logger->trace ( 'before scrubbing userAuthOverride: ' . $userAuthOverride );
+			// validate the userAuthOverride
+			$oauthIsAllowed = false;
+			$passwordIsAllowed = false;
+			$noneIsAllowed = false;
+			if (! PostmanUtils::parseBoolean ( $hostData ['auth_xoauth'] )) {
+				if ($userAuthOverride == 'oauth2') {
+					$userAuthOverride = null;
+				}
+			}
+			if (! PostmanUtils::parseBoolean ( $hostData ['auth_crammd5'] ) && !PostmanUtils::parseBoolean ( $hostData ['auth_plain'] ) && !PostmanUtils::parseBoolean ( $hostData ['auth_login'] )) {
+				if ($userAuthOverride == 'password') {
+					$userAuthOverride = null;
+				}
+			}
+			if (! PostmanUtils::parseBoolean ( $hostData ['auth_none'] )) {
+				if ($userAuthOverride == 'none') {
+					$userAuthOverride = null;
+				}
+			}
+			$this->logger->trace ( 'after scrubbing userAuthOverride: ' . $userAuthOverride );
+			return $userAuthOverride;
 		}
 	}
 }

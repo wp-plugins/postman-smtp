@@ -51,7 +51,7 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 			$userAuthOverride = $this->getUserAuthOverride ();
 			
 			// determine a configuration recommendation
-			$winningRecommendation = $this->getConfigurationRecommendation ( $queryHostData, $userPortOverride, $userAuthOverride, $originalSmtpServer );
+			$winningRecommendation = $this->getWinningRecommendation ( $queryHostData, $userPortOverride, $userAuthOverride, $originalSmtpServer );
 			$this->logger->trace ( 'winning recommendation:' );
 			$this->logger->trace ( $winningRecommendation );
 			
@@ -95,7 +95,6 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 * @return multitype:
 		 */
 		private function createOverrideMenu($queryHostData, $winningRecommendation, $userSocketOverride, $userAuthOverride) {
-			$this->logger->trace ( $queryHostData );
 			$overrideMenu = array ();
 			foreach ( $queryHostData as $id => $value ) {
 				if (filter_var ( $value ['success'], FILTER_VALIDATE_BOOLEAN )) {
@@ -186,14 +185,14 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 		 * @param unknown $queryHostData        	
 		 * @return unknown
 		 */
-		private function getConfigurationRecommendation($queryHostData, $userSocketOverride, $userAuthOverride, $originalSmtpServer) {
+		private function getWinningRecommendation($queryHostData, $userSocketOverride, $userAuthOverride, $originalSmtpServer) {
 			$recommendationPriority = - 1;
 			$winningRecommendation = null;
 			foreach ( $queryHostData as $id => $value ) {
 				$available = filter_var ( $value ['success'], FILTER_VALIDATE_BOOLEAN );
 				if ($available) {
 					$this->logger->debug ( sprintf ( 'Asking for judgement on %s:%s', $value ['hostname'], $value ['port'] ) );
-					$recommendation = PostmanTransportRegistry::getInstance ()->getConfigurationBid ( $value, $userAuthOverride, $originalSmtpServer );
+					$recommendation = PostmanTransportRegistry::getInstance ()->getRecommendation ( $value, $userAuthOverride, $originalSmtpServer );
 					$recommendationId = sprintf ( '%s_%s', $value ['hostname'], $value ['port'] );
 					$recommendation ['id'] = $recommendationId;
 					$this->logger->debug ( sprintf ( 'Got a recommendation: [%d] %s', $recommendation ['priority'], $recommendationId ) );

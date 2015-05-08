@@ -18,7 +18,7 @@ if (! class_exists ( 'Postman' )) {
 	require_once 'PostmanAdminController.php';
 	require_once 'Postman-Controller/PostmanDashboardWidgetController.php';
 	require_once 'PostmanActivationHandler.php';
-	require_once 'Postman-Email-Log/PostmanEmailLogView.php';
+	require_once 'Postman-Email-Log/PostmanEmailLogController.php';
 	require_once 'Postman-Controller/PostmanAdminPointer.php';
 	
 	/**
@@ -76,7 +76,7 @@ if (! class_exists ( 'Postman' )) {
 				// the following classes should only be used if the current user is an admin
 				new PostmanDashboardWidgetController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->wpMailBinder );
 				$adminController = new PostmanAdminController ( $rootPluginFilenameAndPath, $this->pluginData, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
-				new PostmanEmailLogView ( $rootPluginFilenameAndPath, $this->pluginData );
+				new PostmanEmailLogController ( $rootPluginFilenameAndPath, $this->pluginData );
 				new PostmanAdminPointer ( $rootPluginFilenameAndPath );
 				// do this only if we're on a postman admin screen
 				if (PostmanUtils::isCurrentPagePostmanAdmin ()) {

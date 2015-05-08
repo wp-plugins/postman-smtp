@@ -1,301 +1,371 @@
 <?php
-require_once 'PostmanEmailLogService.php';
-require_once 'PostmanEmailLogController.php';
 
 /**
- *
- * @author jasonhendriks
- *        
+ * See http://wpengineer.com/2426/wp_list_table-a-step-by-step-guide/
+ * 
  */
-if (! class_exists ( 'PostmanEmailLogView' )) {
-	class PostmanEmailLogView {
-		private $rootPluginFilenameAndPath;
-		private $logger;
-		private $pluginData;
-		
-		/**
-		 */
-		function __construct($rootPluginFilenameAndPath, $pluginData) {
-			$this->rootPluginFilenameAndPath = $rootPluginFilenameAndPath;
-			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			$this->pluginData = $pluginData;
-			if (PostmanOptions::getInstance ()->isMailLoggingEnabled ()) {
-				add_action ( 'admin_menu', array (
-						$this,
-						'postmanAddMenuItem' 
-				) );
-			} else {
-				$this->logger->trace ( 'not creating PostmanEmailLog admin menu item' );
-			}
-			if (PostmanUtils::isCurrentPagePostmanAdmin ( 'postman_email_log' )) {
-				$this->logger->trace ( 'on postman email log page' );
-				// $this->logger->debug ( 'Registering ' . $actionName . ' Action Post handler' );
-				add_action ( 'admin_post_delete', array (
-						$this,
-						'delete_log_item' 
-				) );
-				add_action ( 'admin_post_view', array (
-						$this,
-						'view_log_item' 
-				) );
-				add_action ( 'admin_post_transcript', array (
-						$this,
-						'view_transcript_log_item' 
-				) );
-				add_action ( 'admin_init', array (
-						$this,
-						'handle_bulk_action' 
-				) );
-			}
-		}
-		
-		/**
-		 * From https://www.skyverge.com/blog/add-custom-bulk-action/
-		 */
-		function handle_bulk_action() {
-			if (isset ( $_REQUEST ['email_log_entry'] )) {
-				$this->logger->trace ( 'handling bulk action' );
-				if (wp_verify_nonce ( $_REQUEST ['_wpnonce'], 'bulk-email_log_entries' )) {
-					$this->logger->trace ( sprintf ( 'nonce "%s" passed validation', $_REQUEST ['_wpnonce'] ) );
-					if (isset ( $_REQUEST ['action'] ) && $_REQUEST ['action'] == 'bulk_delete') {
-						$this->logger->trace ( sprintf ( 'handling bulk delete' ) );
-						$purger = new PostmanEmailLogPurger ();
-						$postids = $_REQUEST ['email_log_entry'];
-						foreach ( $postids as $postid ) {
-							$purger->verifyLogItemExistsAndRemove ( $postid );
-						}
-						$mh = new PostmanMessageHandler ();
-						$mh->addMessage ( __ ( 'Mail Log Entries were deleted.', 'postman-smtp' ) );
-					} else {
-						$this->logger->warn ( sprintf ( 'action "%s" not recognized', $_REQUEST ['action'] ) );
-					}
-				} else {
-					$this->logger->warn ( sprintf ( 'nonce "%s" failed validation', $_REQUEST ['_wpnonce'] ) );
-				}
-				$this->redirectToLogPage ();
-			}
-		}
-		
-		/**
-		 */
-		function delete_log_item() {
-			$this->logger->trace ( 'handling delete item' );
-			$postid = $_REQUEST ['email'];
-			if (wp_verify_nonce ( $_REQUEST ['_wpnonce'], 'delete_email_log_item_' . $postid )) {
-				$this->logger->trace ( sprintf ( 'nonce "%s" passed validation', $_REQUEST ['_wpnonce'] ) );
-				$purger = new PostmanEmailLogPurger ();
-				$purger->verifyLogItemExistsAndRemove ( $postid );
-				$mh = new PostmanMessageHandler ();
-				$mh->addMessage ( __ ( 'Mail Log Entry was deleted.', 'postman-smtp' ) );
-			} else {
-				$this->logger->warn ( sprintf ( 'nonce "%s" failed validation', $_REQUEST ['_wpnonce'] ) );
-			}
-			$this->redirectToLogPage ();
-		}
-		
-		/**
-		 */
-		function view_log_item() {
-			$this->logger->trace ( 'handling view item' );
-			$postid = $_REQUEST ['email'];
-			$post = get_post ( $postid );
-			$meta_values = get_post_meta ( $postid );
-			// https://css-tricks.com/examples/hrs/
-			print '<html><head><style>body {font-family: monospace;} hr {
-    border: 0;
-    border-bottom: 1px dashed #ccc;
-    background: #bbb;
-}</style></head><body>';
-			print '<table>';
-			if (! empty ( $meta_values ['from_header'] [0] )) {
-				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'From', 'Who is this message from?', 'postman-smtp' ), esc_html ( $meta_values ['from_header'] [0] ) );
-			}
-			if (! empty ( $meta_values ['to_header'] [0] )) {
-				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'To', 'Who is this message to?', 'postman-smtp' ), esc_html ( $meta_values ['to_header'] [0] ) );
-			}
-			if (! empty ( $meta_values ['reply_to_header'] [0] )) {
-				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Reply-To', 'Who do we reply to?', 'postman-smtp' ), esc_html ( $meta_values ['reply_to_header'] [0] ) );
-			}
-			printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Date', 'What is the date today?', 'postman-smtp' ), $post->post_date );
-			printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Subject', 'What is the subject of this message?', 'postman-smtp' ), esc_html ( $post->post_title ) );
-			if (! empty ( $meta_values ['transport_uri'] [0] )) {
-				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Delivery-URI', 'What is the unique URI of the configuration?', 'postman-smtp' ), esc_html ( $meta_values ['transport_uri'] [0] ) );
-			}
-			print '</table>';
-			print '<hr/>';
-			print '<pre>';
-			print esc_html ( $post->post_content );
-			print '</pre>';
-			print '</body></html>';
-			die ();
-		}
-		
-		/**
-		 */
-		function view_transcript_log_item() {
-			$this->logger->trace ( 'handling view transcript item' );
-			$postid = $_REQUEST ['email'];
-			$post = get_post ( $postid );
-			$meta_values = get_post_meta ( $postid );
-			// https://css-tricks.com/examples/hrs/
-			print '<html><head><style>body {font-family: monospace;} hr {
-    border: 0;
-    border-bottom: 1px dashed #ccc;
-    background: #bbb;
-}</style></head><body>';
-			print '<pre>';
-			if (! empty ( $meta_values ['session_transcript'] [0] )) {
-				print esc_html ( $meta_values ['session_transcript'] [0] );
-			}
-			print '</pre>';
-			print '</body></html>';
-			die ();
-		}
-		
-		/**
-		 * For whatever reason, PostmanUtils::get..url doesn't work here? :(
-		 */
-		function redirectToLogPage() {
-			PostmanUtils::redirect ( PostmanUtils::POSTMAN_EMAIL_LOG_PAGE_RELATIVE_URL );
-			die ();
-		}
-		
-		/**
-		 * Register the page
-		 */
-		function postmanAddMenuItem() {
-			$this->logger->trace ( 'created PostmanEmailLog admin menu item' );
-			$page = add_management_page ( __ ( 'Postman Email Log', 'postman-smtp' ), _x ( 'Email Log', 'The log of Emails that have been delivered', 'postman-smtp' ), 'read_private_posts', 'postman_email_log', array (
-					$this,
-					'postman_render_email_page' 
-			) );
-			// When the plugin options page is loaded, also load the stylesheet
-			add_action ( 'admin_print_styles-' . $page, array (
-					$this,
-					'postman_email_log_enqueue_resources' 
-			) );
-		}
-		function postman_email_log_enqueue_resources() {
-			wp_register_style ( 'postman_email_log', plugins_url ( 'style/postman-email-log.css', $this->rootPluginFilenameAndPath ), null, $this->pluginData ['Version'] );
-			wp_enqueue_style ( 'postman_email_log' );
-		}
-		
-		/**
-		 * *************************** RENDER TEST PAGE ********************************
-		 * ******************************************************************************
-		 * This function renders the admin page and the example list table.
-		 * Although it's
-		 * possible to call prepare_items() and display() from the constructor, there
-		 * are often times where you may need to include logic here between those steps,
-		 * so we've instead called those methods explicitly. It keeps things flexible, and
-		 * it's the way the list tables are used in the WordPress core.
-		 */
-		function postman_render_email_page() {
-			
-			// Create an instance of our package class...
-			$testListTable = new PostmanEmailLogController ();
-			// Fetch, prepare, sort, and filter our data...
-			$testListTable->prepare_items ();
-			
-			?>
-<div class="wrap">
 
-	<div id="icon-users" class="icon32">
-		<br />
-	</div>
-	<h2><?php echo __ ( 'Postman Email Log', 'postman-smtp' ) ?></h2>
+if(!class_exists('WP_List_Table')){
+    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
 
-	<div
-		style="background: #ECECEC; border: 1px solid #CCC; padding: 0 10px; margin-top: 5px; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;">
-		<p><?php
-			
-			echo __ ( 'This is a record of delivery attempts made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient.', 'postman-smtp' )?></p>
-	</div>
+class PostmanEmailLogView extends WP_List_Table {
+    
+	private $logger;
 
-	<!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->
-	<form id="movies-filter" method="get">
-		<!-- For plugins, we also need to ensure that the form posts back to our current page -->
-		<input type="hidden" name="page"
-			value="<?php echo $_REQUEST['page'] ?>" />
-		<!-- Now we can render the completed list table -->
-            <?php $testListTable->display()?>
-        </form>
+    /** ************************************************************************
+     * REQUIRED. Set up a constructor that references the parent constructor. We 
+     * use the parent reference to set some default configs.
+     ***************************************************************************/
+    function __construct(){
+    	$this->logger = new PostmanLogger ( get_class ( $this ) );
+    	 
+        //Set parent defaults
+        parent::__construct( array(
+            'singular'  => 'email_log_entry',     //singular name of the listed records
+            'plural'    => 'email_log_entries',    //plural name of the listed records
+            'ajax'      => false        //does this table support ajax?
+        ) );
         
-        <?php add_thickbox(); ?>
+    }
 
-</div>
-<?php
-		}
-	}
-}
 
-if (! class_exists ( 'PostmanEmailLogPurger' )) {
-	class PostmanEmailLogPurger {
-		private $posts;
-		private $logger;
+    /** ************************************************************************
+     * Recommended. This method is called when the parent class can't find a method
+     * specifically build for a given column. Generally, it's recommended to include
+     * one method for each column you want to render, keeping your package class
+     * neat and organized. For example, if the class needs to process a column
+     * named 'title', it would first see if a method named $this->column_title() 
+     * exists - if it does, that method will be used. If it doesn't, this one will
+     * be used. Generally, you should try to use custom column methods as much as 
+     * possible. 
+     * 
+     * Since we have defined a column_title() method later on, this method doesn't
+     * need to concern itself with any column with a name of 'title'. Instead, it
+     * needs to handle everything else.
+     * 
+     * For more detailed insight into how columns are handled, take a look at 
+     * WP_List_Table::single_row_columns()
+     * 
+     * @param array $item A singular item (one full row's worth of data)
+     * @param array $column_name The name/slug of the column to be processed
+     * @return string Text or HTML to be placed inside the column <td>
+     **************************************************************************/
+    function column_default($item, $column_name){
+        switch($column_name){
+            case 'date':
+            case 'status':
+                return $item[$column_name];
+            default:
+                return print_r($item,true); //Show the whole array for troubleshooting purposes
+        }
+    }
+
+
+    /** ************************************************************************
+     * Recommended. This is a custom column method and is responsible for what
+     * is rendered in any column with a name/slug of 'title'. Every time the class
+     * needs to render a column, it first looks for a method named 
+     * column_{$column_title} - if it exists, that method is run. If it doesn't
+     * exist, column_default() is called instead.
+     * 
+     * This example also illustrates how to implement rollover actions. Actions
+     * should be an associative array formatted as 'slug'=>'link html' - and you
+     * will need to generate the URLs yourself. You could even ensure the links
+     * 
+     * 
+     * @see WP_List_Table::::single_row_columns()
+     * @param array $item A singular item (one full row's worth of data)
+     * @return string Text to be placed inside the column <td> (movie title only)
+     **************************************************************************/
+    function column_title($item){
+        
+        //Build row actions
+        $deleteUrl = wp_nonce_url(admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s','delete',$item['ID'])), 'delete_email_log_item_' . $item['ID']);
+		$viewUrl   = admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s&TB_iframe=true&width=700&height=550', 'view', $item['ID']));
+		$transcriptUrl   = admin_url(sprintf('admin-post.php?page=postman_email_log&action=%s&email=%s&TB_iframe=true&width=700&height=550', 'transcript', $item['ID']));
 		
-		/**
-		 *
-		 * @return unknown
-		 */
-		function __construct() {
-			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			$args = array (
-					'posts_per_page' => 1000,
-					'offset' => 0,
-					'category' => '',
-					'category_name' => '',
-					'orderby' => 'date',
-					'order' => 'DESC',
-					'include' => '',
-					'exclude' => '',
-					'meta_key' => '',
-					'meta_value' => '',
-					'post_type' => PostmanEmailLogService::POSTMAN_CUSTOM_POST_TYPE_SLUG,
-					'post_mime_type' => '',
-					'post_parent' => '',
-					'post_status' => 'private',
-					'suppress_filters' => true 
+        $actions = array(
+            'delete'    => sprintf('<a href="%s">%s</a>',$deleteUrl,_x('Delete', 'Delete an item from the email log', 'postman-smtp')),
+            'view'    => sprintf('<a href="%s" class="thickbox">%s</a>',$viewUrl,_x('View','View an item from the email log', 'postman-smtp')),
+            'transcript'    => sprintf('<a href="%s" class="thickbox">%s</a>',$transcriptUrl,_x('Transcript','View the transcript of an item from the email log', 'postman-smtp')),
+        );
+        
+        //Return the title contents
+        return sprintf('%1$s %3$s',
+            /*$1%s*/ $item['title'],
+            /*$2%s*/ $item['ID'],
+            /*$3%s*/ $this->row_actions($actions)
+        );
+    }
+
+
+    /** ************************************************************************
+     * REQUIRED if displaying checkboxes or using bulk actions! The 'cb' column
+     * is given special treatment when columns are processed. It ALWAYS needs to
+     * have it's own method.
+     * 
+     * @see WP_List_Table::::single_row_columns()
+     * @param array $item A singular item (one full row's worth of data)
+     * @return string Text to be placed inside the column <td> (movie title only)
+     **************************************************************************/
+    function column_cb($item){
+        return sprintf(
+            '<input type="checkbox" name="%1$s[]" value="%2$s" />',
+            /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("movie")
+            /*$2%s*/ $item['ID']                //The value of the checkbox should be the record's id
+        );
+    }
+
+
+    /** ************************************************************************
+     * REQUIRED! This method dictates the table's columns and titles. This should
+     * return an array where the key is the column slug (and class) and the value 
+     * is the column's title text. If you need a checkbox for bulk actions, refer
+     * to the $columns array below.
+     * 
+     * The 'cb' column is treated differently than the rest. If including a checkbox
+     * column in your table you must create a column_cb() method. If you don't need
+     * bulk actions or checkboxes, simply leave the 'cb' entry out of your array.
+     * 
+     * @see WP_List_Table::::single_row_columns()
+     * @return array An associative array containing column information: 'slugs'=>'Visible Titles'
+     **************************************************************************/
+    function get_columns(){
+        $columns = array(
+            'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text
+            'title'     => _x ( 'Subject', 'What is the subject of this message?', 'postman-smtp' ),
+            'status'  => _x('Status','Was sending this email successful or not?', 'postman-smtp'),
+            'date'    => _x('Delivery Time','When was this email sent?', 'postman-smtp')
+        );
+        return $columns;
+    }
+
+
+    /** ************************************************************************
+     * Optional. If you want one or more columns to be sortable (ASC/DESC toggle), 
+     * you will need to register it here. This should return an array where the 
+     * key is the column that needs to be sortable, and the value is db column to 
+     * sort by. Often, the key and value will be the same, but this is not always
+     * the case (as the value is a column name from the database, not the list table).
+     * 
+     * This method merely defines which columns should be sortable and makes them
+     * clickable - it does not handle the actual sorting. You still need to detect
+     * the ORDERBY and ORDER querystring variables within prepare_items() and sort
+     * your data accordingly (usually by modifying your query).
+     * 
+     * @return array An associative array containing all the columns that should be sortable: 'slugs'=>array('data_values',bool)
+     **************************************************************************/
+    function get_sortable_columns() {
+    	return array();
+        $sortable_columns = array(
+            'title'     => array('title',false),     //true means it's already sorted
+            'status'  => array('status',false),
+            'date'    => array('date',false)
+        );
+        return $sortable_columns;
+    }
+
+
+    /** ************************************************************************
+     * Optional. If you need to include bulk actions in your list table, this is
+     * the place to define them. Bulk actions are an associative array in the format
+     * 'slug'=>'Visible Title'
+     * 
+     * If this method returns an empty value, no bulk action will be rendered. If
+     * you specify any bulk actions, the bulk actions box will be rendered with
+     * the table automatically on display().
+     * 
+     * Also note that list tables are not automatically wrapped in <form> elements,
+     * so you will need to create those manually in order for bulk actions to function.
+     * 
+     * @return array An associative array containing all the bulk actions: 'slugs'=>'Visible Titles'
+     **************************************************************************/
+    function get_bulk_actions() {
+        $actions = array(
+            'bulk_delete'    => _x('Delete', 'Delete an item from the email log', 'postman-smtp')
+        );
+        return $actions;
+    }
+
+
+    /** ************************************************************************
+     * Optional. You can handle your bulk actions anywhere or anyhow you prefer.
+     * For this example package, we will handle it in the class to keep things
+     * clean and organized.
+     * 
+     * @see $this->prepare_items()
+     **************************************************************************/
+    function process_bulk_action() {
+        
+    }
+
+
+    /** ************************************************************************
+     * REQUIRED! This is where you prepare your data for display. This method will
+     * usually be used to query the database, sort and filter the data, and generally
+     * get it ready to be displayed. At a minimum, we should set $this->items and
+     * $this->set_pagination_args(), although the following properties and methods
+     * are frequently interacted with here...
+     * 
+     * @global WPDB $wpdb
+     * @uses $this->_column_headers
+     * @uses $this->items
+     * @uses $this->get_columns()
+     * @uses $this->get_sortable_columns()
+     * @uses $this->get_pagenum()
+     * @uses $this->set_pagination_args()
+     **************************************************************************/
+    function prepare_items() {
+
+        /**
+         * First, lets decide how many records per page to show
+         */
+        $per_page = 10;
+        
+        
+        /**
+         * REQUIRED. Now we need to define our column headers. This includes a complete
+         * array of columns to be displayed (slugs & titles), a list of columns
+         * to keep hidden, and a list of columns that are sortable. Each of these
+         * can be defined in another method (as we've done here) before being
+         * used to build the value for our _column_headers property.
+         */
+        $columns = $this->get_columns();
+        $hidden = array();
+        $sortable = $this->get_sortable_columns();
+        
+        
+        /**
+         * REQUIRED. Finally, we build an array to be used by the class for column 
+         * headers. The $this->_column_headers property takes an array which contains
+         * 3 other arrays. One for all columns, one for hidden columns, and one
+         * for sortable columns.
+         */
+        $this->_column_headers = array($columns, $hidden, $sortable);
+        
+        
+        /**
+         * Optional. You can handle your bulk actions however you see fit. In this
+         * case, we'll handle them within our package just to keep things clean.
+         */
+        $this->process_bulk_action();
+        
+        
+        /**
+         * Instead of querying a database, we're going to fetch the example data
+         * property we created for use in this plugin. This makes this example 
+         * package slightly different than one you might build on your own. In 
+         * this example, we'll be using array manipulation to sort and paginate 
+         * our data. In a real-world implementation, you will probably want to 
+         * use sort and pagination data to build a custom query instead, as you'll
+         * be able to use your precisely-queried data immediately.
+         */
+         $data = $this->example_data;
+         $data = array();
+         $args = array(
+        		'posts_per_page'   => 1000,
+        		'offset'           => 0,
+        		'category'         => '',
+        		'category_name'    => '',
+        		'orderby'          => 'date',
+        		'order'            => 'DESC',
+        		'include'          => '',
+        		'exclude'          => '',
+        		'meta_key'         => '',
+        		'meta_value'       => '',
+        		'post_type'        => PostmanEmailLogService::POSTMAN_CUSTOM_POST_TYPE_SLUG,
+        		'post_mime_type'   => '',
+        		'post_parent'      => '',
+        		'post_status'      => 'private',
+        		'suppress_filters' => true
+        );
+        $posts = get_posts( $args );
+		foreach ( $posts as $post ) {
+			$this->logger->trace(sprintf('postid=%s post-date=%s post-time=%s post-human-time=%s', $post->ID , $post->post_date, strtotime($post->post_date), human_time_diff( strtotime($post->post_date))));
+			$flattenedPost = array (
+					'title' => $post->post_title,
+					'status' => ($post->post_excerpt != null ? $post->post_excerpt : __ ( 'Sent' , 'postman-smtp')),
+					/* Translators where %s indicates the relative time from now */
+					'date' => sprintf(_x('%s ago','A relative time as in "five days ago"', 'postman-smtp'), human_time_diff( strtotime($post->post_date_gmt))),
+					'ID' => $post->ID 
 			);
-			$this->posts = get_posts ( $args );
-		}
-		
-		/**
-		 *
-		 * @param array $posts        	
-		 * @param unknown $postid        	
-		 */
-		function verifyLogItemExistsAndRemove($postid) {
-			$force_delete = true;
-			foreach ( $this->posts as $post ) {
-				if ($post->ID == $postid) {
-					$this->logger->debug ( 'deleting log item ' . $postid );
-					wp_delete_post ( $postid, $force_delete );
-					return;
-				}
-			}
-			$this->logger->warn ( 'could not find Postman Log Item #' . $postid );
-		}
-		function removeAll() {
-			$this->logger->debug ( 'deleting %s log items ', sizeof ( $this->posts ) );
-			$force_delete = true;
-			foreach ( $this->posts as $post ) {
-				wp_delete_post ( $post->ID, $force_delete );
-			}
-		}
-		
-		/**
-		 *
-		 * @param unknown $size        	
-		 */
-		function truncateLogItems($size) {
-			$index = count ( $this->posts );
-			$force_delete = true;
-			while ( $index > $size ) {
-				$postid = $this->posts [-- $index]->ID;
-				$this->logger->debug ( 'deleting log item ' . $postid );
-				wp_delete_post ( $postid, $force_delete );
-			}
-		}
-	}
+        	array_push($data, $flattenedPost);
+        }
+        
+        /**
+         * This checks for sorting input and sorts the data in our array accordingly.
+         * 
+         * In a real-world situation involving a database, you would probably want 
+         * to handle sorting by passing the 'orderby' and 'order' values directly 
+         * to a custom query. The returned data will be pre-sorted, and this array
+         * sorting technique would be unnecessary.
+         */
+        function usort_reorder($a,$b){
+            $orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : 'title'; //If no sort, default to title
+            $order = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'asc'; //If no order, default to asc
+            $result = strcmp($a[$orderby], $b[$orderby]); //Determine sort order
+            return ($order==='asc') ? $result : -$result; //Send final sort direction to usort
+        }
+        //usort($data, 'usort_reorder');
+        
+        
+        /***********************************************************************
+         * ---------------------------------------------------------------------
+         * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+         * 
+         * In a real-world situation, this is where you would place your query.
+         *
+         * For information on making queries in WordPress, see this Codex entry:
+         * http://codex.wordpress.org/Class_Reference/wpdb
+         * 
+         * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         * ---------------------------------------------------------------------
+         **********************************************************************/
+        
+                
+        /**
+         * REQUIRED for pagination. Let's figure out what page the user is currently 
+         * looking at. We'll need this later, so you should always include it in 
+         * your own package classes.
+         */
+        $current_page = $this->get_pagenum();
+        
+        /**
+         * REQUIRED for pagination. Let's check how many items are in our data array. 
+         * In real-world use, this would be the total number of items in your database, 
+         * without filtering. We'll need this later, so you should always include it 
+         * in your own package classes.
+         */
+        $total_items = count($data);
+        
+        
+        /**
+         * The WP_List_Table class does not handle pagination for us, so we need
+         * to ensure that the data is trimmed to only the current page. We can use
+         * array_slice() to 
+         */
+        $data = array_slice($data,(($current_page-1)*$per_page),$per_page);
+        
+        
+        
+        /**
+         * REQUIRED. Now we can add our *sorted* data to the items property, where 
+         * it can be used by the rest of the class.
+         */
+        $this->items = $data;
+        
+        
+        /**
+         * REQUIRED. We also have to register our pagination options & calculations.
+         */
+        $this->set_pagination_args( array(
+            'total_items' => $total_items,                  //WE have to calculate the total number of items
+            'per_page'    => $per_page,                     //WE have to determine how many items to show on a page
+            'total_pages' => ceil($total_items/$per_page)   //WE have to calculate the total number of pages
+        ) );
+    }
+
+
 }
+

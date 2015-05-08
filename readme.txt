@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, smtps, email, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -252,9 +252,14 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.2 =
+= 1.6.4 =
 * (TBD): Add option for MailPoet
 * (TBD): Add option for MyMail
+
+= 1.6.3 - 2015-05-08 =
+* The wizard gets confused if the user specified auth type is undefined for the newly chosen socket. for example, a gmail address, with a mailtrap.io server, toggling between the gmailapi socket and the mailtrap socket. Fixed.
+* Changed the Email Log to use post_date_gmt
+* Show a warning on the main setting screen if the Delivery mode is not set to Production
 
 = 1.6.2 - 2015-05-06 =
 * 4,000 installations!

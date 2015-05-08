@@ -235,9 +235,9 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 		 *
 		 * @param unknown $hostData        	
 		 */
-		public function getConfigurationBid($hostData, $originalSmtpServer) {
+		public function getConfigurationBid($hostData, $userAuthOverride, $originalSmtpServer) {
 			$port = $hostData ['port'];
-			$hostname = $hostData ['host'];
+			$hostname = $hostData ['hostname'];
 			$oauthPotential = ($hostname == self::HOST);
 			if ($oauthPotential) {
 				if ($port == self::PORT) {

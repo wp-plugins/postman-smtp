@@ -222,7 +222,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		 * @see PostmanTransport::getConfigurationRecommendation()
 		 */
 		public function getConfigurationRecommendation($hostData) {
-			return $this->getConfigurationBid ( $hostData, '' );
+			return $this->getConfigurationBid ( $hostData, '', '' );
 		}
 		/**
 		 * First choose the auth method, in this order: XOAUTH (4000), CRAM-MD5 (3000), PLAIN (2000), LOGIN (1000)
@@ -232,9 +232,9 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		 *
 		 * @param unknown $hostData        	
 		 */
-		public function getConfigurationBid($hostData, $originalSmtpServer) {
+		public function getConfigurationBid($hostData, $userAuthOverride, $originalSmtpServer) {
 			$port = $hostData ['port'];
-			$hostname = $hostData ['host'];
+			$hostname = $hostData ['hostname'];
 			// because some servers, like smtp.broadband.rogers.com, report XOAUTH2 but have no OAuth2 front-end
 			$supportedOAuth2Provider = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
 			$score = 0;
@@ -267,48 +267,50 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				$score += 26000;
 				$secure = false;
 			}
-			if (PostmanUtils::parseBoolean ( $hostData ['auth_xoauth'] ) && $supportedOAuth2Provider) {
-				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
-				$recommendation ['display_auth'] = 'oauth2';
-				$score += 500;
-				if (! $secure) {
-					$this->logger->debug ( 'Losing points for sending credentials in the clear' );
-					$score -= 10000;
-				}
-			} elseif (PostmanUtils::parseBoolean ( $hostData ['auth_crammd5'] )) {
-				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5;
-				$recommendation ['display_auth'] = 'password';
-				$score += 400;
-				if (! $secure) {
-					$this->logger->debug ( 'Losing points for sending credentials in the clear' );
-					$score -= 10000;
-				}
-			} elseif (PostmanUtils::parseBoolean ( $hostData ['auth_plain'] )) {
-				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
-				$recommendation ['display_auth'] = 'password';
-				$score += 300;
-				if (! $secure) {
-					$this->logger->debug ( 'Losing points for sending credentials in the clear' );
-					$score -= 10000;
-				}
-			} elseif (PostmanUtils::parseBoolean ( $hostData ['auth_login'] )) {
-				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
-				$recommendation ['display_auth'] = 'password';
-				$score += 200;
-				if (! $secure) {
-					$this->logger->debug ( 'Losing points for sending credentials in the clear' );
-					$score -= 10000;
-				}
-			} elseif (PostmanUtils::parseBoolean ( $hostData ['auth_none'] )) {
-				$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_NONE;
-				$recommendation ['display_auth'] = 'none';
-				$score += 100;
-			}
 			
-			// if there was a way to send mail!
+			// if there is a way to send mail....
 			if ($score > 10) {
 				
-				// tiny weighting to prejudice the port selection
+				// determine the authentication type
+				if (PostmanUtils::parseBoolean ( $hostData ['auth_xoauth'] ) && $supportedOAuth2Provider && (empty ( $userAuthOverride ) || $userAuthOverride == 'oauth2')) {
+					$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+					$recommendation ['display_auth'] = 'oauth2';
+					$score += 500;
+					if (! $secure) {
+						$this->logger->debug ( 'Losing points for sending credentials in the clear' );
+						$score -= 10000;
+					}
+				} elseif (PostmanUtils::parseBoolean ( $hostData ['auth_crammd5'] ) && (empty ( $userAuthOverride ) || $userAuthOverride == 'password')) {
+					$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_CRAMMD5;
+					$recommendation ['display_auth'] = 'password';
+					$score += 400;
+					if (! $secure) {
+						$this->logger->debug ( 'Losing points for sending credentials in the clear' );
+						$score -= 10000;
+					}
+				} elseif (PostmanUtils::parseBoolean ( $hostData ['auth_plain'] ) && (empty ( $userAuthOverride ) || $userAuthOverride == 'password')) {
+					$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_PLAIN;
+					$recommendation ['display_auth'] = 'password';
+					$score += 300;
+					if (! $secure) {
+						$this->logger->debug ( 'Losing points for sending credentials in the clear' );
+						$score -= 10000;
+					}
+				} elseif (PostmanUtils::parseBoolean ( $hostData ['auth_login'] ) && (empty ( $userAuthOverride ) || $userAuthOverride == 'password')) {
+					$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_LOGIN;
+					$recommendation ['display_auth'] = 'password';
+					$score += 200;
+					if (! $secure) {
+						$this->logger->debug ( 'Losing points for sending credentials in the clear' );
+						$score -= 10000;
+					}
+				} else if (empty ( $userAuthOverride ) || $userAuthOverride == 'none') {
+					$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_NONE;
+					$recommendation ['display_auth'] = 'none';
+					$score += 100;
+				}
+				
+				// tiny weighting to prejudice the port selection, all things being equal
 				if ($port == 587) {
 					$score += 4;
 				} elseif ($port == 25) {
@@ -327,19 +329,21 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 					$score += 1;
 				}
 				
-				// fill-in the rest of the recommendation
-				$recommendation ['transport'] = PostmanSmtpTransport::SLUG;
-				$recommendation ['priority'] = $score;
-				$recommendation ['port'] = $port;
-				$recommendation ['hostname'] = $hostname;
-				$recommendation ['transport'] = self::SLUG;
-				
 				// create the recommendation message for the user
+				// this can only be set if there is a valid ['auth'] and ['enc']
 				$transportDescription = $this->getTransportDescription ( $recommendation ['enc'] );
 				$authDesc = $this->getAuthenticationDescription ( $recommendation ['auth'] );
 				/* translators: where %1$s is a description of the transport (eg. SMTPS-SSL), %2$s is a description of the authentication (eg. Password-CRAMMD5), %3$d is the TCP port (eg. 465), %4$d is the hostname */
 				$recommendation ['message'] = sprintf ( __ ( 'Your recommended settings are %1$s with %2$s authentication to host %4$s on port %3$d.', 'postman-smtp' ), $transportDescription, $authDesc, $port, $hostname );
 			}
+			
+			// fill-in the rest of the recommendation
+			$recommendation ['transport'] = PostmanSmtpTransport::SLUG;
+			$recommendation ['priority'] = $score;
+			$recommendation ['port'] = $port;
+			$recommendation ['hostname'] = $hostname;
+			$recommendation ['transport'] = self::SLUG;
+			
 			return $recommendation;
 		}
 	}
