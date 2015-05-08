@@ -49,7 +49,7 @@ function checkEmail(goDaddyHostDetected, email) {
 	jQuery.post(ajaxurl, data, function(response) {
 		checkedEmail = true;
 		smtpDiscovery = response.data;
-		if (response.data.hostname != '') {
+		if (response.data.hostname != null && response.data.hostname) {
 			jQuery(postman_hostname_element_name).val(response.data.hostname);
 		}
 		enableSmtpHostnameInput(goDaddyHostDetected);

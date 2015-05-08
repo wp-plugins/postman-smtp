@@ -252,10 +252,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.4 =
+= 1.6.4 - 2015-05-08 =
 * SMTP transport requires a Sender Email Address be set
-* (TBD): Add option for MailPoet
-* (TBD): Add option for MyMail
+* Wizard will not clear the hostname if it comes back null
 
 = 1.6.3 - 2015-05-08 =
 * The wizard gets confused if the user specified auth type is undefined for the newly chosen socket. for example, a gmail address, with a mailtrap.io server, toggling between the gmailapi socket and the mailtrap socket. Fixed.
