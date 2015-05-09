@@ -40,14 +40,14 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 = Requirements =
 * WordPress 3.9 and PHP 5.2 with SPL and iconv
 * Connectivity to, and authentication credentials with, any email service provider
-* ¹ OAuth 2.0 features requires a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
+* ¹ OAuth 2.0 features require a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
 * ² Custom email domains require a valid SPF record, and potentially a DKIM record, for Blackhole-free and Spam-free delivery
 
 
 
 == Installation ==
 
-> To use email belonging to a specific provider, you must use their SMTP server. If Postman is unable to connect to the SMTP server you want, you may have to ask your host to open the ports, or create a new email account managed by your host, or switch hosts!
+> To use email reliably, you must use the SMTP server assigned to that email. If Postman is unable to connect to the right SMTP server, you may have to ask your host to open the ports, or create a new email account managed by your host, or switch hosts!
 > 
 > The Postman Connectivity Test utility will tell you which ports are open and which are closed, and what actions you can take.
 
@@ -56,11 +56,11 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 1. In the WordPress 'Settings' menu select 'Postman SMTP'.
 1. Choose 'Start the Wizard' and follow the instructions.
 
-= To manually configure Password Authentication (Advanced users only) =
+= To manually configure Password Authentication (Intermediate users only) =
 
 1. Choose configure manually
 1. If the 'Transport' menu is available, choose 'SMTP'
-1. In 'Authentication' choose 'Login', unless your provider has told you different.
+1. In 'Authentication' choose 'Login', unless your email service provider has told you different.
 1. In 'Security' choose the appropriate type (a good guess is SMTPS for port 465, StartTLS otherwise)
 1. Enter the SMTP Server's hostname and port.
 1. Enter the encryption if your port is 465, or 'TLS' if your port is 587.
@@ -77,7 +77,7 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 1. In 'Authentication' choose 'OAuth 2.0'
 1. In 'Security' choose the appropriate type (a good guess is SMTPS for port 465, StartTLS otherwise)
 1. Enter the SMTP Server's hostname and port.
-1. Postman will tell you how to open the Client ID maintenance webpage of your host. Create a Client ID for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
+1. Postman will give you a link to the Client ID maintenance page of your email service provider. Create a Client ID for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
 1. Copy your generated Client ID and Client secret into the plugin's Settings page.
 1. Choose the 'Message' tab.
 1. In 'Sender Email Address' enter your account's email address. This MUST be the same address you login to webmail with.
@@ -129,8 +129,8 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 = How do I get a Google Client ID? (For Gmail users only!) =
 1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose 'Create Project', or use an existing project if you have one.
 1. If you have previously created a project, select it from the Projects page and you will arrive at the Project Dashboard. If you have just created a project, you are brought to the Project Dashboard automatically.
-1. If you have not filled out the consent screen for this project, do it now. In the left-hand hand navigation menu, select 'Consent Screen' from under 'APIs & auth'. Into 'email address' choose the correct Gmail address and in 'product name' put 'Postman SMTP'. Choose 'Save'.
 1. Select 'API's' from under 'APIs & auth'. Find 'Gmail API'. Select 'Enable API'.
+1. Select 'Consent Screen' from under 'APIs & auth'. Into 'email address' choose the correct Gmail address and in 'product name' put 'Postman SMTP'. Choose 'Save'.
 1. Select 'Credentials' from under 'APIs & auth'. Choose 'Create a new Client ID'.
 1. For the 'Application Type' use 'Web application'.
 1. In 'Authorized Javascript origins' enter the 'Javascript Origins' given by Postman (either from the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or from the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
