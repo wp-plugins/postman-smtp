@@ -48,7 +48,8 @@ function portTest(tdValue, port, button) {
 				}
 				portTest2(hostname, port, button, response.success);
 			}).fail(
-			function() {
+			function(response) {
+				ajaxFailed(response);
 				totalPortsTested += 1;
 				testEl.html('<span style="color:red">'
 						+ postman_port_test_closed + '</span> ('
@@ -95,15 +96,15 @@ function portTest2(hostname, port, button, open) {
 								inspectResponse(response.data, port);
 								var message = sprintf(postman_smtp_success,
 										port, hostname);
-								if(response.data.mitm) {
+								if (response.data.mitm) {
 									message += " "
-										+ sprintf(
-												postman_smtp_mitm,
-												response.data.reported_hostname_domain_only,
-												response.data.hostname_domain_only);
+											+ sprintf(
+													postman_smtp_mitm,
+													response.data.reported_hostname_domain_only,
+													response.data.hostname_domain_only);
 								}
-								addConclusion(message,
-										true, response.data.secure);
+								addConclusion(message, true,
+										response.data.secure);
 							}
 						} else {
 							if (response.data.try_smtps) {
@@ -120,7 +121,8 @@ function portTest2(hostname, port, button, open) {
 						}
 						enableButtonCheck(button);
 					}).fail(
-					function() {
+					function(response) {
+						ajaxFailed(response);
 						totalPortsTested += 1;
 						testEl.html('<span style="color:red">' + postman_no
 								+ '</span>');
@@ -153,17 +155,16 @@ function portTest3(hostname, port, button, open) {
 										+ response.data.protocol + '</span>');
 							}
 							inspectResponse(response.data, port);
-							var message = sprintf(postman_smtp_success,
-									port, hostname);
-							if(response.data.mitm) {
+							var message = sprintf(postman_smtp_success, port,
+									hostname);
+							if (response.data.mitm) {
 								message += " "
-									+ sprintf(
-											postman_smtp_mitm,
-											response.data.reported_hostname_domain_only,
-											response.data.hostname_domain_only);
+										+ sprintf(
+												postman_smtp_mitm,
+												response.data.reported_hostname_domain_only,
+												response.data.hostname_domain_only);
 							}
-							addConclusion(message,
-									true, response.data.secure);
+							addConclusion(message, true, response.data.secure);
 						} else {
 							testEl.html('<span style="color:red">' + postman_no
 									+ '</span>');
@@ -180,7 +181,8 @@ function portTest3(hostname, port, button, open) {
 						totalPortsTested += 1;
 						enableButtonCheck(button);
 					}).fail(
-					function() {
+					function(response) {
+						ajaxFailed(response);
 						totalPortsTested += 1;
 						testEl.html('<span style="color:red">' + postman_no
 								+ '</span>');

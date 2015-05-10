@@ -7,14 +7,14 @@ jQuery(document).ready(function() {
 				jQuery.post(ajaxurl, {
 					pointer : pointer.pointer_id,
 					action : 'dismiss-wp-pointer'
+				}).fail(function(response) {
+					//ajaxFailed(response);
 				});
 			}
 		});
 
 		if (typeof (jQuery().pointer) != 'undefined') {
 			jQuery(pointer.target).pointer(options).pointer('open');
-		} else {
-			alert('jQuery().pointer not ready!');
 		}
 	}
 });

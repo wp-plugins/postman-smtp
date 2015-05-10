@@ -32,13 +32,6 @@ function readonly(identifier) {
 	var el = jQuery(identifier);
 	el.prop("readonly", true);
 }
-function getRedirectUrl(data) {
-	jQuery.post(ajaxurl, data, function(response) {
-		if (response.success) {
-			handleConfigurationResponse(response);
-		}
-	});
-}
 function hideLoaderIcon() {
 	hide('.ajax-loader');
 }
@@ -152,7 +145,15 @@ function enablePasswordDisplayOnEntry() {
 }
 
 jQuery('body').ajaxStart(function() {
-    $(this).css({'cursor' : 'wait'});
+	jQuery(this).css({
+		'cursor' : 'wait'
+	});
 }).ajaxStop(function() {
-    $(this).css({'cursor' : 'default'});
+	jQuery(this).css({
+		'cursor' : 'default'
+	});
 });
+
+function ajaxFailed(response) {
+	alert(postman_ajax_fail + " " + JSON.stringify(response, null, 4));
+}

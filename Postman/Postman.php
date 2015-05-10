@@ -86,7 +86,7 @@ if (! class_exists ( 'Postman' )) {
 			}
 			
 			// register activation handler on the activation event
-			new PostmanActivationHandler ( $rootPluginFilenameAndPath, $this->pluginData['Version'] );
+			new PostmanActivationHandler ( $rootPluginFilenameAndPath, $this->pluginData ['Version'] );
 			
 			// register the shortcode handler on the add_shortcode event
 			add_shortcode ( 'postman-version', array (
@@ -144,7 +144,7 @@ if (! class_exists ( 'Postman' )) {
 			$message = sprintf ( __ ( 'Postman is <em>not</em> handling email delivery.', 'postman-smtp' ) );
 			$message .= ' ';
 			/* translators: where %s is the URL to the Postman Setup page */
-			$message .= sprintf ( __ ( '<a href="%s">Configure</a> the plugin.', 'postman-smtp' ), PostmanUtils::getSettingsPageUrl() );
+			$message .= sprintf ( __ ( '<a href="%s">Configure</a> the plugin.', 'postman-smtp' ), PostmanUtils::getSettingsPageUrl () );
 			$this->messageHandler->printMessage ( $message, PostmanMessageHandler::WARNING_CLASS );
 		}
 		

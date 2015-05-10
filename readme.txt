@@ -255,7 +255,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.6.4 - 2015-05-08 =
 * SMTP transport requires a Sender Email Address be set
 * Wizard will not clear the hostname if it comes back null
-* If the host does not support "humanTime", the EMail Log will fall back to an ISO date
+* If the host does not support "humanTime", the Email Log will fall back to an ISO date
 * Added a new advanced option: Transcript size to adjust how much of the transcript is saved in the log
 
 = 1.6.3 - 2015-05-08 =

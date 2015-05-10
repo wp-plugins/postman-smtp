@@ -37,6 +37,8 @@ function checkGoDaddyAndCheckEmail(email) {
 	checkedEmail = false;
 	jQuery.post(ajaxurl, data, function(response) {
 		checkEmail(response.success, email);
+	}).fail(function(response) {
+		ajaxFailed(response);
 	});
 }
 
@@ -53,6 +55,8 @@ function checkEmail(goDaddyHostDetected, email) {
 			jQuery(postman_hostname_element_name).val(response.data.hostname);
 		}
 		enableSmtpHostnameInput(goDaddyHostDetected);
+	}).fail(function(response) {
+		ajaxFailed(response);
 	});
 }
 
@@ -61,7 +65,8 @@ function enableSmtpHostnameInput(goDaddyHostDetected) {
 		// this is a godaddy server and we are using a godaddy smtp server
 		// (gmail excepted)
 		if (smtpDiscovery.is_go_daddy) {
-			// we detected GoDaddy, and the user has entered a GoDaddy hosted email
+			// we detected GoDaddy, and the user has entered a GoDaddy hosted
+			// email
 		} else if (smtpDiscovery.is_well_known) {
 			// this is a godaddy server but the SMTP must be the email
 			// service
@@ -270,6 +275,8 @@ function getHostsToCheck(hostname) {
 	};
 	jQuery.post(ajaxurl, data, function(response) {
 		handleHostsToCheckResponse(response);
+	}).fail(function(response) {
+		ajaxFailed(response);
 	});
 }
 
@@ -305,7 +312,8 @@ function handleHostsToCheckResponse(response) {
 function postThePortTest(hostname, port, data) {
 	jQuery.post(ajaxurl, data, function(response) {
 		handlePortTestResponse(hostname, port, data, response);
-	}).fail(function() {
+	}).fail(function(response) {
+		ajaxFailed(response);
 		portsChecked++;
 		afterPortsChecked();
 	});
@@ -405,6 +413,8 @@ function postTheConfigurationRequest(data) {
 		if (!response.data.configuration.user_override) {
 			jQuery('#wizard_recommendation').append($message);
 		}
+	}).fail(function(response) {
+		ajaxFailed(response);
 	});
 }
 function handleConfigurationResponse(response) {
@@ -439,9 +449,14 @@ function handleConfigurationResponse(response) {
 				response.override_menu[i].secure);
 		// populate user Auth Override menu
 		if (response.override_menu[i].selected) {
-			if(response.override_menu[i].mitm) {
+			if (response.override_menu[i].mitm) {
 				show('#smtp_mitm');
-				jQuery('#smtp_mitm').html(sprintf(postman_smtp_mitm,response.override_menu[i].reported_hostname_domain_only,response.override_menu[i].hostname_domain_only));
+				jQuery('#smtp_mitm')
+						.html(
+								sprintf(
+										postman_smtp_mitm,
+										response.override_menu[i].reported_hostname_domain_only,
+										response.override_menu[i].hostname_domain_only));
 			} else {
 				hide('#smtp_mitm');
 			}
@@ -453,7 +468,9 @@ function handleConfigurationResponse(response) {
 						response.override_menu[i].auth_items[j].selected,
 						response.override_menu[i].auth_items[j].value,
 						response.override_menu[i].auth_items[j].name, false);
-				if(response.override_menu[i].auth_items[j].selected && !response.override_menu[i].secure && response.override_menu[i].auth_items[j].value != 'none') {
+				if (response.override_menu[i].auth_items[j].selected
+						&& !response.override_menu[i].secure
+						&& response.override_menu[i].auth_items[j].value != 'none') {
 					show('#smtp_not_secure');
 				}
 			}
@@ -530,6 +547,8 @@ function getConfiguration() {
 						response.basic_auth_password);
 				switchBetweenPasswordAndOAuth();
 			}
+		}).fail(function(response) {
+			ajaxFailed(response);
 		});
 	} else {
 		jQuery(postman_input_sender_email).val('');

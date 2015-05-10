@@ -166,8 +166,8 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 			$hosts = array ();
 			foreach ( $this->getTransports () as $transport ) {
 				$socketsToTest = $transport->getSocketsForSetupWizardToProbe ( $hostname, $isGmail );
-				$this->logger->debug ( 'sockets to test:' );
-				$this->logger->debug ( $socketsToTest );
+				$this->logger->trace ( 'sockets to test:' );
+				$this->logger->trace ( $socketsToTest );
 				$hosts = array_merge ( $hosts, $socketsToTest );
 			}
 			return $hosts;
@@ -183,7 +183,6 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 		 * @param unknown $hostData        	
 		 */
 		public function getRecommendation($hostData, $userAuthOverride, $originalSmtpServer) {
-			assert ( ! empty ( $originalSmtpServer ) );
 			
 			//
 			$priority = - 1;
@@ -191,13 +190,11 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 			$logger = new PostmanLogger ( get_class ( $this ) );
 			$scrubbedUserAuthOverride = $this->scrubUserOverride ( $hostData, $userAuthOverride );
 			foreach ( $this->getTransports () as $transport ) {
-				$logger->debug ( sprintf ( 'Asking transport %s to bid on: %s:%s', $transport->getName (), $hostData ['hostname'], $hostData ['port'] ) );
 				$recommendation = $transport->getConfigurationBid ( $hostData, $scrubbedUserAuthOverride, $originalSmtpServer );
-				if ($recommendation) {
-					if ($recommendation ['priority'] > $priority) {
-						$priority = $recommendation ['priority'];
-						$winningRecommendation = $recommendation;
-					}
+				$logger->debug ( sprintf ( 'Transport %s bid %s', $transport->getName (), $recommendation ['priority'] ) );
+				if ($recommendation ['priority'] > $priority) {
+					$priority = $recommendation ['priority'];
+					$winningRecommendation = $recommendation;
 				}
 			}
 			return $winningRecommendation;
@@ -213,7 +210,7 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 					$userAuthOverride = null;
 				}
 			}
-			if (! PostmanUtils::parseBoolean ( $hostData ['auth_crammd5'] ) && !PostmanUtils::parseBoolean ( $hostData ['auth_plain'] ) && !PostmanUtils::parseBoolean ( $hostData ['auth_login'] )) {
+			if (! PostmanUtils::parseBoolean ( $hostData ['auth_crammd5'] ) && ! PostmanUtils::parseBoolean ( $hostData ['auth_plain'] ) && ! PostmanUtils::parseBoolean ( $hostData ['auth_login'] )) {
 				if ($userAuthOverride == 'password') {
 					$userAuthOverride = null;
 				}

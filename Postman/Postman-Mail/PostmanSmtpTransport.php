@@ -246,7 +246,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				$score -= 10000;
 				$recommendation ['mitm'] = true;
 			}
-			if ($hostname != $originalSmtpServer) {
+			if (! empty ( $originalSmtpServer ) && $hostname != $originalSmtpServer) {
 				$this->logger->debug ( 'Losing points for Not The Original SMTP server' );
 				$score -= 10000;
 			}

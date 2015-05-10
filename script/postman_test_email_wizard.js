@@ -129,8 +129,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 				})
 				.fail(
 						function(response) {
-							alert("The server returned an unexpected and invalid result: "
-									+ JSON.stringify(response, null, 4));
+							ajaxFailed(response);
 							jQuery('#postman_test_message_status').html(
 									postman_email_test.failed);
 							jQuery('#postman_test_message_status').css('color',

@@ -219,14 +219,14 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 			}
 			return $hosts;
 		}
-
+		
 		/**
-		 * @deprecated
-		 * (non-PHPdoc)
+		 *
+		 * @deprecated (non-PHPdoc)
 		 * @see PostmanTransport::getConfigurationRecommendation()
 		 */
 		public function getConfigurationRecommendation($hostData) {
-			return $this->getConfigurationBid($hostData, '');
+			return $this->getConfigurationBid ( $hostData, '' );
 		}
 		/**
 		 * Postman Gmail API supports delivering mail with these parameters:
@@ -239,21 +239,22 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 			$port = $hostData ['port'];
 			$hostname = $hostData ['hostname'];
 			$oauthPotential = ($hostname == self::HOST);
+			$recommendation = array ();
+			$recommendation ['priority'] = 0;
+			$recommendation ['transport'] = self::SLUG;
+			$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
+			$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
+			$recommendation ['port'] = null;
+			$recommendation ['hostname'] = null;
+			$recommendation ['display_auth'] = 'oauth2';
 			if ($oauthPotential) {
 				if ($port == self::PORT) {
-					$recommendation ['success'] = true;
 					/* translators: where %d is the port number */
 					$recommendation ['message'] = sprintf ( __ ( 'Postman recommends Gmail API configuration on port %d' ), self::PORT );
-					$recommendation ['transport'] = self::SLUG;
 					$recommendation ['priority'] = 27000;
-					$recommendation ['enc'] = PostmanOptions::ENCRYPTION_TYPE_NONE;
-					$recommendation ['auth'] = PostmanOptions::AUTHENTICATION_TYPE_OAUTH2;
-					$recommendation ['port'] = null;
-					$recommendation ['hostname'] = null;
-					$recommendation ['display_auth'] = 'oauth2';
-					return $recommendation;
 				}
 			}
+			return $recommendation;
 		}
 	}
 }

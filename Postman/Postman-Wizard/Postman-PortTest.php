@@ -207,11 +207,10 @@ class PostmanPortTest {
 					if ($starttlsSuccess) {
 						$this->startTls = true;
 						$this->secure = true;
-						$this->debug ( 'starttls started' );
 						$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
 						$done = $this->readSmtpResponse ( $stream );
 					} else {
-						$this->debug ( 'starttls failed' );
+						$this->error ( 'starttls failed' );
 					}
 				}
 				fclose ( $stream );
@@ -261,6 +260,7 @@ class PostmanPortTest {
 				$result = 'auth';
 			} elseif (preg_match ( '/STARTTLS/', $line )) {
 				$result = 'starttls';
+					$this->debug ( 'starttls' );
 			} elseif (preg_match ( '/^220.(.*?)\\s/', $line, $matches )) {
 				if (empty ( $result ))
 					$result = $matches [1];
