@@ -427,9 +427,9 @@ if (! class_exists ( 'PostmanViewController' )) {
 			/* translators: where %d is a port number and %s is a hostname */
 			wp_localize_script ( 'postman_port_test_script', 'postman_smtp_success', __ ( 'Port %d can be used for SMTP to %s.', 'postman-smtp' ) );
 			/* translators: where %s is the name of the SMTP server */
-			wp_localize_script ( 'postman_port_test_script', 'postman_smtp_mitm', __ ( 'Warning: connected to %1$s instead of %2$s. This may be a problem.', 'postman-smtp' ) );
+			wp_localize_script ( 'postman_port_test_script', 'postman_smtp_mitm', __ ( 'Warning: connected to %1$s instead of %2$s.', 'postman-smtp' ) );
 			/* translators: where %s is the name of the SMTP server */
-			wp_localize_script ( 'postman_wizard_script', 'postman_smtp_mitm', __ ( 'Warning: connected to %1$s instead of %2$s. This may be a problem.', 'postman-smtp' ) );
+			wp_localize_script ( 'postman_wizard_script', 'postman_smtp_mitm', __ ( 'Warning: connected to %1$s instead of %2$s.', 'postman-smtp' ) );
 			/* translators: where %d is a port number and %s is the URL for the Postman Gmail Extension */
 			wp_localize_script ( 'postman_port_test_script', 'postman_https_success', sprintf ( __ ( 'Port %d can be used to send <b>Gmail</b> with the Gmail API.', 'postman-smtp' ), 443 ) );
 			/* translators: where %d is a port number */
