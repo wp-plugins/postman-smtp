@@ -265,7 +265,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			} catch ( Exception $e ) {
 				$logger->error ( 'Error: ' . get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . $e->getMessage () );
 				/* translators: %s is the error message */
-				$this->messageHandler->addError ( sprintf ( __ ( 'Error authenticating with this Client ID - please create a new one. [%s]', 'postman-smtp' ), '<em>' . $e->getMessage () . '</em>' ) );
+				$this->messageHandler->addError ( sprintf ( __ ( 'Error authenticating with this Client ID. [%s]', 'postman-smtp' ), '<em>' . $e->getMessage () . '</em>' ) );
 			}
 			// redirect home
 			PostmanUtils::redirect ( PostmanUtils::POSTMAN_HOME_PAGE_RELATIVE_URL );
