@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, smtps, email, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.4
+Stable tag: 1.6.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -251,6 +251,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 
 == Changelog ==
+
+= 1.6.5 - 2015-05-10 =
+* [[Ticket](https://wordpress.org/support/topic/problem-using-wizard?replies=4)] Fixed a Javascript bug
+* Added an Ajax failure handler to every Ajax post
 
 = 1.6.4 - 2015-05-08 =
 * SMTP transport requires a Sender Email Address be set
