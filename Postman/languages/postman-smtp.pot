@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Postman SMTP package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Postman SMTP 1.6.4\n"
+"Project-Id-Version: Postman SMTP 1.6.5a\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-05-10 15:46:24+00:00\n"
+"POT-Creation-Date: 2015-05-11 02:05:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,7 +23,7 @@ msgid ""
 "</b>"
 msgstr ""
 
-#. #-#-#-#-#  plugin.pot (Postman SMTP 1.6.4)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Postman SMTP 1.6.5a)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:52
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:58
@@ -367,8 +367,7 @@ msgstr ""
 
 #. translators: %s is the error message
 #: Postman/PostmanAdminController.php:268
-msgid ""
-"Error authenticating with this Client ID - please create a new one. [%s]"
+msgid "Error authenticating with this Client ID. [%s]"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:300

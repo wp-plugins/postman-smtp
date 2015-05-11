@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-05-10 15:46:24+00:00\n"
-"PO-Revision-Date: 2015-05-10 11:47-0500\n"
+"POT-Creation-Date: 2015-05-11 02:05:58+00:00\n"
+"PO-Revision-Date: 2015-05-10 22:07-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -341,8 +341,8 @@ msgstr "Le code de subvention de Google n'avait pas l'état d'accompagnement et 
 
 #. translators: %s is the error message
 #: Postman/PostmanAdminController.php:268
-msgid "Error authenticating with this Client ID - please create a new one. [%s]"
-msgstr "Erreur authentification avec cet ID client - s'l vous plaît, en créer un nouveau. [%s]"
+msgid "Error authenticating with this Client ID. [%s]"
+msgstr "Erreur authentification avec cet ID de Client. [%s]"
 
 #: Postman/PostmanAdminController.php:300
 #: Postman/PostmanAdminController.php:305
@@ -1349,6 +1349,9 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "Error authenticating with this Client ID - please create a new one. [%s]"
+#~ msgstr "Erreur authentification avec cet ID client - s'l vous plaît, en créer un nouveau. [%s]"
 
 #~ msgid "Warning: connected to %1$s instead of %2$s. This may be a problem."
 #~ msgstr "Avertissement: connecté à %1$s au lieu de %2$s. Cela peut être un problème."

@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.5.7\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-05-10 15:46:24+00:00\n"
-"PO-Revision-Date: 2015-05-10 11:48-0500\n"
+"POT-Creation-Date: 2015-05-11 02:05:58+00:00\n"
+"PO-Revision-Date: 2015-05-10 22:08-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr_TR\n"
@@ -342,8 +342,8 @@ msgstr "Google onay kodu hatalı ya da ortada bir yanlış anlaşılma var."
 
 #. translators: %s is the error message
 #: Postman/PostmanAdminController.php:268
-msgid "Error authenticating with this Client ID - please create a new one. [%s]"
-msgstr "Bu hesap ile doğrulama sırasında hata oluştu - lütfen yeni bir tane oluşturun. [%s]"
+msgid "Error authenticating with this Client ID. [%s]"
+msgstr "Hata bu istemci kimliği doğrulama [%s]"
 
 #: Postman/PostmanAdminController.php:300
 #: Postman/PostmanAdminController.php:305
@@ -1356,6 +1356,9 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "Error authenticating with this Client ID - please create a new one. [%s]"
+#~ msgstr "Bu hesap ile doğrulama sırasında hata oluştu - lütfen yeni bir tane oluşturun. [%s]"
 
 #~ msgid "Warning: connected to %1$s instead of %2$s. This may be a problem."
 #~ msgstr "Uyarı: %1$s %2$s yerine bağlı. Bu bir sorun olabilir."

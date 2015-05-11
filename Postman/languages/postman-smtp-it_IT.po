@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-05-10 15:46:24+00:00\n"
-"PO-Revision-Date: 2015-05-10 11:48-0500\n"
+"POT-Creation-Date: 2015-05-11 02:05:58+00:00\n"
+"PO-Revision-Date: 2015-05-10 22:08-0500\n"
 "Last-Translator: Andrea Greco <andreag.email@gmail.com>\n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -341,8 +341,8 @@ msgstr "Il codice di accesso di Google non ha corrispondenza e potrebbe essere f
 
 #. translators: %s is the error message
 #: Postman/PostmanAdminController.php:268
-msgid "Error authenticating with this Client ID - please create a new one. [%s]"
-msgstr "Errore di autenticazione con questo ID cliente - si prega di creare un nuovo. [%s]"
+msgid "Error authenticating with this Client ID. [%s]"
+msgstr "Errore di autenticazione con questo Client ID. [%s]"
 
 #: Postman/PostmanAdminController.php:300
 #: Postman/PostmanAdminController.php:305
@@ -1349,6 +1349,9 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "Error authenticating with this Client ID - please create a new one. [%s]"
+#~ msgstr "Errore di autenticazione con questo ID cliente - si prega di creare un nuovo. [%s]"
 
 #~ msgid "Warning: connected to %1$s instead of %2$s. This may be a problem."
 #~ msgstr "Attenzione: collegati a %1$s invece di %2$s. Questo può essere un problema."
