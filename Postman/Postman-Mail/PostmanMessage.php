@@ -56,11 +56,9 @@ if (! class_exists ( "PostmanMessage" )) {
 			$this->ccRecipients = array ();
 			$this->bccRecipients = array ();
 		}
-
 		public function setPostmanSignatureEnabled($enableSignature) {
 			$this->enablePostmanSignature = $enableSignature;
 		}
-		
 		public function isPostmanSignatureEnabled() {
 			return $this->enablePostmanSignature;
 		}
@@ -200,8 +198,10 @@ if (! class_exists ( "PostmanMessage" )) {
 			if (! empty ( $recipients )) {
 				$recipients = PostmanEmailAddress::convertToArray ( $recipients );
 				foreach ( $recipients as $recipient ) {
-					$this->logger->debug ( sprintf ( 'User Added recipient: "%s"', $recipient ) );
-					array_push ( $recipientList, new PostmanEmailAddress ( $recipient ) );
+					if (! empty ( $recipient )) {
+						$this->logger->debug ( sprintf ( 'User Added recipient: "%s"', $recipient ) );
+						array_push ( $recipientList, new PostmanEmailAddress ( $recipient ) );
+					}
 				}
 			}
 		}
@@ -373,7 +373,7 @@ if (! class_exists ( "PostmanMessage" )) {
 			$this->sender = new PostmanEmailAddress ( $sender, $name );
 		}
 		function setReplyTo($replyTo) {
-			$this->replyTo = new PostmanEmailAddress($replyTo);
+			$this->replyTo = new PostmanEmailAddress ( $replyTo );
 		}
 		function setReturnPath($returnPath) {
 			$this->returnPath = $returnPath;
