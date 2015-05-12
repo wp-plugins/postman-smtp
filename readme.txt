@@ -252,8 +252,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.7 - 2015-05-12 =
+= 1.6.7 - 2015-05-14 =
 * [[Ticket]https://wordpress.org/support/topic/a-valid-address-is-required-issue-with-contact-form-builder-plugin?replies=2] If wp_mail is called with a recipient list that contains a comma followed by no address, Postman literally tries to add no address to the message. Fixed.
+* The SMTP Session Transcript was not being saved for errors! Fixed.
 
 = 1.6.6 - 2015-05-12 =
 * [[Ticket](https://wordpress.org/support/topic/requesting-permission?replies=14)][[Ticket](https://wordpress.org/support/topic/status-postman-is-not-sending-mail?replies=42)][[Ticket](https://wordpress.org/support/topic/postman-is-not-handling-email-delivery?replies=4)][[Ticket](https://wordpress.org/support/topic/google-request-isnt-acceptable?replies=10)][[Ticket](https://wordpress.org/support/topic/google-wont-grant-permission?replies=7)] Fixed a long-standing bug where Postman would ignore the Grant Code from an OAuth provider if it wasn't in the very next HttpRequest that the site received. Changed this to use a three-minute window.

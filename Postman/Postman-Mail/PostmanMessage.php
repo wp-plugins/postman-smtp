@@ -199,7 +199,7 @@ if (! class_exists ( "PostmanMessage" )) {
 				$recipients = PostmanEmailAddress::convertToArray ( $recipients );
 				foreach ( $recipients as $recipient ) {
 					if (! empty ( $recipient )) {
-						$this->logger->debug ( sprintf ( 'User Added recipient: "%s"', $recipient ) );
+						$this->logger->debug ( sprintf ( 'User added recipient: "%s"', $recipient ) );
 						array_push ( $recipientList, new PostmanEmailAddress ( $recipient ) );
 					}
 				}

@@ -103,6 +103,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 			} catch ( Exception $e ) {
 				// save the error for later
 				$this->exception = $e;
+				$this->transcript = $engine->getTranscript ();
 				
 				// write the error to the PHP log
 				$this->logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
