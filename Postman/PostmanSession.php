@@ -43,7 +43,7 @@ if (! class_exists ( 'PostmanSession' )) {
 			return get_transient ( self::OAUTH_IN_PROGRESS ) != false;
 		}
 		public function setOauthInProgress($state) {
-			set_transient ( self::OAUTH_IN_PROGRESS, $state, 30 * self::MINUTES_IN_SECONDS );
+			set_transient ( self::OAUTH_IN_PROGRESS, $state, 3 * self::MINUTES_IN_SECONDS );
 		}
 		public function getOauthInProgress() {
 			return get_transient ( self::OAUTH_IN_PROGRESS );

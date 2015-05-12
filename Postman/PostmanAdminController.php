@@ -106,15 +106,13 @@ if (! class_exists ( "PostmanAdminController" )) {
 				
 				// test to see if an OAuth authentication is in progress
 				if ($session->isSetOauthInProgress ()) {
+					// there is only a three minute window that Postman will expect a Grant Code, once Grant is clicked by the user
+					$this->logger->debug ( 'Looking for grant code' );
 					if (isset ( $_GET ['code'] )) {
 						$this->logger->debug ( 'Found authorization grant code' );
 						// queue the function that processes the incoming grant code
 						$this->registerInitFunction ( 'handleAuthorizationGrant' );
 						return;
-					} else {
-						// the user must have clicked cancel... abort the grant token check
-						$this->logger->debug ( 'Found NO authorization grant code -- user probably cancelled' );
-						$session->unsetOauthInProgress ();
 					}
 				}
 				
@@ -257,6 +255,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$logger->debug ( 'Authorization successful' );
 					// save to database
 					$authorizationToken->save ();
+					$this->messageHandler->addMessage ( __ ( 'The OAuth 2.0 authorization was successful. Ready to send e-mail.', 'postman-smtp' ) );
 				} else {
 					$this->messageHandler->addError ( __ ( 'Your email provider did not grant Postman permission. Try again.', 'postman-smtp' ) );
 				}

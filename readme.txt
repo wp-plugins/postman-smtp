@@ -252,6 +252,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.6.6 - 2015-05-10 =
+* [[Ticket](https://wordpress.org/support/topic/requesting-permission?replies=14)][[Ticket](https://wordpress.org/support/topic/status-postman-is-not-sending-mail?replies=42)][[Ticket](https://wordpress.org/support/topic/postman-is-not-handling-email-delivery?replies=4)[[Ticket](https://wordpress.org/support/topic/google-request-isnt-acceptable?replies=10)[[Ticket](https://wordpress.org/support/topic/google-wont-grant-permission?replies=7)] Fixed a long-standing bug where Postman would ignore the Grant Code from an OAuth provider if it wasn't in the very next HttpRequest that the site received. Changed this to use a three-minute window.
+
 = 1.6.5 - 2015-05-10 =
 * [[Ticket](https://wordpress.org/support/topic/problem-using-wizard?replies=4)] Fixed a Javascript bug
 * Added an Ajax failure handler to every Ajax post
