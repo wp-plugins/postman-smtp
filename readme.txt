@@ -1,6 +1,6 @@
-=== Postman SMTP Mailer ===
+=== Postman SMTP Mailer/Email Log ===
 Contributors: jasonhendriks
-Tags: smtp, smtps, email, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
+Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
 Stable tag: 1.6.6
