@@ -83,9 +83,13 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 				} else {
 					$pass = $transport->getCredentialsSecret ( $options );
 				}
+				$format = '%1$s:%2$s:%3$s://%4$s:%5$s@%6$s:%7$s';
+				if ($auth == PostmanOptions::AUTHENTICATION_TYPE_NONE) {
+					$format = '%1$s:%2$s:%3$s://%6$s:%7$s';
+				}
 				$host = $transport->getHostname ( $options );
 				$port = $transport->getHostPort ( $options );
-				return sprintf ( '%s:%s:%s://%s:%s@%s:%s', $transportName, $security, $auth, $user, $pass, $host, $port );
+				return sprintf ( $format, $transportName, $security, $auth, $user, $pass, $host, $port );
 			}
 		}
 		public function getPublicTransportUri(PostmanTransport $transport) {

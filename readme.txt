@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.6
+Stable tag: 1.6.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,14 +13,14 @@ The most advanced SMTP Mailer and Email Log for WordPress. Configure an SMTP ser
 
 == Description ==
 
-Postman is a next-generation SMTP mailer that brings reliable email delivery to WordPress. It supports traditional username/password authentication, and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/) - Yahoo Mail, Hotmail and Gmail's [preferred mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html).
+Postman is a next-generation SMTP mailer that brings reliable email delivery to WordPress. It is the first SMTP plugin to support both passwords and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/), Yahoo Mail, Hotmail and Gmail's [preferred mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html). With OAuth 2.0, there is **no need to give out your Google passsword** to software unknown.
 
-Out of the twenty near-identical [SMTP plugins](https://wordpress.org/plugins/search.php?q=smtp) available, what else sets Postman apart? The intelligent **Setup Wizard** scans your SMTP server so you can't make a configuration mistake. The handy **Email Log** shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy, can't stop your Gmail as **Postman will deliver via HTTPS** instead of SMTP.¹
+Out of the twenty identical [SMTP plugins](https://wordpress.org/plugins/search.php?q=smtp) available, what else makes Postman different? The intelligent **Setup Wizard** scans your SMTP server so you can't make a configuration mistake. The handy **Email Log** shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy, can't stop your Gmail as **Postman will deliver via HTTPS** instead of SMTP.
 
-Stop fighting SMTP authentication and connection [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html) ¹, lost emails, spam and phishing warnings ², and [password secrecy concerns](https://wordpress.org/support/topic/open-password-field-please-dont?replies=18). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) ¹ to send SMTP messages on your behalf, without rejection, and without the work-arounds.
+Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), lost emails/spam ², and [password storage concerns](http://blog.varonis.com/giving-away-your-passwords/). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
 ###* What's New for v1.6 *
-*Email Logging! See the contents of any email sent, and delivery errors if any.*
+*Email Logging! See the contents of every email WordPress creates.*
 
 
 = Features =
@@ -34,14 +34,14 @@ Stop fighting SMTP authentication and connection [failures](http://googleappsdev
 * Supports forced recipients (cc, bcc, to) and [Mandrill](http://mandrill.com) X-headers
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Security Support: SMTPS and STARTTLS (SSL/TLS)
-* Verified compatible with: [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), [Visual Forms Builder](https://wordpress.org/plugins/visual-form-builder/), [Fast Secure Contact Form](https://wordpress.org/support/plugin/si-contact-form), [cformsII](https://wordpress.org/plugins/cforms2/), Email Log
+* Verified compatible with: [Woocommerce](https://wordpress.org/plugins/woocommerce/), [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), [Fast Secure Contact Form](https://wordpress.org/plugins/si-contact-form/), [Visual Forms Builder](https://wordpress.org/plugins/visual-form-builder/), [Contact Form Builder](https://wordpress.org/plugins/contact-form-builder/)
 * Available translations: French, Italian and Turkish - if you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
 
 = Requirements =
 * WordPress 3.9 and PHP 5.2 with SPL and iconv
 * Connectivity to, and authentication credentials with, any email service provider
 * ¹ OAuth 2.0 features require a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
-* ² Custom email domains require a valid SPF record, and potentially a DKIM record, for Blackhole-free and Spam-free delivery
+* ² Custom email domains require an SPF and DKIM record for Blackhole-free/Spam-free delivery
 
 
 
