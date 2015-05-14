@@ -60,7 +60,7 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 
 1. Choose configure manually
 1. If the 'Transport' menu is available, choose 'SMTP'
-1. In 'Authentication' choose 'Login', unless your email service provider has told you different.
+1. In 'Authentication' choose 'Plain', unless your email service provider has told you different.
 1. In 'Security' choose the appropriate type (a good guess is SMTPS for port 465, StartTLS otherwise)
 1. Enter the SMTP Server's hostname and port.
 1. Enter the encryption if your port is 465, or 'TLS' if your port is 587.
