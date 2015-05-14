@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-05-12 12:42:42+00:00\n"
-"PO-Revision-Date: 2015-05-12 08:43-0500\n"
+"POT-Creation-Date: 2015-05-14 14:18:38+00:00\n"
+"PO-Revision-Date: 2015-05-14 10:20-0500\n"
 "Last-Translator: Andrea Greco <andreag.email@gmail.com>\n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -41,7 +41,7 @@ msgid "Settings"
 msgstr "Impostazioni"
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:69
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:168
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:170
 msgctxt "The log of Emails that have been delivered"
 msgid "Email Log"
 msgstr "Livello di registrazione"
@@ -142,13 +142,18 @@ msgctxt "What is the unique URI of the configuration?"
 msgid "Delivery-URI"
 msgstr "Consegna-URI"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:168
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:206
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:146
+#: Postman/PostmanViewController.php:866
+msgid "This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your shared secret (password) in encoded form."
+msgstr "Questa è la conversazione tra postino e il server SMTP. Può essere utile per la diagnosi dei problemi. <b>NON</b> pubblicarlo on-line, si può contenere la password in forma codificata."
+
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:170
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:208
 msgid "Postman Email Log"
 msgstr "Postino Email Log"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:212
-msgid "This is a record of delivery attempts made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient."
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:214
+msgid "This is a record of deliveries made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient."
 msgstr "Questo è un record di consegna tentativi fatti a posta presentazione agente (MSA). Non indica necessariamente sucessful consegna al destinatario."
 
 #: Postman/Postman-Email-Log/PostmanEmailLogService.php:76
@@ -1330,10 +1335,6 @@ msgstr "Trascrizione della Sessione SMTP"
 msgid "Examine the SMTP Session Transcript if you need to."
 msgstr "Esaminare la sessione SMTP Trascrizione se è necessario."
 
-#: Postman/PostmanViewController.php:866
-msgid "This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your shared secret (password) in encoded form."
-msgstr "Questa è la conversazione tra postino e il server SMTP. Può essere utile per la diagnosi dei problemi. <b>NON</b> pubblicarlo on-line, si può contenere la password in forma codificata."
-
 #: Postman/PostmanViewController.php:868
 msgid "SMTP Session Transcript"
 msgstr "Trascrizione della Sessione SMTP"
@@ -1353,6 +1354,9 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "This is a record of delivery attempts made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient."
+#~ msgstr "Questo è un record di consegna tentativi fatti a posta presentazione agente (MSA). Non indica necessariamente sucessful consegna al destinatario."
 
 #~ msgid "Error authenticating with this Client ID - please create a new one. [%s]"
 #~ msgstr "Errore di autenticazione con questo ID cliente - si prega di creare un nuovo. [%s]"

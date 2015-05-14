@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.5.7\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-05-12 12:42:42+00:00\n"
-"PO-Revision-Date: 2015-05-12 08:44-0500\n"
+"POT-Creation-Date: 2015-05-14 14:18:38+00:00\n"
+"PO-Revision-Date: 2015-05-14 10:20-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr_TR\n"
@@ -42,7 +42,7 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:69
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:168
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:170
 msgctxt "The log of Emails that have been delivered"
 msgid "Email Log"
 msgstr "E-posta günlüğü"
@@ -143,13 +143,18 @@ msgctxt "What is the unique URI of the configuration?"
 msgid "Delivery-URI"
 msgstr "Teslimat-URI"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:168
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:206
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:146
+#: Postman/PostmanViewController.php:866
+msgid "This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your shared secret (password) in encoded form."
+msgstr "SMTP sunucunuz ve Postman arasındaki diyaloğu buradan takip edebilirsiniz. Bu sorunların teşhisinde size yol gösterebilir. <b>DİKKAT</b> bunu herhangi biriyle paylaşmayın. İçerisinde size özel gizli anahtar (şifre) bilgileri olabilir."
+
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:170
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:208
 msgid "Postman Email Log"
 msgstr "Postacı e-posta günlüğü"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:212
-msgid "This is a record of delivery attempts made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient."
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:214
+msgid "This is a record of deliveries made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient."
 msgstr "Bu posta teslimi Aracısı (MSA) yapılan teslim girişimleri kaydıdır. Sucessful alıcıya teslim için mutlaka göstermez."
 
 #: Postman/Postman-Email-Log/PostmanEmailLogService.php:76
@@ -1337,10 +1342,6 @@ msgstr "Durum Detayı"
 msgid "Examine the SMTP Session Transcript if you need to."
 msgstr "İhtiyacınız olması durumunda SMTP Durum Detayını inceleyebilirsiniz."
 
-#: Postman/PostmanViewController.php:866
-msgid "This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your shared secret (password) in encoded form."
-msgstr "SMTP sunucunuz ve Postman arasındaki diyaloğu buradan takip edebilirsiniz. Bu sorunların teşhisinde size yol gösterebilir. <b>DİKKAT</b> bunu herhangi biriyle paylaşmayın. İçerisinde size özel gizli anahtar (şifre) bilgileri olabilir."
-
 #: Postman/PostmanViewController.php:868
 msgid "SMTP Session Transcript"
 msgstr "SMTP Durum Detayı"
@@ -1360,6 +1361,9 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "This is a record of delivery attempts made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient."
+#~ msgstr "Bu posta teslimi Aracısı (MSA) yapılan teslim girişimleri kaydıdır. Sucessful alıcıya teslim için mutlaka göstermez."
 
 #~ msgid "Error authenticating with this Client ID - please create a new one. [%s]"
 #~ msgstr "Bu hesap ile doğrulama sırasında hata oluştu - lütfen yeni bir tane oluşturun. [%s]"
