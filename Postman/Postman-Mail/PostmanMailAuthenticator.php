@@ -8,27 +8,6 @@ if (! interface_exists ( 'PostmanMailTransportConfiguration' )) {
 	}
 }
 
-if (! class_exists ( 'PostmanMailTransportConfigurationFactory' )) {
-	class PostmanMailTransportConfigurationFactory {
-		private $logger;
-		
-		// singleton instance
-		public static function getInstance() {
-			static $inst = null;
-			if ($inst === null) {
-				$inst = new PostmanMailTransportConfigurationFactory ();
-			}
-			return $inst;
-		}
-		private function __construct() {
-			$this->logger = new PostmanLogger ( get_class ( $this ) );
-		}
-		public function createMailTransportConfiguration(PostmanTransport $transport, PostmanOptions $options, PostmanOAuthToken $authorizationToken) {
-			return $transport->createPostmanMailAuthenticator ( $options, $authorizationToken );
-		}
-	}
-}
-
 if (! class_exists ( 'PostmanGeneralMailAuthenticator' )) {
 	class PostmanGeneralMailAuthenticator implements PostmanMailTransportConfiguration {
 		private $options;

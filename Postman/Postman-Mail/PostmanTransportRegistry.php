@@ -1,4 +1,6 @@
 <?php
+require_once 'PostmanMailAuthenticator.php';
+
 if (! interface_exists ( 'PostmanTransport' )) {
 	interface PostmanTransport {
 		public function isServiceProviderGoogle($hostname);

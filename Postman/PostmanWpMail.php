@@ -1,8 +1,8 @@
 <?php
 if (! class_exists ( "PostmanWpMail" )) {
 	
-	require_once 'Postman-Mail/PostmanMailEngineFactory.php';
 	require_once 'Postman-Auth/PostmanAuthenticationManagerFactory.php';
+	require_once 'Postman-Mail/PostmanMailEngine.php';
 	require_once 'PostmanStats.php';
 	
 	/**
@@ -27,8 +27,8 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * This methods creates an instance of PostmanSmtpEngine and sends an email.
 		 * Exceptions are held for later inspection. An instance of PostmanStats updates the success/fail tally.
 		 *
-		 * @param PostmanOptions $wpMailOptions        	
-		 * @param PostmanOAuthToken $wpMailAuthorizationToken        	
+		 * @param PostmanOptions $options        	
+		 * @param PostmanOAuthToken $authorizationToken        	
 		 * @param unknown $to        	
 		 * @param unknown $subject        	
 		 * @param unknown $body        	
@@ -78,25 +78,31 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$this->traceParameters ( $to, $subject, $message, $headers, $attachments );
 			
 			// get the Options and AuthToken
-			$wpMailOptions = PostmanOptions::getInstance ();
-			$wpMailAuthorizationToken = PostmanOAuthToken::getInstance ();
+			$options = PostmanOptions::getInstance ();
+			$authorizationToken = PostmanOAuthToken::getInstance ();
+			
+			// get the transport and create the transportConfig and engine
+			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
+			$transportConfiguration = $transport->createPostmanMailAuthenticator ( $options, $authorizationToken );
+			$engine = new PostmanMailEngine ( $transportConfiguration, $transport );
+			
 			try {
 				// create the message
-				$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
-				$transportConfiguration = PostmanMailTransportConfigurationFactory::getInstance ()->createMailTransportConfiguration ( $transport, $wpMailOptions, $wpMailAuthorizationToken );
-				$messageBuilder = $this->createMessage ( $wpMailOptions, $to, $subject, $message, $headers, $attachments, $transportConfiguration );
+				$messageBuilder = $this->createMessage ( $options, $to, $subject, $message, $headers, $attachments, $transportConfiguration );
 				
 				// send the message
-				if ($wpMailOptions->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
+				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
+					if ($options->isAuthTypeOAuth2 ()) {
+						$this->ensureAuthtokenIsUpdated ( $transport, $options, $authorizationToken );
+					}
 					$this->logger->debug ( 'Sending mail' );
-					$engine = PostmanMailEngineFactory::getInstance ()->createMailEngine ( $wpMailOptions, $wpMailAuthorizationToken, $transport, $transportConfiguration );
-					$engine->send ( $messageBuilder, $wpMailOptions->getHostname () );
+					$engine->send ( $messageBuilder, $options->getHostname () );
 					$this->transcript = $engine->getTranscript ();
 					
 					// log the successful delivery
 					PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
 				}
-				if ($wpMailOptions->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $wpMailOptions->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
+				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
 					PostmanEmailLogService::getInstance ()->createSuccessLog ( $messageBuilder, $this->transcript, $transport );
 				}
 				return true;
@@ -109,10 +115,10 @@ if (! class_exists ( "PostmanWpMail" )) {
 				$this->logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
 				
 				// log the failed delivery
-				if ($wpMailOptions->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
+				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
 					PostmanStats::getInstance ()->incrementFailedDelivery ();
 				}
-				if ($wpMailOptions->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $wpMailOptions->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
+				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
 					PostmanEmailLogService::getInstance ()->createFailureLog ( $messageBuilder, $this->transcript, $transport, $e->getMessage () );
 				}
 				return false;
@@ -120,33 +126,47 @@ if (! class_exists ( "PostmanWpMail" )) {
 		}
 		
 		/**
+		 */
+		private function ensureAuthtokenIsUpdated(PostmanTransport $transport, PostmanOptions $options, PostmanOAuthToken $authorizationToken) {
+			// ensure the token is up-to-date
+			$this->logger->debug ( 'Ensuring Access Token is up-to-date' );
+			// interact with the Authentication Manager
+			$wpMailAuthManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( $transport, $options, $authorizationToken );
+			if ($wpMailAuthManager->isAccessTokenExpired ()) {
+				$this->logger->debug ( 'Access Token has expired, attempting refresh' );
+				$wpMailAuthManager->refreshToken ();
+				$authorizationToken->save ();
+			}
+		}
+		
+		/**
 		 * Aggregates all the content into a Message to be sent to the MailEngine
 		 *
-		 * @param unknown $wpMailOptions        	
+		 * @param unknown $options        	
 		 * @param unknown $to        	
 		 * @param unknown $subject        	
 		 * @param unknown $body        	
 		 * @param unknown $headers        	
 		 * @param unknown $attachments        	
 		 */
-		private function createMessage(PostmanOptionsInterface $wpMailOptions, $to, $subject, $body, $headers, $attachments, PostmanMailTransportConfiguration $transportation) {
+		private function createMessage(PostmanOptionsInterface $options, $to, $subject, $body, $headers, $attachments, PostmanMailTransportConfiguration $transportation) {
 			$message = PostmanMessageFactory::createEmptyMessage ();
 			$message->addHeaders ( $headers );
-			$message->addHeaders ( $wpMailOptions->getAdditionalHeaders () );
+			$message->addHeaders ( $options->getAdditionalHeaders () );
 			$message->setBody ( $body );
 			$message->setSubject ( $subject );
 			$message->addTo ( $to );
-			$message->addTo ( $wpMailOptions->getForcedToRecipients () );
-			$message->addCc ( $wpMailOptions->getForcedCcRecipients () );
-			$message->addBcc ( $wpMailOptions->getForcedBccRecipients () );
+			$message->addTo ( $options->getForcedToRecipients () );
+			$message->addCc ( $options->getForcedCcRecipients () );
+			$message->addBcc ( $options->getForcedBccRecipients () );
 			$message->setAttachments ( $attachments );
-			$message->setSender ( $wpMailOptions->getSenderEmail (), $wpMailOptions->getSenderName () );
-			$message->setPreventSenderEmailOverride ( $wpMailOptions->isSenderEmailOverridePrevented () || $transportation->isPluginSenderEmailEnforced () );
-			$message->setPreventSenderNameOverride ( $wpMailOptions->isSenderNameOverridePrevented () || $transportation->isPluginSenderNameEnforced () );
-			$message->setPostmanSignatureEnabled(!$wpMailOptions->isStealthModeEnabled());
+			$message->setSender ( $options->getSenderEmail (), $options->getSenderName () );
+			$message->setPreventSenderEmailOverride ( $options->isSenderEmailOverridePrevented () || $transportation->isPluginSenderEmailEnforced () );
+			$message->setPreventSenderNameOverride ( $options->isSenderNameOverridePrevented () || $transportation->isPluginSenderNameEnforced () );
+			$message->setPostmanSignatureEnabled ( ! $options->isStealthModeEnabled () );
 			
 			// set the reply-to address if it hasn't been set already in the user's headers
-			$optionsReplyTo = $wpMailOptions->getReplyTo ();
+			$optionsReplyTo = $options->getReplyTo ();
 			$messageReplyTo = $message->getReplyTo ();
 			if (! empty ( $optionsReplyTo ) && empty ( $messageReplyTo )) {
 				$message->setReplyTo ( $optionsReplyTo );
