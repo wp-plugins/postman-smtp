@@ -253,7 +253,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.6.7 - 2015-05-14 =
-* [[Ticket]https://wordpress.org/support/topic/a-valid-address-is-required-issue-with-contact-form-builder-plugin?replies=2] If wp_mail is called with a recipient list that contains a comma followed by no address, Postman literally tries to add no address to the message. Fixed.
+* [[Ticket](https://wordpress.org/support/topic/a-valid-address-is-required-issue-with-contact-form-builder-plugin?replies=2)] If wp_mail is called with a recipient list that contains a comma followed by no address, Postman literally tries to add no address to the message. Fixed.
 * The SMTP Session Transcript was not being saved for errors! Fixed.
 
 = 1.6.6 - 2015-05-12 =
