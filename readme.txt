@@ -238,7 +238,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 1. Dashboard widget showing status at a glance
 1. Main Settings screen
-1. Setup Wizard (step 1) - Import data from other plugin
+1. Setup Wizard (step 1) - Import data from other plugins
 1. Setup Wizard (step 4) - SMTP server interrogation 
 1. Manual Configuration - Account Settings: Password Authentication
 1. Manual Configuration - Account Settings: OAuth 2.0 Authentication
