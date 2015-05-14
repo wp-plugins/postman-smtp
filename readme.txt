@@ -13,7 +13,7 @@ The most advanced SMTP Mailer and Email Log for WordPress. Configure an SMTP ser
 
 == Description ==
 
-Postman is a next-generation SMTP mailer that brings reliable email delivery to WordPress. It is the first SMTP plugin to support both passwords and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/), Yahoo Mail, Hotmail and Gmail's [preferred mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html). With OAuth 2.0, there is **no need to give out your Google passsword** to software unknown.
+Postman is a next-generation SMTP mailer that brings reliable email delivery to WordPress. It is the first SMTP plugin to support both passwords and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/), Yahoo Mail, Hotmail and Gmail's [preferred mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html). With OAuth 2.0, there is **no need to enter your email passsword** into software unknown.
 
 Out of the twenty identical [SMTP plugins](https://wordpress.org/plugins/search.php?q=smtp) available, what else makes Postman different? The intelligent **Setup Wizard** scans your SMTP server so you can't make a configuration mistake. The handy **Email Log** shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy, can't stop your Gmail as **Postman will deliver via HTTPS** instead of SMTP.
 
