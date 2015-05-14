@@ -211,7 +211,7 @@ if (! class_exists ( 'PostmanEmailLogController' )) {
 		style="background: #ECECEC; border: 1px solid #CCC; padding: 0 10px; margin-top: 5px; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;">
 		<p><?php
 			
-			echo __ ( 'This is a record of delivery attempts made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient.', 'postman-smtp' )?></p>
+			echo __ ( 'This is a record of deliveries made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient.', 'postman-smtp' )?></p>
 	</div>
 
 	<!-- Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions -->

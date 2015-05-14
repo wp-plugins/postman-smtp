@@ -84,41 +84,51 @@ if (! class_exists ( "PostmanWpMail" )) {
 			// get the transport and create the transportConfig and engine
 			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
 			$transportConfiguration = $transport->createPostmanMailAuthenticator ( $options, $authorizationToken );
-			$engine = new PostmanMailEngine ( $transportConfiguration, $transport );
+			$engine = new PostmanMailEngine ( $transport, $transportConfiguration );
+			
+			// create the message
+			$messageBuilder = $this->createMessage ( $options, $to, $subject, $message, $headers, $attachments, $transportConfiguration );
 			
 			try {
-				// create the message
-				$messageBuilder = $this->createMessage ( $options, $to, $subject, $message, $headers, $attachments, $transportConfiguration );
 				
 				// send the message
 				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
 					if ($options->isAuthTypeOAuth2 ()) {
+						// may throw an exception attempting to contact the OAuth2 provider
 						$this->ensureAuthtokenIsUpdated ( $transport, $options, $authorizationToken );
 					}
+					
 					$this->logger->debug ( 'Sending mail' );
+					// may throw an exception attempting to contact the SMTP server
 					$engine->send ( $messageBuilder, $options->getHostname () );
+					
+					// save the transcript
 					$this->transcript = $engine->getTranscript ();
 					
-					// log the successful delivery
+					// increment the success counter
 					PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
 				}
 				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
+					// log the successful delivery
 					PostmanEmailLogService::getInstance ()->createSuccessLog ( $messageBuilder, $this->transcript, $transport );
 				}
 				return true;
 			} catch ( Exception $e ) {
 				// save the error for later
 				$this->exception = $e;
-				$this->transcript = $engine->getTranscript ();
 				
 				// write the error to the PHP log
 				$this->logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
 				
-				// log the failed delivery
+				// save the transcript
+				$this->transcript = $engine->getTranscript ();
+				
+				// increment the failure counter
 				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
 					PostmanStats::getInstance ()->incrementFailedDelivery ();
 				}
 				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
+					// log the failed delivery
 					PostmanEmailLogService::getInstance ()->createFailureLog ( $messageBuilder, $this->transcript, $transport, $e->getMessage () );
 				}
 				return false;

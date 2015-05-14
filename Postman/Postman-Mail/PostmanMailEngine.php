@@ -53,7 +53,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 		 * @param unknown $senderEmail        	
 		 * @param unknown $accessToken        	
 		 */
-		function __construct(PostmanMailTransportConfiguration $authenticator, PostmanTransport $transport) {
+		function __construct(PostmanTransport $transport, PostmanMailTransportConfiguration $authenticator) {
 			assert ( isset ( $authenticator ) );
 			assert ( isset ( $transport ) );
 			$this->logger = new PostmanLogger ( get_class ( $this ) );

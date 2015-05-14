@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.8a
+Stable tag: 1.6.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -245,6 +245,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 1. Manual Configuration - Message Settings
 1. Manual Configuration - Advanced Settings
 1. Test Email utility screen - Oops! Wrong password
+1. Emai Log screen
 1. Connectivity Test utility screen
 1. Diagnostic Information screen
 
@@ -252,7 +253,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.8 - 2015-05-16 =
+= 1.6.8 - 2015-05-14 =
 * [[Ticket](https://wordpress.org/support/topic/fatal-error-after-the-latest-update?replies=2#post-6948880)] Found a PHP envrionment that choked in the catch block trying to call a function on an object instantiated in the try. Fixed.
 
 = 1.6.7 - 2015-05-14 =
