@@ -8,7 +8,8 @@ if (! class_exists ( 'PostmanPreRequisitesCheck' )) {
 			return function_exists ( 'spl_autoload_register' );
 		}
 		public static function checkOpenSsl() {
-			return extension_loaded ( 'openssl' );
+			// apparently curl can use ssl libraries in the OS, and doesn't need ssl in PHP
+			return extension_loaded ( 'openssl' ) || extension_loaded ( 'php_openssl');
 		}
 		public static function checkSockets() {
 			return extension_loaded ( 'sockets' ) || extension_loaded ( 'php_sockets' );
