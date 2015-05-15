@@ -11,7 +11,7 @@ if (! class_exists ( 'PostmanPreRequisitesCheck' )) {
 			return extension_loaded ( 'openssl' );
 		}
 		public static function checkSockets() {
-			return extension_loaded ( 'php_sockets' );
+			return extension_loaded ( 'sockets' ) || extension_loaded ( 'php_sockets' );
 		}
 		public static function checkAllowUrlFopen() {
 			return filter_var ( ini_get ( 'allow_url_fopen' ), FILTER_VALIDATE_BOOLEAN );
