@@ -85,7 +85,7 @@ if (! class_exists ( "PostmanMicrosoftAuthenticationManager" )) {
 						'redirect_uri' => $this->getCallbackUri (),
 						'code' => $code 
 				);
-				$response = PostmanUtils::remotePost ( $this->getTokenUrl (), $postvals );
+				$response = PostmanUtils::remotePostGetBodyOnly ( $this->getTokenUrl (), $postvals );
 				$this->processResponse ( $response );
 				$this->getAuthorizationToken ()->setVendorName ( self::VENDOR_NAME );
 				return true;

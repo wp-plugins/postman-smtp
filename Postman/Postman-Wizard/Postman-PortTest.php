@@ -95,32 +95,25 @@ class PostmanPortTest {
 	 * @param string $hostname        	
 	 */
 	public function testHttpPorts() {
-		$this->logger->trace ( 'testHttpPorts()' );
-		$connectionString = sprintf ( "ssl://%s:%s", $this->hostname, $this->port );
-		$stream = @stream_socket_client ( sprintf ( $connectionString, $this->hostname, $this->port ), $errno, $errstr, $connectTimeout );
-		$stream = $this->createStream ( $connectionString, $this->connectionTimeout );
-		if ($stream) {
-			@stream_set_timeout ( $stream, $this->readTimeout );
-			$serverName = postmanGetServerName ();
-			// see http://php.net/manual/en/transports.inet.php#113244
-			$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
-			$matches = array ();
-			$line = fgets ( $stream );
-			if (preg_match ( '/^HTTP.*\\s/U', $line, $matches )) {
-				$this->protocol = $matches [0];
-				$this->http = true;
-				$this->https = true;
-				$this->secure = true;
-				$this->reportedHostname = $this->hostname;
-				$this->reportedHostnameDomainOnly = getRegisteredDomain ( $this->hostname );
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
+		$this->trace ( 'testHttpPorts()' );
+		$connectionString = sprintf ( "https://%s:%s", $this->hostname, $this->port );
+		try {
+			$response = PostmanUtils::remotePost ( $connectionString );
+			$this->trace ( 'wp_remote_retrieve_headers:' );
+			$this->logger->trace ( wp_remote_retrieve_headers ( $response ) );
+			$this->trace ( wp_remote_retrieve_response_code ( $response ) );
+			$this->protocol = 'HTTPS';
+			$this->http = true;
+			$this->https = true;
+			$this->secure = true;
+			$this->reportedHostname = $this->hostname;
+			$this->reportedHostnameDomainOnly = getRegisteredDomain ( $this->hostname );
+		 	return true;
+		} catch ( Exception $e ) {
+			$this->debug ( 'return false' );
 		}
 	}
+	
 	/**
 	 * Given a hostname, test if it has open ports
 	 *
@@ -185,7 +178,7 @@ class PostmanPortTest {
 			if ($result) {
 				$this->reportedHostname = $result;
 				$this->reportedHostnameDomainOnly = getRegisteredDomain ( $this->reportedHostname );
-				$this->logger->trace(sprintf('comparing %s with %s',$this->reportedHostnameDomainOnly,$this->hostnameDomainOnly));
+				$this->logger->trace ( sprintf ( 'comparing %s with %s', $this->reportedHostnameDomainOnly, $this->hostnameDomainOnly ) );
 				$this->mitm = true;
 				// MITM exceptions
 				if ($this->reportedHostnameDomainOnly == 'google.com' && $this->hostnameDomainOnly == 'gmail.com') {
@@ -260,7 +253,7 @@ class PostmanPortTest {
 				$result = 'auth';
 			} elseif (preg_match ( '/STARTTLS/', $line )) {
 				$result = 'starttls';
-					$this->debug ( 'starttls' );
+				$this->debug ( 'starttls' );
 			} elseif (preg_match ( '/^220.(.*?)\\s/', $line, $matches )) {
 				if (empty ( $result ))
 					$result = $matches [1];

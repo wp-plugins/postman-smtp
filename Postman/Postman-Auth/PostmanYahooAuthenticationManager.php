@@ -92,7 +92,7 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 						'grant_type' => 'authorization_code',
 						'redirect_uri' => $this->getCallbackUri () 
 				);
-				$response = PostmanUtils::remotePost ( $this->getTokenUrl (), $postvals, $headers );
+				$response = PostmanUtils::remotePostGetBodyOnly ( $this->getTokenUrl (), $postvals, $headers );
 				$this->processResponse ( $response );
 				$this->getAuthorizationToken ()->setVendorName ( self::VENDOR_NAME );
 				return true;
@@ -120,7 +120,7 @@ if (! class_exists ( "PostmanYahooAuthenticationManager" )) {
 					'grant_type' => 'refresh_token',
 					'refresh_token' => $this->getAuthorizationToken ()->getRefreshToken () 
 			);
-			$response = PostmanUtils::remotePost ( $this->getTokenUrl (), $postvals, $headers );
+			$response = PostmanUtils::remotePostGetBodyOnly ( $this->getTokenUrl (), $postvals, $headers );
 			$this->processResponse ( $response );
 		}
 		public function getAuthorizationUrl() {

@@ -87,8 +87,24 @@ if (! class_exists ( 'PostmanUtils' )) {
 		 *
 		 * @param unknown $url        	
 		 * @param unknown $args        	
+		 * @return the HTML body
 		 */
-		static function remotePost($url, $parameters, array $headers = array()) {
+		static function remotePostGetBodyOnly($url, $parameters, array $headers = array()) {
+			$response = PostmanUtils::remotePost ( $url, $parameters, $headers );
+			$theBody = wp_remote_retrieve_body ( $response );
+			return $theBody;
+		}
+		
+		/**
+		 * Makes the outgoing HTTP requests
+		 * Inside WordPress we can use wp_remote_post().
+		 * Outside WordPress, not so much.
+		 *
+		 * @param unknown $url        	
+		 * @param unknown $args        	
+		 * @return the HTTP response
+		 */
+		static function remotePost($url, $parameters = array(), array $headers = array()) {
 			$args = array (
 					'timeout' => PostmanOptions::getInstance ()->getConnectionTimeout (),
 					'headers' => $headers,
@@ -106,8 +122,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 				PostmanUtils::$logger->error ( $response->get_error_message () );
 				throw new Exception ( 'Error executing wp_remote_post: ' . $response->get_error_message () );
 			} else {
-				$theBody = wp_remote_retrieve_body ( $response );
-				return $theBody;
+				return $response;
 			}
 		}
 		/**

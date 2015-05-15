@@ -153,7 +153,7 @@ if (! class_exists ( "PostmanAbstractAuthenticationManager" )) {
 			);
 			// example request string
 			// client_id=0000000603DB0F&redirect_uri=http%3A%2F%2Fwww.contoso.com%2Fcallback.php&client_secret=LWILlT555GicSrIATma5qgyBXebRI&refresh_token=*LA9...//refresh token string shortened for example//...xRoX&grant_type=refresh_token
-			$response = PostmanUtils::remotePost ( $refreshUrl, $postvals );
+			$response = PostmanUtils::remotePostGetBodyOnly ( $refreshUrl, $postvals );
 			$this->processResponse ( $response );
 		}
 		/**
