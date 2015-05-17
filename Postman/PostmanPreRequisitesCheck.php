@@ -39,7 +39,7 @@ if (! class_exists ( 'PostmanPreRequisitesCheck' )) {
 					'required' => false 
 			) );
 			array_push ( $state, array (
-					'name' => 'php_sockets',
+					'name' => 'sockets',
 					'ready' => self::checkSockets(),
 					'required' => false 
 			) );

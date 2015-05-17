@@ -594,7 +594,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printAdvancedSectionInfo() {
-			print __ ( 'Log Level specifies the level of detail written to the WordPress and PHP logfiles.', 'postman-smtp' );
+			print __ ( 'Log Level specifies the level of detail written to the WordPress and PHP logfiles. Delivery mode offers options useful in a development environment.', 'postman-smtp' );
 		}
 		/**
 		 * Print the Section text
@@ -838,9 +838,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		public function runModeCallback() {
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::RUN_MODE );
-			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_PRODUCTION, PostmanOptions::RUN_MODE_PRODUCTION == $this->options->getRunMode () ? 'selected="selected"' : '', _x ( 'Production', 'When the server is online to the public, this is "Production" mode', 'postman-smtp' ) );
-			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_LOG_ONLY, PostmanOptions::RUN_MODE_LOG_ONLY == $this->options->getRunMode () ? 'selected="selected"' : '', __ ( 'Log Emails, then Dump', 'postman-smtp' ) );
-			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_IGNORE, PostmanOptions::RUN_MODE_IGNORE == $this->options->getRunMode () ? 'selected="selected"' : '', __ ( 'Dump All Emails', 'postman-smtp' ) );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_PRODUCTION, PostmanOptions::RUN_MODE_PRODUCTION == $this->options->getRunMode () ? 'selected="selected"' : '', _x ( 'Log Email and Send', 'When the server is online to the public, this is "Production" mode', 'postman-smtp' ) );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_LOG_ONLY, PostmanOptions::RUN_MODE_LOG_ONLY == $this->options->getRunMode () ? 'selected="selected"' : '', __ ( 'Log Email and Delete', 'postman-smtp' ) );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_IGNORE, PostmanOptions::RUN_MODE_IGNORE == $this->options->getRunMode () ? 'selected="selected"' : '', __ ( 'Delete All Emails', 'postman-smtp' ) );
 			printf ( '</select>' );
 		}
 		public function stealthModeCallback() {

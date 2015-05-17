@@ -139,13 +139,12 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', wp_get_theme () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', $this->pluginData ['Version'] ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Sender Domain: %s', $hostname = substr ( strrchr ( $this->options->getSenderEmail (), "@" ), 1 ) ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI: %s', $transportRegistry->getDeliveryUri ( $transportRegistry->getCurrentTransport () ) ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI: %s', $transportRegistry->getPublicTransportUri ( $transportRegistry->getCurrentTransport () ) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport Status (Configured|Ready|Connected): %s|%s|%s', $transportRegistry->getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', $this->testConnectivity () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Deliveries (Success|Fail): %d|%d', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PostmanStats::getInstance ()->getFailedDeliveries () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Bind (Success|Fail): %s|%s', (PostmanWpMailBinder::getInstance ()->isBound () ? 'Yes' : 'No'), (PostmanWpMailBinder::getInstance ()->isUnboundDueToException () ? 'Yes' : 'No') ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Available Transports%s', $this->getTransports () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman TCP Timeout (Connection|Read): %d|%d', $this->options->getConnectionTimeout (), $this->options->getReadTimeout () ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Email Log (Enabled|Max): %s %s', ($this->options->isMailLoggingEnabled () ? 'Yes' : 'No'), $this->options->getMailLoggingMaxEntries () ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Email Log (Enabled|Max): %s|%d', ($this->options->isMailLoggingEnabled () ? 'Yes' : 'No'), $this->options->getMailLoggingMaxEntries () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Run Mode: %s', $this->options->getRunMode () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman PHP LogLevel: %s', $this->options->getLogLevel () ) );
 			$response = array (
