@@ -191,7 +191,7 @@ class PostmanPortTest {
 				}
 				$this->debug ( sprintf ( 'domain name: %s (%s)', $this->reportedHostname, $this->reportedHostnameDomainOnly ) );
 				$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
-				$done = $this->readSmtpResponse ( $stream );
+				$this->readSmtpResponse ( $stream );
 				if ($this->checkStartTls) {
 					$this->sendSmtpCommand ( $stream, 'STARTTLS' );
 					$this->readSmtpResponse ( $stream );
@@ -200,7 +200,7 @@ class PostmanPortTest {
 						$this->startTls = true;
 						$this->secure = true;
 						$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
-						$done = $this->readSmtpResponse ( $stream );
+						$this->readSmtpResponse ( $stream );
 					} else {
 						$this->error ( 'starttls failed' );
 					}

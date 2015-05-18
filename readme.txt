@@ -7,15 +7,14 @@ Stable tag: 1.6.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The most advanced SMTP Mailer and Email Log for WordPress. Configure an SMTP server and fix most mail problems, even on GoDaddy.
-
+Setup Wizard, Email Log, Port Tester, Send Gmail from GoDaddy, send Google Apps mail with OAuth2, dev mode and more!
 
 
 == Description ==
 
-Postman is a next-generation SMTP mailer that brings reliable email delivery to WordPress. It is the first SMTP plugin to support both passwords and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/), Yahoo Mail, Hotmail and Gmail's [preferred mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html). With OAuth 2.0, there is **no need to enter your email passsword** into software unknown.
+Postman is a next-generation SMTP mailer that brings reliable email delivery to WordPress. It is the first SMTP plugin to support both passwords and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/), Hotmail, Yahoo and Gmail's [preferred mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html). With OAuth 2.0, there is **no need to enter your email passsword** into software unknown.
 
-Out of the twenty identical [SMTP plugins](https://wordpress.org/plugins/search.php?q=smtp) available, what else makes Postman different? The intelligent **Setup Wizard** scans your SMTP server so you can't make a configuration mistake. The handy **Email Log** shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy, can't stop your Gmail as **Postman will deliver via HTTPS** instead of SMTP.
+Out of the twenty identical [SMTP plugins](https://wordpress.org/plugins/search.php?q=smtp) available, what else makes Postman different? The intelligent **Setup Wizard** scans your SMTP server so you can't make a configuration mistake. The handy **Email Log** shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy/Bluehost/Dreamhost, can't stop your Gmail as **Postman will deliver via HTTPS** instead of SMTP.
 
 Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), lost emails/spam ², and [password storage concerns](http://blog.varonis.com/giving-away-your-passwords/). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
@@ -254,16 +253,16 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.6.9 - 2015-05-18 =
-* [[Ticket](https://wordpress.org/support/topic/send-email-failed?replies=17#post-6954616)] Changed the way Postman performs the API Connectivity Test to more resemble how Google does it
 * Looks for php_openssl and php_socket in the Pre-Requisites check
+* [[Ticket](https://wordpress.org/support/topic/send-email-failed?replies=17#post-6954616)] Changed the way Postman performs the API Connectivity Test to more resemble how Google does it
 * [[Ticket](https://wordpress.org/support/topic/the-result-was-boolfalse-1?replies=1)] Found a host that the Connectivity Test gets confused on : send.one.com. STARTTLS detection was failing. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/fatal-error-after-the-latest-update?replies=9#post-6963805)] Some users insist on running Postman in WordPress < 3.6 which has no wp_slash function. Disabled logging in this case.
 
 = 1.6.8 - 2015-05-14 =
-* [[Ticket](https://wordpress.org/support/topic/fatal-error-after-the-latest-update?replies=2#post-6948880)] Found a PHP envrionment that choked in the catch block trying to call a function on an object instantiated in the try. Fixed.
+* [[Ticket](https://wordpress.org/support/topic/fatal-error-after-the-latest-update?replies=2#post-6948880)] Found a PHP envrionment that choked in the catch block trying to call a function (get transcript) on an object instantiated in the try (mail engine). Fixed.
 
 = 1.6.7 - 2015-05-14 =
-* [[Ticket](https://wordpress.org/support/topic/a-valid-address-is-required-issue-with-contact-form-builder-plugin?replies=2)] If wp_mail is called with a recipient list that contains a comma followed by no address, Postman literally tries to add no address to the message. Fixed.
+* [[Ticket](https://wordpress.org/support/topic/a-valid-address-is-required-issue-with-contact-form-builder-plugin?replies=2)] If wp_mail is called with a recipient list that contains a comma followed by no address, Postman tries to add no address to the message. Fixed.
 * The SMTP Session Transcript was not being saved for errors! Fixed.
 
 = 1.6.6 - 2015-05-12 =
