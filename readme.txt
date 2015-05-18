@@ -22,6 +22,7 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 *Email Logging! See the contents of every email WordPress creates.*
 
 
+
 = Features =
 * Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0 ¹
 * Send Gmail over HTTPS if the standard SMTP ports are blocked ¹
