@@ -101,7 +101,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function isMailLoggingAllowed() {
 			// mail logging requires wp_slash, added in WP 3.6.0
-			return function_exists ( 'wp_slash' )  && false;
+			return function_exists ( 'wp_slash' );
 		}
 		public function isStealthModeEnabled() {
 			if (isset ( $this->options [PostmanOptions::STEALTH_MODE] ))

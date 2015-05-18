@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.9
+Stable tag: 1.6.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -253,7 +253,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.9 - 2015-05-18 =
+= 1.6.10 - 2015-05-18 =
 * 5,000 installations!
 * Looks for php_openssl and php_socket in the Pre-Requisites check
 * [[Ticket](https://wordpress.org/support/topic/send-email-failed?replies=17#post-6954616)] Changed the way Postman performs the API Connectivity Test to more resemble how Google does it
