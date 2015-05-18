@@ -256,6 +256,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.6.10 - 2015-05-18 =
 * 5,000 installations!
 * Looks for php_openssl and php_socket in the Pre-Requisites check
+* [[Ticket](https://wordpress.org/support/topic/email-log-doesnt-show-up-after-upgrade?replies=2)] I hate when you have to have a fix for a fix. It means you need to hire more testers.
 * [[Ticket](https://wordpress.org/support/topic/send-email-failed?replies=17#post-6954616)] Changed the way Postman performs the API Connectivity Test to more resemble how Google does it
 * [[Ticket](https://wordpress.org/support/topic/the-result-was-boolfalse-1?replies=1)] Found a host that the Connectivity Test gets confused on : send.one.com. STARTTLS detection was failing. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/fatal-error-after-the-latest-update?replies=9#post-6963805)] Some users insist on running Postman in WordPress < 3.6 which has no wp_slash function. Logging is disabled in this case.
