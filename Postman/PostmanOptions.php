@@ -95,7 +95,13 @@ if (! class_exists ( "PostmanOptions" )) {
 			return ! isset ( $this->options [PostmanOptions::TRANSPORT_TYPE] );
 		}
 		public function isMailLoggingEnabled() {
-			return $this->getMailLoggingEnabled () == self::MAIL_LOG_ENABLED_OPTION_YES;
+			$allowed = $this->isMailLoggingAllowed ();
+			$enabled = $this->getMailLoggingEnabled () == self::MAIL_LOG_ENABLED_OPTION_YES;
+			return $allowed && $enabled;
+		}
+		public function isMailLoggingAllowed() {
+			// mail logging requires wp_slash, added in WP 3.6.0
+			return function_exists ( 'wp_slash' )  && false;
 		}
 		public function isStealthModeEnabled() {
 			if (isset ( $this->options [PostmanOptions::STEALTH_MODE] ))

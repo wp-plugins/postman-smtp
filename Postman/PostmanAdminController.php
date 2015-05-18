@@ -727,9 +727,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 			}
 		}
 		public function loggingStatusInputField() {
-			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::MAIL_LOG_ENABLED_OPTION );
-			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::MAIL_LOG_ENABLED_OPTION_YES, PostmanOptions::MAIL_LOG_ENABLED_OPTION_YES == $this->options->getMailLoggingEnabled () ? 'selected="selected"' : '', __ ( 'Yes', 'postman-smtp' ) );
-			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::MAIL_LOG_ENABLED_OPTION_NO, PostmanOptions::MAIL_LOG_ENABLED_OPTION_NO == $this->options->getMailLoggingEnabled () ? 'selected="selected"' : '', __ ( 'No', 'postman-smtp' ) );
+			// isMailLoggingAllowed
+			$disabled = "";
+			if (! $this->options->isMailLoggingAllowed ()) {
+				$disabled = 'disabled="disabled" ';
+			}
+			printf ( '<select ' . $disabled . 'id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::MAIL_LOG_ENABLED_OPTION );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::MAIL_LOG_ENABLED_OPTION_YES, $this->options->isMailLoggingEnabled () ? 'selected="selected"' : '', __ ( 'Yes', 'postman-smtp' ) );
+			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::MAIL_LOG_ENABLED_OPTION_NO, ! $this->options->isMailLoggingEnabled () ? 'selected="selected"' : '', __ ( 'No', 'postman-smtp' ) );
 			printf ( '</select>' );
 		}
 		public function loggingMaxEntriesInputField() {
