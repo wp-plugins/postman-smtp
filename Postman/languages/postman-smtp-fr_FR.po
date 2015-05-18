@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-05-14 14:18:38+00:00\n"
-"PO-Revision-Date: 2015-05-14 10:19-0500\n"
+"POT-Creation-Date: 2015-05-18 18:21:31+00:00\n"
+"PO-Revision-Date: 2015-05-18 14:23-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -553,8 +553,8 @@ msgid "Increase the timeouts if your host is intermittenly failing to send mail.
 msgstr "Augmenter le temp de lecture si votre hôte échoue à envoyer du courrier à répétitions. Attention, cette action est en corrélation avec le temps d'attente que subira l'usager si votre serveur de courrier est injoignable."
 
 #: Postman/PostmanAdminController.php:597
-msgid "Log Level specifies the level of detail written to the WordPress and PHP logfiles."
-msgstr "Log Level spécifie le niveau de détail par écrit les fichiers journaux et WordPress PHP."
+msgid "Log Level specifies the level of detail written to the WordPress and PHP logfiles. Delivery mode offers options useful in a development environment."
+msgstr "Niveau du journal spécifie le niveau de détail écrite dans les fichiers journaux de WordPress et PHP. Mode de livraison offre des options utiles dans un environnement de développement."
 
 #: Postman/PostmanAdminController.php:603
 msgid "Specify custom headers (e.g. <code>X-MC-Tags: wordpress-site-A</code>), one per line. Use custom headers with caution as they can negatively affect your Spam score."
@@ -580,67 +580,67 @@ msgstr "Forcer ce nom d'expéditeur pour tous les messages"
 msgid "Force this Sender Email Address for all messages"
 msgstr "Forcer cette adresse E-mail de l'expéditeur pour tous les messages"
 
-#: Postman/PostmanAdminController.php:731
+#: Postman/PostmanAdminController.php:736
 #: Postman/PostmanViewController.php:413
 msgid "Yes"
 msgstr "Oui"
 
-#: Postman/PostmanAdminController.php:732
+#: Postman/PostmanAdminController.php:737
 #: Postman/PostmanViewController.php:414
 msgid "No"
 msgstr "Non"
 
-#: Postman/PostmanAdminController.php:752
+#: Postman/PostmanAdminController.php:757
 msgid "Error computing your domain root - please enter it manually"
 msgstr "Erreur de compilation de votre serveur souche - entrez le manuellement"
 
-#: Postman/PostmanAdminController.php:841
+#: Postman/PostmanAdminController.php:846
 msgctxt "When the server is online to the public, this is \"Production\" mode"
-msgid "Production"
-msgstr "Production"
-
-#: Postman/PostmanAdminController.php:842
-msgid "Log Emails, then Dump"
-msgstr "Connectez-mails, puis déposez."
-
-#: Postman/PostmanAdminController.php:843
-msgid "Dump All Emails"
-msgstr "Supprimez toutes les e-mails"
+msgid "Log Email and Send"
+msgstr "Journal E-mail et envoyer"
 
 #: Postman/PostmanAdminController.php:847
+msgid "Log Email and Delete"
+msgstr "Journal E-mail et Supprimer"
+
+#: Postman/PostmanAdminController.php:848
+msgid "Delete All Emails"
+msgstr "Supprimez toutes les e-mails"
+
+#: Postman/PostmanAdminController.php:852
 msgid "Remove the Postman X-Header signature from messages"
 msgstr "Supprimer la signature de l'en-tête X facteur de messages"
 
 #. translators: where %s is the domain name of the site
-#: Postman/PostmanAjaxController.php:406
+#: Postman/PostmanAjaxController.php:405
 msgctxt "Test Email Subject"
 msgid "Postman SMTP Test (%s)"
 msgstr "Test SMTP de Postman (%s)"
 
 #. translators: where %s is the Postman plugin version number (e.g. 1.4)
-#: Postman/PostmanAjaxController.php:409 Postman/PostmanAjaxController.php:445
+#: Postman/PostmanAjaxController.php:408 Postman/PostmanAjaxController.php:444
 msgctxt "Test Email Tagline"
 msgid "Sent by Postman %s"
 msgstr "Envoyé par Postman %s"
 
-#: Postman/PostmanAjaxController.php:449
+#: Postman/PostmanAjaxController.php:448
 msgid "Image source"
 msgstr "Source de l'image"
 
-#: Postman/PostmanAjaxController.php:449
+#: Postman/PostmanAjaxController.php:448
 msgid "Used with permission"
 msgstr "Utilisé avec permission"
 
-#: Postman/PostmanAjaxController.php:462
+#: Postman/PostmanAjaxController.php:461
 msgid "Your message was delivered (%d ms) to the SMTP server! Congratulations :)"
 msgstr "Votre message à été livrer (%d ms) au serveur SMTP! Félicitations :)"
 
 #. translators: where %s is the email service name (e.g. Gmail)
-#: Postman/PostmanAjaxController.php:475
+#: Postman/PostmanAjaxController.php:474
 msgid "Communication Error [334] - make sure the Sender Email belongs to the account which provided the %s OAuth 2.0 consent."
 msgstr "Erreur de communications  [334]  - Assurez-vous que l'adresse d'envoi appartient au compte qui a fourni le consentement %s de OAuth 2.0."
 
-#: Postman/PostmanAjaxController.php:482
+#: Postman/PostmanAjaxController.php:481
 msgid "The impossible is possible; sending through wp_mail() failed, but sending through internal engine succeeded."
 msgstr "L'impossible est possible;  l'envoi avec wp_mail() à échoué, mais l'envoi interne à réussi."
 
@@ -1354,6 +1354,19 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "Log Level specifies the level of detail written to the WordPress and PHP logfiles."
+#~ msgstr "Log Level spécifie le niveau de détail par écrit les fichiers journaux et WordPress PHP."
+
+#~ msgctxt "When the server is online to the public, this is \"Production\" mode"
+#~ msgid "Production"
+#~ msgstr "Production"
+
+#~ msgid "Log Emails, then Dump"
+#~ msgstr "Connectez-mails, puis déposez."
+
+#~ msgid "Dump All Emails"
+#~ msgstr "Supprimez toutes les e-mails"
 
 #~ msgid "This is a record of delivery attempts made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient."
 #~ msgstr "Il s'agit d'un record de tentatives de remise faite à l'Agent de Submission Courrier (ASC). Il n'indique pas nécessairement sucessful remise au destinataire."

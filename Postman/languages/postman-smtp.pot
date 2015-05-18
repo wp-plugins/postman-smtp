@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Postman SMTP package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Postman SMTP 1.6.8\n"
+"Project-Id-Version: Postman SMTP 1.6.9\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-05-14 14:18:38+00:00\n"
+"POT-Creation-Date: 2015-05-18 18:21:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,7 +23,7 @@ msgid ""
 "</b>"
 msgstr ""
 
-#. #-#-#-#-#  plugin.pot (Postman SMTP 1.6.8)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Postman SMTP 1.6.9)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:52
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:58
@@ -590,7 +590,7 @@ msgstr ""
 #: Postman/PostmanAdminController.php:597
 msgid ""
 "Log Level specifies the level of detail written to the WordPress and PHP "
-"logfiles."
+"logfiles. Delivery mode offers options useful in a development environment."
 msgstr ""
 
 #: Postman/PostmanAdminController.php:603
@@ -620,70 +620,70 @@ msgstr ""
 msgid "Force this Sender Email Address for all messages"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:731
+#: Postman/PostmanAdminController.php:736
 #: Postman/PostmanViewController.php:413
 msgid "Yes"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:732
+#: Postman/PostmanAdminController.php:737
 #: Postman/PostmanViewController.php:414
 msgid "No"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:752
+#: Postman/PostmanAdminController.php:757
 msgid "Error computing your domain root - please enter it manually"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:841
+#: Postman/PostmanAdminController.php:846
 msgctxt "When the server is online to the public, this is \"Production\" mode"
-msgid "Production"
-msgstr ""
-
-#: Postman/PostmanAdminController.php:842
-msgid "Log Emails, then Dump"
-msgstr ""
-
-#: Postman/PostmanAdminController.php:843
-msgid "Dump All Emails"
+msgid "Log Email and Send"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:847
+msgid "Log Email and Delete"
+msgstr ""
+
+#: Postman/PostmanAdminController.php:848
+msgid "Delete All Emails"
+msgstr ""
+
+#: Postman/PostmanAdminController.php:852
 msgid "Remove the Postman X-Header signature from messages"
 msgstr ""
 
 #. translators: where %s is the domain name of the site
-#: Postman/PostmanAjaxController.php:406
+#: Postman/PostmanAjaxController.php:405
 msgctxt "Test Email Subject"
 msgid "Postman SMTP Test (%s)"
 msgstr ""
 
 #. translators: where %s is the Postman plugin version number (e.g. 1.4)
-#: Postman/PostmanAjaxController.php:409 Postman/PostmanAjaxController.php:445
+#: Postman/PostmanAjaxController.php:408 Postman/PostmanAjaxController.php:444
 msgctxt "Test Email Tagline"
 msgid "Sent by Postman %s"
 msgstr ""
 
-#: Postman/PostmanAjaxController.php:449
+#: Postman/PostmanAjaxController.php:448
 msgid "Image source"
 msgstr ""
 
-#: Postman/PostmanAjaxController.php:449
+#: Postman/PostmanAjaxController.php:448
 msgid "Used with permission"
 msgstr ""
 
-#: Postman/PostmanAjaxController.php:462
+#: Postman/PostmanAjaxController.php:461
 msgid ""
 "Your message was delivered (%d ms) to the SMTP server! Congratulations :)"
 msgstr ""
 
 #. translators: where %s is the email service name (e.g. Gmail)
-#: Postman/PostmanAjaxController.php:475
+#: Postman/PostmanAjaxController.php:474
 msgid ""
 "Communication Error [334] - make sure the Sender Email belongs to the "
 "account which provided the %s OAuth 2.0 consent."
 msgstr ""
 
-#: Postman/PostmanAjaxController.php:482
+#: Postman/PostmanAjaxController.php:481
 msgid ""
 "The impossible is possible; sending through wp_mail() failed, but sending "
 "through internal engine succeeded."

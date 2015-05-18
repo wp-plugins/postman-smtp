@@ -254,16 +254,17 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.6.9 - 2015-05-18 =
+* 5,000 installations!
 * Looks for php_openssl and php_socket in the Pre-Requisites check
 * [[Ticket](https://wordpress.org/support/topic/send-email-failed?replies=17#post-6954616)] Changed the way Postman performs the API Connectivity Test to more resemble how Google does it
 * [[Ticket](https://wordpress.org/support/topic/the-result-was-boolfalse-1?replies=1)] Found a host that the Connectivity Test gets confused on : send.one.com. STARTTLS detection was failing. Fixed.
-* [[Ticket](https://wordpress.org/support/topic/fatal-error-after-the-latest-update?replies=9#post-6963805)] Some users insist on running Postman in WordPress < 3.6 which has no wp_slash function. Disabled logging in this case.
+* [[Ticket](https://wordpress.org/support/topic/fatal-error-after-the-latest-update?replies=9#post-6963805)] Some users insist on running Postman in WordPress < 3.6 which has no wp_slash function. Logging is disabled in this case.
 
 = 1.6.8 - 2015-05-14 =
 * [[Ticket](https://wordpress.org/support/topic/fatal-error-after-the-latest-update?replies=2#post-6948880)] Found a PHP envrionment that choked in the catch block trying to call a function (get transcript) on an object instantiated in the try (mail engine). Fixed.
 
 = 1.6.7 - 2015-05-14 =
-* [[Ticket](https://wordpress.org/support/topic/a-valid-address-is-required-issue-with-contact-form-builder-plugin?replies=2)] If wp_mail is called with a recipient list that contains a comma followed by no address, Postman tries to add no address to the message. Fixed.
+* [[Ticket](https://wordpress.org/support/topic/a-valid-address-is-required-issue-with-contact-form-builder-plugin?replies=2)] If wp_mail is called with a recipient list that ends in a comma, Postman tries to add an empty address to the message. Fixed.
 * The SMTP Session Transcript was not being saved for errors! Fixed.
 
 = 1.6.6 - 2015-05-12 =
@@ -327,7 +328,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Translated into Turkish, thank-you ercan yaris
 
 = 1.5.11 - 2015-04-05 = 
-* Two thousand installations! :D
+* 2,000 installations! :D
 * Commercial-grade improvements to Connectivity Test and Setup Wizard. The new wizard prevents misconfiguration by interrogating the MTA for capabilities and intelligently suggests the best settings for the user. Steve Jobs would be proud.
 * Fixed Wizard's MSA hostname guess for GoDaddy addresses (smtp.secureserver.net is the MTA not the MSA)
 * Fixed Wizard's MSA hostname guess for Outlook 365 addresses (smtp.live.com is for their free Hotmail service)
@@ -345,7 +346,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * [[Ticket](https://wordpress.org/support/topic/problem-with-responding?replies=7#post-6723830)] Hide PHP warnings from `stream_set_timeout()` in case the host has disabled this function. 
 
 = 1.5.8 - 2015-03-16 =
-* One thousand installations! :D
+* 1,000 installations! :D
 * [[Ticket](https://wordpress.org/support/topic/openssl-error-after-upgrading?replies=2#post-6699480)] Postman will not shut down if it can't find OpenSSL. It will just display a warning to the user.
 
 = 1.5.7 - 2015-03-14 =
