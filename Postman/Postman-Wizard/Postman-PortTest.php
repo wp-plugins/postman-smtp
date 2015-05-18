@@ -25,6 +25,7 @@ class PostmanPortTest {
 	public $smtp;
 	public $smtps;
 	public $startTls;
+	public $checkStartTls;
 	public $authLogin;
 	public $authPlain;
 	public $authCrammd5;
@@ -191,9 +192,7 @@ class PostmanPortTest {
 				$this->debug ( sprintf ( 'domain name: %s (%s)', $this->reportedHostname, $this->reportedHostnameDomainOnly ) );
 				$this->sendSmtpCommand ( $stream, sprintf ( 'EHLO %s', $serverName ) );
 				$done = $this->readSmtpResponse ( $stream );
-				if ($done == 'auth') {
-					// no-op
-				} else if ($done == 'starttls') {
+				if ($this->checkStartTls) {
 					$this->sendSmtpCommand ( $stream, 'STARTTLS' );
 					$this->readSmtpResponse ( $stream );
 					$starttlsSuccess = @stream_socket_enable_crypto ( $stream, true, STREAM_CRYPTO_METHOD_TLS_CLIENT );
@@ -253,6 +252,7 @@ class PostmanPortTest {
 				$result = 'auth';
 			} elseif (preg_match ( '/STARTTLS/', $line )) {
 				$result = 'starttls';
+				$this->checkStartTls = true;
 				$this->debug ( 'starttls' );
 			} elseif (preg_match ( '/^220.(.*?)\\s/', $line, $matches )) {
 				if (empty ( $result ))
