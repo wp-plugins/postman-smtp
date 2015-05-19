@@ -13,6 +13,8 @@
  */
 
 // ideas for future versions of the plugin
+// -- SendGrid API https://github.com/sendgrid/sendgrid-php-example
+// -- Postmark API http://plugins.svn.wordpress.org/postmark-approved-wordpress-plugin/trunk/postmark.php
 // -- add WPMU functionality. ideas: allow network setup for network emails. allow network admin to choose whether subdomains may override with their own settings. subdomains may override with their own settings.
 // -- send mail in the background using ajax - the single mail thread can block the PHP server for quite some time
 
