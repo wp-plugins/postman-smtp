@@ -7,12 +7,12 @@ Stable tag: 1.6.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Setup Wizard, Email Log, Port Tester, Send Gmail from GoDaddy, send Google Apps mail with OAuth2, dev mode and more!
+Advanced SMTP for WordPress: Setup Wizard, Port Tester, HTTPS and SMTP delivery, OAuth2 authentication, and more!
 
 
 == Description ==
 
-Postman is a next-generation SMTP mailer that brings reliable email delivery to WordPress. It is the first SMTP plugin to support both passwords and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/), Hotmail, Yahoo and Gmail's [preferred mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html). With OAuth 2.0, there is **no need to enter your email passsword** into software unknown.
+Postman is a next-generation SMTP mailer that brings reliable email delivery to WordPress no matter which email service you use. It is the first SMTP plugin to support both passwords and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/), Hotmail, Yahoo and Gmail's [preferred mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html). With OAuth 2.0, there is **no need to enter your email passsword** into software unknown.
 
 Out of the twenty identical [SMTP plugins](https://wordpress.org/plugins/search.php?q=smtp) available, what else makes Postman different? The intelligent **Setup Wizard** scans your SMTP server so you can't make a configuration mistake. The handy **Email Log** shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy/Bluehost/Dreamhost, can't stop your Gmail as **Postman will deliver via HTTPS** instead of SMTP.
 
@@ -24,12 +24,13 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 
 
 = Features =
-* Configure Gmail, Hotmail or Yahoo Mail to use OAuth 2.0 ¹
-* Send Gmail over HTTPS if the standard SMTP ports are blocked ¹
+* Takes over `wp_mail` to send all WordPress email via SMTP
 * Logs all emails sent, including message content and errors
 * Easy-to-use, powerful Setup Wizard for perfect configuration
-* Fire-and-forget delivery continues even if the password changes ¹
 * Commercial-grade Connectivity Tester to diagnose server issues
+* Fire-and-forget delivery continues even if the password changes ¹
+* Send Gmail over HTTPS if the standard SMTP ports are blocked ¹
+* Supports Gmail, Hotmail and Yahoo's OAuth 2.0 implementation ¹
 * Supports International alphabets, HTML Mail and MultiPart/Alternative
 * Supports forced recipients (cc, bcc, to) and [Mandrill](http://mandrill.com) X-headers
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
@@ -252,6 +253,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 
 == Changelog ==
+
+= 1.6.11 =
+* Fix for "Fatal error: Call to undefined function spritnf() in PostmanEmailLogController.php on line 284" - sometimes PHP really sucks compared to Java
 
 = 1.6.10 - 2015-05-18 =
 * 5,000 installations!
