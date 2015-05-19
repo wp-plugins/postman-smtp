@@ -11,11 +11,11 @@ Take control of your Outgoing Email with the most modern, user-friendly and reli
 
 == Description ==
 
-Postman is a next-generation SMTP mailer compatible with all email systems. It is the first and only SMTP plugin to support both traditional passwords and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/), the [modern security mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html). With OAuth 2.0, there is **no need to store your email passsword** in the WordPress database where hackers can access it.
+Postman is a next-generation SMTP mailer compatible with all email systems. It is the first and only SMTP plugin to support both traditional passwords and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/), the [modern security mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html). With OAuth 2.0, there is **no need to store your email passsword** in the WordPress database [where hackers can access it](http://blog.varonis.com/giving-away-your-passwords/).
 
 Out of the twenty near-identical [SMTP plugins](https://wordpress.org/plugins/search.php?q=smtp) available, what else makes Postman completely unique? The intelligent **Setup Wizard** scans your SMTP server so you can't make a configuration mistake. The handy **Email Log** shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy or Bluehost, can't stop your Gmail as **Postman will deliver via HTTPS** if it can't use SMTP.
 
-Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), lost emails/spam ², and [password storage concerns](http://blog.varonis.com/giving-away-your-passwords/). Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
+Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), lost emails and spam ². Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
 ###* What's New for v1.6 *
 *Email Logging! See the contents of every email WordPress creates.*
