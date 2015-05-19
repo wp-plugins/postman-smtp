@@ -7,8 +7,7 @@ Stable tag: 1.6.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Advanced SMTP for WordPress: Setup Wizard, Port Tester, HTTPS and SMTP delivery, OAuth2 authentication, and more!
-
+Take control of your Outgoing Email with the most modern, user-friendly and reliable SMTP Mailer for WordPress!
 
 == Description ==
 
@@ -255,7 +254,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.6.11 =
-* Fix for "Fatal error: Call to undefined function spritnf() in PostmanEmailLogController.php on line 284" - compared to Java, sometimes PHP really sucks
+* Fix for "Fatal error: Call to undefined function spritnf() in PostmanEmailLogController.php on line 284" - sometimes PHP really sucks compared to Java
 
 = 1.6.10 - 2015-05-18 =
 * 5,000 installations!
