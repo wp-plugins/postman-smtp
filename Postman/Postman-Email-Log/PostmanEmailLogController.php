@@ -281,7 +281,7 @@ if (! class_exists ( 'PostmanEmailLogPurger' )) {
 			$this->logger->warn ( 'could not find Postman Log Item #' . $postid );
 		}
 		function removeAll() {
-			$this->logger->debug ( spritnf ( 'deleting %d log items ', sizeof ( $this->posts ) ) );
+			$this->logger->debug ( sprintf ( 'deleting %d log items ', sizeof ( $this->posts ) ) );
 			$force_delete = true;
 			foreach ( $this->posts as $post ) {
 				wp_delete_post ( $post->ID, $force_delete );
