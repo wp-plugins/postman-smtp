@@ -674,7 +674,11 @@ if (! class_exists ( 'PostmanViewController' )) {
 			} else {
 				printf ( '<li><div class="welcome-icon send_test_email">%s</div></li>', __ ( 'Send a Test Email', 'postman-smtp' ) );
 			}
-			printf ( '<li><a href="%s" class="welcome-icon oauth-authorize">%s</a></li>', $this->getPageUrl ( PostmanAdminController::PURGE_DATA_SLUG ), __ ( 'Delete plugin settings', 'postman-smtp' ) );
+			$purgeLinkPattern = '<li><a href="%1$s" class="welcome-icon oauth-authorize">%2$s</a></li>';
+			if ($this->options->isNew ()) {
+				$purgeLinkPattern = '<li>%2$s</li>';
+			}
+			printf ( $purgeLinkPattern, $this->getPageUrl ( PostmanAdminController::PURGE_DATA_SLUG ), __ ( 'Delete plugin settings', 'postman-smtp' ) );
 			print '</ul>';
 			print '</div>';
 			print '<div class="welcome-panel-column welcome-panel-last">';
