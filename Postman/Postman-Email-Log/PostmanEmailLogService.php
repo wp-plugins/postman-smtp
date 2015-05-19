@@ -145,10 +145,7 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 				$log->success = $success;
 				$log->statusMessage = $statusMessage;
 				$log->transportUri = PostmanTransportRegistry::getInstance ()->getPublicTransportUri ( $transport );
-				$log->sessionTranscript = 'n/a';
-				if (! empty ( $transcript )) {
-					$log->sessionTranscript = $transcript;
-				}
+				$log->sessionTranscript = $transcript;
 				$this->writeToEmailLog ( $log );
 			}
 		}

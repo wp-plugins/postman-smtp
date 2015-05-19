@@ -148,6 +148,8 @@ if (! class_exists ( 'PostmanEmailLogController' )) {
 			print '<pre>';
 			if (! empty ( $meta_values ['session_transcript'] [0] )) {
 				print esc_html ( $meta_values ['session_transcript'] [0] );
+			} else {
+				print __ ( 'n/a', 'postman-smtp' );
 			}
 			print '</pre>';
 			print '</body></html>';
