@@ -107,7 +107,10 @@ if (! class_exists ( 'Postman' )) {
 		public function check_for_configuration_errors() {
 			// are we bound?
 			if ($this->wpMailBinder->isUnboundDueToException ()) {
-				$this->messageHandler->addError ( __ ( 'Error: Postman is properly configured, but the current theme or another plugin is preventing service.', 'postman-smtp' ) );
+				// I noticed the wpMandrill and SendGrid plugins have the exact same error message here
+				// I've decided to adopt their error message as well, for shits and giggles .... :D
+				$this->messageHandler->addError ( __ ( 'Postman: wp_mail has been declared by another plugin or theme, so you won\'t be able to use Postman until the conflict is resolved.', 'postman-smtp' ) );
+				// $this->messageHandler->addError ( __ ( 'Error: Postman is properly configured, but the current theme or another plugin is preventing service.', 'postman-smtp' ) );
 			}
 			
 			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
