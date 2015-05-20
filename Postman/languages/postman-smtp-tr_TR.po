@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.5.7\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-05-18 18:21:31+00:00\n"
-"PO-Revision-Date: 2015-05-18 14:25-0500\n"
+"POT-Creation-Date: 2015-05-20 20:51:59+00:00\n"
+"PO-Revision-Date: 2015-05-20 17:00-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr_TR\n"
@@ -42,7 +42,7 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:69
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:170
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:172
 msgctxt "The log of Emails that have been delivered"
 msgid "Email Log"
 msgstr "E-posta günlüğü"
@@ -52,7 +52,6 @@ msgid "Error: Postman is missing a required PHP library."
 msgstr "Postman gerek duyduğu bir PHP kütüphanesine ulaşamıyor."
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:76
-#: Postman/Postman.php:110
 msgid "Error: Postman is properly configured, but the current theme or another plugin is preventing service."
 msgstr "Postman başarıyla kuruldu, fakat şu anda farklı bir mail servisi kullanıyorsunuz. Diğer eklentiyi deaktif ediniz."
 
@@ -68,13 +67,13 @@ msgid_plural "<span style=\"color:green\">Postman is configured</span> and has d
 msgstr[0] "<span style=\"color:green\">Postman ayarlandı</span> ve <span style=\"color:green\">%d</span> adet emaili başarıyla gönderdi."
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:86
-#: Postman/Postman.php:144 Postman/PostmanViewController.php:498
+#: Postman/Postman.php:147 Postman/PostmanViewController.php:498
 msgid "Postman is <em>not</em> handling email delivery."
 msgstr "Postman email gönderimlerinizdeki aktif eklenti değil."
 
 #. translators: where %s is the URL to the Postman Setup page
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:86
-#: Postman/Postman.php:147
+#: Postman/Postman.php:150
 msgid "<a href=\"%s\">Configure</a> the plugin."
 msgstr "Eklentiyi <a href=\"%s\">ayarla</a>."
 
@@ -98,7 +97,7 @@ msgstr "OAuth 2.0 (müşteri kimliği ve istemci gizli gerektirir)"
 #: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:150
 #: Postman/PostmanAdminController.php:624
 #: Postman/PostmanAdminController.php:638
-#: Postman/PostmanViewController.php:718
+#: Postman/PostmanViewController.php:722
 msgctxt "As in type used: None"
 msgid "None"
 msgstr "Hiçbiri"
@@ -144,16 +143,20 @@ msgid "Delivery-URI"
 msgstr "Teslimat-URI"
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:146
-#: Postman/PostmanViewController.php:866
+#: Postman/PostmanViewController.php:870
 msgid "This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your shared secret (password) in encoded form."
 msgstr "SMTP sunucunuz ve Postman arasındaki diyaloğu buradan takip edebilirsiniz. Bu sorunların teşhisinde size yol gösterebilir. <b>DİKKAT</b> bunu herhangi biriyle paylaşmayın. İçerisinde size özel gizli anahtar (şifre) bilgileri olabilir."
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:170
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:208
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:152
+msgid "n/a"
+msgstr "yok"
+
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:172
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:210
 msgid "Postman Email Log"
 msgstr "Postacı e-posta günlüğü"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:214
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:216
 msgid "This is a record of deliveries made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient."
 msgstr "Bu posta teslimi Aracısı (MSA) yapılan teslim girişimleri kaydıdır. Sucessful alıcıya teslim için mutlaka göstermez."
 
@@ -184,7 +187,7 @@ msgid "Transcript"
 msgstr "Transkript"
 
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:138
-#: Postman/PostmanViewController.php:856
+#: Postman/PostmanViewController.php:860
 msgctxt "Was sending this email successful or not?"
 msgid "Status"
 msgstr "Durum"
@@ -323,6 +326,10 @@ msgstr "Önerilen ayarları %1$s %2$s host %4$s bağlantı noktası %3$ d üzeri
 msgid "The selected transport '%s' is unavailable. The external plugin was probably deactivated."
 msgstr "Seçtiğiniz iletim türü kullanılamıyor. Harici eklenti büyük ihtimalle devre dışı."
 
+#: Postman/Postman.php:112
+msgid "Postman: wp_mail has been declared by another plugin or theme, so you won't be able to use Postman until the conflict is resolved."
+msgstr "Postman başarıyla kuruldu, fakat şu anda farklı bir mail servisi kullanıyorsunuz. Diğer eklentiyi deaktif ediniz."
+
 #: Postman/PostmanAdminController.php:103
 msgctxt "The plugin successfully saved new settings."
 msgid "Settings saved."
@@ -366,8 +373,8 @@ msgid "Transport Settings"
 msgstr "İçe Aktarım Ayarları"
 
 #: Postman/PostmanAdminController.php:315
-#: Postman/PostmanViewController.php:596 Postman/PostmanViewController.php:742
-#: Postman/PostmanViewController.php:747
+#: Postman/PostmanViewController.php:596 Postman/PostmanViewController.php:746
+#: Postman/PostmanViewController.php:751
 msgid "Outgoing Mail Server Hostname"
 msgstr "SMTP Sunucusu"
 
@@ -383,19 +390,19 @@ msgstr "Güvenlik"
 #: Postman/PostmanAdminController.php:330
 #: Postman/PostmanAdminController.php:335
 #: Postman/PostmanAdminController.php:351
-#: Postman/PostmanViewController.php:768 Postman/PostmanViewController.php:774
+#: Postman/PostmanViewController.php:772 Postman/PostmanViewController.php:778
 msgctxt "Authentication proves the user's identity"
 msgid "Authentication"
 msgstr "Kimlik Doğrulama Ayarları"
 
 #: Postman/PostmanAdminController.php:340
-#: Postman/PostmanViewController.php:800
+#: Postman/PostmanViewController.php:804
 msgctxt "Configuration Input Field"
 msgid "Username"
 msgstr "Kullanıcı Adı"
 
 #: Postman/PostmanAdminController.php:345
-#: Postman/PostmanViewController.php:804
+#: Postman/PostmanViewController.php:808
 msgid "Password"
 msgstr "Şifre"
 
@@ -405,13 +412,13 @@ msgid "Sender"
 msgstr "Gönderen"
 
 #: Postman/PostmanAdminController.php:382
-#: Postman/PostmanViewController.php:734
+#: Postman/PostmanViewController.php:738
 msgctxt "Configuration Input Field"
 msgid "Sender Email Address"
 msgstr "Gönderen Email Adresi"
 
 #: Postman/PostmanAdminController.php:392
-#: Postman/PostmanViewController.php:737
+#: Postman/PostmanViewController.php:741
 msgctxt "Configuration Input Field"
 msgid "Sender Name"
 msgstr "Gönderen Adı"
@@ -506,19 +513,19 @@ msgid "Test Your Setup"
 msgstr "Kurulumu Test Edin"
 
 #: Postman/PostmanAdminController.php:508
-#: Postman/PostmanViewController.php:844
+#: Postman/PostmanViewController.php:848
 msgctxt "Configuration Input Field"
 msgid "Recipient Email Address"
 msgstr "Alıcı Email Adresi"
 
 #: Postman/PostmanAdminController.php:514
-#: Postman/PostmanViewController.php:576 Postman/PostmanViewController.php:677
+#: Postman/PostmanViewController.php:576 Postman/PostmanViewController.php:681
 msgid "Delete plugin settings"
 msgstr "Eklenti ayarlarını sil"
 
 #: Postman/PostmanAdminController.php:524
-msgid "The most common transport is SMTP:"
-msgstr "En çok kullanılan ulaşım SMTP's:"
+msgid "Choose SMTP or a vendor-specific API:"
+msgstr "SMTP veya satıcıya özel API seçin:"
 
 #: Postman/PostmanAdminController.php:530
 msgid "Configure the communication with the Mail Submission Agent (MSA):"
@@ -839,7 +846,7 @@ msgstr "Postacı, e-posta WordPress site Internet'e teslim eden bir SMTP posta a
 
 #: Postman/PostmanViewController.php:117 Postman/PostmanViewController.php:230
 #: Postman/PostmanViewController.php:275 Postman/PostmanViewController.php:328
-#: Postman/PostmanViewController.php:685
+#: Postman/PostmanViewController.php:689
 msgid "Online Support"
 msgstr "Online Destek"
 
@@ -869,12 +876,12 @@ msgid "<a href=\"%s\">Spoofing</a>, when it results in an SPF violation, will ge
 msgstr "SPF ihlaline sonuçlandığında <a href=\"%s\">sızdırma</a>, binned iletinizi alacak. Gönderen olarak adresinize kullanın (From:) <em>her</em> e-posta."
 
 #: Postman/PostmanViewController.php:225 Postman/PostmanViewController.php:673
-#: Postman/PostmanViewController.php:675 Postman/PostmanViewController.php:832
+#: Postman/PostmanViewController.php:675 Postman/PostmanViewController.php:836
 msgid "Send a Test Email"
 msgstr "Test Emaili Gönder"
 
 #: Postman/PostmanViewController.php:270 Postman/PostmanViewController.php:641
-#: Postman/PostmanViewController.php:684
+#: Postman/PostmanViewController.php:688
 msgctxt "Short for \"Diagnostic Information\""
 msgid "Diagnostic Info"
 msgstr "Tanılama bilgisi"
@@ -932,7 +939,7 @@ msgid "This indicates the authenication methods that the server supports. All ar
 msgstr "Bu sunucunun desteklediği AUTHENICATION yöntemleri gösterir. Tüm hangi belirteci tabanlı, parola tabanlı ve OAuth 2.0 hariç."
 
 #: Postman/PostmanViewController.php:323 Postman/PostmanViewController.php:591
-#: Postman/PostmanViewController.php:755 Postman/PostmanViewController.php:759
+#: Postman/PostmanViewController.php:759 Postman/PostmanViewController.php:763
 msgctxt "A testing tool which determines connectivity to the Internet"
 msgid "Connectivity Test"
 msgstr "Bağlantı Testi"
@@ -957,7 +964,7 @@ msgctxt "eg. TCP Port 25"
 msgid "Port"
 msgstr "Portu"
 
-#: Postman/PostmanViewController.php:417 Postman/PostmanViewController.php:853
+#: Postman/PostmanViewController.php:417 Postman/PostmanViewController.php:857
 msgctxt "Email Test Status"
 msgid "In Outbox"
 msgstr "Gönderilecek"
@@ -1184,165 +1191,165 @@ msgctxt "Main Menu"
 msgid "Actions"
 msgstr "Eylemler"
 
-#: Postman/PostmanViewController.php:681
+#: Postman/PostmanViewController.php:685
 msgctxt "Main Menu"
 msgid "Troubleshooting"
 msgstr "Sorun Giderme"
 
-#: Postman/PostmanViewController.php:683
+#: Postman/PostmanViewController.php:687
 msgid "Run a Connectivity Test"
 msgstr "Bağlantı Testini Başlat"
 
-#: Postman/PostmanViewController.php:699
+#: Postman/PostmanViewController.php:703
 msgctxt "Page Title"
 msgid "Postman Setup Wizard"
 msgstr "Postman Kurulum Sihirbazı"
 
-#: Postman/PostmanViewController.php:713
+#: Postman/PostmanViewController.php:717
 msgctxt "Wizard Step Title"
 msgid "Import Configuration"
 msgstr "Ayarları İçeri Aktar"
 
-#: Postman/PostmanViewController.php:715
+#: Postman/PostmanViewController.php:719
 msgctxt "Wizard Step Title"
 msgid "Import configuration from another plugin?"
 msgstr "Ayarları diğer eklentiden aktar?"
 
-#: Postman/PostmanViewController.php:716
+#: Postman/PostmanViewController.php:720
 msgid "If you had a working configuration with another Plugin, the Setup Wizard can begin with those settings."
 msgstr "Diğer bir çalışan eklentiniz varsa, Kurulum Sihirbazı tüm ayarlarınızı içeri aktaracaktır."
 
-#: Postman/PostmanViewController.php:729
+#: Postman/PostmanViewController.php:733
 msgctxt "Wizard Step Title"
 msgid "Sender Details"
 msgstr "Gönderen Bilgisi"
 
-#: Postman/PostmanViewController.php:731
+#: Postman/PostmanViewController.php:735
 msgctxt "Wizard Step Title"
 msgid "Who is the mail coming from?"
 msgstr "Email kimden gidecek?"
 
-#: Postman/PostmanViewController.php:732
+#: Postman/PostmanViewController.php:736
 msgid "Enter the email address and name you'd like to send mail as."
 msgstr "Lütfen gönderen email adresi ve ismi belirtiniz."
 
-#: Postman/PostmanViewController.php:733
+#: Postman/PostmanViewController.php:737
 msgid "Please note that to combat Spam, many email services will <em>not</em> let you send from an email address other than the one you authenticate with."
 msgstr "Lütfen şunu da not edin, birçok email servisi <em>asla</em> kendi emailizden farklı bir email adına gönderim yapmanıza izin vermez."
 
-#: Postman/PostmanViewController.php:744
+#: Postman/PostmanViewController.php:748
 msgctxt "Wizard Step Title"
 msgid "Which host will relay the mail?"
 msgstr "Hangi sunucudan gönderim yapılacak?"
 
-#: Postman/PostmanViewController.php:745
+#: Postman/PostmanViewController.php:749
 msgid "This is the Outgoing (SMTP) Mail Server, or Mail Submission Agent (MSA), which Postman delegates mail delivery to. This server is specific to your email account, and if you don't know what to use, ask your email service provider."
 msgstr "Giden (SMTP) posta sunucusu veya posta gönderme aracı (MSA), hangi postacı delege teslimatı için posta bu. Bu sunucu e-posta hesabınıza özgü ve kullanımı ne bilmiyorsanız, e-posta servis sağlayıcınıza sorun."
 
-#: Postman/PostmanViewController.php:746
+#: Postman/PostmanViewController.php:750
 msgid "Note that many WordPress hosts, such as GoDaddy, Bluehost and Dreamhost, require that you use their mail accounts with their mail servers, and prevent you from using others."
 msgstr "Not GoDaddy, Bluehost ve Dreamhost, gibi birçok WordPress ana posta hesaplarını kendi posta sunucularıyla kullanmak ve başkalarının kullanmasını engellemek gerekir."
 
-#: Postman/PostmanViewController.php:750
+#: Postman/PostmanViewController.php:754
 msgid "<b>Error</b>: Your email address <b>requires</b> access to a remote SMTP server blocked by GoDaddy. Use a different e-mail address."
 msgstr "<b>Hata</b>: GoDaddy tarafından engellenen bir uzak SMTP sunucusunun e-posta adresi <b>gerektirir</b> erişim. Farklı e-posta adresi kullanın."
 
-#: Postman/PostmanViewController.php:751
+#: Postman/PostmanViewController.php:755
 msgid "<b>Warning</b>: If you own this domain, make sure it has an <a href=\"%s\">SPF record authorizing GoDaddy</a> as a relay, or you will have delivery problems."
 msgstr "<b>Uyarı</b>: Bu etki alanına sahipseniz, geçişi olarak bir <a href=\"%s\">SPF kaydı GoDaddy yetkisi</a> var. veya teslim sorunları olacaktır emin olun."
 
-#: Postman/PostmanViewController.php:757
+#: Postman/PostmanViewController.php:761
 msgctxt "Wizard Step Title"
 msgid "How will the connection to the MSA be established?"
 msgstr "Giden Posta Sunucusu'na nasıl bağlanılacak?"
 
-#: Postman/PostmanViewController.php:758
+#: Postman/PostmanViewController.php:762
 msgid "Your connection settings depend on what your email service provider offers, and what your WordPress host allows."
 msgstr "Bağlantı ayarlarınızı ne e-posta servis sağlayıcınıza sunar ve ne senin WordPress ana verir bağlıdır."
 
-#: Postman/PostmanViewController.php:759
+#: Postman/PostmanViewController.php:763
 msgctxt "TCP Port Test Status"
 msgid "Ready"
 msgstr "Hazır"
 
 #. Translators: Where %1$s is the socket identifier and %2$s is the
 #. authentication type
-#: Postman/PostmanViewController.php:767
+#: Postman/PostmanViewController.php:771
 msgctxt "A socket is the network term for host and port together"
 msgid "Socket"
 msgstr "Soket"
 
-#: Postman/PostmanViewController.php:770
+#: Postman/PostmanViewController.php:774
 msgid "Warning: This configuration option will send your authorization credentials in the clear."
 msgstr "Uyarı: Bu yapılandırma seçeneği açık yetkilendirme kimlik bilgileri gönderir."
 
-#: Postman/PostmanViewController.php:776
+#: Postman/PostmanViewController.php:780
 msgctxt "Wizard Step Title"
 msgid "How will you prove your identity to the MSA?"
 msgstr "Kendinizi Giden Posta Sunucusu'na nasıl tanıtacaksınız?"
 
-#: Postman/PostmanViewController.php:799
+#: Postman/PostmanViewController.php:803
 msgid "Enter your credentials. Your username is often your email address."
 msgstr "Bilgilerinizi giriniz. Kullanıcı adınız genellikle email adresinizdir."
 
-#: Postman/PostmanViewController.php:812
+#: Postman/PostmanViewController.php:816
 msgctxt "The final step of the Wizard"
 msgid "Finish"
 msgstr "Tamamla"
 
-#: Postman/PostmanViewController.php:814
+#: Postman/PostmanViewController.php:818
 msgctxt "Wizard Step Title"
 msgid "You're Done!"
 msgstr "Harika!"
 
-#: Postman/PostmanViewController.php:816
+#: Postman/PostmanViewController.php:820
 msgid "Click Finish to save these settings, then:"
 msgstr "Tamamla butonuna basarak tüm ayarlarınızı kaydedin, sonra:"
 
-#: Postman/PostmanViewController.php:818
+#: Postman/PostmanViewController.php:822
 msgid "Grant permission with the Email Provider for Postman to send email and"
 msgstr "Email hizmeti aldığınız servisten Postman'a yetki verinki email gönderebilsin."
 
-#: Postman/PostmanViewController.php:819
+#: Postman/PostmanViewController.php:823
 msgid "Send yourself a Test Email to make sure everything is working!"
 msgstr "Ve unutmadan kendinize Test Email'i göndererek herşeyin yolunda olup olmadığına bakın!"
 
-#: Postman/PostmanViewController.php:837
+#: Postman/PostmanViewController.php:841
 msgid "Choose the Recipient"
 msgstr "Alıcı Belirtin"
 
-#: Postman/PostmanViewController.php:839
+#: Postman/PostmanViewController.php:843
 msgid "Who is this message going to?"
 msgstr "Bu email kime gidiyor?"
 
-#: Postman/PostmanViewController.php:840
+#: Postman/PostmanViewController.php:844
 msgid "This utility allows you to send an email message for testing."
 msgstr "Bu araç sayesinde test emaili gönderebilirsiniz."
 
 # turkish doesn’t has s letter on calculations ;)
 #. translators: where %d is an amount of time, in seconds
-#: Postman/PostmanViewController.php:843
+#: Postman/PostmanViewController.php:847
 msgid "If there is a problem, Postman will give up after %d second."
 msgid_plural "If there is a problem, Postman will give up after %d seconds."
 msgstr[0] "Eğer bir problem varsa Postman %d saniye sonra vazgeçecek."
 
-#: Postman/PostmanViewController.php:849
+#: Postman/PostmanViewController.php:853
 msgid "Send The Message"
 msgstr "Gönder"
 
-#: Postman/PostmanViewController.php:852
+#: Postman/PostmanViewController.php:856
 msgid "Sending the message:"
 msgstr "Email gönderiliyor:"
 
-#: Postman/PostmanViewController.php:863
+#: Postman/PostmanViewController.php:867
 msgid "Session Transcript"
 msgstr "Durum Detayı"
 
-#: Postman/PostmanViewController.php:865
+#: Postman/PostmanViewController.php:869
 msgid "Examine the SMTP Session Transcript if you need to."
 msgstr "İhtiyacınız olması durumunda SMTP Durum Detayını inceleyebilirsiniz."
 
-#: Postman/PostmanViewController.php:868
+#: Postman/PostmanViewController.php:872
 msgid "SMTP Session Transcript"
 msgstr "SMTP Durum Detayı"
 
@@ -1351,7 +1358,7 @@ msgid "https://wordpress.org/plugins/postman-smtp/"
 msgstr "https://wordpress.org/plugins/postman-smtp/"
 
 #. Description of the plugin/theme
-msgid "Email not working? Postman is the first and only WordPress SMTP plugin to implement OAuth 2.0 for Gmail, Hotmail and Yahoo Mail. Setup is a breeze with the Configuration Wizard and integrated Port Tester. Enjoy worry-free delivery even if your password changes!"
+msgid "Email not reliable? Postman is the first and only WordPress SMTP plugin to implement OAuth 2.0 for Gmail, Hotmail and Yahoo Mail. Setup is a breeze with the Configuration Wizard and integrated Port Tester. Enjoy worry-free delivery even if your password changes!"
 msgstr "Email sisteminiz çalışmıyor mu? Postman; Gmail, Hotmail ve Yahoo Mail için OAuth 2.0 destekli ilk WordPress SMTP eklentisidir. Kurulumu ise Kurulum Sihirbazı ve Port Test araçları ile çok basittir. Şifrenizi değiştirseniz dahi kesintisiz email gönderiminin keyfini çıkarın!"
 
 #. Author of the plugin/theme
@@ -1361,6 +1368,12 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgid "The most common transport is SMTP:"
+#~ msgstr "En çok kullanılan ulaşım SMTP's:"
+
+#~ msgid "Email not working? Postman is the first and only WordPress SMTP plugin to implement OAuth 2.0 for Gmail, Hotmail and Yahoo Mail. Setup is a breeze with the Configuration Wizard and integrated Port Tester. Enjoy worry-free delivery even if your password changes!"
+#~ msgstr "Email sisteminiz çalışmıyor mu? Postman; Gmail, Hotmail ve Yahoo Mail için OAuth 2.0 destekli ilk WordPress SMTP eklentisidir. Kurulumu ise Kurulum Sihirbazı ve Port Test araçları ile çok basittir. Şifrenizi değiştirseniz dahi kesintisiz email gönderiminin keyfini çıkarın!"
 
 #~ msgid "Log Level specifies the level of detail written to the WordPress and PHP logfiles."
 #~ msgstr "Loglama Seviyesi WordPress ve PHP için logların detaylı olup olmamasını belirler."
