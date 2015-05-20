@@ -22,9 +22,11 @@ if (! class_exists ( 'Postman' )) {
 	require_once 'Postman-Controller/PostmanAdminPointer.php';
 	
 	/**
+	 * This is the "main" class for Postman.
+	 * All execution begins here.
 	 *
 	 * @author jasonhendriks
-	 *        
+	 * @copyright Jan 16, 2015
 	 */
 	class Postman {
 		const LONG_ENOUGH_SEC = 432000;
@@ -36,8 +38,10 @@ if (! class_exists ( 'Postman' )) {
 		private $pluginData;
 		
 		/**
+		 * The constructor
 		 *
-		 * @param unknown $rootPluginFilenameAndPath        	
+		 * @param unknown $rootPluginFilenameAndPath
+		 *        	- the __FILE__ of the caller
 		 */
 		public function __construct($rootPluginFilenameAndPath) {
 			
@@ -55,11 +59,8 @@ if (! class_exists ( 'Postman' )) {
 			$this->options = PostmanOptions::getInstance ();
 			$this->authToken = PostmanOAuthToken::getInstance ();
 			
-			// create an instance of the MessageHandler
+			// create and store an instance of the MessageHandler
 			$this->messageHandler = new PostmanMessageHandler ();
-			
-			// create an instance of the EmailLog
-			$emailLog = PostmanEmailLogService::getInstance ();
 			
 			// store an instance of the WpMailBinder
 			$this->wpMailBinder = PostmanWpMailBinder::getInstance ();
@@ -70,13 +71,14 @@ if (! class_exists ( 'Postman' )) {
 			// bind to wp_mail - this has to happen before the "init" action
 			$this->wpMailBinder->bind ();
 			
+			// the following code should be restricted to the admin user
 			if (is_admin ()) {
-				// the following classes should only be used if the current user is an admin
 				new PostmanDashboardWidgetController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->wpMailBinder );
 				$adminController = new PostmanAdminController ( $rootPluginFilenameAndPath, $this->pluginData, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
 				new PostmanEmailLogController ( $rootPluginFilenameAndPath, $this->pluginData );
 				new PostmanAdminPointer ( $rootPluginFilenameAndPath );
-				// do this only if we're on a postman admin screen
+				
+				// register the Postman signature (only if we're on a postman admin screen) on the in_admin_footer event
 				if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
 					add_action ( 'in_admin_footer', array (
 							&$this,
@@ -94,8 +96,7 @@ if (! class_exists ( 'Postman' )) {
 					'version_shortcode' 
 			) );
 			
-			// we'll let the 'init' functions run first; some of them may end the request
-			// we'll look for messages at 'admin_init'
+			// register the check for configuration errors on the init hook
 			add_action ( 'init', array (
 					$this,
 					'check_for_configuration_errors' 
@@ -103,10 +104,14 @@ if (! class_exists ( 'Postman' )) {
 		}
 		
 		/**
+		 * Check for configuration errors and displays messages to the user
 		 */
 		public function check_for_configuration_errors() {
-			// are we bound?
+			// did Postman fail binding to wp_mail()?
 			if ($this->wpMailBinder->isUnboundDueToException ()) {
+				// this message gets printed on ANY WordPress admin page, as it's a pretty fatal error that
+				// may occur just by activating a new plugin
+				
 				// I noticed the wpMandrill and SendGrid plugins have the exact same error message here
 				// I've decided to adopt their error message as well, for shits and giggles .... :D
 				$this->messageHandler->addError ( __ ( 'Postman: wp_mail has been declared by another plugin or theme, so you won\'t be able to use Postman until the conflict is resolved.', 'postman-smtp' ) );
@@ -115,32 +120,38 @@ if (! class_exists ( 'Postman' )) {
 			
 			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
 			$scribe = PostmanConfigTextHelperFactory::createScribe ( $this->options->getHostname (), $transport );
+			$readyToSend = PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $this->options, $this->authToken );
 			
-			// on any Postman page, print the config error messages
+			// on pages that are Postman admin pages only, show this error message
 			if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
 				
-				if (PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
-					// no configuration errors to show
-				} else if (! $this->options->isNew ()) {
-					// show the errors as long as this is not a virgin install
+				$virgin = $this->options->isNew ();
+				if (! $readyToSend && ! $virgin) {
+					// if the configuration is broken, and the user has started to configure the plugin
+					// show this error message
 					$message = PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->getMisconfigurationMessage ( $scribe, $this->options, $this->authToken );
 					if ($message) {
+						// output the error message
 						$this->logger->trace ( 'Transport has a configuration error: ' . $message );
 						$this->messageHandler->addError ( $message );
 					}
 				}
-			} else {
-				if (! PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $this->options, $this->authToken )) {
-					add_action ( 'admin_notices', Array (
-							$this,
-							'display_configuration_required_warning' 
-					) );
-				}
+			} else if (! $readyToSend) {
+				// on pages that are *NOT* Postman admin pages only....
+				// if the configuration is broken
+				// show this error message
+				add_action ( 'admin_notices', Array (
+						$this,
+						'display_configuration_required_warning' 
+				) );
 			}
 		}
 		
 		/**
-		 * A callback function
+		 * This is the general message that Postman requires configuration, to warn users who think
+		 * the plugin is ready-to-go as soon as it is activated.
+		 * This message only goes away once
+		 * the plugin is configured.
 		 */
 		public function display_configuration_required_warning() {
 			$this->logger->debug ( 'Displaying configuration required warning' );
@@ -152,7 +163,7 @@ if (! class_exists ( 'Postman' )) {
 		}
 		
 		/**
-		 * Adds the regular SMTP transport
+		 * Register the built-in transports
 		 */
 		private function registerTransport($pluginData) {
 			assert ( isset ( $pluginData ) );
@@ -161,6 +172,7 @@ if (! class_exists ( 'Postman' )) {
 		}
 		
 		/**
+		 * Print the Postman signature on the bottom of the page
 		 * http://striderweb.com/nerdaphernalia/2008/06/give-your-wordpress-plugin-credit/
 		 */
 		function print_signature() {
