@@ -267,7 +267,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// $screen->remove_help_tabs();
 			$screen->add_help_tab ( array (
 					'id' => 'postman-smtp-connectivity-test',
-					'title' => _x ( 'Diagnostic Info', 'Short for "Diagnostic Information"', 'postman-smtp' ),
+					'title' => __ ( 'Diagnostic Test', 'postman-smtp' ),
 					'content' => __ ( 'Consolidates details of your setup to aid the author in debugging problems, including: operating system details, WordPress configuration, Postman configuration, network connectivity and your domain\'s primary MX and SPF records. Your private authorization credentials are masked.', 'postman-smtp' ) 
 			) );
 			$screen->add_help_tab ( array (
@@ -638,12 +638,12 @@ if (! class_exists ( 'PostmanViewController' )) {
 			// test features
 			print '<div class="wrap">';
 			
-			$this->outputChildPageHeader ( _x ( 'Diagnostic Info', 'Short for "Diagnostic Information"', 'postman-smtp' ) );
+			$this->outputChildPageHeader ( __ ( 'Diagnostic Test', 'postman-smtp' ) );
 			
 			printf ( '<h4>%s</h4>', __ ( 'Are you having issues with Postman?', 'postman-smtp' ) );
 			/* translators: where %1$s and %2$s are the URLs to the Troubleshooting and Support Forums on WordPress.org */
 			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Please check the <a href="%1$s">troubleshooting and error messages</a> page and the <a href="%2$s">support forum</a>.</br>If you write for help, please include the following:', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-smtp/other_notes/', 'https://wordpress.org/support/plugin/postman-smtp' ) );
-			printf ( '<h4>%s</h4>', _x ( 'Diagnostic Information', 'Details about the system', 'postman-smtp' ) );
+			printf ( '<h4>%s</h4>', __ ( 'Diagnostic Test', 'postman-smtp' ) );
 			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="10">%s</textarea>', _x ( 'Checking..', 'The "please wait" message', 'postman-smtp' ) );
 			print '</div>';
 		}
@@ -685,7 +685,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<h4>%s</h4>', _x ( 'Troubleshooting', 'Main Menu', 'postman-smtp' ) );
 			print '<ul>';
 			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::PORT_TEST_SLUG ), __ ( 'Run a Connectivity Test', 'postman-smtp' ) );
-			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::DIAGNOSTICS_SLUG ), _x ( 'Diagnostic Info', 'Short for "Diagnostic Information"', 'postman-smtp' ) );
+			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::DIAGNOSTICS_SLUG ), __ ( 'Diagnostic Test', 'postman-smtp' ) );
 			printf ( '<li><a href="https://wordpress.org/support/plugin/postman-smtp" class="welcome-icon postman_support">%s</a></li>', __ ( 'Online Support', 'postman-smtp' ) );
 			print '</ul></div></div></div></div>';
 		}
