@@ -116,34 +116,35 @@ if (! class_exists ( 'Postman' )) {
 				// I've decided to adopt their error message as well, for shits and giggles .... :D
 				$this->messageHandler->addError ( __ ( 'Postman: wp_mail has been declared by another plugin or theme, so you won\'t be able to use Postman until the conflict is resolved.', 'postman-smtp' ) );
 				// $this->messageHandler->addError ( __ ( 'Error: Postman is properly configured, but the current theme or another plugin is preventing service.', 'postman-smtp' ) );
-			}
-			
-			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
-			$scribe = PostmanConfigTextHelperFactory::createScribe ( $this->options->getHostname (), $transport );
-			$readyToSend = PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $this->options, $this->authToken );
-			
-			// on pages that are Postman admin pages only, show this error message
-			if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
+			} else {
 				
-				$virgin = $this->options->isNew ();
-				if (! $readyToSend && ! $virgin) {
-					// if the configuration is broken, and the user has started to configure the plugin
-					// show this error message
-					$message = PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->getMisconfigurationMessage ( $scribe, $this->options, $this->authToken );
-					if ($message) {
-						// output the error message
-						$this->logger->trace ( 'Transport has a configuration error: ' . $message );
-						$this->messageHandler->addError ( $message );
+				$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
+				$scribe = PostmanConfigTextHelperFactory::createScribe ( $this->options->getHostname (), $transport );
+				$readyToSend = PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $this->options, $this->authToken );
+				
+				// on pages that are Postman admin pages only, show this error message
+				if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
+					
+					$virgin = $this->options->isNew ();
+					if (! $readyToSend && ! $virgin) {
+						// if the configuration is broken, and the user has started to configure the plugin
+						// show this error message
+						$message = PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->getMisconfigurationMessage ( $scribe, $this->options, $this->authToken );
+						if ($message) {
+							// output the error message
+							$this->logger->trace ( 'Transport has a configuration error: ' . $message );
+							$this->messageHandler->addError ( $message );
+						}
 					}
+				} else if (! $readyToSend) {
+					// on pages that are *NOT* Postman admin pages only....
+					// if the configuration is broken
+					// show this error message
+					add_action ( 'admin_notices', Array (
+							$this,
+							'display_configuration_required_warning' 
+					) );
 				}
-			} else if (! $readyToSend) {
-				// on pages that are *NOT* Postman admin pages only....
-				// if the configuration is broken
-				// show this error message
-				add_action ( 'admin_notices', Array (
-						$this,
-						'display_configuration_required_warning' 
-				) );
 			}
 		}
 		
