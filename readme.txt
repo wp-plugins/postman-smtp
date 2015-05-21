@@ -254,7 +254,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.6.11 =
-* Fix for "Fatal error: Call to undefined function spritnf() in PostmanEmailLogController.php on line 284" - sometimes PHP really sucks compared to Java
+* [[Ticket](https://wordpress.org/support/topic/call-to-undefined-function-spritnf?replies=2#post-6977557)] Fix for "Fatal error: Call to undefined function spritnf() in PostmanEmailLogController.php on line 284" - sometimes PHP really sucks compared to Java
 
 = 1.6.10 - 2015-05-18 =
 * 5,000 installations!
