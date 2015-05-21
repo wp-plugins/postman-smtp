@@ -73,7 +73,7 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 			if (! PostmanPreRequisitesCheck::isReady ()) {
 				printf ( '<p><span style="color:red">%s</span></p>', __ ( 'Error: Postman is missing a required PHP library.', 'postman-smtp' ) );
 			} else if ($this->wpMailBinder->isUnboundDueToException ()) {
-				printf ( '<p><span style="color:red">%s</span></p>', __ ( 'Error: Postman is properly configured, but the current theme or another plugin is preventing service.', 'postman-smtp' ) );
+				printf ( '<p><span style="color:red">%s</span></p>', __ ( 'Postman: wp_mail has been declared by another plugin or theme, so you won\'t be able to use Postman until the conflict is resolved.', 'postman-smtp' ) );
 			} else {
 				if ($this->options->getRunMode () != PostmanOptions::RUN_MODE_PRODUCTION) {
 					printf ( '<p><span style="background-color:yellow">%s</span></p>', __ ( 'Postman is in <em>non-Production</em> mode and is dumping all emails.', 'postman-smtp' ) );
