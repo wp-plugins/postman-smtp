@@ -23,8 +23,8 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 
 
 = Features =
-* Takes over `wp_mail` to send all WordPress email via SMTP
-* Logs all emails sent, including message content and errors
+* Overrides `wp_mail` sending all WordPress mail via SMTP
+* Logs all emails, including message content and errors
 * Easy-to-use, powerful Setup Wizard for perfect configuration
 * Commercial-grade Connectivity Tester to diagnose server issues
 * Fire-and-forget delivery continues even if the password changes ¹
