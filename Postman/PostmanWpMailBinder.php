@@ -33,8 +33,9 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 		/**
 		 * Replace wp_mail() after making sure:
 		 * 1) the plugin has not already bound to wp_mail and
-		 * 2) the plugin is properly configured.
-		 * 2) the plugin's prerequisites are met.
+		 * 2) wp_mail is available for use
+		 * 3) the plugin is properly configured.
+		 * 4) the plugin's prerequisites are met.
 		 */
 		function bind() {
 			if (! $this->bound) {
@@ -42,6 +43,8 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 				$binderAuthorizationToken = PostmanOAuthToken::getInstance ();
 				$ready = true;
 				if (function_exists ( 'wp_mail' )) {
+					// If the function exists, it's probably because another plugin has
+					// replaced the pluggable function first, and we set an error flag.
 					$this->logger->error ( 'wp_mail is already bound, Postman can not use it' );
 					$this->bindError = true;
 				}
@@ -62,9 +65,6 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 		
 		/**
 		 * The code to replace the pluggable wp_mail()
-		 *
-		 * If the function exists, it's probably because another plugin has
-		 * replaced the pluggable function first, and we set an error flag.
 		 *
 		 * If the function does not exist, then the replacement was successful
 		 * and we set a success flag.
