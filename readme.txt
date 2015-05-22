@@ -255,7 +255,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.11 =
+= 1.6.11 - 2015-05-22 =
 * [[Ticket](https://wordpress.org/support/topic/call-to-undefined-function-spritnf?replies=2#post-6977557)] Fix for "Fatal error: Call to undefined function spritnf() in PostmanEmailLogController.php on line 284" - sometimes PHP really sucks compared to Java
 * Added a link to a HowTo Video for configuring Google OAuth 2.0 in the OAuth2 authentication section 
 
