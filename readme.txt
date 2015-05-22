@@ -23,8 +23,8 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 
 
 = Features =
-* Takes over `wp_mail` to send all WordPress email via SMTP
-* Logs all emails sent, including message content and errors
+* Overrides `wp_mail` redirecting all WordPress mail to SMTP
+* Logs all emails, including message content and errors
 * Easy-to-use, powerful Setup Wizard for perfect configuration
 * Commercial-grade Connectivity Tester to diagnose server issues
 * Fire-and-forget delivery continues even if the password changes ¹
@@ -71,6 +71,8 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 1. Send yourself a test email. 
 
 = To manually configure OAuth 2.0 Authentication (Advanced users only) =
+
+https://vimeo.com/128589255
 
 1. Choose configure manually
 1. If the 'Transport' menu is available, choose 'SMTP'
@@ -254,7 +256,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.6.11 =
-* Fix for "Fatal error: Call to undefined function spritnf() in PostmanEmailLogController.php on line 284" - sometimes PHP really sucks compared to Java
+* [[Ticket](https://wordpress.org/support/topic/call-to-undefined-function-spritnf?replies=2#post-6977557)] Fix for "Fatal error: Call to undefined function spritnf() in PostmanEmailLogController.php on line 284" - sometimes PHP really sucks compared to Java
+* Added a link to a HowTo Video for configuring Google OAuth 2.0 in the OAuth2 authentication section 
 
 = 1.6.10 - 2015-05-18 =
 * 5,000 installations!
