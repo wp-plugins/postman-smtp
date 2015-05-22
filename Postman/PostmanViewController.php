@@ -684,7 +684,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<div class="welcome-panel-column welcome-panel-last">';
 			printf ( '<h4>%s</h4>', _x ( 'Troubleshooting', 'Main Menu', 'postman-smtp' ) );
 			print '<ul>';
-			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::PORT_TEST_SLUG ), __ ( 'Run a Connectivity Test', 'postman-smtp' ) );
+			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::PORT_TEST_SLUG ), __ ( 'Connectivity Test', 'postman-smtp' ) );
 			printf ( '<li><a href="%s" class="welcome-icon run-port-test">%s</a></li>', $this->getPageUrl ( self::DIAGNOSTICS_SLUG ), __ ( 'Diagnostic Test', 'postman-smtp' ) );
 			printf ( '<li><a href="https://wordpress.org/support/plugin/postman-smtp" class="welcome-icon postman_support">%s</a></li>', __ ( 'Online Support', 'postman-smtp' ) );
 			print '</ul></div></div></div></div>';
