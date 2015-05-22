@@ -72,6 +72,8 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 
 = To manually configure OAuth 2.0 Authentication (Advanced users only) =
 
+https://vimeo.com/128589255
+
 1. Choose configure manually
 1. If the 'Transport' menu is available, choose 'SMTP'
 1. In 'Authentication' choose 'OAuth 2.0'
@@ -255,6 +257,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 = 1.6.11 =
 * [[Ticket](https://wordpress.org/support/topic/call-to-undefined-function-spritnf?replies=2#post-6977557)] Fix for "Fatal error: Call to undefined function spritnf() in PostmanEmailLogController.php on line 284" - sometimes PHP really sucks compared to Java
+* Added a link to a HowTo Video for configuring Google OAuth 2.0 in the OAuth2 authentication section 
 
 = 1.6.10 - 2015-05-18 =
 * 5,000 installations!

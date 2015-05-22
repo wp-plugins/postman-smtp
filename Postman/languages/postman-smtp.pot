@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.6.11a\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-05-20 20:51:59+00:00\n"
+"POT-Creation-Date: 2015-05-22 13:14:33+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -52,9 +52,10 @@ msgid "Error: Postman is missing a required PHP library."
 msgstr ""
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:76
+#: Postman/Postman.php:117
 msgid ""
-"Error: Postman is properly configured, but the current theme or another "
-"plugin is preventing service."
+"Postman: wp_mail has been declared by another plugin or theme, so you won't "
+"be able to use Postman until the conflict is resolved."
 msgstr ""
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:79
@@ -73,13 +74,13 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:86
-#: Postman/Postman.php:147 Postman/PostmanViewController.php:498
+#: Postman/Postman.php:159 Postman/PostmanViewController.php:498
 msgid "Postman is <em>not</em> handling email delivery."
 msgstr ""
 
 #. translators: where %s is the URL to the Postman Setup page
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:86
-#: Postman/Postman.php:150
+#: Postman/Postman.php:162
 msgid "<a href=\"%s\">Configure</a> the plugin."
 msgstr ""
 
@@ -351,12 +352,6 @@ msgstr ""
 msgid ""
 "The selected transport '%s' is unavailable. The external plugin was probably "
 "deactivated."
-msgstr ""
-
-#: Postman/Postman.php:112
-msgid ""
-"Postman: wp_mail has been declared by another plugin or theme, so you won't "
-"be able to use Postman until the conflict is resolved."
 msgstr ""
 
 #: Postman/PostmanAdminController.php:103
@@ -710,19 +705,18 @@ msgid ""
 "the generated %3$s and %4$s here."
 msgstr ""
 
-#. translators: parameters available are 1=portal-url, 2=portal-name,
-#. 3=clientId-name, 4=clientSecret-name, 5=callbackUrl, 6=service-name,
-#. 7=portal-application (e.g. See How do I get a Google Client ID? in the
-#. F.A.Q. for help.)
+#. translators: parameters available are 1=clientId-name, 2=service-name,
+#. 3=FAQ-URL, 4=Video-URL (e.g. See How do I get a Google Client ID? in the
+#. F.A.Q.)
 #: Postman/PostmanConfigTextHelper.php:56
 msgid ""
-"See <a href=\"https://wordpress.org/plugins/postman-smtp/faq/\" target=\"_new"
-"\">How do I get a %6$s %3$s?</a> in the F.A.Q. for help."
+"See <a href=\"%3$s\" target=\"_new\">How do I get a %1$s %2$s?</a> in the F."
+"A.Q. or <a href=\"%4$s\" target=\"_new\">watch our How-To video 📺</a>."
 msgstr ""
 
 #. translators: where %s is the Email Service Owner (e.g. Google, Microsoft or
 #. Yahoo)
-#: Postman/PostmanConfigTextHelper.php:73
+#: Postman/PostmanConfigTextHelper.php:74
 msgctxt "Command to initiate OAuth authentication"
 msgid "Grant permission with %s"
 msgstr ""
@@ -730,10 +724,10 @@ msgstr ""
 #. Translators: This description is specific to Google
 #. Translators: This description is specific to Microsoft
 #. Translators: This description is specific to Yahoo
-#: Postman/PostmanConfigTextHelper.php:99
-#: Postman/PostmanConfigTextHelper.php:161
-#: Postman/PostmanConfigTextHelper.php:223
-#: Postman/PostmanConfigTextHelper.php:290
+#: Postman/PostmanConfigTextHelper.php:100
+#: Postman/PostmanConfigTextHelper.php:162
+#: Postman/PostmanConfigTextHelper.php:224
+#: Postman/PostmanConfigTextHelper.php:291
 msgctxt "Name of the OAuth 2.0 Client ID"
 msgid "Client ID"
 msgstr ""
@@ -741,133 +735,133 @@ msgstr ""
 #. Translators: This description is specific to Google
 #. Translators: This description is specific to Microsoft
 #. Translators: This description is specific to Yahoo
-#: Postman/PostmanConfigTextHelper.php:103
-#: Postman/PostmanConfigTextHelper.php:165
-#: Postman/PostmanConfigTextHelper.php:227
-#: Postman/PostmanConfigTextHelper.php:293
+#: Postman/PostmanConfigTextHelper.php:104
+#: Postman/PostmanConfigTextHelper.php:166
+#: Postman/PostmanConfigTextHelper.php:228
+#: Postman/PostmanConfigTextHelper.php:294
 msgctxt "Name of the OAuth 2.0 Client Secret"
 msgid "Client Secret"
 msgstr ""
 
 #. Translators: This description is specific to Google
-#: Postman/PostmanConfigTextHelper.php:107
+#: Postman/PostmanConfigTextHelper.php:108
 msgctxt "Name of the Application Callback URI"
 msgid "Authorized redirect URI"
 msgstr ""
 
 #. Translators: This description is specific to Google
-#: Postman/PostmanConfigTextHelper.php:111
+#: Postman/PostmanConfigTextHelper.php:112
 msgctxt "Name of the Application Callback Domain"
 msgid "Authorized JavaScript origins"
 msgstr ""
 
 #. Translators: This description is specific to Google
-#: Postman/PostmanConfigTextHelper.php:115
+#: Postman/PostmanConfigTextHelper.php:116
 msgctxt "Name of the email service owner"
 msgid "Google"
 msgstr ""
 
 #. Translators: This description is specific to Google
-#: Postman/PostmanConfigTextHelper.php:119
+#: Postman/PostmanConfigTextHelper.php:120
 msgctxt "Name of the email service"
 msgid "Gmail"
 msgstr ""
 
 #. Translators: This description is specific to Google
-#: Postman/PostmanConfigTextHelper.php:123
+#: Postman/PostmanConfigTextHelper.php:124
 msgctxt "Description of the email service OAuth 2.0 Application"
 msgid "a Client ID for web application"
 msgstr ""
 
 #. Translators: This description is specific to Google
-#: Postman/PostmanConfigTextHelper.php:127
+#: Postman/PostmanConfigTextHelper.php:128
 msgctxt "Name of the email service portal"
 msgid "Google Developer Console"
 msgstr ""
 
 #. Translators: This description is specific to Microsoft
-#: Postman/PostmanConfigTextHelper.php:169
+#: Postman/PostmanConfigTextHelper.php:170
 msgctxt "Name of the Application Callback URI"
 msgid "Redirect URL"
 msgstr ""
 
 #. Translators: This description is specific to Microsoft
-#: Postman/PostmanConfigTextHelper.php:173
+#: Postman/PostmanConfigTextHelper.php:174
 msgctxt "Name of the Application Callback Domain"
 msgid "Root Domain"
 msgstr ""
 
 #. Translators: This description is specific to Microsoft
-#: Postman/PostmanConfigTextHelper.php:177
+#: Postman/PostmanConfigTextHelper.php:178
 msgctxt "Name of the email service owner"
 msgid "Microsoft"
 msgstr ""
 
 #. Translators: This description is specific to Microsoft
-#: Postman/PostmanConfigTextHelper.php:181
+#: Postman/PostmanConfigTextHelper.php:182
 msgctxt "Name of the email service"
 msgid "Outlook.com"
 msgstr ""
 
 #. Translators: This description is specific to Microsoft
 #. Translators: This description is specific to Yahoo
-#: Postman/PostmanConfigTextHelper.php:185
-#: Postman/PostmanConfigTextHelper.php:247
+#: Postman/PostmanConfigTextHelper.php:186
+#: Postman/PostmanConfigTextHelper.php:248
 msgctxt "Description of the email service OAuth 2.0 Application"
 msgid "an Application"
 msgstr ""
 
 #. Translators: This description is specific to Microsoft
-#: Postman/PostmanConfigTextHelper.php:189
+#: Postman/PostmanConfigTextHelper.php:190
 msgctxt "Name of the email service portal"
 msgid "Microsoft Developer Center"
 msgstr ""
 
 #. Translators: This description is specific to Yahoo
-#: Postman/PostmanConfigTextHelper.php:231
+#: Postman/PostmanConfigTextHelper.php:232
 msgctxt "Name of the Application Callback URI"
 msgid "Home Page URL"
 msgstr ""
 
 #. Translators: This description is specific to Yahoo
-#: Postman/PostmanConfigTextHelper.php:235
+#: Postman/PostmanConfigTextHelper.php:236
 msgctxt "Name of the Application Callback Domain"
 msgid "Callback Domain"
 msgstr ""
 
 #. Translators: This description is specific to Yahoo
-#: Postman/PostmanConfigTextHelper.php:239
+#: Postman/PostmanConfigTextHelper.php:240
 msgctxt "Name of the email service owner"
 msgid "Yahoo"
 msgstr ""
 
 #. Translators: This description is specific to Yahoo
-#: Postman/PostmanConfigTextHelper.php:243
+#: Postman/PostmanConfigTextHelper.php:244
 msgctxt "Name of the email service"
 msgid "Yahoo Mail"
 msgstr ""
 
 #. Translators: This description is specific to Yahoo
-#: Postman/PostmanConfigTextHelper.php:251
+#: Postman/PostmanConfigTextHelper.php:252
 msgctxt "Name of the email service portal"
 msgid "Yahoo Developer Network"
 msgstr ""
 
-#: Postman/PostmanConfigTextHelper.php:280
+#: Postman/PostmanConfigTextHelper.php:281
 msgid "Enter an Outgoing Mail Server with OAuth2 capabilities."
 msgstr ""
 
-#: Postman/PostmanConfigTextHelper.php:296
+#: Postman/PostmanConfigTextHelper.php:297
 msgctxt "Name of the Application Callback URI"
 msgid "Redirect URI"
 msgstr ""
 
-#: Postman/PostmanConfigTextHelper.php:299
+#: Postman/PostmanConfigTextHelper.php:300
 msgctxt "Name of the Application Callback Domain"
 msgid "Website Domain"
 msgstr ""
 
-#: Postman/PostmanConfigTextHelper.php:323
+#: Postman/PostmanConfigTextHelper.php:324
 msgctxt "Command to initiate OAuth authentication"
 msgid "Grant OAuth Permission"
 msgstr ""
@@ -944,9 +938,8 @@ msgid "Send a Test Email"
 msgstr ""
 
 #: Postman/PostmanViewController.php:270 Postman/PostmanViewController.php:641
-#: Postman/PostmanViewController.php:688
-msgctxt "Short for \"Diagnostic Information\""
-msgid "Diagnostic Info"
+#: Postman/PostmanViewController.php:646 Postman/PostmanViewController.php:688
+msgid "Diagnostic Test"
 msgstr ""
 
 #: Postman/PostmanViewController.php:271
@@ -1286,11 +1279,6 @@ msgid ""
 "please include the following:"
 msgstr ""
 
-#: Postman/PostmanViewController.php:646
-msgctxt "Details about the system"
-msgid "Diagnostic Information"
-msgstr ""
-
 #: Postman/PostmanViewController.php:661
 msgid "Start the Wizard"
 msgstr ""
@@ -1311,7 +1299,7 @@ msgid "Troubleshooting"
 msgstr ""
 
 #: Postman/PostmanViewController.php:687
-msgid "Run a Connectivity Test"
+msgid "Connectivity Test"
 msgstr ""
 
 #: Postman/PostmanViewController.php:703
