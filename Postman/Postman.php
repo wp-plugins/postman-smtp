@@ -62,19 +62,21 @@ if (! class_exists ( 'Postman' )) {
 			// create and store an instance of the MessageHandler
 			$this->messageHandler = new PostmanMessageHandler ();
 			
+			// register the email transports
+			$this->registerTransports ( $this->pluginData );
+			
 			// store an instance of the WpMailBinder
 			$this->wpMailBinder = PostmanWpMailBinder::getInstance ();
-			
-			// register the SMTP transport
-			$this->registerTransport ( $this->pluginData );
-			
+
 			// bind to wp_mail - this has to happen before the "init" action
+			// this design allows other plugins to register a Postman transport and call bind()
+			// bind may be called more than once
 			$this->wpMailBinder->bind ();
 			
-			// the following code should be restricted to the admin user
+			// the following code is restricted to an administrator
 			if (is_admin ()) {
 				new PostmanDashboardWidgetController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->wpMailBinder );
-				$adminController = new PostmanAdminController ( $rootPluginFilenameAndPath, $this->pluginData, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
+				new PostmanAdminController ( $rootPluginFilenameAndPath, $this->pluginData, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
 				new PostmanEmailLogController ( $rootPluginFilenameAndPath, $this->pluginData );
 				new PostmanAdminPointer ( $rootPluginFilenameAndPath );
 				
@@ -164,9 +166,14 @@ if (! class_exists ( 'Postman' )) {
 		}
 		
 		/**
-		 * Register the built-in transports
+		 * Register the email transports.
+		 *
+		 * The Gmail API used to be a separate plugin which was registered when that plugin
+		 * was loaded. But now both the SMTP and Gmail API transports are registered here.
+		 *
+		 * @param unknown $pluginData        	
 		 */
-		private function registerTransport($pluginData) {
+		private function registerTransports($pluginData) {
 			assert ( isset ( $pluginData ) );
 			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanSmtpTransport ( $pluginData ) );
 			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanGoogleMailApiTransport ( $pluginData ) );
