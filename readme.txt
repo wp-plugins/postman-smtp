@@ -59,11 +59,11 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 = To manually configure Password Authentication (Intermediate users only) =
 
 1. Choose configure manually
-1. If the 'Transport' menu is available, choose 'SMTP'
-1. In 'Authentication' choose 'Plain', unless your email service provider has told you different.
-1. In 'Security' choose the appropriate type (a good guess is SMTPS for port 465, StartTLS otherwise)
-1. Enter the SMTP Server's hostname and port.
-1. Enter the encryption if your port is 465, or 'TLS' if your port is 587.
+1. In 'Transport', choose 'SMTP'
+1. In 'Outgoing Mail Server Hostname', enter the SMTP Server's hostname
+1. In 'Outgoing Mail Server Port', enter the SMTP Server's port
+1. In 'Security' choose the appropriate type (a good guess is SMTPS for port 465, STARTTLS otherwise)
+1. In 'Authentication', choose the authentication type (a good guess is 'Plain')
 1. If your Authentication method is not 'None', enter your username (probably your email address) and password.
 1. Choose the 'Message' tab.
 1. In 'Sender Email Address' enter your account's email address.
