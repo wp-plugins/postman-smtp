@@ -858,7 +858,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '</legend>';
 			print '<section>';
 			printf ( '<p><label>%s</label></p>', _x ( 'Status', 'Was sending this email successful or not?', 'postman-smtp' ) );
-			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="65" rows="2"></textarea>';
+			print '<textarea id="postman_test_message_error_message" readonly="readonly" cols="65" rows="4"></textarea>';
 			print '</section>';
 			print '</fieldset>';
 			

@@ -391,22 +391,28 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 			$this->oauthScribe = $oauthScribe;
 			$this->registerAjaxHandler ( 'send_test_email', $this, 'sendTestEmailViaAjax' );
 		}
+		function test_mode() {
+			return true;
+		}
 		
 		/**
 		 * This Ajax sends a test email
 		 */
 		function sendTestEmailViaAjax() {
+			add_filter ( 'postman_test_email', array (
+					$this,
+					'test_mode' 
+			) );
 			$email = $this->getRequestParameter ( 'email' );
 			$method = $this->getRequestParameter ( 'method' );
-			try {
-				$emailTester = new PostmanSendTestEmailController ();
-				$serverName = postmanGetServerName ();
-				/* translators: where %s is the domain name of the site */
-				$subject = sprintf ( _x ( 'Postman SMTP Test (%s)', 'Test Email Subject', 'postman-smtp' ), $serverName );
-				// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
-				/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
-				$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanMessage::EOL, PostmanMessage::EOL, sprintf ( _x ( 'Sent by Postman %s', 'Test Email Tagline', 'postman-smtp' ), $this->pluginData ['Version'] ) );
-				$message2 = '
+			
+			$serverName = postmanGetServerName ();
+			/* translators: where %s is the domain name of the site */
+			$subject = sprintf ( _x ( 'Postman SMTP Test (%s)', 'Test Email Subject', 'postman-smtp' ), $serverName );
+			// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
+			/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
+			$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanMessage::EOL, PostmanMessage::EOL, sprintf ( _x ( 'Sent by Postman %s', 'Test Email Tagline', 'postman-smtp' ), $this->pluginData ['Version'] ) );
+			$message2 = '
 Content-Type: text/plain; charset = "UTF-8"
 Content-Transfer-Encoding: 8bit
 
@@ -453,37 +459,28 @@ Content-Transfer-Encoding: 8bit
 
 </html>
 				';
-				$header = 'Content-Type: multipart/alternative;';
-				$startTime = microtime ( true ) * 1000;
-				$success = $emailTester->sendTestEmail ( $this->options, $this->authorizationToken, $email, $this->oauthScribe->getServiceName (), $subject, $message2, $header );
-				$endTime = microtime ( true ) * 1000;
-				if ($success) {
-					$statusMessage = sprintf ( __ ( 'Your message was delivered (%d ms) to the SMTP server! Congratulations :)', 'postman-smtp' ), ($endTime - $startTime) );
+			$header = 'Content-Type: multipart/alternative;';
+			$success = wp_mail ( $email, $subject, $message2, $header );
+			$result = apply_filters ( 'postman_wp_mail_result', null );
+			if ($success) {
+				$statusMessage = sprintf ( __ ( 'Your message was delivered (%d ms) to the SMTP server! Congratulations :)', 'postman-smtp' ), $result ['time'] );
+				$this->logger->debug ( 'Test Email delivered to server' );
+			} else {
+				$this->logger->error ( 'Test Email NOT delivered to server - ' . $result ['exception']->getCode () );
+				$this->logger->error ( "SMTP session transcript follows:\n" . $result ['transcript'] );
+				if ($result ['exception']->getCode () == 334) {
+					$this->logger->error ( 'Communication Error [334]!' );
+					$statusMessage = sprintf ( __ ( 'Communication Error [334] - make sure the Sender Email belongs to the account which provided the %s OAuth 2.0 consent.', 'postman-smtp' ), $this->oauthScribe->getServiceName () );
 				} else {
-					$statusMessage = $emailTester->getMessage ();
+					$statusMessage = $result ['exception']->getMessage ();
 				}
-				$this->logger->debug ( 'statusmessage: ' . $statusMessage );
-				$response = array (
-						'message' => $statusMessage,
-						'transcript' => $emailTester->getTranscript (),
-						'success' => $success 
-				);
-			} catch ( PostmanSendMailCommunicationError334 $e ) {
-				/* translators: where %s is the email service name (e.g. Gmail) */
-				$response = array (
-						'message' => sprintf ( __ ( 'Communication Error [334] - make sure the Sender Email belongs to the account which provided the %s OAuth 2.0 consent.', 'postman-smtp' ), $this->oauthScribe->getServiceName () ),
-						'transcript' => $emailTester->getTranscript (),
-						'success' => false 
-				);
-				$this->logger->error ( "SMTP session transcript follows:\n" . $emailTester->getTranscript () );
-			} catch ( PostmanSendMailInexplicableException $e ) {
-				$response = array (
-						'message' => __ ( 'The impossible is possible; sending through wp_mail() failed, but sending through internal engine succeeded.', 'postman-smtp' ),
-						'transcript' => $emailTester->getTranscript (),
-						'success' => false 
-				);
-				$this->logger->error ( "SMTP session transcript follows:\n" . $emailTester->getTranscript () );
 			}
+			$this->logger->debug ( 'statusmessage: ' . $statusMessage );
+			$response = array (
+					'message' => $statusMessage,
+					'transcript' => $result ['transcript'],
+					'success' => $success 
+			);
 			wp_send_json ( $response );
 		}
 	}

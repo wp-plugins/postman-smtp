@@ -12,6 +12,13 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
+
+// The Postman Mail API
+//
+// filter postman_test_email: before calling wp_mail, implement this filter and return true to disable the success/fail counters
+// filter postman_wp_mail_result: apply this filter after calling wp_mail for an array containg the SMTP error, transcript and time
+
+
 // ideas for future versions of the plugin
 // -- SendGrid API https://github.com/sendgrid/sendgrid-php-example
 // -- Postmark API http://plugins.svn.wordpress.org/postmark-approved-wordpress-plugin/trunk/postmark.php

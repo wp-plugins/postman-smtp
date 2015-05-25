@@ -1,7 +1,6 @@
 <?php
 if (! class_exists ( "PostmanAdminController" )) {
 	
-	require_once "PostmanSendTestEmail.php";
 	require_once 'PostmanOptions.php';
 	require_once 'PostmanState.php';
 	require_once 'PostmanStats.php';

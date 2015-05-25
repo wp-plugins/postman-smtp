@@ -14,6 +14,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 	class PostmanWpMail {
 		private $exception;
 		private $transcript;
+		private $totalTime;
 		private $logger;
 		
 		/**
@@ -37,6 +38,9 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @return boolean
 		 */
 		public function send($to, $subject, $message, $headers = '', $attachments = array()) {
+			// start the clock
+			$startTime = microtime ( true ) * 1000;
+			
 			$this->logger->trace ( 'wp_mail parameters before applying WordPress wp_mail filter:' );
 			$this->traceParameters ( $to, $subject, $message, $headers, $attachments );
 			
@@ -77,6 +81,12 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$this->logger->trace ( 'wp_mail parameters after applying WordPress wp_mail filter:' );
 			$this->traceParameters ( $to, $subject, $message, $headers, $attachments );
 			
+			// register the response hook
+			add_filter ( 'postman_wp_mail_result', array (
+					$this,
+					'postman_wp_mail_result' 
+			) );
+			
 			// get the Options and AuthToken
 			$options = PostmanOptions::getInstance ();
 			$authorizationToken = PostmanOAuthToken::getInstance ();
@@ -85,6 +95,10 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
 			$transportConfiguration = $transport->createPostmanMailAuthenticator ( $options, $authorizationToken );
 			$engine = new PostmanMailEngine ( $transport, $transportConfiguration );
+			
+			// is this a test run?
+			$testMode = apply_filters ( 'postman_test_email', false );
+			$this->logger->debug ( 'testMode=' . $testMode );
 			
 			// create the message
 			$messageBuilder = $this->createMessage ( $options, $to, $subject, $message, $headers, $attachments, $transportConfiguration );
@@ -105,13 +119,17 @@ if (! class_exists ( "PostmanWpMail" )) {
 					// save the transcript
 					$this->transcript = $engine->getTranscript ();
 					
-					// increment the success counter
-					PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
+					// increment the success counter, unless we are just tesitng
+					if (! $testMode) {
+						PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
+					}
 				}
 				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
 					// log the successful delivery
 					PostmanEmailLogService::getInstance ()->createSuccessLog ( $messageBuilder, $this->transcript, $transport );
 				}
+				$endTime = microtime ( true ) * 1000;
+				$this->totalTime = $endTime - $startTime;
 				return true;
 			} catch ( Exception $e ) {
 				// save the error for later
@@ -123,16 +141,31 @@ if (! class_exists ( "PostmanWpMail" )) {
 				// save the transcript
 				$this->transcript = $engine->getTranscript ();
 				
-				// increment the failure counter
-				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
+				// increment the failure counter, unless we are just tesitng
+				if (! $testMode && $options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
 					PostmanStats::getInstance ()->incrementFailedDelivery ();
 				}
 				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
 					// log the failed delivery
 					PostmanEmailLogService::getInstance ()->createFailureLog ( $messageBuilder, $this->transcript, $transport, $e->getMessage () );
 				}
+				$endTime = microtime ( true ) * 1000;
+				$this->totalTime = $endTime - $startTime;
 				return false;
 			}
+		}
+		
+		/**
+		 *
+		 * @return multitype:Exception NULL
+		 */
+		function postman_wp_mail_result() {
+			$result = array (
+					'time' => $this->totalTime,
+					'exception' => $this->exception,
+					'transcript' => $this->transcript 
+			);
+			return $result;
 		}
 		
 		/**
