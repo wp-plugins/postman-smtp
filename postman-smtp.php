@@ -12,20 +12,49 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-
 // The Postman Mail API
 //
 // filter postman_test_email: before calling wp_mail, implement this filter and return true to disable the success/fail counters
 // filter postman_wp_mail_result: apply this filter after calling wp_mail for an array containg the SMTP error, transcript and time
 
-
 // ideas for future versions of the plugin
 // -- SendGrid API https://github.com/sendgrid/sendgrid-php-example
 // -- Postmark API http://plugins.svn.wordpress.org/postmark-approved-wordpress-plugin/trunk/postmark.php
+// -- Amazon SES API http://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-email-api.html
+// -- Postman API with WordPress filters - test mode, smtp result
 // -- add WPMU functionality. ideas: allow network setup for network emails. allow network admin to choose whether subdomains may override with their own settings. subdomains may override with their own settings.
 // -- send mail in the background using ajax - the single mail thread can block the PHP server for quite some time
 
-// start Postman
 require_once 'Postman/Postman.php';
-$kevinCostner = new Postman ( __FILE__ );
+require_once 'Postman/PostmanOptions.php';
+require_once 'Postman/PostmanLogger.php';
+require_once 'Postman/PostmanUtils.php';
+require_once 'Postman/postman-common-functions.php';
+require_once 'Postman/Postman-Common.php';
+require_once 'Postman/Postman-Mail/PostmanTransportRegistry.php';
+require_once 'Postman/Postman-Mail/PostmanSmtpTransport.php';
+require_once 'Postman/Postman-Mail/PostmanGoogleMailApiTransport.php';
+require_once 'Postman/PostmanOAuthToken.php';
+require_once 'Postman/PostmanConfigTextHelper.php';
+require_once 'Postman/PostmanMessageHandler.php';
+require_once 'Postman/PostmanWpMailBinder.php';
+if (is_admin ()) {
+	require_once 'Postman/PostmanAdminController.php';
+	require_once 'Postman/Postman-Controller/PostmanDashboardWidgetController.php';
+	require_once 'Postman/PostmanActivationHandler.php';
+	require_once 'Postman/Postman-Controller/PostmanAdminPointer.php';
+	require_once 'Postman/Postman-Email-Log/PostmanEmailLogController.php';
+}
+
+/**
+ * Create the main Postman class to start Postman
+ */
+function start() {
+	$kevinCostner = new Postman ( __FILE__ );
+}
+
+/**
+ * Start Postman
+ */
+start ();
 

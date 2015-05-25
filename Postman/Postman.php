@@ -3,24 +3,6 @@
 // setup the main entry point
 if (! class_exists ( 'Postman' )) {
 	
-	require_once 'PostmanOptions.php';
-	require_once 'PostmanLogger.php';
-	require_once 'PostmanUtils.php';
-	require_once 'postman-common-functions.php';
-	require_once 'Postman-Common.php';
-	require_once 'Postman-Mail/PostmanTransportRegistry.php';
-	require_once 'Postman-Mail/PostmanSmtpTransport.php';
-	require_once 'Postman-Mail/PostmanGoogleMailApiTransport.php';
-	require_once 'PostmanOAuthToken.php';
-	require_once 'PostmanConfigTextHelper.php';
-	require_once 'PostmanMessageHandler.php';
-	require_once 'PostmanWpMailBinder.php';
-	require_once 'PostmanAdminController.php';
-	require_once 'Postman-Controller/PostmanDashboardWidgetController.php';
-	require_once 'PostmanActivationHandler.php';
-	require_once 'Postman-Email-Log/PostmanEmailLogController.php';
-	require_once 'Postman-Controller/PostmanAdminPointer.php';
-	
 	/**
 	 * This is the "main" class for Postman.
 	 * All execution begins here.
@@ -44,9 +26,16 @@ if (! class_exists ( 'Postman' )) {
 		 *        	- the __FILE__ of the caller
 		 */
 		public function __construct($rootPluginFilenameAndPath) {
-			
 			// get plugin metadata
-			$this->pluginData = get_plugin_data ( $rootPluginFilenameAndPath );
+			if (is_admin ()) {
+				include_once (ABSPATH . 'wp-admin/includes/plugin.php');
+				$this->pluginData = get_plugin_data ( $rootPluginFilenameAndPath );
+			} else {
+				$this->pluginData = array (
+						'Name' => 'Postman SMTP',
+						'Version' => '???' 
+				);
+			}
 			
 			// create an instance of the logger
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
@@ -67,7 +56,7 @@ if (! class_exists ( 'Postman' )) {
 			
 			// store an instance of the WpMailBinder
 			$this->wpMailBinder = PostmanWpMailBinder::getInstance ();
-
+			
 			// bind to wp_mail - this has to happen before the "init" action
 			// this design allows other plugins to register a Postman transport and call bind()
 			// bind may be called more than once
@@ -87,10 +76,9 @@ if (! class_exists ( 'Postman' )) {
 							'print_signature' 
 					) );
 				}
+				// register activation handler on the activation event
+				new PostmanActivationHandler ( $rootPluginFilenameAndPath, $this->pluginData ['Version'] );
 			}
-			
-			// register activation handler on the activation event
-			new PostmanActivationHandler ( $rootPluginFilenameAndPath, $this->pluginData ['Version'] );
 			
 			// register the shortcode handler on the add_shortcode event
 			add_shortcode ( 'postman-version', array (
