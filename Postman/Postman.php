@@ -94,7 +94,7 @@ if (! class_exists ( 'Postman' )) {
 				// register the Postman signature (only if we're on a postman admin screen) on the in_admin_footer event
 				if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
 					add_action ( 'in_admin_footer', array (
-							&$this,
+							$this,
 							'print_signature' 
 					) );
 				}
