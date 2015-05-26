@@ -78,7 +78,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 				$mail->addHeader ( 'X-Mailer', sprintf ( 'Postman SMTP %s for WordPress (%s)', $this->authenticator->getPluginVersion (), 'https://wordpress.org/plugins/postman-smtp/' ), true );
 			}
 			
-			// add the headers
+			// add the headers - see http://framework.zend.com/manual/1.12/en/zend.mail.additional-headers.html
 			foreach ( ( array ) $message->getHeaders () as $header ) {
 				$this->logger->debug ( sprintf ( 'Adding user header %s=%s', $header ['name'], $header ['content'] ) );
 				$mail->addHeader ( $header ['name'], $header ['content'], true );

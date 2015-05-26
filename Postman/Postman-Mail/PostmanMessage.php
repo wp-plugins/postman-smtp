@@ -208,9 +208,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		
 		/**
 		 * For the string version, each header line (beginning with From:, Cc:, etc.) is delimited with a newline ("\r\n")
-		 *
-		 * @todo http://framework.zend.com/manual/1.12/en/zend.mail.additional-headers.html
-		 *      
 		 */
 		public function addHeaders($headers) {
 			if (! is_array ( $headers )) {
