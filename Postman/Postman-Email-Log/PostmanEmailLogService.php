@@ -77,7 +77,7 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 					'capability_type' => '',
 					'capabilities' => array () 
 			) );
-			$this->logger->trace ( 'Created custom post type' );
+			$this->logger->trace ( 'Created post type: ' . self::POSTMAN_CUSTOM_POST_TYPE_SLUG );
 		}
 		
 		/**
