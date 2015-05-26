@@ -255,8 +255,13 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.12 =
-* Postman now calls wp_mail when sending a test email
+= 1.6.12 - 2015-05-26 =
+* 6,000 installations!
+* Postman now calls wp_mail when sending a test email. This marks the beginning of the "Postman API"
+* Shaved admin memory use from ~6MB to ~4MB; Non-admin memory use holds at ~2MB
+* Now loading the Sent Email post type for all admin screens, in case other custom post type-related plugins (e.g. WordPress Importer) need it
+* Wasn't comfortable how plugin_data was being retrieved, so reverted back to hard-coded plugin name and version
+* [TBD] Save original wp_mail fields to log so that we can add a Resend action
 
 = 1.6.11 - 2015-05-22 =
 * [[Ticket](https://wordpress.org/support/topic/call-to-undefined-function-spritnf?replies=2#post-6977557)] Fix for "Fatal error: Call to undefined function spritnf() in PostmanEmailLogController.php on line 284" - sometimes PHP really sucks compared to Java

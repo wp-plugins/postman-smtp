@@ -25,36 +25,19 @@
 // -- add WPMU functionality. ideas: allow network setup for network emails. allow network admin to choose whether subdomains may override with their own settings. subdomains may override with their own settings.
 // -- send mail in the background using ajax - the single mail thread can block the PHP server for quite some time
 
-require_once 'Postman/Postman.php';
-require_once 'Postman/PostmanOptions.php';
-require_once 'Postman/PostmanLogger.php';
-require_once 'Postman/PostmanUtils.php';
-require_once 'Postman/postman-common-functions.php';
-require_once 'Postman/Postman-Common.php';
-require_once 'Postman/Postman-Mail/PostmanTransportRegistry.php';
-require_once 'Postman/Postman-Mail/PostmanSmtpTransport.php';
-require_once 'Postman/Postman-Mail/PostmanGoogleMailApiTransport.php';
-require_once 'Postman/PostmanOAuthToken.php';
-require_once 'Postman/PostmanConfigTextHelper.php';
-require_once 'Postman/PostmanMessageHandler.php';
-require_once 'Postman/PostmanWpMailBinder.php';
-if (is_admin ()) {
-	require_once 'Postman/PostmanAdminController.php';
-	require_once 'Postman/Postman-Controller/PostmanDashboardWidgetController.php';
-	require_once 'Postman/PostmanActivationHandler.php';
-	require_once 'Postman/Postman-Controller/PostmanAdminPointer.php';
-	require_once 'Postman/Postman-Email-Log/PostmanEmailLogController.php';
-}
-
 /**
  * Create the main Postman class to start Postman
  */
-function start() {
-	$kevinCostner = new Postman ( __FILE__ );
+function postman_start($startingMemory) {
+	postman_setupPostman ();
+	PostmanUtils::logMemoryUse ( $startingMemory, 'Postman' );
 }
-
+function postman_setupPostman() {
+	require_once 'Postman/Postman.php';
+	$kevinCostner = new Postman ( __FILE__, '1.6.11' );
+}
 /**
  * Start Postman
  */
-start ();
+postman_start ( memory_get_usage () );
 

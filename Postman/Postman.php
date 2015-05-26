@@ -4,8 +4,12 @@
 if (! class_exists ( 'Postman' )) {
 	
 	/**
-	 * This is the "main" class for Postman.
-	 * All execution begins here.
+	 * This is the setup for Postman.
+	 *
+	 * Execution always begins here:
+	 * - the wp_mail hook is created, if Postman is properly configured
+	 * - the admin screen hooks are created, if the current user is an admin
+	 * - the ajax endpoints are created, if the current user is an admin
 	 *
 	 * @author jasonhendriks
 	 * @copyright Jan 16, 2015
@@ -25,18 +29,36 @@ if (! class_exists ( 'Postman' )) {
 		 * @param unknown $rootPluginFilenameAndPath
 		 *        	- the __FILE__ of the caller
 		 */
-		public function __construct($rootPluginFilenameAndPath) {
-			// get plugin metadata
+		public function __construct($rootPluginFilenameAndPath, $version) {
+			require_once 'PostmanOptions.php';
+			require_once 'PostmanLogger.php';
+			require_once 'PostmanUtils.php';
+			require_once 'postman-common-functions.php';
+			require_once 'Postman-Common.php';
+			require_once 'Postman-Mail/PostmanTransportRegistry.php';
+			require_once 'Postman-Mail/PostmanSmtpTransport.php';
+			require_once 'Postman-Mail/PostmanGoogleMailApiTransport.php';
+			require_once 'PostmanOAuthToken.php';
+			require_once 'PostmanConfigTextHelper.php';
+			require_once 'PostmanMessageHandler.php';
+			require_once 'PostmanWpMailBinder.php';
 			if (is_admin ()) {
-				include_once (ABSPATH . 'wp-admin/includes/plugin.php');
-				$this->pluginData = get_plugin_data ( $rootPluginFilenameAndPath );
-			} else {
-				$this->pluginData = array (
-						'Name' => 'Postman SMTP',
-						'Version' => '???' 
-				);
+				require_once 'PostmanAdminController.php';
+				require_once 'Postman-Controller/PostmanDashboardWidgetController.php';
+				require_once 'PostmanActivationHandler.php';
+				require_once 'Postman-Controller/PostmanAdminPointer.php';
+				require_once 'Postman-Email-Log/PostmanEmailLogController.php';
+				// always load email log service, in case another plugin (eg. WordPress importer)
+				// is doing something related to custom post types
+				require_once 'Postman-Email-Log/PostmanEmailLogService.php';
 			}
-			
+
+			// get plugin metadata - alternative to get_plugin_data
+			$this->pluginData = array (
+					'Name' => __ ( 'Postman SMTP', 'postman-smtp' ),
+					'Version' => $version 
+			);
+
 			// create an instance of the logger
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->logger->debug ( sprintf ( '%1$s v%2$s starting', $this->pluginData ['Name'], $this->pluginData ['Version'] ) );
@@ -76,6 +98,10 @@ if (! class_exists ( 'Postman' )) {
 							'print_signature' 
 					) );
 				}
+				
+				// create the custom post type
+				PostmanEmailLogService::getInstance ();
+				
 				// register activation handler on the activation event
 				new PostmanActivationHandler ( $rootPluginFilenameAndPath, $this->pluginData ['Version'] );
 			}
@@ -173,7 +199,7 @@ if (! class_exists ( 'Postman' )) {
 		 */
 		function print_signature() {
 			$pluginData = $this->pluginData;
-			printf ( '%s %s<br/>', $pluginData ['Title'], $pluginData ['Version'] );
+			printf ( '<a href="https://wordpress.org/plugins/postman-smtp/">%s</a> %s<br/>', $pluginData ['Name'], $pluginData ['Version'] );
 		}
 		
 		/**
