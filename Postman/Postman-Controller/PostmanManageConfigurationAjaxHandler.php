@@ -155,17 +155,18 @@ if (! class_exists ( 'PostmanManageConfigurationAjaxHandler' )) {
 						// marks at least one item as selected if none are selected
 						$atLeastOneSelected = false;
 						$firstItem = null;
-						foreach ( $overrideAuthItems as &$item ) {
+						// don't use variable reference see http://stackoverflow.com/questions/15024616/php-foreach-change-original-array-values
+						foreach ( $overrideAuthItems as $key => $field ) {
 							if (! $firstItem) {
-								$firstItem = &$item;
+								$firstItem = $key;
 							}
-							if ($item ['selected']) {
+							if ($field ['selected']) {
 								$atLeastOneSelected = true;
 							}
 						}
 						if (! $atLeastOneSelected) {
-							$this->logger->debug ( 'forcing a selection on $overrideAuthItems' );
-							$firstItem ['selected'] = true;
+							$this->logger->debug ( 'nothing selected - forcing a selection on the *first* overrided auth item' );
+							$overrideAuthItems [$firstItem] ['selected'] = true;
 						}
 						
 						// push the authentication options into the $overrideItem structure
