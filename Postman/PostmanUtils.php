@@ -140,6 +140,9 @@ if (! class_exists ( 'PostmanUtils' )) {
 		static function parseBoolean($var) {
 			return filter_var ( $var, FILTER_VALIDATE_BOOLEAN );
 		}
+		static function logMemoryUse($startingMemory, $description) {
+			PostmanUtils::$logger->trace ( sprintf ( $description . ' memory used: %s bytes', memory_get_usage () - $startingMemory ) );
+		}
 	}
 	PostmanUtils::staticInit ();
 }
