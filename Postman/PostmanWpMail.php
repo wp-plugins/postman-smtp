@@ -1,6 +1,9 @@
 <?php
 if (! class_exists ( "PostmanWpMail" )) {
 	
+	require_once 'Postman-Email-Log/PostmanEmailLogService.php';
+	require_once 'Postman-Email-Log/PostmanEmailLogController.php';
+	require_once 'Postman-Mail/PostmanMessage.php';
 	require_once 'Postman-Auth/PostmanAuthenticationManagerFactory.php';
 	require_once 'Postman-Mail/PostmanMailEngine.php';
 	require_once 'PostmanStats.php';
@@ -193,7 +196,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @param unknown $attachments        	
 		 */
 		private function createMessage(PostmanOptionsInterface $options, $to, $subject, $body, $headers, $attachments, PostmanMailTransportConfiguration $transportation) {
-			$message = PostmanMessageFactory::createEmptyMessage ();
+			$message = new PostmanMessage();
 			$message->addHeaders ( $headers );
 			$message->addHeaders ( $options->getAdditionalHeaders () );
 			$message->setBody ( $body );
