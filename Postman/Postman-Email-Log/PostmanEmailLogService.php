@@ -151,6 +151,10 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			$flat = '';
 			$count = 0;
 			foreach ( $addresses as $address ) {
+				if ($count >= 3) {
+					$flat .= sprintf ( __ ( '.. +%d more', 'postman-smtp' ), sizeof ( $addresses ) - $count );
+					break;
+				}
 				if ($count > 0) {
 					$flat .= ', ';
 				}
