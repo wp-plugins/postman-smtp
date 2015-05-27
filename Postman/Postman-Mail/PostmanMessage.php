@@ -432,11 +432,3 @@ if (! class_exists ( "PostmanMessage" )) {
 		}
 	}
 }
-
-if (! class_exists ( 'PostmanMessageFactory' )) {
-	class PostmanMessageFactory {
-		public static function createEmptyMessage() {
-			return new PostmanMessage ();
-		}
-	}
-}
