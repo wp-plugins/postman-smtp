@@ -261,7 +261,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Shaved admin memory use from ~6MB to ~4MB; Non-admin memory use holds at ~2MB
 * Now loading the Sent Email post type for all admin screens, in case other custom post type-related plugins (e.g. WordPress Importer) need it
 * Wasn't comfortable how plugin_data was being retrieved, so reverted back to hard-coded plugin name and version
-* [TBD] Save original wp_mail fields to log so that we can add a Resend action
+* Save original wp_mail parameters to Email Log so that a Resend action can be implemented
+* [[Ticket](https://wordpress.org/support/topic/578-error-authentication-failed-ugfzc3dvcmq6?replies=4#post-7008516)] Removed sanitize_text_field from the PostmanSanitizer to prevent corruption of some passwords
 
 = 1.6.11 - 2015-05-22 =
 * [[Ticket](https://wordpress.org/support/topic/call-to-undefined-function-spritnf?replies=2#post-6977557)] Fix for "Fatal error: Call to undefined function spritnf() in PostmanEmailLogController.php on line 284" - sometimes PHP really sucks compared to Java
