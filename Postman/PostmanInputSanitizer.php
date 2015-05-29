@@ -43,13 +43,13 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			$this->sanitizeString ( 'Client Secret', PostmanOptions::CLIENT_SECRET, $input, $new_input );
 			$this->sanitizeString ( 'Username', PostmanOptions::BASIC_AUTH_USERNAME, $input, $new_input );
 			$this->sanitizePassword ( 'Password', PostmanOptions::BASIC_AUTH_PASSWORD, $input, $new_input );
-			$this->sanitizeEmail ( 'Reply-To', PostmanOptions::REPLY_TO, $input, $new_input );
+			$this->sanitizeString ( 'Reply-To', PostmanOptions::REPLY_TO, $input, $new_input );
 			$this->sanitizeString ( 'Sender Name Override', PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, $input, $new_input );
 			$this->sanitizeString ( 'Sender Email Override', PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE, $input, $new_input );
-			$this->sanitizeEmail ( 'Forced To Recipients', PostmanOptions::FORCED_TO_RECIPIENTS, $input, $new_input );
-			$this->sanitizeEmail ( 'Forced CC Recipients', PostmanOptions::FORCED_CC_RECIPIENTS, $input, $new_input );
-			$this->sanitizeEmail ( 'Forced BCC Recipients', PostmanOptions::FORCED_BCC_RECIPIENTS, $input, $new_input );
-			$this->sanitizeEmail ( 'Additional Headers', PostmanOptions::ADDITIONAL_HEADERS, $input, $new_input );
+			$this->sanitizeString ( 'Forced To Recipients', PostmanOptions::FORCED_TO_RECIPIENTS, $input, $new_input );
+			$this->sanitizeString ( 'Forced CC Recipients', PostmanOptions::FORCED_CC_RECIPIENTS, $input, $new_input );
+			$this->sanitizeString ( 'Forced BCC Recipients', PostmanOptions::FORCED_BCC_RECIPIENTS, $input, $new_input );
+			$this->sanitizeString ( 'Additional Headers', PostmanOptions::ADDITIONAL_HEADERS, $input, $new_input );
 			$this->sanitizeInt ( 'Read Timeout', PostmanOptions::READ_TIMEOUT, $input, $new_input );
 			$this->sanitizeInt ( 'Conenction Timeout', PostmanOptions::CONNECTION_TIMEOUT, $input, $new_input );
 			$this->sanitizeInt ( 'Log Level', PostmanOptions::LOG_LEVEL, $input, $new_input );
@@ -85,30 +85,10 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			
 			return $new_input;
 		}
-		/**
-		 * Sanitize each setting field as needed
-		 *
-		 * @param array $input
-		 *        	Contains all settings fields as array keys
-		 */
-		public function testSanitize($input) {
-			$new_input = array ();
-			
-			if (isset ( $input ['test_email'] ))
-				$new_input ['test_email'] = sanitize_text_field ( $input ['test_email'] );
-			
-			return $new_input;
-		}
-		private function sanitizeEmail($desc, $key, $input, &$new_input) {
-			if (isset ( $input [$key] )) {
-				$this->logSanitize ( $desc, $input [$key] );
-				$new_input [$key] = ($input [$key]);
-			}
-		}
 		private function sanitizeString($desc, $key, $input, &$new_input) {
 			if (isset ( $input [$key] )) {
 				$this->logSanitize ( $desc, $input [$key] );
-				$new_input [$key] = sanitize_text_field ( $input [$key] );
+				$new_input [$key] = $input [$key];
 			}
 		}
 		private function sanitizePassword($desc, $key, $input, &$new_input) {
@@ -117,7 +97,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 					// if the password is all stars, then keep the existing password
 					$new_input [$key] = $this->options->getPassword ();
 				} else {
-					$new_input [$key] = sanitize_text_field ( $input [$key] );
+					$new_input [$key] = $input [$key];
 				}
 				$this->logSanitize ( $desc, $new_input [$key] );
 			}
