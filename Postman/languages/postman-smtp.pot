@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.6.11\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-05-28 14:27:06+00:00\n"
+"POT-Creation-Date: 2015-05-29 17:56:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -104,8 +104,8 @@ msgid "OAuth 2.0 (requires Client ID and Client Secret)"
 msgstr ""
 
 #: Postman/Postman-Controller/PostmanManageConfigurationAjaxHandler.php:150
-#: Postman/PostmanAdminController.php:623
-#: Postman/PostmanAdminController.php:637
+#: Postman/PostmanAdminController.php:614
+#: Postman/PostmanAdminController.php:628
 #: Postman/PostmanViewController.php:722
 msgctxt "As in type used: None"
 msgid "None"
@@ -141,7 +141,7 @@ msgid "Date"
 msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:120
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:137
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:158
 msgctxt "What is the subject of this message?"
 msgid "Subject"
 msgstr ""
@@ -174,53 +174,59 @@ msgid ""
 "does not neccessarily indicate sucessful delivery to the recipient."
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogService.php:74
+#: Postman/Postman-Email-Log/PostmanEmailLogService.php:87
 msgctxt "The group of Emails that have been delivered"
 msgid "Sent Emails"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogService.php:75
+#: Postman/Postman-Email-Log/PostmanEmailLogService.php:88
 msgctxt "An Email that has been delivered"
 msgid "Sent Email"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogService.php:155
+#: Postman/Postman-Email-Log/PostmanEmailLogService.php:216
 msgid ".. +%d more"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:89
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:186
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:99
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:220
 msgctxt "Delete an item from the email log"
 msgid "Delete"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:90
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:100
 msgctxt "View an item from the email log"
 msgid "View"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:91
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:104
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:106
 msgctxt "View the transcript of an item from the email log"
 msgid "Transcript"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:138
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:109
+msgctxt "Attempt to resend this email"
+msgid "Resend"
+msgstr ""
+
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:159
 #: Postman/PostmanViewController.php:860
 msgctxt "Was sending this email successful or not?"
 msgid "Status"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:139
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:160
 msgctxt "When was this email sent?"
 msgid "Delivery Time"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:288
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:329
 msgctxt "A relative time as in \"five days ago\""
 msgid "%s ago"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogView.php:292
+#: Postman/Postman-Email-Log/PostmanEmailLogView.php:335
 msgid "Sent"
 msgstr ""
 
@@ -231,7 +237,7 @@ msgstr ""
 
 #: Postman/Postman-Mail/PostmanGoogleMailApiTransport.php:130
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:91
-#: Postman/PostmanAdminController.php:627
+#: Postman/PostmanAdminController.php:618
 #: Postman/PostmanViewController.php:612
 msgctxt "Authentication Type is OAuth 2.0"
 msgid "OAuth 2.0"
@@ -295,21 +301,21 @@ msgid "no"
 msgstr ""
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:97
-#: Postman/PostmanAdminController.php:626
+#: Postman/PostmanAdminController.php:617
 #: Postman/PostmanViewController.php:611
 msgctxt "As in type used: CRAM-MD5"
 msgid "CRAM-MD5"
 msgstr ""
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:101
-#: Postman/PostmanAdminController.php:625
+#: Postman/PostmanAdminController.php:616
 #: Postman/PostmanViewController.php:609
 msgctxt "As in type used: Login"
 msgid "Login"
 msgstr ""
 
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:105
-#: Postman/PostmanAdminController.php:624
+#: Postman/PostmanAdminController.php:615
 #: Postman/PostmanViewController.php:610
 msgctxt "As in type used: Plain"
 msgid "Plain"
@@ -536,116 +542,111 @@ msgctxt "This mode removes the Postman X-Mailer signature from emails"
 msgid "Stealth Mode"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:502
+#: Postman/PostmanAdminController.php:499
 msgctxt "Configuration Section Title"
 msgid "Test Your Setup"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:507
+#: Postman/PostmanAdminController.php:504
 #: Postman/PostmanViewController.php:848
 msgctxt "Configuration Input Field"
 msgid "Recipient Email Address"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:513
-#: Postman/PostmanViewController.php:576 Postman/PostmanViewController.php:681
-msgid "Delete plugin settings"
-msgstr ""
-
-#: Postman/PostmanAdminController.php:523
+#: Postman/PostmanAdminController.php:514
 msgid "Choose SMTP or a vendor-specific API:"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:529
+#: Postman/PostmanAdminController.php:520
 msgid "Configure the communication with the Mail Submission Agent (MSA):"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:542
+#: Postman/PostmanAdminController.php:533
 msgid "Enter the account username (email address) and password:"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:552
+#: Postman/PostmanAdminController.php:543
 msgid "Configure the delivery audit log:"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:569
+#: Postman/PostmanAdminController.php:560
 msgid ""
 "This will purge all of Postman's settings, including SMTP server info, "
 "username/password and OAuth Credentials."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:569
+#: Postman/PostmanAdminController.php:560
 #: Postman/PostmanViewController.php:580
 msgid "Are you sure?"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:576
+#: Postman/PostmanAdminController.php:567
 msgid "The message sender is used as the default <b>From:</b> address."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:583
+#: Postman/PostmanAdminController.php:574
 msgid ""
 "Separate multiple <b>to</b>/<b>cc</b>/<b>bcc</b> recipients with commas."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:590
+#: Postman/PostmanAdminController.php:581
 msgid ""
 "Increase the timeouts if your host is intermittenly failing to send mail. Be "
 "careful, this also correlates to how long your user must wait if the mail "
 "server is unreachable."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:596
+#: Postman/PostmanAdminController.php:587
 msgid ""
 "Log Level specifies the level of detail written to the WordPress and PHP "
 "logfiles. Delivery mode offers options useful in a development environment."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:602
+#: Postman/PostmanAdminController.php:593
 msgid ""
 "Specify custom headers (e.g. <code>X-MC-Tags: wordpress-site-A</code>), one "
 "per line. Use custom headers with caution as they can negatively affect your "
 "Spam score."
 msgstr ""
 
-#: Postman/PostmanAdminController.php:687
-#: Postman/PostmanAdminController.php:690
+#: Postman/PostmanAdminController.php:678
+#: Postman/PostmanAdminController.php:681
 msgid "Force this Sender Name for all messages"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:718
-#: Postman/PostmanAdminController.php:721
+#: Postman/PostmanAdminController.php:709
+#: Postman/PostmanAdminController.php:712
 msgid "Force this Sender Email Address for all messages"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:735
+#: Postman/PostmanAdminController.php:726
 #: Postman/PostmanViewController.php:413
 msgid "Yes"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:736
+#: Postman/PostmanAdminController.php:727
 #: Postman/PostmanViewController.php:414
 msgid "No"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:756
+#: Postman/PostmanAdminController.php:747
 msgid "Error computing your domain root - please enter it manually"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:845
+#: Postman/PostmanAdminController.php:836
 msgctxt "When the server is online to the public, this is \"Production\" mode"
 msgid "Log Email and Send"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:846
+#: Postman/PostmanAdminController.php:837
 msgid "Log Email and Delete"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:847
+#: Postman/PostmanAdminController.php:838
 msgid "Delete All Emails"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:851
+#: Postman/PostmanAdminController.php:842
 msgid "Remove the Postman X-Header signature from messages"
 msgstr ""
 
@@ -1173,6 +1174,10 @@ msgstr ""
 #: Postman/PostmanViewController.php:528
 msgctxt "Manual Configuration Tab Label"
 msgid "Advanced"
+msgstr ""
+
+#: Postman/PostmanViewController.php:576 Postman/PostmanViewController.php:681
+msgid "Delete plugin settings"
 msgstr ""
 
 #: Postman/PostmanViewController.php:580
