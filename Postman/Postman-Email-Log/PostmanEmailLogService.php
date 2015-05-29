@@ -10,14 +10,33 @@ if (! class_exists ( 'PostmanEmailLog' )) {
 		public $sessionTranscript;
 		public $transportUri;
 		public $replyTo;
+		public $originalTo;
+		public $originalSubject;
+		public $originalMessage;
+		public $originalHeaders;
 	}
 }
 
 if (! class_exists ( 'PostmanEmailLogService' )) {
+	
+	/**
+	 * This class creates the Custom Post Type for Email Logs and handles writing these posts.
+	 *
+	 * @author jasonhendriks
+	 */
 	class PostmanEmailLogService {
 		
 		// constants
 		const POSTMAN_CUSTOM_POST_TYPE_SLUG = 'postman_sent_mail';
+		
+		/*
+		 * Private content is published only for your eyes, or the eyes of only those with authorization
+		 * permission levels to see private content. Normal users and visitors will not be aware of
+		 * private content. It will not appear in the article lists. If a visitor were to guess the URL
+		 * for your private post, they would still not be able to see your content. You will only see
+		 * the private content when you are logged into your WordPress blog.
+		 */
+		const POSTMAN_CUSTOM_POST_STATUS_PRIVATE = 'private';
 		
 		// member variables
 		private $logger;
@@ -46,16 +65,10 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		}
 		
 		/**
+		 * Behavior to run on the WordPress 'init' action
 		 */
 		public function init() {
 			$this->create_post_type ();
-		}
-		private function truncateEmailLog() {
-			$args = array (
-					'post_type' => 'self::POSTMAN_CUSTOM_POST_TYPE_SLUG' 
-			);
-			$FORCE_DELETE = true;
-			// wp_delete_post( $postid, $FORCE_DELETE );
 		}
 		
 		/**
@@ -81,72 +94,120 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		}
 		
 		/**
+		 * Logs successful email attempts
+		 *
+		 * @param PostmanMessage $message        	
+		 * @param unknown $transcript        	
+		 * @param PostmanTransport $transport        	
+		 */
+		public function writeSuccessLog(PostmanMessage $message, $transcript, PostmanTransport $transport) {
+			if (PostmanOptions::getInstance ()->isMailLoggingEnabled ()) {
+				$log = $this->createLog ( $message, $transcript, '', true, $transport );
+				$this->writeToEmailLog ( $log );
+			}
+		}
+		
+		/**
+		 * Logs failed email attempts, requires more metadata so the email can be resent in the future
+		 *
+		 * @param PostmanMessage $message        	
+		 * @param unknown $transcript        	
+		 * @param PostmanTransport $transport        	
+		 * @param unknown $statusMessage        	
+		 * @param unknown $originalTo        	
+		 * @param unknown $originalSubject        	
+		 * @param unknown $originalMessage        	
+		 * @param unknown $originalHeaders        	
+		 */
+		public function writeFailureLog(PostmanMessage $message = null, $transcript, PostmanTransport $transport, $statusMessage, $originalTo, $originalSubject, $originalMessage, $originalHeaders) {
+			if (PostmanOptions::getInstance ()->isMailLoggingEnabled ()) {
+				$log = $this->createLog ( $message, $transcript, $statusMessage, false, $transport );
+				$log->originalTo = $originalTo;
+				$log->originalSubject = $originalSubject;
+				$log->originalMessage = $originalMessage;
+				$log->originalHeaders = $originalHeaders;
+				$this->writeToEmailLog ( $log );
+			}
+		}
+		
+		/**
+		 * Writes an email sending attempt to the Email Log
+		 *
 		 * From http://wordpress.stackexchange.com/questions/8569/wp-insert-post-php-function-and-custom-fields
 		 */
-		public function writeToEmailLog(PostmanEmailLog $log) {
-			// Create post object
-			// from http://stackoverflow.com/questions/20444042/wordpress-how-to-sanitize-multi-line-text-from-a-textarea-without-losing-line
-			$sanitizedBody = implode ( PHP_EOL, array_map ( 'sanitize_text_field', explode ( PHP_EOL, $log->body ) ) );
-			$sanitizedBody = $log->body;
-			/*
-			 * Private content is published only for your eyes, or the eyes of only those with authorization
-			 * permission levels to see private content. Normal users and visitors will not be aware of
-			 * private content. It will not appear in the article lists. If a visitor were to guess the URL
-			 * for your private post, they would still not be able to see your content. You will only see
-			 * the private content when you are logged into your WordPress blog.
-			 */
+		private function writeToEmailLog(PostmanEmailLog $log) {
+			// nothing here is sanitized as WordPress should take care of
+			// making database writes safe
 			$my_post = array (
 					'post_type' => self::POSTMAN_CUSTOM_POST_TYPE_SLUG,
-					// https://codex.wordpress.org/Function_Reference/wp_slash
-					'post_title' => wp_slash ( sanitize_text_field ( $log->subject ) ),
-					'post_content' => wp_slash ( $sanitizedBody ),
-					'post_excerpt' => wp_slash ( sanitize_text_field ( $log->statusMessage ) ),
-					'post_status' => 'private' 
-			); // publish
-			   
-			// Insert the post into the database
+					'post_title' => $log->subject,
+					'post_content' => $log->body,
+					'post_excerpt' => $log->statusMessage,
+					'post_status' => PostmanEmailLogService::POSTMAN_CUSTOM_POST_STATUS_PRIVATE 
+			);
+			
+			// Insert the post into the database (WordPress gives us the Post ID)
 			$post_id = wp_insert_post ( $my_post );
 			$this->logger->debug ( sprintf ( 'Saved message #%s to the database', $post_id ) );
 			$this->logger->trace ( $log );
 			
-			// meta
+			// Write the meta data related to the email
 			update_post_meta ( $post_id, 'success', $log->success );
 			update_post_meta ( $post_id, 'from_header', wp_slash ( $log->sender ) );
 			update_post_meta ( $post_id, 'to_header', wp_slash ( $log->recipients ) );
 			update_post_meta ( $post_id, 'reply_to_header', wp_slash ( $log->replyTo ) );
-			update_post_meta ( $post_id, 'transport_uri', wp_slash ( sanitize_text_field ( $log->transportUri ) ) );
-			// from http://stackoverflow.com/questions/20444042/wordpress-how-to-sanitize-multi-line-text-from-a-textarea-without-losing-line
-			$sanitizedTranscript = $log->sessionTranscript;
-			// $sanitizedTranscript = implode ( PHP_EOL, array_map ( 'sanitize_text_field', explode ( PHP_EOL, $log->sessionTranscript ) ) );
-			update_post_meta ( $post_id, 'session_transcript', wp_slash ( $sanitizedTranscript ) );
+			update_post_meta ( $post_id, 'transport_uri', wp_slash ( $log->transportUri ) );
+			
+			if (! $log->success) {
+				// if the message failed to send, add meta data so we can re-send it
+				update_post_meta ( $post_id, 'original_to', $log->originalTo );
+				update_post_meta ( $post_id, 'original_subject', $log->originalSubject );
+				update_post_meta ( $post_id, 'original_message', $log->originalMessage );
+				update_post_meta ( $post_id, 'original_headers', $log->originalHeaders );
+			}
+			
+			// we do not sanitize the session transcript - let the reader decide how to handle the data
+			update_post_meta ( $post_id, 'session_transcript', wp_slash ( $log->sessionTranscript ) );
+			
+			// truncate the log (remove older entries)
 			$purger = new PostmanEmailLogPurger ();
 			$purger->truncateLogItems ( PostmanOptions::getInstance ()->getMailLoggingMaxEntries () );
 		}
-		public function createSuccessLog(PostmanMessage $message, $transcript, PostmanTransport $transport) {
-			return $this->createLog ( $message, $transcript, '', true, $transport );
-		}
-		public function createFailureLog(PostmanMessage $message = null, $transcript, PostmanTransport $transport, $statusMessage) {
-			return $this->createLog ( $message, $transcript, $statusMessage, false, $transport );
-		}
+		
+		/**
+		 * Creates a Log object for use by writeToEmailLog()
+		 *
+		 * @param PostmanMessage $message        	
+		 * @param unknown $transcript        	
+		 * @param unknown $statusMessage        	
+		 * @param unknown $success        	
+		 * @param PostmanTransport $transport        	
+		 * @return PostmanEmailLog
+		 */
 		private function createLog(PostmanMessage $message = null, $transcript, $statusMessage, $success, PostmanTransport $transport) {
-			if (PostmanOptions::getInstance ()->isMailLoggingEnabled ()) {
-				$log = new PostmanEmailLog ();
-				if ($message) {
-					$log->sender = $message->getSender ()->format ();
-					$log->recipients = $this->flattenEmails ( $message->getToRecipients () );
-					$log->subject = $message->getSubject ();
-					$log->body = $message->getBody ();
-					if (null !== $message->getReplyTo ()) {
-						$log->replyTo = $message->getReplyTo ()->format ();
-					}
+			$log = new PostmanEmailLog ();
+			if ($message) {
+				$log->sender = $message->getSender ()->format ();
+				$log->recipients = $this->flattenEmails ( $message->getToRecipients () );
+				$log->subject = $message->getSubject ();
+				$log->body = $message->getBody ();
+				if (null !== $message->getReplyTo ()) {
+					$log->replyTo = $message->getReplyTo ()->format ();
 				}
-				$log->success = $success;
-				$log->statusMessage = $statusMessage;
-				$log->transportUri = PostmanTransportRegistry::getInstance ()->getPublicTransportUri ( $transport );
-				$log->sessionTranscript = $transcript;
-				$this->writeToEmailLog ( $log );
 			}
+			$log->success = $success;
+			$log->statusMessage = $statusMessage;
+			$log->transportUri = PostmanTransportRegistry::getInstance ()->getPublicTransportUri ( $transport );
+			$log->sessionTranscript = $transcript;
+			return $log;
 		}
+		
+		/**
+		 * Creates a readable "TO" entry based on the recipient header
+		 * 
+		 * @param array $addresses
+		 * @return string
+		 */
 		private static function flattenEmails(array $addresses) {
 			$flat = '';
 			$count = 0;

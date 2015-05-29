@@ -57,18 +57,22 @@ if (! class_exists ( "PostmanWpMail" )) {
 			 *        	subject, message, headers, and attachments values.
 			 */
 			$atts = apply_filters ( 'wp_mail', compact ( 'to', 'subject', 'message', 'headers', 'attachments' ) );
+			$originalTo = $to;
 			if (isset ( $atts ['to'] )) {
 				$to = $atts ['to'];
 			}
 			
+			$originalSubject = $subject;
 			if (isset ( $atts ['subject'] )) {
 				$subject = $atts ['subject'];
 			}
 			
+			$originalMessage = $message;
 			if (isset ( $atts ['message'] )) {
 				$message = $atts ['message'];
 			}
-			
+
+			$originalHeaders = $headers;
 			if (isset ( $atts ['headers'] )) {
 				$headers = $atts ['headers'];
 			}
@@ -129,7 +133,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 				}
 				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
 					// log the successful delivery
-					PostmanEmailLogService::getInstance ()->createSuccessLog ( $messageBuilder, $this->transcript, $transport );
+					PostmanEmailLogService::getInstance ()->writeSuccessLog ( $messageBuilder, $this->transcript, $transport );
 				}
 				$endTime = microtime ( true ) * 1000;
 				$this->totalTime = $endTime - $startTime;
@@ -150,7 +154,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 				}
 				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
 					// log the failed delivery
-					PostmanEmailLogService::getInstance ()->createFailureLog ( $messageBuilder, $this->transcript, $transport, $e->getMessage () );
+					PostmanEmailLogService::getInstance ()->writeFailureLog ( $messageBuilder, $this->transcript, $transport, $e->getMessage (), $originalTo, $originalSubject, $originalMessage, $originalHeaders );
 				}
 				$endTime = microtime ( true ) * 1000;
 				$this->totalTime = $endTime - $startTime;
