@@ -494,10 +494,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
 			// the Test Email section
-			register_setting ( 'email_group', PostmanAdminController::TEST_OPTIONS, array (
-					$sanitizer,
-					'testSanitize' 
-			) );
+			register_setting ( 'email_group', PostmanAdminController::TEST_OPTIONS );
 			
 			add_settings_section ( 'TEST_EMAIL', _x ( 'Test Your Setup', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
@@ -508,12 +505,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this,
 					'test_email_callback' 
 			), PostmanAdminController::POSTMAN_TEST_SLUG, 'TEST_EMAIL' );
-			
-			// the Purge Data section
-			add_settings_section ( 'PURGE_DATA', __ ( 'Delete plugin settings', 'postman-smtp' ), array (
-					$this,
-					'printPurgeDataSectionInfo' 
-			), 'PURGE_DATA' );
 		}
 		
 		/**
