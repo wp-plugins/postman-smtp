@@ -106,8 +106,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 		jQuery('li').addClass('disabled');
 		var data = {
 			'action' : 'send_test_email',
-			'email' : jQuery('#input_test_email').val(),
-			'method' : 'wp_mail'
+			'email' : jQuery('#input_test_email').val()
 		};
 		jQuery('#postman_test_message_status').html(postman_email_test.sending);
 		jQuery('#postman_test_message_status').css('color', 'blue');
@@ -123,11 +122,9 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 							method : "POST",
 							url : ajaxurl,
 							data : data
-						})
-				.done(function(response) {
+						}).done(function(response) {
 					handleResponse(response);
-				})
-				.fail(
+				}).fail(
 						function(response) {
 							ajaxFailed(response);
 							jQuery('#postman_test_message_status').html(
@@ -138,7 +135,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 
 	}
 	function handleResponse(response) {
-		if(jQuery('#postman_test_message_transcript').length) {
+		if (jQuery('#postman_test_message_transcript').length) {
 			// only disable the next button if there is a next step
 			jQuery('li').removeClass('disabled');
 		} else {

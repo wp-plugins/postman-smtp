@@ -127,7 +127,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 					$this->transcript = $engine->getTranscript ();
 					
 					// increment the success counter, unless we are just tesitng
-					if (! $testMode) {
+					if (! $testMode && $options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
 						PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
 					}
 				}

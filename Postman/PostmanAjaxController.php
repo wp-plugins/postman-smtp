@@ -103,10 +103,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		private function getTransports() {
 			$transports = '';
 			foreach ( PostmanTransportRegistry::getInstance ()->getTransports () as $transport ) {
-				$transports .= ' : ' . $transport->getName ();
-				if (method_exists ( $transport, 'getVersion' )) {
-					$transports .= ' (' . $transport->getVersion () . ')';
-				}
+				$transports .= ' : ' . $transport->getName () . ' (' . $transport->getVersion () . ')';
 			}
 			return $transports;
 		}
@@ -118,7 +115,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		 */
 		private function testConnectivity() {
 			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
-			if ($transport->isConfigured ( $this->options, $this->authorizationToken ) && method_exists ( $transport, 'getHostname' ) && method_exists ( $transport, 'getHostPort' )) {
+			if ($transport->isConfigured ( $this->options, $this->authorizationToken )) {
 				$portTest = new PostmanPortTest ( $transport->getHostname ( $this->options ), $transport->getHostPort ( $this->options ) );
 				$result = $portTest->genericConnectionTest ( $this->options->getConnectionTimeout () );
 				if ($result) {
@@ -404,7 +401,6 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 					'test_mode' 
 			) );
 			$email = $this->getRequestParameter ( 'email' );
-			$method = $this->getRequestParameter ( 'method' );
 			
 			$serverName = postmanGetServerName ();
 			/* translators: where %s is the domain name of the site */

@@ -58,55 +58,23 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 				return $transports [$slug];
 			}
 		}
+		
 		/**
+		 * A short-hand way of showing the complete delivery method
 		 *
-		 * @deprecated by getTransportUri()
 		 * @param PostmanTransport $transport        	
 		 * @return string
 		 */
-		public function getDeliveryUri(PostmanTransport $transport) {
-			return $this->getSecretTransportUri ( $transport, true, true );
-		}
-		public function getSecretTransportUri(PostmanTransport $transport, $obscureUsername = false, $obscurePassword = true) {
-			if (! method_exists ( $transport, 'getVersion' )) {
-				return 'undefined';
-			} else {
-				$options = PostmanOptions::getInstance ();
-				$transportName = $transport->getSlug ();
-				$auth = $transport->getAuthenticationType ( $options );
-				$security = $transport->getSecurityType ( $options );
-				if ($obscureUsername) {
-					$user = postmanObfuscateEmail ( $transport->getCredentialsId ( $options ) );
-				} else {
-					$user = $transport->getCredentialsId ( $options );
-				}
-				if ($obscurePassword) {
-					$pass = PostmanUtils::obfuscatePassword ( $transport->getCredentialsSecret ( $options ) );
-				} else {
-					$pass = $transport->getCredentialsSecret ( $options );
-				}
-				$format = '%1$s:%2$s:%3$s://%4$s:%5$s@%6$s:%7$s';
-				if ($auth == PostmanOptions::AUTHENTICATION_TYPE_NONE) {
-					$format = '%1$s:%2$s:%3$s://%6$s:%7$s';
-				}
-				$host = $transport->getHostname ( $options );
-				$port = $transport->getHostPort ( $options );
-				return sprintf ( $format, $transportName, $security, $auth, $user, $pass, $host, $port );
-			}
-		}
 		public function getPublicTransportUri(PostmanTransport $transport) {
-			if (! method_exists ( $transport, 'getVersion' )) {
-				return 'undefined';
-			} else {
-				$options = PostmanOptions::getInstance ();
-				$transportName = $transport->getSlug ();
-				$auth = $transport->getAuthenticationType ( $options );
-				$security = $transport->getSecurityType ( $options );
-				$host = $transport->getHostname ( $options );
-				$port = $transport->getHostPort ( $options );
-				return sprintf ( '%s:%s:%s://%s:%s', $transportName, $security, $auth, $host, $port );
-			}
+			$options = PostmanOptions::getInstance ();
+			$transportName = $transport->getSlug ();
+			$auth = $transport->getAuthenticationType ( $options );
+			$security = $transport->getSecurityType ( $options );
+			$host = $transport->getHostname ( $options );
+			$port = $transport->getHostPort ( $options );
+			return sprintf ( '%s:%s:%s://%s:%s', $transportName, $security, $auth, $host, $port );
 		}
+		
 		/**
 		 * Determine if a specific transport is registered in the directory.
 		 *
@@ -168,6 +136,14 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 			
 			return $oauthUsed && $configured;
 		}
+		
+		/**
+		 * Polls all the installed transports to get a complete list of sockets to probe for connectivity
+		 *
+		 * @param unknown $hostname        	
+		 * @param unknown $isGmail        	
+		 * @return multitype:
+		 */
 		public function getSocketsForSetupWizardToProbe($hostname, $isGmail) {
 			$hosts = array ();
 			foreach ( $this->getTransports () as $transport ) {

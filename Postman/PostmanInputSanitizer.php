@@ -88,7 +88,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 		private function sanitizeString($desc, $key, $input, &$new_input) {
 			if (isset ( $input [$key] )) {
 				$this->logSanitize ( $desc, $input [$key] );
-				$new_input [$key] = $input [$key];
+				$new_input [$key] = trim($input [$key]);
 			}
 		}
 		private function sanitizePassword($desc, $key, $input, &$new_input) {
@@ -97,7 +97,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 					// if the password is all stars, then keep the existing password
 					$new_input [$key] = $this->options->getPassword ();
 				} else {
-					$new_input [$key] = $input [$key];
+					$new_input [$key] = trim($input [$key]);
 				}
 				$this->logSanitize ( $desc, $new_input [$key] );
 			}
