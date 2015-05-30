@@ -40,6 +40,7 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 = Requirements =
 * WordPress 3.9 and PHP 5.2 with SPL and iconv
 * Connectivity to, and authentication credentials with, any email service provider
+* 3.7MB per process for administration; 2.5MB per process for visitors
 * ¹ OAuth 2.0 features require a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
 * ² Custom email domains require an SPF and DKIM record for Blackhole-free/Spam-free delivery
 
@@ -263,7 +264,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * Wasn't comfortable how plugin_data was being retrieved, so reverted back to hard-coded plugin name and version
 * Save original wp_mail parameters to Email Log so that a Resend action can be implemented
 * [[Ticket](https://wordpress.org/support/topic/578-error-authentication-failed-ugfzc3dvcmq6?replies=4#post-7008516)] Removed sanitize_text_field from the PostmanSanitizer to prevent corruption of some passwords
-* A lot of general code clean-up
+* [[Ticket](https://wordpress.org/support/topic/fatal-error-after-the-latest-update?replies=9#post-6963805)] Removed the WordPress function call wp_slash - systems that don't support it can now use logging
+* A lot of general code clean-up and memory optimizations
 
 = 1.6.11 - 2015-05-22 =
 * [[Ticket](https://wordpress.org/support/topic/call-to-undefined-function-spritnf?replies=2#post-6977557)] Fix for "Fatal error: Call to undefined function spritnf() in PostmanEmailLogController.php on line 284" - sometimes PHP really sucks compared to Java
