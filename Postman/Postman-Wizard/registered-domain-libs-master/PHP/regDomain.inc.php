@@ -5,13 +5,13 @@
  *
  * <@LICENSE>
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
+ * contributor license agreements. See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to you under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at:
+ * the License. You may obtain a copy of the License at:
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,34 +31,32 @@
  * the most common identifier - the registered domain - finally.
  *
  * This function returns NULL if $signingDomain is TLD itself
- * 
+ *
  * $signingDomain has to be provided lowercase (!)
  */
 
 /* pull in class */
-require_once(dirname(__FILE__) . '/regDomain.class.php');
+require_once (dirname ( __FILE__ ) . '/regDomain.class.php');
 
 /* create global object */
-$regDomainObj = new regDomain;
-
+;
 function getRegisteredDomain($signingDomain, $fallback = TRUE) {
 	/* pull in object */
-	global $regDomainObj;
+	$regDomainObj = new regDomain ();
 	/* return object method */
-	return $regDomainObj->getRegisteredDomain($signingDomain, $fallback);
+	return $regDomainObj->getRegisteredDomain ( $signingDomain, $fallback );
 }
-
 function validDomainPart($domPart) {
 	/* pull in object */
-	global $regDomainObj;
+	$regDomainObj = new regDomain ();
 	/* return object method */
-	return $regDomainObj->validDomainPart($domPart);
+	return $regDomainObj->validDomainPart ( $domPart );
 }
 
 // recursive helper method
 function findRegisteredDomain($remainingSigningDomainParts, &$treeNode) {
 	/* pull in object */
-	global $regDomainObj;
+	$regDomainObj = new regDomain ();
 	/* return object method */
-	return $regDomainObj->findRegisteredDomain($remainingSigningDomainParts, $treeNode);
+	return $regDomainObj->findRegisteredDomain ( $remainingSigningDomainParts, $treeNode );
 }
