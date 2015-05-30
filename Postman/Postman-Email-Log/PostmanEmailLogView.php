@@ -106,7 +106,8 @@ class PostmanEmailLogView extends WP_List_Table {
 			$actions ['transcript'] = sprintf ( '%2$s', $transcriptUrl, _x ( 'Transcript', 'View the transcript of an item from the email log', 'postman-smtp' ) );
 		}
 		if (! ($meta_values ['success'] [0]) && ! empty ( $meta_values ['original_to'] [0] )) {
-			$actions ['resend'] = sprintf ( '<a href="%s">%s</a>', $resendUrl, _x ( 'Resend', 'Attempt to resend this email', 'postman-smtp' ) );
+			// $actions ['resend'] = sprintf ( '<a href="%s">%s</a>', $resendUrl, _x ( 'Resend', 'Attempt to resend this email', 'postman-smtp' ) );
+			$actions ['resend'] = sprintf ( '%2$s', $resendUrl, _x ( 'Resend', 'Attempt to resend this email', 'postman-smtp' ) );
 		}
 		
 		// Return the title contents
