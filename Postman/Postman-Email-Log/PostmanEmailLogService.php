@@ -153,10 +153,10 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			
 			// Write the meta data related to the email
 			update_post_meta ( $post_id, 'success', $log->success );
-			update_post_meta ( $post_id, 'from_header', wp_slash ( $log->sender ) );
-			update_post_meta ( $post_id, 'to_header', wp_slash ( $log->recipients ) );
-			update_post_meta ( $post_id, 'reply_to_header', wp_slash ( $log->replyTo ) );
-			update_post_meta ( $post_id, 'transport_uri', wp_slash ( $log->transportUri ) );
+			update_post_meta ( $post_id, 'from_header', $log->sender );
+			update_post_meta ( $post_id, 'to_header', $log->recipients );
+			update_post_meta ( $post_id, 'reply_to_header', $log->replyTo );
+			update_post_meta ( $post_id, 'transport_uri', $log->transportUri );
 			
 			if (! $log->success) {
 				// if the message failed to send, add meta data so we can re-send it
@@ -167,7 +167,7 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			}
 			
 			// we do not sanitize the session transcript - let the reader decide how to handle the data
-			update_post_meta ( $post_id, 'session_transcript', wp_slash ( $log->sessionTranscript ) );
+			update_post_meta ( $post_id, 'session_transcript', $log->sessionTranscript );
 			
 			// truncate the log (remove older entries)
 			$purger = new PostmanEmailLogPurger ();
