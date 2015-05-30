@@ -11,6 +11,8 @@ if (! class_exists ( "PostmanState" )) {
 		
 		// the option database name
 		const SLUG = 'postman_state';
+		const LONG_ENOUGH_SEC = 432000;
+		const TOO_LONG_SEC = 2592000;
 		
 		// the options fields
 		const VERSION = 'version';
@@ -38,9 +40,16 @@ if (! class_exists ( "PostmanState" )) {
 		public function save() {
 			update_option ( self::SLUG, $this->options );
 		}
+		/**
+		 * Shows the review feature of Postman five days after install to thirty days after install
+		 * 
+		 * @return boolean
+		 */
 		public function isTimeToReviewPostman() {
 			if (! empty ( $this->options [self::INSTALL_DATE] )) {
-				return $this->options [self::INSTALL_DATE] + Postman::LONG_ENOUGH_SEC < time ();
+				$minTime = $this->options [self::INSTALL_DATE] + self::LONG_ENOUGH_SEC;
+				$maxTime = $this->options [self::INSTALL_DATE] + self::TOO_LONG_SEC;
+				return $minTime <= time () && time () <= $maxTime;
 			}
 		}
 	}

@@ -15,7 +15,6 @@ if (! class_exists ( 'Postman' )) {
 	 * @copyright Jan 16, 2015
 	 */
 	class Postman {
-		const LONG_ENOUGH_SEC = 432000;
 		private $logger;
 		private $messageHandler;
 		private $options;
