@@ -78,19 +78,6 @@ class PostmanPortTest {
 	}
 	
 	/**
-	 *
-	 * @param number $timeout        	
-	 * @return boolean
-	 */
-	public function testPortQuiz() {
-		$this->logger->trace ( 'testPortQuiz()' );
-		// test if the port is open
-		$connectionString = sprintf ( 'portquiz.net:%s', $this->port );
-		$stream = $this->createStream ( $connectionString, $this->connectionTimeout );
-		return null != $stream;
-	}
-	
-	/**
 	 * Given a hostname, test if it has open ports
 	 *
 	 * @param string $hostname        	

@@ -240,11 +240,11 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		 * This Ajax function retrieves whether a TCP port is open or not
 		 */
 		function runPortQuizTest() {
-			$hostname = trim ( $this->getRequestParameter ( 'hostname' ) );
+			$hostname = 'portquiz.net';
 			$port = intval ( $this->getRequestParameter ( 'port' ) );
 			$this->logger->debug ( 'testing TCP port: hostname ' . $hostname . ' port ' . $port );
 			$portTest = new PostmanPortTest ( $hostname, $port );
-			$success = $portTest->testPortQuiz ();
+			$success = $portTest->genericConnectionTest();
 			$this->buildResponse ( $hostname, $port, $portTest, $success );
 		}
 		
