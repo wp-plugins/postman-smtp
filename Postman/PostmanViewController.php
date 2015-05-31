@@ -844,7 +844,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<p>%s', __ ( 'This utility allows you to send an email message for testing.', 'postman-smtp' ) );
 			print ' ';
 			/* translators: where %d is an amount of time, in seconds */
-			printf ( '%s</p>', sprintf ( _n ( 'If there is a problem, Postman will give up after %d second.', 'If there is a problem, Postman will give up after %d seconds.', $this->options->getReadTimeout () * 2, 'postman-smtp' ), $this->options->getReadTimeout () * 2 ) );
+			printf ( '%s</p>', sprintf ( _n ( 'If there is a problem, Postman will give up after %d second.', 'If there is a problem, Postman will give up after %d seconds.', $this->options->getReadTimeout (), 'postman-smtp' ), $this->options->getReadTimeout () ) );
 			printf ( '<label for="postman_test_options[test_email]">%s</label>', _x ( 'Recipient Email Address', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->adminController->test_email_callback ();
 			print '</fieldset>';
