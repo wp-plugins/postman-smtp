@@ -71,7 +71,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 			if (isset ( $atts ['message'] )) {
 				$message = $atts ['message'];
 			}
-
+			
 			$originalHeaders = $headers;
 			if (isset ( $atts ['headers'] )) {
 				$headers = $atts ['headers'];
@@ -115,6 +115,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 				// send the message
 				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
 					if ($options->isAuthTypeOAuth2 ()) {
+						PostmanUtils::lock ();
 						// may throw an exception attempting to contact the OAuth2 provider
 						$this->ensureAuthtokenIsUpdated ( $transport, $options, $authorizationToken );
 					}
@@ -123,21 +124,22 @@ if (! class_exists ( "PostmanWpMail" )) {
 					// may throw an exception attempting to contact the SMTP server
 					$engine->send ( $messageBuilder, $options->getHostname () );
 					
-					// save the transcript
-					$this->transcript = $engine->getTranscript ();
-					
 					// increment the success counter, unless we are just tesitng
-					if (! $testMode && $options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
+					if (! $testMode) {
 						PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
 					}
 				}
 				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
 					// log the successful delivery
-					PostmanEmailLogService::getInstance ()->writeSuccessLog ( $messageBuilder, $this->transcript, $transport );
+					PostmanEmailLogService::getInstance ()->writeSuccessLog ( $messageBuilder, $engine->getTranscript (), $transport );
 				}
-				$endTime = microtime ( true ) * 1000;
-				$this->totalTime = $endTime - $startTime;
+				
+				// clean up
+				$this->postSend ( $engine, $startTime );
+				
+				// return successful
 				return true;
+				
 			} catch ( Exception $e ) {
 				// save the error for later
 				$this->exception = $e;
@@ -145,21 +147,39 @@ if (! class_exists ( "PostmanWpMail" )) {
 				// write the error to the PHP log
 				$this->logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
 				
-				// save the transcript
-				$this->transcript = $engine->getTranscript ();
-				
 				// increment the failure counter, unless we are just tesitng
 				if (! $testMode && $options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
 					PostmanStats::getInstance ()->incrementFailedDelivery ();
 				}
 				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
 					// log the failed delivery
-					PostmanEmailLogService::getInstance ()->writeFailureLog ( $messageBuilder, $this->transcript, $transport, $e->getMessage (), $originalTo, $originalSubject, $originalMessage, $originalHeaders );
+					PostmanEmailLogService::getInstance ()->writeFailureLog ( $messageBuilder, $engine->getTranscript (), $transport, $e->getMessage (), $originalTo, $originalSubject, $originalMessage, $originalHeaders );
 				}
-				$endTime = microtime ( true ) * 1000;
-				$this->totalTime = $endTime - $startTime;
+				
+				// clean up
+				$this->postSend ( $engine, $startTime );
+				
+				// return failure
 				return false;
 			}
+		}
+		
+		/**
+		 * Clean up after sending the mail
+		 *
+		 * @param PostmanMailEngine $engine        	
+		 * @param unknown $startTime        	
+		 */
+		private function postSend(PostmanMailEngine $engine, $startTime) {
+			// save the transcript
+			$this->transcript = $engine->getTranscript ();
+			
+			// delete the semaphore
+			PostmanUtils::unlock ();
+			
+			// stop the clock
+			$endTime = microtime ( true ) * 1000;
+			$this->totalTime = $endTime - $startTime;
 		}
 		
 		/**
@@ -200,7 +220,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @param unknown $attachments        	
 		 */
 		private function createMessage(PostmanOptionsInterface $options, $to, $subject, $body, $headers, $attachments, PostmanMailTransportConfiguration $transportation) {
-			$message = new PostmanMessage();
+			$message = new PostmanMessage ();
 			$message->addHeaders ( $headers );
 			$message->addHeaders ( $options->getAdditionalHeaders () );
 			$message->setBody ( $body );

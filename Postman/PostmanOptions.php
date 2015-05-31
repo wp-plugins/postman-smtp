@@ -68,7 +68,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		const DEFAULT_TCP_CONNECTION_TIMEOUT = 10;
 		const DEFAULT_PLUGIN_SENDER_NAME_ENFORCED = true;
 		const DEFAULT_PLUGIN_SENDER_EMAIL_ENFORCED = true;
-		
+		const DEFAULT_TEMP_DIRECTORY = '/tmp';
+
 		// options data
 		private $options;
 		
@@ -98,6 +99,14 @@ if (! class_exists ( "PostmanOptions" )) {
 			$allowed = $this->isMailLoggingAllowed ();
 			$enabled = $this->getMailLoggingEnabled () == self::MAIL_LOG_ENABLED_OPTION_YES;
 			return $allowed && $enabled;
+		}
+		public function isFileLockingEnabled() {
+			// TODO this option can be set by PostmanActivationHandler
+			return false;
+		}
+		public function getTempDirectory() {
+			// TODO this option should be overridable by the user
+			return self::DEFAULT_TEMP_DIRECTORY;
 		}
 		public function isMailLoggingAllowed() {
 			return true;

@@ -259,7 +259,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.6.13 =
 * Translated into Dutch, thank-you Louise
 * [TBD] Add dismiss option for "unconfigured message" .. for multisites
-* [TBD] Add resen option to Email Log for failed messages
+* [TBD] Add resend option to Email Log for failed messages
+* [TBD] Add locking to make sure OAuth2 token is refreshed in a thread-safe way
 * [TBD] Add mail queue option
 
 = 1.6.12 - 2015-05-30 =

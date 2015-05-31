@@ -147,7 +147,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 		/**
 		 * Rounds the bytes returned from memory_get_usage to smaller amounts used IEC binary prefixes
 		 * See http://en.wikipedia.org/wiki/Binary_prefix
-		 * 
+		 *
 		 * @param unknown $size        	
 		 * @return string
 		 */
@@ -161,6 +161,41 @@ if (! class_exists ( 'PostmanUtils' )) {
 					'PiB' 
 			);
 			return @round ( $size / pow ( 1024, ($i = floor ( log ( $size, 1024 ) )) ), 2 ) . ' ' . $unit [$i];
+		}
+		
+		/**
+		 * Unblock threads waiting on lock()
+		 */
+		static function unlock() {
+			$options = PostmanOptions::getInstance ();
+			if ($options->isFileLockingEnabled ()) {
+				@unlink ( $options->getTempDirectory () . '/.postman.lock' );
+			}
+		}
+		
+		/**
+		 * Processes will block on this method until unlock() is called
+		 * Inspired by http://cubicspot.blogspot.ca/2010/10/forget-flock-and-system-v-semaphores.html
+		 *
+		 * @throws Exception
+		 */
+		static function lock() {
+			$options = PostmanOptions::getInstance ();
+			$attempts = 0;
+			while ( $options->isFileLockingEnabled () ) {
+				// create the semaphore
+				$lock = @fopen ( $options->getTempDirectory () . '/.postman.lock', 'xb' );
+				if ($lock) {
+					// if we got the lock, return
+					return;
+				} else {
+					$attempts ++;
+					if ($attempts >= 10) {
+						throw new Exception ( sprintf ( 'Could not create lockfile %s', '/tmp' . '/.postman.lock' ) );
+					}
+					sleep ( 1 );
+				}
+			}
 		}
 	}
 	PostmanUtils::staticInit ();
