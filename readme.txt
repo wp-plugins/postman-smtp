@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.12
+Stable tag: 1.6.13a
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -255,6 +255,12 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 
 == Changelog ==
+
+= 1.6.13 =
+* Translated into Dutch, thank-you Louise
+* [TBD] Add dismiss option for "unconfigured message" .. for multisites
+* [TBD] Add resen option to Email Log for failed messages
+* [TBD] Add mail queue option
 
 = 1.6.12 - 2015-05-30 =
 * 6,000 installations!- 2015-05-26
