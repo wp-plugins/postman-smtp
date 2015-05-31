@@ -80,25 +80,24 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->diagnostics .= sprintf ( '%s%s', $message, PHP_EOL );
 		}
 		private function getActivePlugins() {
-			$activePlugins = ('WordPress Plugins');
 			// from http://stackoverflow.com/questions/20488264/how-do-i-get-activated-plugin-list-in-wordpress-plugin-development
 			$apl = get_option ( 'active_plugins' );
 			$plugins = get_plugins ();
-			$activated_plugins = array ();
+			$pluginText = array ();
 			foreach ( $apl as $p ) {
 				if (isset ( $plugins [$p] )) {
-					$activePlugins .= ' : ' . $plugins [$p] ['Name'];
+					array_push($pluginText, $plugins [$p] ['Name']);
 				}
 			}
-			return $activePlugins;
+			return 'WordPress Plugins: ' . implode ( ', ', $pluginText );
 		}
 		private function getPhpDependencies() {
-			$activePlugins = ('PHP Dependencies');
 			$apl = PostmanPreRequisitesCheck::getState ();
+			$pluginText = array ();
 			foreach ( $apl as $p ) {
-				$activePlugins .= ' : ' . $p ['name'] . '=' . ($p ['ready'] ? 'Yes' : 'No');
+				array_push ( $pluginText, $p ['name'] . '=' . ($p ['ready'] ? 'Yes' : 'No') );
 			}
-			return $activePlugins;
+			return 'PHP Dependencies: ' . implode ( ', ', $pluginText );
 		}
 		private function getTransports() {
 			$transports = '';
