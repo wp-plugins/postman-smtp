@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Postman SMTP 1.6.11\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
 "POT-Creation-Date: 2015-05-29 17:56:40+00:00\n"
-"PO-Revision-Date: 2015-05-31 08:48-0500\n"
+"PO-Revision-Date: 2015-05-31 08:59-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -876,7 +876,7 @@ msgstr "De aansluitbaarheids Test zal een raport geven over de ability bereik va
 #: Postman/PostmanViewController.php:315 Postman/PostmanViewController.php:604
 msgctxt "Is it possible to create network connections to the Internet?"
 msgid "Outbound to Internet"
-msgstr "Outbound to internet"
+msgstr "Outbound naar Internet"
 
 #: Postman/PostmanViewController.php:315
 msgid "This tests the ability to make outbound connections from your site to the Internet in general. If the result is Closed, then there is a communication problem with the Internet, like a firewall.</li>"
@@ -980,7 +980,7 @@ msgstr "Poort %d is open, maar niet voor %s."
 #. translators: where %d is a port number and %s is a hostname
 #: Postman/PostmanViewController.php:428
 msgid "Port %d can be used for SMTP to %s."
-msgstr "Poort %d kan gebruikt worden voor  SMTP  naar %s."
+msgstr "Poort %d kan gebruikt worden voor SMTP naar %s."
 
 #. translators: where %s is the name of the SMTP server
 #: Postman/PostmanViewController.php:430 Postman/PostmanViewController.php:432
@@ -991,7 +991,7 @@ msgstr "Waarschuwing: connect naar %1$s in plaast van %2$s."
 #. Gmail Extension
 #: Postman/PostmanViewController.php:434
 msgid "Port %d can be used to send <b>Gmail</b> with the Gmail API."
-msgstr "Poort %d kan voor verzenden gebruikt worden met <b>Gmail</b> met de  Gmail API."
+msgstr "Poort %d kan voor verzenden gebruikt worden met <b>Gmail</b> met de Gmail API."
 
 #. translators: where %d is a port number
 #: Postman/PostmanViewController.php:436
@@ -1019,14 +1019,14 @@ msgstr "Postman is geconfigureerd"
 
 #: Postman/PostmanViewController.php:483
 msgid "Please note: <em>When composing email, some WordPress plugins and themes may set an unauthorized sender email address causing rejection with services like Yahoo Mail. If you experience problems, enable \"Force this Sender Email Address for all messages\" in the settings.</em>"
-msgstr "Let Op:<em>Bij het samenstellen van  email, kunnen sommige WordPress plugins en Thema's een onbevoegde email afzender in stellen waardoor zich afwijzingen met diensten zoals Yahoo mail voordoen. Als je problemen ondervindt, enable '' force deze email afzender voor alle berichten'' in de instellingen.</em>"
+msgstr "Let Op:<em>Bij het samenstellen van  email, kunnen sommige WordPress plugins en Thema's een onbevoegde email afzender in stellen waardoor zich afwijzingen met diensten zoals Yahoo mail voordoen. Als je problemen ondervindt, enable ''force deze email afzender voor alle berichten'' in de instellingen.</em>"
 
 #. translators: where %d is the number of emails delivered
 #: Postman/PostmanViewController.php:487
 msgid "Postman has delivered <span style=\"color:green\">%d</span> email for you."
 msgid_plural "Postman has delivered <span style=\"color:green\">%d</span> emails for you."
-msgstr[0] "Postman heeft <span style=\"color:green\">%d</span> email bezrigd voor je."
-msgstr[1] ""
+msgstr[0] "Postman heeft <span style=\"color:green\">%d</span> email bezorgd voor je."
+msgstr[1] "Postman heeft <span style=\"color:green\">%d</span> emails bezorgd voor je."
 
 #: Postman/PostmanViewController.php:490
 msgid "View the log"
