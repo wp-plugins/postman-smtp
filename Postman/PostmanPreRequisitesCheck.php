@@ -17,6 +17,9 @@ if (! class_exists ( 'PostmanPreRequisitesCheck' )) {
 		public static function checkAllowUrlFopen() {
 			return filter_var ( ini_get ( 'allow_url_fopen' ), FILTER_VALIDATE_BOOLEAN );
 		}
+		public static function checkMcrypt() {
+			return function_exists('mcrypt_get_iv_size') && function_exists('mcrypt_create_iv') && function_exists('mcrypt_encrypt') && function_exists('mcrypt_decrypt');
+		}
 		/**
 		 * Return an array of state:
 		 * [n][name=>x,ready=>true|false,required=true|false]
@@ -46,6 +49,11 @@ if (! class_exists ( 'PostmanPreRequisitesCheck' )) {
 			array_push ( $state, array (
 					'name' => 'allow_url_fopen',
 					'ready' => self::checkAllowUrlFopen (),
+					'required' => false 
+			) );
+			array_push ( $state, array (
+					'name' => 'mcrypt',
+					'ready' => self::checkMcrypt(),
 					'required' => false 
 			) );
 			return $state;
