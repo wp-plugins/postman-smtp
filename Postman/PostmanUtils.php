@@ -9,6 +9,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 		// redirections back to THIS SITE should always be relative because of IIS bug
 		const POSTMAN_EMAIL_LOG_PAGE_RELATIVE_URL = 'tools.php?page=postman_email_log';
 		const POSTMAN_HOME_PAGE_RELATIVE_URL = 'options-general.php?page=postman';
+		const REQUEST_OAUTH2_GRANT_SLUG = 'admin-post.php?action=postman/requestOauthGrant';
 		
 		//
 		const NO_ECHO = false;
@@ -17,6 +18,13 @@ if (! class_exists ( 'PostmanUtils' )) {
 			if (isset ( $_REQUEST ['page'] )) {
 				PostmanUtils::$logger->trace ( 'Current page: ' . $_REQUEST ['page'] );
 			}
+		}
+		
+		/**
+		 * Returns an escaped URL
+		 */
+		public static function getGrantOAuthPermissionUrl() {
+			return menu_page_url ( self::REQUEST_OAUTH2_GRANT_SLUG, self::NO_ECHO );
 		}
 		
 		/**
