@@ -36,6 +36,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 				}
 			}
 			// check the auth type AFTER the hostname because we reset the hostname if auth is bad
+			$this->sanitizeString ( 'Sender Email', PostmanOptions::SENDER_EMAIL, $input, $new_input );
 			$this->sanitizeString ( 'Transport Type', PostmanOptions::TRANSPORT_TYPE, $input, $new_input );
 			$this->sanitizeString ( 'Authorization Type', PostmanOptions::AUTHENTICATION_TYPE, $input, $new_input );
 			$this->sanitizeString ( 'Sender Name', PostmanOptions::SENDER_NAME, $input, $new_input );
@@ -59,18 +60,6 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			$this->sanitizeString ( 'Stealth Mode', PostmanOptions::STEALTH_MODE, $input, $new_input );
 			$this->sanitizeInt ( 'Transcript Size', PostmanOptions::TRANSCRIPT_SIZE, $input, $new_input );
 				
-			if (! empty ( $input [PostmanOptions::SENDER_EMAIL] )) {
-				$newEmail = $input [PostmanOptions::SENDER_EMAIL];
-				$this->logger->debug ( 'Sanitize Sender Email ' . $newEmail );
-				if (postmanValidateEmail ( $newEmail )) {
-					$new_input [PostmanOptions::SENDER_EMAIL] = sanitize_text_field ( $newEmail );
-				} else {
-					$new_input [PostmanOptions::SENDER_EMAIL] = $this->options->getSenderEmail ();
-					add_settings_error ( PostmanOptions::SENDER_EMAIL, PostmanOptions::SENDER_EMAIL, 'You have entered an invalid email address', 'error' );
-					$success = false;
-				}
-			}
-			
 			if ($new_input [PostmanOptions::CLIENT_ID] != $this->options->getClientId () || $new_input [PostmanOptions::CLIENT_SECRET] != $this->options->getClientSecret () || $new_input [PostmanOptions::HOSTNAME] != $this->options->getHostname ()) {
 				$this->logger->debug ( "Recognized new Client ID" );
 				// the user entered a new client id and we should destroy the stored auth token
