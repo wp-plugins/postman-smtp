@@ -1,6 +1,5 @@
 <?php
 require_once 'PostmanWpMail.php';
-require_once 'PostmanMessageHandler.php';
 require_once 'PostmanOptions.php';
 require_once 'PostmanPreRequisitesCheck.php';
 
@@ -49,7 +48,7 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 					$this->bindError = true;
 				}
 				if (! PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $binderOptions, $binderAuthorizationToken )) {
-					$this->logger->debug ( 'Transport is not configured and ready' );
+					$this->logger->error ( 'Transport is not configured and ready' );
 					$ready = false;
 				}
 				if (! PostmanPreRequisitesCheck::isReady ()) {
