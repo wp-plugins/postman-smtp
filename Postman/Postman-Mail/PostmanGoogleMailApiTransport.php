@@ -177,7 +177,7 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 				return sprintf ( __ ( 'The Gmail API transport requires a Sender Email Address, Client ID and Client Secret.', 'postman-smtp' ) );
 			} else if ($this->isPermissionNeeded ( $token )) {
 				$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
-				$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanAdminController::getActionUrl ( PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG ), $scribe->getRequestPermissionLinkText () );
+				$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanUtils::getGrantOAuthPermissionUrl(), $scribe->getRequestPermissionLinkText () );
 				return $message;
 			}
 		}

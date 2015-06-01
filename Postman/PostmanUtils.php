@@ -5,11 +5,15 @@ if (! class_exists ( 'PostmanUtils' )) {
 		
 		//
 		const POSTMAN_SETTINGS_PAGE_STUB = 'postman';
+		const REQUEST_OAUTH2_GRANT_SLUG = 'postman/requestOauthGrant';
 		const POSTMAN_EMAIL_LOG_PAGE_STUB = 'postman_email_log';
+
 		// redirections back to THIS SITE should always be relative because of IIS bug
 		const POSTMAN_EMAIL_LOG_PAGE_RELATIVE_URL = 'tools.php?page=postman_email_log';
 		const POSTMAN_HOME_PAGE_RELATIVE_URL = 'options-general.php?page=postman';
-		const REQUEST_OAUTH2_GRANT_SLUG = 'admin-post.php?action=postman/requestOauthGrant';
+
+		// custom admin post page
+		const ADMIN_POST_OAUTH2_GRANT_URL_PART = 'admin-post.php?action=postman/requestOauthGrant';
 		
 		//
 		const NO_ECHO = false;
@@ -19,12 +23,21 @@ if (! class_exists ( 'PostmanUtils' )) {
 				PostmanUtils::$logger->trace ( 'Current page: ' . $_REQUEST ['page'] );
 			}
 		}
+
+		/**
+		 * 
+		 * @param unknown $slug
+		 * @return string
+		 */
+		public static function getPageUrl($slug) {
+			return get_admin_url () . 'options-general.php?page=' . $slug;
+		}
 		
 		/**
 		 * Returns an escaped URL
 		 */
 		public static function getGrantOAuthPermissionUrl() {
-			return menu_page_url ( self::REQUEST_OAUTH2_GRANT_SLUG, self::NO_ECHO );
+			return get_admin_url () . self::ADMIN_POST_OAUTH2_GRANT_URL_PART;
 		}
 		
 		/**

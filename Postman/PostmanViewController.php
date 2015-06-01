@@ -53,11 +53,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 					'initializeAdminPage' 
 			) );
 		}
-		public static function getActionUrl($slug) {
-			return PostmanAdminController::getActionUrl ( $slug );
-		}
 		public static function getPageUrl($slug) {
-			return PostmanAdminController::getPageUrl ( $slug );
+			return PostmanUtils::getPageUrl ( $slug );
 		}
 		/**
 		 *
@@ -665,7 +662,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			printf ( '<h4>%s</h4>', _x ( 'Actions', 'Main Menu', 'postman-smtp' ) );
 			print '<ul>';
 			if (PostmanTransportRegistry::getInstance ()->isRequestOAuthPermissionAllowed ( $this->options, $this->authorizationToken )) {
-				printf ( '<li><a href="%s" class="welcome-icon send-test-email">%s</a></li>', $this->getActionUrl ( PostmanAdminController::REQUEST_OAUTH2_GRANT_SLUG ), $this->oauthScribe->getRequestPermissionLinkText () );
+				printf ( '<li><a href="%s" class="welcome-icon send-test-email">%s</a></li>', PostmanUtils::getGrantOAuthPermissionUrl (), $this->oauthScribe->getRequestPermissionLinkText () );
 			} else {
 				printf ( '<li><div class="welcome-icon send_test_emaail">%s</div></li>', $this->oauthScribe->getRequestPermissionLinkText () );
 			}
