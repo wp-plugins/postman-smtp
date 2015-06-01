@@ -38,10 +38,10 @@ if (! class_exists ( 'Postman' )) {
 			require_once 'Postman-Mail/PostmanSmtpTransport.php';
 			require_once 'Postman-Mail/PostmanGoogleMailApiTransport.php';
 			require_once 'PostmanOAuthToken.php';
-			require_once 'PostmanConfigTextHelper.php';
-			require_once 'PostmanMessageHandler.php';
 			require_once 'PostmanWpMailBinder.php';
+			require_once 'PostmanConfigTextHelper.php';
 			if (is_admin ()) {
+				require_once 'PostmanMessageHandler.php';
 				require_once 'PostmanAdminController.php';
 				require_once 'Postman-Controller/PostmanDashboardWidgetController.php';
 				require_once 'PostmanActivationHandler.php';
@@ -50,14 +50,17 @@ if (! class_exists ( 'Postman' )) {
 				// always load email log service, in case another plugin (eg. WordPress importer)
 				// is doing something related to custom post types
 				require_once 'Postman-Email-Log/PostmanEmailLogService.php';
+				
+				// create and store an instance of the MessageHandler
+				$this->messageHandler = new PostmanMessageHandler ();
 			}
-
+			
 			// get plugin metadata - alternative to get_plugin_data
 			$this->pluginData = array (
 					'Name' => __ ( 'Postman SMTP', 'postman-smtp' ),
 					'Version' => $version 
 			);
-
+			
 			// create an instance of the logger
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->logger->debug ( sprintf ( '%1$s v%2$s starting', $this->pluginData ['Name'], $this->pluginData ['Version'] ) );
@@ -68,9 +71,6 @@ if (! class_exists ( 'Postman' )) {
 			// store instances of the Options and OAuthToken
 			$this->options = PostmanOptions::getInstance ();
 			$this->authToken = PostmanOAuthToken::getInstance ();
-			
-			// create and store an instance of the MessageHandler
-			$this->messageHandler = new PostmanMessageHandler ();
 			
 			// register the email transports
 			$this->registerTransports ( $this->pluginData );
@@ -137,21 +137,24 @@ if (! class_exists ( 'Postman' )) {
 				$scribe = PostmanConfigTextHelperFactory::createScribe ( $this->options->getHostname (), $transport );
 				$readyToSend = PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $this->options, $this->authToken );
 				
-				// on pages that are Postman admin pages only, show this error message
-				if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
-					
-					$virgin = $this->options->isNew ();
-					if (! $readyToSend && ! $virgin) {
-						// if the configuration is broken, and the user has started to configure the plugin
-						// show this error message
-						$message = PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->getMisconfigurationMessage ( $scribe, $this->options, $this->authToken );
-						if ($message) {
-							// output the error message
-							$this->logger->trace ( 'Transport has a configuration error: ' . $message );
+				$virgin = $this->options->isNew ();
+				if (! $readyToSend && ! $virgin) {
+					// if the configuration is broken, and the user has started to configure the plugin
+					// show this error message
+					$message = PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->getMisconfigurationMessage ( $scribe, $this->options, $this->authToken );
+					if ($message) {
+						// output the error message
+						$this->logger->error ( 'Transport has a configuration error: ' . $message );
+						// on pages that are Postman admin pages only, show this error message
+						if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
+							
 							$this->messageHandler->addError ( $message );
 						}
 					}
-				} else if (! $readyToSend) {
+				}
+
+				// on pages that are NOT Postman admin pages only, show this error message
+				if (! PostmanUtils::isCurrentPagePostmanAdmin () && ! $readyToSend) {
 					// on pages that are *NOT* Postman admin pages only....
 					// if the configuration is broken
 					// show this error message
