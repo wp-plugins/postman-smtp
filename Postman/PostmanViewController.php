@@ -656,7 +656,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			if (PostmanTransportRegistry::getInstance ()->isRequestOAuthPermissionAllowed ( $this->options, $this->authorizationToken )) {
 				printf ( '<li><a href="%s" class="welcome-icon send-test-email">%s</a></li>', PostmanUtils::getGrantOAuthPermissionUrl (), $this->oauthScribe->getRequestPermissionLinkText () );
 			} else {
-				printf ( '<li><div class="welcome-icon send_test_emaail">%s</div></li>', $this->oauthScribe->getRequestPermissionLinkText () );
+				printf ( '<li><div class="welcome-icon send_test_email">%s</div></li>', $this->oauthScribe->getRequestPermissionLinkText () );
 			}
 			if (PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $this->options, $this->authorizationToken )) {
 				printf ( '<li><a href="%s" class="welcome-icon send_test_email">%s</a></li>', $this->getPageUrl ( self::EMAIL_TEST_SLUG ), __ ( 'Send a Test Email', 'postman-smtp' ) );

@@ -119,7 +119,7 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 		public function getDeliveryDetails(PostmanOptions $options) {
 			$deliveryDetails ['auth_desc'] = _x ( 'OAuth 2.0', 'Authentication Type is OAuth 2.0', 'postman-smtp' );
 			/* translators: %s is the Authentication Type (e.g. OAuth 2.0) */
-			return sprintf ( __ ( 'Postman will send mail via the <b>Gmail API</b> using %s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails ['auth_desc'] . '</b>' );
+			return sprintf ( __ ( 'Postman will send mail via the <b>🔐Gmail API</b> using %s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails ['auth_desc'] . '</b>' );
 		}
 		/**
 		 * If the Transport is not properly configured, the MessageHandler warns the user,

@@ -55,7 +55,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			if ($options->getAuthenticationType () == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
-				return new PostmanOAuth2MailAuthenticator ( $options, $authToken);
+				return new PostmanOAuth2MailAuthenticator ( $options, $authToken );
 			} else {
 				return new PostmanGeneralMailAuthenticator ( $options, $authToken );
 			}
@@ -71,13 +71,13 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			return sprintf ( __ ( 'Postman will send mail via %1$s to %2$s using %3$s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails ['transport_name'] . '</b>', '<b>' . $deliveryDetails ['host'] . '</b>', '<b>' . $deliveryDetails ['auth_desc'] . '</b>' );
 		}
 		private function getTransportDescription($encType) {
-			$deliveryDetails = $this->getName ();
+			$deliveryDetails = '🔓SMTP';
 			if ($encType == PostmanOptions::ENCRYPTION_TYPE_SSL) {
 				/* translators: where %1$s is the Transport type (e.g. SMTP or SMTPS) and %2$s is the encryption type (e.g. SSL or TLS) */
-				$deliveryDetails = sprintf ( '%1$s', _x ( 'SMTPS', 'Transport Name', 'postman-smtp' ) );
+				$deliveryDetails = '🔐SMTPS';
 			} else if ($encType == PostmanOptions::ENCRYPTION_TYPE_TLS) {
 				/* translators: where %1$s is the Transport type (e.g. SMTP or SMTPS) and %2$s is the encryption type (e.g. SSL or TLS) */
-				$deliveryDetails = sprintf ( '%1$s', _x ( 'SMTP-STARTTLS', 'Transport Name', 'postman-smtp' ) );
+				$deliveryDetails = '🔐SMTP-STARTTLS';
 			}
 			return $deliveryDetails;
 		}
@@ -177,7 +177,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			} else if ($this->isPermissionNeeded ( $options, $token )) {
 				/* translators: %1$s is the Client ID label, and %2$s is the Client Secret label */
 				$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
-				$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanUtils::getGrantOAuthPermissionUrl(), $scribe->getRequestPermissionLinkText () );
+				$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanUtils::getGrantOAuthPermissionUrl (), $scribe->getRequestPermissionLinkText () );
 				return $message;
 			}
 		}

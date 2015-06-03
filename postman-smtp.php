@@ -16,14 +16,18 @@
 //
 // filter postman_test_email: before calling wp_mail, implement this filter and return true to disable the success/fail counters
 // filter postman_wp_mail_result: apply this filter after calling wp_mail for an array containg the SMTP error, transcript and time
+// filter postman_get_plugin_metadata: get plugin metadata
+// filter postman_wp_mail_bind_status: get wp_mail bind status
 
-// ideas for future versions of the plugin
+// TODO
+// -- customize sent-mail icon WordPress dashboard
 // -- SendGrid API https://github.com/sendgrid/sendgrid-php-example
 // -- Postmark API http://plugins.svn.wordpress.org/postmark-approved-wordpress-plugin/trunk/postmark.php
 // -- Amazon SES API http://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-email-api.html
-// -- Postman API with WordPress filters - test mode, smtp result
-// -- add WPMU functionality. ideas: allow network setup for network emails. allow network admin to choose whether subdomains may override with their own settings. subdomains may override with their own settings.
-// -- send mail in the background using ajax - the single mail thread can block the PHP server for quite some time
+// -- Mandrill API
+// -- multisite support for site-wide email configuration. allow network admin to choose whether subdomains may override with their own settings. subdomains may override with their own settings.
+// -- mail queue : send mail in the background
+// -- multiple mailbox support
 
 /**
  * Create the main Postman class to start Postman
