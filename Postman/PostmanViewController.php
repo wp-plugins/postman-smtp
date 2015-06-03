@@ -3,7 +3,6 @@ if (! class_exists ( 'PostmanViewController' )) {
 	class PostmanViewController {
 		private $logger;
 		private $rootPluginFilenameAndPath;
-		private $pluginData;
 		private $options;
 		private $authorizationToken;
 		private $oauthScribe;
@@ -27,15 +26,13 @@ if (! class_exists ( 'PostmanViewController' )) {
 		/**
 		 * Constructor
 		 *
-		 * @param PostmanOptionsInterface $options        	
-		 * @param PostmanOAuthTokenInterface $authorizationToken        	
+		 * @param PostmanOptions $options        	
+		 * @param PostmanOAuthToken $authorizationToken        	
 		 * @param PostmanConfigTextHelper $oauthScribe        	
 		 */
-		function __construct($rootPluginFilenameAndPath, $pluginData, PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authorizationToken, PostmanConfigTextHelper $oauthScribe, PostmanAdminController $adminController) {
-			assert ( isset ( $pluginData ) );
+		function __construct($rootPluginFilenameAndPath, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanConfigTextHelper $oauthScribe, PostmanAdminController $adminController) {
 			$this->options = $options;
 			$this->rootPluginFilenameAndPath = $rootPluginFilenameAndPath;
-			$this->pluginData = $pluginData;
 			$this->authorizationToken = $authorizationToken;
 			$this->oauthScribe = $oauthScribe;
 			$this->adminController = $adminController;
@@ -351,14 +348,15 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 */
 		public function initializeAdminPage() {
 			// register the stylesheet and javascript external resources
-			wp_register_style ( self::POSTMAN_STYLE, plugins_url ( 'style/postman.css', $this->rootPluginFilenameAndPath ), null, $this->pluginData ['Version'] );
+			$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
+			wp_register_style ( self::POSTMAN_STYLE, plugins_url ( 'style/postman.css', $this->rootPluginFilenameAndPath ), null, $pluginData ['version'] );
 			wp_register_style ( 'jquery_ui_style', plugins_url ( 'style/jquery-steps/jquery-ui.css', $this->rootPluginFilenameAndPath ), self::POSTMAN_STYLE, '1.1.0' );
 			wp_register_style ( 'jquery_steps_style', plugins_url ( 'style/jquery-steps/jquery.steps.css', $this->rootPluginFilenameAndPath ), self::POSTMAN_STYLE, '1.1.0' );
-			wp_register_style ( 'postman_send_test_email', plugins_url ( 'style/postman_send_test_email.css', $this->rootPluginFilenameAndPath ), self::POSTMAN_STYLE, $this->pluginData ['Version'] );
+			wp_register_style ( 'postman_send_test_email', plugins_url ( 'style/postman_send_test_email.css', $this->rootPluginFilenameAndPath ), self::POSTMAN_STYLE, $pluginData ['version'] );
 			
 			wp_register_script ( self::POSTMAN_SCRIPT, plugins_url ( 'script/postman.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT 
-			), $this->pluginData ['Version'] );
+			), $pluginData ['version'] );
 			wp_register_script ( 'sprintf', plugins_url ( 'script/sprintf/sprintf.min.js', $this->rootPluginFilenameAndPath ), null, '1.0.2' );
 			wp_register_script ( 'jquery_steps_script', plugins_url ( 'script/jquery-steps/jquery.steps.min.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT 
@@ -381,28 +379,28 @@ if (! class_exists ( 'PostmanViewController' )) {
 					'jquery_steps_script',
 					self::POSTMAN_SCRIPT,
 					'sprintf' 
-			), $this->pluginData ['Version'] );
+			), $pluginData ['version'] );
 			wp_register_script ( 'postman_test_email_wizard_script', plugins_url ( 'script/postman_test_email_wizard.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					'jquery_steps_script',
 					self::POSTMAN_SCRIPT 
-			), $this->pluginData ['Version'] );
+			), $pluginData ['version'] );
 			wp_register_script ( 'postman_manual_config_script', plugins_url ( 'script/postman_manual_config.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					self::POSTMAN_SCRIPT 
-			), $this->pluginData ['Version'] );
+			), $pluginData ['version'] );
 			wp_register_script ( 'postman_port_test_script', plugins_url ( 'script/postman_port_test.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					'jquery_validation',
 					self::POSTMAN_SCRIPT,
 					'sprintf' 
-			), $this->pluginData ['Version'] );
+			), $pluginData ['version'] );
 			wp_register_script ( 'postman_diagnostics_script', plugins_url ( 'script/postman_diagnostics.js', $this->rootPluginFilenameAndPath ), array (
 					self::JQUERY_SCRIPT,
 					self::POSTMAN_SCRIPT 
-			), $this->pluginData ['Version'] );
+			), $pluginData ['version'] );
 			
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_test_in_progress', _x ( 'Checking..', 'The "please wait" message', 'postman-smtp' ) );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_test_open', _x ( 'Open', 'The port is open', 'postman-smtp' ) );
@@ -473,12 +471,6 @@ if (! class_exists ( 'PostmanViewController' )) {
 					$currentTransport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
 					$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
 					printf ( '<p style="margin:0 10px"><span>%s</span></p>', $deliveryDetails );
-					if ($this->options->isAuthTypeOAuth2 () || $this->options->isPluginSenderEmailEnforced ()) {
-						// printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, other WordPress plugins and themes are forbidden from overriding the sender email address.</em>', 'postman-smtp' ) );
-						// no-op
-					} else if ($this->options->isAuthTypePassword ()) {
-						printf ( '<p style="margin:10px 10px"><span>%s</span></p>', __ ( 'Please note: <em>When composing email, some WordPress plugins and themes may set an unauthorized sender email address causing rejection with services like Yahoo Mail. If you experience problems, enable "Force this Sender Email Address for all messages" in the settings.</em>', 'postman-smtp' ) );
-					}
 				}
 				/* translators: where %d is the number of emails delivered */
 				printf ( '<p style="margin:10px 10px"><span>%s', sprintf ( _n ( 'Postman has delivered <span style="color:green">%d</span> email for you.', 'Postman has delivered <span style="color:green">%d</span> emails for you.', PostmanStats::getInstance ()->getSuccessfulDeliveries (), 'postman-smtp' ), PostmanStats::getInstance ()->getSuccessfulDeliveries () ) );

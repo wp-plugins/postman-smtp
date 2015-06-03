@@ -18,9 +18,11 @@ if (! class_exists ( "PostmanMessage" )) {
 		
 		// logger for all concrete classes - populate with setLogger($logger)
 		protected $logger;
+		private $pluginVersion;
 		
 		// set by the caller
 		private $sender;
+		private $fromHeader;
 		private $replyTo;
 		private $toRecipients;
 		private $ccRecipients;
@@ -67,54 +69,56 @@ if (! class_exists ( "PostmanMessage" )) {
 		 *
 		 * @return PostmanEmailAddress
 		 */
-		public function getSender() {
+		public function getSenderAddress() {
+			return $this->sender;
+		}
+		
+		/**
+		 *
+		 * @return PostmanEmailAddress
+		 */
+		public function getFromAddress() {
 			
 			// by default, sender is what Postman set
-			$sender = PostmanEmailAddress::copy ( $this->sender );
+			$from = PostmanEmailAddress::copy ( $this->sender );
+			$this->logger->trace($from);
 			
-			// but we will let other plugins override the sender via the headers
-			if (isset ( $this->overrideSender )) {
-				$s1 = new PostmanEmailAddress ( $this->overrideSender );
+			// but we will let other plugins override the sender via the 'From' header
+			if (isset ( $this->fromHeader )) {
+				$s1 = new PostmanEmailAddress ( $this->fromHeader );
 				$s1name = $s1->getName ();
 				$s1email = $s1->getEmail ();
 				if (! empty ( $s1name )) {
-					$sender->setName ( $s1name );
+					$from->setName ( $s1name );
 				}
 				if (! empty ( $s1email )) {
-					$sender->setEmail ( $s1email );
+					$from->setEmail ( $s1email );
 				}
 			}
+			$this->logger->trace($from);
 			/**
 			 * Filter the email address to send from.
-			 *
-			 * @since 2.2.0
-			 *       
-			 * @param string $from_email
-			 *        	Email address to send from.
 			 */
-			// and other plugins can override the email via a filter
-			$sender->setEmail ( apply_filters ( 'wp_mail_from', $sender->getEmail () ) );
+			// other plugins can override the email via a filter
+			$from->setEmail ( apply_filters ( 'wp_mail_from', $from->getEmail () ) );
 			
 			/**
 			 * Filter the name to associate with the "from" email address.
-			 *
-			 * @since 2.3.0
-			 *       
-			 * @param string $from_name
-			 *        	Name associated with the "from" email address.
 			 */
-			// and other plugins can override the name via a filter
-			$sender->setName ( apply_filters ( 'wp_mail_from_name', $sender->getName () ) );
-			
-			// but the caller and the user have the final say
+			// other plugins can override the name via a filter
+			$from->setName ( apply_filters ( 'wp_mail_from_name', $from->getName () ) );
+			$this->logger->trace($from);
+				
+			// but the user has the final say
 			if ($this->isPluginSenderEmailEnforced ()) {
-				$sender->setEmail ( $this->sender->getEmail () );
+				$from->setEmail ( $this->sender->getEmail () );
 			}
 			if ($this->isPluginSenderNameEnforced ()) {
-				$sender->setName ( $this->sender->getName () );
+				$from->setName ( $this->sender->getName () );
 			}
-			
-			return $sender;
+			$this->logger->trace($from);
+				
+			return $from;
 		}
 		
 		/**
@@ -288,7 +292,7 @@ if (! class_exists ( "PostmanMessage" )) {
 					break;
 				case 'from' :
 					$this->logProcessHeader ( 'From', $name, $content );
-					$this->overrideSender = $content;
+					$this->fromHeader = $content;
 					break;
 				case 'subject' :
 					$this->logProcessHeader ( 'Subject', $name, $content );

@@ -262,6 +262,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * [TBD] Add resend option to Email Log for failed messages
 * [TBD] Add locking to make sure OAuth2 token is refreshed in a thread-safe way
 * [TBD] Add mail queue option
+* Use the Zend_Mail Return-Path option to specify a Sender header for all emails, allowing random From headers.
 
 = 1.6.12 - 2015-05-30 =
 * 6,000 installations!- 2015-05-26

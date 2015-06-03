@@ -187,7 +187,7 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		private function createLog(PostmanMessage $message = null, $transcript, $statusMessage, $success, PostmanTransport $transport) {
 			$log = new PostmanEmailLog ();
 			if ($message) {
-				$log->sender = $message->getSender ()->format ();
+				$log->sender = $message->getFromAddress ()->format ();
 				$log->recipients = $this->flattenEmails ( $message->getToRecipients () );
 				$log->subject = $message->getSubject ();
 				$log->body = $message->getBody ();

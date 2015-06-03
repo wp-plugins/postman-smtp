@@ -52,7 +52,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 		
 		// logging
 		private $logger;
-		private $pluginData;
 		
 		// Holds the values to be used in the fields callbacks
 		private $rootPluginFilenameAndPath;
@@ -68,10 +67,9 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 * Start up
 		 */
-		public function __construct($rootPluginFilenameAndPath, $pluginData, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanMessageHandler $messageHandler, PostmanWpMailBinder $binder) {
+		public function __construct($rootPluginFilenameAndPath, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanMessageHandler $messageHandler, PostmanWpMailBinder $binder) {
 			if (is_admin ()) {
 				assert ( ! empty ( $rootPluginFilenameAndPath ) );
-				assert ( isset ( $pluginData ) );
 				assert ( ! empty ( $options ) );
 				assert ( ! empty ( $authorizationToken ) );
 				assert ( ! empty ( $messageHandler ) );
@@ -81,7 +79,6 @@ if (! class_exists ( "PostmanAdminController" )) {
 				$this->authorizationToken = $authorizationToken;
 				$this->messageHandler = $messageHandler;
 				$this->rootPluginFilenameAndPath = $rootPluginFilenameAndPath;
-				$this->pluginData = $pluginData;
 				$this->wpMailBinder = $binder;
 				
 				// check if the user saved data, and if validation was successful
@@ -133,16 +130,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $this->options->getHostname (), $transport );
 			
 			// register Ajax handlers
-			new PostmanManageConfigurationAjaxHandler ( $this->pluginData );
-			new PostmanGetHostnameByEmailAjaxController ( $this->pluginData );
-			new PostmanGetPortsToTestViaAjax ( $this->pluginData );
-			new PostmanPortTestAjaxController ( $this->pluginData, $this->options );
-			new PostmanImportConfigurationAjaxController ( $this->pluginData, $this->options );
-			new PostmanGetDiagnosticsViaAjax ( $this->pluginData, $this->options, $this->authorizationToken );
-			new PostmanSendTestEmailAjaxController ( $this->pluginData, $this->options, $this->authorizationToken, $this->oauthScribe );
+			new PostmanManageConfigurationAjaxHandler ();
+			new PostmanGetHostnameByEmailAjaxController ();
+			new PostmanGetPortsToTestViaAjax ();
+			new PostmanPortTestAjaxController ( $this->options );
+			new PostmanImportConfigurationAjaxController ( $this->options );
+			new PostmanGetDiagnosticsViaAjax ( $this->options, $this->authorizationToken );
+			new PostmanSendTestEmailAjaxController ( $this->options, $this->authorizationToken, $this->oauthScribe );
 			
 			// register content handlers
-			$viewController = new PostmanViewController ( $this->rootPluginFilenameAndPath, $this->pluginData, $this->options, $this->authorizationToken, $this->oauthScribe, $this );
+			$viewController = new PostmanViewController ( $this->rootPluginFilenameAndPath, $this->options, $this->authorizationToken, $this->oauthScribe, $this );
 			
 			// register action handlers
 			$this->registerAdminPostAction ( self::PURGE_DATA_SLUG, 'handlePurgeDataAction' );
@@ -659,24 +656,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 		/**
 		 */
 		public function prevent_sender_name_override_callback() {
-			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
-			$transportConfigured = $transport->isConfigured ( $this->options, $this->authorizationToken );
-			if ($transportConfigured) {
-				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
-			}
 			$enforced = $this->options->isPluginSenderNameEnforced ();
-			// always let the user configure it in the wizard
-			$wizard = PostmanUtils::isCurrentPagePostmanAdmin ( 'postman/configuration_wizard' );
-			if ($wizard || ! $transportConfigured || ! $authenticator->isPluginSenderNameEnforced ()) {
-				printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this Sender Name for all messages', 'postman-smtp' ) );
-			} else {
-				// show it as forced "on" because that is the transport behavior
-				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_name_override" checked="checked"/> %s', __ ( 'Force this Sender Name for all messages', 'postman-smtp' ) );
-				if ($enforced) {
-					// only save "on" to the database if the user has enabled it
-					printf ( '<input type="hidden" name="postman_options[prevent_sender_name_override]" value="on"/>' );
-				}
-			}
+			printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this Sender Name for all messages', 'postman-smtp' ) );
 		}
 		
 		/**
@@ -690,24 +671,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function prevent_sender_email_override_callback() {
-			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
-			$transportConfigured = $transport->isConfigured ( $this->options, $this->authorizationToken );
-			if ($transportConfigured) {
-				$authenticator = $transport->createPostmanMailAuthenticator ( $this->options, $this->authorizationToken );
-			}
 			$enforced = $this->options->isPluginSenderEmailEnforced ();
-			// always let the user configure it in the wizard
-			$wizard = PostmanUtils::isCurrentPagePostmanAdmin ( 'postman/configuration_wizard' );
-			if ($wizard || ! $transportConfigured || ! $authenticator->isPluginSenderEmailEnforced ()) {
-				printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this Sender Email Address for all messages', 'postman-smtp' ) );
-			} else {
-				// show it as forced "on" because that is the transport behavior
-				printf ( '<input disabled="disabled" type="checkbox" id="input_prevent_sender_email_override" checked="checked"/> %s', __ ( 'Force this Sender Email Address for all messages', 'postman-smtp' ) );
-				if ($enforced) {
-					// only save "on" to the database if the user has enabled it
-					printf ( '<input type="hidden" name="postman_options[prevent_sender_email_override]" value="on"/>' );
-				}
-			}
+			printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this Sender Email Address for all messages', 'postman-smtp' ) );
 		}
 		public function loggingStatusInputField() {
 			// isMailLoggingAllowed
@@ -821,6 +786,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			printf ( '<option value="%s" %s>Trace</option>', PostmanLogger::TRACE_INT, PostmanLogger::TRACE_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
 			printf ( '<option value="%s" %s>Debug</option>', PostmanLogger::DEBUG_INT, PostmanLogger::DEBUG_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
 			printf ( '<option value="%s" %s>Info</option>', PostmanLogger::INFO_INT, PostmanLogger::INFO_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
+			printf ( '<option value="%s" %s>Warning</option>', PostmanLogger::WARN_INT, PostmanLogger::WARN_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
 			printf ( '<option value="%s" %s>Errors</option>', PostmanLogger::ERROR_INT, PostmanLogger::ERROR_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
 			printf ( '</select>' );
 		}

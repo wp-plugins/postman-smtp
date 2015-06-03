@@ -33,7 +33,6 @@ if (! class_exists ( 'Postman' )) {
 			require_once 'PostmanLogger.php';
 			require_once 'PostmanUtils.php';
 			require_once 'postman-common-functions.php';
-			require_once 'Postman-Common.php';
 			require_once 'Postman-Mail/PostmanTransportRegistry.php';
 			require_once 'Postman-Mail/PostmanSmtpTransport.php';
 			require_once 'Postman-Mail/PostmanGoogleMailApiTransport.php';
@@ -57,13 +56,19 @@ if (! class_exists ( 'Postman' )) {
 			
 			// get plugin metadata - alternative to get_plugin_data
 			$this->pluginData = array (
-					'Name' => __ ( 'Postman SMTP', 'postman-smtp' ),
-					'Version' => $version 
+					'name' => __ ( 'Postman SMTP', 'postman-smtp' ),
+					'version' => $version 
 			);
+			
+			// register the plugin metadata
+			add_filter ( 'postman_get_plugin_metadata', array (
+					$this,
+					'getPluginMetaData' 
+			) );
 			
 			// create an instance of the logger
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			$this->logger->debug ( sprintf ( '%1$s v%2$s starting', $this->pluginData ['Name'], $this->pluginData ['Version'] ) );
+			$this->logger->info ( sprintf ( '%1$s v%2$s starting', $this->pluginData ['name'], $this->pluginData ['version'] ) );
 			
 			// load the text domain
 			$this->loadTextDomain ( $rootPluginFilenameAndPath );
@@ -73,7 +78,7 @@ if (! class_exists ( 'Postman' )) {
 			$this->authToken = PostmanOAuthToken::getInstance ();
 			
 			// register the email transports
-			$this->registerTransports ( $this->pluginData );
+			$this->registerTransports ();
 			
 			// store an instance of the WpMailBinder
 			$this->wpMailBinder = PostmanWpMailBinder::getInstance ();
@@ -86,8 +91,8 @@ if (! class_exists ( 'Postman' )) {
 			// the following code is restricted to an administrator
 			if (is_admin ()) {
 				new PostmanDashboardWidgetController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->wpMailBinder );
-				new PostmanAdminController ( $rootPluginFilenameAndPath, $this->pluginData, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
-				new PostmanEmailLogController ( $rootPluginFilenameAndPath, $this->pluginData );
+				new PostmanAdminController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
+				new PostmanEmailLogController ( $rootPluginFilenameAndPath );
 				new PostmanAdminPointer ( $rootPluginFilenameAndPath );
 				
 				// register the Postman signature (only if we're on a postman admin screen) on the in_admin_footer event
@@ -102,7 +107,7 @@ if (! class_exists ( 'Postman' )) {
 				PostmanEmailLogService::getInstance ();
 				
 				// register activation handler on the activation event
-				new PostmanActivationHandler ( $rootPluginFilenameAndPath, $this->pluginData ['Version'] );
+				new PostmanActivationHandler ( $rootPluginFilenameAndPath );
 			}
 			
 			// register the shortcode handler on the add_shortcode event
@@ -143,8 +148,8 @@ if (! class_exists ( 'Postman' )) {
 					// show this error message
 					$message = PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->getMisconfigurationMessage ( $scribe, $this->options, $this->authToken );
 					if ($message) {
-						// output the error message
-						$this->logger->error ( 'Transport has a configuration error: ' . $message );
+						// output the warning message
+						$this->logger->warn ( 'Transport has a configuration problem: ' . $message );
 						// on pages that are Postman admin pages only, show this error message
 						if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
 							
@@ -152,7 +157,7 @@ if (! class_exists ( 'Postman' )) {
 						}
 					}
 				}
-
+				
 				// on pages that are NOT Postman admin pages only, show this error message
 				if (! PostmanUtils::isCurrentPagePostmanAdmin () && ! $readyToSend) {
 					// on pages that are *NOT* Postman admin pages only....
@@ -164,6 +169,13 @@ if (! class_exists ( 'Postman' )) {
 					) );
 				}
 			}
+		}
+		
+		/**
+		 */
+		public function getPluginMetaData() {
+			// get plugin metadata
+			return $this->pluginData;
 		}
 		
 		/**
@@ -189,10 +201,9 @@ if (! class_exists ( 'Postman' )) {
 		 *
 		 * @param unknown $pluginData        	
 		 */
-		private function registerTransports($pluginData) {
-			assert ( isset ( $pluginData ) );
-			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanSmtpTransport ( $pluginData ) );
-			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanGoogleMailApiTransport ( $pluginData ) );
+		private function registerTransports() {
+			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanSmtpTransport () );
+			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanGoogleMailApiTransport () );
 		}
 		
 		/**
@@ -200,8 +211,7 @@ if (! class_exists ( 'Postman' )) {
 		 * http://striderweb.com/nerdaphernalia/2008/06/give-your-wordpress-plugin-credit/
 		 */
 		function print_signature() {
-			$pluginData = $this->pluginData;
-			printf ( '<a href="https://wordpress.org/plugins/postman-smtp/">%s</a> %s<br/>', $pluginData ['Name'], $pluginData ['Version'] );
+			printf ( '<a href="https://wordpress.org/plugins/postman-smtp/">%s</a> %s<br/>', $this->pluginData ['name'], $this->pluginData ['version'] );
 		}
 		
 		/**
@@ -220,7 +230,7 @@ if (! class_exists ( 'Postman' )) {
 		 * @return string Plugin version
 		 */
 		function version_shortcode() {
-			return $this->pluginData ['Version'];
+			return $this->pluginData ['version'];
 		}
 	}
 }

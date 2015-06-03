@@ -12,9 +12,9 @@ if (! interface_exists ( 'PostmanTransport' )) {
 		public function getName();
 		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken);
 		public function createZendMailTransport($hostname, $config);
-		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
-		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token);
-		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token);
+		public function isConfigured(PostmanOptions $options, PostmanOAuthToken $token);
+		public function isReady(PostmanOptions $options, PostmanOAuthToken $token);
+		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptions $options, PostmanOAuthToken $token);
 		public function getConfigurationRecommendation($hostData); // deprecated
 		public function getHostsToTest($hostname); // deprecated
 	}
@@ -102,11 +102,11 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 		}
 		/**
 		 *
-		 * @param PostmanOptionsInterface $options        	
+		 * @param PostmanOptions $options        	
 		 * @param PostmanOAuthToken $token        	
 		 * @return boolean
 		 */
-		public function isPostmanReadyToSendEmail(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+		public function isPostmanReadyToSendEmail(PostmanOptions $options, PostmanOAuthToken $token) {
 			$selectedTransport = $options->getTransportType ();
 			foreach ( $this->getTransports () as $transport ) {
 				if ($transport->getSlug () == $selectedTransport && $transport->isReady ( $options, $token )) {
@@ -124,10 +124,10 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 		 * 2. the transport is properly configured
 		 * 3. we have a valid Client ID and Client Secret without an Auth Token
 		 *
-		 * @param PostmanOptionsInterface $options        	
+		 * @param PostmanOptions $options        	
 		 * @return boolean
 		 */
-		public function isRequestOAuthPermissionAllowed(PostmanOptionsInterface $options, PostmanOAuthTokenInterface $authToken) {
+		public function isRequestOAuthPermissionAllowed(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			// does the current transport use OAuth 2.0
 			$oauthUsed = self::getCurrentTransport ()->isOAuthUsed ( $options->getAuthenticationType () );
 			

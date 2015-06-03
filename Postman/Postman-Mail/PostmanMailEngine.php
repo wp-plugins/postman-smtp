@@ -75,7 +75,8 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			
 			// add the Postman signature - append it to whatever the user may have set
 			if ($message->isPostmanSignatureEnabled ()) {
-				$mail->addHeader ( 'X-Mailer', sprintf ( 'Postman SMTP %s for WordPress (%s)', $this->authenticator->getPluginVersion (), 'https://wordpress.org/plugins/postman-smtp/' ), true );
+				$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
+				$mail->addHeader ( 'X-Mailer', sprintf ( 'Postman SMTP %s for WordPress (%s)', $pluginData ['version'], 'https://wordpress.org/plugins/postman-smtp/' ) );
 			}
 			
 			// add the headers - see http://framework.zend.com/manual/1.12/en/zend.mail.additional-headers.html
@@ -90,12 +91,22 @@ if (! class_exists ( "PostmanMailEngine" )) {
 				// Lines in email are terminated by CRLF ("\r\n") according to RFC2821
 				$contentType = sprintf ( "%s;\r\n\t boundary=\"%s\"", $contentType, $message->getBoundary () );
 			}
-			$mail->addHeader ( 'Content-Type', $contentType );
+			
+			// add the Content-Type header, overriding what the user may have set
+			$mail->addHeader ( 'Content-Type', $contentType, false );
 			$this->logger->debug ( 'Adding content-type ' . $contentType );
 			
-			// add the sender
+			// add the From Header
 			$sender = $this->addFrom ( $message, $mail );
 			$sender->log ( $this->logger, 'From' );
+			
+			// add the Sender Header, overriding what the user may have set
+			$mail->addHeader ( 'Sender', $message->getSenderAddress ()->format (), false );
+			// from RFC 5321: http://tools.ietf.org/html/rfc5321#section-4.4
+			// A message-originating SMTP system SHOULD NOT send a message that
+			// already contains a Return-path header field.
+			// I changed Zend/Mail/Mail.php to fix this
+			$mail->setReturnPath ( $message->getSenderAddress ()->getEmail () );
 			
 			// add the to recipients
 			foreach ( ( array ) $message->getToRecipients () as $recipient ) {
@@ -223,7 +234,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 		 * @return PostmanEmailAddress
 		 */
 		public function addFrom(PostmanMessage $message, Postman_Zend_Mail $mail) {
-			$sender = $message->getSender ();
+			$sender = $message->getFromAddress ();
 			// now log it and push it into the message
 			$senderEmail = $sender->getEmail ();
 			$senderName = $sender->getName ();

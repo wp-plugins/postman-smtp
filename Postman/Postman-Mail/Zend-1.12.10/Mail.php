@@ -872,7 +872,10 @@ class Postman_Zend_Mail extends Postman_Zend_Mime_Message
         if ($this->_returnPath === null) {
             $email = $this->_filterEmail($email);
             $this->_returnPath = $email;
-            $this->_storeHeader('Return-Path', $email, false);
+            // Postman SMTP Fix - Jason Hendriks
+            // according to RFC 5321, Return-Path should not be set my the MUA
+            // http://tools.ietf.org/html/rfc5321#section-4.4
+            // $this->_storeHeader('Return-Path', $email, false);
         } else {
             /**
              * @see Postman_Zend_Mail_Exception

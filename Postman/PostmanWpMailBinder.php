@@ -3,7 +3,7 @@ require_once 'PostmanWpMail.php';
 require_once 'PostmanOptions.php';
 require_once 'PostmanPreRequisitesCheck.php';
 
-if (! class_exists ( "PostmanWpMailBinder" )) {
+if (! class_exists ( 'PostmanWpMailBinder' )) {
 	class PostmanWpMailBinder {
 		private $logger;
 		private $bound;
@@ -14,6 +14,12 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 		 */
 		private function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
+
+			// register the bind status hook
+			add_filter ( 'postman_wp_mail_bind_status', array (
+					$this,
+					'postman_wp_mail_bind_status' 
+			) );
 		}
 		
 		/**
@@ -27,6 +33,17 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 				$inst = new PostmanWpMailBinder ();
 			}
 			return $inst;
+		}
+		
+		/**
+		 * Returns the bind result
+		 */
+		public function postman_wp_mail_bind_status() {
+			$result = array (
+					'bound' => $this->bound,
+					'bind_error' => $this->bindError 
+			);
+			return $result;
 		}
 		
 		/**
@@ -48,7 +65,8 @@ if (! class_exists ( "PostmanWpMailBinder" )) {
 					$this->bindError = true;
 				}
 				if (! PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $binderOptions, $binderAuthorizationToken )) {
-					$this->logger->error ( 'Transport is not configured and ready' );
+					// this is too common for new installs to be reported as an error
+					$this->logger->warn ( 'Transport is not configured and ready' );
 					$ready = false;
 				}
 				if (! PostmanPreRequisitesCheck::isReady ()) {

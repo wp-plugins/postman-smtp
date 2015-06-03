@@ -2,9 +2,6 @@
 if (! interface_exists ( 'PostmanMailTransportConfiguration' )) {
 	interface PostmanMailTransportConfiguration {
 		function createConfig();
-		function getPluginVersion();
-		function isPluginSenderNameEnforced();
-		function isPluginSenderEmailEnforced();
 	}
 }
 
@@ -18,15 +15,6 @@ if (! class_exists ( 'PostmanGeneralMailAuthenticator' )) {
 			$this->options = $options;
 			$this->authToken = $authToken;
 			$this->pluginVersion = $pluginVersion;
-		}
-		public function isPluginSenderNameEnforced() {
-			return false;
-		}
-		public function isPluginSenderEmailEnforced() {
-			return false;
-		}
-		public function getPluginVersion() {
-			return $this->pluginVersion;
 		}
 		public function createConfig() {
 			$logger = new PostmanLogger ( get_class ( $this ) );
@@ -58,19 +46,10 @@ if (! class_exists ( 'PostmanOAuth2MailAuthenticator' )) {
 		private $options;
 		private $authToken;
 		private $logger;
-		private $pluginVersion;
-		public function __construct(PostmanOptions $options, PostmanOAuthToken $authToken, $pluginVersion) {
-			assert ( isset ( $pluginVersion ) );
+		public function __construct(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			$this->options = $options;
 			$this->authToken = $authToken;
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			$this->pluginVersion = $pluginVersion;
-		}
-		public function isPluginSenderNameEnforced() {
-			return false;
-		}
-		public function isPluginSenderEmailEnforced() {
-			return true;
 		}
 		private function getEncryptionType() {
 			return $this->options->getEncryptionType ();
@@ -78,19 +57,16 @@ if (! class_exists ( 'PostmanOAuth2MailAuthenticator' )) {
 		private function getPort() {
 			return $this->options->getPort ();
 		}
-		public function getPluginVersion() {
-			return $this->pluginVersion;
-		}
 		public function createConfig() {
-			$initClientRequestEncoded = '';
 			$senderEmail = $this->options->getSenderEmail ();
+			$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
 			assert ( ! empty ( $senderEmail ) );
+			$vendor = '';
 			if (PostmanUtils::endsWith ( $this->options->getHostname (), 'yahoo.com' )) {
 				// Yahoo Mail requires a Vendor - see http://imapclient.freshfoo.com/changeset/535%3A80ae438f4e4a/
-				$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$this->authToken->getAccessToken()}\1vendor=Postman SMTP {$this->pluginVersion}\1\1" );
-			} else {
-				$initClientRequestEncoded = base64_encode ( "user={$senderEmail}\1auth=Bearer {$this->authToken->getAccessToken()}\1\1" );
+				$vendor = sprintf ( "vendor=Postman SMTP %s\1", $pluginData ['version'] );
 			}
+			$initClientRequestEncoded = base64_encode ( sprintf ( "user=%s\1auth=Bearer %s\1%s\1", $senderEmail, $this->authToken->getAccessToken (), $vendor ) );
 			assert ( ! empty ( $initClientRequestEncoded ) );
 			$config = array (
 					'ssl' => $this->getEncryptionType (),

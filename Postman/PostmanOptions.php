@@ -1,6 +1,5 @@
 <?php
 if (! class_exists ( "PostmanOptions" )) {
-	require_once ('Postman-Common.php');
 	
 	/**
 	 * http://stackoverflow.com/questions/23880928/use-oauth-refresh-token-to-obtain-new-access-token-google-api
@@ -8,7 +7,7 @@ if (! class_exists ( "PostmanOptions" )) {
 	 *
 	 * Make sure these emails are permitted (see http://en.wikipedia.org/wiki/E-mail_address#Internationalization):
 	 */
-	class PostmanOptions implements PostmanOptionsInterface {
+	class PostmanOptions {
 		
 		// the option database name
 		const POSTMAN_OPTIONS = 'postman_options';
@@ -66,8 +65,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		const DEFAULT_TRANSPORT_TYPE = 'smtp'; // must match what's in PostmanSmtpTransport
 		const DEFAULT_TCP_READ_TIMEOUT = 60;
 		const DEFAULT_TCP_CONNECTION_TIMEOUT = 10;
-		const DEFAULT_PLUGIN_SENDER_NAME_ENFORCED = true;
-		const DEFAULT_PLUGIN_SENDER_EMAIL_ENFORCED = true;
+		const DEFAULT_PLUGIN_SENDER_NAME_ENFORCED = false;
+		const DEFAULT_PLUGIN_SENDER_EMAIL_ENFORCED = false;
 		const DEFAULT_TEMP_DIRECTORY = '/tmp';
 
 		// options data
@@ -238,7 +237,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		/**
 		 * (non-PHPdoc)
 		 *
-		 * @see PostmanOptionsInterface::isSenderNameOverridePrevented()
+		 * @see PostmanOptions::isSenderNameOverridePrevented()
 		 * @deprecated by isPluginSenderNameEnforced
 		 */
 		public function isSenderNameOverridePrevented() {

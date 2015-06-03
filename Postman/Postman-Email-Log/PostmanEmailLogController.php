@@ -11,14 +11,12 @@ if (! class_exists ( 'PostmanEmailLogController' )) {
 	class PostmanEmailLogController {
 		private $rootPluginFilenameAndPath;
 		private $logger;
-		private $pluginData;
 		
 		/**
 		 */
-		function __construct($rootPluginFilenameAndPath, $pluginData) {
+		function __construct($rootPluginFilenameAndPath) {
 			$this->rootPluginFilenameAndPath = $rootPluginFilenameAndPath;
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			$this->pluginData = $pluginData;
 			if (PostmanOptions::getInstance ()->isMailLoggingEnabled ()) {
 				add_action ( 'admin_menu', array (
 						$this,
@@ -180,7 +178,8 @@ if (! class_exists ( 'PostmanEmailLogController' )) {
 			) );
 		}
 		function postman_email_log_enqueue_resources() {
-			wp_register_style ( 'postman_email_log', plugins_url ( 'style/postman-email-log.css', $this->rootPluginFilenameAndPath ), null, $this->pluginData ['Version'] );
+			$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
+			wp_register_style ( 'postman_email_log', plugins_url ( 'style/postman-email-log.css', $this->rootPluginFilenameAndPath ), null, $pluginData ['version'] );
 			wp_enqueue_style ( 'postman_email_log' );
 		}
 		

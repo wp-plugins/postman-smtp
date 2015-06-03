@@ -2,10 +2,8 @@
 if (! class_exists ( 'PostmanSmtpTransport' )) {
 	class PostmanSmtpTransport implements PostmanTransport {
 		private $logger;
-		private $pluginData;
-		public function __construct($pluginData) {
+		public function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			$this->pluginData = $pluginData;
 		}
 		const SLUG = 'smtp';
 		public function getSlug() {
@@ -14,29 +12,26 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function getName() {
 			return _x ( 'SMTP', 'Transport Name', 'postman-smtp' );
 		}
-		public function getVersion() {
-			return $this->pluginData ['Version'];
-		}
-		public function getHostname(PostmanOptionsInterface $options) {
+		public function getHostname(PostmanOptions $options) {
 			return $options->getHostname ();
 		}
-		public function getHostPort(PostmanOptionsInterface $options) {
+		public function getHostPort(PostmanOptions $options) {
 			return $options->getPort ();
 		}
-		public function getAuthenticationType(PostmanOptionsInterface $options) {
+		public function getAuthenticationType(PostmanOptions $options) {
 			return $options->getAuthenticationType ();
 		}
-		public function getSecurityType(PostmanOptionsInterface $options) {
+		public function getSecurityType(PostmanOptions $options) {
 			return $options->getEncryptionType ();
 		}
-		public function getCredentialsId(PostmanOptionsInterface $options) {
+		public function getCredentialsId(PostmanOptions $options) {
 			if ($options->isAuthTypeOAuth2 ()) {
 				return $options->getClientId ();
 			} else {
 				return $options->getUsername ();
 			}
 		}
-		public function getCredentialsSecret(PostmanOptionsInterface $options) {
+		public function getCredentialsSecret(PostmanOptions $options) {
 			if ($options->isAuthTypeOAuth2 ()) {
 				return $options->getClientSecret ();
 			} else {
@@ -60,15 +55,15 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			if ($options->getAuthenticationType () == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
-				return new PostmanOAuth2MailAuthenticator ( $options, $authToken, $this->pluginData ['Version'] );
+				return new PostmanOAuth2MailAuthenticator ( $options, $authToken);
 			} else {
-				return new PostmanGeneralMailAuthenticator ( $options, $authToken, $this->pluginData ['Version'] );
+				return new PostmanGeneralMailAuthenticator ( $options, $authToken );
 			}
 		}
 		public function createZendMailTransport($hostname, $config) {
 			return new Postman_Zend_Mail_Transport_Smtp ( $hostname, $config );
 		}
-		public function getDeliveryDetails(PostmanOptionsInterface $options) {
+		public function getDeliveryDetails(PostmanOptions $options) {
 			$deliveryDetails ['transport_name'] = $this->getTransportDescription ( $options->getEncryptionType () );
 			$deliveryDetails ['host'] = $options->getHostname () . ':' . $options->getPort ();
 			$deliveryDetails ['auth_desc'] = $this->getAuthenticationDescription ( $options->getAuthenticationType () );
@@ -113,7 +108,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				return sprintf ( _x ( 'Password (%s)', 'This authentication type is password-based', 'postman-smtp' ), $authDescription );
 			}
 		}
-		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+		public function isConfigured(PostmanOptions $options, PostmanOAuthToken $token) {
 			// This is configured if:
 			$configured = true;
 			
@@ -134,11 +129,11 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		 * The transport can have all the configuration it needs, but still not be ready for use
 		 * Check to see if permission is required from the OAuth 2.0 provider
 		 *
-		 * @param PostmanOptionsInterface $options        	
+		 * @param PostmanOptions $options        	
 		 * @param PostmanOAuthToken $token        	
 		 * @return boolean
 		 */
-		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+		public function isReady(PostmanOptions $options, PostmanOAuthToken $token) {
 			// 1. is the transport configured
 			$configured = $this->isConfigured ( $options, $token );
 			
@@ -147,18 +142,18 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			
 			return $configured;
 		}
-		private function isTransportConfigured(PostmanOptionsInterface $options) {
+		private function isTransportConfigured(PostmanOptions $options) {
 			$hostname = $options->getHostname ();
 			$port = $options->getPort ();
 			$senderEmail = $options->getSenderEmail ();
 			return ! (empty ( $senderEmail ) || empty ( $hostname ) || empty ( $port ));
 		}
-		private function isPasswordAuthenticationConfigured(PostmanOptionsInterface $options) {
+		private function isPasswordAuthenticationConfigured(PostmanOptions $options) {
 			$username = $options->getUsername ();
 			$password = $options->getPassword ();
 			return $options->isAuthTypePassword () && ! (empty ( $username ) || empty ( $password ));
 		}
-		private function isOAuthAuthenticationConfigured(PostmanOptionsInterface $options) {
+		private function isOAuthAuthenticationConfigured(PostmanOptions $options) {
 			$clientId = $options->getClientId ();
 			$clientSecret = $options->getClientSecret ();
 			$senderEmail = $options->getSenderEmail ();
@@ -166,12 +161,12 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$supportedOAuthProvider = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
 			return $options->isAuthTypeOAuth2 () && ! (empty ( $clientId ) || empty ( $clientSecret ) || empty ( $senderEmail )) && $supportedOAuthProvider;
 		}
-		private function isPermissionNeeded(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+		private function isPermissionNeeded(PostmanOptions $options, PostmanOAuthToken $token) {
 			$accessToken = $token->getAccessToken ();
 			$refreshToken = $token->getRefreshToken ();
 			return $options->isAuthTypeOAuth2 () && (empty ( $accessToken ) || empty ( $refreshToken ));
 		}
-		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptions $options, PostmanOAuthToken $token) {
 			if (! $this->isTransportConfigured ( $options )) {
 				return __ ( 'Outgoing Mail Server Hostname/Port and Sender Email Address can not be empty.', 'postman-smtp' );
 			} else if ($options->isAuthTypePassword () && ! $this->isPasswordAuthenticationConfigured ( $options )) {
@@ -381,12 +376,12 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		}
 		public function createZendMailTransport($hostname, $config) {
 		}
-		public function getDeliveryDetails(PostmanOptionsInterface $options) {
+		public function getDeliveryDetails(PostmanOptions $options) {
 		}
-		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+		public function isConfigured(PostmanOptions $options, PostmanOAuthToken $token) {
 			return false;
 		}
-		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+		public function isReady(PostmanOptions $options, PostmanOAuthToken $token) {
 			return false;
 		}
 		/**
@@ -402,7 +397,7 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		}
 		public function getConfigurationBid($hostData, $originalSmtpServer) {
 		}
-		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptions $options, PostmanOAuthToken $token) {
 			/* translators: where %s is the name of the transport (e.g. smtp) */
 			return sprintf ( __ ( 'The selected transport \'%s\' is unavailable. The external plugin was probably deactivated.', 'postman-smtp' ), $options->getTransportType () );
 		}

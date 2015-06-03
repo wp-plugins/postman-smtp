@@ -219,7 +219,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @param unknown $headers        	
 		 * @param unknown $attachments        	
 		 */
-		private function createMessage(PostmanOptionsInterface $options, $to, $subject, $body, $headers, $attachments, PostmanMailTransportConfiguration $transportation) {
+		private function createMessage(PostmanOptions $options, $to, $subject, $body, $headers, $attachments, PostmanMailTransportConfiguration $transportation) {
 			$message = new PostmanMessage ();
 			$message->addHeaders ( $headers );
 			$message->addHeaders ( $options->getAdditionalHeaders () );
@@ -231,8 +231,8 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$message->addBcc ( $options->getForcedBccRecipients () );
 			$message->setAttachments ( $attachments );
 			$message->setSender ( $options->getSenderEmail (), $options->getSenderName () );
-			$message->setPreventSenderEmailOverride ( $options->isSenderEmailOverridePrevented () || $transportation->isPluginSenderEmailEnforced () );
-			$message->setPreventSenderNameOverride ( $options->isSenderNameOverridePrevented () || $transportation->isPluginSenderNameEnforced () );
+			$message->setPreventSenderEmailOverride ( $options->isSenderEmailOverridePrevented () );
+			$message->setPreventSenderNameOverride ( $options->isSenderNameOverridePrevented () );
 			$message->setPostmanSignatureEnabled ( ! $options->isStealthModeEnabled () );
 			
 			// set the reply-to address if it hasn't been set already in the user's headers
