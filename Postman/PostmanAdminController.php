@@ -554,7 +554,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printMessageSenderSectionInfo() {
-			print __ ( 'The message sender is used as the default <b>From:</b> address.', 'postman-smtp' );
+			print __ ( 'The Sender sets both the envelope <b>Mail-From</b> and the message <b>From</b> header. However, the <b>From</b> header can be modified by another plugin (e.g. for setting a visitor\'s email address from a Contact Form).', 'postman-smtp' );
 		}
 		
 		/**
@@ -657,7 +657,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function prevent_sender_name_override_callback() {
 			$enforced = $this->options->isPluginSenderNameEnforced ();
-			printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this Sender Name for all messages', 'postman-smtp' ) );
+			printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this in the <b>From</b> header for all messages', 'postman-smtp' ) );
 		}
 		
 		/**
@@ -672,8 +672,12 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function prevent_sender_email_override_callback() {
 			$enforced = $this->options->isPluginSenderEmailEnforced ();
-			printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this Sender Email Address for all messages', 'postman-smtp' ) );
+			printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this in the <b>From</b> header for all messages', 'postman-smtp' ) );
 		}
+		
+		/**
+		 * Shows the Mail Logging enable/disabled option
+		 */
 		public function loggingStatusInputField() {
 			// isMailLoggingAllowed
 			$disabled = "";
