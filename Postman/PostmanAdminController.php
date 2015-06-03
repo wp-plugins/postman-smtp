@@ -574,7 +574,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printAdvancedSectionInfo() {
-			print __ ( 'Log Level specifies the level of detail written to the WordPress and PHP logfiles. Delivery mode offers options useful in a development environment.', 'postman-smtp' );
+			print __ ( 'Log Level specifies the level of detail written to the WordPress and PHP logfiles. Delivery mode offers options useful for developing or testing.', 'postman-smtp' );
 		}
 		/**
 		 * Print the Section text
