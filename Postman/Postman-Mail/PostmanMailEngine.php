@@ -101,7 +101,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$sender->log ( $this->logger, 'From' );
 			
 			// add the Sender Header, overriding what the user may have set
-			$mail->addHeader ( 'Sender', $message->getSenderAddress ()->format (), false );
+			// $mail->addHeader ( 'Sender', $message->getSenderAddress ()->format (), false );
 			// from RFC 5321: http://tools.ietf.org/html/rfc5321#section-4.4
 			// A message-originating SMTP system SHOULD NOT send a message that
 			// already contains a Return-path header field.
