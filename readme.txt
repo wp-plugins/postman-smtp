@@ -35,7 +35,7 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Security Support: SMTPS and STARTTLS (SSL/TLS)
 * Verified compatible with: [Woocommerce](https://wordpress.org/plugins/woocommerce/), [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), [Fast Secure Contact Form](https://wordpress.org/plugins/si-contact-form/), [Visual Forms Builder](https://wordpress.org/plugins/visual-form-builder/), [Contact Form Builder](https://wordpress.org/plugins/contact-form-builder/)
-* Available translations: French, Italian and Turkish - if you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
+* Available translations: French, Italian, Turkish and Dutch - if you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
 
 = Requirements =
 * WordPress 3.9 and PHP 5.2 with SPL and iconv
