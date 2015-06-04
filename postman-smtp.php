@@ -38,7 +38,7 @@ function postman_start($startingMemory) {
 }
 function postman_setupPostman() {
 	require_once 'Postman/Postman.php';
-	$kevinCostner = new Postman ( __FILE__, '1.6.13a' );
+	$kevinCostner = new Postman ( __FILE__, '1.6.13b' );
 }
 /**
  * Start Postman

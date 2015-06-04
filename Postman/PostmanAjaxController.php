@@ -67,7 +67,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		 * @param PostmanOptions $options        	
 		 */
 		function __construct(PostmanOptions $options, PostmanOAuthToken $authorizationToken) {
-			parent::__construct (  );
+			parent::__construct ();
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->diagnostics = '';
@@ -133,15 +133,21 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', $pluginData ['version'] ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Sender Domain: %s', $hostname = substr ( strrchr ( $this->options->getSenderEmail (), "@" ), 1 ) ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI: %s', $transportRegistry->getPublicTransportUri ( $transportRegistry->getCurrentTransport () ) ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI|Force Email|Name: %s|%s|%s', $transportRegistry->getPublicTransportUri ( $transportRegistry->getCurrentTransport () ), $this->options->isSenderEmailOverridePrevented () ? 'Yes' : 'No', $this->options->isSenderNameOverridePrevented () ? 'Yes' : 'No' ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport Status (Configured|Ready|Connected): %s|%s|%s', $transportRegistry->getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', $this->testConnectivity () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Deliveries (Success|Fail): %d|%d', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PostmanStats::getInstance ()->getFailedDeliveries () ) );
 			$bindResult = apply_filters ( 'postman_wp_mail_bind_status', null );
-			$this->addToDiagnostics ( sprintf ( 'Postman Bind (Success|Fail): %s|%s', ($bindResult ['bound'] ? 'Yes' : 'No'), ($bindResult ['bind_error'] ? 'Yes' : 'No') ) );
+			$wp_mail_file_name = 'n/a';
+			if (class_exists ( 'ReflectionFunction' )) {
+				$wp_mail = new ReflectionFunction ( 'wp_mail' );
+				$wp_mail_file_name = realpath ( $wp_mail->getFileName () );
+			}
+			$this->addToDiagnostics ( sprintf ( 'Postman Bind (Success|Fail|Path): %s|%s|%s', ($bindResult ['bound'] ? 'Yes' : 'No'), ($bindResult ['bind_error'] ? 'Yes' : 'No'), $wp_mail_file_name ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman TCP Timeout (Connection|Read): %d|%d', $this->options->getConnectionTimeout (), $this->options->getReadTimeout () ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Email Log (Enabled|Max): %s|%d', ($this->options->isMailLoggingEnabled () ? 'Yes' : 'No'), $this->options->getMailLoggingMaxEntries () ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Email Log (Enabled|Limit|Transcript Size): %s|%d|%d', ($this->options->isMailLoggingEnabled () ? 'Yes' : 'No'), $this->options->getMailLoggingMaxEntries (), $this->options->getTranscriptSize () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Run Mode: %s', $this->options->getRunMode () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman PHP LogLevel: %s', $this->options->getLogLevel () ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Stealth Mode: %s', $this->options->isStealthModeEnabled () ? 'Yes' : 'No' ) );
 			$response = array (
 					'message' => $this->diagnostics 
 			);
@@ -153,7 +159,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 if (! class_exists ( 'PostmanGetPortsToTestViaAjax' )) {
 	class PostmanGetPortsToTestViaAjax extends PostmanAbstractAjaxHandler {
 		function __construct() {
-			parent::__construct (  );
+			parent::__construct ();
 			$this->registerAjaxHandler ( 'get_hosts_to_test', $this, 'getPortsToTestViaAjax' );
 		}
 		/**
@@ -180,7 +186,7 @@ if (! class_exists ( 'PostmanGetHostnameByEmailAjaxController' )) {
 	class PostmanGetHostnameByEmailAjaxController extends PostmanAbstractAjaxHandler {
 		const IS_GOOGLE_PARAMETER = 'is_google';
 		function __construct() {
-			parent::__construct (  );
+			parent::__construct ();
 			$this->registerAjaxHandler ( 'check_email', $this, 'getAjaxHostnameByEmail' );
 		}
 		/**
@@ -219,7 +225,7 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		 * @param PostmanOptions $options        	
 		 */
 		function __construct(PostmanOptions $options) {
-			parent::__construct (  );
+			parent::__construct ();
 			$this->options = $options;
 			$this->registerAjaxHandler ( 'wizard_port_test', $this, 'runSmtpTest' );
 			$this->registerAjaxHandler ( 'wizard_port_test_smtps', $this, 'runSmtpsTest' );
@@ -327,7 +333,7 @@ if (! class_exists ( 'PostmanImportConfigurationAjaxController' )) {
 		 * @param PostmanOptions $options        	
 		 */
 		function __construct(PostmanOptions $options) {
-			parent::__construct (  );
+			parent::__construct ();
 			$this->options = $options;
 			$this->registerAjaxHandler ( 'import_configuration', $this, 'getConfigurationFromExternalPluginViaAjax' );
 		}
@@ -380,7 +386,7 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 		 * @param PostmanConfigTextHelper $oauthScribe        	
 		 */
 		function __construct(PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanConfigTextHelper $oauthScribe) {
-			parent::__construct (  );
+			parent::__construct ();
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->oauthScribe = $oauthScribe;
