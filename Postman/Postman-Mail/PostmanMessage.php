@@ -81,7 +81,7 @@ if (! class_exists ( "PostmanMessage" )) {
 			
 			// by default, sender is what Postman set
 			$from = PostmanEmailAddress::copy ( $this->sender );
-			$this->logger->trace($from);
+			$this->logger->trace ( $from );
 			
 			// but we will let other plugins override the sender via the 'From' header
 			if (isset ( $this->fromHeader )) {
@@ -95,7 +95,7 @@ if (! class_exists ( "PostmanMessage" )) {
 					$from->setEmail ( $s1email );
 				}
 			}
-			$this->logger->trace($from);
+			$this->logger->trace ( $from );
 			/**
 			 * Filter the email address to send from.
 			 */
@@ -107,8 +107,8 @@ if (! class_exists ( "PostmanMessage" )) {
 			 */
 			// other plugins can override the name via a filter
 			$from->setName ( apply_filters ( 'wp_mail_from_name', $from->getName () ) );
-			$this->logger->trace($from);
-				
+			$this->logger->trace ( $from );
+			
 			// but the user has the final say
 			if ($this->isPluginSenderEmailEnforced ()) {
 				$from->setEmail ( $this->sender->getEmail () );
@@ -116,8 +116,8 @@ if (! class_exists ( "PostmanMessage" )) {
 			if ($this->isPluginSenderNameEnforced ()) {
 				$from->setName ( $this->sender->getName () );
 			}
-			$this->logger->trace($from);
-				
+			$this->logger->trace ( $from );
+			
 			return $from;
 		}
 		
@@ -302,9 +302,13 @@ if (! class_exists ( "PostmanMessage" )) {
 					$this->logProcessHeader ( 'Reply-To', $name, $content );
 					$this->setReplyTo ( $content );
 					break;
+				case 'sender' :
+					$this->logProcessHeader ( 'Sender', $name, $content );
+					$this->logger->warn ( sprintf ( 'Ignoring Sender header \'%s\'', $content ) );
+					break;
 				case 'return-path' :
 					$this->logProcessHeader ( 'Return-Path', $name, $content );
-					$this->setReturnPath ( $content );
+					$this->logger->warn ( sprintf ( 'Ignoring Return-Path header \'%s\'', $content ) );
 					break;
 				case 'date' :
 					$this->logProcessHeader ( 'Date', $name, $content );

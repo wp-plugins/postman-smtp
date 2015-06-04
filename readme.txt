@@ -172,6 +172,7 @@ If your WordPress site is configured with WP_HTTP_BLOCK_EXTERNAL to prevent outb
 * French - [Etienne Provost](https://www.facebook.com/eprovost3)
 * Italian - Andrea Greco
 * Turkish - [ercan yaris](http://lunar.com.tr/)
+* Dutch - Louise
 
 
 
@@ -261,8 +262,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * [TBD] Add dismiss option for "unconfigured message" .. for multisites
 * [TBD] Add resend option to Email Log for failed messages
 * [TBD] Add locking to make sure OAuth2 token is refreshed in a thread-safe way
-* Use the Zend_Mail Return-Path option to specify a Sender header for all emails, allowing random From headers. Gmail ignores it anyway *sigh*
+* Use the Zend_Mail setReturnPath option to specify the Mail-From and Sender, allowing any address as the From header. Gmail will ignore it anyway **sigh**
 * [[Ticket](https://wordpress.org/support/topic/smtp-authentication-security?replies=1#post-7025445) Added Emoji lock icons to Dashbaoard and Main Setting screens to indicate security
+* [[Ticket](https://wordpress.org/support/topic/problem-sending-mail-with-other-users?replies=19) Emails from [Email Users](https://wordpress.org/plugins/email-users/) were causing undeliverable errors - fixed by removing the SMTP Return-Path header that *Email Users* plugin injects
 
 = 1.6.12 - 2015-05-30 =
 * 6,000 installations!- 2015-05-26
