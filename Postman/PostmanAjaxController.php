@@ -148,6 +148,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->addToDiagnostics ( sprintf ( 'Postman Run Mode: %s', $this->options->getRunMode () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman PHP LogLevel: %s', $this->options->getLogLevel () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Stealth Mode: %s', $this->options->isStealthModeEnabled () ? 'Yes' : 'No' ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman File Locking Enabled: %s', PostmanState::getInstance ()->isFileLockingEnabled () ? 'Yes' : 'No' ) );
 			$response = array (
 					'message' => $this->diagnostics 
 			);

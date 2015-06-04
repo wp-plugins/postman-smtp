@@ -12,10 +12,11 @@ if (! class_exists ( "PostmanState" )) {
 		// the option database name
 		const SLUG = 'postman_state';
 		const TOO_LONG_SEC = 2592000; // 30 days
-		
+		                              
 		// the options fields
 		const VERSION = 'version';
 		const INSTALL_DATE = 'install_date';
+		const FILE_LOCKING_ENABLED = 'locking_enabled';
 		
 		// options data
 		private $options;
@@ -50,6 +51,16 @@ if (! class_exists ( "PostmanState" )) {
 				$maxTime = $this->options [self::INSTALL_DATE] + self::TOO_LONG_SEC;
 				return $successful && time () <= $maxTime;
 			}
+		}
+		public function isFileLockingEnabled() {
+			if (isset ( $this->options [self::FILE_LOCKING_ENABLED] ))
+				return $this->options [self::FILE_LOCKING_ENABLED];
+			else
+				return false;
+		}
+		public function setFileLockingEnabled($enabled) {
+			$this->options [self::FILE_LOCKING_ENABLED] = $enabled;
+			$this->save ();
 		}
 	}
 }

@@ -135,11 +135,10 @@ if (! class_exists ( "PostmanWpMail" )) {
 				}
 				
 				// clean up
-				$this->postSend ( $engine, $startTime );
+				$this->postSend ( $engine, $startTime, $options );
 				
 				// return successful
 				return true;
-				
 			} catch ( Exception $e ) {
 				// save the error for later
 				$this->exception = $e;
@@ -157,7 +156,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 				}
 				
 				// clean up
-				$this->postSend ( $engine, $startTime );
+				$this->postSend ( $engine, $startTime, $options );
 				
 				// return failure
 				return false;
@@ -170,12 +169,14 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @param PostmanMailEngine $engine        	
 		 * @param unknown $startTime        	
 		 */
-		private function postSend(PostmanMailEngine $engine, $startTime) {
+		private function postSend(PostmanMailEngine $engine, $startTime, PostmanOptions $options) {
 			// save the transcript
 			$this->transcript = $engine->getTranscript ();
 			
 			// delete the semaphore
-			PostmanUtils::unlock ();
+			if ($options->isAuthTypeOAuth2 ()) {
+				PostmanUtils::unlock ();
+			}
 			
 			// stop the clock
 			$endTime = microtime ( true ) * 1000;

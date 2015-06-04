@@ -483,6 +483,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'stealthModeCallback' 
 			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
 			
+			add_settings_field ( PostmanOptions::TEMPORARY_DIRECTORY, __ ( 'Temporary Directory', 'postman-smtp' ), array (
+					$this,
+					'temporaryDirectoryCallback' 
+			), PostmanAdminController::ADVANCED_OPTIONS, PostmanAdminController::ADVANCED_SECTION );
+			
 			// the Test Email section
 			register_setting ( 'email_group', PostmanAdminController::TEST_OPTIONS );
 			
@@ -803,6 +808,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		}
 		public function stealthModeCallback() {
 			printf ( '<input type="checkbox" id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]" %3$s /> %4$s', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::STEALTH_MODE, $this->options->isStealthModeEnabled () ? 'checked="checked"' : '', __ ( 'Remove the Postman X-Header signature from messages', 'postman-smtp' ) );
+		}
+		public function temporaryDirectoryCallback() {
+			printf ( '<input type="text" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::TEMPORARY_DIRECTORY, $this->options->getTempDirectory () );
+			if (PostmanState::getInstance ()->isFileLockingEnabled ()) {
+				printf ( ' <span style="color:green">Valid</span>' );
+			} else {
+				printf ( ' <span style="color:red">Invalid</span>' );
+			}
 		}
 		
 		/**

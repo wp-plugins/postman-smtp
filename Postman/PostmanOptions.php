@@ -54,6 +54,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		const MAIL_LOG_MAX_ENTRIES = 'mail_log_max_entries';
 		const STEALTH_MODE = 'stealth_mode';
 		const TRANSCRIPT_SIZE = 'transcript_size';
+		const TEMPORARY_DIRECTORY = 'tmp_dir';
 		
 		// defaults
 		const DEFAULT_TRANSCRIPT_SIZE = 128;
@@ -68,7 +69,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		const DEFAULT_PLUGIN_SENDER_NAME_ENFORCED = false;
 		const DEFAULT_PLUGIN_SENDER_EMAIL_ENFORCED = false;
 		const DEFAULT_TEMP_DIRECTORY = '/tmp';
-
+		
 		// options data
 		private $options;
 		
@@ -99,13 +100,11 @@ if (! class_exists ( "PostmanOptions" )) {
 			$enabled = $this->getMailLoggingEnabled () == self::MAIL_LOG_ENABLED_OPTION_YES;
 			return $allowed && $enabled;
 		}
-		public function isFileLockingEnabled() {
-			// TODO this option can be set by PostmanActivationHandler
-			return false;
-		}
 		public function getTempDirectory() {
-			// TODO this option should be overridable by the user
-			return self::DEFAULT_TEMP_DIRECTORY;
+			if (isset ( $this->options [self::TEMPORARY_DIRECTORY] ))
+				return $this->options [self::TEMPORARY_DIRECTORY];
+			else
+				return self::DEFAULT_TEMP_DIRECTORY;
 		}
 		public function isMailLoggingAllowed() {
 			return true;

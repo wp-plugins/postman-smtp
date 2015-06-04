@@ -106,6 +106,13 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 					update_option ( 'postman_auth_token', $authOptions );
 				}
 			}
+
+			// can we create a tmp file? - this code is duplicated in InputSanitizer
+			PostmanUtils::deleteLockFile ();
+			$lockSuccess = PostmanUtils::createLockFile ();
+			$lockSuccess &= PostmanUtils::deleteLockFile ();
+			$postmanState ['locking_enabled'] = $lockSuccess;
+				
 			// always update the version number
 			if (! isset ( $postmanState ['install_date'] )) {
 				$postmanState ['install_date'] = time ();

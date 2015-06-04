@@ -59,11 +59,22 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 			$this->sanitizeString ( 'Run Mode', PostmanOptions::RUN_MODE, $input, $new_input );
 			$this->sanitizeString ( 'Stealth Mode', PostmanOptions::STEALTH_MODE, $input, $new_input );
 			$this->sanitizeInt ( 'Transcript Size', PostmanOptions::TRANSCRIPT_SIZE, $input, $new_input );
-				
+			$this->sanitizeString ( 'Temporary Directory', PostmanOptions::TEMPORARY_DIRECTORY, $input, $new_input );
+			
 			if ($new_input [PostmanOptions::CLIENT_ID] != $this->options->getClientId () || $new_input [PostmanOptions::CLIENT_SECRET] != $this->options->getClientSecret () || $new_input [PostmanOptions::HOSTNAME] != $this->options->getHostname ()) {
 				$this->logger->debug ( "Recognized new Client ID" );
 				// the user entered a new client id and we should destroy the stored auth token
 				delete_option ( PostmanOAuthToken::OPTIONS_NAME );
+			}
+			
+			if ($new_input [PostmanOptions::TEMPORARY_DIRECTORY] != $this->options->getTempDirectory ()) {
+				$this->logger->debug ( "Recognized new Temporary Directory" );
+				// can we create a tmp file? - this code is duplicated in ActivationHandler
+				PostmanUtils::deleteLockFile ($new_input [PostmanOptions::TEMPORARY_DIRECTORY]);
+				$lockSuccess = PostmanUtils::createLockFile ($new_input [PostmanOptions::TEMPORARY_DIRECTORY]);
+				$lockSuccess &= PostmanUtils::deleteLockFile ($new_input [PostmanOptions::TEMPORARY_DIRECTORY]);
+				$this->logger->debug ( 'FileLocking=' . $lockSuccess );
+				PostmanState::getInstance ()->setFileLockingEnabled ( $lockSuccess );
 			}
 			
 			if ($success) {
@@ -77,7 +88,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 		private function sanitizeString($desc, $key, $input, &$new_input) {
 			if (isset ( $input [$key] )) {
 				$this->logSanitize ( $desc, $input [$key] );
-				$new_input [$key] = trim($input [$key]);
+				$new_input [$key] = trim ( $input [$key] );
 			}
 		}
 		private function sanitizePassword($desc, $key, $input, &$new_input) {
@@ -86,7 +97,7 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 					// if the password is all stars, then keep the existing password
 					$new_input [$key] = $this->options->getPassword ();
 				} else {
-					$new_input [$key] = trim($input [$key]);
+					$new_input [$key] = trim ( $input [$key] );
 				}
 				$this->logSanitize ( $desc, $new_input [$key] );
 			}

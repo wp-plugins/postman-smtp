@@ -7,11 +7,11 @@ if (! class_exists ( 'PostmanUtils' )) {
 		const POSTMAN_SETTINGS_PAGE_STUB = 'postman';
 		const REQUEST_OAUTH2_GRANT_SLUG = 'postman/requestOauthGrant';
 		const POSTMAN_EMAIL_LOG_PAGE_STUB = 'postman_email_log';
-
+		
 		// redirections back to THIS SITE should always be relative because of IIS bug
 		const POSTMAN_EMAIL_LOG_PAGE_RELATIVE_URL = 'tools.php?page=postman_email_log';
 		const POSTMAN_HOME_PAGE_RELATIVE_URL = 'options-general.php?page=postman';
-
+		
 		// custom admin post page
 		const ADMIN_POST_OAUTH2_GRANT_URL_PART = 'admin-post.php?action=postman/requestOauthGrant';
 		
@@ -23,10 +23,10 @@ if (! class_exists ( 'PostmanUtils' )) {
 				PostmanUtils::$logger->trace ( 'Current page: ' . $_REQUEST ['page'] );
 			}
 		}
-
+		
 		/**
-		 * 
-		 * @param unknown $slug
+		 *
+		 * @param unknown $slug        	
 		 * @return string
 		 */
 		public static function getPageUrl($slug) {
@@ -188,9 +188,8 @@ if (! class_exists ( 'PostmanUtils' )) {
 		 * Unblock threads waiting on lock()
 		 */
 		static function unlock() {
-			$options = PostmanOptions::getInstance ();
-			if ($options->isFileLockingEnabled ()) {
-				@unlink ( $options->getTempDirectory () . '/.postman.lock' );
+			if (PostmanState::getInstance ()->isFileLockingEnabled ()) {
+				PostmanUtils::deleteLockFile ();
 			}
 		}
 		
@@ -201,22 +200,43 @@ if (! class_exists ( 'PostmanUtils' )) {
 		 * @throws Exception
 		 */
 		static function lock() {
-			$options = PostmanOptions::getInstance ();
-			$attempts = 0;
-			while ( $options->isFileLockingEnabled () ) {
-				// create the semaphore
-				$lock = @fopen ( $options->getTempDirectory () . '/.postman.lock', 'xb' );
-				if ($lock) {
-					// if we got the lock, return
-					return;
-				} else {
-					$attempts ++;
-					if ($attempts >= 10) {
-						throw new Exception ( sprintf ( 'Could not create lockfile %s', '/tmp' . '/.postman.lock' ) );
+			if (PostmanState::getInstance ()->isFileLockingEnabled ()) {
+				$attempts = 0;
+				while ( true ) {
+					// create the semaphore
+					$lock = PostmanUtils::createLockFile ();
+					if ($lock) {
+						// if we got the lock, return
+						return;
+					} else {
+						$attempts ++;
+						if ($attempts >= 10) {
+							throw new Exception ( sprintf ( 'Could not create lockfile %s', '/tmp' . '/.postman.lock' ) );
+						}
+						sleep ( 1 );
 					}
-					sleep ( 1 );
 				}
 			}
+		}
+		static function deleteLockFile($tempDirectory = null) {
+			$path = PostmanUtils::calculateTemporaryLockPath ( $tempDirectory );
+			$success = @unlink ( $path );
+			PostmanUtils::$logger->trace ( sprintf ( 'Deleting file %s : %s', $path, $success ) );
+			return $success;
+		}
+		static function createLockFile($tempDirectory = null) {
+			$path = PostmanUtils::calculateTemporaryLockPath ( $tempDirectory );
+			$success = @fopen ( $path, 'xb' );
+			PostmanUtils::$logger->trace ( sprintf ( 'Creating file %s : %s', $path, $success ) );
+			return $success;
+		}
+		private static function calculateTemporaryLockPath($tempDirectory) {
+			if (empty ( $tempDirectory )) {
+				$options = PostmanOptions::getInstance ();
+				$tempDirectory = $options->getTempDirectory ();
+			}
+			$fullPath = $tempDirectory . '/.postman.lock';
+			return $fullPath;
 		}
 	}
 	PostmanUtils::staticInit ();

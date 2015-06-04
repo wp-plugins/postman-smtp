@@ -260,10 +260,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 = 1.6.14 =
 * [TBD] Add dismiss option for "unconfigured message" .. for multisites
 * [TBD] Add resend option to Email Log for failed messages
-* [TBD] Add locking to make sure OAuth2 token is refreshed in a thread-safe way
 
 = 1.6.13 - 2015-06-04 =
 * Translated into Dutch, thank-you Louise
+* [[Ticket](https://wordpress.org/support/topic/bad-requestinvalid_grant?replies=13#post-6991435) Add process-locking to make sure OAuth2 token is refreshed synchronously
 * Use the Zend_Mail setReturnPath option to specify the Mail-From and Sender, allowing any address as the From header. Gmail will ignore it anyway **sigh**
 * [[Ticket](https://wordpress.org/support/topic/smtp-authentication-security?replies=1#post-7025445) Added Emoji lock icons to Dashbaoard and Main Setting screens to indicate security
 * [[Ticket](https://wordpress.org/support/topic/problem-sending-mail-with-other-users?replies=19) Emails from [Email Users](https://wordpress.org/plugins/email-users/) were causing undeliverable errors - fixed by removing the SMTP Return-Path header that *Email Users* plugin injects
