@@ -631,8 +631,9 @@ if (! class_exists ( 'PostmanViewController' )) {
 			
 			printf ( '<h4>%s</h4>', __ ( 'Are you having issues with Postman?', 'postman-smtp' ) );
 			/* translators: where %1$s and %2$s are the URLs to the Troubleshooting and Support Forums on WordPress.org */
-			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Please check the <a href="%1$s">troubleshooting and error messages</a> page and the <a href="%2$s">support forum</a>.</br>If you write for help, please include the following:', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-smtp/other_notes/', 'https://wordpress.org/support/plugin/postman-smtp' ) );
+			printf ( '<p style="margin:0 10px">%s</p>', sprintf ( __ ( 'Please check the <a href="%1$s">troubleshooting and error messages</a> page and the <a href="%2$s">support forum</a>.', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-smtp/other_notes/', 'https://wordpress.org/support/plugin/postman-smtp' ) );
 			printf ( '<h4>%s</h4>', __ ( 'Diagnostic Test', 'postman-smtp' ) );
+			printf ( '<p style="margin:0 10px">%s</p><br/>', sprintf ( __ ( 'If you write for help, please include the following:', 'postman-smtp' ), 'https://wordpress.org/plugins/postman-smtp/other_notes/', 'https://wordpress.org/support/plugin/postman-smtp' ) );
 			printf ( '<textarea readonly="readonly" id="diagnostic-text" cols="80" rows="15">%s</textarea>', _x ( 'Checking..', 'The "please wait" message', 'postman-smtp' ) );
 			print '</div>';
 		}
