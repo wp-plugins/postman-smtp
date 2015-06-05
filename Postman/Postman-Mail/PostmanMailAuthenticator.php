@@ -9,12 +9,9 @@ if (! class_exists ( 'PostmanGeneralMailAuthenticator' )) {
 	class PostmanGeneralMailAuthenticator implements PostmanMailTransportConfiguration {
 		private $options;
 		private $authToken;
-		private $pluginVersion;
-		public function __construct(PostmanOptions $options, PostmanOAuthToken $authToken, $pluginVersion) {
-			assert ( isset ( $pluginVersion ) );
+		public function __construct(PostmanOptions $options, PostmanOAuthToken $authToken) {
 			$this->options = $options;
 			$this->authToken = $authToken;
-			$this->pluginVersion = $pluginVersion;
 		}
 		public function createConfig() {
 			$logger = new PostmanLogger ( get_class ( $this ) );

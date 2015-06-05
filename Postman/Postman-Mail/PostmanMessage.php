@@ -18,7 +18,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		
 		// logger for all concrete classes - populate with setLogger($logger)
 		protected $logger;
-		private $pluginVersion;
 		
 		// set by the caller
 		private $sender;

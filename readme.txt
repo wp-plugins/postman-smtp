@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.13
+Stable tag: 1.6.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -257,9 +257,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.14 =
-* [TBD] Add dismiss option for "unconfigured message" .. for multisites
-* [TBD] Add resend option to Email Log for failed messages
+= 1.6.14 - 2015-06-05 =
+* [[Ticket](https://wordpress.org/support/topic/large-warnings-on-site?replies=1#post-7036030)] Fixed a bug (PHP Warning) I introduced in v1.6.13
 
 = 1.6.13 - 2015-06-05 =
 * 7,000 installations!
