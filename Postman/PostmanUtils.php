@@ -200,6 +200,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 		 * @throws Exception
 		 */
 		static function lock() {
+			require 'PostmanState.php';
 			if (PostmanState::getInstance ()->isFileLockingEnabled ()) {
 				$attempts = 0;
 				while ( true ) {
