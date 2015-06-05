@@ -188,6 +188,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 		 * Unblock threads waiting on lock()
 		 */
 		static function unlock() {
+			require 'PostmanState.php';
 			if (PostmanState::getInstance ()->isFileLockingEnabled ()) {
 				PostmanUtils::deleteLockFile ();
 			}

@@ -261,7 +261,8 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * [TBD] Add dismiss option for "unconfigured message" .. for multisites
 * [TBD] Add resend option to Email Log for failed messages
 
-= 1.6.13 - 2015-06-04 =
+= 1.6.13 - 2015-06-05 =
+* 7,000 installations!
 * Translated into Dutch, thank-you Louise
 * [[Ticket](https://wordpress.org/support/topic/bad-requestinvalid_grant?replies=13#post-6991435) Add process-locking to make sure OAuth2 token is refreshed synchronously
 * Use the Zend_Mail setReturnPath option to specify the Mail-From and Sender, allowing any address as the From header. Gmail will ignore it anyway **sigh**
