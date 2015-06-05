@@ -199,7 +199,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function postmanModifyLinksOnPluginsListPage($links) {
 			$mylinks = array (
-					sprintf ( '<a href="%s">%s</a>', PostmanUtils::getSettingsPageUrl (), _x ( 'Settings', 'The configuration page of the plugin', 'postman-smtp' ) ) 
+					sprintf ( '<a href="%s" class="postman_settings">%s</a>', PostmanUtils::getSettingsPageUrl (), _x ( 'Settings', 'The configuration page of the plugin', 'postman-smtp' ) ) 
 			);
 			return array_merge ( $mylinks, $links );
 		}
