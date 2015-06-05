@@ -97,8 +97,8 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$this->logger->debug ( 'Adding content-type ' . $contentType );
 			
 			// add the From Header
-			$sender = $this->addFrom ( $message, $mail );
-			$sender->log ( $this->logger, 'From' );
+			$fromHeader = $this->addFrom ( $message, $mail );
+			$fromHeader->log ( $this->logger, 'From' );
 			
 			// add the Sender Header, overriding what the user may have set
 			$mail->addHeader ( 'Sender', $message->getSenderAddress ()->format (), false );
