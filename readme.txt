@@ -257,10 +257,6 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.14 =
-* [TBD] Add dismiss option for "unconfigured message" .. for multisites
-* [TBD] Add resend option to Email Log for failed messages
-
 = 1.6.13 - 2015-06-05 =
 * 7,000 installations!
 * Translated into Dutch, thank-you Louise
