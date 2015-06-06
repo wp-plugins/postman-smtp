@@ -258,6 +258,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.6.15 =
+* [[Ticket](https://wordpress.org/support/topic/fixed-my-problem-but-broke-bbpress-notifications?replies=7#post-7038255)] Removing the BCC header in the case of the Gmail API was incorrect and causing lost recipients. Fixed.
 * [TBD] Add dismiss option for "unconfigured message" .. for multisites
 * [TBD] Add resend option to Email Log for failed messages
 
