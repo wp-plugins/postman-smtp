@@ -212,7 +212,9 @@ if (! class_exists ( 'PostmanGoogleMailApiZendMailTransport' )) {
 				throw new Postman_Zend_Mail_Transport_Exception ( '_prepareHeaders requires a registered Postman_Zend_Mail object' );
 			}
 			
-			unset ( $headers ['Bcc'] );
+
+			// google will unset the Bcc header for us.
+			// unset ( $headers ['Bcc'] );
 			
 			// Prepare headers
 			parent::_prepareHeaders ( $headers );
