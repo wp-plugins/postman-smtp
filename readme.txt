@@ -257,6 +257,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.6.15 =
+* [TBD] Add dismiss option for "unconfigured message" .. for multisites
+* [TBD] Add resend option to Email Log for failed messages
+
 = 1.6.14 - 2015-06-05 =
 * [[Ticket](https://wordpress.org/support/topic/large-warnings-on-site?replies=1#post-7036030)] Fixed a bug (PHP Warning) I introduced in v1.6.13
 
@@ -266,10 +270,10 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * [[Ticket](https://wordpress.org/support/topic/bad-requestinvalid_grant?replies=13#post-6991435)] Add process-locking to make sure the OAuth2 token is refreshed synchronously
 * Use the Zend_Mail setReturnPath option to specify the Mail-From and Sender, allowing any address as the From header
 * [[Ticket](https://wordpress.org/support/topic/smtp-authentication-security?replies=1#post-7025445)] Added Emoji lock icons to Dashboard and Main Setting screens to indicate security
-* [[Ticket](https://wordpress.org/support/topic/problem-sending-mail-with-other-users?replies=19)] Emails from the [Email Users](https://wordpress.org/plugins/email-users/) plugin were causing undeliverable errors - fixed by removing the SMTP Return-Path header that *Email Users* plugin injects
+* [[Ticket](https://wordpress.org/support/topic/problem-sending-mail-with-other-users?replies=19)] Emails from the [Email Users](https://wordpress.org/plugins/email-users/) plugin were causing undeliverable errors - fixed by removing the SMTP Return-Path header that *Email Users* injects
 
 = 1.6.12 - 2015-05-30 =
-* 6,000 installations!- 2015-05-26
+* 6,000 installations! - 2015-05-26
 * Postman now calls wp_mail when sending a test email. This marks the beginning of the "Postman API"
 * Shaved admin memory use from ~6MB to ~4MB; Non-admin memory use holds at ~2MB
 * Now loading the Sent Email post type for all admin screens, in case other custom post type-related plugins (e.g. WordPress Importer) need it
