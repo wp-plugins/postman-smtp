@@ -240,6 +240,19 @@ if (! class_exists ( 'PostmanUtils' )) {
 			$fullPath = $tempDirectory . '/.postman.lock';
 			return $fullPath;
 		}
+		
+		/**
+		 * From http://stackoverflow.com/a/381275/4368109
+		 * 
+		 * @param unknown $text
+		 * @return boolean
+		 */
+		private static function isEmpty($text) {
+			// Function for basic field validation (present and neither empty nor only white space
+			function IsNullOrEmptyString($question) {
+				return (! isset ( $text ) || trim ( $text ) === '');
+			}
+		}
 	}
 	PostmanUtils::staticInit ();
 }
