@@ -2,7 +2,9 @@
 if (! class_exists ( 'PostmanEmailLog' )) {
 	class PostmanEmailLog {
 		public $sender;
-		public $recipients;
+		public $toRecipients;
+		public $ccRecipients;
+		public $bccRecipients;
 		public $subject;
 		public $body;
 		public $success;
@@ -154,8 +156,18 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			// Write the meta data related to the email
 			update_post_meta ( $post_id, 'success', $log->success );
 			update_post_meta ( $post_id, 'from_header', $log->sender );
-			update_post_meta ( $post_id, 'to_header', $log->recipients );
-			update_post_meta ( $post_id, 'reply_to_header', $log->replyTo );
+			if (! empty ( $log->toRecipients )) {
+				update_post_meta ( $post_id, 'to_header', $log->toRecipients );
+			}
+			if (! empty ( $log->ccRecipients )) {
+				update_post_meta ( $post_id, 'cc_header', $log->ccRecipients );
+			}
+			if (! empty ( $log->bccRecipients )) {
+				update_post_meta ( $post_id, 'bcc_header', $log->bccRecipients );
+			}
+			if (! empty ( $log->replyTo )) {
+				update_post_meta ( $post_id, 'reply_to_header', $log->replyTo );
+			}
 			update_post_meta ( $post_id, 'transport_uri', $log->transportUri );
 			
 			if (! $log->success) {
@@ -188,7 +200,9 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			$log = new PostmanEmailLog ();
 			if ($message) {
 				$log->sender = $message->getFromAddress ()->format ();
-				$log->recipients = $this->flattenEmails ( $message->getToRecipients () );
+				$log->toRecipients = $this->flattenEmails ( $message->getToRecipients () );
+				$log->ccRecipients = $this->flattenEmails ( $message->getCcRecipients () );
+				$log->bccRecipients = $this->flattenEmails ( $message->getBccRecipients () );
 				$log->subject = $message->getSubject ();
 				$log->body = $message->getBody ();
 				if (null !== $message->getReplyTo ()) {
@@ -204,8 +218,8 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		
 		/**
 		 * Creates a readable "TO" entry based on the recipient header
-		 * 
-		 * @param array $addresses
+		 *
+		 * @param array $addresses        	
 		 * @return string
 		 */
 		private static function flattenEmails(array $addresses) {

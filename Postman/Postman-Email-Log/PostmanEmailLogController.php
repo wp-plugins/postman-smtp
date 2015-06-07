@@ -106,16 +106,27 @@ if (! class_exists ( 'PostmanEmailLogController' )) {
 }</style></head><body>';
 			print '<table>';
 			if (! empty ( $meta_values ['from_header'] [0] )) {
-				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'From', 'Who is this message from?', 'postman-smtp' ), esc_html ( $meta_values ['from_header'] [0] ) );
+				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'From', 'Who is this message From?', 'postman-smtp' ), esc_html ( $meta_values ['from_header'] [0] ) );
 			}
+			// show the To header (it's optional)
 			if (! empty ( $meta_values ['to_header'] [0] )) {
-				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'To', 'Who is this message to?', 'postman-smtp' ), esc_html ( $meta_values ['to_header'] [0] ) );
+				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'To', 'Who is this message To?', 'postman-smtp' ), esc_html ( $meta_values ['to_header'] [0] ) );
 			}
+			// show the Cc header (it's optional)
+			if (! empty ( $meta_values ['cc_header'] [0] )) {
+				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Cc', 'Who is this message Cc\'d to?', 'postman-smtp' ), esc_html ( $meta_values ['cc_header'] [0] ) );
+			}
+			// show the Bcc header (it's optional)
+			if (! empty ( $meta_values ['bcc_header'] [0] )) {
+				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Bcc', 'Who is this message Bcc\'d to?', 'postman-smtp' ), esc_html ( $meta_values ['bcc_header'] [0] ) );
+			}
+			// show the Reply-To header (it's optional)
 			if (! empty ( $meta_values ['reply_to_header'] [0] )) {
 				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Reply-To', 'Who do we reply to?', 'postman-smtp' ), esc_html ( $meta_values ['reply_to_header'] [0] ) );
 			}
 			printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Date', 'What is the date today?', 'postman-smtp' ), $post->post_date );
 			printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Subject', 'What is the subject of this message?', 'postman-smtp' ), esc_html ( $post->post_title ) );
+			// The Transport UI is always there, in more recent versions that is
 			if (! empty ( $meta_values ['transport_uri'] [0] )) {
 				printf ( '<tr><th style="text-align:right">%s:</th><td>%s</td></tr>', _x ( 'Delivery-URI', 'What is the unique URI of the configuration?', 'postman-smtp' ), esc_html ( $meta_values ['transport_uri'] [0] ) );
 			}
