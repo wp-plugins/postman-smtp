@@ -212,16 +212,21 @@ if (! class_exists ( "PostmanMailEngine" )) {
 				$this->logger->debug ( "Sending mail" );
 				$mail->send ( $zendTransport );
 				// finally not supported??
-				if ($zendTransport->getConnection ()) {
+				if ($zendTransport->getConnection () && ! PostmanUtils::isEmpty ( $zendTransport->getConnection ()->getLog () )) {
 					$this->transcript = $zendTransport->getConnection ()->getLog ();
 					$this->logger->trace ( $this->transcript );
+				} else {
+					// TODO then use the Raw Message as the Transcript
 				}
 			} catch ( Exception $e ) {
 				// finally not supported??
-				if ($zendTransport->getConnection ()) {
+				if ($zendTransport->getConnection () && ! PostmanUtils::isEmpty ( $zendTransport->getConnection ()->getLog () )) {
 					$this->transcript = $zendTransport->getConnection ()->getLog ();
 					$this->logger->trace ( $this->transcript );
+				} else {
+					// TODO then use the Raw Message as the Transcript
 				}
+				// re-throw the exception after handling
 				throw $e;
 			}
 		}

@@ -247,7 +247,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 		 * @param unknown $text
 		 * @return boolean
 		 */
-		private static function isEmpty($text) {
+		public static function isEmpty($text) {
 			// Function for basic field validation (present and neither empty nor only white space
 			function IsNullOrEmptyString($question) {
 				return (! isset ( $text ) || trim ( $text ) === '');
