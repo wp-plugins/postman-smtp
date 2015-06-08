@@ -129,7 +129,7 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 		 * @param PostmanOAuthToken $token        	
 		 * @return boolean
 		 */
-		public function isConfigured(PostmanOptions $options, PostmanOAuthToken $token) {
+		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			// This transport is configured if:
 			$configured = true;
 			
@@ -153,7 +153,7 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 		 * @param PostmanOAuthToken $token        	
 		 * @return boolean
 		 */
-		public function isReady(PostmanOptions $options, PostmanOAuthToken $token) {
+		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			// 1. is the transport configured
 			$configured = $this->isConfigured ( $options, $token );
 			
@@ -162,7 +162,7 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 			
 			return $configured;
 		}
-		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptions $options, PostmanOAuthToken $token) {
+		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			if ($this->isConfigurationNeeded ( $options )) {
 				return sprintf ( __ ( 'The Gmail API transport requires a Sender Email Address, Client ID and Client Secret.', 'postman-smtp' ) );
 			} else if ($this->isPermissionNeeded ( $token )) {

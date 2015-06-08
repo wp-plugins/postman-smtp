@@ -12,9 +12,9 @@ if (! interface_exists ( 'PostmanTransport' )) {
 		public function getName();
 		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken);
 		public function createZendMailTransport($hostname, $config);
-		public function isConfigured(PostmanOptions $options, PostmanOAuthToken $token);
-		public function isReady(PostmanOptions $options, PostmanOAuthToken $token);
-		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptions $options, PostmanOAuthToken $token);
+		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
+		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token);
+		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function getConfigurationRecommendation($hostData); // deprecated
 		public function getHostsToTest($hostname); // deprecated
 	}
@@ -106,7 +106,7 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 		 * @param PostmanOAuthToken $token        	
 		 * @return boolean
 		 */
-		public function isPostmanReadyToSendEmail(PostmanOptions $options, PostmanOAuthToken $token) {
+		public function isPostmanReadyToSendEmail(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			$selectedTransport = $options->getTransportType ();
 			foreach ( $this->getTransports () as $transport ) {
 				if ($transport->getSlug () == $selectedTransport && $transport->isReady ( $options, $token )) {

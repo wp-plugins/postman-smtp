@@ -108,7 +108,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 				return sprintf ( _x ( 'Password (%s)', 'This authentication type is password-based', 'postman-smtp' ), $authDescription );
 			}
 		}
-		public function isConfigured(PostmanOptions $options, PostmanOAuthToken $token) {
+		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			// This is configured if:
 			$configured = true;
 			
@@ -133,7 +133,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		 * @param PostmanOAuthToken $token        	
 		 * @return boolean
 		 */
-		public function isReady(PostmanOptions $options, PostmanOAuthToken $token) {
+		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			// 1. is the transport configured
 			$configured = $this->isConfigured ( $options, $token );
 			
@@ -166,7 +166,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			$refreshToken = $token->getRefreshToken ();
 			return $options->isAuthTypeOAuth2 () && (empty ( $accessToken ) || empty ( $refreshToken ));
 		}
-		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptions $options, PostmanOAuthToken $token) {
+		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			if (! $this->isTransportConfigured ( $options )) {
 				return __ ( 'Outgoing Mail Server Hostname/Port and Sender Email Address can not be empty.', 'postman-smtp' );
 			} else if ($options->isAuthTypePassword () && ! $this->isPasswordAuthenticationConfigured ( $options )) {
@@ -378,10 +378,10 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		}
 		public function getDeliveryDetails(PostmanOptions $options) {
 		}
-		public function isConfigured(PostmanOptions $options, PostmanOAuthToken $token) {
+		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			return false;
 		}
-		public function isReady(PostmanOptions $options, PostmanOAuthToken $token) {
+		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			return false;
 		}
 		/**
@@ -397,7 +397,7 @@ if (! class_exists ( 'PostmanDummyTransport' )) {
 		}
 		public function getConfigurationBid($hostData, $originalSmtpServer) {
 		}
-		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptions $options, PostmanOAuthToken $token) {
+		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
 			/* translators: where %s is the name of the transport (e.g. smtp) */
 			return sprintf ( __ ( 'The selected transport \'%s\' is unavailable. The external plugin was probably deactivated.', 'postman-smtp' ), $options->getTransportType () );
 		}

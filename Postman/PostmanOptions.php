@@ -1,4 +1,36 @@
 <?php
+if (! interface_exists ( "PostmanOptionsInterface" )) {
+	interface PostmanOptionsInterface {
+		/**
+		 * I'm stuck with these methods because of Gmail API Extension
+		 */
+		public function save();
+		public function isNew();
+		public function getLogLevel();
+		public function getHostname();
+		public function getPort();
+		public function getSenderEmail();
+		public function getSenderName();
+		public function getClientId();
+		public function getClientSecret();
+		public function getTransportType();
+		public function getAuthenticationType();
+		public function getEncryptionType();
+		public function getUsername();
+		public function getPassword();
+		public function getReplyTo();
+		public function getConnectionTimeout();
+		public function getReadTimeout();
+		public function isSenderNameOverridePrevented();
+		public function isAuthTypePassword();
+		public function isAuthTypeOAuth2();
+		public function isAuthTypeLogin();
+		public function isAuthTypePlain();
+		public function isAuthTypeCrammd5();
+		public function isAuthTypeNone();
+	}
+}
+
 if (! class_exists ( "PostmanOptions" )) {
 	
 	/**
@@ -7,7 +39,7 @@ if (! class_exists ( "PostmanOptions" )) {
 	 *
 	 * Make sure these emails are permitted (see http://en.wikipedia.org/wiki/E-mail_address#Internationalization):
 	 */
-	class PostmanOptions {
+	class PostmanOptions implements PostmanOptionsInterface {
 		
 		// the option database name
 		const POSTMAN_OPTIONS = 'postman_options';
