@@ -3,9 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.5.7\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-06-06 12:48:37+00:00\n"
-"PO-Revision-Date: 2015-06-06 08:52-0500\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/postman-smtp\n"
+"POT-Creation-Date: 2015-06-08 13:45:23+00:00\n"
+"PO-Revision-Date: 2015-06-08 09:52-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr_TR\n"
@@ -42,7 +42,7 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:69
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:170
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:181
 msgctxt "The log of Emails that have been delivered"
 msgid "Email Log"
 msgstr "E-posta günlüğü"
@@ -68,7 +68,7 @@ msgid_plural "<span style=\"color:green\">Postman is configured</span> and has d
 msgstr[0] "<span style=\"color:green\">Postman ayarlandı</span> ve <span style=\"color:green\">%d</span> adet emaili başarıyla gönderdi."
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:86
-#: Postman/Postman.php:189 Postman/PostmanViewController.php:487
+#: Postman/PostmanViewController.php:487
 msgid "Postman is <em>not</em> handling email delivery."
 msgstr "Postman email gönderimlerinizdeki aktif eklenti değil."
 
@@ -112,66 +112,76 @@ msgid "Mail Log Entry was deleted."
 msgstr "Posta günlük girdisi silindi."
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:109
-msgctxt "Who is this message from?"
+msgctxt "Who is this message From?"
 msgid "From"
 msgstr "Şundan"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:112
-msgctxt "Who is this message to?"
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:113
+msgctxt "Who is this message To?"
 msgid "To"
 msgstr "Şuraya"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:115
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:117
+msgctxt "Who is this message Cc'd to?"
+msgid "Cc"
+msgstr "Cc"
+
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:121
+msgctxt "Who is this message Bcc'd to?"
+msgid "Bcc"
+msgstr "Bcc"
+
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:125
 #: Postman/PostmanAdminController.php:397
 msgctxt "Who do we reply to?"
 msgid "Reply-To"
 msgstr "Yanıt"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:117
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:127
 msgctxt "What is the date today?"
 msgid "Date"
 msgstr "Tarih"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:118
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:128
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:159
 msgctxt "What is the subject of this message?"
 msgid "Subject"
 msgstr "Konu"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:120
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:131
 msgctxt "What is the unique URI of the configuration?"
 msgid "Delivery-URI"
 msgstr "Teslimat-URI"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:144
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:155
 #: Postman/PostmanViewController.php:876
 msgid "This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your shared secret (password) in encoded form."
 msgstr "SMTP sunucunuz ve Postman arasındaki diyaloğu buradan takip edebilirsiniz. Bu sorunların teşhisinde size yol gösterebilir. <b>DİKKAT</b> bunu herhangi biriyle paylaşmayın. İçerisinde size özel gizli anahtar (şifre) bilgileri olabilir."
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:150
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:161
 msgid "n/a"
 msgstr "yok"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:170
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:209
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:181
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:220
 msgid "Postman Email Log"
 msgstr "Postacı e-posta günlüğü"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:215
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:226
 msgid "This is a record of deliveries made to the Mail Submission Agent (MSA). It does not neccessarily indicate sucessful delivery to the recipient."
 msgstr "Bu posta teslimi Aracısı (MSA) yapılan teslim girişimleri kaydıdır. Sucessful alıcıya teslim için mutlaka göstermez."
 
-#: Postman/Postman-Email-Log/PostmanEmailLogService.php:87
+#: Postman/Postman-Email-Log/PostmanEmailLogService.php:89
 msgctxt "The group of Emails that have been delivered"
 msgid "Sent Emails"
 msgstr "Gönderilen e-posta"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogService.php:88
+#: Postman/Postman-Email-Log/PostmanEmailLogService.php:90
 msgctxt "An Email that has been delivered"
 msgid "Sent Email"
 msgstr "Gönderilen e-posta"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogService.php:216
+#: Postman/Postman-Email-Log/PostmanEmailLogService.php:230
 msgid ".. +%d more"
 msgstr ".. ve %d daha fazla."
 
@@ -324,6 +334,10 @@ msgstr "Önerilen ayarları %1$s %2$s host %4$s bağlantı noktası %3$ d üzeri
 #: Postman/Postman-Mail/PostmanSmtpTransport.php:402
 msgid "The selected transport '%s' is unavailable. The external plugin was probably deactivated."
 msgstr "Seçtiğiniz iletim türü kullanılamıyor. Harici eklenti büyük ihtimalle devre dışı."
+
+#: Postman/Postman.php:189
+msgid "WordPress is still handling email delivery, <em>not</em> Postman."
+msgstr "Postman email gönderimlerinizdeki aktif eklenti değil."
 
 #: Postman/PostmanAdminController.php:92
 msgctxt "The plugin successfully saved new settings."
@@ -706,7 +720,7 @@ msgstr "web uygulaması için Client ID"
 #. Translators: This description is specific to Google
 #: Postman/PostmanConfigTextHelper.php:128
 msgctxt "Name of the email service portal"
-msgid "Google Developer Console"
+msgid "Google Developers Console Gmail Wizard"
 msgstr "Google Developer Konsolu"
 
 # no need to translate - its generic
@@ -1339,6 +1353,18 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgctxt "Who is this message from?"
+#~ msgid "From"
+#~ msgstr "Şundan"
+
+#~ msgctxt "Who is this message to?"
+#~ msgid "To"
+#~ msgstr "Şuraya"
+
+#~ msgctxt "Name of the email service portal"
+#~ msgid "Google Developer Console"
+#~ msgstr "Google Developer Konsolu"
 
 #~ msgid "Please check the <a href=\"%1$s\">troubleshooting and error messages</a> page and the <a href=\"%2$s\">support forum</a>.</br>If you write for help, please include the following:"
 #~ msgstr "Lütfen <a href=\"%1$s\">hata ve sorun çözme sayfası</a> ya da <a href=\"%2$s\">destek forumlarına</a> göz atın.<br/>Yardım almak için lütfen tanı bilgisini de foruma yazınız:"

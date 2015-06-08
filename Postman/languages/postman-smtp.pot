@@ -3,8 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.6.15a\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-06-06 12:48:37+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/postman-smtp\n"
+"POT-Creation-Date: 2015-06-08 13:45:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -42,7 +42,7 @@ msgid "Settings"
 msgstr ""
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:69
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:170
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:181
 msgctxt "The log of Emails that have been delivered"
 msgid "Email Log"
 msgstr ""
@@ -74,7 +74,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: Postman/Postman-Controller/PostmanDashboardWidgetController.php:86
-#: Postman/Postman.php:189 Postman/PostmanViewController.php:487
+#: Postman/PostmanViewController.php:487
 msgid "Postman is <em>not</em> handling email delivery."
 msgstr ""
 
@@ -120,38 +120,48 @@ msgid "Mail Log Entry was deleted."
 msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:109
-msgctxt "Who is this message from?"
+msgctxt "Who is this message From?"
 msgid "From"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:112
-msgctxt "Who is this message to?"
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:113
+msgctxt "Who is this message To?"
 msgid "To"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:115
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:117
+msgctxt "Who is this message Cc'd to?"
+msgid "Cc"
+msgstr ""
+
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:121
+msgctxt "Who is this message Bcc'd to?"
+msgid "Bcc"
+msgstr ""
+
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:125
 #: Postman/PostmanAdminController.php:397
 msgctxt "Who do we reply to?"
 msgid "Reply-To"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:117
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:127
 msgctxt "What is the date today?"
 msgid "Date"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:118
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:128
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:159
 msgctxt "What is the subject of this message?"
 msgid "Subject"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:120
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:131
 msgctxt "What is the unique URI of the configuration?"
 msgid "Delivery-URI"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:144
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:155
 #: Postman/PostmanViewController.php:876
 msgid ""
 "This is the conversation between Postman and your SMTP server. It can be "
@@ -159,32 +169,32 @@ msgid ""
 "contain your shared secret (password) in encoded form."
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:150
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:161
 msgid "n/a"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:170
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:209
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:181
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:220
 msgid "Postman Email Log"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogController.php:215
+#: Postman/Postman-Email-Log/PostmanEmailLogController.php:226
 msgid ""
 "This is a record of deliveries made to the Mail Submission Agent (MSA). It "
 "does not neccessarily indicate sucessful delivery to the recipient."
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogService.php:87
+#: Postman/Postman-Email-Log/PostmanEmailLogService.php:89
 msgctxt "The group of Emails that have been delivered"
 msgid "Sent Emails"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogService.php:88
+#: Postman/Postman-Email-Log/PostmanEmailLogService.php:90
 msgctxt "An Email that has been delivered"
 msgid "Sent Email"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogService.php:216
+#: Postman/Postman-Email-Log/PostmanEmailLogService.php:230
 msgid ".. +%d more"
 msgstr ""
 
@@ -350,6 +360,10 @@ msgstr ""
 msgid ""
 "The selected transport '%s' is unavailable. The external plugin was probably "
 "deactivated."
+msgstr ""
+
+#: Postman/Postman.php:189
+msgid "WordPress is still handling email delivery, <em>not</em> Postman."
 msgstr ""
 
 #: Postman/PostmanAdminController.php:92
@@ -754,7 +768,7 @@ msgstr ""
 #. Translators: This description is specific to Google
 #: Postman/PostmanConfigTextHelper.php:128
 msgctxt "Name of the email service portal"
-msgid "Google Developer Console"
+msgid "Google Developers Console Gmail Wizard"
 msgstr ""
 
 #. Translators: This description is specific to Microsoft
