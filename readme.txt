@@ -256,6 +256,9 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.6.17 - 2015-06-08 =
+* You know you're having a really bad day when you have to have do three releases. Fix for "Fatal error: Call to a member function addError() on a non-object". This happens when wp_mail is blocked by another plugin and a non-admin user accesses the site.
+
 = 1.6.16 - 2015-06-08 =
 * [[Ticket](https://wordpress.org/support/topic/error-after-latest-upgrade?replies=2#post-7044181)] Fixed a bug "Fatal error: Cannot redeclare IsNullOrEmptyString()" I introduced in v1.6.15
 

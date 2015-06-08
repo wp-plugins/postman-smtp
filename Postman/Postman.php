@@ -49,9 +49,6 @@ if (! class_exists ( 'Postman' )) {
 				// always load email log service, in case another plugin (eg. WordPress importer)
 				// is doing something related to custom post types
 				require_once 'Postman-Email-Log/PostmanEmailLogService.php';
-				
-				// create and store an instance of the MessageHandler
-				$this->messageHandler = new PostmanMessageHandler ();
 			}
 			
 			// get plugin metadata - alternative to get_plugin_data
@@ -90,6 +87,9 @@ if (! class_exists ( 'Postman' )) {
 			
 			// the following code is restricted to an administrator
 			if (is_admin ()) {
+				// create and store an instance of the MessageHandler
+				$this->messageHandler = new PostmanMessageHandler ();
+				
 				new PostmanDashboardWidgetController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->wpMailBinder );
 				new PostmanAdminController ( $rootPluginFilenameAndPath, $this->options, $this->authToken, $this->messageHandler, $this->wpMailBinder );
 				new PostmanEmailLogController ( $rootPluginFilenameAndPath );
@@ -134,7 +134,9 @@ if (! class_exists ( 'Postman' )) {
 				
 				// I noticed the wpMandrill and SendGrid plugins have the exact same error message here
 				// I've decided to adopt their error message as well, for shits and giggles .... :D
-				$this->messageHandler->addError ( __ ( 'Postman: wp_mail has been declared by another plugin or theme, so you won\'t be able to use Postman until the conflict is resolved.', 'postman-smtp' ) );
+				if (is_admin ()) {
+					$this->messageHandler->addError ( __ ( 'Postman: wp_mail has been declared by another plugin or theme, so you won\'t be able to use Postman until the conflict is resolved.', 'postman-smtp' ) );
+				}
 				// $this->messageHandler->addError ( __ ( 'Error: Postman is properly configured, but the current theme or another plugin is preventing service.', 'postman-smtp' ) );
 			} else {
 				
@@ -151,7 +153,7 @@ if (! class_exists ( 'Postman' )) {
 						// output the warning message
 						$this->logger->warn ( 'Transport has a configuration problem: ' . $message );
 						// on pages that are Postman admin pages only, show this error message
-						if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
+						if (is_admin () && PostmanUtils::isCurrentPagePostmanAdmin ()) {
 							
 							$this->messageHandler->addError ( $message );
 						}
