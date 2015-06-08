@@ -256,9 +256,12 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
+= 1.6.16 - 2015-06-08 =
+* [[Ticket](https://wordpress.org/support/topic/error-after-latest-upgrade?replies=2#post-7044181)] Fixed a bug ""Fatal error: Cannot redeclare IsNullOrEmptyString()" I introduced in v1.6.15
+
 = 1.6.15 - 2015-06-08 =
 * Added Cc and Bcc addresses to Email Log
-* [[Ticket](https://wordpress.org/support/topic/email-errors?replies=16)][[Ticket](https://wordpress.org/support/topic/postman-smtp-on-contact-form-7?replies=2#post-7043223)]Force a Logout of Google before launching the Developers Console so it's obvious to the user which account is being used
+* [[Ticket](https://wordpress.org/support/topic/email-errors?replies=16)][[Ticket](https://wordpress.org/support/topic/postman-smtp-on-contact-form-7?replies=2#post-7043223)] Force a Logout of Google before launching the Developers Console so it's obvious to the user which account is being used
 * Now using Google Developers Console Gmail Wizard URL in place of Google Developers Console URL to simplify Client ID creation
 * [[Ticket](https://wordpress.org/support/topic/fixed-my-problem-but-broke-bbpress-notifications?replies=7#post-7038255)] Removing the BCC header in the case of the Gmail API was incorrect and causing lost recipients. Fixed.
 * Fixed a compatibility issue (PHP Fatal Error) with the Postman Gmail API Extension

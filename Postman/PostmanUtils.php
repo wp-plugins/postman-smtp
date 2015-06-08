@@ -243,15 +243,13 @@ if (! class_exists ( 'PostmanUtils' )) {
 		
 		/**
 		 * From http://stackoverflow.com/a/381275/4368109
-		 * 
-		 * @param unknown $text
+		 *
+		 * @param unknown $text        	
 		 * @return boolean
 		 */
 		public static function isEmpty($text) {
 			// Function for basic field validation (present and neither empty nor only white space
-			function IsNullOrEmptyString($question) {
-				return (! isset ( $text ) || trim ( $text ) === '');
-			}
+			return (! isset ( $text ) || trim ( $text ) === '');
 		}
 	}
 	PostmanUtils::staticInit ();
