@@ -257,7 +257,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 == Changelog ==
 
 = 1.6.16 - 2015-06-08 =
-* [[Ticket](https://wordpress.org/support/topic/error-after-latest-upgrade?replies=2#post-7044181)] Fixed a bug ""Fatal error: Cannot redeclare IsNullOrEmptyString()" I introduced in v1.6.15
+* [[Ticket](https://wordpress.org/support/topic/error-after-latest-upgrade?replies=2#post-7044181)] Fixed a bug "Fatal error: Cannot redeclare IsNullOrEmptyString()" I introduced in v1.6.15
 
 = 1.6.15 - 2015-06-08 =
 * Added Cc and Bcc addresses to Email Log
