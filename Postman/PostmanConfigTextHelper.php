@@ -128,7 +128,7 @@ if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
 			return _x ( 'Google Developers Console Gmail Wizard', 'Name of the email service portal', 'postman-smtp' );
 		}
 		public function getApplicationPortalUrl() {
-			return 'https://console.developers.google.com/start/api?id=gmail';
+			return 'https://www.google.com/accounts/Logout?continue=https://console.developers.google.com/start/api?id=gmail';
 		}
 		public function getOAuthPort() {
 			return 465;
