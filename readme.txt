@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.14
+Stable tag: 1.6.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -257,10 +257,12 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 
 == Changelog ==
 
-= 1.6.15 =
+= 1.6.15 - 2015-06-08 =
+* Added Cc and Bcc addresses to Email Log
+* [[Ticket](https://wordpress.org/support/topic/email-errors?replies=16)][[Ticket](https://wordpress.org/support/topic/postman-smtp-on-contact-form-7?replies=2#post-7043223)]Force a Logout of Google before launching the Developers Console so it's obvious to the user which account is being used
+* Now using Google Developers Console Gmail Wizard URL in place of Google Developers Console URL to simplify Client ID creation
 * [[Ticket](https://wordpress.org/support/topic/fixed-my-problem-but-broke-bbpress-notifications?replies=7#post-7038255)] Removing the BCC header in the case of the Gmail API was incorrect and causing lost recipients. Fixed.
-* [TBD] Add dismiss option for "unconfigured message" .. for multisites
-* [TBD] Add resend option to Email Log for failed messages
+* Fixed a compatibility issue (PHP Fatal Error) with the Postman Gmail API Extension
 
 = 1.6.14 - 2015-06-05 =
 * [[Ticket](https://wordpress.org/support/topic/large-warnings-on-site?replies=1#post-7036030)] Fixed a bug (PHP Warning) I introduced in v1.6.13
@@ -269,7 +271,7 @@ You may be on a Virtual Private Server that is [playing havoc with your communic
 * 7,000 installations!
 * Translated into Dutch, thank-you Louise
 * [[Ticket](https://wordpress.org/support/topic/bad-requestinvalid_grant?replies=13#post-6991435)] Add process-locking to make sure the OAuth2 token is refreshed synchronously
-* Use the Zend_Mail setReturnPath option to specify the Mail-From and Sender, allowing any address as the From header
+* Use the Zend_Mail setReturnPath option to communicate the Mail-From and Sender as the SMTP account, allowing arbitrary addresses in the From header
 * [[Ticket](https://wordpress.org/support/topic/smtp-authentication-security?replies=1#post-7025445)] Added Emoji lock icons to Dashboard and Main Setting screens to indicate security
 * [[Ticket](https://wordpress.org/support/topic/problem-sending-mail-with-other-users?replies=19)] Emails from the [Email Users](https://wordpress.org/plugins/email-users/) plugin were causing undeliverable errors - fixed by removing the SMTP Return-Path header that *Email Users* injects
 
