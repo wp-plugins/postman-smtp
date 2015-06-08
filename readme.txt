@@ -130,10 +130,9 @@ Instead, consider setting the  **reply-to header** of the e-mail. This allows th
 To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several websites, you will need a different Client ID for each one.
 
 = How do I get a Google Client ID? (For Gmail users only!) =
-1. Go to [Google Developer's Console](https://console.developers.google.com/) and choose 'Create Project', or use an existing project if you have one.
-1. If you have previously created a project, select it from the Projects page and you will arrive at the Project Dashboard. If you have just created a project, you are brought to the Project Dashboard automatically.
-1. Select 'API's' from under 'APIs & auth'. Find 'Gmail API'. Select 'Enable API'.
-1. Select 'Consent Screen' from under 'APIs & auth'. Into 'email address' choose the correct Gmail address and in 'product name' put 'Postman SMTP'. Choose 'Save'.
+1. Go to [Google Developer's Console](https://www.google.com/accounts/Logout?continue=https://console.developers.google.com/start/api?id=gmail) and login with the same email address that you are configuring Postman with.
+1. Choose 'Create a New Project'. This project will be for Postman SMTP only.
+1. Select 'Consent Screen' from under 'APIs & auth'. Into 'Email address' choose the correct Gmail address and in 'Product name' put 'Postman SMTP'. Choose 'Save'.
 1. Select 'Credentials' from under 'APIs & auth'. Choose 'Create a new Client ID'.
 1. For the 'Application Type' use 'Web application'.
 1. In 'Authorized Javascript origins' enter the 'Javascript Origins' given by Postman (either from the wizard[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_34_22_PM.png), or from the manual configuration page[[screenshot]](http://plugins.svn.wordpress.org/postman-smtp/assets/examples/Screen_Shot_2015-03-06_at_2_44_48_PM.png)).
