@@ -115,15 +115,6 @@ There are many reasons why OAuth 2.0 is better than any password-based mechanism
 
 > **[NEVER give out your Gmail, Microsoft or Yahoo password](http://blog.varonis.com/giving-away-your-passwords/)** to a 3rd-party or 3rd-party program that you don't fully trust.
 
-= How can I get my email to show up with a different From: address? =
-Google supports custom domains with the paid services Google Apps for [Work](https://www.google.com/work/apps/business/products/gmail/)/[Government](https://www.google.com/work/apps/government/products.html#gmail) and the free services Google Apps for [Education](https://www.google.com/work/apps/education/products.html#gmail)/[Non-Profits](https://www.google.com/nonprofits/products/)/[Free Edition](https://support.google.com/a/answer/2855120?hl=en).
-
-Similarliy Hotmail supports custom domains through an [Office 365 subscription](https://products.office.com/en-us/business/compare-office-365-for-business-plans?legRedir=true&CorrelationId=7245e847-0e33-4edd-9b38-f89f92ebb39e) and Yahoo through their [Yahoo Business Email](https://smallbusiness.yahoo.com/email) plan.
-
-Otherwise, changing the sender address is not possible in OAuth 2.0 mode, and not recommended in Password (Plain, Login or CRAM-MD5) mode. At best, your email provider will re-write the correct email address or give you a connection error. At worst, your IP or entire domain will end up on a Spam blacklist.
-
-Instead, consider setting the  **reply-to header** of the e-mail. This allows the email reply to be automatically addressed to a different email address. Contact Form 7 allows the reply-to header to be set.
-
 = What is a Client ID? =
 To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several websites, you will need a different Client ID for each one.
 
