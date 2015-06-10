@@ -40,7 +40,7 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 = Requirements =
 * WordPress 3.9 and PHP 5.2 with SPL and iconv
 * Connectivity to, and authentication credentials with, any email service provider
-* 3.7MB per process for administration; 2.5MB per process for visitors
+* 3.7MB per process for admin users; 2.5MB per process for visitors
 * ¹ OAuth 2.0 features require a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
 * ² Custom email domains require an SPF and DKIM record for Blackhole-free/Spam-free delivery
 
@@ -72,8 +72,6 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 1. Send yourself a test email. 
 
 = To manually configure OAuth 2.0 Authentication (Advanced users only) =
-
-https://vimeo.com/128589255
 
 1. Choose configure manually
 1. If the 'Transport' menu is available, choose 'SMTP'
@@ -130,6 +128,9 @@ Instead, consider setting the  **reply-to header** of the e-mail. This allows th
 To use OAuth, your website needs it's own Client ID. The Client ID is used to control authentication and authorization and is tied to the specific URL of your website. If you manage several websites, you will need a different Client ID for each one.
 
 = How do I get a Google Client ID? (For Gmail users only!) =
+
+https://vimeo.com/128589255
+
 1. Go to [Google Developer's Console](https://www.google.com/accounts/Logout?continue=https://console.developers.google.com/start/api?id=gmail) and login with the same email address that you are configuring Postman with.
 1. Choose 'Create a New Project'. This project will be for Postman SMTP only.
 1. Select 'Consent Screen' from under 'APIs & auth'. Into 'Email address' choose the correct Gmail address and in 'Product name' put 'Postman SMTP'. Choose 'Save'.
@@ -162,11 +163,6 @@ To use OAuth, your website needs it's own Client ID. The Client ID is used to co
 * If you have a Microsoft Live account, from the [Microsoft account Developer Center](https://account.live.com/developers/applications/index), select the Application and choose Delete Application.
 * If you have a Yahoo Account, from the [Yahoo Developer Network My Apps](https://developer.yahoo.com/apps/), select the Application and choose Delete App. 
 
-= What URIs do I enter to whitelist the plugin? =
-If your WordPress site is configured with WP_HTTP_BLOCK_EXTERNAL to prevent outbound connections, you may exempt the APIs with these definitions:
-
-> define('WP_ACCESSIBLE_HOSTS', 'www.googleapis.com, login.live.com, api.login.yahoo.com');
-
 = Who do we thank for translations? =
 * French - [Etienne Provost](https://www.facebook.com/eprovost3)
 * Italian - Andrea Greco
@@ -175,42 +171,34 @@ If your WordPress site is configured with WP_HTTP_BLOCK_EXTERNAL to prevent outb
 
 
 
-== Troubleshooting ==
-
-= The Wizard Can't find any Open Ports =
-
-Run a connectivity test to find out what's wrong. You may find that the HTTPS port is open.
-
-= "Request OAuth permission" is not working =
+== Grant OAuth permission error messages ==
 
 Please note that the Client ID and Client Secret fields are NOT for your username and password. They are for OAuth Credentials only.
 
-If Google tells you "Error: invalid_client ... no support email" then you've [forgotten to choose an email address in the consent screen](https://wordpress.org/support/topic/status-postman-is-not-sending-mail-1?replies=7).
+= Error authenticating with this Client ID. [Error executing wp_remote_post: The user has blocked requests via HTTP.] =
 
-= I have a custom domain and sometimes emails disappear or end up as spam =
+Your WordPress site is configured with WP_HTTP_BLOCK_EXTERNAL to prevent outbound connections. Add a whitelist rule to wp-config.php:
+> define('WP_ACCESSIBLE_HOSTS', 'www.googleapis.com, login.live.com, api.login.yahoo.com');
 
-To avoid being flagged as spam, you need to prove your email isn't forged. On a custom domain, its up to YOU to set that up:
+= Error authenticating with this Client ID. [Error executing wp_remote_post: Failed to connect to xxxx] =
 
-* add an [SPF record](http://www.openspf.org/Introduction) to your DNS zone file. The SPF is specific to your email provider, for example [Google](https://support.google.com/a/answer/33786)
-* add a DKIM record to your DNS zone file and upload your Domain Key (a digital signature) to, for example [Google]((https://support.google.com/a/answer/174124?hl=en))
+There is a firewall on port 443 between you and the OAuth2 server. Open up the port for outbound connections.
 
-= Sometimes sending mail fails =
+= Error: redirect_uri_mismatch =
 
-Your host may have poor connectivity to your email server. Open up the advanced configuration and double the TCP Read Timeout setting.
+* You did not enter the Redirect URI correctly, watch the [instructional video](https://vimeo.com/128589255)
+* You used an IP address instead of a domain name (not allowed)
 
+= Error: invalid_client ... no support email =
+
+You've [forgotten to choose an email address in the consent screen](https://wordpress.org/support/topic/status-postman-is-not-sending-mail-1?replies=7).
 
 
 == SMTP Error Messages ==
 
-= Communication Error [334] =
+= Communication Error [334] – make sure the Sender Email belongs to the account which provided the Gmail OAuth 2.0 consent. =
 
-This is the only OAuth2-specific error you will see. By design it tells you *nothing* about what's wrong. There are a number of things to check:
-
-* Make sure that your Sender Email Address is the same account that you use to create the Google Client ID or Microsoft Application.
-* Maybe you sent an e-mail with the wrong Sender Email Address one too many times. Delete the Google Client ID or Microsoft Application, and start over.
-* Maybe you sent an e-mail with a new user before logging in to the web. Login to the webmail, checks for errors, and try again.
-* Maybe you refreshed the Client Secret but Postman still has the old one. Make sure your Client ID and Client Secret in Postman match the values shown in the Developer Console of your provider.
-* If all else fails, delete your Google Client ID or Microsoft Application and start over
+This is almost always caused by being logged in to Google/Microsoft/Yahoo with a different user than the one Postman is configured to send mail with. Logout and try again with the correct user.
 
 = Could not open socket =
 
@@ -234,6 +222,16 @@ You configured TLS security when you should have selected no security.
 = XOAUTH2 authentication mechanism not supported =
 
 You may be on a Virtual Private Server that is [playing havoc with your communications](https://wordpress.org/support/topic/oh-bother-xoauth2-authentication-mechanism-not-supported?replies=9). Jump ship.
+
+
+== Mail ends up in the Spam folder ==
+
+To avoid being flagged as spam, you need to prove your email isn't forged. On a custom domain, its up to YOU to set that up:
+
+* Ensure you are using the correct SMTP server with authentication - the correct SMTP server is the one defined by your email service's SPF record
+* If you use a custom domain name for email, add an [SPF record](http://www.openspf.org/Introduction) to your DNS zone file. The SPF is specific to your email provider, for example [Google](https://support.google.com/a/answer/33786)
+* If you use a custom domain name for email, add a DKIM record to your DNS zone file and upload your Domain Key (a digital signature) to, for example [Google]((https://support.google.com/a/answer/174124?hl=en))
+
 
 
 
