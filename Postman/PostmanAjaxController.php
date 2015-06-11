@@ -470,12 +470,7 @@ Content-Transfer-Encoding: 8bit
 			} else {
 				$this->logger->error ( 'Test Email NOT delivered to server - ' . $result ['exception']->getCode () );
 				$this->logger->error ( "SMTP session transcript follows:\n" . $result ['transcript'] );
-				if ($result ['exception']->getCode () == 334) {
-					$this->logger->error ( 'Communication Error [334]!' );
-					$statusMessage = sprintf ( __ ( 'Communication Error [334] - make sure the Sender Email belongs to the account which provided the %s OAuth 2.0 consent.', 'postman-smtp' ), $this->oauthScribe->getServiceName () );
-				} else {
-					$statusMessage = $result ['exception']->getMessage ();
-				}
+				$statusMessage = $result ['exception']->getMessage ();
 			}
 			$this->logger->debug ( 'statusmessage: ' . $statusMessage );
 			$response = array (
