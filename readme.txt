@@ -189,7 +189,8 @@ You've [forgotten to choose an email address in the consent screen](https://word
 
 = Communication Error [334] – make sure the Sender Email belongs to the account which provided the Gmail OAuth 2.0 consent. =
 
-This is almost always caused by being logged in to Google/Microsoft/Yahoo with a different user than the one Postman is configured to send mail with. Logout and try again with the correct user.
+* This is almost always caused by being logged in to Google/Microsoft/Yahoo with a different user than the one Postman is configured to send mail with. Logout and try again with the correct user
+* Login to [Webmail](http://www.gmail.com) and see if there is an "Unusual Activity" warning waiting for your attention
 
 = Could not open socket =
 
@@ -247,6 +248,7 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 = 1.6.18 - 2015-06-11 =
 * [[Ticket](https://wordpress.org/support/topic/password-corruption-issue?replies=1)] Passwords are being encoded incorrectly in rare cases. Fixed.
+* [[Ticket](https://wordpress.org/support/topic/subscriber-registration?replies=6)] Postman is determining the current's user admin capability incorrectly. Fixed.
 
 = 1.6.17 - 2015-06-08 =
 * You know you're having a really bad day when you have to have do three releases. Fix for "Fatal error: Call to a member function addError() on a non-object". This happens when wp_mail is blocked by another plugin and a non-admin user accesses the site.
