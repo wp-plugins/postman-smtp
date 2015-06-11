@@ -21,25 +21,22 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 			$this->authorizationToken = $authorizationToken;
 			$this->wpMailBinder = $binder;
 			
-			if (is_admin ()) {
-				
-				add_action ( 'wp_dashboard_setup', array (
+			add_action ( 'wp_dashboard_setup', array (
+					$this,
+					'addDashboardWidget' 
+			) );
+			
+			add_action ( 'wp_network_dashboard_setup', array (
+					$this,
+					'addNetworkDashboardWidget' 
+			) );
+			
+			// dashboard glance mod
+			if ($this->options->isMailLoggingEnabled ()) {
+				add_filter ( 'dashboard_glance_items', array (
 						$this,
-						'addDashboardWidget' 
-				) );
-				
-				add_action ( 'wp_network_dashboard_setup', array (
-						$this,
-						'addNetworkDashboardWidget' 
-				) );
-				
-				// dashboard glance mod
-				if ($this->options->isMailLoggingEnabled ()) {
-					add_filter ( 'dashboard_glance_items', array (
-							$this,
-							'customizeAtAGlanceDashboardWidget' 
-					), 10, 1 );
-				}
+						'customizeAtAGlanceDashboardWidget' 
+				), 10, 1 );
 			}
 		}
 		
@@ -83,7 +80,7 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 					$deliveryDetails = $currentTransport->getDeliveryDetails ( $this->options );
 					printf ( '<p>%s</p>', $deliveryDetails );
 				} else {
-					printf ( '<p><span>%s %s</span></p>', __ ( 'Postman is <em>not</em> handling email delivery.', 'postman-smtp' ), sprintf ( __ ( '<a href="%s">Configure</a> the plugin.', 'postman-smtp' ), PostmanUtils::getSettingsPageUrl() ) );
+					printf ( '<p><span>%s %s</span></p>', __ ( 'Postman is <em>not</em> handling email delivery.', 'postman-smtp' ), sprintf ( __ ( '<a href="%s">Configure</a> the plugin.', 'postman-smtp' ), PostmanUtils::getSettingsPageUrl () ) );
 				}
 			}
 			printf ( '<p>%s | %s</p>', $goToEmailLog, $goToSettings );
