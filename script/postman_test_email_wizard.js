@@ -135,7 +135,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 
 	}
 	function handleResponse(response) {
-		if (jQuery('#postman_test_message_transcript').length) {
+		if (jQuery('#postman_test_message_transcript').val().length != 0) {
 			// only disable the next button if there is a next step
 			jQuery('li').removeClass('disabled');
 		} else {
