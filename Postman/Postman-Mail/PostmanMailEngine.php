@@ -226,8 +226,17 @@ if (! class_exists ( "PostmanMailEngine" )) {
 				} else {
 					// TODO then use the Raw Message as the Transcript
 				}
-				// re-throw the exception after handling
-				throw $e;
+				
+				// get the current exception message
+				$message = $e->getMessage ();
+				if ($e->getCode () == 334) {
+					// replace the unusable Google message with a better one in the case of code 334
+					$message = sprintf ( __ ( 'Communication Error [334] - make sure the Sender Email belongs to the account which provided the OAuth 2.0 consent.', 'postman-smtp' ) );
+				}
+				// create a new exception
+				$newException = new Exception ( $message, $e->getCode (), $e->getPrevious () );
+				// throw the new exception after handling
+				throw $newException;
 			}
 		}
 		
