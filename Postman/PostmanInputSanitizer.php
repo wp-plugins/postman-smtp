@@ -67,15 +67,13 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 				delete_option ( PostmanOAuthToken::OPTIONS_NAME );
 			}
 			
-			if ($new_input [PostmanOptions::TEMPORARY_DIRECTORY] != $this->options->getTempDirectory ()) {
-				$this->logger->debug ( "Recognized new Temporary Directory" );
-				// can we create a tmp file? - this code is duplicated in ActivationHandler
-				PostmanUtils::deleteLockFile ($new_input [PostmanOptions::TEMPORARY_DIRECTORY]);
-				$lockSuccess = PostmanUtils::createLockFile ($new_input [PostmanOptions::TEMPORARY_DIRECTORY]);
-				$lockSuccess &= PostmanUtils::deleteLockFile ($new_input [PostmanOptions::TEMPORARY_DIRECTORY]);
-				$this->logger->debug ( 'FileLocking=' . $lockSuccess );
-				PostmanState::getInstance ()->setFileLockingEnabled ( $lockSuccess );
-			}
+			// can we create a tmp file? - this code is duplicated in ActivationHandler
+			PostmanUtils::deleteLockFile ( $new_input [PostmanOptions::TEMPORARY_DIRECTORY] );
+			$lockSuccess = PostmanUtils::createLockFile ( $new_input [PostmanOptions::TEMPORARY_DIRECTORY] );
+			// &= does not work as expected in my PHP
+			$lockSuccess = $lockSuccess && PostmanUtils::deleteLockFile ( $new_input [PostmanOptions::TEMPORARY_DIRECTORY] );
+			$this->logger->debug ( 'FileLocking=' . $lockSuccess );
+			PostmanState::getInstance ()->setFileLockingEnabled ( $lockSuccess );
 			
 			if ($success) {
 				PostmanSession::getInstance ()->setAction ( self::VALIDATION_SUCCESS );
@@ -91,28 +89,39 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 				$new_input [$key] = trim ( $input [$key] );
 			}
 		}
+		
+		/**
+		 * Sanitize a Basic Auth password, and base64-encode it
+		 * 
+		 * @param unknown $desc
+		 * @param unknown $key
+		 * @param unknown $input
+		 * @param unknown $new_input
+		 */
 		private function sanitizePassword($desc, $key, $input, &$new_input) {
-			if (isset ( $input [$key] )) {
+			// WordPress calling Sanitize twice is a known issue
+			// https://core.trac.wordpress.org/ticket/21989
+			$action = PostmanSession::getInstance ()->getAction ();
+			// if $action is not empty, then sanitize has already run
+			if (! empty ( $action )) {
+				// use the already encoded password in the $input
+				$new_input [$key] = $input [$key];
+				// log it
+				$this->logger->debug ( 'Warning, second sanitizePassword attempt detected' );
+			} else if (isset ( $input [$key] )) {
 				if (strlen ( $input [$key] ) > 0 && preg_match ( '/^\**$/', $input [$key] )) {
 					// if the password is all stars, then keep the existing password
 					$new_input [$key] = $this->options->getPassword ();
 				} else {
+					// otherwise the password is new, so trim it
 					$new_input [$key] = trim ( $input [$key] );
 				}
+				// log it
 				$this->logSanitize ( $desc, $new_input [$key] );
+				// base-64 scramble password
+				$new_input [$key] = base64_encode ( $new_input [$key] );
 			}
-			// WordPress calling Sanitize twice is a known issue
-			// https://core.trac.wordpress.org/ticket/21989
-			$action = PostmanSession::getInstance ()->getAction ();
-			if ($action != self::VALIDATION_SUCCESS && $action != self::VALIDATION_FAILED) {
-				if (! empty ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] )) {
-					// base-64 scramble password
-					$new_input [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode ( $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] );
-					$this->logger->debug ( 'Encoding Password as ' . $new_input [PostmanOptions::BASIC_AUTH_PASSWORD] );
-				}
-			} else {
-				$this->logger->debug ( 'Wordpress called sanitize() twice, skipping the second password encode' );
-			}
+			$this->logger->debug ( 'Encoding Password as ' . $new_input [$key] );
 		}
 		private function sanitizeInt($desc, $key, $input, &$new_input) {
 			if (isset ( $input [$key] )) {

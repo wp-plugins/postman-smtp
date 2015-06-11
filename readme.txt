@@ -245,6 +245,9 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 == Changelog ==
 
+= 1.6.18 - 2015-06-11 =
+* [[Ticket](https://wordpress.org/support/topic/password-corruption-issue?replies=1)] Passwords are being encoded incorrectly in rare cases. Fixed.
+
 = 1.6.17 - 2015-06-08 =
 * You know you're having a really bad day when you have to have do three releases. Fix for "Fatal error: Call to a member function addError() on a non-object". This happens when wp_mail is blocked by another plugin and a non-admin user accesses the site.
 

@@ -87,10 +87,16 @@ if (! class_exists ( "PostmanAdminController" )) {
 					$this->logger->debug ( sprintf ( 'session action: %s', $session->getAction () ) );
 				}
 				if ($session->getAction () == PostmanInputSanitizer::VALIDATION_SUCCESS) {
+					// unset the action
 					$session->unsetAction ();
+					// do a redirect on the init hook
 					$this->registerInitFunction ( 'handleSuccessfulSave' );
+					// add a saved message to be shown after the redirect
 					$this->messageHandler->addMessage ( _x ( 'Settings saved.', 'The plugin successfully saved new settings.', 'postman-smtp' ) );
 					return;
+				} else {
+					// unset the action in the failed case as well
+					$session->unsetAction ();
 				}
 				
 				// test to see if an OAuth authentication is in progress

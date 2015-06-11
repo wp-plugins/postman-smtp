@@ -110,7 +110,8 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			// can we create a tmp file? - this code is duplicated in InputSanitizer
 			PostmanUtils::deleteLockFile ();
 			$lockSuccess = PostmanUtils::createLockFile ();
-			$lockSuccess &= PostmanUtils::deleteLockFile ();
+			// &= does not work as expected in my PHP
+			$lockSuccess = $lockSuccess && PostmanUtils::deleteLockFile ();
 			$postmanState ['locking_enabled'] = $lockSuccess;
 				
 			// always update the version number
