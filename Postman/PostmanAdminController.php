@@ -68,67 +68,65 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Start up
 		 */
 		public function __construct($rootPluginFilenameAndPath, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanMessageHandler $messageHandler, PostmanWpMailBinder $binder) {
-			if (is_admin ()) {
-				assert ( ! empty ( $rootPluginFilenameAndPath ) );
-				assert ( ! empty ( $options ) );
-				assert ( ! empty ( $authorizationToken ) );
-				assert ( ! empty ( $messageHandler ) );
-				assert ( ! empty ( $binder ) );
-				$this->logger = new PostmanLogger ( get_class ( $this ) );
-				$this->options = $options;
-				$this->authorizationToken = $authorizationToken;
-				$this->messageHandler = $messageHandler;
-				$this->rootPluginFilenameAndPath = $rootPluginFilenameAndPath;
-				$this->wpMailBinder = $binder;
-				
-				// check if the user saved data, and if validation was successful
-				$session = PostmanSession::getInstance ();
-				if ($session->isSetAction ()) {
-					$this->logger->debug ( sprintf ( 'session action: %s', $session->getAction () ) );
-				}
-				if ($session->getAction () == PostmanInputSanitizer::VALIDATION_SUCCESS) {
-					// unset the action
-					$session->unsetAction ();
-					// do a redirect on the init hook
-					$this->registerInitFunction ( 'handleSuccessfulSave' );
-					// add a saved message to be shown after the redirect
-					$this->messageHandler->addMessage ( _x ( 'Settings saved.', 'The plugin successfully saved new settings.', 'postman-smtp' ) );
-					return;
-				} else {
-					// unset the action in the failed case as well
-					$session->unsetAction ();
-				}
-				
-				// test to see if an OAuth authentication is in progress
-				if ($session->isSetOauthInProgress ()) {
-					// there is only a three minute window that Postman will expect a Grant Code, once Grant is clicked by the user
-					$this->logger->debug ( 'Looking for grant code' );
-					if (isset ( $_GET ['code'] )) {
-						$this->logger->debug ( 'Found authorization grant code' );
-						// queue the function that processes the incoming grant code
-						$this->registerInitFunction ( 'handleAuthorizationGrant' );
-						return;
-					}
-				}
-				
-				// continue to initialize the AdminController
-				add_action ( 'init', array (
-						$this,
-						'init' 
-				) );
-				
-				// Adds "Settings" link to the plugin action page
-				add_filter ( 'plugin_action_links_' . plugin_basename ( $this->rootPluginFilenameAndPath ), array (
-						$this,
-						'postmanModifyLinksOnPluginsListPage' 
-				) );
-				
-				// initialize the scripts, stylesheets and form fields
-				add_action ( 'admin_init', array (
-						$this,
-						'initializeAdminPage' 
-				) );
+			assert ( ! empty ( $rootPluginFilenameAndPath ) );
+			assert ( ! empty ( $options ) );
+			assert ( ! empty ( $authorizationToken ) );
+			assert ( ! empty ( $messageHandler ) );
+			assert ( ! empty ( $binder ) );
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			$this->options = $options;
+			$this->authorizationToken = $authorizationToken;
+			$this->messageHandler = $messageHandler;
+			$this->rootPluginFilenameAndPath = $rootPluginFilenameAndPath;
+			$this->wpMailBinder = $binder;
+			
+			// check if the user saved data, and if validation was successful
+			$session = PostmanSession::getInstance ();
+			if ($session->isSetAction ()) {
+				$this->logger->debug ( sprintf ( 'session action: %s', $session->getAction () ) );
 			}
+			if ($session->getAction () == PostmanInputSanitizer::VALIDATION_SUCCESS) {
+				// unset the action
+				$session->unsetAction ();
+				// do a redirect on the init hook
+				$this->registerInitFunction ( 'handleSuccessfulSave' );
+				// add a saved message to be shown after the redirect
+				$this->messageHandler->addMessage ( _x ( 'Settings saved.', 'The plugin successfully saved new settings.', 'postman-smtp' ) );
+				return;
+			} else {
+				// unset the action in the failed case as well
+				$session->unsetAction ();
+			}
+			
+			// test to see if an OAuth authentication is in progress
+			if ($session->isSetOauthInProgress ()) {
+				// there is only a three minute window that Postman will expect a Grant Code, once Grant is clicked by the user
+				$this->logger->debug ( 'Looking for grant code' );
+				if (isset ( $_GET ['code'] )) {
+					$this->logger->debug ( 'Found authorization grant code' );
+					// queue the function that processes the incoming grant code
+					$this->registerInitFunction ( 'handleAuthorizationGrant' );
+					return;
+				}
+			}
+			
+			// continue to initialize the AdminController
+			add_action ( 'init', array (
+					$this,
+					'init' 
+			) );
+			
+			// Adds "Settings" link to the plugin action page
+			add_filter ( 'plugin_action_links_' . plugin_basename ( $this->rootPluginFilenameAndPath ), array (
+					$this,
+					'postmanModifyLinksOnPluginsListPage' 
+			) );
+			
+			// initialize the scripts, stylesheets and form fields
+			add_action ( 'admin_init', array (
+					$this,
+					'initializeAdminPage' 
+			) );
 		}
 		public function init() {
 			//
