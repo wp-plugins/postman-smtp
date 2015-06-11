@@ -251,6 +251,32 @@ if (! class_exists ( 'PostmanUtils' )) {
 			// Function for basic field validation (present and neither empty nor only white space
 			return (! isset ( $text ) || trim ( $text ) === '');
 		}
+		
+		/**
+		 * Warning, this will fail if called before hook 'plugins_loaded'
+		 */
+		public static function isAdmin() {
+			/**
+			 * is_admin() will return false when trying to access wp-login.php.
+			 * is_admin() will return true when trying to make an ajax request.
+			 * is_admin() will return true for calls to load-scripts.php and load-styles.php.
+			 * is_admin() is not intended to be used for security checks. It will return true
+			 * whenever the current URL is for a page on the admin side of WordPress. It does
+			 * not check if the user is logged in, nor if the user even has access to the page
+			 * being requested. It is a convenience function for plugins and themes to use for
+			 * various purposes, but it is not suitable for validating secured requests.
+			 *
+			 * Good to know.
+			 */
+			return current_user_can ( 'administrator' );
+		}
+
+		/**
+		 * Warning, this will fail if called before hook 'plugins_loaded'
+		 */
+		public static function isAdminOnAdminScreen() {
+			return PostmanUtils::isAdmin() && is_admin ();
+		}
 	}
 	PostmanUtils::staticInit ();
 }
