@@ -1,5 +1,5 @@
 <?php
-if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
+if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 	/**
 	 * This class integrates Postman with the Gmail API
 	 * http://ctrlq.org/code/19860-gmail-api-send-emails
@@ -7,7 +7,7 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 	 * @author jasonhendriks
 	 *        
 	 */
-	class PostmanGoogleMailApiTransport implements PostmanTransport {
+	class PostmanGmailApiModuleTransport implements PostmanTransport {
 		const SLUG = 'gmail_api';
 		const PORT = 443;
 		const HOST = 'www.googleapis.com';
@@ -87,14 +87,21 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 		public function isTranscriptSupported() {
 			return false;
 		}
-		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
-			require_once 'PostmanGoogleMailApiAuthenticator.php';
-			return new PostmanGoogleMailApiAuthenticator ( $options, $authToken );
-		}
+		
+		/**
+		 * This is the only place where the Google library is loaded
+		 * 
+		 * @see PostmanTransport::createZendMailTransport()
+		 */
 		public function createZendMailTransport($hostname, $config) {
-			require_once 'PostmanGoogleMailApiZendMailTransport.php';
+			// This is where the ZendMail special transport is loaded
+			require_once 'PostmanGmailApiModuleZendMailTransport.php';
+			
+			// This is the only place where the Google library is loaded
 			require_once 'google-api-php-client-1.1.2/src/Google/Client.php';
 			require_once 'google-api-php-client-1.1.2/src/Google/Service/Gmail.php';
+			
+			// build the Gmail Client
 			$options = PostmanOptions::getInstance ();
 			$authToken = PostmanOAuthToken::getInstance ();
 			$client = new Postman_Google_Client ();
@@ -113,8 +120,8 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 			// We only need permissions to compose and send emails
 			$client->addScope ( "https://www.googleapis.com/auth/gmail.compose" );
 			$service = new Postman_Google_Service_Gmail ( $client );
-			$config [PostmanGoogleMailApiZendMailTransport::SERVICE_OPTION] = $service;
-			return new PostmanGoogleMailApiZendMailTransport ( $hostname, $config );
+			$config [PostmanGmailApiModuleZendMailTransport::SERVICE_OPTION] = $service;
+			return new PostmanGmailApiModuleZendMailTransport ( $hostname, $config );
 		}
 		public function getDeliveryDetails(PostmanOptions $options) {
 			$deliveryDetails ['auth_desc'] = _x ( 'OAuth 2.0', 'Authentication Type is OAuth 2.0', 'postman-smtp' );
@@ -186,7 +193,8 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 		
 		/**
 		 *
-		 * @deprecated (non-PHPdoc)
+		 * @deprecated
+		 *
 		 * @see PostmanTransport::getHostsToTest()
 		 */
 		public function getHostsToTest($hostname) {
@@ -245,6 +253,14 @@ if (! class_exists ( 'PostmanGoogleMailApiTransport' )) {
 				}
 			}
 			return $recommendation;
+		}
+		/**
+		 *
+		 * @deprecated
+		 *
+		 * @see PostmanTransport::createPostmanMailAuthenticator()
+		 */
+		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
 		}
 	}
 }

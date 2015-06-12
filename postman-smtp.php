@@ -45,5 +45,6 @@ function postman_setupPostman() {
 /**
  * Start Postman
  */
+error_reporting(-1);
 postman_start ( memory_get_usage () );
 

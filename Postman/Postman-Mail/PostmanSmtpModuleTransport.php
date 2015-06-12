@@ -1,6 +1,6 @@
 <?php
-if (! class_exists ( 'PostmanSmtpTransport' )) {
-	class PostmanSmtpTransport implements PostmanTransport {
+if (! class_exists ( 'PostmanSmtpModuleTransport' )) {
+	class PostmanSmtpModuleTransport implements PostmanTransport {
 		private $logger;
 		public function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
@@ -12,26 +12,30 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function getName() {
 			return _x ( 'SMTP', 'Transport Name', 'postman-smtp' );
 		}
-		public function getHostname(PostmanOptions $options) {
+		public function getHostname() {
+			$options = PostmanOptions::getInstance ();
 			return $options->getHostname ();
 		}
-		public function getHostPort(PostmanOptions $options) {
+		public function getHostPort() {
+			$options = PostmanOptions::getInstance ();
 			return $options->getPort ();
 		}
-		public function getAuthenticationType(PostmanOptions $options) {
-			return $options->getAuthenticationType ();
+		public function getAuthenticationType() {
+			return PostmanOptions::getInstance ()->getAuthenticationType ();
 		}
-		public function getSecurityType(PostmanOptions $options) {
-			return $options->getEncryptionType ();
+		public function getSecurityType() {
+			return PostmanOptions::getInstance ()->getEncryptionType ();
 		}
-		public function getCredentialsId(PostmanOptions $options) {
+		public function getCredentialsId() {
+			$options = PostmanOptions::getInstance ();
 			if ($options->isAuthTypeOAuth2 ()) {
 				return $options->getClientId ();
 			} else {
 				return $options->getUsername ();
 			}
 		}
-		public function getCredentialsSecret(PostmanOptions $options) {
+		public function getCredentialsSecret() {
+			$options = PostmanOptions::getInstance ();
 			if ($options->isAuthTypeOAuth2 ()) {
 				return $options->getClientSecret ();
 			} else {
@@ -53,17 +57,11 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		public function isTranscriptSupported() {
 			return true;
 		}
-		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
-			if ($options->getAuthenticationType () == PostmanOptions::AUTHENTICATION_TYPE_OAUTH2) {
-				return new PostmanOAuth2MailAuthenticator ( $options, $authToken );
-			} else {
-				return new PostmanGeneralMailAuthenticator ( $options, $authToken );
-			}
-		}
 		public function createZendMailTransport($hostname, $config) {
 			return new Postman_Zend_Mail_Transport_Smtp ( $hostname, $config );
 		}
-		public function getDeliveryDetails(PostmanOptions $options) {
+		public function getDeliveryDetails() {
+			$options = PostmanOptions::getInstance ();
 			$deliveryDetails ['transport_name'] = $this->getTransportDescription ( $options->getEncryptionType () );
 			$deliveryDetails ['host'] = $options->getHostname () . ':' . $options->getPort ();
 			$deliveryDetails ['auth_desc'] = $this->getAuthenticationDescription ( $options->getAuthenticationType () );
@@ -183,7 +181,8 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 		}
 		/**
 		 *
-		 * @deprecated (non-PHPdoc)
+		 * @deprecated
+		 *
 		 * @see PostmanTransport::getHostsToTest()
 		 */
 		public function getHostsToTest($hostname) {
@@ -334,7 +333,7 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			}
 			
 			// fill-in the rest of the recommendation
-			$recommendation ['transport'] = PostmanSmtpTransport::SLUG;
+			$recommendation ['transport'] = PostmanSmtpModuleTransport::SLUG;
 			$recommendation ['priority'] = $score;
 			$recommendation ['port'] = $port;
 			$recommendation ['hostname'] = $hostname;
@@ -342,64 +341,13 @@ if (! class_exists ( 'PostmanSmtpTransport' )) {
 			
 			return $recommendation;
 		}
-	}
-}
-
-if (! class_exists ( 'PostmanDummyTransport' )) {
-	class PostmanDummyTransport implements PostmanTransport {
-		const UNCONFIGURED = 'unconfigured';
-		private $logger;
-		public function __construct() {
-			$this->logger = new PostmanLogger ( get_class ( $this ) );
-		}
-		const SLUG = 'smtp';
-		public function isServiceProviderGoogle($hostname) {
-			return PostmanUtils::endsWith ( $hostname, 'gmail.com' );
-		}
-		public function isServiceProviderMicrosoft($hostname) {
-			return PostmanUtils::endsWith ( $hostname, 'live.com' );
-		}
-		public function isServiceProviderYahoo($hostname) {
-			return PostmanUtils::endsWith ( $hostname, 'yahoo.com' );
-		}
-		public function isOAuthUsed($authType) {
-			return false;
-		}
-		public function isTranscriptSupported() {
-			return false;
-		}
-		public function getSlug() {
-		}
-		public function getName() {
-		}
-		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
-		}
-		public function createZendMailTransport($hostname, $config) {
-		}
-		public function getDeliveryDetails(PostmanOptions $options) {
-		}
-		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
-			return false;
-		}
-		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
-			return false;
-		}
 		/**
 		 *
-		 * @deprecated (non-PHPdoc)
-		 * @see PostmanTransport::getHostsToTest()
+		 * @deprecated
+		 *
+		 * @see PostmanTransport::createPostmanMailAuthenticator()
 		 */
-		public function getHostsToTest($hostname) {
-		}
-		public function getSocketsForSetupWizardToProbe($hostname, $isGmail) {
-		}
-		public function getConfigurationRecommendation($hostData) {
-		}
-		public function getConfigurationBid($hostData, $originalSmtpServer) {
-		}
-		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
-			/* translators: where %s is the name of the transport (e.g. smtp) */
-			return sprintf ( __ ( 'The selected transport \'%s\' is unavailable. The external plugin was probably deactivated.', 'postman-smtp' ), $options->getTransportType () );
+		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
 		}
 	}
 }

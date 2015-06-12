@@ -100,7 +100,15 @@ if (! class_exists ( "PostmanWpMail" )) {
 			
 			// get the transport and create the transportConfig and engine
 			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
-			$transportConfiguration = $transport->createPostmanMailAuthenticator ( $options, $authorizationToken );
+
+			// create the Zend Mail Transport Configuration Factory
+			if (PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $transport->getAuthenticationType ()) {
+				$transportConfiguration = new PostmanOAuth2ConfigurationFactory ();
+			} else {
+				$transportConfiguration = new PostmanBasicAuthConfigurationFactory ();
+			}
+			
+			// create the Mail Engine
 			$engine = new PostmanMailEngine ( $transport, $transportConfiguration );
 			
 			// is this a test run?
@@ -220,7 +228,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @param unknown $headers        	
 		 * @param unknown $attachments        	
 		 */
-		private function createMessage(PostmanOptions $options, $to, $subject, $body, $headers, $attachments, PostmanMailTransportConfiguration $transportation) {
+		private function createMessage(PostmanOptions $options, $to, $subject, $body, $headers, $attachments, PostmanZendMailTransportConfigurationFactory $transportation) {
 			$message = new PostmanMessage ();
 			$message->addHeaders ( $headers );
 			$message->addHeaders ( $options->getAdditionalHeaders () );

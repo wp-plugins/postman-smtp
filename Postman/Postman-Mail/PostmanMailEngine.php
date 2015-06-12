@@ -53,7 +53,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 		 * @param unknown $senderEmail        	
 		 * @param unknown $accessToken        	
 		 */
-		function __construct(PostmanTransport $transport, PostmanMailTransportConfiguration $authenticator) {
+		function __construct(PostmanTransport $transport, PostmanZendMailTransportConfigurationFactory $authenticator) {
 			assert ( isset ( $authenticator ) );
 			assert ( isset ( $transport ) );
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
@@ -200,7 +200,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$message->addAttachmentsToMail ( $mail );
 			
 			// get the transport configuration
-			$config = $this->authenticator->createConfig ();
+			$config = $this->authenticator->createConfig ($this->transport);
 			assert ( ! empty ( $config ) );
 			
 			// create the SMTP transport

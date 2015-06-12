@@ -47,6 +47,8 @@ if (! class_exists ( 'PostmanWpMailBinder' )) {
 		}
 		
 		/**
+		 * Important: bind() may be called multiple times
+		 * 
 		 * Replace wp_mail() after making sure:
 		 * 1) the plugin has not already bound to wp_mail and
 		 * 2) wp_mail is available for use
@@ -61,16 +63,19 @@ if (! class_exists ( 'PostmanWpMailBinder' )) {
 				if (function_exists ( 'wp_mail' )) {
 					// If the function exists, it's probably because another plugin has
 					// replaced the pluggable function first, and we set an error flag.
+					// this is an error message because it is a Bind error
 					$this->logger->error ( 'wp_mail is already bound, Postman can not use it' );
 					$this->bindError = true;
 				}
 				if (! PostmanTransportRegistry::getInstance ()->isPostmanReadyToSendEmail ( $binderOptions, $binderAuthorizationToken )) {
-					// this is too common for new installs to be reported as an error
-					$this->logger->warn ( 'Transport is not configured and ready' );
+					// this is a debug message because bound may be called again with a NEW transport that IS configured
+					// this is a debug message because it is not up to the Binder to report transport errors
+					$this->logger->debug ( 'Transport is not configured and ready' );
 					$ready = false;
 				}
 				if (! PostmanPreRequisitesCheck::isReady ()) {
-					$this->logger->error ( 'Prerequisite check failed' );
+					// this is a debug message because it is not up to the Binder to report transport errors
+					$this->logger->debug ( 'Prerequisite check failed' );
 					$ready = false;
 				}
 				if ($ready && ! $this->bindError) {

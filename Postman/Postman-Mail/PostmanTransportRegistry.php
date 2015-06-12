@@ -1,22 +1,27 @@
 <?php
-require_once 'PostmanMailAuthenticator.php';
+require_once 'PostmanZendMailTransportConfigurationFactory.php';
 
 if (! interface_exists ( 'PostmanTransport' )) {
 	interface PostmanTransport {
 		public function isServiceProviderGoogle($hostname);
 		public function isServiceProviderMicrosoft($hostname);
 		public function isServiceProviderYahoo($hostname);
-		public function isOAuthUsed($authType);
 		public function isTranscriptSupported();
 		public function getSlug();
 		public function getName();
-		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken);
 		public function createZendMailTransport($hostname, $config);
 		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token);
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token);
-		public function getConfigurationRecommendation($hostData); // deprecated
-		public function getHostsToTest($hostname); // deprecated
+		
+		// @deprecated
+		public function isOAuthUsed($authType);
+		// @deprecated
+		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken);
+		// @deprecated
+		public function getConfigurationRecommendation($hostData);
+		// @deprecated
+		public function getHostsToTest($hostname);
 	}
 }
 
@@ -208,3 +213,74 @@ if (! class_exists ( 'PostmanTransportRegistry' )) {
 	}
 }
 
+if (! class_exists ( 'PostmanDummyTransport' )) {
+	class PostmanDummyTransport implements PostmanTransport {
+		const UNCONFIGURED = 'unconfigured';
+		private $logger;
+		public function __construct() {
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
+		}
+		const SLUG = 'smtp';
+		public function isServiceProviderGoogle($hostname) {
+			return PostmanUtils::endsWith ( $hostname, 'gmail.com' );
+		}
+		public function isServiceProviderMicrosoft($hostname) {
+			return PostmanUtils::endsWith ( $hostname, 'live.com' );
+		}
+		public function isServiceProviderYahoo($hostname) {
+			return PostmanUtils::endsWith ( $hostname, 'yahoo.com' );
+		}
+		public function isOAuthUsed($authType) {
+			return false;
+		}
+		public function isTranscriptSupported() {
+			return false;
+		}
+		public function getSlug() {
+		}
+		public function getName() {
+		}
+		public function createZendMailTransport($hostname, $config) {
+		}
+		public function getDeliveryDetails(PostmanOptions $options) {
+		}
+		public function isConfigured(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+			return false;
+		}
+		public function isReady(PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+			return false;
+		}
+		/**
+		 *
+		 * @deprecated
+		 *
+		 * @see PostmanTransport::getHostsToTest()
+		 */
+		public function getHostsToTest($hostname) {
+		}
+		public function getSocketsForSetupWizardToProbe($hostname, $isGmail) {
+		}
+		/**
+		 *
+		 * @deprecated
+		 *
+		 * @see PostmanTransport::getConfigurationRecommendation()
+		 */
+		public function getConfigurationRecommendation($hostData) {
+		}
+		public function getConfigurationBid($hostData, $originalSmtpServer) {
+		}
+		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
+			/* translators: where %s is the name of the transport (e.g. smtp) */
+			return sprintf ( __ ( 'The selected transport \'%s\' is unavailable. The external plugin was probably deactivated.', 'postman-smtp' ), $options->getTransportType () );
+		}
+		/**
+		 *
+		 * @deprecated
+		 *
+		 * @see PostmanTransport::createPostmanMailAuthenticator()
+		 */
+		public function createPostmanMailAuthenticator(PostmanOptions $options, PostmanOAuthToken $authToken) {
+		}
+	}
+}

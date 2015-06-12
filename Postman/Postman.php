@@ -38,8 +38,8 @@ if (! class_exists ( 'Postman' )) {
 			require_once 'PostmanUtils.php';
 			require_once 'postman-common-functions.php';
 			require_once 'Postman-Mail/PostmanTransportRegistry.php';
-			require_once 'Postman-Mail/PostmanSmtpTransport.php';
-			require_once 'Postman-Mail/PostmanGoogleMailApiTransport.php';
+			require_once 'Postman-Mail/PostmanSmtpModuleTransport.php';
+			require_once 'Postman-Mail/PostmanGmailApiModuleTransport.php';
 			require_once 'PostmanOAuthToken.php';
 			require_once 'PostmanWpMailBinder.php';
 			require_once 'PostmanConfigTextHelper.php';
@@ -232,8 +232,8 @@ if (! class_exists ( 'Postman' )) {
 		 * @param unknown $pluginData        	
 		 */
 		private function registerTransports() {
-			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanSmtpTransport () );
-			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanGoogleMailApiTransport () );
+			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanSmtpModuleTransport () );
+			PostmanTransportRegistry::getInstance ()->registerTransport ( new PostmanGmailApiModuleTransport () );
 		}
 		
 		/**
