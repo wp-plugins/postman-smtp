@@ -438,8 +438,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			wp_localize_script ( 'jquery_steps_script', 'steps_loading', 'steps_loading' );
 			
 			// user input
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_email', '#input_' . PostmanOptions::SENDER_EMAIL );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_name', '#input_' . PostmanOptions::SENDER_NAME );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_email', '#input_' . PostmanOptions::FROM_EMAIL );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_name', '#input_' . PostmanOptions::FROM_NAME );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_element_name', '#input_' . PostmanOptions::PORT );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_hostname_element_name', '#input_' . PostmanOptions::HOSTNAME );
 			
@@ -537,6 +537,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '</section>';
 			print '<section id="message_config">';
 			do_settings_sections ( PostmanAdminController::MESSAGE_SENDER_OPTIONS );
+			do_settings_sections ( PostmanAdminController::MESSAGE_FROM_OPTIONS );
 			do_settings_sections ( PostmanAdminController::MESSAGE_OPTIONS );
 			do_settings_sections ( PostmanAdminController::MESSAGE_HEADERS_OPTIONS );
 			print '</section>';
@@ -695,8 +696,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<form id="postman_wizard" method="post" action="options.php">';
 			
 			// message tab
-			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE, $this->options->isPluginSenderEmailEnforced () );
-			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, $this->options->isPluginSenderNameEnforced () );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PREVENT_FROM_EMAIL_OVERRIDE, $this->options->isPluginSenderEmailEnforced () );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PREVENT_FROM_NAME_OVERRIDE, $this->options->isPluginSenderNameEnforced () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, $this->options->getReplyTo () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_TO_RECIPIENTS, $this->options->getForcedToRecipients () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_CC_RECIPIENTS, $this->options->getForcedCcRecipients () );
@@ -740,11 +741,11 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<fieldset>';
 			printf ( '<legend>%s</legend>', _x ( 'Who is the mail coming from?', 'Wizard Step Title', 'postman-smtp' ) );
 			printf ( '<p>%s</p>', __ ( 'Enter the email address and name you\'d like to send mail as.', 'postman-smtp' ) );
-			printf ( '<p>%s</p>', __ ( 'Please note that to combat Spam, many email services will <em>not</em> let you send from an email address other than the one you authenticate with.', 'postman-smtp' ) );
-			printf ( '<label for="postman_options[sender_email]">%s</label>', _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ) );
-			print $this->adminController->sender_email_callback ();
+			printf ( '<p>%s</p>', __ ( 'Please note that to prevent abuse, many email services will <em>not</em> let you send from an email address other than the one you authenticate with.', 'postman-smtp' ) );
+			printf ( '<label for="postman_options[sender_email]">%s</label>', _x ( 'From Email Address', 'Configuration Input Field', 'postman-smtp' ) );
+			print $this->adminController->from_email_callback ();
 			print '<br/>';
-			printf ( '<label for="postman_options[sender_name]">%s</label>', _x ( 'Sender Name', 'Configuration Input Field', 'postman-smtp' ) );
+			printf ( '<label for="postman_options[sender_name]">%s</label>', _x ( 'From Name', 'Configuration Input Field', 'postman-smtp' ) );
 			print $this->adminController->sender_name_callback ();
 			print '</fieldset>';
 			

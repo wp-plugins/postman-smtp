@@ -21,6 +21,7 @@ if (! class_exists ( "PostmanMessage" )) {
 		
 		// set by the caller
 		private $sender;
+		private $from;
 		private $fromHeader;
 		private $replyTo;
 		private $toRecipients;
@@ -46,9 +47,7 @@ if (! class_exists ( "PostmanMessage" )) {
 		private $enablePostmanSignature;
 		
 		/**
-		 *
-		 * @param unknown $senderEmail        	
-		 * @param unknown $accessToken        	
+		 * No-argument constructor
 		 */
 		function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
@@ -79,10 +78,10 @@ if (! class_exists ( "PostmanMessage" )) {
 		public function getFromAddress() {
 			
 			// by default, sender is what Postman set
-			$from = PostmanEmailAddress::copy ( $this->sender );
+			$from = PostmanEmailAddress::copy ( $this->from );
 			$this->logger->trace ( $from );
 			
-			// but we will let other plugins override the sender via the 'From' header
+			// but we will let other plugins override the from via the 'From' header
 			if (isset ( $this->fromHeader )) {
 				$s1 = new PostmanEmailAddress ( $this->fromHeader );
 				$s1name = $s1->getName ();
@@ -110,10 +109,10 @@ if (! class_exists ( "PostmanMessage" )) {
 			
 			// but the user has the final say
 			if ($this->isPluginSenderEmailEnforced ()) {
-				$from->setEmail ( $this->sender->getEmail () );
+				$from->setEmail ( $this->from->getEmail () );
 			}
 			if ($this->isPluginSenderNameEnforced ()) {
-				$from->setName ( $this->sender->getName () );
+				$from->setName ( $this->from->getName () );
 			}
 			$this->logger->trace ( $from );
 			
@@ -373,8 +372,11 @@ if (! class_exists ( "PostmanMessage" )) {
 		function setAttachments($attachments) {
 			$this->attachments = $attachments;
 		}
-		function setSender($sender, $name = null) {
-			$this->sender = new PostmanEmailAddress ( $sender, $name );
+		function setSender($email) {
+			$this->sender = $email;
+		}
+		function setFrom($email, $name = null) {
+			$this->from = new PostmanEmailAddress ( $email, $name );
 		}
 		function setReplyTo($replyTo) {
 			$this->replyTo = new PostmanEmailAddress ( $replyTo );

@@ -7,7 +7,7 @@ Stable tag: 1.6.17
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Take control of your Outgoing Email with the most modern, user-friendly and reliable SMTP Mailer for WordPress!
+Take control of your Outgoing Email with the most modern, friendly and reliable SMTP Mailer for WordPress!
 
 == Description ==
 
@@ -23,7 +23,7 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 
 
 = Features =
-* Overrides `wp_mail` redirecting all WordPress mail to SMTP
+* Replaces stock PHP Mailer with the much stronger Zend_Mail
 * Logs all emails, including message content and errors
 * Easy-to-use, powerful Setup Wizard for perfect configuration
 * Commercial-grade Connectivity Tester to diagnose server issues
@@ -246,9 +246,11 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 == Changelog ==
 
-= 1.6.18 - 2015-06-11 =
+= 1.6.18 - 2015-06-13 =
+* 8,000 installations!
 * [[Ticket](https://wordpress.org/support/topic/password-corruption-issue?replies=1)] Passwords are being encoded incorrectly in rare cases. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/subscriber-registration?replies=6)] Postman is determining the current's user admin capability incorrectly. Fixed.
+* [[Ticket](https://wordpress.org/support/topic/using-a-google-apps-group-as-sender?replies=3)] Added an additional From field, the Envelope From, so users can use a different From address than the Account address (for example, to use a Google Apps' Group email address)
 
 = 1.6.17 - 2015-06-08 =
 * You know you're having a really bad day when you have to have do three releases. Fix for "Fatal error: Call to a member function addError() on a non-object". This happens when wp_mail is blocked by another plugin and a non-admin user accesses the site.

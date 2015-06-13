@@ -15,15 +15,6 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 	class PostmanActivationHandler {
 		
 		/**
-		 */
-		public function __construct($rootPluginFilenameAndPath) {
-			register_activation_hook ( $rootPluginFilenameAndPath, array (
-					$this,
-					'activate_postman' 
-			) );
-		}
-		
-		/**
 		 * Handle activation of plugin
 		 */
 		public function activate_postman() {
@@ -106,14 +97,20 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 					update_option ( 'postman_auth_token', $authOptions );
 				}
 			}
-
+			
+			// for version 1.6.18, the envelope from was introduced
+			if (! empty ( $options ['sender_email'] ) && empty ( $options ['envelope_sender'] )) {
+				$options ['envelope_sender'] = $options ['sender_email'];
+				update_option ( 'postman_options', $options );
+			}
+			
 			// can we create a tmp file? - this code is duplicated in InputSanitizer
 			PostmanUtils::deleteLockFile ();
 			$lockSuccess = PostmanUtils::createLockFile ();
 			// &= does not work as expected in my PHP
 			$lockSuccess = $lockSuccess && PostmanUtils::deleteLockFile ();
 			$postmanState ['locking_enabled'] = $lockSuccess;
-				
+			
 			// always update the version number
 			if (! isset ( $postmanState ['install_date'] )) {
 				$postmanState ['install_date'] = time ();

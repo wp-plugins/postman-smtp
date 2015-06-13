@@ -34,6 +34,8 @@ if (! class_exists ( "PostmanAdminController" )) {
 		const OAUTH_SECTION = 'postman_oauth_section';
 		const MESSAGE_SENDER_OPTIONS = 'postman_message_sender_options';
 		const MESSAGE_SENDER_SECTION = 'postman_message_sender_section';
+		const MESSAGE_FROM_OPTIONS = 'postman_message_from_options';
+		const MESSAGE_FROM_SECTION = 'postman_message_from_section';
 		const MESSAGE_OPTIONS = 'postman_message_options';
 		const MESSAGE_SECTION = 'postman_message_section';
 		const MESSAGE_HEADERS_OPTIONS = 'postman_message_headers_options';
@@ -367,30 +369,41 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
 			// the Message Sender section
-			add_settings_section ( PostmanAdminController::MESSAGE_SENDER_SECTION, _x ( 'Sender', 'Configuration Section Title', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::MESSAGE_SENDER_SECTION, _x ( 'Envelope From', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printMessageSenderSectionInfo' 
 			), PostmanAdminController::MESSAGE_SENDER_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::SENDER_EMAIL, _x ( 'Sender Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::ENVELOPE_SENDER, _x ( 'From Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'sender_email_callback' 
 			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
 			
-			add_settings_field ( PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE, '', array (
+			// the Message From section
+			add_settings_section ( PostmanAdminController::MESSAGE_FROM_SECTION, _x ( 'Message From', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
-					'prevent_sender_email_override_callback' 
-			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
+					'printMessageFromSectionInfo' 
+			), PostmanAdminController::MESSAGE_FROM_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::SENDER_NAME, _x ( 'Sender Name', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::FROM_EMAIL, _x ( 'From Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
+					$this,
+					'from_email_callback' 
+			), PostmanAdminController::MESSAGE_FROM_OPTIONS, PostmanAdminController::MESSAGE_FROM_SECTION );
+			
+			add_settings_field ( PostmanOptions::PREVENT_FROM_EMAIL_OVERRIDE, '', array (
+					$this,
+					'prevent_from_email_override_callback' 
+			), PostmanAdminController::MESSAGE_FROM_OPTIONS, PostmanAdminController::MESSAGE_FROM_SECTION );
+			
+			add_settings_field ( PostmanOptions::FROM_NAME, _x ( 'From Name', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'sender_name_callback' 
-			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
+			), PostmanAdminController::MESSAGE_FROM_OPTIONS, PostmanAdminController::MESSAGE_FROM_SECTION );
 			
-			add_settings_field ( PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE, '', array (
+			add_settings_field ( PostmanOptions::PREVENT_FROM_NAME_OVERRIDE, '', array (
 					$this,
-					'prevent_sender_name_override_callback' 
-			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
+					'prevent_from_name_override_callback' 
+			), PostmanAdminController::MESSAGE_FROM_OPTIONS, PostmanAdminController::MESSAGE_FROM_SECTION );
 			
 			// the Additional Addresses section
 			add_settings_section ( PostmanAdminController::MESSAGE_SECTION, _x ( 'Additional Addresses', 'Configuration Section Title', 'postman-smtp' ), array (
@@ -563,7 +576,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printMessageSenderSectionInfo() {
-			print __ ( 'The Sender sets both the envelope <b>Mail-From</b> and the message <b>From</b> header. However, the <b>From</b> header can be modified by another plugin (e.g. for setting a visitor\'s email address from a Contact Form).', 'postman-smtp' );
+			print sprintf ( __ ( 'The envelope <b>From</b> identifies the account owner to the SMTP server.', 'postman-smtp' ), 'https://support.google.com/mail/answer/22370?hl=en' );
+		}
+		
+		/**
+		 * Print the Section text
+		 */
+		public function printMessageFromSectionInfo() {
+			print sprintf ( __ ( 'The message <b>From</b> identifies the sender to the recipient. Change this when you are sending on behalf of someone else, for example to use Google\'s <a href="%s">Send Mail As</a> feature. Themes and other plugins, especially Contact Forms, are permitted to modify this field.', 'postman-smtp' ), 'https://support.google.com/mail/answer/22370?hl=en' );
 		}
 		
 		/**
@@ -659,29 +679,36 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function sender_name_callback() {
-			printf ( '<input type="text" id="input_sender_name" name="postman_options[sender_name]" value="%s" size="40" />', null !== $this->options->getSenderName () ? esc_attr ( $this->options->getSenderName () ) : '' );
+			printf ( '<input type="text" id="input_sender_name" name="postman_options[sender_name]" value="%s" size="40" />', null !== $this->options->getFromName () ? esc_attr ( $this->options->getFromName () ) : '' );
 		}
 		
 		/**
 		 */
-		public function prevent_sender_name_override_callback() {
+		public function prevent_from_name_override_callback() {
 			$enforced = $this->options->isPluginSenderNameEnforced ();
-			printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this in the <b>From</b> header for all messages', 'postman-smtp' ) );
+			printf ( '<input type="checkbox" id="input_prevent_sender_name_override" name="postman_options[prevent_sender_name_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Prevent <b>plugins</b> and <b>themes</b> from changing this', 'postman-smtp' ) );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
 		public function sender_email_callback() {
-			printf ( '<input type="email" id="input_sender_email" name="postman_options[sender_email]" value="%s" size="40" class="required"/>', null !== $this->options->getSenderEmail () ? esc_attr ( $this->options->getSenderEmail () ) : '' );
+			printf ( '<input type="email" id="input_envelope_sender_email" name="postman_options[envelope_sender]" value="%s" size="40" class="required"/>', null !== $this->options->getEnvelopeSender () ? esc_attr ( $this->options->getEnvelopeSender () ) : '' );
 		}
 		
 		/**
 		 * Get the settings option array and print one of its values
 		 */
-		public function prevent_sender_email_override_callback() {
+		public function from_email_callback() {
+			printf ( '<input type="email" id="input_sender_email" name="postman_options[sender_email]" value="%s" size="40" class="required"/>', null !== $this->options->getFromEmail () ? esc_attr ( $this->options->getFromEmail () ) : '' );
+		}
+		
+		/**
+		 * Get the settings option array and print one of its values
+		 */
+		public function prevent_from_email_override_callback() {
 			$enforced = $this->options->isPluginSenderEmailEnforced ();
-			printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Force this in the <b>From</b> header for all messages', 'postman-smtp' ) );
+			printf ( '<input type="checkbox" id="input_prevent_sender_email_override" name="postman_options[prevent_sender_email_override]" %s /> %s', $enforced ? 'checked="checked"' : '', __ ( 'Prevent <b>plugins</b> and <b>themes</b> from changing this', 'postman-smtp' ) );
 		}
 		
 		/**

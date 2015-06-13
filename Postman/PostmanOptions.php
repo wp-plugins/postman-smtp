@@ -9,8 +9,8 @@ if (! interface_exists ( "PostmanOptionsInterface" )) {
 		public function getLogLevel();
 		public function getHostname();
 		public function getPort();
-		public function getSenderEmail();
-		public function getSenderName();
+		public function getFromEmail();
+		public function getFromName();
 		public function getClientId();
 		public function getClientSecret();
 		public function getTransportType();
@@ -46,8 +46,9 @@ if (! class_exists ( "PostmanOptions" )) {
 		
 		// the options fields
 		const VERSION = 'version';
-		const SENDER_EMAIL = 'sender_email';
-		const SENDER_NAME = 'sender_name';
+		const ENVELOPE_SENDER = 'envelope_sender';
+		const FROM_EMAIL = 'sender_email';
+		const FROM_NAME = 'sender_name';
 		const REPLY_TO = 'reply_to';
 		const FORCED_TO_RECIPIENTS = 'forced_to';
 		const FORCED_CC_RECIPIENTS = 'forced_cc';
@@ -71,8 +72,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		const CLIENT_SECRET = 'oauth_client_secret';
 		const BASIC_AUTH_USERNAME = 'basic_auth_username';
 		const BASIC_AUTH_PASSWORD = 'basic_auth_password';
-		const PREVENT_SENDER_NAME_OVERRIDE = 'prevent_sender_name_override';
-		const PREVENT_SENDER_EMAIL_OVERRIDE = 'prevent_sender_email_override';
+		const PREVENT_FROM_NAME_OVERRIDE = 'prevent_sender_name_override';
+		const PREVENT_FROM_EMAIL_OVERRIDE = 'prevent_sender_email_override';
 		const CONNECTION_TIMEOUT = 'connection_timeout';
 		const READ_TIMEOUT = 'read_timeout';
 		const LOG_LEVEL = 'log_level';
@@ -98,8 +99,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		const DEFAULT_TRANSPORT_TYPE = 'smtp'; // must match what's in PostmanSmtpModuleTransport
 		const DEFAULT_TCP_READ_TIMEOUT = 60;
 		const DEFAULT_TCP_CONNECTION_TIMEOUT = 10;
-		const DEFAULT_PLUGIN_SENDER_NAME_ENFORCED = false;
-		const DEFAULT_PLUGIN_SENDER_EMAIL_ENFORCED = false;
+		const DEFAULT_PLUGIN_FROM_NAME_ENFORCED = false;
+		const DEFAULT_PLUGIN_FROM_EMAIL_ENFORCED = false;
 		const DEFAULT_TEMP_DIRECTORY = '/tmp';
 		
 		// options data
@@ -202,13 +203,17 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::PORT] ))
 				return $this->options [PostmanOptions::PORT];
 		}
-		public function getSenderEmail() {
-			if (isset ( $this->options [PostmanOptions::SENDER_EMAIL] ))
-				return $this->options [PostmanOptions::SENDER_EMAIL];
+		public function getEnvelopeSender() {
+			if (isset ( $this->options [PostmanOptions::ENVELOPE_SENDER] ))
+				return $this->options [PostmanOptions::ENVELOPE_SENDER];
 		}
-		public function getSenderName() {
-			if (isset ( $this->options [PostmanOptions::SENDER_NAME] ))
-				return $this->options [PostmanOptions::SENDER_NAME];
+		public function getFromEmail() {
+			if (isset ( $this->options [PostmanOptions::FROM_EMAIL] ))
+				return $this->options [PostmanOptions::FROM_EMAIL];
+		}
+		public function getFromName() {
+			if (isset ( $this->options [PostmanOptions::FROM_NAME] ))
+				return $this->options [PostmanOptions::FROM_NAME];
 		}
 		public function getClientId() {
 			if (isset ( $this->options [PostmanOptions::CLIENT_ID] ))
@@ -261,9 +266,9 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function isPluginSenderNameEnforced() {
 			if ($this->isNew ())
-				return self::DEFAULT_PLUGIN_SENDER_NAME_ENFORCED;
-			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] ))
-				return $this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE];
+				return self::DEFAULT_PLUGIN_FROM_NAME_ENFORCED;
+			if (isset ( $this->options [PostmanOptions::PREVENT_FROM_NAME_OVERRIDE] ))
+				return $this->options [PostmanOptions::PREVENT_FROM_NAME_OVERRIDE];
 		}
 		/**
 		 * (non-PHPdoc)
@@ -276,9 +281,9 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function isPluginSenderEmailEnforced() {
 			if ($this->isNew ())
-				return self::DEFAULT_PLUGIN_SENDER_EMAIL_ENFORCED;
-			if (isset ( $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE] ))
-				return $this->options [PostmanOptions::PREVENT_SENDER_EMAIL_OVERRIDE];
+				return self::DEFAULT_PLUGIN_FROM_EMAIL_ENFORCED;
+			if (isset ( $this->options [PostmanOptions::PREVENT_FROM_EMAIL_OVERRIDE] ))
+				return $this->options [PostmanOptions::PREVENT_FROM_EMAIL_OVERRIDE];
 		}
 		/**
 		 *
@@ -288,7 +293,7 @@ if (! class_exists ( "PostmanOptions" )) {
 			return $this->isPluginSenderEmailEnforced ();
 		}
 		public function setSenderNameOverridePrevented($prevent) {
-			$this->options [PostmanOptions::PREVENT_SENDER_NAME_OVERRIDE] = $prevent;
+			$this->options [PostmanOptions::PREVENT_FROM_NAME_OVERRIDE] = $prevent;
 		}
 		public function setHostname($hostname) {
 			$this->options [PostmanOptions::HOSTNAME] = $hostname;
@@ -307,18 +312,18 @@ if (! class_exists ( "PostmanOptions" )) {
 			}
 		}
 		public function setSenderEmail($senderEmail) {
-			$this->options [PostmanOptions::SENDER_EMAIL] = $senderEmail;
+			$this->options [PostmanOptions::FROM_EMAIL] = $senderEmail;
 		}
 		public function setSenderEmailIfEmpty($senderEmail) {
-			if (empty ( $this->options [PostmanOptions::SENDER_EMAIL] )) {
+			if (empty ( $this->options [PostmanOptions::FROM_EMAIL] )) {
 				$this->setSenderEmail ( $senderEmail );
 			}
 		}
 		public function setSenderName($senderName) {
-			$this->options [PostmanOptions::SENDER_NAME] = $senderName;
+			$this->options [PostmanOptions::FROM_NAME] = $senderName;
 		}
 		public function setSenderNameIfEmpty($senderName) {
-			if (empty ( $this->options [PostmanOptions::SENDER_NAME] )) {
+			if (empty ( $this->options [PostmanOptions::FROM_NAME] )) {
 				$this->setSenderName ( $senderName );
 			}
 		}

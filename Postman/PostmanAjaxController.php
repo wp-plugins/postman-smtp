@@ -132,7 +132,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', wp_get_theme () ) );
 			$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', $pluginData ['version'] ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Sender Domain: %s', $hostname = substr ( strrchr ( $this->options->getSenderEmail (), "@" ), 1 ) ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Sender Domain: %s', $hostname = substr ( strrchr ( $this->options->getFromEmail (), "@" ), 1 ) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI|Force Email|Name: %s|%s|%s', $transportRegistry->getPublicTransportUri ( $transportRegistry->getCurrentTransport () ), $this->options->isSenderEmailOverridePrevented () ? 'Yes' : 'No', $this->options->isSenderNameOverridePrevented () ? 'Yes' : 'No' ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport Status (Configured|Ready|Connected): %s|%s|%s', $transportRegistry->getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', $this->testConnectivity () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Deliveries (Success|Fail): %d|%d', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PostmanStats::getInstance ()->getFailedDeliveries () ) );
@@ -351,8 +351,8 @@ if (! class_exists ( 'PostmanImportConfigurationAjaxController' )) {
 				if ($this->options->getPluginSlug () == $plugin) {
 					$this->logger->debug ( 'Sending configuration response' );
 					$response = array (
-							PostmanOptions::SENDER_EMAIL => $this->options->getSenderEmail (),
-							PostmanOptions::SENDER_NAME => $this->options->getSenderName (),
+							PostmanOptions::FROM_EMAIL => $this->options->getFromEmail (),
+							PostmanOptions::FROM_NAME => $this->options->getFromName (),
 							PostmanOptions::HOSTNAME => $this->options->getHostname (),
 							PostmanOptions::PORT => $this->options->getPort (),
 							PostmanOptions::AUTHENTICATION_TYPE => $this->options->getAuthenticationType (),

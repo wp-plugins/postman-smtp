@@ -52,7 +52,7 @@
 if (! class_exists ( 'PostmanGmailApiModuleZendMailTransport' )) {
 	class PostmanGmailApiModuleZendMailTransport extends Postman_Zend_Mail_Transport_Abstract {
 		const SERVICE_OPTION = 'service';
-		const SENDER_EMAIL_OPTION = 'sender_email';
+		const FROM_EMAIL_OPTION = 'sender_email';
 		private $logger;
 		
 		/**

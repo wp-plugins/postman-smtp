@@ -239,7 +239,8 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$message->addCc ( $options->getForcedCcRecipients () );
 			$message->addBcc ( $options->getForcedBccRecipients () );
 			$message->setAttachments ( $attachments );
-			$message->setSender ( $options->getSenderEmail (), $options->getSenderName () );
+			$message->setSender ( $options->getEnvelopeSender() );
+			$message->setFrom ( $options->getFromEmail (), $options->getFromName () );
 			$message->setPreventSenderEmailOverride ( $options->isSenderEmailOverridePrevented () );
 			$message->setPreventSenderNameOverride ( $options->isSenderNameOverridePrevented () );
 			$message->setPostmanSignatureEnabled ( ! $options->isStealthModeEnabled () );

@@ -59,7 +59,7 @@ if (! class_exists ( 'PostmanOAuth2ConfigurationFactory' )) {
 			$port = $transport->getHostPort ();
 			
 			// the sender email is needed for the OAuth2 Bearer token
-			$senderEmail = PostmanOptions::getInstance ()->getSenderEmail ();
+			$senderEmail = PostmanOptions::getInstance ()->getEnvelopeSender ();
 			assert ( ! empty ( $senderEmail ) );
 			
 			// the vendor is required for Yahoo's OAuth2 implementation

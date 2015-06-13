@@ -43,7 +43,8 @@ if (! class_exists ( 'Postman' )) {
 			require_once 'PostmanOAuthToken.php';
 			require_once 'PostmanWpMailBinder.php';
 			require_once 'PostmanConfigTextHelper.php';
-			
+			require_once 'PostmanActivationHandler.php';
+				
 			// get plugin metadata - alternative to get_plugin_data
 			$this->pluginData = array (
 					'name' => __ ( 'Postman SMTP', 'postman-smtp' ),
@@ -73,6 +74,13 @@ if (! class_exists ( 'Postman' )) {
 			// this design allows other plugins to register a Postman transport and call bind()
 			// bind may be called more than once
 			$this->wpMailBinder->bind ();
+			
+			// register activation handler on the activation event
+			// must be called in constructor
+			register_activation_hook ( $rootPluginFilenameAndPath, array (
+					new PostmanActivationHandler (),
+					'activate_postman' 
+			) );
 			
 			// register the shortcode handler on the add_shortcode event
 			add_shortcode ( 'postman-version', array (
@@ -113,7 +121,6 @@ if (! class_exists ( 'Postman' )) {
 				require_once 'PostmanMessageHandler.php';
 				require_once 'PostmanAdminController.php';
 				require_once 'Postman-Controller/PostmanDashboardWidgetController.php';
-				require_once 'PostmanActivationHandler.php';
 				require_once 'Postman-Controller/PostmanAdminPointer.php';
 				require_once 'Postman-Email-Log/PostmanEmailLogController.php';
 				
@@ -141,9 +148,6 @@ if (! class_exists ( 'Postman' )) {
 				// getting an instance reference performs lazy initialization
 				// lazy initialization registers the custom post type for all callers
 				PostmanEmailLogService::getInstance ();
-				
-				// register activation handler on the activation event
-				new PostmanActivationHandler ( $rootPluginFilenameAndPath );
 			}
 		}
 		

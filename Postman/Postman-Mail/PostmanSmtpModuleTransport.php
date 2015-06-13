@@ -111,7 +111,8 @@ if (! class_exists ( 'PostmanSmtpModuleTransport' )) {
 			$configured = true;
 			
 			// 1. the transport is configured
-			$configured &= $this->isTransportConfigured ( $options );
+			$configured &= $this->isHostConfigured ( $options );
+			$configured &= $this->isSenderConfigured ( $options );
 			
 			// 2. if authentication is enabled, check further rules to confirm configured
 			if ($options->isAuthTypePassword ()) {
@@ -140,11 +141,15 @@ if (! class_exists ( 'PostmanSmtpModuleTransport' )) {
 			
 			return $configured;
 		}
-		private function isTransportConfigured(PostmanOptions $options) {
+		private function isHostConfigured(PostmanOptions $options) {
 			$hostname = $options->getHostname ();
 			$port = $options->getPort ();
-			$senderEmail = $options->getSenderEmail ();
-			return ! (empty ( $senderEmail ) || empty ( $hostname ) || empty ( $port ));
+			return ! (empty ( $hostname ) || empty ( $port ));
+		}
+		private function isSenderConfigured(PostmanOptions $options) {
+			$envelopeFrom = $options->getEnvelopeSender ();
+			$messageFrom = $options->getFromEmail ();
+			return ! (empty ( $envelopeFrom ) || empty ( $messageFrom ));
 		}
 		private function isPasswordAuthenticationConfigured(PostmanOptions $options) {
 			$username = $options->getUsername ();
@@ -154,10 +159,9 @@ if (! class_exists ( 'PostmanSmtpModuleTransport' )) {
 		private function isOAuthAuthenticationConfigured(PostmanOptions $options) {
 			$clientId = $options->getClientId ();
 			$clientSecret = $options->getClientSecret ();
-			$senderEmail = $options->getSenderEmail ();
 			$hostname = $options->getHostname ();
 			$supportedOAuthProvider = $this->isServiceProviderGoogle ( $hostname ) || $this->isServiceProviderMicrosoft ( $hostname ) || $this->isServiceProviderYahoo ( $hostname );
-			return $options->isAuthTypeOAuth2 () && ! (empty ( $clientId ) || empty ( $clientSecret ) || empty ( $senderEmail )) && $supportedOAuthProvider;
+			return $options->isAuthTypeOAuth2 () && ! (empty ( $clientId ) || empty ( $clientSecret )) && $supportedOAuthProvider;
 		}
 		private function isPermissionNeeded(PostmanOptions $options, PostmanOAuthToken $token) {
 			$accessToken = $token->getAccessToken ();
@@ -165,8 +169,10 @@ if (! class_exists ( 'PostmanSmtpModuleTransport' )) {
 			return $options->isAuthTypeOAuth2 () && (empty ( $accessToken ) || empty ( $refreshToken ));
 		}
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
-			if (! $this->isTransportConfigured ( $options )) {
-				return __ ( 'Outgoing Mail Server Hostname/Port and Sender Email Address can not be empty.', 'postman-smtp' );
+			if (! $this->isHostConfigured ( $options )) {
+				return __ ( 'Outgoing Mail Server Hostname and Port can not be empty.', 'postman-smtp' );
+			} else if (! $this->isSenderConfigured ( $options )) {
+				return __ ( 'Envelope From and Message From can not be empty.', 'postman-smtp' );
 			} else if ($options->isAuthTypePassword () && ! $this->isPasswordAuthenticationConfigured ( $options )) {
 				return __ ( 'Password authentication (Plain/Login/CRAM-MD5) requires a username and password.', 'postman-smtp' );
 			} else if ($options->isAuthTypeOAuth2 () && ! $this->isOAuthAuthenticationConfigured ( $options )) {

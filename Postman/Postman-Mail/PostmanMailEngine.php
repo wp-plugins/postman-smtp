@@ -101,12 +101,12 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$fromHeader->log ( $this->logger, 'From' );
 			
 			// add the Sender Header, overriding what the user may have set
-			$mail->addHeader ( 'Sender', $message->getSenderAddress ()->format (), false );
+			$mail->addHeader ( 'Sender', $message->getSenderAddress (), false );
 			// from RFC 5321: http://tools.ietf.org/html/rfc5321#section-4.4
 			// A message-originating SMTP system SHOULD NOT send a message that
 			// already contains a Return-path header field.
 			// I changed Zend/Mail/Mail.php to fix this
-			$mail->setReturnPath ( $message->getSenderAddress ()->getEmail () );
+			$mail->setReturnPath ( $message->getSenderAddress () );
 			
 			// add the to recipients
 			foreach ( ( array ) $message->getToRecipients () as $recipient ) {
@@ -200,7 +200,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$message->addAttachmentsToMail ( $mail );
 			
 			// get the transport configuration
-			$config = $this->authenticator->createConfig ($this->transport);
+			$config = $this->authenticator->createConfig ( $this->transport );
 			assert ( ! empty ( $config ) );
 			
 			// create the SMTP transport

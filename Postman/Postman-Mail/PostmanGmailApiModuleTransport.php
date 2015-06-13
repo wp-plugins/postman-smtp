@@ -141,7 +141,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 			$configured = true;
 			
 			// 1. there is a sender email address
-			$senderEmailAddress = $options->getSenderEmail ();
+			$senderEmailAddress = $options->getFromEmail ();
 			$configured &= ! empty ( $senderEmailAddress );
 			
 			// 2. for some reason the Gmail API wants a Client ID and Client Secret; Auth Token itself is not good enough.
@@ -170,19 +170,25 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 			return $configured;
 		}
 		public function getMisconfigurationMessage(PostmanConfigTextHelper $scribe, PostmanOptionsInterface $options, PostmanOAuthToken $token) {
-			if ($this->isConfigurationNeeded ( $options )) {
-				return sprintf ( __ ( 'The Gmail API transport requires a Sender Email Address, Client ID and Client Secret.', 'postman-smtp' ) );
+			if ($this->isOAuthCredentialsNeeded ( $options )) {
+				return sprintf ( __ ( 'OAuth 2.0 authentication requires a Client ID and Client Secret.', 'postman-smtp' ) );
+			} else if (! $this->isSenderConfigured ( $options )) {
+				return __ ( 'Envelope From and Message From can not be empty.', 'postman-smtp' );
 			} else if ($this->isPermissionNeeded ( $token )) {
 				$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
 				$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanUtils::getGrantOAuthPermissionUrl (), $scribe->getRequestPermissionLinkText () );
 				return $message;
 			}
 		}
-		private function isConfigurationNeeded(PostmanOptions $options) {
-			$senderEmail = $options->getSenderEmail ();
+		private function isOAuthCredentialsNeeded(PostmanOptions $options) {
 			$clientId = $options->getClientId ();
 			$clientSecret = $options->getClientSecret ();
-			return empty ( $senderEmail ) || empty ( $clientId ) || empty ( $clientSecret );
+			return empty ( $clientId ) || empty ( $clientSecret );
+		}
+		private function isSenderConfigured(PostmanOptions $options) {
+			$envelopeFrom = $options->getEnvelopeSender ();
+			$messageFrom = $options->getFromEmail ();
+			return ! (empty ( $envelopeFrom ) || empty ( $messageFrom ));
 		}
 		private function isPermissionNeeded(PostmanOAuthToken $token) {
 			$accessToken = $token->getAccessToken ();
