@@ -576,14 +576,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printMessageSenderSectionInfo() {
-			print sprintf ( __ ( 'The envelope <b>From</b> address identifies the account owner to the SMTP server.', 'postman-smtp' ), 'https://support.google.com/mail/answer/22370?hl=en' );
+			print sprintf ( __ ( 'The <b>Envelope</b> From address identifies the account owner to the SMTP server.', 'postman-smtp' ), 'https://support.google.com/mail/answer/22370?hl=en' );
 		}
 		
 		/**
 		 * Print the Section text
 		 */
 		public function printMessageFromSectionInfo() {
-			print sprintf ( __ ( 'The message <b>From</b> address identifies the sender to the recipient. Change this when you are sending on behalf of someone else, for example to use Google\'s <a href="%s">Send Mail As</a> feature. Themes and other plugins, especially Contact Forms, are permitted to modify this field.', 'postman-smtp' ), 'https://support.google.com/mail/answer/22370?hl=en' );
+			print sprintf ( __ ( 'The <b>Message</b> From address identifies the sender to the recipient. Change this when you are sending on behalf of someone else, for example to use Google\'s <a href="%s">Send Mail As</a> feature. Themes and other plugins, especially Contact Forms, are permitted to modify this field.', 'postman-smtp' ), 'https://support.google.com/mail/answer/22370?hl=en' );
 		}
 		
 		/**
