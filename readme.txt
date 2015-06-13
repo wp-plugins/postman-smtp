@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.17
+Stable tag: 1.6.18
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -250,7 +250,7 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 * 8,000 installations! Big milestone! The author of [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) has [officially endorsed Postman SMTP](http://contactform7.com/faq/i-get-an-error-message-with-a-red-border-so-how-can-i-solve-this/) as the SMTP plugin of choice! You can't wipe the smile from my face :D
 * [[Ticket](https://wordpress.org/support/topic/password-corruption-issue?replies=1)] Passwords are being encoded incorrectly in rare cases. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/subscriber-registration?replies=6)] Postman is determining the current's user admin capability incorrectly. Fixed.
-* [[Ticket](https://wordpress.org/support/topic/using-a-google-apps-group-as-sender?replies=3)] Added an additional From field, the Envelope From, so users can use a different From address than the Account address (for example, to use a Google Apps' Group email address)
+* [[Ticket](https://wordpress.org/support/topic/using-a-google-apps-group-as-sender?replies=3)] Added an additional From field, the Envelope From Address, so users can use a different From address than the Account address (for example, to use a Google Apps' Group email address)
 * Added a uniqueness (based on site URL) to the lock filename in case this is shared hosting
 
 = 1.6.17 - 2015-06-08 =
