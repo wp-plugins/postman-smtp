@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-06-13 19:06:51+00:00\n"
-"PO-Revision-Date: 2015-06-13 15:08-0500\n"
+"POT-Creation-Date: 2015-06-13 20:53:55+00:00\n"
+"PO-Revision-Date: 2015-06-13 17:09-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -216,6 +216,7 @@ msgctxt "When was this email sent?"
 msgid "Delivery Time"
 msgstr "Délai de livraison"
 
+#. Translators: where %s indicates the relative time from now
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:330
 msgctxt "A relative time as in \"five days ago\""
 msgid "%s ago"
@@ -429,6 +430,7 @@ msgstr "Adresse d'expéditeur d'enveloppe"
 
 #: Postman/PostmanAdminController.php:377
 #: Postman/PostmanAdminController.php:388
+#: Postman/PostmanViewController.php:745
 msgid "Email Address"
 msgstr "Adresse e-mail"
 
@@ -438,6 +440,7 @@ msgid "Message From Address"
 msgstr "Adresse d'expéditeur du message"
 
 #: Postman/PostmanAdminController.php:398
+#: Postman/PostmanViewController.php:748
 msgid "Name"
 msgstr "Nom"
 
@@ -1220,16 +1223,6 @@ msgstr "Entrez l'adresse e-mail et le nom que vous souhaitez envoyer un mail com
 msgid "Please note that to prevent abuse, many email services will <em>not</em> let you send from an email address other than the one you authenticate with."
 msgstr "Veuillez noter que pour combattre le Spam, plusieurs services de messagerie <em>ne permettrons pas</em> l'envoi d'un message provenant d'une autre adresse que la vôtre."
 
-#: Postman/PostmanViewController.php:745
-msgctxt "Configuration Input Field"
-msgid "Email Address"
-msgstr "Adresse e-mail"
-
-#: Postman/PostmanViewController.php:748
-msgctxt "Configuration Input Field"
-msgid "Name"
-msgstr "Nom"
-
 #: Postman/PostmanViewController.php:755
 msgctxt "Wizard Step Title"
 msgid "Which host will relay the mail?"
@@ -1361,6 +1354,14 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgctxt "Configuration Input Field"
+#~ msgid "Email Address"
+#~ msgstr "Adresse e-mail"
+
+#~ msgctxt "Configuration Input Field"
+#~ msgid "Name"
+#~ msgstr "Nom"
 
 #~ msgctxt "Configuration Section Title"
 #~ msgid "Envelope From Address"

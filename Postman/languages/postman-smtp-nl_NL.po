@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.6.11\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-06-13 19:20:44+00:00\n"
-"PO-Revision-Date: 2015-06-13 16:52-0500\n"
+"POT-Creation-Date: 2015-06-13 20:53:55+00:00\n"
+"PO-Revision-Date: 2015-06-13 17:10-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -216,6 +216,7 @@ msgctxt "When was this email sent?"
 msgid "Delivery Time"
 msgstr "Overdrachts tijd"
 
+#. Translators: where %s indicates the relative time from now
 #: Postman/Postman-Email-Log/PostmanEmailLogView.php:330
 msgctxt "A relative time as in \"five days ago\""
 msgid "%s ago"
