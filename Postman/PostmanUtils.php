@@ -232,13 +232,34 @@ if (! class_exists ( 'PostmanUtils' )) {
 			PostmanUtils::$logger->trace ( sprintf ( 'Creating file %s : %s', $path, $success ) );
 			return $success;
 		}
+		
+		/**
+		 * Creates the pathname of the lockfile
+		 *
+		 * @param unknown $tempDirectory        	
+		 * @return string
+		 */
 		private static function calculateTemporaryLockPath($tempDirectory) {
 			if (empty ( $tempDirectory )) {
 				$options = PostmanOptions::getInstance ();
 				$tempDirectory = $options->getTempDirectory ();
 			}
-			$fullPath = $tempDirectory . '/.postman.lock';
+			$fullPath = sprintf ( '%s/.postman_%s.lock', $tempDirectory, self::generateUniqueLockKey () );
 			return $fullPath;
+		}
+		
+		/**
+		 *
+		 * @return string
+		 */
+		private static function generateUniqueLockKey() {
+			// for single sites, use the network_site_url to generate the key because
+			// it is unique for every wordpress site unlike the blog ID which may be the same
+			$key = hash ( 'crc32', network_site_url ( '/' ) );
+			// TODO for multisites
+			// if the subsite is sharing the config - use the network_site_url of site 0
+			// if the subsite has its own config - use the network_site_url of the subsite
+			return $key;
 		}
 		
 		/**
@@ -270,12 +291,12 @@ if (! class_exists ( 'PostmanUtils' )) {
 			 */
 			return current_user_can ( 'administrator' );
 		}
-
+		
 		/**
 		 * Warning, this will fail if called before hook 'plugins_loaded'
 		 */
 		public static function isAdminOnAdminScreen() {
-			return PostmanUtils::isAdmin() && is_admin ();
+			return PostmanUtils::isAdmin () && is_admin ();
 		}
 	}
 	PostmanUtils::staticInit ();

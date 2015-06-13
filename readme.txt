@@ -251,6 +251,7 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 * [[Ticket](https://wordpress.org/support/topic/password-corruption-issue?replies=1)] Passwords are being encoded incorrectly in rare cases. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/subscriber-registration?replies=6)] Postman is determining the current's user admin capability incorrectly. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/using-a-google-apps-group-as-sender?replies=3)] Added an additional From field, the Envelope From, so users can use a different From address than the Account address (for example, to use a Google Apps' Group email address)
+* Added a uniqueness (based on site URL) to the lock filename in case this is shared hosting
 
 = 1.6.17 - 2015-06-08 =
 * You know you're having a really bad day when you have to have do three releases. Fix for "Fatal error: Call to a member function addError() on a non-object". This happens when wp_mail is blocked by another plugin and a non-admin user accesses the site.

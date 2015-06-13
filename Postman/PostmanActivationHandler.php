@@ -13,19 +13,46 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 	 * @author jasonhendriks
 	 */
 	class PostmanActivationHandler {
+		private $logger;
 		
 		/**
 		 * Handle activation of plugin
 		 */
-		public function activate_postman() {
-			$logger = new PostmanLogger ( get_class ( $this ) );
-			$logger->debug ( "Activating plugin" );
+		public function activate_postman($networkwide) {
+			// Activation is not used often, lazy initialize the logger
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			$this->logger->trace ( '$networkwide?' . $networkwide );
+			
+			// handle network activation
+			if (function_exists ( 'is_multisite' ) && is_multisite ()) {
+				// check if it is a network activation - if so, run the activation function for each blog id
+				if ($networkwide) {
+					$old_blog = get_current_blog_id ();
+					// Get all blog ids
+					$subsites = wp_get_sites ();
+					foreach ( $subsites as $blog_id->$subsite ) {
+						$this->logger->trace ( 'multisite: switching to blog ' . $blog_id );
+						switch_to_blog ( $blog_id );
+						$this->handleOptionUpdates ();
+					}
+					switch_to_blog ( $old_blog );
+				}
+			} else {
+				$this->handleOptionUpdates ();
+			}
+		}
+		
+		/**
+		 * Handle activation of plugin
+		 */
+		private function handleOptionUpdates() {
+			$this->logger->debug ( "Activating plugin" );
 			// prior to version 0.2.5, $authOptions did not exist
 			$authOptions = get_option ( 'postman_auth_token' );
 			$options = get_option ( 'postman_options' );
 			$postmanState = get_option ( 'postman_state' );
 			if (empty ( $authOptions ) && ! (empty ( $options )) && ! empty ( $options ['access_token'] )) {
-				$logger->debug ( "Upgrading database: copying Authorization token from postman_options to postman_auth_token" );
+				$this->logger->debug ( "Upgrading database: copying Authorization token from postman_options to postman_auth_token" );
 				// copy the variables from $options to $authToken
 				$authOptions ['access_token'] = $options ['access_token'];
 				$authOptions ['refresh_token'] = $options ['refresh_token'];
@@ -40,7 +67,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 				// prior to 0.2.5, access tokens were save in options without an auth type
 				// either way, only oauth2 was supported
 				if (isset ( $authOptions ['access_token'] ) || isset ( $options ['access_token'] )) {
-					$logger->debug ( "Upgrading database: setting authorization_type to 'oauth2'" );
+					$this->logger->debug ( "Upgrading database: setting authorization_type to 'oauth2'" );
 					$options ['authorization_type'] = 'oauth2';
 					update_option ( 'postman_options', $options );
 				}
@@ -48,7 +75,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			if (! isset ( $options ['enc_type'] )) {
 				// prior to 1.3, encryption type was combined with authentication type
 				if (isset ( $options ['authorization_type'] )) {
-					$logger->debug ( "Upgrading database: creating auth_type and enc_type from authorization_type" );
+					$this->logger->debug ( "Upgrading database: creating auth_type and enc_type from authorization_type" );
 					$authType = $options ['authorization_type'];
 					switch ($authType) {
 						case 'none' :
@@ -74,7 +101,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			}
 			// prior to 1.3.3, the version identifier was not stored and the passwords were plaintext
 			if (isset ( $options ['enc_type'] ) && ! isset ( $options ['version'] )) {
-				$logger->debug ( "Upgrading database: added plugin version and encoding password" );
+				$this->logger->debug ( "Upgrading database: added plugin version and encoding password" );
 				$options ['version'] = '1.3.3';
 				if (isset ( $options ['basic_auth_password'] )) {
 					$options ['basic_auth_password'] = base64_encode ( $options ['basic_auth_password'] );
@@ -83,7 +110,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			}
 			// prior to 1.4.2, the transport was not identified and the auth token had no vendor
 			if (isset ( $options ['auth_type'] ) && ! isset ( $options ['transport_type'] )) {
-				$logger->debug ( "Upgrading database: added transport_type and vendor_name" );
+				$this->logger->debug ( "Upgrading database: added transport_type and vendor_name" );
 				$options ['transport_type'] = 'smtp';
 				update_option ( 'postman_options', $options );
 				if (isset ( $authOptions ['access_token'] ) && isset ( $options ['oauth_client_id'] )) {
