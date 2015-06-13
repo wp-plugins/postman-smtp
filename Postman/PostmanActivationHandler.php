@@ -22,7 +22,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			// Activation is not used often, lazy initialize the logger
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->logger->trace ( '$networkwide?' . $networkwide );
-			
+				
 			// handle network activation
 			if (function_exists ( 'is_multisite' ) && is_multisite ()) {
 				// check if it is a network activation - if so, run the activation function for each blog id
@@ -30,9 +30,9 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 					$old_blog = get_current_blog_id ();
 					// Get all blog ids
 					$subsites = wp_get_sites ();
-					foreach ( $subsites as $blog_id->$subsite ) {
-						$this->logger->trace ( 'multisite: switching to blog ' . $blog_id );
-						switch_to_blog ( $blog_id );
+					foreach ( $subsites as $subsite ) {
+						$this->logger->trace ( 'multisite: switching to blog ' . $subsite[ 'blog_id' ] );
+						switch_to_blog ( $subsite[ 'blog_id' ] );
 						$this->handleOptionUpdates ();
 					}
 					switch_to_blog ( $old_blog );
