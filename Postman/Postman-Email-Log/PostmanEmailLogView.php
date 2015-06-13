@@ -326,7 +326,7 @@ class PostmanEmailLogView extends WP_List_Table {
 			$humanTime = human_time_diff ( strtotime ( $post->post_date_gmt ) );
 			// if this PHP system support humanTime, than use it
 			if (! empty ( $humanTime )) {
-				/* Translators where %s indicates the relative time from now */
+				/* Translators: where %s indicates the relative time from now */
 				$date = sprintf ( _x ( '%s ago', 'A relative time as in "five days ago"', 'postman-smtp' ), $humanTime );
 			}
 			$flattenedPost = array (
