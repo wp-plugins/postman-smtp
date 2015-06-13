@@ -369,23 +369,23 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::OAUTH_OPTIONS, PostmanAdminController::OAUTH_SECTION );
 			
 			// the Message Sender section
-			add_settings_section ( PostmanAdminController::MESSAGE_SENDER_SECTION, _x ( 'Envelope From', 'Configuration Section Title', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::MESSAGE_SENDER_SECTION, _x ( 'Envelope From Address', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printMessageSenderSectionInfo' 
 			), PostmanAdminController::MESSAGE_SENDER_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::ENVELOPE_SENDER, _x ( 'From Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::ENVELOPE_SENDER, _x ( 'Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'sender_email_callback' 
 			), PostmanAdminController::MESSAGE_SENDER_OPTIONS, PostmanAdminController::MESSAGE_SENDER_SECTION );
 			
 			// the Message From section
-			add_settings_section ( PostmanAdminController::MESSAGE_FROM_SECTION, _x ( 'Message From', 'Configuration Section Title', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::MESSAGE_FROM_SECTION, _x ( 'Message From Address', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printMessageFromSectionInfo' 
 			), PostmanAdminController::MESSAGE_FROM_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::MESSAGE_SENDER_EMAIL, _x ( 'From Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::MESSAGE_SENDER_EMAIL, _x ( 'Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'from_email_callback' 
 			), PostmanAdminController::MESSAGE_FROM_OPTIONS, PostmanAdminController::MESSAGE_FROM_SECTION );
@@ -395,7 +395,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'prevent_from_email_override_callback' 
 			), PostmanAdminController::MESSAGE_FROM_OPTIONS, PostmanAdminController::MESSAGE_FROM_SECTION );
 			
-			add_settings_field ( PostmanOptions::MESSAGE_SENDER_NAME, _x ( 'From Name', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::MESSAGE_SENDER_NAME, _x ( 'Name', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'sender_name_callback' 
 			), PostmanAdminController::MESSAGE_FROM_OPTIONS, PostmanAdminController::MESSAGE_FROM_SECTION );
@@ -406,7 +406,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			), PostmanAdminController::MESSAGE_FROM_OPTIONS, PostmanAdminController::MESSAGE_FROM_SECTION );
 			
 			// the Additional Addresses section
-			add_settings_section ( PostmanAdminController::MESSAGE_SECTION, _x ( 'Additional Addresses', 'Configuration Section Title', 'postman-smtp' ), array (
+			add_settings_section ( PostmanAdminController::MESSAGE_SECTION, _x ( 'Additional Email Addresses', 'Configuration Section Title', 'postman-smtp' ), array (
 					$this,
 					'printMessageSectionInfo' 
 			), PostmanAdminController::MESSAGE_OPTIONS );
@@ -576,14 +576,14 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Print the Section text
 		 */
 		public function printMessageSenderSectionInfo() {
-			print sprintf ( __ ( 'The envelope <b>From</b> identifies the account owner to the SMTP server.', 'postman-smtp' ), 'https://support.google.com/mail/answer/22370?hl=en' );
+			print sprintf ( __ ( 'The envelope <b>From</b> address identifies the account owner to the SMTP server.', 'postman-smtp' ), 'https://support.google.com/mail/answer/22370?hl=en' );
 		}
 		
 		/**
 		 * Print the Section text
 		 */
 		public function printMessageFromSectionInfo() {
-			print sprintf ( __ ( 'The message <b>From</b> identifies the sender to the recipient. Change this when you are sending on behalf of someone else, for example to use Google\'s <a href="%s">Send Mail As</a> feature. Themes and other plugins, especially Contact Forms, are permitted to modify this field.', 'postman-smtp' ), 'https://support.google.com/mail/answer/22370?hl=en' );
+			print sprintf ( __ ( 'The message <b>From</b> address identifies the sender to the recipient. Change this when you are sending on behalf of someone else, for example to use Google\'s <a href="%s">Send Mail As</a> feature. Themes and other plugins, especially Contact Forms, are permitted to modify this field.', 'postman-smtp' ), 'https://support.google.com/mail/answer/22370?hl=en' );
 		}
 		
 		/**

@@ -172,7 +172,7 @@ if (! class_exists ( 'PostmanSmtpModuleTransport' )) {
 			if (! $this->isHostConfigured ( $options )) {
 				return __ ( 'Outgoing Mail Server Hostname and Port can not be empty.', 'postman-smtp' );
 			} else if (! $this->isSenderConfigured ( $options )) {
-				return __ ( 'Envelope From and Message From can not be empty.', 'postman-smtp' );
+				return __ ( 'Envelope From Address and Message From Address can not be empty.', 'postman-smtp' );
 			} else if ($options->isAuthTypePassword () && ! $this->isPasswordAuthenticationConfigured ( $options )) {
 				return __ ( 'Password authentication (Plain/Login/CRAM-MD5) requires a username and password.', 'postman-smtp' );
 			} else if ($options->isAuthTypeOAuth2 () && ! $this->isOAuthAuthenticationConfigured ( $options )) {

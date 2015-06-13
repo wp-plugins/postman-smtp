@@ -24,6 +24,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			$this->logger->trace ( '$networkwide?' . $networkwide );
 				
 			// handle network activation
+			// from https://wordpress.org/support/topic/new-function-wp_get_sites?replies=11
 			if (function_exists ( 'is_multisite' ) && is_multisite ()) {
 				// check if it is a network activation - if so, run the activation function for each blog id
 				if ($networkwide) {

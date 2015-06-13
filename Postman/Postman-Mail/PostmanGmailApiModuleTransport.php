@@ -173,7 +173,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 			if ($this->isOAuthCredentialsNeeded ( $options )) {
 				return sprintf ( __ ( 'OAuth 2.0 authentication requires a Client ID and Client Secret.', 'postman-smtp' ) );
 			} else if (! $this->isSenderConfigured ( $options )) {
-				return __ ( 'Envelope From and Message From can not be empty.', 'postman-smtp' );
+				return __ ( 'Envelope From Address and Message From Address can not be empty.', 'postman-smtp' );
 			} else if ($this->isPermissionNeeded ( $token )) {
 				$message = sprintf ( __ ( 'You have configured OAuth 2.0 authentication, but have not received permission to use it.', 'postman-smtp' ), $scribe->getClientIdLabel (), $scribe->getClientSecretLabel () );
 				$message .= sprintf ( ' <a href="%s">%s</a>.', PostmanUtils::getGrantOAuthPermissionUrl (), $scribe->getRequestPermissionLinkText () );
