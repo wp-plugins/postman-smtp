@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.6.18e\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-06-13 18:48:32+00:00\n"
+"POT-Creation-Date: 2015-06-13 19:20:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -140,7 +140,6 @@ msgid "Bcc"
 msgstr ""
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:125
-#: Postman/PostmanAdminController.php:414
 msgctxt "Who do we reply to?"
 msgid "Reply-To"
 msgstr ""
@@ -452,55 +451,52 @@ msgid "Password"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:372
-msgctxt "Configuration Section Title"
+msgctxt "The Envelope Sender Email Address"
 msgid "Envelope From Address"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:377
 #: Postman/PostmanAdminController.php:388
 #: Postman/PostmanViewController.php:745
-msgctxt "Configuration Input Field"
 msgid "Email Address"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:383
-msgctxt "Configuration Section Title"
+msgctxt "The Message Sender Email Address"
 msgid "Message From Address"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:398
 #: Postman/PostmanViewController.php:748
-msgctxt "Configuration Input Field"
 msgid "Name"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:409
-msgctxt "Configuration Section Title"
 msgid "Additional Email Addresses"
 msgstr ""
 
+#: Postman/PostmanAdminController.php:414
+msgctxt "The email address to address replies to"
+msgid "Reply-To"
+msgstr ""
+
 #: Postman/PostmanAdminController.php:419
-msgctxt "Configuration Input Field"
 msgid "To Recipient(s)"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:424
-msgctxt "Configuration Input Field"
 msgid "Carbon Copy Recipient(s)"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:429
-msgctxt "Configuration Input Field"
 msgid "Blind Carbon Copy Recipient(s)"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:435
-msgctxt "Configuration Section Title"
 msgid "Additional Headers"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:440
-msgctxt "Configuration Input Field"
 msgid "Custom Headers"
 msgstr ""
 
@@ -509,22 +505,18 @@ msgid "Email Log Settings"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:451
-msgctxt "Configuration Input Field"
 msgid "Enable Logging"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:456
-msgctxt "Configuration Input Field"
-msgid "Log Entries Limit"
+msgid "Maximum Number of Log Entries"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:461
-msgctxt "The maximum number of lines of the SMTP transcript"
-msgid "Transcript Size (Total Lines)"
+msgid "Maximum Number of Lines in a Transcript"
 msgstr ""
 
 #: Postman/PostmanAdminController.php:467
-msgctxt "Configuration Section Title"
 msgid "Network Settings"
 msgstr ""
 

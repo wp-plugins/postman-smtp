@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-06-13 18:31:51+00:00\n"
-"PO-Revision-Date: 2015-06-13 14:41-0500\n"
+"POT-Creation-Date: 2015-06-13 19:06:51+00:00\n"
+"PO-Revision-Date: 2015-06-13 15:08-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -131,7 +131,6 @@ msgid "Bcc"
 msgstr "Bcc"
 
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:125
-#: Postman/PostmanAdminController.php:414
 msgctxt "Who do we reply to?"
 msgid "Reply-To"
 msgstr "Reply-To"
@@ -424,53 +423,50 @@ msgid "Password"
 msgstr "Password"
 
 #: Postman/PostmanAdminController.php:372
-msgctxt "Configuration Section Title"
+msgctxt "The Envelope Sender Email Address"
 msgid "Envelope From Address"
 msgstr "Adresse d'expéditeur d'enveloppe"
 
 #: Postman/PostmanAdminController.php:377
 #: Postman/PostmanAdminController.php:388
-msgctxt "Configuration Input Field"
 msgid "Email Address"
 msgstr "Adresse e-mail"
 
 #: Postman/PostmanAdminController.php:383
-msgctxt "Configuration Section Title"
+msgctxt "The Message Sender Email Address"
 msgid "Message From Address"
 msgstr "Adresse d'expéditeur du message"
 
 #: Postman/PostmanAdminController.php:398
-msgctxt "Configuration Input Field"
 msgid "Name"
 msgstr "Nom"
 
 #: Postman/PostmanAdminController.php:409
-msgctxt "Configuration Section Title"
 msgid "Additional Email Addresses"
 msgstr "Adresses e-mail supplémentaires"
 
+#: Postman/PostmanAdminController.php:414
+msgctxt "The email address to address replies to"
+msgid "Reply-To"
+msgstr "Reply-To"
+
 #: Postman/PostmanAdminController.php:419
-msgctxt "Configuration Input Field"
 msgid "To Recipient(s)"
-msgstr "Pour destinataire(s)"
+msgstr "Récipiendaires To"
 
 #: Postman/PostmanAdminController.php:424
-msgctxt "Configuration Input Field"
 msgid "Carbon Copy Recipient(s)"
 msgstr "Récipiendaires Carbon Copy"
 
 #: Postman/PostmanAdminController.php:429
-msgctxt "Configuration Input Field"
 msgid "Blind Carbon Copy Recipient(s)"
 msgstr "Récipiendaires Blind Carbon Copy"
 
 #: Postman/PostmanAdminController.php:435
-msgctxt "Configuration Section Title"
 msgid "Additional Headers"
 msgstr "Têtes additionnels"
 
 #: Postman/PostmanAdminController.php:440
-msgctxt "Configuration Input Field"
 msgid "Custom Headers"
 msgstr "Têtes personnalisés"
 
@@ -479,22 +475,18 @@ msgid "Email Log Settings"
 msgstr "Paramètres Niveau du journal"
 
 #: Postman/PostmanAdminController.php:451
-msgctxt "Configuration Input Field"
 msgid "Enable Logging"
 msgstr "Activer la journalisation"
 
 #: Postman/PostmanAdminController.php:456
-msgctxt "Configuration Input Field"
-msgid "Log Entries Limit"
-msgstr "Limite d'entrées de journal"
+msgid "Maximum Number of Log Entries"
+msgstr "Entrées de journal de courrier ont été supprimées."
 
 #: Postman/PostmanAdminController.php:461
-msgctxt "The maximum number of lines of the SMTP transcript"
-msgid "Transcript Size (Total Lines)"
+msgid "Maximum Number of Lines in a Transcript"
 msgstr "Taille de la transcription (Total des lignes)"
 
 #: Postman/PostmanAdminController.php:467
-msgctxt "Configuration Section Title"
 msgid "Network Settings"
 msgstr "Paramètres réseau"
 
@@ -569,12 +561,12 @@ msgid "Are you sure?"
 msgstr "En êtes-vous sûre?"
 
 #: Postman/PostmanAdminController.php:579
-msgid "The envelope <b>From</b> address identifies the account owner to the SMTP server."
-msgstr ""
+msgid "The <b>Envelope</b> From address identifies the account owner to the SMTP server."
+msgstr "L'adresse d'expéditeur <b>d'enveloppe</b> identifie le propriétaire du compte sur le serveur SMTP."
 
 #: Postman/PostmanAdminController.php:586
-msgid "The message <b>From</b> address identifies the sender to the recipient. Change this when you are sending on behalf of someone else, for example to use Google's <a href=\"%s\">Send Mail As</a> feature. Themes and other plugins, especially Contact Forms, are permitted to modify this field."
-msgstr ""
+msgid "The <b>Message</b> From address identifies the sender to the recipient. Change this when you are sending on behalf of someone else, for example to use Google's <a href=\"%s\">Send Mail As</a> feature. Themes and other plugins, especially Contact Forms, are permitted to modify this field."
+msgstr "L'adresse d'expéditeur du <b>message</b> identifie l'expéditeur au destinataire. Changer cela lorsque vous envoyez au nom de quelqu'un d'autre, par exemple d'utiliser <a href=\"%s\">Envoyer Mail en tant que</a> fonctionnalité Google. Thèmes et autres plugins, notamment les formulaires de Contact, sont autorisés à modifier ce champ."
 
 #: Postman/PostmanAdminController.php:593
 msgid "Separate multiple <b>to</b>/<b>cc</b>/<b>bcc</b> recipients with commas."
@@ -595,7 +587,7 @@ msgstr "Spécifiez têtes personnalisés (par exemple <code>X-MC-Tags: wordpress
 #: Postman/PostmanAdminController.php:689
 #: Postman/PostmanAdminController.php:711
 msgid "Prevent <b>plugins</b> and <b>themes</b> from changing this"
-msgstr ""
+msgstr "Empêcher des <b>plugins</b> et des <b>thèmes</b> de modifier ceci"
 
 #: Postman/PostmanAdminController.php:724
 #: Postman/PostmanViewController.php:408
@@ -1226,17 +1218,17 @@ msgstr "Entrez l'adresse e-mail et le nom que vous souhaitez envoyer un mail com
 
 #: Postman/PostmanViewController.php:744
 msgid "Please note that to prevent abuse, many email services will <em>not</em> let you send from an email address other than the one you authenticate with."
-msgstr ""
+msgstr "Veuillez noter que pour combattre le Spam, plusieurs services de messagerie <em>ne permettrons pas</em> l'envoi d'un message provenant d'une autre adresse que la vôtre."
 
 #: Postman/PostmanViewController.php:745
 msgctxt "Configuration Input Field"
-msgid "From Email Address"
-msgstr ""
+msgid "Email Address"
+msgstr "Adresse e-mail"
 
 #: Postman/PostmanViewController.php:748
 msgctxt "Configuration Input Field"
-msgid "From Name"
-msgstr ""
+msgid "Name"
+msgstr "Nom"
 
 #: Postman/PostmanViewController.php:755
 msgctxt "Wizard Step Title"
@@ -1369,6 +1361,54 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "https://profiles.wordpress.org/jasonhendriks/"
 msgstr "https://profiles.wordpress.org/jasonhendriks/"
+
+#~ msgctxt "Configuration Section Title"
+#~ msgid "Envelope From Address"
+#~ msgstr "Adresse d'expéditeur d'enveloppe"
+
+#~ msgctxt "Configuration Section Title"
+#~ msgid "Message From Address"
+#~ msgstr "Adresse d'expéditeur du message"
+
+#~ msgctxt "Configuration Section Title"
+#~ msgid "Additional Email Addresses"
+#~ msgstr "Adresses e-mail supplémentaires"
+
+#~ msgctxt "Configuration Input Field"
+#~ msgid "To Recipient(s)"
+#~ msgstr "Pour destinataire(s)"
+
+#~ msgctxt "Configuration Input Field"
+#~ msgid "Carbon Copy Recipient(s)"
+#~ msgstr "Récipiendaires Carbon Copy"
+
+#~ msgctxt "Configuration Input Field"
+#~ msgid "Blind Carbon Copy Recipient(s)"
+#~ msgstr "Récipiendaires Blind Carbon Copy"
+
+#~ msgctxt "Configuration Section Title"
+#~ msgid "Additional Headers"
+#~ msgstr "Têtes additionnels"
+
+#~ msgctxt "Configuration Input Field"
+#~ msgid "Custom Headers"
+#~ msgstr "Têtes personnalisés"
+
+#~ msgctxt "Configuration Input Field"
+#~ msgid "Enable Logging"
+#~ msgstr "Activer la journalisation"
+
+#~ msgctxt "Configuration Input Field"
+#~ msgid "Log Entries Limit"
+#~ msgstr "Limite d'entrées de journal"
+
+#~ msgctxt "The maximum number of lines of the SMTP transcript"
+#~ msgid "Transcript Size (Total Lines)"
+#~ msgstr "Taille de la transcription (Total des lignes)"
+
+#~ msgctxt "Configuration Section Title"
+#~ msgid "Network Settings"
+#~ msgstr "Paramètres réseau"
 
 #~ msgctxt "Configuration Section Title"
 #~ msgid "Envelope From"
