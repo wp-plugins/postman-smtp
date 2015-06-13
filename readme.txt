@@ -23,7 +23,7 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 
 
 = Features =
-* Replaces stock PHP Mailer with the much stronger Zend_Mail
+* Overrides wp_mail, replaces PHP Mailer, avoids PHP mail
 * Logs all emails, including message content and errors
 * Easy-to-use, powerful Setup Wizard for perfect configuration
 * Commercial-grade Connectivity Tester to diagnose server issues
