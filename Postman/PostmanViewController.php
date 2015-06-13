@@ -438,8 +438,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			wp_localize_script ( 'jquery_steps_script', 'steps_loading', 'steps_loading' );
 			
 			// user input
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_email', '#input_' . PostmanOptions::FROM_EMAIL );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_name', '#input_' . PostmanOptions::FROM_NAME );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_email', '#input_' . PostmanOptions::MESSAGE_SENDER_EMAIL );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_input_sender_name', '#input_' . PostmanOptions::MESSAGE_SENDER_NAME );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_port_element_name', '#input_' . PostmanOptions::PORT );
 			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_hostname_element_name', '#input_' . PostmanOptions::HOSTNAME );
 			
@@ -685,8 +685,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 		 */
 		public function outputWizardContent() {
 			// Set default values for input fields
-			$this->options->setSenderEmailIfEmpty ( wp_get_current_user ()->user_email );
-			$this->options->setSenderNameIfEmpty ( wp_get_current_user ()->display_name );
+			$this->options->setMessageSenderEmailIfEmpty ( wp_get_current_user ()->user_email );
+			$this->options->setMessageSenderNameIfEmpty ( wp_get_current_user ()->display_name );
 			
 			// construct Wizard
 			print '<div class="wrap">';
@@ -696,8 +696,8 @@ if (! class_exists ( 'PostmanViewController' )) {
 			print '<form id="postman_wizard" method="post" action="options.php">';
 			
 			// message tab
-			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PREVENT_FROM_EMAIL_OVERRIDE, $this->options->isPluginSenderEmailEnforced () );
-			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PREVENT_FROM_NAME_OVERRIDE, $this->options->isPluginSenderNameEnforced () );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PREVENT_MESSAGE_SENDER_EMAIL_OVERRIDE, $this->options->isPluginSenderEmailEnforced () );
+			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::PREVENT_MESSAGE_SENDER_NAME_OVERRIDE, $this->options->isPluginSenderNameEnforced () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::REPLY_TO, $this->options->getReplyTo () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_TO_RECIPIENTS, $this->options->getForcedToRecipients () );
 			printf ( '<input type="hidden" id="input_%2$s" name="%1$s[%2$s]" value="%3$s" />', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::FORCED_CC_RECIPIENTS, $this->options->getForcedCcRecipients () );

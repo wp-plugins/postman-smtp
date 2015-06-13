@@ -148,7 +148,7 @@ if (! class_exists ( 'PostmanSmtpModuleTransport' )) {
 		}
 		private function isSenderConfigured(PostmanOptions $options) {
 			$envelopeFrom = $options->getEnvelopeSender ();
-			$messageFrom = $options->getFromEmail ();
+			$messageFrom = $options->getMessageSenderEmail ();
 			return ! (empty ( $envelopeFrom ) || empty ( $messageFrom ));
 		}
 		private function isPasswordAuthenticationConfigured(PostmanOptions $options) {

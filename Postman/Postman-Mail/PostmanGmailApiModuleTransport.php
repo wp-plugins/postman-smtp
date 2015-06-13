@@ -141,7 +141,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 			$configured = true;
 			
 			// 1. there is a sender email address
-			$senderEmailAddress = $options->getFromEmail ();
+			$senderEmailAddress = $options->getMessageSenderEmail ();
 			$configured &= ! empty ( $senderEmailAddress );
 			
 			// 2. for some reason the Gmail API wants a Client ID and Client Secret; Auth Token itself is not good enough.
@@ -187,7 +187,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 		}
 		private function isSenderConfigured(PostmanOptions $options) {
 			$envelopeFrom = $options->getEnvelopeSender ();
-			$messageFrom = $options->getFromEmail ();
+			$messageFrom = $options->getMessageSenderEmail ();
 			return ! (empty ( $envelopeFrom ) || empty ( $messageFrom ));
 		}
 		private function isPermissionNeeded(PostmanOAuthToken $token) {

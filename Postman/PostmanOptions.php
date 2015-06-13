@@ -9,8 +9,8 @@ if (! interface_exists ( "PostmanOptionsInterface" )) {
 		public function getLogLevel();
 		public function getHostname();
 		public function getPort();
-		public function getFromEmail();
-		public function getFromName();
+		public function getMessageSenderEmail();
+		public function getMessageSenderName();
 		public function getClientId();
 		public function getClientSecret();
 		public function getTransportType();
@@ -28,6 +28,19 @@ if (! interface_exists ( "PostmanOptionsInterface" )) {
 		public function isAuthTypePlain();
 		public function isAuthTypeCrammd5();
 		public function isAuthTypeNone();
+		
+		/**
+		 *
+		 * @deprecated
+		 *
+		 */
+		public function getSenderEmail();
+		/**
+		 *
+		 * @deprecated
+		 *
+		 */
+		public function getSenderName();
 	}
 }
 
@@ -47,8 +60,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		// the options fields
 		const VERSION = 'version';
 		const ENVELOPE_SENDER = 'envelope_sender';
-		const FROM_EMAIL = 'sender_email';
-		const FROM_NAME = 'sender_name';
+		const MESSAGE_SENDER_EMAIL = 'sender_email';
+		const MESSAGE_SENDER_NAME = 'sender_name';
 		const REPLY_TO = 'reply_to';
 		const FORCED_TO_RECIPIENTS = 'forced_to';
 		const FORCED_CC_RECIPIENTS = 'forced_cc';
@@ -72,8 +85,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		const CLIENT_SECRET = 'oauth_client_secret';
 		const BASIC_AUTH_USERNAME = 'basic_auth_username';
 		const BASIC_AUTH_PASSWORD = 'basic_auth_password';
-		const PREVENT_FROM_NAME_OVERRIDE = 'prevent_sender_name_override';
-		const PREVENT_FROM_EMAIL_OVERRIDE = 'prevent_sender_email_override';
+		const PREVENT_MESSAGE_SENDER_NAME_OVERRIDE = 'prevent_sender_name_override';
+		const PREVENT_MESSAGE_SENDER_EMAIL_OVERRIDE = 'prevent_sender_email_override';
 		const CONNECTION_TIMEOUT = 'connection_timeout';
 		const READ_TIMEOUT = 'read_timeout';
 		const LOG_LEVEL = 'log_level';
@@ -99,8 +112,8 @@ if (! class_exists ( "PostmanOptions" )) {
 		const DEFAULT_TRANSPORT_TYPE = 'smtp'; // must match what's in PostmanSmtpModuleTransport
 		const DEFAULT_TCP_READ_TIMEOUT = 60;
 		const DEFAULT_TCP_CONNECTION_TIMEOUT = 10;
-		const DEFAULT_PLUGIN_FROM_NAME_ENFORCED = false;
-		const DEFAULT_PLUGIN_FROM_EMAIL_ENFORCED = false;
+		const DEFAULT_PLUGIN_MESSAGE_SENDER_NAME_ENFORCED = false;
+		const DEFAULT_PLUGIN_MESSAGE_SENDER_EMAIL_ENFORCED = false;
 		const DEFAULT_TEMP_DIRECTORY = '/tmp';
 		
 		// options data
@@ -207,13 +220,13 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::ENVELOPE_SENDER] ))
 				return $this->options [PostmanOptions::ENVELOPE_SENDER];
 		}
-		public function getFromEmail() {
-			if (isset ( $this->options [PostmanOptions::FROM_EMAIL] ))
-				return $this->options [PostmanOptions::FROM_EMAIL];
+		public function getMessageSenderEmail() {
+			if (isset ( $this->options [PostmanOptions::MESSAGE_SENDER_EMAIL] ))
+				return $this->options [PostmanOptions::MESSAGE_SENDER_EMAIL];
 		}
-		public function getFromName() {
-			if (isset ( $this->options [PostmanOptions::FROM_NAME] ))
-				return $this->options [PostmanOptions::FROM_NAME];
+		public function getMessageSenderName() {
+			if (isset ( $this->options [PostmanOptions::MESSAGE_SENDER_NAME] ))
+				return $this->options [PostmanOptions::MESSAGE_SENDER_NAME];
 		}
 		public function getClientId() {
 			if (isset ( $this->options [PostmanOptions::CLIENT_ID] ))
@@ -245,9 +258,6 @@ if (! class_exists ( "PostmanOptions" )) {
 			if (isset ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] ))
 				return base64_decode ( $this->options [PostmanOptions::BASIC_AUTH_PASSWORD] );
 		}
-		public function getObfuscatedPassword() {
-			return PostmanUtils::obfuscatePassword ( $this->getPassword () );
-		}
 		public function getReplyTo() {
 			if (isset ( $this->options [PostmanOptions::REPLY_TO] ))
 				return $this->options [PostmanOptions::REPLY_TO];
@@ -266,9 +276,9 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function isPluginSenderNameEnforced() {
 			if ($this->isNew ())
-				return self::DEFAULT_PLUGIN_FROM_NAME_ENFORCED;
-			if (isset ( $this->options [PostmanOptions::PREVENT_FROM_NAME_OVERRIDE] ))
-				return $this->options [PostmanOptions::PREVENT_FROM_NAME_OVERRIDE];
+				return self::DEFAULT_PLUGIN_MESSAGE_SENDER_NAME_ENFORCED;
+			if (isset ( $this->options [PostmanOptions::PREVENT_MESSAGE_SENDER_NAME_OVERRIDE] ))
+				return $this->options [PostmanOptions::PREVENT_MESSAGE_SENDER_NAME_OVERRIDE];
 		}
 		/**
 		 * (non-PHPdoc)
@@ -281,9 +291,9 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function isPluginSenderEmailEnforced() {
 			if ($this->isNew ())
-				return self::DEFAULT_PLUGIN_FROM_EMAIL_ENFORCED;
-			if (isset ( $this->options [PostmanOptions::PREVENT_FROM_EMAIL_OVERRIDE] ))
-				return $this->options [PostmanOptions::PREVENT_FROM_EMAIL_OVERRIDE];
+				return self::DEFAULT_PLUGIN_MESSAGE_SENDER_EMAIL_ENFORCED;
+			if (isset ( $this->options [PostmanOptions::PREVENT_MESSAGE_SENDER_EMAIL_OVERRIDE] ))
+				return $this->options [PostmanOptions::PREVENT_MESSAGE_SENDER_EMAIL_OVERRIDE];
 		}
 		/**
 		 *
@@ -292,84 +302,20 @@ if (! class_exists ( "PostmanOptions" )) {
 		public function isSenderEmailOverridePrevented() {
 			return $this->isPluginSenderEmailEnforced ();
 		}
-		public function setSenderNameOverridePrevented($prevent) {
-			$this->options [PostmanOptions::PREVENT_FROM_NAME_OVERRIDE] = $prevent;
+		private function setSenderEmail($senderEmail) {
+			$this->options [PostmanOptions::MESSAGE_SENDER_EMAIL] = $senderEmail;
 		}
-		public function setHostname($hostname) {
-			$this->options [PostmanOptions::HOSTNAME] = $hostname;
-		}
-		public function setHostnameIfEmpty($hostname) {
-			if (empty ( $this->options [PostmanOptions::HOSTNAME] )) {
-				$this->setHostname ( $hostname );
-			}
-		}
-		public function setPort($port) {
-			$this->options [PostmanOptions::PORT] = $port;
-		}
-		public function setPortIfEmpty($port) {
-			if (empty ( $this->options [PostmanOptions::PORT] )) {
-				$this->setPort ( $port );
-			}
-		}
-		public function setSenderEmail($senderEmail) {
-			$this->options [PostmanOptions::FROM_EMAIL] = $senderEmail;
-		}
-		public function setSenderEmailIfEmpty($senderEmail) {
-			if (empty ( $this->options [PostmanOptions::FROM_EMAIL] )) {
+		public function setMessageSenderEmailIfEmpty($senderEmail) {
+			if (empty ( $this->options [PostmanOptions::MESSAGE_SENDER_EMAIL] )) {
 				$this->setSenderEmail ( $senderEmail );
 			}
 		}
-		public function setSenderName($senderName) {
-			$this->options [PostmanOptions::FROM_NAME] = $senderName;
+		private function setSenderName($senderName) {
+			$this->options [PostmanOptions::MESSAGE_SENDER_NAME] = $senderName;
 		}
-		public function setSenderNameIfEmpty($senderName) {
-			if (empty ( $this->options [PostmanOptions::FROM_NAME] )) {
+		public function setMessageSenderNameIfEmpty($senderName) {
+			if (empty ( $this->options [PostmanOptions::MESSAGE_SENDER_NAME] )) {
 				$this->setSenderName ( $senderName );
-			}
-		}
-		public function setClientId($clientId) {
-			$this->options [PostmanOptions::CLIENT_ID] = $clientId;
-		}
-		public function setClientSecret($clientSecret) {
-			$this->options [PostmanOptions::CLIENT_SECRET] = $clientSecret;
-		}
-		public function setTransportType($transportType) {
-			$this->options [PostmanOptions::TRANSPORT_TYPE] = $transportType;
-		}
-		public function setAuthorizationType($authType) {
-			$this->options [PostmanOptions::AUTHENTICATION_TYPE] = $authType;
-		}
-		public function setAuthorizationTypeIfEmpty($authType) {
-			if (! isset ( $this->options [PostmanOptions::AUTHENTICATION_TYPE] )) {
-				$this->setAuthorizationType ( $authType );
-			}
-		}
-		public function setEncryptionType($encType) {
-			$this->options [PostmanOptions::ENCRYPTION_TYPE] = $encType;
-		}
-		public function setUsername($username) {
-			$this->options [PostmanOptions::BASIC_AUTH_USERNAME] = $username;
-		}
-		public function setPassword($password) {
-			$this->options [PostmanOptions::BASIC_AUTH_PASSWORD] = base64_encode ( $password );
-		}
-		public function setReplyTo($replyTo) {
-			$this->options [PostmanOptions::REPLY_TO] = $replyTo;
-		}
-		public function setConnectionTimeout($seconds) {
-			$this->options [self::CONNECTION_TIMEOUT] = $seconds;
-		}
-		public function setReadTimeout($seconds) {
-			$this->options [self::READ_TIMEOUT] = $seconds;
-		}
-		public function setConnectionTimeoutIfEmpty($seconds) {
-			if (! isset ( $this->options [self::CONNECTION_TIMEOUT] )) {
-				$this->setConnectionTimeout ( $seconds );
-			}
-		}
-		public function setReadTimeoutIfEmpty($seconds) {
-			if (! isset ( $this->options [self::READ_TIMEOUT] )) {
-				$this->setReadTimeout ( $seconds );
 			}
 		}
 		public function isAuthTypePassword() {
@@ -389,6 +335,24 @@ if (! class_exists ( "PostmanOptions" )) {
 		}
 		public function isAuthTypeNone() {
 			return PostmanOptions::AUTHENTICATION_TYPE_NONE == $this->getAuthenticationType ();
+		}
+		/**
+		 *
+		 * @deprecated Required by the Postman Gmail Extension
+		 *            
+		 * @see PostmanOptionsInterface::getSenderEmail()
+		 */
+		public function getSenderEmail() {
+			return $this->getMessageSenderEmail ();
+		}
+		/**
+		 *
+		 * @deprecated Required by the Postman Gmail Extension
+		 *            
+		 * @see PostmanOptionsInterface::getSenderEmail()
+		 */
+		public function getSenderName() {
+			return $this->getMessageNameEmail ();
 		}
 	}
 }

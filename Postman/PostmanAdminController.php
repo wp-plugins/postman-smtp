@@ -385,22 +385,22 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'printMessageFromSectionInfo' 
 			), PostmanAdminController::MESSAGE_FROM_OPTIONS );
 			
-			add_settings_field ( PostmanOptions::FROM_EMAIL, _x ( 'From Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::MESSAGE_SENDER_EMAIL, _x ( 'From Email Address', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'from_email_callback' 
 			), PostmanAdminController::MESSAGE_FROM_OPTIONS, PostmanAdminController::MESSAGE_FROM_SECTION );
 			
-			add_settings_field ( PostmanOptions::PREVENT_FROM_EMAIL_OVERRIDE, '', array (
+			add_settings_field ( PostmanOptions::PREVENT_MESSAGE_SENDER_EMAIL_OVERRIDE, '', array (
 					$this,
 					'prevent_from_email_override_callback' 
 			), PostmanAdminController::MESSAGE_FROM_OPTIONS, PostmanAdminController::MESSAGE_FROM_SECTION );
 			
-			add_settings_field ( PostmanOptions::FROM_NAME, _x ( 'From Name', 'Configuration Input Field', 'postman-smtp' ), array (
+			add_settings_field ( PostmanOptions::MESSAGE_SENDER_NAME, _x ( 'From Name', 'Configuration Input Field', 'postman-smtp' ), array (
 					$this,
 					'sender_name_callback' 
 			), PostmanAdminController::MESSAGE_FROM_OPTIONS, PostmanAdminController::MESSAGE_FROM_SECTION );
 			
-			add_settings_field ( PostmanOptions::PREVENT_FROM_NAME_OVERRIDE, '', array (
+			add_settings_field ( PostmanOptions::PREVENT_MESSAGE_SENDER_NAME_OVERRIDE, '', array (
 					$this,
 					'prevent_from_name_override_callback' 
 			), PostmanAdminController::MESSAGE_FROM_OPTIONS, PostmanAdminController::MESSAGE_FROM_SECTION );
@@ -679,7 +679,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function sender_name_callback() {
-			printf ( '<input type="text" id="input_sender_name" name="postman_options[sender_name]" value="%s" size="40" />', null !== $this->options->getFromName () ? esc_attr ( $this->options->getFromName () ) : '' );
+			printf ( '<input type="text" id="input_sender_name" name="postman_options[sender_name]" value="%s" size="40" />', null !== $this->options->getMessageSenderName () ? esc_attr ( $this->options->getMessageSenderName () ) : '' );
 		}
 		
 		/**
@@ -700,7 +700,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function from_email_callback() {
-			printf ( '<input type="email" id="input_sender_email" name="postman_options[sender_email]" value="%s" size="40" class="required"/>', null !== $this->options->getFromEmail () ? esc_attr ( $this->options->getFromEmail () ) : '' );
+			printf ( '<input type="email" id="input_sender_email" name="postman_options[sender_email]" value="%s" size="40" class="required"/>', null !== $this->options->getMessageSenderEmail () ? esc_attr ( $this->options->getMessageSenderEmail () ) : '' );
 		}
 		
 		/**
@@ -764,7 +764,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 * Get the settings option array and print one of its values
 		 */
 		public function basic_auth_password_callback() {
-			printf ( '<input type="password" autocomplete="off" id="input_basic_auth_password" name="postman_options[basic_auth_password]" value="%s" size="40" class="required"/>', null !== $this->options->getPassword () ? esc_attr ( $this->options->getObfuscatedPassword () ) : '' );
+			printf ( '<input type="password" autocomplete="off" id="input_basic_auth_password" name="postman_options[basic_auth_password]" value="%s" size="40" class="required"/>', null !== $this->options->getPassword () ? esc_attr ( PostmanUtils::obfuscatePassword ( $this->options->getPassword () ) ) : '' );
 			print ' <input type="button" id="togglePasswordField" value="Show Password" class="button button-secondary" style="visibility:hidden" />';
 		}
 		

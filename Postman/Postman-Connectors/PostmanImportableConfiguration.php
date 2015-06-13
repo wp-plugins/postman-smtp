@@ -6,8 +6,8 @@ if (! interface_exists ( 'PostmanPluginOptions' )) {
 		public function isImportable();
 		public function getHostname();
 		public function getPort();
-		public function getFromEmail();
-		public function getFromName();
+		public function getMessageSenderEmail();
+		public function getMessageSenderName();
 		public function getAuthenticationType();
 		public function getEncryptionType();
 		public function getUsername();
@@ -79,8 +79,8 @@ if (! class_exists ( 'PostmanAbstractPluginOptions' )) {
 			$valid = true;
 			$host = $this->getHostname ();
 			$port = $this->getPort ();
-			$fromEmail = $this->getFromEmail ();
-			$fromName = $this->getFromName ();
+			$fromEmail = $this->getMessageSenderEmail ();
+			$fromName = $this->getMessageSenderName ();
 			$auth = $this->getAuthenticationType ();
 			$enc = $this->getEncryptionType ();
 			$username = $this->getUsername ();
@@ -116,8 +116,8 @@ if (! class_exists ( 'PostmanConfigureSmtpOptions' )) {
 	class PostmanConfigureSmtpOptions extends PostmanAbstractPluginOptions {
 		const SLUG = 'configure_smtp';
 		const PLUGIN_NAME = 'Configure SMTP';
-		const FROM_EMAIL = 'from_email';
-		const FROM_NAME = 'from_name';
+		const MESSAGE_SENDER_EMAIL = 'from_email';
+		const MESSAGE_SENDER_NAME = 'from_name';
 		const HOSTNAME = 'host';
 		const PORT = 'port';
 		const AUTHENTICATION_TYPE = 'smtp_auth';
@@ -134,13 +134,13 @@ if (! class_exists ( 'PostmanConfigureSmtpOptions' )) {
 		public function getPluginName() {
 			return self::PLUGIN_NAME;
 		}
-		public function getFromEmail() {
-			if (isset ( $this->options [self::FROM_EMAIL] ))
-				return $this->options [self::FROM_EMAIL];
+		public function getMessageSenderEmail() {
+			if (isset ( $this->options [self::MESSAGE_SENDER_EMAIL] ))
+				return $this->options [self::MESSAGE_SENDER_EMAIL];
 		}
-		public function getFromName() {
-			if (isset ( $this->options [self::FROM_NAME] ))
-				return $this->options [self::FROM_NAME];
+		public function getMessageSenderName() {
+			if (isset ( $this->options [self::MESSAGE_SENDER_NAME] ))
+				return $this->options [self::MESSAGE_SENDER_NAME];
 		}
 		public function getHostname() {
 			if (isset ( $this->options [self::HOSTNAME] ))
@@ -188,8 +188,8 @@ if (! class_exists ( 'PostmanCimySwiftSmtpOptions' )) {
 	class PostmanCimySwiftSmtpOptions extends PostmanAbstractPluginOptions {
 		const SLUG = 'cimy_swift_smtp';
 		const PLUGIN_NAME = 'Cimy Swift SMTP';
-		const FROM_EMAIL = 'sender_mail';
-		const FROM_NAME = 'sender_name';
+		const MESSAGE_SENDER_EMAIL = 'sender_mail';
+		const MESSAGE_SENDER_NAME = 'sender_name';
 		const HOSTNAME = 'server';
 		const PORT = 'port';
 		const ENCRYPTION_TYPE = 'ssl';
@@ -205,13 +205,13 @@ if (! class_exists ( 'PostmanCimySwiftSmtpOptions' )) {
 		public function getPluginName() {
 			return self::PLUGIN_NAME;
 		}
-		public function getFromEmail() {
-			if (isset ( $this->options [self::FROM_EMAIL] ))
-				return $this->options [self::FROM_EMAIL];
+		public function getMessageSenderEmail() {
+			if (isset ( $this->options [self::MESSAGE_SENDER_EMAIL] ))
+				return $this->options [self::MESSAGE_SENDER_EMAIL];
 		}
-		public function getFromName() {
-			if (isset ( $this->options [self::FROM_NAME] ))
-				return $this->options [self::FROM_NAME];
+		public function getMessageSenderName() {
+			if (isset ( $this->options [self::MESSAGE_SENDER_NAME] ))
+				return $this->options [self::MESSAGE_SENDER_NAME];
 		}
 		public function getHostname() {
 			if (isset ( $this->options [self::HOSTNAME] ))
@@ -263,8 +263,8 @@ if (! class_exists ( 'PostmanEasyWpSmtpOptions' )) {
 		const SLUG = 'easy_wp_smtp';
 		const PLUGIN_NAME = 'Easy WP SMTP';
 		const SMTP_SETTINGS = 'smtp_settings';
-		const FROM_EMAIL = 'from_email_field';
-		const FROM_NAME = 'from_name_field';
+		const MESSAGE_SENDER_EMAIL = 'from_email_field';
+		const MESSAGE_SENDER_NAME = 'from_name_field';
 		const HOSTNAME = 'host';
 		const PORT = 'port';
 		const ENCRYPTION_TYPE = 'type_encryption';
@@ -281,13 +281,13 @@ if (! class_exists ( 'PostmanEasyWpSmtpOptions' )) {
 		public function getPluginName() {
 			return self::PLUGIN_NAME;
 		}
-		public function getFromEmail() {
-			if (isset ( $this->options [self::FROM_EMAIL] ))
-				return $this->options [self::FROM_EMAIL];
+		public function getMessageSenderEmail() {
+			if (isset ( $this->options [self::MESSAGE_SENDER_EMAIL] ))
+				return $this->options [self::MESSAGE_SENDER_EMAIL];
 		}
-		public function getFromName() {
-			if (isset ( $this->options [self::FROM_NAME] ))
-				return $this->options [self::FROM_NAME];
+		public function getMessageSenderName() {
+			if (isset ( $this->options [self::MESSAGE_SENDER_NAME] ))
+				return $this->options [self::MESSAGE_SENDER_NAME];
 		}
 		public function getHostname() {
 			if (isset ( $this->options [self::SMTP_SETTINGS] [self::HOSTNAME] ))
@@ -376,11 +376,11 @@ if (! class_exists ( 'PostmanWpMailBankOptions' )) {
 		public function getPluginName() {
 			return self::PLUGIN_NAME;
 		}
-		public function getFromEmail() {
+		public function getMessageSenderEmail() {
 			if (isset ( $this->options->from_email ))
 				return $this->options->from_email;
 		}
-		public function getFromName() {
+		public function getMessageSenderName() {
 			if (isset ( $this->options->from_name )) {
 				return stripslashes ( htmlspecialchars_decode ( $this->options->from_name, ENT_QUOTES ) );
 			}
@@ -438,8 +438,8 @@ if (! class_exists ( 'PostmanWpMailSmtpOptions' )) {
 	class PostmanWpMailSmtpOptions extends PostmanAbstractPluginOptions implements PostmanPluginOptions {
 		const SLUG = 'wp_mail_smtp';
 		const PLUGIN_NAME = 'WP Mail SMTP';
-		const FROM_EMAIL = 'mail_from';
-		const FROM_NAME = 'mail_from_name';
+		const MESSAGE_SENDER_EMAIL = 'mail_from';
+		const MESSAGE_SENDER_NAME = 'mail_from_name';
 		const HOSTNAME = 'smtp_host';
 		const PORT = 'smtp_port';
 		const ENCRYPTION_TYPE = 'smtp_ssl';
@@ -448,8 +448,8 @@ if (! class_exists ( 'PostmanWpMailSmtpOptions' )) {
 		const PASSWORD = 'smtp_pass';
 		public function __construct() {
 			parent::__construct ();
-			$this->options [self::FROM_EMAIL] = get_option ( self::FROM_EMAIL );
-			$this->options [self::FROM_NAME] = get_option ( self::FROM_NAME );
+			$this->options [self::MESSAGE_SENDER_EMAIL] = get_option ( self::MESSAGE_SENDER_EMAIL );
+			$this->options [self::MESSAGE_SENDER_NAME] = get_option ( self::MESSAGE_SENDER_NAME );
 			$this->options [self::HOSTNAME] = get_option ( self::HOSTNAME );
 			$this->options [self::PORT] = get_option ( self::PORT );
 			$this->options [self::ENCRYPTION_TYPE] = get_option ( self::ENCRYPTION_TYPE );
@@ -463,13 +463,13 @@ if (! class_exists ( 'PostmanWpMailSmtpOptions' )) {
 		public function getPluginName() {
 			return self::PLUGIN_NAME;
 		}
-		public function getFromEmail() {
-			if (isset ( $this->options [self::FROM_EMAIL] ))
-				return $this->options [self::FROM_EMAIL];
+		public function getMessageSenderEmail() {
+			if (isset ( $this->options [self::MESSAGE_SENDER_EMAIL] ))
+				return $this->options [self::MESSAGE_SENDER_EMAIL];
 		}
-		public function getFromName() {
-			if (isset ( $this->options [self::FROM_NAME] ))
-				return $this->options [self::FROM_NAME];
+		public function getMessageSenderName() {
+			if (isset ( $this->options [self::MESSAGE_SENDER_NAME] ))
+				return $this->options [self::MESSAGE_SENDER_NAME];
 		}
 		public function getHostname() {
 			if (isset ( $this->options [self::HOSTNAME] ))
@@ -521,8 +521,8 @@ if (! class_exists ( 'PostmanWpSmtpOptions' )) {
 	class PostmanWpSmtpOptions extends PostmanAbstractPluginOptions implements PostmanPluginOptions {
 		const SLUG = 'wp_smtp'; // god these names are terrible
 		const PLUGIN_NAME = 'WP SMTP';
-		const FROM_EMAIL = 'from';
-		const FROM_NAME = 'fromname';
+		const MESSAGE_SENDER_EMAIL = 'from';
+		const MESSAGE_SENDER_NAME = 'fromname';
 		const HOSTNAME = 'host';
 		const PORT = 'port';
 		const ENCRYPTION_TYPE = 'smtpsecure';
@@ -539,13 +539,13 @@ if (! class_exists ( 'PostmanWpSmtpOptions' )) {
 		public function getPluginName() {
 			return self::PLUGIN_NAME;
 		}
-		public function getFromEmail() {
-			if (isset ( $this->options [self::FROM_EMAIL] ))
-				return $this->options [self::FROM_EMAIL];
+		public function getMessageSenderEmail() {
+			if (isset ( $this->options [self::MESSAGE_SENDER_EMAIL] ))
+				return $this->options [self::MESSAGE_SENDER_EMAIL];
 		}
-		public function getFromName() {
-			if (isset ( $this->options [self::FROM_NAME] ))
-				return $this->options [self::FROM_NAME];
+		public function getMessageSenderName() {
+			if (isset ( $this->options [self::MESSAGE_SENDER_NAME] ))
+				return $this->options [self::MESSAGE_SENDER_NAME];
 		}
 		public function getHostname() {
 			if (isset ( $this->options [self::HOSTNAME] ))

@@ -26,7 +26,7 @@ if (! class_exists ( "PostmanAuthenticationManagerFactory" )) {
 			$hostname = $options->getHostname ();
 			$clientId = $options->getClientId ();
 			$clientSecret = $options->getClientSecret ();
-			$senderEmail = $options->getFromEmail ();
+			$senderEmail = $options->getMessageSenderEmail ();
 			if (! isset ( $scribe )) {
 				$transport = PostmanTransportRegistry::getInstance()->getCurrentTransport ();
 				$scribe = PostmanConfigTextHelperFactory::createScribe ( $hostname, $transport );

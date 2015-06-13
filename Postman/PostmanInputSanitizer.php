@@ -36,20 +36,20 @@ if (! class_exists ( 'PostmanInputSanitizer' )) {
 				}
 			}
 			// check the auth type AFTER the hostname because we reset the hostname if auth is bad
-			$this->sanitizeString ( 'From Email', PostmanOptions::FROM_EMAIL, $input, $new_input );
+			$this->sanitizeString ( 'From Email', PostmanOptions::MESSAGE_SENDER_EMAIL, $input, $new_input );
 			// the wizard doesn't set an envelope sender, so we'll default it to From Email
-			$new_input[PostmanOptions::ENVELOPE_SENDER] = $new_input[PostmanOptions::FROM_EMAIL];
+			$new_input[PostmanOptions::ENVELOPE_SENDER] = $new_input[PostmanOptions::MESSAGE_SENDER_EMAIL];
 			$this->sanitizeString ( 'Sender Email', PostmanOptions::ENVELOPE_SENDER, $input, $new_input );
 			$this->sanitizeString ( 'Transport Type', PostmanOptions::TRANSPORT_TYPE, $input, $new_input );
 			$this->sanitizeString ( 'Authorization Type', PostmanOptions::AUTHENTICATION_TYPE, $input, $new_input );
-			$this->sanitizeString ( 'From Name', PostmanOptions::FROM_NAME, $input, $new_input );
+			$this->sanitizeString ( 'From Name', PostmanOptions::MESSAGE_SENDER_NAME, $input, $new_input );
 			$this->sanitizeString ( 'Client ID', PostmanOptions::CLIENT_ID, $input, $new_input );
 			$this->sanitizeString ( 'Client Secret', PostmanOptions::CLIENT_SECRET, $input, $new_input );
 			$this->sanitizeString ( 'Username', PostmanOptions::BASIC_AUTH_USERNAME, $input, $new_input );
 			$this->sanitizePassword ( 'Password', PostmanOptions::BASIC_AUTH_PASSWORD, $input, $new_input );
 			$this->sanitizeString ( 'Reply-To', PostmanOptions::REPLY_TO, $input, $new_input );
-			$this->sanitizeString ( 'From Name Override', PostmanOptions::PREVENT_FROM_NAME_OVERRIDE, $input, $new_input );
-			$this->sanitizeString ( 'From Email Override', PostmanOptions::PREVENT_FROM_EMAIL_OVERRIDE, $input, $new_input );
+			$this->sanitizeString ( 'From Name Override', PostmanOptions::PREVENT_MESSAGE_SENDER_NAME_OVERRIDE, $input, $new_input );
+			$this->sanitizeString ( 'From Email Override', PostmanOptions::PREVENT_MESSAGE_SENDER_EMAIL_OVERRIDE, $input, $new_input );
 			$this->sanitizeString ( 'Forced To Recipients', PostmanOptions::FORCED_TO_RECIPIENTS, $input, $new_input );
 			$this->sanitizeString ( 'Forced CC Recipients', PostmanOptions::FORCED_CC_RECIPIENTS, $input, $new_input );
 			$this->sanitizeString ( 'Forced BCC Recipients', PostmanOptions::FORCED_BCC_RECIPIENTS, $input, $new_input );

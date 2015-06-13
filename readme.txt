@@ -247,7 +247,7 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 == Changelog ==
 
 = 1.6.18 - 2015-06-13 =
-* 8,000 installations!
+* 8,000 installations! Big milestone! The author of [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) has [officially endorsed Postman SMTP](http://contactform7.com/faq/i-get-an-error-message-with-a-red-border-so-how-can-i-solve-this/) as the SMTP plugin of choice! You can't wipe the smile from my face :D
 * [[Ticket](https://wordpress.org/support/topic/password-corruption-issue?replies=1)] Passwords are being encoded incorrectly in rare cases. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/subscriber-registration?replies=6)] Postman is determining the current's user admin capability incorrectly. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/using-a-google-apps-group-as-sender?replies=3)] Added an additional From field, the Envelope From, so users can use a different From address than the Account address (for example, to use a Google Apps' Group email address)

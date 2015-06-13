@@ -120,7 +120,7 @@ class Email
 
     public function getFrom($as_array = false)
     {
-        if($as_array && ($name = $this->getFromName())) {
+        if($as_array && ($name = $this->getMessageSenderName())) {
             return array("$this->from" => $name);
         } else {
             return $this->from;
@@ -133,7 +133,7 @@ class Email
         return $this;
     }
 
-    public function getFromName()
+    public function getMessageSenderName()
     {
         return $this->fromName;
     }
@@ -565,7 +565,7 @@ class Email
         if ($this->getCcNames())      { $web['ccname']      = $this->getCcNames(); }
         if ($this->getBccs())         { $web['bcc']         = $this->getBccs(); }
         if ($this->getBccNames())     { $web['bccname']     = $this->getBccNames(); }
-        if ($this->getFromName())     { $web['fromname']    = $this->getFromName(); }
+        if ($this->getMessageSenderName())     { $web['fromname']    = $this->getMessageSenderName(); }
         if ($this->getReplyTo())      { $web['replyto']     = $this->getReplyTo(); }
         if ($this->getDate())         { $web['date']        = $this->getDate(); }
         if ($this->smtpapi->to && (count($this->smtpapi->to) > 0))  { $web['to'] = ""; }
