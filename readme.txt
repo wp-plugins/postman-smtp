@@ -247,7 +247,7 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 == Changelog ==
 
 = 1.6.19 - 2015-06-14 =
-* [[Ticket](https://wordpress.org/support/topic/latest-update-conflicting-with-theme?replies=3#post-7066897)] Forgot to remove error_reporting(-1); All the poorly-coded plugins are going crazy :-/
+* [[Ticket](https://wordpress.org/support/topic/latest-update-conflicting-with-theme?replies=3#post-7066897)] I enable Strict mode when I code Postman to ensure it's error free and I forgot to turn it off. This was causing all plugins and themes to report their problems in v1.6.18. Fixed. 
 
 = 1.6.18 - 2015-06-13 =
 * 8,000 installations! Big milestone! The author of [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) has [officially endorsed Postman SMTP](http://contactform7.com/faq/i-get-an-error-message-with-a-red-border-so-how-can-i-solve-this/) as the SMTP plugin of choice! You can't wipe the smile from my face :D
