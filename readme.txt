@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.18
+Stable tag: 1.6.19
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -245,6 +245,9 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 
 == Changelog ==
+
+= 1.6.19 - 2015-06-14 =
+* [[Ticket](https://wordpress.org/support/topic/latest-update-conflicting-with-theme?replies=3#post-7066897)] Forgot to remove error_reporting(-1); All the poorly-coded plugins are going crazy :-/
 
 = 1.6.18 - 2015-06-13 =
 * 8,000 installations! Big milestone! The author of [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) has [officially endorsed Postman SMTP](http://contactform7.com/faq/i-get-an-error-message-with-a-red-border-so-how-can-i-solve-this/) as the SMTP plugin of choice! You can't wipe the smile from my face :D
