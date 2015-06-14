@@ -240,3 +240,74 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		}
 	}
 }
+
+if (! class_exists ( 'PostmanEmailLogPurger' )) {
+	class PostmanEmailLogPurger {
+		private $posts;
+		private $logger;
+
+		/**
+		 *
+		 * @return unknown
+		 */
+		function __construct() {
+			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			$args = array (
+					'posts_per_page' => 1000,
+					'offset' => 0,
+					'category' => '',
+					'category_name' => '',
+					'orderby' => 'date',
+					'order' => 'DESC',
+					'include' => '',
+					'exclude' => '',
+					'meta_key' => '',
+					'meta_value' => '',
+					'post_type' => PostmanEmailLogService::POSTMAN_CUSTOM_POST_TYPE_SLUG,
+					'post_mime_type' => '',
+					'post_parent' => '',
+					'post_status' => 'private',
+					'suppress_filters' => true
+			);
+			$this->posts = get_posts ( $args );
+		}
+
+		/**
+		 *
+		 * @param array $posts
+		 * @param unknown $postid
+		 */
+		function verifyLogItemExistsAndRemove($postid) {
+			$force_delete = true;
+			foreach ( $this->posts as $post ) {
+				if ($post->ID == $postid) {
+					$this->logger->debug ( 'deleting log item ' . $postid );
+					wp_delete_post ( $postid, $force_delete );
+					return;
+				}
+			}
+			$this->logger->warn ( 'could not find Postman Log Item #' . $postid );
+		}
+		function removeAll() {
+			$this->logger->debug ( sprintf ( 'deleting %d log items ', sizeof ( $this->posts ) ) );
+			$force_delete = true;
+			foreach ( $this->posts as $post ) {
+				wp_delete_post ( $post->ID, $force_delete );
+			}
+		}
+
+		/**
+		 *
+		 * @param unknown $size
+		 */
+		function truncateLogItems($size) {
+			$index = count ( $this->posts );
+			$force_delete = true;
+			while ( $index > $size ) {
+				$postid = $this->posts [-- $index]->ID;
+				$this->logger->debug ( 'deleting log item ' . $postid );
+				wp_delete_post ( $postid, $force_delete );
+			}
+		}
+	}
+}
