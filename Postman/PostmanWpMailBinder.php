@@ -1,8 +1,4 @@
 <?php
-require_once 'PostmanWpMail.php';
-require_once 'PostmanOptions.php';
-require_once 'PostmanPreRequisitesCheck.php';
-
 if (! class_exists ( 'PostmanWpMailBinder' )) {
 	class PostmanWpMailBinder {
 		private $logger;
@@ -14,6 +10,11 @@ if (! class_exists ( 'PostmanWpMailBinder' )) {
 		 */
 		private function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			
+			// load the dependencies
+			require_once 'PostmanWpMail.php';
+			require_once 'PostmanOptions.php';
+			require_once 'PostmanPreRequisitesCheck.php';
 
 			// register the bind status hook
 			add_filter ( 'postman_wp_mail_bind_status', array (
@@ -48,7 +49,7 @@ if (! class_exists ( 'PostmanWpMailBinder' )) {
 		
 		/**
 		 * Important: bind() may be called multiple times
-		 * 
+		 *
 		 * Replace wp_mail() after making sure:
 		 * 1) the plugin has not already bound to wp_mail and
 		 * 2) wp_mail is available for use
@@ -110,10 +111,12 @@ if (! class_exists ( 'PostmanWpMailBinder' )) {
 			 * @return bool Whether the email contents were sent successfully.
 			 */
 			function wp_mail($to, $subject, $message, $headers = '', $attachments = array()) {
-				
 				// create an instance of PostmanWpMail to send the message
 				$postmanWpMail = new PostmanWpMail ();
-				return $postmanWpMail->send ( $to, $subject, $message, $headers, $attachments );
+				// send the mail
+				$result = $postmanWpMail->send ( $to, $subject, $message, $headers, $attachments );
+				// return the result
+				return $result;
 			}
 			$this->logger->debug ( 'Bound to wp_mail()' );
 			$this->bound = true;
