@@ -1,13 +1,6 @@
 <?php
 if (! class_exists ( "PostmanWpMail" )) {
 	
-	require_once 'Postman-Email-Log/PostmanEmailLogService.php';
-	require_once 'Postman-Email-Log/PostmanEmailLogController.php';
-	require_once 'Postman-Mail/PostmanMessage.php';
-	require_once 'Postman-Auth/PostmanAuthenticationManagerFactory.php';
-	require_once 'Postman-Mail/PostmanMailEngine.php';
-	require_once 'PostmanStats.php';
-	
 	/**
 	 * Moved this code into a class so it could be used by both wp_mail() and PostmanSendTestEmailController
 	 *
@@ -41,8 +34,16 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @return boolean
 		 */
 		public function send($to, $subject, $message, $headers = '', $attachments = array()) {
+
 			// start the clock
 			$startTime = microtime ( true ) * 1000;
+
+			// load the dependencies
+			require_once 'Postman-Email-Log/PostmanEmailLogService.php';
+			require_once 'Postman-Mail/PostmanMessage.php';
+			require_once 'Postman-Auth/PostmanAuthenticationManagerFactory.php';
+			require_once 'Postman-Mail/PostmanMailEngine.php';
+			require_once 'PostmanStats.php';
 			
 			$this->logger->trace ( 'wp_mail parameters before applying WordPress wp_mail filter:' );
 			$this->traceParameters ( $to, $subject, $message, $headers, $attachments );
@@ -192,6 +193,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 		}
 		
 		/**
+		 * Returns the result of the last call to send()
 		 *
 		 * @return multitype:Exception NULL
 		 */
@@ -276,15 +278,5 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$this->logger->trace ( $message );
 		}
 		
-		/**
-		 *
-		 * @return Exception
-		 */
-		public function getException() {
-			return $this->exception;
-		}
-		public function getTranscript() {
-			return $this->transcript;
-		}
 	}
 }
