@@ -1,4 +1,5 @@
 <?php
+require_once 'PostmanTransportPrivate.php';
 if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 	/**
 	 * This class integrates Postman with the Gmail API
@@ -7,7 +8,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 	 * @author jasonhendriks
 	 *        
 	 */
-	class PostmanGmailApiModuleTransport implements PostmanTransport {
+	class PostmanGmailApiModuleTransport implements PostmanTransportPrivate {
 		const SLUG = 'gmail_api';
 		const PORT = 443;
 		const HOST = 'www.googleapis.com';
@@ -29,7 +30,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 		 *
 		 * @return string
 		 */
-		public function getHostname(PostmanOptions $options) {
+		public function getHostname() {
 			return 'www.googleapis.com';
 		}
 		/**
@@ -37,7 +38,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 		 *
 		 * @return string
 		 */
-		public function getHostPort(PostmanOptions $options) {
+		public function getHostPort() {
 			return self::PORT;
 		}
 		/**
@@ -45,7 +46,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 		 *
 		 * @return string
 		 */
-		public function getAuthenticationType(PostmanOptions $options) {
+		public function getAuthenticationType() {
 			return 'oauth2';
 		}
 		/**
@@ -53,7 +54,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 		 *
 		 * @return string
 		 */
-		public function getSecurityType(PostmanOptions $options) {
+		public function getSecurityType() {
 			return 'https';
 		}
 		/**
@@ -61,7 +62,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 		 *
 		 * @return string
 		 */
-		public function getCredentialsId(PostmanOptions $options) {
+		public function getCredentialsId() {
 			return $options->getClientId ();
 		}
 		/**
@@ -69,7 +70,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 		 *
 		 * @return string
 		 */
-		public function getCredentialsSecret(PostmanOptions $options) {
+		public function getCredentialsSecret() {
 			return $options->getClientSecret ();
 		}
 		public function isServiceProviderGoogle($hostname) {
@@ -123,7 +124,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 			$config [PostmanGmailApiModuleZendMailTransport::SERVICE_OPTION] = $service;
 			return new PostmanGmailApiModuleZendMailTransport ( $hostname, $config );
 		}
-		public function getDeliveryDetails(PostmanOptions $options) {
+		public function getDeliveryDetails() {
 			$deliveryDetails ['auth_desc'] = _x ( 'OAuth 2.0', 'Authentication Type is OAuth 2.0', 'postman-smtp' );
 			/* translators: %s is the Authentication Type (e.g. OAuth 2.0) */
 			return sprintf ( __ ( 'Postman will send mail via the <b>🔐Gmail API</b> using %s authentication.', 'postman-smtp' ), '<b>' . $deliveryDetails ['auth_desc'] . '</b>' );
@@ -194,7 +195,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 			$accessToken = $token->getAccessToken ();
 			$refreshToken = $token->getRefreshToken ();
 			$oauthVendor = $token->getVendorName ();
-			return $oauthVendor != PostmanGoogleAuthenticationManager::VENDOR_NAME || empty ( $accessToken ) || empty ( $refreshToken );
+			return $oauthVendor != 'google' || empty ( $accessToken ) || empty ( $refreshToken );
 		}
 		
 		/**

@@ -1,6 +1,7 @@
 <?php
+require_once 'PostmanTransportPrivate.php';
 if (! class_exists ( 'PostmanSmtpModuleTransport' )) {
-	class PostmanSmtpModuleTransport implements PostmanTransport {
+	class PostmanSmtpModuleTransport implements PostmanTransportPrivate {
 		private $logger;
 		public function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
