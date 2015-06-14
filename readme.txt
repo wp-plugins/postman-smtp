@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.17
+Stable tag: 1.6.20
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -246,8 +246,9 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 == Changelog ==
 
-= 1.6.19 - 2015-06-14 =
+= 1.6.20 - 2015-06-14 =
 * [[Ticket](https://wordpress.org/support/topic/latest-update-conflicting-with-theme?replies=3#post-7066897)] I enable Strict mode when I code Postman to ensure it's error free and I forgot to turn it off. This was causing all plugins and themes to report their problems in v1.6.18. Fixed. 
+* [[Ticket](https://wordpress.org/support/topic/upgrade-to-1619-broke-contact-form?replies=2#post-7067673)] I didn't thoroughly test the Gmail API, causing "Catchable fatal error: Argument 1 passed to PostmanGmailApiModuleTransport::getAuthenticationType() must be an instance of PostmanOptions, none given." Fixed. 
 
 = 1.6.18 - 2015-06-13 =
 * 8,000 installations! Big milestone! The author of [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) has [officially endorsed Postman SMTP](http://contactform7.com/faq/i-get-an-error-message-with-a-red-border-so-how-can-i-solve-this/) as the SMTP plugin of choice! You can't wipe the smile from my face :D
