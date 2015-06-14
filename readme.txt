@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.19
+Stable tag: 1.6.17
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,7 +40,7 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 = Requirements =
 * WordPress 3.9 and PHP 5.2 with SPL and iconv
 * Connectivity to, and authentication credentials with, any email service provider
-* 3.7MB per process for admin users; 2.5MB per process for visitors
+* Memory: 750KiB per process at idle
 * ¹ OAuth 2.0 features require a free [Google](https://developers.google.com/accounts/docs/OAuth2), [Microsoft](https://msdn.microsoft.com/en-us/library/cc287659.aspx) or [Yahoo](https://developer.yahoo.com/faq/#appid) OAuth 2.0 Client ID
 * ² Custom email domains require an SPF and DKIM record for Blackhole-free/Spam-free delivery
 
