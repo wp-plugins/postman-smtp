@@ -44,7 +44,7 @@ if (! class_exists ( 'Postman' )) {
 			require_once 'PostmanWpMailBinder.php';
 			require_once 'PostmanConfigTextHelper.php';
 			require_once 'PostmanActivationHandler.php';
-				
+			
 			// get plugin metadata - alternative to get_plugin_data
 			$this->pluginData = array (
 					'name' => __ ( 'Postman SMTP', 'postman-smtp' ),
@@ -77,10 +77,12 @@ if (! class_exists ( 'Postman' )) {
 			
 			// register activation handler on the activation event
 			// must be called in constructor
-			register_activation_hook ( $rootPluginFilenameAndPath, array (
-					new PostmanActivationHandler (),
-					'activate_postman' 
-			) );
+			if (is_admin ()) {
+				register_activation_hook ( $rootPluginFilenameAndPath, array (
+						new PostmanActivationHandler (),
+						'activate_postman' 
+				) );
+			}
 			
 			// register the shortcode handler on the add_shortcode event
 			add_shortcode ( 'postman-version', array (
@@ -108,6 +110,14 @@ if (! class_exists ( 'Postman' )) {
 		 * If the user is an administrator, creates the Admin screens
 		 */
 		public function setup_admin() {
+			// check if this is an admin user
+			if (PostmanUtils::isAdmin ()) {
+				// load email log service, in case another plugin (eg. WordPress importer)
+				// is doing something related to custom post types
+				// this is only something admins do
+				require_once 'Postman-Email-Log/PostmanEmailLogService.php';
+			}
+			
 			// check if this is an admin user on the admin screen
 			if (PostmanUtils::isAdminOnAdminScreen ()) {
 				
@@ -123,10 +133,6 @@ if (! class_exists ( 'Postman' )) {
 				require_once 'Postman-Controller/PostmanDashboardWidgetController.php';
 				require_once 'Postman-Controller/PostmanAdminPointer.php';
 				require_once 'Postman-Email-Log/PostmanEmailLogController.php';
-				
-				// load email log service, in case another plugin (eg. WordPress importer)
-				// is doing something related to custom post types
-				require_once 'Postman-Email-Log/PostmanEmailLogService.php';
 				
 				// create and store an instance of the MessageHandler
 				$this->messageHandler = new PostmanMessageHandler ();
