@@ -13,6 +13,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 	require_once 'PostmanAjaxController.php';
 	require_once 'PostmanViewController.php';
 	require_once 'PostmanPreRequisitesCheck.php';
+	require_once 'Postman-Auth/PostmanAuthenticationManagerFactory.php';
 	
 	//
 	class PostmanAdminController {
@@ -67,9 +68,32 @@ if (! class_exists ( "PostmanAdminController" )) {
 		private $wpMailBinder;
 		
 		/**
-		 * Start up
+		 * Constructor
+		 *
+		 * @param unknown $rootPluginFilenameAndPath        	
+		 * @param PostmanOptions $options        	
+		 * @param PostmanOAuthToken $authorizationToken        	
+		 * @param PostmanMessageHandler $messageHandler        	
+		 * @param PostmanWpMailBinder $binder        	
 		 */
 		public function __construct($rootPluginFilenameAndPath, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanMessageHandler $messageHandler, PostmanWpMailBinder $binder) {
+			// sanity-check
+			// wrap the initialization code inside an admin privilege check
+			if (PostmanUtils::isAdminOnAdminScreen ()) {
+				$this->init($rootPluginFilenameAndPath, $options, $authorizationToken, $messageHandler, $binder);
+			}
+		}
+		
+		/**
+		 * Initialize the class
+		 *
+		 * @param unknown $rootPluginFilenameAndPath        	
+		 * @param PostmanOptions $options        	
+		 * @param PostmanOAuthToken $authorizationToken        	
+		 * @param PostmanMessageHandler $messageHandler        	
+		 * @param PostmanWpMailBinder $binder        	
+		 */
+		private function init($rootPluginFilenameAndPath, PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanMessageHandler $messageHandler, PostmanWpMailBinder $binder) {
 			assert ( ! empty ( $rootPluginFilenameAndPath ) );
 			assert ( ! empty ( $options ) );
 			assert ( ! empty ( $authorizationToken ) );
@@ -115,7 +139,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 			// continue to initialize the AdminController
 			add_action ( 'init', array (
 					$this,
-					'init' 
+					'registerHooks' 
 			) );
 			
 			// Adds "Settings" link to the plugin action page
@@ -130,7 +154,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 					'initializeAdminPage' 
 			) );
 		}
-		public function init() {
+		
+		/**
+		 */
+		public function registerHooks() {
 			//
 			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
 			$this->oauthScribe = PostmanConfigTextHelperFactory::createScribe ( $this->options->getHostname (), $transport );
