@@ -22,7 +22,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			// Activation is not used often, lazy initialize the logger
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->logger->trace ( '$networkwide?' . $networkwide );
-				
+			
 			// handle network activation
 			// from https://wordpress.org/support/topic/new-function-wp_get_sites?replies=11
 			if (function_exists ( 'is_multisite' ) && is_multisite ()) {
@@ -32,8 +32,8 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 					// Get all blog ids
 					$subsites = wp_get_sites ();
 					foreach ( $subsites as $subsite ) {
-						$this->logger->trace ( 'multisite: switching to blog ' . $subsite[ 'blog_id' ] );
-						switch_to_blog ( $subsite[ 'blog_id' ] );
+						$this->logger->trace ( 'multisite: switching to blog ' . $subsite ['blog_id'] );
+						switch_to_blog ( $subsite ['blog_id'] );
 						$this->handleOptionUpdates ();
 					}
 					switch_to_blog ( $old_blog );
@@ -101,7 +101,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 				}
 			}
 			// prior to 1.3.3, the version identifier was not stored and the passwords were plaintext
-			if (isset ( $options ['enc_type'] ) && ! isset ( $options ['version'] )) {
+			if (isset ( $options ['enc_type'] ) && ! (isset ( $options ['version'] ) || isset ( $postmanState ['version'] ))) {
 				$this->logger->debug ( "Upgrading database: added plugin version and encoding password" );
 				$options ['version'] = '1.3.3';
 				if (isset ( $options ['basic_auth_password'] )) {
