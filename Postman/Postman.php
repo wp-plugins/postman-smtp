@@ -77,12 +77,11 @@ if (! class_exists ( 'Postman' )) {
 			
 			// register activation handler on the activation event
 			// must be called in constructor
-			if (is_admin ()) {
-				register_activation_hook ( $rootPluginFilenameAndPath, array (
-						new PostmanActivationHandler (),
-						'activate_postman' 
-				) );
-			}
+			// tried wrapping in an isAdmin sanity check and things started breaking :-(
+			register_activation_hook ( $rootPluginFilenameAndPath, array (
+					new PostmanActivationHandler (),
+					'activate_postman' 
+			) );
 			
 			// register the shortcode handler on the add_shortcode event
 			add_shortcode ( 'postman-version', array (
