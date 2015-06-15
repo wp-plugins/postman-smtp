@@ -91,7 +91,7 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 		
 		/**
 		 * This is the only place where the Google library is loaded
-		 * 
+		 *
 		 * @see PostmanTransport::createZendMailTransport()
 		 */
 		public function createZendMailTransport($hostname, $config) {
@@ -141,15 +141,11 @@ if (! class_exists ( 'PostmanGmailApiModuleTransport' )) {
 			// This transport is configured if:
 			$configured = true;
 			
-			// 1. there is a sender email address
-			$senderEmailAddress = $options->getMessageSenderEmail ();
-			$configured &= ! empty ( $senderEmailAddress );
+			// 1. the sender is configured
+			$configured &= $this->isSenderConfigured($options);
 			
 			// 2. for some reason the Gmail API wants a Client ID and Client Secret; Auth Token itself is not good enough.
-			$clientId = $options->getClientId ();
-			$configured &= ! empty ( $clientId );
-			$clientSecret = $options->getClientSecret ();
-			$configured &= ! empty ( $clientSecret );
+			$configured &= !$this->isOAuthCredentialsNeeded($options);
 			
 			return $configured;
 		}
