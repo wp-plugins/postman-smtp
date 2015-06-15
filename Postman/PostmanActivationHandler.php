@@ -21,7 +21,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 		public function activate_postman($networkwide) {
 			// Activation is not used often, lazy initialize the logger
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			$this->logger->trace ( '$networkwide?' . $networkwide );
+			$this->logger->trace ( '$networkwide?' . (int) $networkwide );
 			
 			// handle network activation
 			// from https://wordpress.org/support/topic/new-function-wp_get_sites?replies=11
