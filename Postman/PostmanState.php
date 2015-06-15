@@ -62,5 +62,10 @@ if (! class_exists ( "PostmanState" )) {
 			$this->options [self::FILE_LOCKING_ENABLED] = $enabled;
 			$this->save ();
 		}
+		public function getVersion() {
+			if (! empty ( $this->options [self::VERSION] )) {
+				return $this->options [self::VERSION];
+			}
+		}
 	}
 }

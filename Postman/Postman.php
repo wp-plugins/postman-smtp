@@ -34,6 +34,7 @@ if (! class_exists ( 'Postman' )) {
 			
 			// load the dependencies
 			require_once 'PostmanOptions.php';
+			require_once 'PostmanState.php';
 			require_once 'PostmanLogger.php';
 			require_once 'PostmanUtils.php';
 			require_once 'postman-common-functions.php';
@@ -43,7 +44,6 @@ if (! class_exists ( 'Postman' )) {
 			require_once 'PostmanOAuthToken.php';
 			require_once 'PostmanWpMailBinder.php';
 			require_once 'PostmanConfigTextHelper.php';
-			require_once 'PostmanActivationHandler.php';
 			
 			// get plugin metadata - alternative to get_plugin_data
 			$this->pluginData = array (
@@ -77,11 +77,12 @@ if (! class_exists ( 'Postman' )) {
 			
 			// register activation handler on the activation event
 			// must be called in constructor
-			// tried wrapping in an isAdmin sanity check and things started breaking :-(
-			register_activation_hook ( $rootPluginFilenameAndPath, array (
-					new PostmanActivationHandler (),
-					'activate_postman' 
-			) );
+			if (PostmanState::getInstance ()->getVersion () != $this->pluginData ['version']) {
+				require_once 'PostmanDatastoreUpgrader.php';
+				$this->logger->info ( sprintf ( "Upgrading datastore from version %s to %s", PostmanState::getInstance ()->getVersion (), $this->pluginData ['version'] ) );
+				$activate = new PostmanActivationHandler ();
+				$activate->activate_postman ();
+			}
 			
 			// register the shortcode handler on the add_shortcode event
 			add_shortcode ( 'postman-version', array (
