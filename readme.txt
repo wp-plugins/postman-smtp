@@ -3,7 +3,7 @@ Contributors: jasonhendriks
 Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
 Requires at least: 3.9
 Tested up to: 4.2
-Stable tag: 1.6.17
+Stable tag: 1.6.22
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,21 +67,24 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 1. In 'Authentication', choose the authentication type (a good guess is 'Plain')
 1. If your Authentication method is not 'None', enter your username (probably your email address) and password.
 1. Choose the 'Message' tab.
-1. In 'Sender Email Address' enter your account's email address.
+1. In 'Envelope From Address' enter your email address. This MUST be the same address you login to webmail with.
+1. In 'Message From Address' enter your email address. Or this can be an alias, mailing list, or group email if you wish.
 1. Choose the Save Changes button.
 1. Send yourself a test email. 
 
 = To manually configure OAuth 2.0 Authentication (Advanced users only) =
 
 1. Choose configure manually
-1. If the 'Transport' menu is available, choose 'SMTP'
-1. In 'Authentication' choose 'OAuth 2.0'
+1. In 'Transport', choose 'SMTP'
+1. In 'Outgoing Mail Server Hostname', enter the SMTP Server's hostname
+1. In 'Outgoing Mail Server Port', enter the SMTP Server's port
 1. In 'Security' choose the appropriate type (a good guess is SMTPS for port 465, StartTLS otherwise)
-1. Enter the SMTP Server's hostname and port.
+1. In 'Authentication' choose 'OAuth 2.0'
 1. Postman will give you a link to the Client ID maintenance page of your email service provider. Create a Client ID for your WordPress site.. [instructions for this are detailed in the FAQ](https://wordpress.org/plugins/postman-smtp/faq/)
 1. Copy your generated Client ID and Client secret into the plugin's Settings page.
 1. Choose the 'Message' tab.
-1. In 'Sender Email Address' enter your account's email address. This MUST be the same address you login to webmail with.
+1. In 'Envelope From Address' enter your email address. This MUST be the same address you login to webmail with.
+1. In 'Message From Address' enter your email address. Or this can be an alias, mailing list, or group email if you wish.
 1. Choose the Save Changes button.
 1. Choose the 'Request OAuth2 Permission' link and follow the instructions.
 1. Send yourself a test email. 
@@ -246,7 +249,8 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 == Changelog ==
 
-= 1.6.21 - 2015-06-14 =
+= 1.6.22 - 2015-06-14 =
+* Finally realized that for the last five months I've been relying on register_activation_hook to fire during plugin updates - [and it doesn't](https://make.wordpress.org/core/2010/10/27/plugin-activation-hooks-no-longer-fire-for-updates/). Lovely. Well this change should eliminate all the "update doesn't work!" bugs for good.
 * [[Ticket](https://wordpress.org/support/topic/latest-update-conflicting-with-theme?replies=3#post-7066897)] I enable Strict mode when I code Postman to ensure it's error free and I forgot to turn it off. This was causing all plugins and themes to show their warnings. Fixed. 
 * [[Ticket](https://wordpress.org/support/topic/upgrade-to-1619-broke-contact-form?replies=2#post-7067673)] I didn't thoroughly test the Gmail API, causing "Catchable fatal error: Argument 1 passed to PostmanGmailApiModuleTransport::getAuthenticationType() must be an instance of PostmanOptions, none given." Fixed. 
 * [[Ticket](https://wordpress.org/support/topic/gmail-api-assertion-failed-and-cannot-modify-header-information?replies=4#post-7068833)] I didn't thoroughly test the Gmail API, it wasn't warning the user if the Envelope Sender Address is missing. Fixed.
@@ -261,11 +265,7 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 = 1.6.17 - 2015-06-08 =
 * You know you're having a really bad day when you have to have do three releases. Fix for "Fatal error: Call to a member function addError() on a non-object". This happens when wp_mail is blocked by another plugin and a non-admin user accesses the site.
-
-= 1.6.16 - 2015-06-08 =
 * [[Ticket](https://wordpress.org/support/topic/error-after-latest-upgrade?replies=2#post-7044181)] Fixed a bug "Fatal error: Cannot redeclare IsNullOrEmptyString()" I introduced in v1.6.15
-
-= 1.6.15 - 2015-06-08 =
 * Added Cc and Bcc addresses to Email Log
 * [[Ticket](https://wordpress.org/support/topic/email-errors?replies=16)][[Ticket](https://wordpress.org/support/topic/postman-smtp-on-contact-form-7?replies=2#post-7043223)] Force a Logout of Google before launching the Developers Console so it's obvious to the user which account is being used
 * Now using Google Developers Console Gmail Wizard URL in place of Google Developers Console URL to simplify Client ID creation
@@ -274,8 +274,6 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 = 1.6.14 - 2015-06-05 =
 * [[Ticket](https://wordpress.org/support/topic/large-warnings-on-site?replies=1#post-7036030)] Fixed a bug (PHP Warning) I introduced in v1.6.13
-
-= 1.6.13 - 2015-06-05 =
 * 7,000 installations!
 * Translated into Dutch, thank-you Louise
 * [[Ticket](https://wordpress.org/support/topic/bad-requestinvalid_grant?replies=13#post-6991435)] Add process-locking to make sure the OAuth2 token is refreshed synchronously
@@ -308,8 +306,6 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 = 1.6.8 - 2015-05-14 =
 * [[Ticket](https://wordpress.org/support/topic/fatal-error-after-the-latest-update?replies=2#post-6948880)] Found a PHP envrionment that choked in the catch block trying to call a function (get transcript) on an object instantiated in the try (mail engine). Fixed.
-
-= 1.6.7 - 2015-05-14 =
 * [[Ticket](https://wordpress.org/support/topic/a-valid-address-is-required-issue-with-contact-form-builder-plugin?replies=2)] If wp_mail is called with a recipient list that ends in a comma, Postman tries to add an empty address to the message. Fixed.
 * The SMTP Session Transcript was not being saved for errors! Fixed.
 
@@ -325,8 +321,6 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 * Wizard will not clear the hostname if it comes back null
 * If the host does not support "humanTime", the Email Log will fall back to an ISO date
 * Added a new advanced option: Transcript size to adjust how much of the transcript is saved in the log
-
-= 1.6.3 - 2015-05-08 =
 * The wizard gets confused if the user specified auth type is undefined for the newly chosen socket. for example, a gmail address, with a mailtrap.io server, toggling between the gmailapi socket and the mailtrap socket. Fixed.
 * Show a warning on the main setting screen if the Delivery mode is not set to Production
 
