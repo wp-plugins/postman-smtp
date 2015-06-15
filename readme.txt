@@ -247,14 +247,13 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 == Changelog ==
 
 = 1.6.21 - 2015-06-14 =
-* [[Ticket](https://wordpress.org/support/topic/latest-update-conflicting-with-theme?replies=3#post-7066897)] I enable Strict mode when I code Postman to ensure it's error free and I forgot to turn it off. This was causing all plugins and themes to report their problems in v1.6.18. Fixed. 
+* [[Ticket](https://wordpress.org/support/topic/latest-update-conflicting-with-theme?replies=3#post-7066897)] I enable Strict mode when I code Postman to ensure it's error free and I forgot to turn it off. This was causing all plugins and themes to show their warnings. Fixed. 
 * [[Ticket](https://wordpress.org/support/topic/upgrade-to-1619-broke-contact-form?replies=2#post-7067673)] I didn't thoroughly test the Gmail API, causing "Catchable fatal error: Argument 1 passed to PostmanGmailApiModuleTransport::getAuthenticationType() must be an instance of PostmanOptions, none given." Fixed. 
-* [[Ticket](https://wordpress.org/support/topic/gmail-api-assertion-failed-and-cannot-modify-header-information?replies=4#post-7068833) I didn't thoroughly test the Gmail API, it wasn't warning the user if the Envelope Sender Address is missing. Fixed.
-* [[Ticket](https://wordpress.org/support/topic/password-corruption-issue?replies=4#post-7068839) Found a problem in the Activation Handler. It was re-encoding passwords when it shouldn't have been. Fixed.
+* [[Ticket](https://wordpress.org/support/topic/gmail-api-assertion-failed-and-cannot-modify-header-information?replies=4#post-7068833)] I didn't thoroughly test the Gmail API, it wasn't warning the user if the Envelope Sender Address is missing. Fixed.
+* [[Ticket](https://wordpress.org/support/topic/password-corruption-issue?replies=1)][[Ticket](https://wordpress.org/support/topic/password-corruption-issue?replies=4#post-7068839)] Found a problem in the Activation Handler. It was re-encoding passwords when it shouldn't have been. Fixed.
 
 = 1.6.18 - 2015-06-13 =
 * 8,000 installations! Big milestone! The author of [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) has [officially endorsed Postman SMTP](http://contactform7.com/faq/i-get-an-error-message-with-a-red-border-so-how-can-i-solve-this/) as the SMTP plugin of choice! You can't wipe the smile from my face :D
-* [[Ticket](https://wordpress.org/support/topic/password-corruption-issue?replies=1)] Passwords are being encoded incorrectly in rare cases. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/subscriber-registration?replies=6)] Postman is determining the current user's admin capability incorrectly. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/using-a-google-apps-group-as-sender?replies=3)] Added an additional From field, the Envelope From Address, so users can use a different From address than the Account address (for example, to use a Google Apps' Group email address)
 * Added a uniqueness (based on site URL) to the lock filename in case this is shared hosting
