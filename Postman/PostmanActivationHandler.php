@@ -128,6 +128,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			
 			// for version 1.6.18, the envelope from was introduced
 			if (! empty ( $options ['sender_email'] ) && empty ( $options ['envelope_sender'] )) {
+				$this->logger->debug ( "Upgrading database: adding envelope_sender" );
 				$options ['envelope_sender'] = $options ['sender_email'];
 				update_option ( 'postman_options', $options );
 			}
@@ -141,6 +142,7 @@ if (! class_exists ( 'PostmanActivationHandler' )) {
 			
 			// always update the version number
 			if (! isset ( $postmanState ['install_date'] )) {
+				$this->logger->debug ( "Upgrading database: adding install_date" );
 				$postmanState ['install_date'] = time ();
 			}
 			$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
