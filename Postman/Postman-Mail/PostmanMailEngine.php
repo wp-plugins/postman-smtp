@@ -231,7 +231,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 				$message = $e->getMessage ();
 				if ($e->getCode () == 334) {
 					// replace the unusable Google message with a better one in the case of code 334
-					$message = sprintf ( __ ( 'Communication Error [334] - make sure the Sender Email belongs to the account which provided the OAuth 2.0 consent.', 'postman-smtp' ) );
+					$message = sprintf ( __ ( 'Communication Error [334] - make sure the Envelope From email is the same account used to create the Client ID.', 'postman-smtp' ) );
 				}
 				// create a new exception
 				$newException = new Exception ( $message, $e->getCode (), $e->getPrevious () );
