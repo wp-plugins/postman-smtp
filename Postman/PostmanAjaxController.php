@@ -78,20 +78,12 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 		}
 		private function getActivePlugins() {
 			// from http://stackoverflow.com/questions/20488264/how-do-i-get-activated-plugin-list-in-wordpress-plugin-development
+			$apl = get_option ( 'active_plugins' );
 			$plugins = get_plugins ();
 			$pluginText = array ();
-			$apl = get_option ( 'active_plugins' );
 			foreach ( $apl as $p ) {
 				if (isset ( $plugins [$p] )) {
 					array_push ( $pluginText, $plugins [$p] ['Name'] );
-				}
-			}
-			if (is_multisite ()) {
-				$apl2 = get_site_option ( 'active_plugins' );
-				foreach ( $apl2 as $p2 ) {
-					if (isset ( $plugins [$p2] )) {
-						array_push ( $pluginText, $plugins [$p2] ['Name'] );
-					}
 				}
 			}
 			return 'WordPress Plugins: ' . implode ( ', ', $pluginText );
