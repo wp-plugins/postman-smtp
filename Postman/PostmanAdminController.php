@@ -258,8 +258,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$authorizationToken = $this->authorizationToken;
 			$logger->debug ( 'Authorization in progress' );
 			$transactionId = PostmanSession::getInstance ()->getOauthInProgress ();
-			PostmanSession::getInstance ()->unsetOauthInProgress ();
-			
+
+			// begin transaction
+			PostmanUtils::lock ();
+				
 			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( PostmanTransportRegistry::getInstance ()->getCurrentTransport (), $options, $authorizationToken );
 			try {
 				if ($authenticationManager->processAuthorizationGrantCode ( $transactionId )) {
@@ -277,6 +279,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 				/* translators: %s is the error message */
 				$this->messageHandler->addError ( sprintf ( __ ( 'Error authenticating with this Client ID. [%s]', 'postman-smtp' ), '<em>' . $e->getMessage () . '</em>' ) );
 			}
+
+			// clean-up
+			PostmanUtils::unlock ();
+			PostmanSession::getInstance ()->unsetOauthInProgress ();
+				
 			// redirect home
 			PostmanUtils::redirect ( PostmanUtils::POSTMAN_HOME_PAGE_RELATIVE_URL );
 		}
