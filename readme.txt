@@ -249,7 +249,7 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 == Changelog ==
 
-= 1.6.23 - 2015-06-14 =
+= 1.6.23 - 2015-06-19 =
 * [[Ticket](https://wordpress.org/support/topic/conflict-with-bbpress-and-buddy-press-in-1622?replies=2)] Causes bbPress or Buddy Press to generate warning messages. Fixed.
 
 = 1.6.22 - 2015-06-14 =
