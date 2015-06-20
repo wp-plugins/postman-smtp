@@ -26,7 +26,6 @@ class PostmanEmailLogView extends WP_List_Table {
 				'plural' => 'email_log_entries', // plural name of the listed records
 				'ajax' => false 
 		) ); // does this table support ajax?
-
 	}
 	
 	/**
@@ -314,7 +313,7 @@ class PostmanEmailLogView extends WP_List_Table {
 				'exclude' => '',
 				'meta_key' => '',
 				'meta_value' => '',
-				'post_type' => PostmanEmailLogService::POSTMAN_CUSTOM_POST_TYPE_SLUG,
+				'post_type' => PostmanEmailLogPostType::POSTMAN_CUSTOM_POST_TYPE_SLUG,
 				'post_mime_type' => '',
 				'post_parent' => '',
 				'post_status' => 'private',
@@ -412,7 +411,6 @@ class PostmanEmailLogView extends WP_List_Table {
 				'per_page' => $per_page, // WE have to determine how many items to show on a page
 				'total_pages' => ceil ( $total_items / $per_page ) 
 		) ); // WE have to calculate the total number of pages
-
 	}
 }
 

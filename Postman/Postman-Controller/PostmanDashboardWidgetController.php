@@ -46,16 +46,26 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 		 * This function is hooked into the 'wp_dashboard_setup' action below.
 		 */
 		public function addDashboardWidget() {
-			wp_add_dashboard_widget ( 'example_dashboard_widget', __ ( 'Postman SMTP', 'postman-smtp' ), array (
-					$this,
-					'printDashboardWidget' 
-			) ); // Display function.
+			// only display to the widget to administrator
+			if (PostmanUtils::isAdmin ()) {
+				wp_add_dashboard_widget ( 'example_dashboard_widget', __ ( 'Postman SMTP', 'postman-smtp' ), array (
+						$this,
+						'printDashboardWidget' 
+				) ); // Display function.
+			}
 		}
+		
+		/**
+		 * Add a widget to the network dashboard
+		 */
 		public function addNetworkDashboardWidget() {
-			wp_add_dashboard_widget ( 'example_dashboard_widget', __ ( 'Postman SMTP', 'postman-smtp' ), array (
-					$this,
-					'printNetworkDashboardWidget' 
-			) ); // Display function.
+			// only display to the widget to administrator
+			if (PostmanUtils::isAdmin ()) {
+				wp_add_dashboard_widget ( 'example_dashboard_widget', __ ( 'Postman SMTP', 'postman-smtp' ), array (
+						$this,
+						'printNetworkDashboardWidget' 
+				) ); // Display function.
+			}
 		}
 		
 		/**
@@ -101,31 +111,34 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 		 * @return string
 		 */
 		function customizeAtAGlanceDashboardWidget($items = array()) {
-			$post_types = array (
-					PostmanEmailLogService::POSTMAN_CUSTOM_POST_TYPE_SLUG 
-			);
-			
-			foreach ( $post_types as $type ) {
+			// only modify the At-a-Glance for administrators
+			if (PostmanUtils::isAdmin ()) {
+				$post_types = array (
+						PostmanEmailLogPostType::POSTMAN_CUSTOM_POST_TYPE_SLUG 
+				);
 				
-				if (! post_type_exists ( $type ))
-					continue;
-				
-				$num_posts = wp_count_posts ( $type );
-				
-				if ($num_posts) {
+				foreach ( $post_types as $type ) {
 					
-					$published = intval ( $num_posts->publish );
-					$privated = intval ( $num_posts->private );
-					$post_type = get_post_type_object ( $type );
+					if (! post_type_exists ( $type ))
+						continue;
 					
-					$text = _n ( '%s ' . $post_type->labels->singular_name, '%s ' . $post_type->labels->name, $privated, 'postman-smtp' );
-					$text = sprintf ( $text, number_format_i18n ( $privated ) );
+					$num_posts = wp_count_posts ( $type );
 					
-					$items [] = sprintf ( '<a class="%1$s-count" href="%3$s">%2$s</a>', $type, $text, PostmanUtils::getEmailLogPageUrl () ) . "\n";
+					if ($num_posts) {
+						
+						$published = intval ( $num_posts->publish );
+						$privated = intval ( $num_posts->private );
+						$post_type = get_post_type_object ( $type );
+						
+						$text = _n ( '%s ' . $post_type->labels->singular_name, '%s ' . $post_type->labels->name, $privated, 'postman-smtp' );
+						$text = sprintf ( $text, number_format_i18n ( $privated ) );
+						
+						$items [] = sprintf ( '<a class="%1$s-count" href="%3$s">%2$s</a>', $type, $text, PostmanUtils::getEmailLogPageUrl () ) . "\n";
+					}
 				}
+				
+				return $items;
 			}
-			
-			return $items;
 		}
 	}
 }

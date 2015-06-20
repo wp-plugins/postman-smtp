@@ -28,9 +28,6 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 	 */
 	class PostmanEmailLogService {
 		
-		// constants
-		const POSTMAN_CUSTOM_POST_TYPE_SLUG = 'postman_sent_mail';
-		
 		/*
 		 * Private content is published only for your eyes, or the eyes of only those with authorization
 		 * permission levels to see private content. Normal users and visitors will not be aware of
@@ -49,10 +46,6 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		 */
 		private function __construct() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
-			add_action ( 'init', array (
-					$this,
-					'init' 
-			) );
 		}
 		
 		/**
@@ -64,35 +57,6 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 				$inst = new PostmanEmailLogService ();
 			}
 			return $inst;
-		}
-		
-		/**
-		 * Behavior to run on the WordPress 'init' action
-		 */
-		public function init() {
-			$this->create_post_type ();
-		}
-		
-		/**
-		 * Create a custom post type
-		 * Callback function - must be public scope
-		 *
-		 * register_post_type should only be invoked through the 'init' action.
-		 * It will not work if called before 'init', and aspects of the newly
-		 * created or modified post type will work incorrectly if called later.
-		 *
-		 * https://codex.wordpress.org/Function_Reference/register_post_type
-		 */
-		function create_post_type() {
-			register_post_type ( self::POSTMAN_CUSTOM_POST_TYPE_SLUG, array (
-					'labels' => array (
-							'name' => _x ( 'Sent Emails', 'The group of Emails that have been delivered', 'postman-smtp' ),
-							'singular_name' => _x ( 'Sent Email', 'An Email that has been delivered', 'postman-smtp' ) 
-					),
-					'capability_type' => '',
-					'capabilities' => array () 
-			) );
-			$this->logger->trace ( 'Created post type: ' . self::POSTMAN_CUSTOM_POST_TYPE_SLUG );
 		}
 		
 		/**
@@ -141,7 +105,7 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 			// nothing here is sanitized as WordPress should take care of
 			// making database writes safe
 			$my_post = array (
-					'post_type' => self::POSTMAN_CUSTOM_POST_TYPE_SLUG,
+					'post_type' => PostmanEmailLogPostType::POSTMAN_CUSTOM_POST_TYPE_SLUG,
 					'post_title' => $log->subject,
 					'post_content' => $log->body,
 					'post_excerpt' => $log->statusMessage,
@@ -245,7 +209,7 @@ if (! class_exists ( 'PostmanEmailLogPurger' )) {
 	class PostmanEmailLogPurger {
 		private $posts;
 		private $logger;
-
+		
 		/**
 		 *
 		 * @return unknown
@@ -263,19 +227,19 @@ if (! class_exists ( 'PostmanEmailLogPurger' )) {
 					'exclude' => '',
 					'meta_key' => '',
 					'meta_value' => '',
-					'post_type' => PostmanEmailLogService::POSTMAN_CUSTOM_POST_TYPE_SLUG,
+					'post_type' => PostmanEmailLogPostType::POSTMAN_CUSTOM_POST_TYPE_SLUG,
 					'post_mime_type' => '',
 					'post_parent' => '',
 					'post_status' => 'private',
-					'suppress_filters' => true
+					'suppress_filters' => true 
 			);
 			$this->posts = get_posts ( $args );
 		}
-
+		
 		/**
 		 *
-		 * @param array $posts
-		 * @param unknown $postid
+		 * @param array $posts        	
+		 * @param unknown $postid        	
 		 */
 		function verifyLogItemExistsAndRemove($postid) {
 			$force_delete = true;
@@ -295,10 +259,10 @@ if (! class_exists ( 'PostmanEmailLogPurger' )) {
 				wp_delete_post ( $post->ID, $force_delete );
 			}
 		}
-
+		
 		/**
 		 *
-		 * @param unknown $size
+		 * @param unknown $size        	
 		 */
 		function truncateLogItems($size) {
 			$index = count ( $this->posts );

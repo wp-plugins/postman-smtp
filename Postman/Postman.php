@@ -44,6 +44,7 @@ if (! class_exists ( 'Postman' )) {
 			require_once 'PostmanOAuthToken.php';
 			require_once 'PostmanWpMailBinder.php';
 			require_once 'PostmanConfigTextHelper.php';
+			require_once 'Postman-Email-Log/PostmanEmailLogPostType.php';
 			
 			// get plugin metadata - alternative to get_plugin_data
 			$this->pluginData = array (
@@ -75,6 +76,9 @@ if (! class_exists ( 'Postman' )) {
 			// bind may be called more than once
 			$this->wpMailBinder->bind ();
 			
+			// registers the custom post type for all callers
+			PostmanEmailLogPostType::automaticallyCreatePostType ();
+			
 			// register activation handler on the activation event
 			// must be called in constructor
 			if (PostmanState::getInstance ()->getVersion () != $this->pluginData ['version']) {
@@ -90,13 +94,11 @@ if (! class_exists ( 'Postman' )) {
 					'version_shortcode' 
 			) );
 			
-			// register the admin functions on the plugins_loaded hook,
-			// because we need the ability to test for user capabilities
-			// and that function is loaded in pluggables.php
-			add_action ( 'plugins_loaded', array (
-					$this,
-					'setup_admin' 
-			) );
+			// load the administration screens
+			if (is_admin ()) {
+				// the is_admin check only tells us that we are not on the public pages
+				$this->setup_admin ();
+			}
 			
 			// register the check for configuration errors on the wp_loaded hook,
 			// because we want it to run after the OAuth Grant Code check on the init hook
@@ -110,50 +112,34 @@ if (! class_exists ( 'Postman' )) {
 		 * If the user is an administrator, creates the Admin screens
 		 */
 		public function setup_admin() {
-			// check if this is an admin user
-			if (PostmanUtils::isAdmin ()) {
-				// load email log service, in case another plugin (eg. WordPress importer)
-				// is doing something related to custom post types
-				// this is only something admins do
-				require_once 'Postman-Email-Log/PostmanEmailLogService.php';
-			}
+			$this->logger->debug ( 'Admin start-up sequence' );
 			
-			// check if this is an admin user on the admin screen
-			if (PostmanUtils::isAdminOnAdminScreen ()) {
-				
-				$this->logger->debug ( 'Admin start-up sequence' );
-				
-				$options = PostmanOptions::getInstance ();
-				$authToken = PostmanOAuthToken::getInstance ();
-				$rootPluginFilenameAndPath = $this->rootPluginFilenameAndPath;
-				
-				// load the dependencies
-				require_once 'PostmanMessageHandler.php';
-				require_once 'PostmanAdminController.php';
-				require_once 'Postman-Controller/PostmanDashboardWidgetController.php';
-				require_once 'Postman-Controller/PostmanAdminPointer.php';
-				require_once 'Postman-Email-Log/PostmanEmailLogController.php';
-				
-				// create and store an instance of the MessageHandler
-				$this->messageHandler = new PostmanMessageHandler ();
-				
-				// create the Admin Controllers
-				new PostmanDashboardWidgetController ( $rootPluginFilenameAndPath, $options, $authToken, $this->wpMailBinder );
-				new PostmanAdminController ( $rootPluginFilenameAndPath, $options, $authToken, $this->messageHandler, $this->wpMailBinder );
-				new PostmanEmailLogController ( $rootPluginFilenameAndPath );
-				new PostmanAdminPointer ( $rootPluginFilenameAndPath );
-				
-				// register the Postman signature (only if we're on a postman admin screen) on the in_admin_footer event
-				if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
-					add_action ( 'in_admin_footer', array (
-							$this,
-							'print_signature' 
-					) );
-				}
-				
-				// getting an instance reference performs lazy initialization
-				// lazy initialization registers the custom post type for all callers
-				PostmanEmailLogService::getInstance ();
+			$options = PostmanOptions::getInstance ();
+			$authToken = PostmanOAuthToken::getInstance ();
+			$rootPluginFilenameAndPath = $this->rootPluginFilenameAndPath;
+			
+			// load the dependencies
+			require_once 'PostmanMessageHandler.php';
+			require_once 'PostmanAdminController.php';
+			require_once 'Postman-Controller/PostmanDashboardWidgetController.php';
+			require_once 'Postman-Controller/PostmanAdminPointer.php';
+			require_once 'Postman-Email-Log/PostmanEmailLogController.php';
+			
+			// create and store an instance of the MessageHandler
+			$this->messageHandler = new PostmanMessageHandler ();
+			
+			// create the Admin Controllers
+			new PostmanDashboardWidgetController ( $rootPluginFilenameAndPath, $options, $authToken, $this->wpMailBinder );
+			new PostmanAdminController ( $rootPluginFilenameAndPath, $options, $authToken, $this->messageHandler, $this->wpMailBinder );
+			new PostmanEmailLogController ( $rootPluginFilenameAndPath );
+			new PostmanAdminPointer ( $rootPluginFilenameAndPath );
+			
+			// register the Postman signature (only if we're on a postman admin screen) on the in_admin_footer event
+			if (PostmanUtils::isCurrentPagePostmanAdmin ()) {
+				add_action ( 'in_admin_footer', array (
+						$this,
+						'print_signature' 
+				) );
 			}
 		}
 		

@@ -249,6 +249,9 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 == Changelog ==
 
+= 1.6.23 - 2015-06-14 =
+* [[Ticket](https://wordpress.org/support/topic/conflict-with-bbpress-and-buddy-press-in-1622?replies=2)] Causes bbPress or Buddy Press to generate warning messages. Fixed.
+
 = 1.6.22 - 2015-06-14 =
 * Finally realized that for the last five months I've been relying on register_activation_hook to fire during plugin updates - [and it doesn't](https://make.wordpress.org/core/2010/10/27/plugin-activation-hooks-no-longer-fire-for-updates/). Lovely. Well this change should eliminate all the "update doesn't work!" bugs for good.
 * [[Ticket](https://wordpress.org/support/topic/latest-update-conflicting-with-theme?replies=3#post-7066897)] I enable Strict mode when I code Postman to ensure it's error free and I forgot to turn it off. This was causing all plugins and themes to show their warnings. Fixed. 
