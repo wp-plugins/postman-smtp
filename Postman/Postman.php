@@ -62,6 +62,10 @@ if (! class_exists ( 'Postman' )) {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
 			$this->logger->debug ( sprintf ( '%1$s v%2$s starting', $this->pluginData ['name'], $this->pluginData ['version'] ) );
 			
+			if (isset ( $_REQUEST ['page'] )) {
+				$this->logger->trace ( 'Current page: ' . $_REQUEST ['page'] );
+			}
+			
 			// load the text domain
 			$this->loadTextDomain ( $rootPluginFilenameAndPath );
 			
@@ -154,7 +158,7 @@ if (! class_exists ( 'Postman' )) {
 			if ($this->wpMailBinder->isUnboundDueToException ()) {
 				// this message gets printed on ANY WordPress admin page, as it's a pretty fatal error that
 				// may occur just by activating a new plugin
-				if (PostmanUtils::isAdminOnAdminScreen ()) {
+				if (PostmanUtils::isAdmin () && is_admin ()) {
 					// I noticed the wpMandrill and SendGrid plugins have the exact same error message here
 					// I've adopted their error message as well, for shits and giggles .... :D
 					$this->messageHandler->addError ( __ ( 'Postman: wp_mail has been declared by another plugin or theme, so you won\'t be able to use Postman until the conflict is resolved.', 'postman-smtp' ) );

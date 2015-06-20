@@ -19,9 +19,6 @@ if (! class_exists ( 'PostmanUtils' )) {
 		const NO_ECHO = false;
 		public static function staticInit() {
 			PostmanUtils::$logger = new PostmanLogger ( 'PostmanUtils' );
-			if (isset ( $_REQUEST ['page'] )) {
-				PostmanUtils::$logger->trace ( 'Current page: ' . $_REQUEST ['page'] );
-			}
 		}
 		
 		/**
@@ -274,7 +271,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 		}
 		
 		/**
-		 * Warning, this will fail if called before hook 'plugins_loaded'
+		 * Warning! This will can only be called on hook 'init' or later
 		 */
 		public static function isAdmin() {
 			/**
@@ -292,12 +289,6 @@ if (! class_exists ( 'PostmanUtils' )) {
 			return current_user_can ( 'administrator' );
 		}
 		
-		/**
-		 * Warning, this will fail if called before hook 'plugins_loaded'
-		 */
-		public static function isAdminOnAdminScreen() {
-			return PostmanUtils::isAdmin () && is_admin ();
-		}
 	}
 	PostmanUtils::staticInit ();
 }
