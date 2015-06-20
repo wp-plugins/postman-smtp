@@ -232,7 +232,7 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 == Screenshots ==
 
-1. Dashboard widget showing status at a glance
+1. WordPress Dashboard showing both the Postman widget and At a Glance widget
 1. Main Settings screen - shows Main Menu and current status (new installation)
 1. Setup Wizard (step 1) - Import data from other plugins
 1. Setup Wizard (step 4) - Connectivity Test 
