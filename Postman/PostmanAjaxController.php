@@ -87,10 +87,10 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 				}
 			}
 			if (is_multisite ()) {
-				$apl = get_site_option ( 'active_plugins' );
-				foreach ( $apl as $p ) {
-					if (isset ( $plugins [$p] )) {
-						array_push ( $pluginText, $plugins [$p] ['Name'] );
+				$apl2 = get_site_option ( 'active_plugins' );
+				foreach ( $apl2 as $p2 ) {
+					if (isset ( $plugins [$p2] )) {
+						array_push ( $pluginText, $plugins [$p2] ['Name'] );
 					}
 				}
 			}
