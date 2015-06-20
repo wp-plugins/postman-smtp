@@ -126,7 +126,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$transportRegistry = PostmanTransportRegistry::getInstance ();
 			$this->addToDiagnostics ( sprintf ( 'OS: %s', php_uname () ) );
 			$this->addToDiagnostics ( sprintf ( 'HTTP User Agent: %s', $_SERVER ['HTTP_USER_AGENT'] ) );
-			$this->addToDiagnostics ( sprintf ( 'Platform: PHP %s %s / WordPress %s %s %s', PHP_OS, PHP_VERSION, is_multisite () ? 'Multisite ' : '', get_bloginfo ( 'version' ), get_locale () ) );
+			$this->addToDiagnostics ( sprintf ( 'Platform: PHP %s %s / WordPress %s %s %s', PHP_OS, PHP_VERSION, is_multisite () ? 'Multisite' : '', get_bloginfo ( 'version' ), get_locale () ) );
 			$this->addToDiagnostics ( $this->getPhpDependencies () );
 			$this->addToDiagnostics ( $this->getActivePlugins () );
 			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', wp_get_theme () ) );
