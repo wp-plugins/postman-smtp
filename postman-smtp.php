@@ -7,7 +7,7 @@
  * Version: 1.6.23a
  * Author: Jason Hendriks
  * Text Domain: postman-smtp
- * Author URI: https://profiles.wordpress.org/jasonhendriks/
+ * Author URI: http://www.codingmonkey.ca
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
