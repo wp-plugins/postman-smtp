@@ -190,7 +190,7 @@ You've [forgotten to choose an email address in the consent screen](https://word
 
 == SMTP Error Messages ==
 
-= Communication Error [334] – make sure the Sender Email belongs to the account which provided the Gmail OAuth 2.0 consent. =
+= Communication Error [334] – make sure the Envelope From Email is the same account used to create the Client ID. =
 
 * This is almost always caused by being logged in to Google/Microsoft/Yahoo with a different user than the one Postman is configured to send mail with. Logout and try again with the correct user
 * Login to [Webmail](http://www.gmail.com) and see if there is an "Unusual Activity" warning waiting for your attention
