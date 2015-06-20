@@ -1,4 +1,5 @@
 <?php
+require_once 'PostmanState.php';
 if (! class_exists ( 'PostmanUtils' )) {
 	class PostmanUtils {
 		private static $logger;
@@ -185,7 +186,6 @@ if (! class_exists ( 'PostmanUtils' )) {
 		 * Unblock threads waiting on lock()
 		 */
 		static function unlock() {
-			require 'PostmanState.php';
 			if (PostmanState::getInstance ()->isFileLockingEnabled ()) {
 				PostmanUtils::deleteLockFile ();
 			}
@@ -198,7 +198,6 @@ if (! class_exists ( 'PostmanUtils' )) {
 		 * @throws Exception
 		 */
 		static function lock() {
-			require 'PostmanState.php';
 			if (PostmanState::getInstance ()->isFileLockingEnabled ()) {
 				$attempts = 0;
 				while ( true ) {
