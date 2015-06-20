@@ -161,7 +161,7 @@ if (! class_exists ( 'PostmanEmailLogController' )) {
     border-bottom: 1px dashed #ccc;
     background: #bbb;
 }</style></head><body>';
-				printf ( '<p>%s</p>', __ ( 'This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your shared secret (password) in encoded form.', 'postman-smtp' ) );
+				printf ( '<p>%s</p>', __ ( 'This is the conversation between Postman and your SMTP server. It can be useful for diagnosing problems. <b>DO NOT</b> post it on-line, it may contain your account password.', 'postman-smtp' ) );
 				print '<hr/>';
 				print '<pre>';
 				if (! empty ( $meta_values ['session_transcript'] [0] )) {
