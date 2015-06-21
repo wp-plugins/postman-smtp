@@ -225,16 +225,20 @@ if (! class_exists ( "PostmanMailEngine" )) {
 				if ($zendTransport->getConnection () && ! PostmanUtils::isEmpty ( $zendTransport->getConnection ()->getLog () )) {
 					$this->transcript = $zendTransport->getConnection ()->getLog ();
 					$this->logger->trace ( $this->transcript );
-				} else {
-					// TODO then use the Raw Message as the Transcript
+				} else if (method_exists ( $zendTransport, 'getMessage' ) && ! PostmanUtils::isEmpty ( $zendTransport->getMessage () )) {
+					// then use the Raw Message as the Transcript
+					$this->transcript = $zendTransport->getMessage ();
+					$this->logger->trace ( $this->transcript );
 				}
 			} catch ( Exception $e ) {
 				// finally not supported??
 				if ($zendTransport->getConnection () && ! PostmanUtils::isEmpty ( $zendTransport->getConnection ()->getLog () )) {
 					$this->transcript = $zendTransport->getConnection ()->getLog ();
 					$this->logger->trace ( $this->transcript );
-				} else {
-					// TODO then use the Raw Message as the Transcript
+				} else if (method_exists ( $zendTransport, 'getMessage' ) && ! PostmanUtils::isEmpty ( $zendTransport->getMessage () )) {
+					// then use the Raw Message as the Transcript
+					$this->transcript = $zendTransport->getMessage ();
+					$this->logger->trace ( $this->transcript );
 				}
 				
 				// get the current exception message

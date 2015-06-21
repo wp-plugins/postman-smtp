@@ -54,6 +54,7 @@ if (! class_exists ( 'PostmanGmailApiModuleZendMailTransport' )) {
 		const SERVICE_OPTION = 'service';
 		const MESSAGE_SENDER_EMAIL_OPTION = 'sender_email';
 		private $logger;
+		private $message;
 		
 		/**
 		 * EOL character string used by transport
@@ -182,6 +183,7 @@ if (! class_exists ( 'PostmanGmailApiModuleZendMailTransport' )) {
 			
 			// Prepare the message in message/rfc822
 			$message = $this->header . Postman_Zend_Mime::LINEEND . $this->body;
+			$this->message = $message;
 			$this->logger->debug ( 'message: ' . $message );
 			
 			// The message needs to be encoded in Base64URL
@@ -190,6 +192,10 @@ if (! class_exists ( 'PostmanGmailApiModuleZendMailTransport' )) {
 			$msg->setRaw ( $mime );
 			$service = $this->_config [self::SERVICE_OPTION];
 			$service->users_messages->send ( 'me', $msg );
+		}
+
+		public function getMessage() {
+			return $this->message;
 		}
 		
 		/**

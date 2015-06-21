@@ -254,6 +254,7 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 * [[Ticket](https://wordpress.org/support/topic/conflict-with-bbpress-and-buddy-press-in-1622?replies=2)] Causes bbPress or Buddy Press to generate warning messages. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/fatal-error-internal-zend-error-missing-class-information?replies=2#post-7092317)] User reported error "Fatal error: Internal Zend error - Missing class information" - Whoops, used 'require' PostmanState.php instead of 'require_once' PostmanState.php which was causing errors. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/error-send-mymail-email-marketing?replies=5)] [[Ticket](https://wordpress.org/support/topic/how-configure-mymail-in-plugin?replies=6)] MyMail Newsletter Plugin for WordPress refuses to use wp_mail. I don't want to make this a habit, but I've integrated Postman with MyMail's proprietary delivery mechanism.
+* The Gmail API transport now saves a transcript (or rather, a copy of the payload sent to the Gmail API) in the Email Log
 
 = 1.6.22 - 2015-06-14 =
 * Finally realized that for the last five months I've been relying on register_activation_hook to fire during plugin updates - [and it doesn't](https://make.wordpress.org/core/2010/10/27/plugin-activation-hooks-no-longer-fire-for-updates/). Lovely. Well this change should eliminate all the "update doesn't work!" bugs for good.
