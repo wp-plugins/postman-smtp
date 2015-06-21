@@ -258,10 +258,10 @@ if (! class_exists ( "PostmanAdminController" )) {
 			$authorizationToken = $this->authorizationToken;
 			$logger->debug ( 'Authorization in progress' );
 			$transactionId = PostmanSession::getInstance ()->getOauthInProgress ();
-
+			
 			// begin transaction
 			PostmanUtils::lock ();
-				
+			
 			$authenticationManager = PostmanAuthenticationManagerFactory::getInstance ()->createAuthenticationManager ( PostmanTransportRegistry::getInstance ()->getCurrentTransport (), $options, $authorizationToken );
 			try {
 				if ($authenticationManager->processAuthorizationGrantCode ( $transactionId )) {
@@ -279,11 +279,11 @@ if (! class_exists ( "PostmanAdminController" )) {
 				/* translators: %s is the error message */
 				$this->messageHandler->addError ( sprintf ( __ ( 'Error authenticating with this Client ID. [%s]', 'postman-smtp' ), '<em>' . $e->getMessage () . '</em>' ) );
 			}
-
+			
 			// clean-up
 			PostmanUtils::unlock ();
 			PostmanSession::getInstance ()->unsetOauthInProgress ();
-				
+			
 			// redirect home
 			PostmanUtils::redirect ( PostmanUtils::POSTMAN_HOME_PAGE_RELATIVE_URL );
 		}
@@ -848,19 +848,25 @@ if (! class_exists ( "PostmanAdminController" )) {
 		 */
 		public function log_level_callback() {
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::LOG_LEVEL );
-			printf ( '<option value="%s" %s>Off</option>', PostmanLogger::OFF_INT, PostmanLogger::OFF_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
-			printf ( '<option value="%s" %s>Trace</option>', PostmanLogger::TRACE_INT, PostmanLogger::TRACE_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
-			printf ( '<option value="%s" %s>Debug</option>', PostmanLogger::DEBUG_INT, PostmanLogger::DEBUG_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
-			printf ( '<option value="%s" %s>Info</option>', PostmanLogger::INFO_INT, PostmanLogger::INFO_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
-			printf ( '<option value="%s" %s>Warning</option>', PostmanLogger::WARN_INT, PostmanLogger::WARN_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
-			printf ( '<option value="%s" %s>Errors</option>', PostmanLogger::ERROR_INT, PostmanLogger::ERROR_INT == $this->options->getLogLevel () ? 'selected="selected"' : '' );
+			$currentKey = $this->options->getLogLevel ();
+			$this->printSelectOption ( _x ( 'Off', 'Log Level', 'postman-smtp' ), PostmanLogger::OFF_INT, $currentKey );
+			$this->printSelectOption ( _x ( 'Trace', 'Log Level', 'postman-smtp' ), PostmanLogger::TRACE_INT, $currentKey );
+			$this->printSelectOption ( _x ( 'Debug', 'Log Level', 'postman-smtp' ), PostmanLogger::DEBUG_INT, $currentKey );
+			$this->printSelectOption ( _x ( 'Info', 'Log Level', 'postman-smtp' ), PostmanLogger::INFO_INT, $currentKey );
+			$this->printSelectOption ( _x ( 'Warning', 'Log Level', 'postman-smtp' ), PostmanLogger::WARN_INT, $currentKey );
+			$this->printSelectOption ( _x ( 'Error', 'Log Level', 'postman-smtp' ), PostmanLogger::ERROR_INT, $currentKey );
 			printf ( '</select>' );
+		}
+		private function printSelectOption($label, $optionKey, $currentKey) {
+			$optionPattern = '<option value="%1$s" %2$s>%3$s</option>';
+			printf ( $optionPattern, $optionKey, $optionKey == $currentKey ? 'selected="selected"' : '', $label );
 		}
 		public function runModeCallback() {
 			printf ( '<select id="input_%2$s" class="input_%2$s" name="%1$s[%2$s]">', PostmanOptions::POSTMAN_OPTIONS, PostmanOptions::RUN_MODE );
-			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_PRODUCTION, PostmanOptions::RUN_MODE_PRODUCTION == $this->options->getRunMode () ? 'selected="selected"' : '', _x ( 'Log Email and Send', 'When the server is online to the public, this is "Production" mode', 'postman-smtp' ) );
-			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_LOG_ONLY, PostmanOptions::RUN_MODE_LOG_ONLY == $this->options->getRunMode () ? 'selected="selected"' : '', __ ( 'Log Email and Delete', 'postman-smtp' ) );
-			printf ( '<option value="%s" %s>%s</option>', PostmanOptions::RUN_MODE_IGNORE, PostmanOptions::RUN_MODE_IGNORE == $this->options->getRunMode () ? 'selected="selected"' : '', __ ( 'Delete All Emails', 'postman-smtp' ) );
+			$currentKey = $this->options->getRunMode ();
+			$this->printSelectOption ( _x ( 'Log Email and Send', 'When the server is online to the public, this is "Production" mode', 'postman-smtp' ), PostmanOptions::RUN_MODE_PRODUCTION, $currentKey );
+			$this->printSelectOption ( __ ( 'Log Email and Delete', 'postman-smtp' ), PostmanOptions::RUN_MODE_LOG_ONLY, $currentKey );
+			$this->printSelectOption ( __ ( 'Delete All Emails', 'postman-smtp' ), PostmanOptions::RUN_MODE_IGNORE, $currentKey );
 			printf ( '</select>' );
 		}
 		public function stealthModeCallback() {
