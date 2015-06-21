@@ -66,9 +66,9 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		 * @param unknown $transcript        	
 		 * @param PostmanTransport $transport        	
 		 */
-		public function writeSuccessLog(PostmanMessage $message, $transcript, PostmanTransport $transport) {
+		public function writeSuccessLog(PostmanEmailLog $log, PostmanMessage $message, $transcript, PostmanTransport $transport) {
 			if (PostmanOptions::getInstance ()->isMailLoggingEnabled ()) {
-				$log = $this->createLog ( $message, $transcript, '', true, $transport );
+				$this->createLog ( $log, $message, $transcript, '', true, $transport );
 				$this->writeToEmailLog ( $log );
 			}
 		}
@@ -85,13 +85,9 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		 * @param unknown $originalMessage        	
 		 * @param unknown $originalHeaders        	
 		 */
-		public function writeFailureLog(PostmanMessage $message = null, $transcript, PostmanTransport $transport, $statusMessage, $originalTo, $originalSubject, $originalMessage, $originalHeaders) {
+		public function writeFailureLog(PostmanEmailLog $log, PostmanMessage $message = null, $transcript, PostmanTransport $transport, $statusMessage) {
 			if (PostmanOptions::getInstance ()->isMailLoggingEnabled ()) {
-				$log = $this->createLog ( $message, $transcript, $statusMessage, false, $transport );
-				$log->originalTo = $originalTo;
-				$log->originalSubject = $originalSubject;
-				$log->originalMessage = $originalMessage;
-				$log->originalHeaders = $originalHeaders;
+				$this->createLog ( $log, $message, $transcript, $statusMessage, false, $transport );
 				$this->writeToEmailLog ( $log );
 			}
 		}
@@ -160,8 +156,7 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		 * @param PostmanTransport $transport        	
 		 * @return PostmanEmailLog
 		 */
-		private function createLog(PostmanMessage $message = null, $transcript, $statusMessage, $success, PostmanTransport $transport) {
-			$log = new PostmanEmailLog ();
+		private function createLog(PostmanEmailLog $log, PostmanMessage $message = null, $transcript, $statusMessage, $success, PostmanTransport $transport) {
 			if ($message) {
 				$log->sender = $message->getFromAddress ()->format ();
 				$log->toRecipients = $this->flattenEmails ( $message->getToRecipients () );

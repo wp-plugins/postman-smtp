@@ -45,6 +45,7 @@ if (! class_exists ( 'Postman' )) {
 			require_once 'PostmanWpMailBinder.php';
 			require_once 'PostmanConfigTextHelper.php';
 			require_once 'Postman-Email-Log/PostmanEmailLogPostType.php';
+			require_once 'Postman-Mail/PostmanMyMailConnector.php';
 			
 			// get plugin metadata - alternative to get_plugin_data
 			$this->pluginData = array (

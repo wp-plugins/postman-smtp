@@ -24,8 +24,6 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * This methods creates an instance of PostmanSmtpEngine and sends an email.
 		 * Exceptions are held for later inspection. An instance of PostmanStats updates the success/fail tally.
 		 *
-		 * @param PostmanOptions $options        	
-		 * @param PostmanOAuthToken $authorizationToken        	
 		 * @param unknown $to        	
 		 * @param unknown $subject        	
 		 * @param unknown $body        	
@@ -34,17 +32,150 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @return boolean
 		 */
 		public function send($to, $subject, $message, $headers = '', $attachments = array()) {
+			
+			// build the message
+			$postmanMessage = $this->processWpMailCall ( $to, $subject, $message, $headers, $attachments );
+			
+			// build the log
+			$log = new PostmanEmailLog ();
+			$log->originalTo = $to;
+			$log->originalSubject = $subject;
+			$log->originalMessage = $message;
+			$log->originalHeaders = $headers;
+				
+			// send the message and return the result
+			return $this->sendMessage ( $postmanMessage, $log );
+		}
+		
+		/**
+		 * Creates a new instance of PostmanMessage with a pre-set From and Reply-To
+		 *
+		 * @return PostmanMessage
+		 */
+		public function createNewMessage() {
+			$message = new PostmanMessage ();
+			$options = PostmanOptions::getInstance ();
+			// the From is set now so that it can be overridden
+			$message->setFrom ( $options->getMessageSenderEmail (), $options->getMessageSenderName () );
+			// the Reply-To is set now so that it can be overridden
+			$message->setReplyTo ( $options->getReplyTo () );
+			return $message;
+		}
+		
+		/**
+		 * A convenient place for other code to send a PostmanMessage
+		 *
+		 * @param PostmanMessage $message        	
+		 * @return boolean
+		 */
+		public function sendMessage(PostmanMessage $message, PostmanEmailLog $log) {
 
+			// get the Options and AuthToken
+			$options = PostmanOptions::getInstance ();
+			$authorizationToken = PostmanOAuthToken::getInstance ();
+			
+			// add plugin-specific attributes to PostmanMessage
+			$message->addHeaders ( $options->getAdditionalHeaders () );
+			$message->addTo ( $options->getForcedToRecipients () );
+			$message->addCc ( $options->getForcedCcRecipients () );
+			$message->addBcc ( $options->getForcedBccRecipients () );
+			
+			// setting these options here means they can not be overridden
+			$message->setSender ( $options->getEnvelopeSender () );
+			$message->setPreventSenderEmailOverride ( $options->isSenderEmailOverridePrevented () );
+			$message->setPreventSenderNameOverride ( $options->isSenderNameOverridePrevented () );
+			$message->setPostmanSignatureEnabled ( ! $options->isStealthModeEnabled () );
+			
 			// start the clock
 			$startTime = microtime ( true ) * 1000;
-
+			
 			// load the dependencies
 			require_once 'Postman-Email-Log/PostmanEmailLogService.php';
-			require_once 'Postman-Mail/PostmanMessage.php';
 			require_once 'Postman-Auth/PostmanAuthenticationManagerFactory.php';
 			require_once 'Postman-Mail/PostmanMailEngine.php';
 			require_once 'PostmanStats.php';
 			
+			// get the transport and create the transportConfig and engine
+			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
+			
+			// create the Zend Mail Transport Configuration Factory
+			if (PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $transport->getAuthenticationType ()) {
+				$transportConfiguration = new PostmanOAuth2ConfigurationFactory ();
+			} else {
+				$transportConfiguration = new PostmanBasicAuthConfigurationFactory ();
+			}
+			
+			// create the Mail Engine
+			$engine = new PostmanMailEngine ( $transport, $transportConfiguration );
+			
+			// is this a test run?
+			$testMode = apply_filters ( 'postman_test_email', false );
+			$this->logger->debug ( 'testMode=' . $testMode );
+			
+			try {
+				
+				// send the message
+				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
+					if ($options->isAuthTypeOAuth2 ()) {
+						PostmanUtils::lock ();
+						$this->logger->debug ( 'jason' );
+						// may throw an exception attempting to contact the OAuth2 provider
+						$this->ensureAuthtokenIsUpdated ( $transport, $options, $authorizationToken );
+					}
+					
+					$this->logger->debug ( 'Sending mail' );
+					// may throw an exception attempting to contact the SMTP server
+					$engine->send ( $message, $options->getHostname () );
+					
+					// increment the success counter, unless we are just tesitng
+					if (! $testMode) {
+						PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
+					}
+				}
+				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
+					// log the successful delivery
+					PostmanEmailLogService::getInstance ()->writeSuccessLog ( $log, $message, $engine->getTranscript (), $transport );
+				}
+				
+				// clean up
+				$this->postSend ( $engine, $startTime, $options );
+				
+				// return successful
+				return true;
+			} catch ( Exception $e ) {
+				// save the error for later
+				$this->exception = $e;
+				
+				// write the error to the PHP log
+				$this->logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
+				
+				// increment the failure counter, unless we are just tesitng
+				if (! $testMode && $options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
+					PostmanStats::getInstance ()->incrementFailedDelivery ();
+				}
+				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
+					// log the failed delivery
+					PostmanEmailLogService::getInstance ()->writeFailureLog ( $log, $message, $engine->getTranscript (), $transport, $e->getMessage () );
+				}
+				
+				// clean up
+				$this->postSend ( $engine, $startTime, $options );
+				
+				// return failure
+				return false;
+			}
+		}
+		
+		/**
+		 * Builds a PostmanMessage based on the WordPress wp_mail parameters
+		 *
+		 * @param unknown $to        	
+		 * @param unknown $subject        	
+		 * @param unknown $message        	
+		 * @param unknown $headers        	
+		 * @param unknown $attachments        	
+		 */
+		private function processWpMailCall($to, $subject, $message, $headers, $attachments) {
 			$this->logger->trace ( 'wp_mail parameters before applying WordPress wp_mail filter:' );
 			$this->traceParameters ( $to, $subject, $message, $headers, $attachments );
 			
@@ -58,22 +189,18 @@ if (! class_exists ( "PostmanWpMail" )) {
 			 *        	subject, message, headers, and attachments values.
 			 */
 			$atts = apply_filters ( 'wp_mail', compact ( 'to', 'subject', 'message', 'headers', 'attachments' ) );
-			$originalTo = $to;
 			if (isset ( $atts ['to'] )) {
 				$to = $atts ['to'];
 			}
 			
-			$originalSubject = $subject;
 			if (isset ( $atts ['subject'] )) {
 				$subject = $atts ['subject'];
 			}
 			
-			$originalMessage = $message;
 			if (isset ( $atts ['message'] )) {
 				$message = $atts ['message'];
 			}
 			
-			$originalHeaders = $headers;
 			if (isset ( $atts ['headers'] )) {
 				$headers = $atts ['headers'];
 			}
@@ -95,81 +222,15 @@ if (! class_exists ( "PostmanWpMail" )) {
 					'postman_wp_mail_result' 
 			) );
 			
-			// get the Options and AuthToken
-			$options = PostmanOptions::getInstance ();
-			$authorizationToken = PostmanOAuthToken::getInstance ();
-			
-			// get the transport and create the transportConfig and engine
-			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
-
-			// create the Zend Mail Transport Configuration Factory
-			if (PostmanOptions::AUTHENTICATION_TYPE_OAUTH2 == $transport->getAuthenticationType ()) {
-				$transportConfiguration = new PostmanOAuth2ConfigurationFactory ();
-			} else {
-				$transportConfiguration = new PostmanBasicAuthConfigurationFactory ();
-			}
-			
-			// create the Mail Engine
-			$engine = new PostmanMailEngine ( $transport, $transportConfiguration );
-			
-			// is this a test run?
-			$testMode = apply_filters ( 'postman_test_email', false );
-			$this->logger->debug ( 'testMode=' . $testMode );
+			// load the dependencies
+			require_once 'Postman-Mail/PostmanMessage.php';
 			
 			// create the message
-			$messageBuilder = $this->createMessage ( $options, $to, $subject, $message, $headers, $attachments, $transportConfiguration );
+			$postmanMessage = $this->createNewMessage ();
+			$this->populateMessageFromWpMailParams ( $postmanMessage, $to, $subject, $message, $headers, $attachments );
 			
-			try {
-				
-				// send the message
-				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
-					if ($options->isAuthTypeOAuth2 ()) {
-						PostmanUtils::lock ();
-						// may throw an exception attempting to contact the OAuth2 provider
-						$this->ensureAuthtokenIsUpdated ( $transport, $options, $authorizationToken );
-					}
-					
-					$this->logger->debug ( 'Sending mail' );
-					// may throw an exception attempting to contact the SMTP server
-					$engine->send ( $messageBuilder, $options->getHostname () );
-					
-					// increment the success counter, unless we are just tesitng
-					if (! $testMode) {
-						PostmanStats::getInstance ()->incrementSuccessfulDelivery ();
-					}
-				}
-				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
-					// log the successful delivery
-					PostmanEmailLogService::getInstance ()->writeSuccessLog ( $messageBuilder, $engine->getTranscript (), $transport );
-				}
-				
-				// clean up
-				$this->postSend ( $engine, $startTime, $options );
-				
-				// return successful
-				return true;
-			} catch ( Exception $e ) {
-				// save the error for later
-				$this->exception = $e;
-				
-				// write the error to the PHP log
-				$this->logger->error ( get_class ( $e ) . ' code=' . $e->getCode () . ' message=' . trim ( $e->getMessage () ) );
-				
-				// increment the failure counter, unless we are just tesitng
-				if (! $testMode && $options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
-					PostmanStats::getInstance ()->incrementFailedDelivery ();
-				}
-				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION || $options->getRunMode () == PostmanOptions::RUN_MODE_LOG_ONLY) {
-					// log the failed delivery
-					PostmanEmailLogService::getInstance ()->writeFailureLog ( $messageBuilder, $engine->getTranscript (), $transport, $e->getMessage (), $originalTo, $originalSubject, $originalMessage, $originalHeaders );
-				}
-				
-				// clean up
-				$this->postSend ( $engine, $startTime, $options );
-				
-				// return failure
-				return false;
-			}
+			// return the message
+			return $postmanMessage;
 		}
 		
 		/**
@@ -209,6 +270,9 @@ if (! class_exists ( "PostmanWpMail" )) {
 		/**
 		 */
 		private function ensureAuthtokenIsUpdated(PostmanTransport $transport, PostmanOptions $options, PostmanOAuthToken $authorizationToken) {
+			assert ( ! empty ( $transport ) );
+			assert ( ! empty ( $options ) );
+			assert ( ! empty ( $authorizationToken ) );
 			// ensure the token is up-to-date
 			$this->logger->debug ( 'Ensuring Access Token is up-to-date' );
 			// interact with the Authentication Manager
@@ -223,36 +287,18 @@ if (! class_exists ( "PostmanWpMail" )) {
 		/**
 		 * Aggregates all the content into a Message to be sent to the MailEngine
 		 *
-		 * @param unknown $options        	
 		 * @param unknown $to        	
 		 * @param unknown $subject        	
 		 * @param unknown $body        	
 		 * @param unknown $headers        	
 		 * @param unknown $attachments        	
 		 */
-		private function createMessage(PostmanOptions $options, $to, $subject, $body, $headers, $attachments, PostmanZendMailTransportConfigurationFactory $transportation) {
-			$message = new PostmanMessage ();
+		private function populateMessageFromWpMailParams(PostmanMessage $message, $to, $subject, $body, $headers, $attachments) {
 			$message->addHeaders ( $headers );
-			$message->addHeaders ( $options->getAdditionalHeaders () );
 			$message->setBody ( $body );
 			$message->setSubject ( $subject );
 			$message->addTo ( $to );
-			$message->addTo ( $options->getForcedToRecipients () );
-			$message->addCc ( $options->getForcedCcRecipients () );
-			$message->addBcc ( $options->getForcedBccRecipients () );
 			$message->setAttachments ( $attachments );
-			$message->setSender ( $options->getEnvelopeSender() );
-			$message->setFrom ( $options->getMessageSenderEmail (), $options->getMessageSenderName () );
-			$message->setPreventSenderEmailOverride ( $options->isSenderEmailOverridePrevented () );
-			$message->setPreventSenderNameOverride ( $options->isSenderNameOverridePrevented () );
-			$message->setPostmanSignatureEnabled ( ! $options->isStealthModeEnabled () );
-			
-			// set the reply-to address if it hasn't been set already in the user's headers
-			$optionsReplyTo = $options->getReplyTo ();
-			$messageReplyTo = $message->getReplyTo ();
-			if (! empty ( $optionsReplyTo ) && empty ( $messageReplyTo )) {
-				$message->setReplyTo ( $optionsReplyTo );
-			}
 			return $message;
 		}
 		
@@ -277,6 +323,5 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$this->logger->trace ( 'message:' );
 			$this->logger->trace ( $message );
 		}
-		
 	}
 }
