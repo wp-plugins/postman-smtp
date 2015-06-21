@@ -46,7 +46,7 @@ if (! class_exists ( 'Postman' )) {
 			require_once 'PostmanConfigTextHelper.php';
 			require_once 'Postman-Email-Log/PostmanEmailLogPostType.php';
 			require_once 'Postman-Mail/PostmanMyMailConnector.php';
-
+			
 			// get plugin metadata - alternative to get_plugin_data
 			$this->pluginData = array (
 					'name' => __ ( 'Postman SMTP', 'postman-smtp' ),
@@ -111,10 +111,9 @@ if (! class_exists ( 'Postman' )) {
 					$this,
 					'check_for_configuration_errors' 
 			) );
-
+			
 			// MyMail integration
-			new PostmanMyMailConnector (__FILE__);
-				
+			new PostmanMyMailConnector ( $rootPluginFilenameAndPath );
 		}
 		
 		/**
