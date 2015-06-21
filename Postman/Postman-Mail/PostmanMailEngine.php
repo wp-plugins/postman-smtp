@@ -67,6 +67,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 		 * @see PostmanSmtpEngine::send()
 		 */
 		public function send(PostmanMessage $message, $hostname) {
+			$options = PostmanOptions::getInstance ();
 			
 			// create the Message
 			$charset = $message->getCharset ();
@@ -74,7 +75,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			$mail = new Postman_Zend_Mail ( $charset );
 			
 			// add the Postman signature - append it to whatever the user may have set
-			if ($message->isPostmanSignatureEnabled ()) {
+			if (! $options->isStealthModeEnabled ()) {
 				$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
 				$mail->addHeader ( 'X-Mailer', sprintf ( 'Postman SMTP %s for WordPress (%s)', $pluginData ['version'], 'https://wordpress.org/plugins/postman-smtp/' ) );
 			}
@@ -85,7 +86,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 				$mail->addHeader ( $header ['name'], $header ['content'], true );
 			}
 			
-			// add the content type
+			// get the content type
 			$contentType = $message->getContentType ();
 			if (false !== stripos ( $contentType, 'multipart' ) && ! empty ( $this->boundary )) {
 				// Lines in email are terminated by CRLF ("\r\n") according to RFC2821
@@ -93,20 +94,22 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			}
 			
 			// add the Content-Type header, overriding what the user may have set
-			$mail->addHeader ( 'Content-Type', $contentType, false );
-			$this->logger->debug ( 'Adding content-type ' . $contentType );
+			if (! empty ( $contentType )) {
+				$mail->addHeader ( 'Content-Type', $contentType, false );
+				$this->logger->debug ( 'Adding content-type ' . $contentType );
+			}
 			
 			// add the From Header
 			$fromHeader = $this->addFrom ( $message, $mail );
 			$fromHeader->log ( $this->logger, 'From' );
 			
 			// add the Sender Header, overriding what the user may have set
-			$mail->addHeader ( 'Sender', $message->getSenderAddress (), false );
+			$mail->addHeader ( 'Sender', $options->getEnvelopeSender (), false );
 			// from RFC 5321: http://tools.ietf.org/html/rfc5321#section-4.4
 			// A message-originating SMTP system SHOULD NOT send a message that
 			// already contains a Return-path header field.
 			// I changed Zend/Mail/Mail.php to fix this
-			$mail->setReturnPath ( $message->getSenderAddress () );
+			$mail->setReturnPath ( $options->getEnvelopeSender () );
 			
 			// add the to recipients
 			foreach ( ( array ) $message->getToRecipients () as $recipient ) {
@@ -132,13 +135,6 @@ if (! class_exists ( "PostmanMailEngine" )) {
 				$mail->setReplyTo ( $replyTo->getEmail (), $replyTo->getName () );
 			}
 			
-			// add the return-path
-			$returnPath = $message->getReturnPath ();
-			if (! empty ( $returnPath )) {
-				$returnPath = new PostmanEmailAddress ( $returnPath );
-				$mail->setReturnPath ( $returnPath->getEmail () );
-			}
-			
 			// add the date
 			$date = $message->getDate ();
 			if (! empty ( $date )) {
@@ -157,7 +153,19 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			}
 			
 			// add the message content as either text or html
-			if (substr ( $contentType, 0, 10 ) === 'text/plain') {
+			$bodyTextPart = $message->getBodyTextPart ();
+			$bodyHtmlPart = $message->getBodyHtmlPart ();
+			if (! empty ( $bodyTextPart ) && empty ( $bodyHtmlPart )) {
+				$this->logger->debug ( 'Adding body as text' );
+				$mail->setBodyText ( $message->getBody () );
+			} else if (empty ( $bodyTextPart ) && ! empty ( $bodyHtmlPart )) {
+				$this->logger->debug ( 'Adding body as html' );
+				$mail->setBodyHtml ( $message->getBody () );
+			} else if (! empty ( $bodyTextPart ) && ! empty ( $bodyHtmlPart )) {
+				$this->logger->debug ( 'Adding body as text and html' );
+				$mail->setBodyHtml ( $message->getBodyHtmlPart () );
+				$mail->setBodyText ( $message->getBodyTextPart () );
+			} else if (empty ( $contentType ) || substr ( $contentType, 0, 10 ) === 'text/plain') {
 				$this->logger->debug ( 'Adding body as text' );
 				$mail->setBodyText ( $message->getBody () );
 			} else if (substr ( $contentType, 0, 9 ) === 'text/html') {
@@ -193,17 +201,19 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			} else {
 				$this->logger->error ( 'Unknown content-type: ' . $contentType );
 				$mail->setBodyText ( $message->getBody () );
-				break;
 			}
 			
 			// add attachments
+			$this->logger->debug ( "Adding attachments" );
 			$message->addAttachmentsToMail ( $mail );
 			
 			// get the transport configuration
+			$this->logger->debug ( "Create the Zend_Mail transport configuration array" );
 			$config = $this->authenticator->createConfig ( $this->transport );
 			assert ( ! empty ( $config ) );
 			
 			// create the SMTP transport
+			$this->logger->debug ( "Create the Zend_Mail transport configuration" );
 			$zendTransport = $this->transport->createZendMailTransport ( $hostname, $config );
 			assert ( ! empty ( $zendTransport ) );
 			

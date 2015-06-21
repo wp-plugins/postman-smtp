@@ -84,7 +84,7 @@ if (! class_exists ( 'PostmanMyMailConnector' )) {
 		 * @return void
 		 */
 		public function initsend($mailobject) {
-			$this->logger->debug ( 'initsend' );
+			$this->logger->trace ( 'initsend' );
 			// disable dkim
 			$mailobject->dkim = false;
 		}
@@ -99,6 +99,9 @@ if (! class_exists ( 'PostmanMyMailConnector' )) {
 		 * @return void
 		 */
 		public function presend($mailobject) {
+			
+			// embedding images doesn't work
+			$mailobject->embed_images = false;
 			
 			// use pre_send from the main class
 			// need the raw email body to send so we use the same option
@@ -115,28 +118,34 @@ if (! class_exists ( 'PostmanMyMailConnector' )) {
 		 * @return void
 		 */
 		public function dosend($mailobject) {
-			$this->logger->debug ( 'dosend' );
-			$this->logger->debug ( $mailobject );
+			$this->logger->trace ( 'dosend' );
+			$this->logger->trace ( $mailobject->mailer );
 			
 			// create a PostmanWpMail instance
-			require_once 'PostmanMessage.php';
 			$postmanWpMail = new PostmanWpMail ();
+			$postmanWpMail->init ();
 			
 			// create a PostmanMessage instance
 			$message = $postmanWpMail->createNewMessage ();
-			$message->addHeaders ( 'Content-Type: text/html;' );
 			$message->addHeaders ( $mailobject->headers );
-			$message->setBody ( $mailobject->mailer->Body );
+			$message->setBodyTextPart ( $mailobject->mailer->AltBody );
+			$message->setBodyHtmlPart ( $mailobject->mailer->Body );
 			$message->setSubject ( $mailobject->subject );
 			$message->addTo ( $mailobject->to );
 			$message->setReplyTo ( $mailobject->reply_to );
-			// $message->setAttachments ( $attachments );
+			$message->setAttachments ( $mailobject->attachments );
 			
 			// create a PostmanEmailLog instance
 			$log = new PostmanEmailLog ();
 			
 			// send the message and store the result
 			$mailobject->sent = $postmanWpMail->sendMessage ( $message, $log );
+			
+			// give error message back to MyMail
+			$result = apply_filters ( 'postman_wp_mail_result', null );
+			if (! $mailobject->sent) {
+				$mailobject->set_error ( $result ['exception']->getMessage () );
+			}
 		}
 		
 		/**
@@ -176,15 +185,7 @@ if (! class_exists ( 'PostmanMyMailConnector' )) {
 		 * @return void
 		 */
 		public function deliverytab() {
-			?>
-<table class="form-table">
-	<tr valign="top">
-		<th scope="row">&nbsp;</th>
-		<td><p class="description">Ready!</p></td>
-	</tr>
-</table>
-
-<?php
+			apply_filters ( 'print_postman_status', null );
 		}
 		
 		/**

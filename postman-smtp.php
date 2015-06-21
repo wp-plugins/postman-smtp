@@ -18,6 +18,7 @@
 // filter postman_wp_mail_result: apply this filter after calling wp_mail for an array containg the SMTP error, transcript and time
 // filter postman_get_plugin_metadata: get plugin metadata
 // filter postman_wp_mail_bind_status: get wp_mail bind status
+// filter print_postman_status: print the human-readable plugin state
 
 // TODO
 // -- Add dismiss option for "unconfigured message" .. for multisites

@@ -20,7 +20,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		protected $logger;
 		
 		// set by the caller
-		private $sender;
 		private $from;
 		private $fromHeader;
 		private $replyTo;
@@ -29,13 +28,12 @@ if (! class_exists ( "PostmanMessage" )) {
 		private $bccRecipients;
 		private $subject;
 		private $body;
+		private $bodyTextPart;
+		private $bodyHtmlPart;
 		private $headers;
 		private $attachments;
-		private $returnPath;
 		private $date;
 		private $messageId;
-		private $preventSenderNameOverride;
-		private $preventSenderEmailOverride;
 		
 		// determined by the send() method
 		private $isTextHtml;
@@ -44,7 +42,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		
 		//
 		private $boundary;
-		private $enablePostmanSignature;
 		
 		/**
 		 * No-argument constructor
@@ -56,26 +53,14 @@ if (! class_exists ( "PostmanMessage" )) {
 			$this->ccRecipients = array ();
 			$this->bccRecipients = array ();
 		}
-		public function setPostmanSignatureEnabled($enableSignature) {
-			$this->enablePostmanSignature = $enableSignature;
-		}
-		public function isPostmanSignatureEnabled() {
-			return $this->enablePostmanSignature;
-		}
-		
-		/**
-		 *
-		 * @return PostmanEmailAddress
-		 */
-		public function getSenderAddress() {
-			return $this->sender;
-		}
 		
 		/**
 		 *
 		 * @return PostmanEmailAddress
 		 */
 		public function getFromAddress() {
+			
+			$options = PostmanOptions::getInstance();
 			
 			// by default, sender is what Postman set
 			$from = PostmanEmailAddress::copy ( $this->from );
@@ -108,10 +93,10 @@ if (! class_exists ( "PostmanMessage" )) {
 			$this->logger->trace ( $from );
 			
 			// but the user has the final say
-			if ($this->isPluginSenderEmailEnforced ()) {
+			if ($options->isSenderEmailOverridePrevented ()) {
 				$from->setEmail ( $this->from->getEmail () );
 			}
-			if ($this->isPluginSenderNameEnforced ()) {
+			if ($options->isSenderNameOverridePrevented ()) {
 				$from->setName ( $this->from->getName () );
 			}
 			$this->logger->trace ( $from );
@@ -148,10 +133,9 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @return string
 		 */
 		public function getContentType() {
-			// Set Content-Type and charset
-			// If we don't have a content-type from the input headers
-			if (! isset ( $this->contentType ))
-				$this->contentType = 'text/plain';
+			return $this->contentType;
+		}
+		public function setContentType($contentType) {
 			/**
 			 * Filter the wp_mail() content type.
 			 *
@@ -160,8 +144,7 @@ if (! class_exists ( "PostmanMessage" )) {
 			 * @param string $content_type
 			 *        	Default wp_mail() content type.
 			 */
-			$this->contentType = apply_filters ( 'wp_mail_content_type', $this->contentType );
-			return $this->contentType;
+			$this->contentType = apply_filters ( 'wp_mail_content_type', $contentType );
 		}
 		/**
 		 *
@@ -258,7 +241,7 @@ if (! class_exists ( "PostmanMessage" )) {
 					$this->logProcessHeader ( 'Content-Type', $name, $content );
 					if (strpos ( $content, ';' ) !== false) {
 						list ( $type, $this->charset ) = explode ( ';', $content );
-						$this->contentType = trim ( $type );
+						$this->setContentType ( trim ( $type ) );
 						if (false !== stripos ( $this->charset, 'charset=' )) {
 							$this->charset = trim ( str_replace ( array (
 									'charset=',
@@ -273,7 +256,7 @@ if (! class_exists ( "PostmanMessage" )) {
 							$this->charset = '';
 						}
 					} else {
-						$this->contentType = trim ( $content );
+						$this->setContentType ( trim ( $content ) );
 					}
 					break;
 				case 'to' :
@@ -366,14 +349,17 @@ if (! class_exists ( "PostmanMessage" )) {
 		function setBody($body) {
 			$this->body = $body;
 		}
+		function setBodyTextPart($bodyTextPart) {
+			$this->bodyTextPart = $bodyTextPart;
+		}
+		function setBodyHtmlPart($bodyHtmlPart) {
+			$this->bodyHtmlPart = $bodyHtmlPart;
+		}
 		function setSubject($subject) {
 			$this->subject = $subject;
 		}
 		function setAttachments($attachments) {
 			$this->attachments = $attachments;
-		}
-		function setSender($email) {
-			$this->sender = $email;
 		}
 		function setFrom($email, $name = null) {
 			$this->from = new PostmanEmailAddress ( $email, $name );
@@ -381,28 +367,11 @@ if (! class_exists ( "PostmanMessage" )) {
 		function setReplyTo($replyTo) {
 			$this->replyTo = new PostmanEmailAddress ( $replyTo );
 		}
-		function setReturnPath($returnPath) {
-			$this->returnPath = $returnPath;
-		}
 		function setMessageId($messageId) {
 			$this->messageId = $messageId;
 		}
 		function setDate($date) {
 			$this->date = $date;
-		}
-		
-		// sender override
-		public function isPluginSenderNameEnforced() {
-			return $this->preventSenderNameOverride;
-		}
-		public function setPreventSenderNameOverride($preventSenderNameOverride) {
-			$this->preventSenderNameOverride = $preventSenderNameOverride;
-		}
-		public function isPluginSenderEmailEnforced() {
-			return $this->preventSenderEmailOverride;
-		}
-		public function setPreventSenderEmailOverride($preventSenderEmailOverride) {
-			$this->preventSenderEmailOverride = $preventSenderEmailOverride;
 		}
 		
 		// return the headers
@@ -424,9 +393,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		public function getReplyTo() {
 			return $this->replyTo;
 		}
-		public function getReturnPath() {
-			return $this->returnPath;
-		}
 		public function getDate() {
 			return $this->date;
 		}
@@ -438,6 +404,12 @@ if (! class_exists ( "PostmanMessage" )) {
 		}
 		public function getBody() {
 			return $this->body;
+		}
+		public function getBodyTextPart() {
+			return $this->bodyTextPart;
+		}
+		public function getBodyHtmlPart() {
+			return $this->bodyHtmlPart;
 		}
 	}
 }

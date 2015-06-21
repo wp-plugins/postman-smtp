@@ -38,6 +38,12 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 						'customizeAtAGlanceDashboardWidget' 
 				), 10, 1 );
 			}
+			
+			// Postman API: register the human-readable plugin state
+			add_filter ( 'print_postman_status', array (
+					$this,
+					'print_postman_status' 
+			) );
 		}
 		
 		/**
@@ -77,6 +83,14 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 			if ($this->options->isMailLoggingEnabled ()) {
 				$goToEmailLog = sprintf ( '<a href="%s">%s</a>', PostmanUtils::getEmailLogPageUrl (), $goToEmailLog );
 			}
+			apply_filters ( 'print_postman_status', null );
+			printf ( '<p>%s | %s</p>', $goToEmailLog, $goToSettings );
+		}
+		
+		/**
+		 * Print the human-readable plugin state
+		 */
+		public function print_postman_status() {
 			if (! PostmanPreRequisitesCheck::isReady ()) {
 				printf ( '<p><span style="color:red">%s</span></p>', __ ( 'Error: Postman is missing a required PHP library.', 'postman-smtp' ) );
 			} else if ($this->wpMailBinder->isUnboundDueToException ()) {
@@ -93,7 +107,6 @@ if (! class_exists ( "PostmanDashboardWidgetController" )) {
 					printf ( '<p><span>%s %s</span></p>', __ ( 'Postman is <em>not</em> handling email delivery.', 'postman-smtp' ), sprintf ( __ ( '<a href="%s">Configure</a> the plugin.', 'postman-smtp' ), PostmanUtils::getSettingsPageUrl () ) );
 				}
 			}
-			printf ( '<p>%s | %s</p>', $goToEmailLog, $goToSettings );
 		}
 		
 		/**

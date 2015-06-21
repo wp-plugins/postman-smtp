@@ -1,6 +1,6 @@
 === Postman SMTP Mailer/Email Log ===
 Contributors: jasonhendriks
-Tags: smtp, email log, mail, wp_mail, smtp email, mailer, phpmailer, oauth2, outgoing mail, sendmail, wp mail, gmail, google apps
+Tags: smtp, email, mail, mailer, log, outgoing, wp_mail, oauth2, gmail, google apps, godaddy, mymail, revaxarts
 Requires at least: 3.9
 Tested up to: 4.2
 Stable tag: 1.6.22
@@ -34,7 +34,7 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 * Supports forced recipients (cc, bcc, to) and [Mandrill](http://mandrill.com) X-headers
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Security Support: SMTPS and STARTTLS (SSL/TLS)
-* Verified compatible with: [Woocommerce](https://wordpress.org/plugins/woocommerce/), [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), [Fast Secure Contact Form](https://wordpress.org/plugins/si-contact-form/), [Visual Forms Builder](https://wordpress.org/plugins/visual-form-builder/), [Contact Form Builder](https://wordpress.org/plugins/contact-form-builder/)
+* Verified compatible with: [Woocommerce](https://wordpress.org/plugins/woocommerce/), [Contact Form 7](https://wordpress.org/plugins/contact-form-7/), [Gravity Forms](http://www.gravityforms.com), [Fast Secure Contact Form](https://wordpress.org/plugins/si-contact-form/), [Visual Forms Builder](https://wordpress.org/plugins/visual-form-builder/), [Contact Form Builder](https://wordpress.org/plugins/contact-form-builder/), [MyMail Newsletter](http://revaxarts-themes.com/?t=mymail)
 * Available translations: French, Italian, Turkish and Dutch - if you are willing to translate Postman into your language, [please let me know](https://wordpress.org/support/plugin/postman-smtp#postform)!
 
 = Requirements =

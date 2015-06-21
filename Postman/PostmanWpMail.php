@@ -14,10 +14,15 @@ if (! class_exists ( "PostmanWpMail" )) {
 		private $logger;
 		
 		/**
-		 * constructor
+		 * Load the dependencies
 		 */
-		public function __construct() {
+		public function init() {
 			$this->logger = new PostmanLogger ( get_class ( $this ) );
+			require_once 'Postman-Mail/PostmanMessage.php';
+			require_once 'Postman-Email-Log/PostmanEmailLogService.php';
+			require_once 'Postman-Mail/PostmanMailEngine.php';
+			require_once 'Postman-Auth/PostmanAuthenticationManagerFactory.php';
+			require_once 'PostmanStats.php';
 		}
 		
 		/**
@@ -33,6 +38,9 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 */
 		public function send($to, $subject, $message, $headers = '', $attachments = array()) {
 			
+			// initialize for sending
+			$this->init ();
+			
 			// build the message
 			$postmanMessage = $this->processWpMailCall ( $to, $subject, $message, $headers, $attachments );
 			
@@ -42,7 +50,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$log->originalSubject = $subject;
 			$log->originalMessage = $message;
 			$log->originalHeaders = $headers;
-				
+			
 			// send the message and return the result
 			return $this->sendMessage ( $postmanMessage, $log );
 		}
@@ -69,7 +77,10 @@ if (! class_exists ( "PostmanWpMail" )) {
 		 * @return boolean
 		 */
 		public function sendMessage(PostmanMessage $message, PostmanEmailLog $log) {
-
+			
+			// start the clock
+			$startTime = microtime ( true ) * 1000;
+			
 			// get the Options and AuthToken
 			$options = PostmanOptions::getInstance ();
 			$authorizationToken = PostmanOAuthToken::getInstance ();
@@ -79,21 +90,6 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$message->addTo ( $options->getForcedToRecipients () );
 			$message->addCc ( $options->getForcedCcRecipients () );
 			$message->addBcc ( $options->getForcedBccRecipients () );
-			
-			// setting these options here means they can not be overridden
-			$message->setSender ( $options->getEnvelopeSender () );
-			$message->setPreventSenderEmailOverride ( $options->isSenderEmailOverridePrevented () );
-			$message->setPreventSenderNameOverride ( $options->isSenderNameOverridePrevented () );
-			$message->setPostmanSignatureEnabled ( ! $options->isStealthModeEnabled () );
-			
-			// start the clock
-			$startTime = microtime ( true ) * 1000;
-			
-			// load the dependencies
-			require_once 'Postman-Email-Log/PostmanEmailLogService.php';
-			require_once 'Postman-Auth/PostmanAuthenticationManagerFactory.php';
-			require_once 'Postman-Mail/PostmanMailEngine.php';
-			require_once 'PostmanStats.php';
 			
 			// get the transport and create the transportConfig and engine
 			$transport = PostmanTransportRegistry::getInstance ()->getCurrentTransport ();
@@ -216,14 +212,11 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$this->logger->trace ( 'wp_mail parameters after applying WordPress wp_mail filter:' );
 			$this->traceParameters ( $to, $subject, $message, $headers, $attachments );
 			
-			// register the response hook
+			// Postman API: register the response hook
 			add_filter ( 'postman_wp_mail_result', array (
 					$this,
 					'postman_wp_mail_result' 
 			) );
-			
-			// load the dependencies
-			require_once 'Postman-Mail/PostmanMessage.php';
 			
 			// create the message
 			$postmanMessage = $this->createNewMessage ();
