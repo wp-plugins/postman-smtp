@@ -1,4 +1,5 @@
 <?php
+require_once 'PostmanLogger.php';
 require_once 'PostmanState.php';
 if (! class_exists ( 'PostmanUtils' )) {
 	class PostmanUtils {

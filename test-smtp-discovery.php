@@ -1,7 +1,5 @@
 <?php
-require_once 'Postman/PostmanLogger.php';
 require_once 'Postman/PostmanUtils.php';
-require_once 'Postman/postman-common-functions.php';
 require_once 'Postman/Postman-Wizard/PostmanSmtpDiscovery.php';
 function test() {
 	$pass = true;

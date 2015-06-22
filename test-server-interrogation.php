@@ -1,5 +1,5 @@
 <?php
-require_once 'Postman/postman-common-functions.php';
+require_once 'Postman/PostmanUtils.php';
 require_once 'Postman/Postman-Wizard/Postman-PortTest.php';
 
 // constants
