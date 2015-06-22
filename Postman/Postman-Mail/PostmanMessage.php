@@ -21,7 +21,6 @@ if (! class_exists ( "PostmanMessage" )) {
 		
 		// set by the caller
 		private $from;
-		private $fromHeader;
 		private $replyTo;
 		private $toRecipients;
 		private $ccRecipients;
@@ -59,37 +58,9 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @return PostmanEmailAddress
 		 */
 		public function getFromAddress() {
+			$options = PostmanOptions::getInstance ();
 			
-			$options = PostmanOptions::getInstance();
-			
-			// by default, sender is what Postman set
-			$from = PostmanEmailAddress::copy ( $this->from );
-			$this->logger->trace ( $from );
-			
-			// but we will let other plugins override the from via the 'From' header
-			if (isset ( $this->fromHeader )) {
-				$s1 = new PostmanEmailAddress ( $this->fromHeader );
-				$s1name = $s1->getName ();
-				$s1email = $s1->getEmail ();
-				if (! empty ( $s1name )) {
-					$from->setName ( $s1name );
-				}
-				if (! empty ( $s1email )) {
-					$from->setEmail ( $s1email );
-				}
-			}
-			$this->logger->trace ( $from );
-			/**
-			 * Filter the email address to send from.
-			 */
-			// other plugins can override the email via a filter
-			$from->setEmail ( apply_filters ( 'wp_mail_from', $from->getEmail () ) );
-			
-			/**
-			 * Filter the name to associate with the "from" email address.
-			 */
-			// other plugins can override the name via a filter
-			$from->setName ( apply_filters ( 'wp_mail_from_name', $from->getName () ) );
+			$from = $this->from;
 			$this->logger->trace ( $from );
 			
 			// but the user has the final say
@@ -122,9 +93,12 @@ if (! class_exists ( "PostmanMessage" )) {
 			 * @param string $charset
 			 *        	Default email charset.
 			 */
-			$this->charset = apply_filters ( 'wp_mail_charset', $this->charset );
+			$filteredCharset = apply_filters ( 'wp_mail_charset', $this->charset );
+			if ($this->charset !== $filteredCharset) {
+				$this->logger->debug ( sprintf ( 'Filtering Charset: before=%s after=%s', $this->charset, $filteredCharset ) );
+			}
 			
-			return $this->charset;
+			return $filteredCharset;
 		}
 		
 		/**
@@ -144,7 +118,11 @@ if (! class_exists ( "PostmanMessage" )) {
 			 * @param string $content_type
 			 *        	Default wp_mail() content type.
 			 */
-			$this->contentType = apply_filters ( 'wp_mail_content_type', $contentType );
+			$filteredContentType = apply_filters ( 'wp_mail_content_type', $contentType );
+			if ($contentType !== $filteredContentType) {
+				$this->logger->debug ( sprintf ( 'Filtering Content-Type: before=%s after=%s', $contentType, $filteredContentType ) );
+			}
+			$this->contentType = $filteredContentType;
 		}
 		/**
 		 *
@@ -273,7 +251,7 @@ if (! class_exists ( "PostmanMessage" )) {
 					break;
 				case 'from' :
 					$this->logProcessHeader ( 'From', $name, $content );
-					$this->fromHeader = $content;
+					$this->setFrom ( $content );
 					break;
 				case 'subject' :
 					$this->logProcessHeader ( 'Subject', $name, $content );
@@ -363,6 +341,25 @@ if (! class_exists ( "PostmanMessage" )) {
 		}
 		function setFrom($email, $name = null) {
 			$this->from = new PostmanEmailAddress ( $email, $name );
+			/**
+			 * Filter the email address to send from.
+			 */
+			// other plugins can override the email via a filter
+			$filteredEmail = apply_filters ( 'wp_mail_from', $this->from->getEmail () );
+			if ($this->from->getEmail () !== $filteredEmail) {
+				$this->logger->debug ( sprintf ( 'Filtering From email address: before=%s after=%s', $this->from->getEmail (), $filteredEmail ) );
+				$this->from->setEmail ( $filteredEmail );
+			}
+			
+			/**
+			 * Filter the name to associate with the "from" email address.
+			 */
+			// other plugins can override the name via a filter
+			$filteredName = apply_filters ( 'wp_mail_from_name', $this->from->getName () );
+			if ($this->from->getName () !== $filteredName) {
+				$this->logger->debug ( sprintf ( 'Filtering From email name: before=%s after=%s', $this->from->getName (), $filteredName ) );
+				$this->from->setName ( $filteredName );
+			}
 		}
 		function setReplyTo($replyTo) {
 			$this->replyTo = new PostmanEmailAddress ( $replyTo );
