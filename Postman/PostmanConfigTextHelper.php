@@ -92,7 +92,7 @@ if (! class_exists ( 'PostmanGoogleOAuthScribe' )) {
 			if (isset ( $urlParts ['scheme'] ) && isset ( $urlParts ['host'] )) {
 				return $urlParts ['scheme'] . "://" . $urlParts ['host'];
 			} else {
-				throw new ParseUrlException ();
+				throw new Exception ();
 			}
 		}
 		public function getClientIdLabel() {
@@ -154,7 +154,7 @@ if (! class_exists ( 'PostmanMicrosoftOAuthScribe' )) {
 			if (isset ( $urlParts ['host'] )) {
 				return $urlParts ['host'];
 			} else {
-				throw new ParseUrlException ();
+				throw new Exception ();
 			}
 		}
 		public function getClientIdLabel() {
@@ -216,7 +216,7 @@ if (! class_exists ( 'PostmanYahooOAuthScribe' )) {
 			if (isset ( $urlParts ['host'] )) {
 				return $urlParts ['host'];
 			} else {
-				throw new ParseUrlException ();
+				throw new Exception ();
 			}
 		}
 		public function getClientIdLabel() {

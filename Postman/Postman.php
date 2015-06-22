@@ -37,7 +37,6 @@ if (! class_exists ( 'Postman' )) {
 			require_once 'PostmanState.php';
 			require_once 'PostmanLogger.php';
 			require_once 'PostmanUtils.php';
-			require_once 'postman-common-functions.php';
 			require_once 'Postman-Mail/PostmanTransportRegistry.php';
 			require_once 'Postman-Mail/PostmanSmtpModuleTransport.php';
 			require_once 'Postman-Mail/PostmanGmailApiModuleTransport.php';
@@ -270,3 +269,18 @@ if (! class_exists ( 'Postman' )) {
 		}
 	}
 }
+
+if (! function_exists ( 'str_getcsv' )) {
+	/**
+	 * PHP version less than 5.3 don't have str_getcsv natively.
+	 *
+	 * @param unknown $string
+	 * @return multitype:
+	 */
+	function str_getcsv($string) {
+		$logger = new PostmanLogger ( 'postman-common-functions' );
+		$logger->debug ( 'Using custom str_getcsv' );
+		return PostmanUtils::postman_strgetcsv_impl ( $string );
+	}
+}
+

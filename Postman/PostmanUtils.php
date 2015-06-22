@@ -288,6 +288,51 @@ if (! class_exists ( 'PostmanUtils' )) {
 			return current_user_can ( 'administrator' );
 		}
 		
+		/**
+		 * Validate an e-mail address
+		 *
+		 * @param unknown $email        	
+		 * @return number
+		 */
+		static function validateEmail($email) {
+			return true;
+			$exp = "/^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$/i";
+			return preg_match ( $exp, $email );
+		}
+		
+		/**
+		 * From http://stackoverflow.com/questions/13430120/str-getcsv-alternative-for-older-php-version-gives-me-an-empty-array-at-the-e
+		 *
+		 * @param unknown $string        	
+		 * @return multitype:
+		 */
+		static function postman_strgetcsv_impl($string) {
+			$fh = fopen ( 'php://temp', 'r+' );
+			fwrite ( $fh, $string );
+			rewind ( $fh );
+			
+			$row = fgetcsv ( $fh );
+			
+			fclose ( $fh );
+			return $row;
+		}
+		
+		/**
+		 * 
+		 * @return Ambigous <string, unknown>
+		 */
+		static function postmanGetServerName() {
+			$serverName = '127.0.0.1';
+			if (isset ( $_SERVER ['SERVER_NAME'] )) {
+				$serverName = $_SERVER ['SERVER_NAME'];
+			}
+			if (empty ( $serverName )) {
+				if (isset ( $_SERVER ['HTTP_HOST'] )) {
+					$serverName = $_SERVER ['HTTP_HOST'];
+				}
+			}
+			return $serverName;
+		}
 	}
 	PostmanUtils::staticInit ();
 }

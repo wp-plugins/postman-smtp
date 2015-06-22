@@ -158,7 +158,7 @@ class PostmanPortTest {
 		$this->logger->trace ( 'talkToMailServer()' );
 		$stream = $this->createStream ( $connectionString, $this->connectionTimeout );
 		if ($stream) {
-			$serverName = postmanGetServerName ();
+			$serverName = PostmanUtils::postmanGetServerName ();
 			@stream_set_timeout ( $stream, $this->readTimeout );
 			// see http://php.net/manual/en/transports.inet.php#113244
 			// see http://php.net/stream_socket_enable_crypto

@@ -47,7 +47,7 @@ if (! class_exists ( 'PostmanEmailAddress' )) {
 		 * @return number
 		 */
 		public function validateEmail($email) {
-			return postmanValidateEmail ( $email );
+			return PostmanUtils::validateEmail ( $email );
 		}
 		
 		/**

@@ -139,7 +139,7 @@ if (! class_exists ( 'PostmanSmtpDiscovery' )) {
 		 * @return Ambigous <number, boolean>
 		 */
 		private function validateEmail($email) {
-			return postmanValidateEmail ( $email );
+			return PostmanUtils::validateEmail ( $email );
 		}
 		private function determineSmtpServer($email) {
 			$hostname = substr ( strrchr ( $email, "@" ), 1 );

@@ -408,7 +408,7 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 			$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
 			$email = $this->getRequestParameter ( 'email' );
 			
-			$serverName = postmanGetServerName ();
+			$serverName = PostmanUtils::postmanGetServerName ();
 			/* translators: where %s is the domain name of the site */
 			$subject = sprintf ( _x ( 'Postman SMTP Test (%s)', 'Test Email Subject', 'postman-smtp' ), $serverName );
 			// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
