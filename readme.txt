@@ -30,7 +30,7 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 * Fire-and-forget delivery continues even if the password changes ¹
 * Send Gmail over HTTPS if the standard SMTP ports are blocked ¹
 * Supports Gmail, Hotmail and Yahoo's OAuth 2.0 implementation ¹
-* Supports International alphabets, HTML Mail and MultiPart/Alternative
+* Supports [International alphabets](https://tools.ietf.org/html/rfc6530), HTML Mail and MultiPart/Alternative
 * Supports forced recipients (cc, bcc, to) and [Mandrill](http://mandrill.com) X-headers
 * SASL Support: Plain/Login/CRAM-MD5/XOAUTH2 authentication
 * Security Support: SMTPS and STARTTLS (SSL/TLS)
@@ -254,6 +254,7 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 * [[Ticket](https://wordpress.org/support/topic/conflict-with-bbpress-and-buddy-press-in-1622?replies=2)] Causes bbPress or Buddy Press to generate warning messages. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/fatal-error-internal-zend-error-missing-class-information?replies=2#post-7092317)] User reported error "Fatal error: Internal Zend error - Missing class information" - Whoops, used 'require' PostmanState.php instead of 'require_once' PostmanState.php which was causing errors. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/error-send-mymail-email-marketing?replies=5)] [[Ticket](https://wordpress.org/support/topic/how-configure-mymail-in-plugin?replies=6)] MyMail Newsletter Plugin for WordPress refuses to use wp_mail. I don't want to make this a habit, but I've integrated Postman with MyMail's proprietary delivery mechanism.
+* [[Ticket](https://wordpress.org/support/topic/cant-send-error-500?replies=11#post-7103035)] Found an environment where the plugin's call to new Exception was creating PHP Fatal errors. Fixed.
 * The Gmail API transport now saves a transcript (or rather, a copy of the payload sent to the Gmail API) in the Email Log
 
 = 1.6.22 - 2015-06-14 =
