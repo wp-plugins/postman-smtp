@@ -248,7 +248,7 @@ if (! class_exists ( "PostmanMailEngine" )) {
 					$message = sprintf ( __ ( 'Communication Error [334] - make sure the Envelope From email is the same account used to create the Client ID.', 'postman-smtp' ) );
 				}
 				// create a new exception
-				$newException = new Exception ( $message, $e->getCode (), $e->getPrevious () );
+				$newException = new Exception ( $message, $e->getCode () );
 				// throw the new exception after handling
 				throw $newException;
 			}
