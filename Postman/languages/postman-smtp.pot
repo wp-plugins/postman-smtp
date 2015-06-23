@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Postman SMTP package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Postman SMTP 1.6.23a\n"
+"Project-Id-Version: Postman SMTP 1.6.23d\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-06-20 12:27:34+00:00\n"
+"POT-Creation-Date: 2015-06-23 18:56:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,10 +23,10 @@ msgid ""
 "</b>"
 msgstr ""
 
-#. #-#-#-#-#  plugin.pot (Postman SMTP 1.6.23a)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Postman SMTP 1.6.23d)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:51
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:64
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:57
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:70
 #: Postman/Postman.php:51 Postman/PostmanViewController.php:75
 #: Postman/PostmanViewController.php:129 Postman/PostmanViewController.php:164
 #: Postman/PostmanViewController.php:185 Postman/PostmanViewController.php:237
@@ -34,36 +34,36 @@ msgstr ""
 msgid "Postman SMTP"
 msgstr ""
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:75
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:81
 #: Postman/PostmanAdminController.php:223
 #: Postman/PostmanViewController.php:651
 msgctxt "The configuration page of the plugin"
 msgid "Settings"
 msgstr ""
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:76
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:82
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:193
 msgctxt "The log of Emails that have been delivered"
 msgid "Email Log"
 msgstr ""
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:81
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:95
 msgid "Error: Postman is missing a required PHP library."
 msgstr ""
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:83
-#: Postman/Postman.php:164
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:97
+#: Postman/Postman.php:167
 msgid ""
 "Postman: wp_mail has been declared by another plugin or theme, so you won't "
 "be able to use Postman until the conflict is resolved."
 msgstr ""
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:86
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:100
 #: Postman/PostmanViewController.php:468
 msgid "Postman is in <em>non-Production</em> mode and is dumping all emails."
 msgstr ""
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:88
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:102
 msgid ""
 "<span style=\"color:green\">Postman is configured</span> and has delivered "
 "<span style=\"color:green\">%d</span> email."
@@ -73,18 +73,18 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:93
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:107
 #: Postman/PostmanViewController.php:487
 msgid "Postman is <em>not</em> handling email delivery."
 msgstr ""
 
 #. translators: where %s is the URL to the Postman Setup page
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:93
-#: Postman/Postman.php:222
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:107
+#: Postman/Postman.php:225
 msgid "<a href=\"%s\">Configure</a> the plugin."
 msgstr ""
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:103
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:116
 msgid "Postman is operating in per-site mode."
 msgstr ""
 
@@ -193,7 +193,7 @@ msgctxt "An Email that has been delivered"
 msgid "Sent Email"
 msgstr ""
 
-#: Postman/Postman-Email-Log/PostmanEmailLogService.php:194
+#: Postman/Postman-Email-Log/PostmanEmailLogService.php:189
 msgid ".. +%d more"
 msgstr ""
 
@@ -284,10 +284,15 @@ msgstr ""
 msgid "Postman recommends Gmail API configuration on port %d"
 msgstr ""
 
-#: Postman/Postman-Mail/PostmanMailEngine.php:234
+#: Postman/Postman-Mail/PostmanMailEngine.php:248
 msgid ""
 "Communication Error [334] - make sure the Envelope From email is the same "
 "account used to create the Client ID."
+msgstr ""
+
+#: Postman/Postman-Mail/PostmanMyMailConnector.php:199
+#: Postman/Postman-Mail/PostmanMyMailConnector.php:214
+msgid "Change the delivery method on the %s!"
 msgstr ""
 
 #: Postman/Postman-Mail/PostmanSmtpModuleTransport.php:14
@@ -370,7 +375,7 @@ msgid ""
 "deactivated."
 msgstr ""
 
-#: Postman/Postman.php:219
+#: Postman/Postman.php:222
 msgid "WordPress is still handling email delivery, <em>not</em> Postman."
 msgstr ""
 
@@ -651,20 +656,50 @@ msgstr ""
 msgid "Error computing your domain root - please enter it manually"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:861
+#: Postman/PostmanAdminController.php:852
+msgctxt "Log Level"
+msgid "Off"
+msgstr ""
+
+#: Postman/PostmanAdminController.php:853
+msgctxt "Log Level"
+msgid "Trace"
+msgstr ""
+
+#: Postman/PostmanAdminController.php:854
+msgctxt "Log Level"
+msgid "Debug"
+msgstr ""
+
+#: Postman/PostmanAdminController.php:855
+msgctxt "Log Level"
+msgid "Info"
+msgstr ""
+
+#: Postman/PostmanAdminController.php:856
+msgctxt "Log Level"
+msgid "Warning"
+msgstr ""
+
+#: Postman/PostmanAdminController.php:857
+msgctxt "Log Level"
+msgid "Error"
+msgstr ""
+
+#: Postman/PostmanAdminController.php:867
 msgctxt "When the server is online to the public, this is \"Production\" mode"
 msgid "Log Email and Send"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:862
+#: Postman/PostmanAdminController.php:868
 msgid "Log Email and Delete"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:863
+#: Postman/PostmanAdminController.php:869
 msgid "Delete All Emails"
 msgstr ""
 
-#: Postman/PostmanAdminController.php:867
+#: Postman/PostmanAdminController.php:873
 msgid "Remove the Postman X-Header signature from messages"
 msgstr ""
 
@@ -1062,7 +1097,7 @@ msgid "Failed"
 msgstr ""
 
 #: Postman/PostmanViewController.php:417
-msgid "The server returned an unexpected and invalid result:"
+msgid "The server returned an unexpected result:"
 msgstr ""
 
 #. translators: where %d is a port number

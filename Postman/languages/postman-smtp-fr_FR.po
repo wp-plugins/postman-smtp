@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.4.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-06-20 12:27:34+00:00\n"
-"PO-Revision-Date: 2015-06-20 08:29-0500\n"
+"POT-Creation-Date: 2015-06-23 18:56:42+00:00\n"
+"PO-Revision-Date: 2015-06-23 14:59-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -24,8 +24,8 @@ msgid "Enable to save a copy of all your emails. Great for troubleshooting or as
 msgstr "Permettre d'enregistrer une copie de tous vos emails. Idéal pour le dépannage ou une sauvegarde des messages qui se perdent. <b>Accéder au journal des Email dans le menu Outils.</b>"
 
 #. Plugin Name of the plugin/theme
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:51
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:64
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:57
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:70
 #: Postman/Postman.php:51 Postman/PostmanViewController.php:75
 #: Postman/PostmanViewController.php:129 Postman/PostmanViewController.php:164
 #: Postman/PostmanViewController.php:185 Postman/PostmanViewController.php:237
@@ -33,51 +33,51 @@ msgstr "Permettre d'enregistrer une copie de tous vos emails. Idéal pour le dé
 msgid "Postman SMTP"
 msgstr "Postman SMTP"
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:75
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:81
 #: Postman/PostmanAdminController.php:223
 #: Postman/PostmanViewController.php:651
 msgctxt "The configuration page of the plugin"
 msgid "Settings"
 msgstr "Réglages"
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:76
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:82
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:193
 msgctxt "The log of Emails that have been delivered"
 msgid "Email Log"
 msgstr "Niveau du journal"
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:81
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:95
 msgid "Error: Postman is missing a required PHP library."
 msgstr "Postman manque une bibliothèque PHP requise."
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:83
-#: Postman/Postman.php:164
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:97
+#: Postman/Postman.php:167
 msgid "Postman: wp_mail has been declared by another plugin or theme, so you won't be able to use Postman until the conflict is resolved."
 msgstr "Erreur: Postman est correctement configuré, mais le thème actuel ou un autre plugin empêche service."
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:86
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:100
 #: Postman/PostmanViewController.php:468
 msgid "Postman is in <em>non-Production</em> mode and is dumping all emails."
 msgstr "Postman est en mode <em>non-production</em>."
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:88
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:102
 msgid "<span style=\"color:green\">Postman is configured</span> and has delivered <span style=\"color:green\">%d</span> email."
 msgid_plural "<span style=\"color:green\">Postman is configured</span> and has delivered <span style=\"color:green\">%d</span> emails."
 msgstr[0] "<span style=\"color:green\">Postman est configuré</span> et a livré <span style=\"color:green\">%d</span> e-mail."
 msgstr[1] "<span style=\"color:green\">Postman est configuré</span> et a livré <span style=\"color:green\">%d</span> e-mails."
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:93
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:107
 #: Postman/PostmanViewController.php:487
 msgid "Postman is <em>not</em> handling email delivery."
 msgstr "Postman <em>n'intercepte pas</em> les demandes de courrier."
 
 #. translators: where %s is the URL to the Postman Setup page
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:93
-#: Postman/Postman.php:222
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:107
+#: Postman/Postman.php:225
 msgid "<a href=\"%s\">Configure</a> the plugin."
 msgstr "<a href=\"%s\">Configurez</a> le plugin"
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:103
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:116
 msgid "Postman is operating in per-site mode."
 msgstr "Postier fonctionne en mode par-site."
 
@@ -179,7 +179,7 @@ msgctxt "An Email that has been delivered"
 msgid "Sent Email"
 msgstr "Courriel envoyé"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogService.php:194
+#: Postman/Postman-Email-Log/PostmanEmailLogService.php:189
 msgid ".. +%d more"
 msgstr ".. et %d plus"
 
@@ -267,9 +267,14 @@ msgstr "Vous avez configuré l'authentification OAuth 2.0, mais ne avons pas re�
 msgid "Postman recommends Gmail API configuration on port %d"
 msgstr "Recommande configuration API Gmail sur le port %d"
 
-#: Postman/Postman-Mail/PostmanMailEngine.php:234
+#: Postman/Postman-Mail/PostmanMailEngine.php:248
 msgid "Communication Error [334] - make sure the Envelope From email is the same account used to create the Client ID."
 msgstr "Erreur de communications  [334]  - Assurez-vous que l'adresse d'envoi appartient au compte qui a fourni le consentement de OAuth 2.0."
+
+#: Postman/Postman-Mail/PostmanMyMailConnector.php:199
+#: Postman/Postman-Mail/PostmanMyMailConnector.php:214
+msgid "Change the delivery method on the %s!"
+msgstr "Changer la méthode de livraison sur la %s!"
 
 #: Postman/Postman-Mail/PostmanSmtpModuleTransport.php:14
 msgctxt "Transport Name"
@@ -343,7 +348,7 @@ msgstr "Vos paramètres recommandés sont%1$s avec l&#39;authentification de 2% 
 msgid "The selected transport '%s' is unavailable. The external plugin was probably deactivated."
 msgstr "Le transport sélectionné '%s' ne est pas disponible. Le plugin externe a été probablement désactivée."
 
-#: Postman/Postman.php:219
+#: Postman/Postman.php:222
 msgid "WordPress is still handling email delivery, <em>not</em> Postman."
 msgstr "Postman <em>n'intercepte pas</em> les demandes de courrier."
 
@@ -606,20 +611,50 @@ msgstr "Non"
 msgid "Error computing your domain root - please enter it manually"
 msgstr "Erreur de compilation de votre serveur souche - entrez le manuellement"
 
-#: Postman/PostmanAdminController.php:861
+#: Postman/PostmanAdminController.php:852
+msgctxt "Log Level"
+msgid "Off"
+msgstr "Off"
+
+#: Postman/PostmanAdminController.php:853
+msgctxt "Log Level"
+msgid "Trace"
+msgstr "Trace"
+
+#: Postman/PostmanAdminController.php:854
+msgctxt "Log Level"
+msgid "Debug"
+msgstr "Début"
+
+#: Postman/PostmanAdminController.php:855
+msgctxt "Log Level"
+msgid "Info"
+msgstr "Info"
+
+#: Postman/PostmanAdminController.php:856
+msgctxt "Log Level"
+msgid "Warning"
+msgstr "Warning"
+
+#: Postman/PostmanAdminController.php:857
+msgctxt "Log Level"
+msgid "Error"
+msgstr "Error"
+
+#: Postman/PostmanAdminController.php:867
 msgctxt "When the server is online to the public, this is \"Production\" mode"
 msgid "Log Email and Send"
 msgstr "Journal E-mail et envoyer"
 
-#: Postman/PostmanAdminController.php:862
+#: Postman/PostmanAdminController.php:868
 msgid "Log Email and Delete"
 msgstr "Journal E-mail et Supprimer"
 
-#: Postman/PostmanAdminController.php:863
+#: Postman/PostmanAdminController.php:869
 msgid "Delete All Emails"
 msgstr "Supprimez toutes les e-mails"
 
-#: Postman/PostmanAdminController.php:867
+#: Postman/PostmanAdminController.php:873
 msgid "Remove the Postman X-Header signature from messages"
 msgstr "Supprimer la signature de l'en-tête X facteur de messages"
 
@@ -972,7 +1007,7 @@ msgid "Failed"
 msgstr "Echoué"
 
 #: Postman/PostmanViewController.php:417
-msgid "The server returned an unexpected and invalid result:"
+msgid "The server returned an unexpected result:"
 msgstr "Le serveur a renvoyé un résultat inattendu et non valide :"
 
 #. translators: where %d is a port number
@@ -1354,6 +1389,9 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "http://www.codingmonkey.ca"
 msgstr "http://www.codingmonkey.ca"
+
+#~ msgid "The server returned an unexpected and invalid result:"
+#~ msgstr "Le serveur a renvoyé un résultat inattendu et non valide :"
 
 #~ msgid "Communication Error [334] - make sure the Sender Email belongs to the account which provided the OAuth 2.0 consent."
 #~ msgstr "Erreur de communications  [334]  - Assurez-vous que l'adresse d'envoi appartient au compte qui a fourni le consentement de OAuth 2.0."

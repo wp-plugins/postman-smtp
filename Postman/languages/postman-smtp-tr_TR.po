@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Postman SMTP 1.5.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/postman-smtp\n"
-"POT-Creation-Date: 2015-06-20 12:27:34+00:00\n"
-"PO-Revision-Date: 2015-06-20 08:30-0500\n"
+"POT-Creation-Date: 2015-06-23 18:56:42+00:00\n"
+"PO-Revision-Date: 2015-06-23 15:02-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr_TR\n"
@@ -25,8 +25,8 @@ msgid "Enable to save a copy of all your emails. Great for troubleshooting or as
 msgstr "Tüm e-postalar bir kopyasını kaydetmek için etkinleştirin. Büyük sorun giderme veya kaybolma iletiler için bir yedek olarak. <b>Araçlar menüsünde e-posta günlük erişmek.</b>"
 
 #. Plugin Name of the plugin/theme
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:51
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:64
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:57
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:70
 #: Postman/Postman.php:51 Postman/PostmanViewController.php:75
 #: Postman/PostmanViewController.php:129 Postman/PostmanViewController.php:164
 #: Postman/PostmanViewController.php:185 Postman/PostmanViewController.php:237
@@ -34,51 +34,51 @@ msgstr "Tüm e-postalar bir kopyasını kaydetmek için etkinleştirin. Büyük 
 msgid "Postman SMTP"
 msgstr "Postman SMTP"
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:75
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:81
 #: Postman/PostmanAdminController.php:223
 #: Postman/PostmanViewController.php:651
 msgctxt "The configuration page of the plugin"
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:76
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:82
 #: Postman/Postman-Email-Log/PostmanEmailLogController.php:193
 msgctxt "The log of Emails that have been delivered"
 msgid "Email Log"
 msgstr "E-posta günlüğü"
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:81
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:95
 msgid "Error: Postman is missing a required PHP library."
 msgstr "Postman gerek duyduğu bir PHP kütüphanesine ulaşamıyor."
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:83
-#: Postman/Postman.php:164
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:97
+#: Postman/Postman.php:167
 msgid "Postman: wp_mail has been declared by another plugin or theme, so you won't be able to use Postman until the conflict is resolved."
 msgstr "Postman başarıyla kuruldu, fakat şu anda farklı bir mail servisi kullanıyorsunuz. Diğer eklentiyi deaktif ediniz."
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:86
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:100
 #: Postman/PostmanViewController.php:468
 msgid "Postman is in <em>non-Production</em> mode and is dumping all emails."
 msgstr "Postacı <em>Olmayan üretim</em> modunda ise ve tüm e-postalar atıyor."
 
 # turkish doesn’t has s letter on calculations ;)
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:88
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:102
 msgid "<span style=\"color:green\">Postman is configured</span> and has delivered <span style=\"color:green\">%d</span> email."
 msgid_plural "<span style=\"color:green\">Postman is configured</span> and has delivered <span style=\"color:green\">%d</span> emails."
 msgstr[0] "<span style=\"color:green\">Postman ayarlandı</span> ve <span style=\"color:green\">%d</span> adet emaili başarıyla gönderdi."
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:93
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:107
 #: Postman/PostmanViewController.php:487
 msgid "Postman is <em>not</em> handling email delivery."
 msgstr "Postman email gönderimlerinizdeki aktif eklenti değil."
 
 #. translators: where %s is the URL to the Postman Setup page
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:93
-#: Postman/Postman.php:222
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:107
+#: Postman/Postman.php:225
 msgid "<a href=\"%s\">Configure</a> the plugin."
 msgstr "Eklentiyi <a href=\"%s\">ayarla</a>."
 
-#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:103
+#: Postman/Postman-Controller/PostmanDashboardWidgetController.php:116
 msgid "Postman is operating in per-site mode."
 msgstr "Postacı site başına modunda çalışıyor."
 
@@ -180,7 +180,7 @@ msgctxt "An Email that has been delivered"
 msgid "Sent Email"
 msgstr "Gönderilen e-posta"
 
-#: Postman/Postman-Email-Log/PostmanEmailLogService.php:194
+#: Postman/Postman-Email-Log/PostmanEmailLogService.php:189
 msgid ".. +%d more"
 msgstr ".. ve %d daha fazla."
 
@@ -268,9 +268,14 @@ msgstr "OAuth 2.0 konfigürasyonunu yaptınız ancak henüz gönderim için yetk
 msgid "Postman recommends Gmail API configuration on port %d"
 msgstr "Postman Gmail API konfigürasyonu için %d nolu portu ayarlamanızı öneriyor."
 
-#: Postman/Postman-Mail/PostmanMailEngine.php:234
+#: Postman/Postman-Mail/PostmanMailEngine.php:248
 msgid "Communication Error [334] - make sure the Envelope From email is the same account used to create the Client ID."
 msgstr "Bağlantı Hatası [334] - gönderen email adresinin OAuth 2.0 email gönderimine izin verdiğinden emin olun."
+
+#: Postman/Postman-Mail/PostmanMyMailConnector.php:199
+#: Postman/Postman-Mail/PostmanMyMailConnector.php:214
+msgid "Change the delivery method on the %s!"
+msgstr "Teslimat yöntemini değiştirme %s!"
 
 #: Postman/Postman-Mail/PostmanSmtpModuleTransport.php:14
 msgctxt "Transport Name"
@@ -344,7 +349,7 @@ msgstr "Önerilen ayarları %1$s %2$s host %4$s bağlantı noktası %3$ d üzeri
 msgid "The selected transport '%s' is unavailable. The external plugin was probably deactivated."
 msgstr "Seçtiğiniz iletim türü kullanılamıyor. Harici eklenti büyük ihtimalle devre dışı."
 
-#: Postman/Postman.php:219
+#: Postman/Postman.php:222
 msgid "WordPress is still handling email delivery, <em>not</em> Postman."
 msgstr "Postman email gönderimlerinizdeki aktif eklenti değil."
 
@@ -607,20 +612,50 @@ msgstr "Hayır"
 msgid "Error computing your domain root - please enter it manually"
 msgstr "Domain adından dizin alınırken hata oluştu - lütfen el ile giriniz"
 
-#: Postman/PostmanAdminController.php:861
+#: Postman/PostmanAdminController.php:852
+msgctxt "Log Level"
+msgid "Off"
+msgstr "Off"
+
+#: Postman/PostmanAdminController.php:853
+msgctxt "Log Level"
+msgid "Trace"
+msgstr "Trace"
+
+#: Postman/PostmanAdminController.php:854
+msgctxt "Log Level"
+msgid "Debug"
+msgstr "Debug"
+
+#: Postman/PostmanAdminController.php:855
+msgctxt "Log Level"
+msgid "Info"
+msgstr "Info"
+
+#: Postman/PostmanAdminController.php:856
+msgctxt "Log Level"
+msgid "Warning"
+msgstr "Warning"
+
+#: Postman/PostmanAdminController.php:857
+msgctxt "Log Level"
+msgid "Error"
+msgstr "Error"
+
+#: Postman/PostmanAdminController.php:867
 msgctxt "When the server is online to the public, this is \"Production\" mode"
 msgid "Log Email and Send"
 msgstr "Üretim"
 
-#: Postman/PostmanAdminController.php:862
+#: Postman/PostmanAdminController.php:868
 msgid "Log Email and Delete"
 msgstr "E-posta giriş, o zaman dökümü"
 
-#: Postman/PostmanAdminController.php:863
+#: Postman/PostmanAdminController.php:869
 msgid "Delete All Emails"
 msgstr "Herşeyi Sıfırla"
 
-#: Postman/PostmanAdminController.php:867
+#: Postman/PostmanAdminController.php:873
 msgid "Remove the Postman X-Header signature from messages"
 msgstr "Postacı X-üstbilgi imzası gelen iletileri kaldırma"
 
@@ -979,7 +1014,7 @@ msgid "Failed"
 msgstr "Gönderilemedi"
 
 #: Postman/PostmanViewController.php:417
-msgid "The server returned an unexpected and invalid result:"
+msgid "The server returned an unexpected result:"
 msgstr "Sunucu beklenmedik ve geçersiz bir sonuç döndürdü:"
 
 #. translators: where %d is a port number
@@ -1361,6 +1396,9 @@ msgstr "Jason Hendriks"
 #. Author URI of the plugin/theme
 msgid "http://www.codingmonkey.ca"
 msgstr "http://www.codingmonkey.ca"
+
+#~ msgid "The server returned an unexpected and invalid result:"
+#~ msgstr "Sunucu beklenmedik ve geçersiz bir sonuç döndürdü:"
 
 #~ msgid "Communication Error [334] - make sure the Sender Email belongs to the account which provided the OAuth 2.0 consent."
 #~ msgstr "Bağlantı Hatası [334] - gönderen email adresinin OAuth 2.0 email gönderimine izin verdiğinden emin olun."
