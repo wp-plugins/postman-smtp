@@ -414,7 +414,7 @@ if (! class_exists ( 'PostmanViewController' )) {
 					'success' => _x ( 'Success', 'Email Test Status', 'postman-smtp' ),
 					'failed' => _x ( 'Failed', 'Email Test Status', 'postman-smtp' ) 
 			) );
-			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_ajax_fail', __ ( 'The server returned an unexpected and invalid result:', 'postman-smtp' ) );
+			wp_localize_script ( self::POSTMAN_SCRIPT, 'postman_ajax_fail', __ ( 'The server returned an unexpected result:', 'postman-smtp' ) );
 			/* translators: where %d is a port number */
 			wp_localize_script ( 'postman_port_test_script', 'postman_port_blocked', __ ( 'No outbound route between this site and the Internet on Port %d.', 'postman-smtp' ) );
 			/* translators: where %d is a port number and %s is a hostname */
