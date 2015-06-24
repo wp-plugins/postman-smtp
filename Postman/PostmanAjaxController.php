@@ -401,10 +401,6 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 		 * This Ajax sends a test email
 		 */
 		function sendTestEmailViaAjax() {
-			add_filter ( 'postman_test_email', array (
-					$this,
-					'test_mode' 
-			) );
 			$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
 			$email = $this->getRequestParameter ( 'email' );
 			
@@ -462,7 +458,15 @@ Content-Transfer-Encoding: 8bit
 </html>
 				';
 			$header = 'Content-Type: multipart/alternative;';
+			add_filter ( 'postman_test_email', array (
+					$this,
+					'test_mode' 
+			) );
 			$success = wp_mail ( $email, $subject, $message2, $header );
+			remove_filter ( 'postman_test_email', array (
+					$this,
+					'test_mode' 
+			) );
 			$result = apply_filters ( 'postman_wp_mail_result', null );
 			if ($success) {
 				$statusMessage = sprintf ( __ ( 'Your message was delivered (%d ms) to the SMTP server! Congratulations :)', 'postman-smtp' ), $result ['time'] );
