@@ -4,7 +4,7 @@
  * Plugin Name: Postman SMTP
  * Plugin URI: https://wordpress.org/plugins/postman-smtp/
  * Description: Email not reliable? Postman is the first and only WordPress SMTP plugin to implement OAuth 2.0 for Gmail, Hotmail and Yahoo Mail. Setup is a breeze with the Configuration Wizard and integrated Port Tester. Enjoy worry-free delivery even if your password changes!
- * Version: 1.6.23d
+ * Version: 1.6.23e
  * Author: Jason Hendriks
  * Text Domain: postman-smtp
  * Author URI: http://www.codingmonkey.ca
@@ -41,7 +41,7 @@ function postman_start($startingMemory) {
 }
 function postman_setupPostman() {
 	require_once 'Postman/Postman.php';
-	$kevinCostner = new Postman ( __FILE__, '1.6.23d' );
+	$kevinCostner = new Postman ( __FILE__, '1.6.23e' );
 }
 /**
  * Start Postman
