@@ -131,7 +131,8 @@ if (! class_exists ( "PostmanMailEngine" )) {
 			
 			// add the reply-to
 			$replyTo = $message->getReplyTo ();
-			if (! empty ( $replyTo )) {
+			// $replyTo is null or a PostmanEmailAddress object
+			if (isset ( $replyTo )) {
 				$mail->setReplyTo ( $replyTo->getEmail (), $replyTo->getName () );
 			}
 			
