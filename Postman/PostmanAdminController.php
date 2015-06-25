@@ -154,7 +154,7 @@ if (! class_exists ( "PostmanAdminController" )) {
 				new PostmanPortTestAjaxController ( $this->options );
 				new PostmanImportConfigurationAjaxController ( $this->options );
 				new PostmanGetDiagnosticsViaAjax ( $this->options, $this->authorizationToken );
-				new PostmanSendTestEmailAjaxController ( $this->options, $this->authorizationToken, $this->oauthScribe );
+				new PostmanSendTestEmailAjaxController ();
 				
 				// register content handlers
 				$viewController = new PostmanViewController ( $this->rootPluginFilenameAndPath, $this->options, $this->authorizationToken, $this->oauthScribe, $this );

@@ -132,7 +132,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->addToDiagnostics ( $this->getActivePlugins () );
 			$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', $pluginData ['version'] ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Sender Domain (Envelope|Message): %s|%s', $hostname = substr ( strrchr ( $this->options->getEnvelopeSender(), "@" ), 1 ), $hostname = substr ( strrchr ( $this->options->getMessageSenderEmail (), "@" ), 1 ) ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Sender Domain (Envelope|Message): %s|%s', $hostname = substr ( strrchr ( $this->options->getEnvelopeSender (), "@" ), 1 ), $hostname = substr ( strrchr ( $this->options->getMessageSenderEmail (), "@" ), 1 ) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Prevent Message Sender Override (Email|Name): %s|%s', $this->options->isSenderEmailOverridePrevented () ? 'Yes' : 'No', $this->options->isSenderNameOverridePrevented () ? 'Yes' : 'No' ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI: %s', $transportRegistry->getPublicTransportUri ( $transportRegistry->getCurrentTransport () ) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport Status (Configured|Ready|Connected): %s|%s|%s', $transportRegistry->getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', $this->testConnectivity () ) );
@@ -376,9 +376,6 @@ if (! class_exists ( 'PostmanImportConfigurationAjaxController' )) {
 }
 if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 	class PostmanSendTestEmailAjaxController extends PostmanAbstractAjaxHandler {
-		private $options;
-		private $authorizationToken;
-		private $oauthScribe;
 		
 		/**
 		 * Constructor
@@ -387,13 +384,16 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 		 * @param PostmanOAuthToken $authorizationToken        	
 		 * @param PostmanConfigTextHelper $oauthScribe        	
 		 */
-		function __construct(PostmanOptions $options, PostmanOAuthToken $authorizationToken, PostmanConfigTextHelper $oauthScribe) {
+		function __construct() {
 			parent::__construct ();
-			$this->options = $options;
-			$this->authorizationToken = $authorizationToken;
-			$this->oauthScribe = $oauthScribe;
 			$this->registerAjaxHandler ( 'send_test_email', $this, 'sendTestEmailViaAjax' );
 		}
+		
+		/**
+		 * Yes, this procedure is just for testing.
+		 *
+		 * @return boolean
+		 */
 		function test_mode() {
 			return true;
 		}
@@ -402,15 +402,24 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 		 * This Ajax sends a test email
 		 */
 		function sendTestEmailViaAjax() {
+			// Postman API: Get the plugin metadata
 			$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
+			
+			// get the email address of the recipient from the HTTP Request
 			$email = $this->getRequestParameter ( 'email' );
 			
+			// get the name of the server from the HTTP Request
 			$serverName = PostmanUtils::postmanGetServerName ();
+			
 			/* translators: where %s is the domain name of the site */
 			$subject = sprintf ( _x ( 'Postman SMTP Test (%s)', 'Test Email Subject', 'postman-smtp' ), $serverName );
-			// Englsih - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
+			
+			// the plain-text content
 			/* translators: where %s is the Postman plugin version number (e.g. 1.4) */
+			// English - Mandarin - French - Hindi - Spanish - Portuguese - Russian - Japanese
 			$message1 = sprintf ( 'Hello! - 你好 - Bonjour! - नमस्ते - ¡Hola! - Olá - Привет! - 今日は%s%s%s - https://wordpress.org/plugins/postman-smtp/', PostmanMessage::EOL, PostmanMessage::EOL, sprintf ( _x ( 'Sent by Postman %s', 'Test Email Tagline', 'postman-smtp' ), $pluginData ['version'] ) );
+			
+			// the HTML content
 			$message2 = '
 Content-Type: text/plain; charset = "UTF-8"
 Content-Transfer-Encoding: 8bit
@@ -458,31 +467,47 @@ Content-Transfer-Encoding: 8bit
 
 </html>
 				';
+			// this header specifies that there are many parts (one text part, one html part)
 			$header = 'Content-Type: multipart/alternative;';
+			
+			// Postman API: indicate to Postman this is just for testing
 			add_filter ( 'postman_test_email', array (
 					$this,
 					'test_mode' 
 			) );
+			
+			// send the message
 			$success = wp_mail ( $email, $subject, $message2, $header );
+			
+			// Postman API: remove the testing indicator
 			remove_filter ( 'postman_test_email', array (
 					$this,
 					'test_mode' 
 			) );
+			
+			// Postman API: retrieve the result of sending this message from Postman
 			$result = apply_filters ( 'postman_wp_mail_result', null );
+			
+			// post-handling
 			if ($success) {
-				$statusMessage = sprintf ( __ ( 'Your message was delivered (%d ms) to the SMTP server! Congratulations :)', 'postman-smtp' ), $result ['time'] );
 				$this->logger->debug ( 'Test Email delivered to server' );
+				// the message was sent successfully, generate an appropriate message for the user
+				$statusMessage = sprintf ( __ ( 'Your message was delivered (%d ms) to the SMTP server! Congratulations :)', 'postman-smtp' ), $result ['time'] );
 			} else {
 				$this->logger->error ( 'Test Email NOT delivered to server - ' . $result ['exception']->getCode () );
 				$this->logger->error ( "SMTP session transcript follows:\n" . $result ['transcript'] );
+				// the message was NOT sent successfully, generate an appropriate message for the user
 				$statusMessage = $result ['exception']->getMessage ();
 			}
 			$this->logger->debug ( 'statusmessage: ' . $statusMessage );
+			
+			// compose the JSON response for the caller
 			$response = array (
 					'message' => $statusMessage,
 					'transcript' => $result ['transcript'],
 					'success' => $success 
 			);
+			// send the JSON response
 			wp_send_json ( $response );
 		}
 	}
