@@ -13,7 +13,7 @@ Take control of your Outgoing Email with the most modern, friendly and reliable 
 
 Postman is a next-generation SMTP mailer compatible with all email systems. It is the first and only SMTP plugin to support both traditional passwords and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/), the [modern security mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html). With OAuth 2.0, there is **no need** to [store your email passsword](http://blog.codinghorror.com/youre-probably-storing-passwords-incorrectly/) in the WordPress database where hackers might find it.
 
-Postman is one of the [very few](https://wordpress.org/support/topic/conflict-with-mail-queue-plugin?replies=4#post-6974043) [SMTP plugins](https://wordpress.org/plugins/search.php?q=smtp) that is *not* just another WP Mail SMTP [clone](https://wordpress.org/support/view/plugin-reviews/webriti-smtp-mail?filter=1); Here's why. The intelligent **Setup Wizard** scans your SMTP server so you can't make a configuration mistake. The handy **Email Log** shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy or Bluehost, can't stop your Gmail as **Postman will deliver via HTTPS** if it can't use SMTP.
+Postman is *not* another [WP Mail SMTP clone](https://wordpress.org/support/view/plugin-reviews/webriti-smtp-mail?filter=1). It is one of the [few](https://wordpress.org/support/topic/conflict-with-mail-queue-plugin?replies=4#post-6974043) [SMTP plugins](https://wordpress.org/plugins/search.php?q=smtp) which rewrite wp_mail. Why? So the intelligent **Setup Wizard** can scan your SMTP server to eliminate configuration mistakes. The handy **Email Log** can show which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy or Bluehost, can't stop your Gmail as **Postman will deliver via HTTPS** if it can't use SMTP.
 
 Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/updates-on-authentication-for-gmail.html), lost emails and spam ². Email is reliably delivered every time because Postman is [pre-approved](http://blog.varonis.com/introduction-to-oauth/) to send SMTP messages on your behalf, without rejection, and without the work-arounds.
 
@@ -23,7 +23,6 @@ Stop fighting SMTP [failures](http://googleappsdeveloper.blogspot.no/2014/10/upd
 
 
 = Features =
-* Overrides wp_mail, replaces PHP Mailer with Zend_Mail
 * Logs all emails, including message content and errors
 * Easy-to-use, powerful Setup Wizard for perfect configuration
 * Commercial-grade Connectivity Tester to diagnose server issues
@@ -249,7 +248,7 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 == Changelog ==
 
-= 1.6.23 - 2015-06-20 =
+= 1.6.23 - 2015-06-24 =
 * 9,000 installations! - 2015-06-20
 * [[Ticket](https://wordpress.org/support/topic/conflict-with-bbpress-and-buddy-press-in-1622?replies=2)] Causes bbPress or Buddy Press to generate warning messages. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/fatal-error-internal-zend-error-missing-class-information?replies=2#post-7092317)] User reported error "Fatal error: Internal Zend error - Missing class information" - Whoops, used 'require' PostmanState.php instead of 'require_once' PostmanState.php which was causing errors. Fixed.

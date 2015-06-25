@@ -362,7 +362,9 @@ if (! class_exists ( "PostmanMessage" )) {
 			}
 		}
 		function setReplyTo($replyTo) {
-			$this->replyTo = new PostmanEmailAddress ( $replyTo );
+			if (! empty ( $replyTo )) {
+				$this->replyTo = new PostmanEmailAddress ( $replyTo );
+			}
 		}
 		function setMessageId($messageId) {
 			$this->messageId = $messageId;
