@@ -128,12 +128,13 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->addToDiagnostics ( sprintf ( 'HTTP User Agent: %s', $_SERVER ['HTTP_USER_AGENT'] ) );
 			$this->addToDiagnostics ( sprintf ( 'Platform: PHP %s %s / WordPress %s %s %s', PHP_OS, PHP_VERSION, is_multisite () ? 'Multisite' : '', get_bloginfo ( 'version' ), get_locale () ) );
 			$this->addToDiagnostics ( $this->getPhpDependencies () );
-			$this->addToDiagnostics ( $this->getActivePlugins () );
 			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', wp_get_theme () ) );
+			$this->addToDiagnostics ( $this->getActivePlugins () );
 			$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', $pluginData ['version'] ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Sender Domain: %s', $hostname = substr ( strrchr ( $this->options->getMessageSenderEmail (), "@" ), 1 ) ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI|Force Email|Name: %s|%s|%s', $transportRegistry->getPublicTransportUri ( $transportRegistry->getCurrentTransport () ), $this->options->isSenderEmailOverridePrevented () ? 'Yes' : 'No', $this->options->isSenderNameOverridePrevented () ? 'Yes' : 'No' ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Sender Domain (Envelope|Message): %s|%s', $hostname = substr ( strrchr ( $this->options->getEnvelopeSender(), "@" ), 1 ), $hostname = substr ( strrchr ( $this->options->getMessageSenderEmail (), "@" ), 1 ) ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Prevent Message Sender Override (Email|Name): %s|%s', $this->options->isSenderEmailOverridePrevented () ? 'Yes' : 'No', $this->options->isSenderNameOverridePrevented () ? 'Yes' : 'No' ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman Transport URI: %s', $transportRegistry->getPublicTransportUri ( $transportRegistry->getCurrentTransport () ) ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Transport Status (Configured|Ready|Connected): %s|%s|%s', $transportRegistry->getCurrentTransport ()->isConfigured ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', PostmanTransportRegistry::getInstance ()->getCurrentTransport ()->isReady ( $this->options, $this->authorizationToken ) ? 'Yes' : 'No', $this->testConnectivity () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Deliveries (Success|Fail): %d|%d', PostmanStats::getInstance ()->getSuccessfulDeliveries (), PostmanStats::getInstance ()->getFailedDeliveries () ) );
 			$bindResult = apply_filters ( 'postman_wp_mail_bind_status', null );
@@ -148,7 +149,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->addToDiagnostics ( sprintf ( 'Postman Run Mode: %s', $this->options->getRunMode () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman PHP LogLevel: %s', $this->options->getLogLevel () ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Stealth Mode: %s', $this->options->isStealthModeEnabled () ? 'Yes' : 'No' ) );
-			$this->addToDiagnostics ( sprintf ( 'Postman File Locking (Enabled|Temp Dir): %s | %s', PostmanState::getInstance ()->isFileLockingEnabled () ? 'Yes' : 'No', $this->options->getTempDirectory () ) );
+			$this->addToDiagnostics ( sprintf ( 'Postman File Locking (Enabled|Temp Dir): %s|%s', PostmanState::getInstance ()->isFileLockingEnabled () ? 'Yes' : 'No', $this->options->getTempDirectory () ) );
 			$response = array (
 					'message' => $this->diagnostics 
 			);
