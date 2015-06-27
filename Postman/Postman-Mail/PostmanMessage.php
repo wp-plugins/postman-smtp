@@ -57,6 +57,7 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * Apply the WordPress filters to the email
 		 */
 		public function applyFilters() {
+			
 			/**
 			 * Filter the email address to send from.
 			 *
@@ -112,6 +113,19 @@ if (! class_exists ( "PostmanMessage" )) {
 				$this->logger->debug ( sprintf ( 'Filtering Content-Type: before=%s after=%s', $this->getContentType (), $filteredContentType ) );
 				$this->setContentType ( $filteredContentType );
 			}
+			
+			// Postman has it's own 'user override' filter
+			$options = PostmanOptions::getInstance ();
+			$forcedEmailAddress = $options->getMessageSenderEmail ();
+			if ($options->isSenderEmailOverridePrevented () && $this->getFromAddress ()->getEmail () !== $forcedEmailAddress) {
+				$this->logger->debug ( sprintf ( 'Forced From email address: before=%s after=%s', $this->getFromAddress ()->getEmail (), $forcedEmailAddress ) );
+				$this->getFromAddress ()->setEmail ( $forcedEmailAddress );
+			}
+			$forcedEmailName = $options->getMessageSenderName ();
+			if ($options->isSenderNameOverridePrevented () && $this->getFromAddress ()->getName () !== $forcedEmailName) {
+				$this->logger->debug ( sprintf ( 'Forced From email name: before=%s after=%s', $this->getFromAddress ()->getName (), $forcedEmailName ) );
+				$this->getFromAddress ()->setName ( $forcedEmailName );
+			}
 		}
 		
 		/**
@@ -153,21 +167,7 @@ if (! class_exists ( "PostmanMessage" )) {
 		 * @return PostmanEmailAddress
 		 */
 		public function getFromAddress() {
-			$options = PostmanOptions::getInstance ();
-			
-			$from = $this->from;
-			$this->logger->trace ( $from );
-			
-			// but the user has the final say
-			if ($options->isSenderEmailOverridePrevented ()) {
-				$from->setEmail ( $this->from->getEmail () );
-			}
-			if ($options->isSenderNameOverridePrevented ()) {
-				$from->setName ( $this->from->getName () );
-			}
-			$this->logger->trace ( $from );
-			
-			return $from;
+			return $this->from;
 		}
 		
 		/**
