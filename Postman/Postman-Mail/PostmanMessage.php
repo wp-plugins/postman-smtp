@@ -59,8 +59,12 @@ if (! class_exists ( "PostmanMessage" )) {
 		public function applyFilters() {
 			/**
 			 * Filter the email address to send from.
+			 *
+			 * @since 2.2.0
+			 *       
+			 * @param string $from_email
+			 *        	Email address to send from.
 			 */
-			// other plugins can override the email via a filter
 			$filteredEmail = apply_filters ( 'wp_mail_from', $this->getFromAddress ()->getEmail () );
 			if ($this->getFromAddress ()->getEmail () !== $filteredEmail) {
 				$this->logger->debug ( sprintf ( 'Filtering From email address: before=%s after=%s', $this->getFromAddress ()->getEmail (), $filteredEmail ) );
@@ -69,8 +73,12 @@ if (! class_exists ( "PostmanMessage" )) {
 			
 			/**
 			 * Filter the name to associate with the "from" email address.
+			 *
+			 * @since 2.3.0
+			 *       
+			 * @param string $from_name
+			 *        	Name associated with the "from" email address.
 			 */
-			// other plugins can override the name via a filter
 			$filteredName = apply_filters ( 'wp_mail_from_name', $this->getFromAddress ()->getName () );
 			if ($this->getFromAddress ()->getName () !== $filteredName) {
 				$this->logger->debug ( sprintf ( 'Filtering From email name: before=%s after=%s', $this->getFromAddress ()->getName (), $filteredName ) );
@@ -81,6 +89,9 @@ if (! class_exists ( "PostmanMessage" )) {
 			 * Filter the default wp_mail() charset.
 			 *
 			 * @since 2.3.0
+			 *       
+			 * @param string $charset
+			 *        	Default email charset.
 			 */
 			$filteredCharset = apply_filters ( 'wp_mail_charset', $this->getCharset () );
 			if ($this->getCharset () !== $filteredCharset) {
@@ -93,6 +104,8 @@ if (! class_exists ( "PostmanMessage" )) {
 			 *
 			 * @since 2.3.0
 			 *       
+			 * @param string $content_type
+			 *        	Default wp_mail() content type.
 			 */
 			$filteredContentType = apply_filters ( 'wp_mail_content_type', $this->getContentType () );
 			if ($this->getContentType () !== $filteredContentType) {

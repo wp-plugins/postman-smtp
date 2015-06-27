@@ -86,14 +86,14 @@ if (! class_exists ( "PostmanMailEngine" )) {
 				$mail->addHeader ( $header ['name'], $header ['content'], true );
 			}
 			
-			// get the content type
+			// modify the content-type to include the boundary
 			$contentType = $message->getContentType ();
 			if (false !== stripos ( $contentType, 'multipart' ) && ! empty ( $this->boundary )) {
 				// Lines in email are terminated by CRLF ("\r\n") according to RFC2821
 				$contentType = sprintf ( "%s;\r\n\t boundary=\"%s\"", $contentType, $message->getBoundary () );
 			}
 			
-			// add the Content-Type header, overriding what the user may have set
+			// if the caller set a Content-Type header, push it into the $mail object
 			if (! empty ( $contentType )) {
 				$mail->addHeader ( 'Content-Type', $contentType, false );
 				$this->logger->debug ( 'Adding content-type ' . $contentType );
