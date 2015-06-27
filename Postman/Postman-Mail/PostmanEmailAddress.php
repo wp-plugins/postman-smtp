@@ -35,19 +35,21 @@ if (! class_exists ( 'PostmanEmailAddress' )) {
 			$this->name = $name;
 		}
 		public function setEmail($email) {
-			if (! $this->validateEmail ( $email )) {
-				throw new Exception ( "invalid email=" . $email );
-			}
 			$this->email = $email;
 		}
+		
 		/**
-		 * Validate an email address
+		 * Validate the email address
 		 *
-		 * @param unknown $email        	
-		 * @return number
+		 * @throws Exception
 		 */
-		public function validateEmail($email) {
-			return PostmanUtils::validateEmail ( $email );
+		public function validate() {
+			if (! PostmanUtils::validateEmail ( $this->email )) {
+				$message = 'Invalid e-mail address: ' . $this->email;
+				$logger = new PostmanLogger ( get_class ( $this ) );
+				$logger->warn ( $message );
+				throw new Exception ( $message );
+			}
 		}
 		
 		/**
