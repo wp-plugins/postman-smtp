@@ -184,7 +184,7 @@ if (! class_exists ( 'PostmanGmailApiModuleZendMailTransport' )) {
 			// Prepare the message in message/rfc822
 			$message = $this->header . Postman_Zend_Mime::LINEEND . $this->body;
 			$this->message = $message;
-			$this->logger->debug ( 'message: ' . $message );
+			$this->logger->trace ( 'message: ' . $message );
 			
 			// The message needs to be encoded in Base64URL
 			$mime = rtrim ( strtr ( base64_encode ( $message ), '+/', '-_' ), '=' );
