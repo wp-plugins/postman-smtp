@@ -1,9 +1,17 @@
 <?php
 require_once 'PostmanLogger.php';
 require_once 'PostmanState.php';
+require_once 'Postman-Mail/Zend-1.12.10/Exception.php';
+require_once 'Postman-Mail/Zend-1.12.10/Validate/Exception.php';
+require_once 'Postman-Mail/Zend-1.12.10/Validate/Interface.php';
+require_once 'Postman-Mail/Zend-1.12.10/Validate/Abstract.php';
+require_once 'Postman-Mail/Zend-1.12.10/Validate/Ip.php';
+require_once 'Postman-Mail/Zend-1.12.10/Validate/Hostname.php';
+require_once 'Postman-Mail/Zend-1.12.10/Validate/EmailAddress.php';
 if (! class_exists ( 'PostmanUtils' )) {
 	class PostmanUtils {
 		private static $logger;
+		private static $emailValidator;
 		
 		//
 		const POSTMAN_SETTINGS_PAGE_STUB = 'postman';
@@ -21,6 +29,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 		const NO_ECHO = false;
 		public static function staticInit() {
 			PostmanUtils::$logger = new PostmanLogger ( 'PostmanUtils' );
+			PostmanUtils::$emailValidator = new Postman_Zend_Validate_EmailAddress ();
 		}
 		
 		/**
@@ -296,9 +305,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 		 * @return number
 		 */
 		static function validateEmail($email) {
-			return true;
-			$exp = "/^[a-z\'0-9]+([._-][a-z\'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+))+$/i";
-			return preg_match ( $exp, $email );
+			return PostmanUtils::$emailValidator->isValid ( $email );
 		}
 		
 		/**
@@ -319,7 +326,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 		}
 		
 		/**
-		 * 
+		 *
 		 * @return Ambigous <string, unknown>
 		 */
 		static function postmanGetServerName() {

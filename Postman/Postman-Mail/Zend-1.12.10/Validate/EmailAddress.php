@@ -22,12 +22,12 @@
 /**
  * @see Postman_Zend_Validate_Abstract
  */
-require_once 'Zend/Validate/Abstract.php';
+// require_once 'Zend/Validate/Abstract.php';
 
 /**
  * @see Postman_Zend_Validate_Hostname
  */
-require_once 'Zend/Validate/Hostname.php';
+// require_once 'Zend/Validate/Hostname.php';
 
 /**
  * @category   Zend
@@ -288,7 +288,7 @@ class Postman_Zend_Validate_EmailAddress extends Postman_Zend_Validate_Abstract
     public function setValidateMx($mx)
     {
         if ((bool) $mx && !$this->validateMxSupported()) {
-            require_once 'Zend/Validate/Exception.php';
+            // require_once 'Zend/Validate/Exception.php';
             throw new Postman_Zend_Validate_Exception('MX checking not available on this system');
         }
 

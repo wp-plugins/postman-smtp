@@ -104,7 +104,7 @@ class Postman_Zend_Validate_Ip extends Postman_Zend_Validate_Abstract
         }
 
         if (!$this->_options['allowipv4'] && !$this->_options['allowipv6']) {
-            require_once 'Zend/Validate/Exception.php';
+            // require_once 'Zend/Validate/Exception.php';
             throw new Postman_Zend_Validate_Exception('Nothing to validate. Check your options');
         }
 
