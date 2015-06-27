@@ -136,7 +136,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	}
 	function handleResponse(response) {
 		if (response.transcript && response.transcript.length != 0) {
-			// only disable the next button if there is a next step
+			// only enable the next button if there is a transcript
 			jQuery('li').removeClass('disabled');
 		} else {
 			jQuery('li + li').removeClass('disabled');
