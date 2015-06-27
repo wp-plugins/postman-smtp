@@ -495,7 +495,6 @@ Content-Transfer-Encoding: 8bit
 				$statusMessage = sprintf ( __ ( 'Your message was delivered (%d ms) to the SMTP server! Congratulations :)', 'postman-smtp' ), $result ['time'] );
 			} else {
 				$this->logger->error ( 'Test Email NOT delivered to server - ' . $result ['exception']->getCode () );
-				$this->logger->error ( "SMTP session transcript follows:\n" . $result ['transcript'] );
 				// the message was NOT sent successfully, generate an appropriate message for the user
 				$statusMessage = $result ['exception']->getMessage ();
 			}
