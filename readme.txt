@@ -250,7 +250,8 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 
 == Changelog ==
 
-= 1.6.23 - 2015-06-24 =
+= 1.6.23 - 2015-06-27 =
+* 10,000 installations! - 2015-06-27
 * 9,000 installations! - 2015-06-20
 * [[Ticket](https://wordpress.org/support/topic/conflict-with-bbpress-and-buddy-press-in-1622?replies=2)] Causes bbPress or Buddy Press to generate warning messages. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/fatal-error-internal-zend-error-missing-class-information?replies=2#post-7092317)] User reported error "Fatal error: Internal Zend error - Missing class information" - Whoops, used 'require' PostmanState.php instead of 'require_once' PostmanState.php which was causing errors. Fixed.
