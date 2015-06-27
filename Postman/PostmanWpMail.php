@@ -67,6 +67,7 @@ if (! class_exists ( "PostmanWpMail" )) {
 			$message->setFrom ( $options->getMessageSenderEmail (), $options->getMessageSenderName () );
 			// the Reply-To is set now so that it can be overridden
 			$message->setReplyTo ( $options->getReplyTo () );
+			$message->setCharset ( get_bloginfo ( 'charset' ) );
 			return $message;
 		}
 		
@@ -110,11 +111,14 @@ if (! class_exists ( "PostmanWpMail" )) {
 			
 			try {
 				
+				// validate the message
+				$message->applyFilters ();
+				$message->validate ();
+				
 				// send the message
 				if ($options->getRunMode () == PostmanOptions::RUN_MODE_PRODUCTION) {
 					if ($options->isAuthTypeOAuth2 ()) {
 						PostmanUtils::lock ();
-						$this->logger->debug ( 'jason' );
 						// may throw an exception attempting to contact the OAuth2 provider
 						$this->ensureAuthtokenIsUpdated ( $transport, $options, $authorizationToken );
 					}
