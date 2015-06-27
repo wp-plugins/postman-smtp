@@ -257,7 +257,9 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 * [[Ticket](https://wordpress.org/support/topic/error-send-mymail-email-marketing?replies=5)] [[Ticket](https://wordpress.org/support/topic/how-configure-mymail-in-plugin?replies=6)] MyMail Newsletter Plugin for WordPress refuses to use wp_mail. I don't want to make this a habit, but I've integrated Postman with MyMail's proprietary delivery mechanism.
 * [[Ticket](https://wordpress.org/support/topic/cant-send-error-500?replies=11#post-7103035)] Found an environment where the plugin's call to new Exception was creating PHP Fatal errors. Fixed.
 * [[Ticket](https://wordpress.org/support/topic/error-calling-post-400-invalid-to-header?replies=4)] Perform validation on all email headers before sending message
+* The Gmail API transport now displays a transcript (or rather, a copy of the payload sent to the Gmail API) during the Send Email Test
 * The Gmail API transport now saves a transcript (or rather, a copy of the payload sent to the Gmail API) in the Email Log
+* No longer shows the Javascript pop-up if the error is caused by the user cancelling everything (by checking JSON response.responseText for null)
 
 = 1.6.22 - 2015-06-14 =
 * Finally realized that for the last five months I've been relying on register_activation_hook to fire during plugin updates - [and it doesn't](https://make.wordpress.org/core/2010/10/27/plugin-activation-hooks-no-longer-fire-for-updates/). Lovely. Well this change should eliminate all the "update doesn't work!" bugs for good.

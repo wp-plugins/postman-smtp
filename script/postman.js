@@ -155,5 +155,7 @@ jQuery('body').ajaxStart(function() {
 });
 
 function ajaxFailed(response) {
-	alert(postman_ajax_fail + " " + JSON.stringify(response, null, 4));
+	if (response.responseText) {
+		alert(postman_ajax_fail + " " + JSON.stringify(response, null, 4));
+	}
 }
