@@ -1,5 +1,4 @@
-portsChecked = 0;
-portsToCheck = 0;
+transcript = false;
 jQuery(document).ready(
 		function() {
 			ready = 0;
@@ -94,6 +93,7 @@ function handleStepChange(event, currentIndex, newIndex, form) {
 		hide(jQuery('#test-success'));
 		hide(jQuery('#test-fail'));
 	} else if (currentIndex === 1) {
+		return transcript;
 	}
 
 	return true;
@@ -137,6 +137,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 	function handleResponse(response) {
 		if (response.transcript && response.transcript.length != 0) {
 			// only enable the next button if there is a transcript
+			transcript = true;
 			jQuery('li').removeClass('disabled');
 		} else {
 			jQuery('li + li').removeClass('disabled');
