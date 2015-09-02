@@ -1,6 +1,6 @@
 === Postman SMTP Mailer/Email Log ===
 Contributors: jasonhendriks
-Tags: smtp, email, mail, mailer, log, outgoing, wp_mail, oauth2, gmail, google apps, godaddy, mymail, revaxarts
+Tags: smtp, email, mail, mailer, log, outgoing, wp_mail, oauth2, gmail, google apps, godaddy, mymail
 Requires at least: 3.9
 Tested up to: 4.3
 Stable tag: 1.6.23
