@@ -7,7 +7,7 @@ Stable tag: 1.6.23
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Take control of your Outgoing Email with the most modern, friendly and reliable SMTP Mailer for WordPress!
+Take control of your Outgoing Email with the most modern, friendly and #1 rated SMTP Mailer for WordPress!
 
 == Description ==
 
