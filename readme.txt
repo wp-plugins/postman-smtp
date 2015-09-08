@@ -13,7 +13,9 @@ Take control of your Outgoing Email with the most modern, friendly and #1 rated 
 
 Postman is a next-generation SMTP mailer compatible with all email systems. It is the first and only SMTP plugin to support both traditional passwords and [OAuth 2.0](http://foorious.com/webdev/auth/oauth2/), the [modern security mechanism for authentication](http://googleonlinesecurity.blogspot.ca/2014/04/new-security-measures-will-affect-older.html). With OAuth 2.0, there is **no need** to [store your email passsword](http://blog.codinghorror.com/youre-probably-storing-passwords-incorrectly/) in the WordPress database where hackers might find it.
 
-Postman is *not* another WP Mail SMTP clone like WP Bank or Easy SMTP. It replaces the default WordPress SMTP library, PHPMailer, with the heavy-duty Zend_Mail. The intelligent **Setup Wizard** scans your SMTP server to eliminate configuration mistakes. The handy **Email Log** shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy or Bluehost, can't stop your Gmail as **Postman will deliver via HTTPS** if it can't use SMTP.
+Postman is *not* another WP Mail SMTP clone like WP Bank or Easy SMTP. It replaces the default WordPress SMTP library, PHPMailer, with the heavy-duty Zend_Mail. Never lose an email to PHP mail() again.
+
+The **Connectivity Test** and intelligent **Setup Wizard** scan your SMTP server to detect firewall blocks and eliminate configuration mistakes. The handy **Email Log** shows which emails failed to send, and why. Even hosts that block the standard SMTP ports, like GoDaddy or Bluehost, can't stop your Gmail as **Postman will deliver via HTTPS** if it can't use SMTP.
 
 = Standard Features =
 * Easy-to-use, powerful Setup Wizard for perfect configuration
