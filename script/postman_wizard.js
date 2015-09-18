@@ -28,7 +28,7 @@ function checkGoDaddyAndCheckEmail(email) {
 	hide('#godaddy_spf_required');
 	// are we hosted on GoDaddy? check.
 	var data = {
-		'action' : 'wizard_port_test',
+		'action' : 'postman_wizard_port_test',
 		'hostname' : 'relay-hosting.secureserver.net',
 		'port' : 25,
 		'timeout' : 3
@@ -44,7 +44,7 @@ function checkGoDaddyAndCheckEmail(email) {
 
 function checkEmail(goDaddyHostDetected, email) {
 	var data = {
-		'action' : 'check_email',
+		'action' : 'postman_check_email',
 		'go_daddy' : goDaddyHostDetected,
 		'email' : email
 	};
@@ -269,7 +269,7 @@ function getHostsToCheck(hostname) {
 	portCheckBlocksUi = true;
 	portTestInProgress = true;
 	var data = {
-		'action' : 'get_hosts_to_test',
+		'action' : 'postman_get_hosts_to_test',
 		'hostname' : hostname,
 		'is_google' : smtpDiscovery.is_google
 	};
@@ -294,7 +294,7 @@ function handleHostsToCheckResponse(response) {
 		show('#connectivity_test_status');
 		updateStatus(postman_test_in_progress + " " + portsToCheck);
 		var data = {
-			'action' : 'wizard_port_test',
+			'action' : 'postman_wizard_port_test',
 			'hostname' : hostname,
 			'port' : port
 		};
@@ -340,7 +340,7 @@ function handlePortTestResponse(hostname, port, data, response) {
 		afterPortsChecked();
 	} else {
 		// SMTP failed, try again on the SMTPS port
-		data['action'] = 'wizard_port_test_smtps';
+		data['action'] = 'postman_wizard_port_test_smtps';
 		postThePortTest(hostname, port, data);
 	}
 }

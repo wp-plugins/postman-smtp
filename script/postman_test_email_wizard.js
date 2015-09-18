@@ -105,7 +105,7 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 		// re-enables it after the screen slides
 		jQuery('li').addClass('disabled');
 		var data = {
-			'action' : 'send_test_email',
+			'action' : 'postman_send_test_email',
 			'email' : jQuery('#input_test_email').val()
 		};
 		jQuery('#postman_test_message_status').html(postman_email_test.sending);

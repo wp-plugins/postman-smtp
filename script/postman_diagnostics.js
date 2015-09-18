@@ -6,7 +6,7 @@ jQuery(document).ready(function() {
  */
 function getDiagnosticData() {
 	var data = {
-		'action' : 'get_diagnostics'
+		'action' : 'postman_diagnostics'
 	};
 	jQuery.post(ajaxurl, data, function(response) {
 		if (response.success) {

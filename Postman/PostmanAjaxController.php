@@ -71,7 +71,7 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->options = $options;
 			$this->authorizationToken = $authorizationToken;
 			$this->diagnostics = '';
-			$this->registerAjaxHandler ( 'get_diagnostics', $this, 'getDiagnostics' );
+			$this->registerAjaxHandler ( 'postman_diagnostics', $this, 'getDiagnostics' );
 		}
 		private function addToDiagnostics($message) {
 			$this->diagnostics .= sprintf ( '%s%s', $message, PHP_EOL );
@@ -162,7 +162,7 @@ if (! class_exists ( 'PostmanGetPortsToTestViaAjax' )) {
 	class PostmanGetPortsToTestViaAjax extends PostmanAbstractAjaxHandler {
 		function __construct() {
 			parent::__construct ();
-			$this->registerAjaxHandler ( 'get_hosts_to_test', $this, 'getPortsToTestViaAjax' );
+			$this->registerAjaxHandler ( 'postman_get_hosts_to_test', $this, 'getPortsToTestViaAjax' );
 		}
 		/**
 		 * This Ajax function determines which hosts/ports to test in the Wizard Port Test
@@ -189,7 +189,7 @@ if (! class_exists ( 'PostmanGetHostnameByEmailAjaxController' )) {
 		const IS_GOOGLE_PARAMETER = 'is_google';
 		function __construct() {
 			parent::__construct ();
-			$this->registerAjaxHandler ( 'check_email', $this, 'getAjaxHostnameByEmail' );
+			$this->registerAjaxHandler ( 'postman_check_email', $this, 'getAjaxHostnameByEmail' );
 		}
 		/**
 		 * This Ajax function retrieves the smtp hostname for a give e-mail address
@@ -229,11 +229,11 @@ if (! class_exists ( 'PostmanPortTestAjaxController' )) {
 		function __construct(PostmanOptions $options) {
 			parent::__construct ();
 			$this->options = $options;
-			$this->registerAjaxHandler ( 'wizard_port_test', $this, 'runSmtpTest' );
-			$this->registerAjaxHandler ( 'wizard_port_test_smtps', $this, 'runSmtpsTest' );
-			$this->registerAjaxHandler ( 'port_quiz_test', $this, 'runPortQuizTest' );
-			$this->registerAjaxHandler ( 'test_port', $this, 'runSmtpTest' );
-			$this->registerAjaxHandler ( 'test_smtps', $this, 'runSmtpsTest' );
+			$this->registerAjaxHandler ( 'postman_wizard_port_test', $this, 'runSmtpTest' );
+			$this->registerAjaxHandler ( 'postman_wizard_port_test_smtps', $this, 'runSmtpsTest' );
+			$this->registerAjaxHandler ( 'postman_port_quiz_test', $this, 'runPortQuizTest' );
+			$this->registerAjaxHandler ( 'postman_test_port', $this, 'runSmtpTest' );
+			$this->registerAjaxHandler ( 'postman_test_smtps', $this, 'runSmtpsTest' );
 		}
 		
 		/**
@@ -386,7 +386,7 @@ if (! class_exists ( 'PostmanSendTestEmailAjaxController' )) {
 		 */
 		function __construct() {
 			parent::__construct ();
-			$this->registerAjaxHandler ( 'send_test_email', $this, 'sendTestEmailViaAjax' );
+			$this->registerAjaxHandler ( 'postman_send_test_email', $this, 'sendTestEmailViaAjax' );
 		}
 		
 		/**
