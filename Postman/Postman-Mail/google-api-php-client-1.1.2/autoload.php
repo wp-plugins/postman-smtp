@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 function postman_google_api_php_client_autoload($className) {
+	$logger = new PostmanLogger ( 'postman_google_api_php_client_autoload' );
+	$logger->trace('Autoloading ' . $className);
 	$classPath = explode ( '_', $className );
 	// @jason: make sure the first segment of the classname is 'Postman'
 	if ($classPath [0] != 'Postman' && $classPath [1] != 'Google') {
