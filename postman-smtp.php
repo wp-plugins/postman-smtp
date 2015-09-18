@@ -15,12 +15,14 @@
 // The Postman Mail API
 //
 // filter postman_test_email: before calling wp_mail, implement this filter and return true to disable the success/fail counters
-// filter postman_wp_mail_result: apply this filter after calling wp_mail for an array containg the SMTP error, transcript and time
+// filter postman_wp_mail_result: apply this filter after calling wp_mail for an array containing the SMTP error, transcript and time
 // filter postman_get_plugin_metadata: get plugin metadata
 // filter postman_wp_mail_bind_status: get wp_mail bind status
 // filter print_postman_status: print the human-readable plugin state
 
 // TODO
+// http://stackoverflow.com/questions/5224209/wordpress-how-do-i-get-all-the-registered-functions-for-the-content-filter
+// PHP7 compatibility
 // -- Add dismiss option for "unconfigured message" .. for multisites
 // -- Add resend option for failed messages
 // -- customize sent-mail icon WordPress dashboard
@@ -29,20 +31,26 @@
 // -- Amazon SES API http://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-email-api.html
 // -- Mandrill API
 // -- multisite support for site-wide email configuration. allow network admin to choose whether subdomains may override with their own settings. subdomains may override with their own settings.
-// -- mail queue : send mail in the background
 // -- multiple mailbox support
 
 /**
  * Create the main Postman class to start Postman
+ * 
+ * @param unknown $startingMemory
  */
 function postman_start($startingMemory) {
 	postman_setupPostman ();
 	PostmanUtils::logMemoryUse ( $startingMemory, 'Postman' );
 }
+
+/**
+ * Instantiate the mail Postman class
+ */
 function postman_setupPostman() {
 	require_once 'Postman/Postman.php';
 	$kevinCostner = new Postman ( __FILE__, '1.6.23' );
 }
+
 /**
  * Start Postman
  */

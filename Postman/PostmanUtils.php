@@ -280,7 +280,7 @@ if (! class_exists ( 'PostmanUtils' )) {
 		}
 		
 		/**
-		 * Warning! This will can only be called on hook 'init' or later
+		 * Warning! This can only be called on hook 'init' or later
 		 */
 		public static function isAdmin() {
 			/**

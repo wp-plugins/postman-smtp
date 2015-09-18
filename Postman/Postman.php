@@ -8,8 +8,8 @@ if (! class_exists ( 'Postman' )) {
 	 *
 	 * Execution always begins here:
 	 * - the wp_mail hook is created, if Postman is properly configured
-	 * - the admin screen hooks are created, if the current user is an admin
-	 * - the ajax endpoints are created, if the current user is an admin
+	 * - the admin screen hooks are created, if the current user is on the admin page
+	 * - the ajax endpoints are created, if the current user is on the admin page
 	 *
 	 * @author jasonhendriks
 	 * @copyright Jan 16, 2015
@@ -116,7 +116,7 @@ if (! class_exists ( 'Postman' )) {
 		}
 		
 		/**
-		 * If the user is an administrator, creates the Admin screens
+		 * If the user is on the WordPress Admin page, creates the Admin screens
 		 */
 		public function setup_admin() {
 			$this->logger->debug ( 'Admin start-up sequence' );
