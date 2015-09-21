@@ -107,7 +107,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		const DEFAULT_STEALTH_MODE = false;
 		const DEFAULT_RUN_MODE = self::RUN_MODE_PRODUCTION;
 		const DEFAULT_MAIL_LOG_ENABLED = self::MAIL_LOG_ENABLED_OPTION_YES;
-		const DEFAULT_MAIL_LOG_ENTRIES = 10;
+		const DEFAULT_MAIL_LOG_ENTRIES = 100;
 		const DEFAULT_LOG_LEVEL = PostmanLogger::ERROR_INT;
 		const DEFAULT_TRANSPORT_TYPE = 'smtp'; // must match what's in PostmanSmtpModuleTransport
 		const DEFAULT_TCP_READ_TIMEOUT = 60;
@@ -117,7 +117,7 @@ if (! class_exists ( "PostmanOptions" )) {
 		const DEFAULT_TEMP_DIRECTORY = '/tmp';
 		
 		// options data
-		private $options;
+		public $options;
 		
 		// singleton instance
 		public static function getInstance() {
