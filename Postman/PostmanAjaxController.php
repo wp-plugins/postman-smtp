@@ -122,6 +122,25 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			}
 			return 'undefined';
 		}
+		
+		/**
+		 * Inspects the $wp_filter variable and returns the plugins attached to it
+		 * From: http://stackoverflow.com/questions/5224209/wordpress-how-do-i-get-all-the-registered-functions-for-the-content-filter
+		 */
+		private function getFilters($hook = '') {
+			global $wp_filter;
+			if (empty ( $hook ) || ! isset ( $wp_filter [$hook] ))
+				return 'No';
+			
+			$functionArray = array ();
+			foreach ( $wp_filter [$hook] as $functions ) {
+				array_push ( $functionArray, array_keys ( $functions )[0] );
+			}
+			return implode ( ', ', $functionArray );
+		}
+		
+		/**
+		 */
 		public function getDiagnostics() {
 			$transportRegistry = PostmanTransportRegistry::getInstance ();
 			$this->addToDiagnostics ( sprintf ( 'OS: %s', php_uname () ) );
@@ -130,6 +149,12 @@ if (! class_exists ( 'PostmanGetDiagnosticsViaAjax' )) {
 			$this->addToDiagnostics ( $this->getPhpDependencies () );
 			$this->addToDiagnostics ( sprintf ( 'WordPress Theme: %s', wp_get_theme () ) );
 			$this->addToDiagnostics ( $this->getActivePlugins () );
+			$this->addToDiagnostics ( sprintf ( 'WordPress wp_mail filters: %s', $this->getFilters ( 'wp_mail' ) ) );
+			$this->addToDiagnostics ( sprintf ( 'WordPress wp_mail_from filters: %s', $this->getFilters ( 'wp_mail_from' ) ) );
+			$this->addToDiagnostics ( sprintf ( 'WordPress wp_mail_from_name filters: %s', $this->getFilters ( 'wp_mail_from_name' ) ) );
+			$this->addToDiagnostics ( sprintf ( 'WordPress wp_mail_content_type filters: %s', $this->getFilters ( 'wp_mail_content_type' ) ) );
+			$this->addToDiagnostics ( sprintf ( 'WordPress wp_mail_charset filters: %s', $this->getFilters ( 'wp_mail_charset' ) ) );
+			$this->addToDiagnostics ( sprintf ( 'WordPress phpmailer_init actions: %s', $this->getFilters ( 'phpmailer_init' ) ) );
 			$pluginData = apply_filters ( 'postman_get_plugin_metadata', null );
 			$this->addToDiagnostics ( sprintf ( 'Postman Version: %s', $pluginData ['version'] ) );
 			$this->addToDiagnostics ( sprintf ( 'Postman Sender Domain (Envelope|Message): %s|%s', $hostname = substr ( strrchr ( $this->options->getEnvelopeSender (), "@" ), 1 ), $hostname = substr ( strrchr ( $this->options->getMessageSenderEmail (), "@" ), 1 ) ) );
