@@ -68,7 +68,14 @@ if (! class_exists ( 'PostmanEmailLogService' )) {
 		 */
 		public function writeSuccessLog(PostmanEmailLog $log, PostmanMessage $message, $transcript, PostmanTransport $transport) {
 			if (PostmanOptions::getInstance ()->isMailLoggingEnabled ()) {
-				$this->createLog ( $log, $message, $transcript, '', true, $transport );
+				$statusMessage = '';
+				$status = true;
+				$subject = $message->getSubject ();
+				if (empty ( $subject )) {
+					$statusMessage = __ ( 'Warning: An empty subject line can result in delivery failure.', 'postman-smtp' );
+					$status = 'WARN';
+				}
+				$this->createLog ( $log, $message, $transcript, $statusMessage, $status, $transport );
 				$this->writeToEmailLog ( $log );
 			}
 		}
