@@ -219,7 +219,7 @@ if (! class_exists ( 'Postman' )) {
 		 */
 		public function display_configuration_required_warning() {
 			$this->logger->debug ( 'Displaying configuration required warning' );
-			$message = sprintf ( __ ( 'WordPress is still handling email delivery, <em>not</em> Postman.', 'postman-smtp' ) );
+			$message = sprintf ( __ ( 'WordPress (or another plugin) is currently handling email delivery, <em>not</em> Postman.', 'postman-smtp' ) );
 			$message .= ' ';
 			/* translators: where %s is the URL to the Postman Setup page */
 			$message .= sprintf ( __ ( '<a href="%s">Configure</a> the plugin.', 'postman-smtp' ), PostmanUtils::getSettingsPageUrl () );
