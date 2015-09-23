@@ -53,7 +53,7 @@ function portTest(tdValue, port, button) {
 				totalPortsTested += 1;
 				testEl.html('<span style="color:red">'
 						+ postman_port_test_closed + '</span> ('
-						+ postman_email_test.failed + ")");
+						+ postman_email_test.ajax_error + ")");
 				enableButtonCheck(button);
 			});
 }

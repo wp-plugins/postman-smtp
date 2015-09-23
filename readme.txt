@@ -267,6 +267,10 @@ To avoid being flagged as spam, you need to prove your email isn't forged. On a 
 * [[Ticket](https://wordpress.org/support/topic/test-email-keeps-on-failing?replies=17)] Fixed an incompatibility (Ajax name collision) with the plugin [MemberPress](https://www.memberpress.com)
 * [[Ticket](https://wordpress.org/support/topic/missing-image-files-of-jquery-ui-1?replies=4)] Removed the references to images in Postman's copy of jquery-ui.css causing HTTP 404
 * Added debugging to Google API autoloader
+* Send Test Email detects Ajax errors and displays the output in the Status window
+* Diagnostic Test displays all the wp_mail-related hooks of active plugins and themes 
+* Added a warning to the Email Log for emails that have an empty subject line
+* Added an import/export tab to the Advanced Configuration screen for those who want to duplicate settings between sites.
 
 = 1.6.23 - 2015-06-27 =
 * 10,000 installations! - 2015-06-27

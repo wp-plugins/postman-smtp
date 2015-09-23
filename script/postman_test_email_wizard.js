@@ -126,11 +126,12 @@ function postHandleStepChange(event, currentIndex, priorIndex, myself) {
 					handleResponse(response);
 				}).fail(
 						function(response) {
-							ajaxFailed(response);
 							jQuery('#postman_test_message_status').html(
-									postman_email_test.failed);
+									postman_email_test.ajax_error);
 							jQuery('#postman_test_message_status').css('color',
 									'red');
+							jQuery('#postman_test_message_error_message').val(postman_ajax_fail + "\n" + response.responseText);
+							ajaxFailed(response);
 						});
 
 	}

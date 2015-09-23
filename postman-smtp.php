@@ -21,6 +21,8 @@
 // filter print_postman_status: print the human-readable plugin state
 
 // TODO
+// warn if subject line is blank
+// TODO
 // http://stackoverflow.com/questions/5224209/wordpress-how-do-i-get-all-the-registered-functions-for-the-content-filter
 // PHP7 compatibility
 // -- Add dismiss option for "unconfigured message" .. for multisites
